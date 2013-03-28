@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Your request{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+  </style>
+{% endblock %}
+{% block content %}
+  <h1>Your public records request</h1>
+  <p class="important">
+    thanks for submitting! your request is: <br></br> {{ text }} <br></br>
+    the permalink is /request/{{ request_id}}
+
+      <h1>Public records, yo</h1>
+  <p class="important">
+    upload a record, yo:
+  <form name="input" action="/upload" method="post">
+		Filepath: <input type="text" name="filepath"><input type="hidden" name="request_id" value="{{ request_id }}">
+		<input type="submit" value="Submit">
+	</form>
+  <p class = "important">
+  	records: <br></br>
+    {% for doc_id in doc_ids %}
+    <a href="http://www.scribd.com/doc/{{doc_id}}">{{doc_id}}</a></br>
+    {% else %}
+    No records uploaded yet!
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}All requests{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+  </style>
+{% endblock %}
+{% block content %}
+  <h1>All requests</h1>
+  <p class="important">
+    {% for r in all_record_requests %}
+    <li>{{ r }}</li>
+  {% else %}
+    <li><em>Unbelievable.  No entries here so far</em></li>
+  {% endfor %}
+{% endblock %}
