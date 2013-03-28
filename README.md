@@ -3,16 +3,16 @@ public-records
 This is a portal to display public record requests to the community and the City of Oakland.
 
 
-Setup:
+## Installation
 
-git clone https://github.com/codeforamerica/public-records.git
+This application requires [Postgres](http://www.postgresapp.com/) and Xcode developer tools to be installed.
 
-install postgres: http://postgresapp.com/
-
-install XCode and developer tools
-
-from command line:
-    sudo pip install -r requirements.txt
     /Applications/Postgres.app/Contents/MacOS/bin/psql
     CREATE DATABASE publicrecords;
 
+In a new window:
+
+    git clone git://github.com/codeforamerica/public-records.git
+    cd public-records
+    sudo pip install -r requirements.txt
+    
