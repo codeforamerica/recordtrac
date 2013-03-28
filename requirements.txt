@@ -1,0 +1,5 @@
+https://python-scribd.googlecode.com/files/python-scribd-1.2.0.tar.gz
+flask
+SQLAlchemy
+psycopg2
+Flask-SQLAlchemy
