@@ -1,5 +1,8 @@
-https://python-scribd.googlecode.com/files/python-scribd-1.2.0.tar.gz
-flask
-SQLAlchemy
-psycopg2
-Flask-SQLAlchemy
+Flask==0.9
+Flask-SQLAlchemy==0.16
+Jinja2==2.6
+SQLAlchemy==0.8.0
+Twisted==12.0.0
+Werkzeug==0.8.3
+psycopg2==2.4.6
+python-scribd==1.2.0
