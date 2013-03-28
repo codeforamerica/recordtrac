@@ -1,6 +1,6 @@
 public-records
 ==============
-This is a portal to display public record requests to the community and the city.
+This is a portal to display public record requests to the community and the City of Oakland.
 
 
 Setup:
