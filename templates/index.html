@@ -1,5 +1,18 @@
 {% extends "base.html" %}
 {% block title %}Public records, yo{% endblock %}
+<style type="text/css">
+  * { font-family: Verdana; font-size: 96%; }
+  label { width: 10em; float: left; }
+  label.error { float: none; color: red; padding-left: .5em; vertical-align: top; }
+  p { clear: both; }
+  .submit { margin-left: 12em; }
+  em { font-weight: bold; padding-right: 1em; vertical-align: top; }
+</style>
+<script>
+  $(document).ready(function(){
+    $("#submitRequest").validate();
+  });
+</script>
 {% block head %}
   {{ super() }}
   <style type="text/css">
@@ -7,11 +20,75 @@
   </style>
 {% endblock %}
 {% block content %}
-  <h1>Public records, yo</h1>
+<!--  <h1>Public records, yo</h1>
   <p class="important">
     make a request, yo: <br></br>
   <form name="input" action="" method="post">
 		Request: <input type="text" name="request_text">
 		<input type="submit" value="Submit">
-	</form>
+	</form> -->
+
+<div class="container">
+
+  <div class="row">
+    <div class="span10">
+
+<!-- validation jQuery not working yet http://docs.jquery.com/Plugins/Validation 
+      try this validation as well https://github.com/jzaefferer/jquery-validation -->
+      <form name="input" class="form-horizontal" id="submitRequest" method="post" action="" autocomplete="on">
+        <fieldset>
+          <legend>Submit a Request</legend>
+
+          <div class="control-group">
+            <label class="control-label" for="requestTextarea">What are you trying to find?</label>
+            <div class="controls">
+              <textarea name="request_text" class="input-xlarge" id="requestTextarea" rows="3" placeholder="Describe your request.  Be as specific as possible." class="required" minlength="1"></textarea>
+            </div>
+          </div>
+
+<!-- Do Not Erase: dropdown selection for contact info options         
+          <div class="control-group">
+            <label class="control-label" for="contactPrependedDropdownButton">How would you like to be contacted?</label>
+            <div class="controls">
+              <div class="input-prepend">
+                <div class="btn-group">
+                  <button class="btn dropdown-toggle" data-toggle="dropdown">
+                    <i class="icon-envelope-alt"></i>  Email
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a href="#"><i class="icon-envelope-alt"></i> Email</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#"><i class="icon-phone"></i> Phone</a></li>
+                    <li><a href="#"><i class="icon-file"></i> Fax</a></li>
+                    <li><a href="#"><i class="icon-envelope"></i> Mail</a></li>
+                  </ul>
+                </div>
+                <input id="contactPrependedDropdownButton" type="text">
+              </div>
+            </div>
+          </div> -->
+          <div class="control-group">
+            <div class="control-group">
+              <label class="control-label" for="inputEmail">Email</label>
+              <div class="controls">
+                <input name="request_email" type="text" id="inputEmail" placeholder="youremail@company.com" class="required email" />
+              </div>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="controls">
+              <button type="submit" class="btn btn-large btn-primary">Request</button>
+            </div>
+          </div>
+          
+        </fieldset>
+      </form>
+
+    </div>
+  </div>
+
+</div>
+
 {% endblock %}
