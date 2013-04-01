@@ -48,6 +48,12 @@ def assign_owner(request_id, name, email):
 	db.session.commit()
 	return owner.id
 
+def unassign_owner(owner_id):
+	owner = Owner.query.get(owner_id)
+	db.session.delete(owner)
+	db.session.commit()
+
+
 # def view_owner(id):
 # 	owner = owner.query.get(id)
 # 	print "Owner"
@@ -56,7 +62,8 @@ def make_request(str):
 	req = Request(str)
 	db.session.add(req)
 	db.session.commit()
-	assign_owner(req.id, "richa", "richa@codeforamerica.org")
+	owner_id = assign_owner(req.id, "richa", "richa@codeforamerica.org")
+	# unassign_owner(owner_id)
 	open_request(req.id)
 	return req.id
 
@@ -72,10 +79,12 @@ def change_request_status(id, status):
 
 def notify(id):
 	req = Request.query.get(id)
-	owner = req.owners[0]
-	# print req.owners
-	print "This is the e-mail we would send to owner %s" % owner.name
-	print "Subject: Request for %s is now %s" % (req.text, req.status)
+	if len(req.owners) != 0:
+		owner = req.owners[0]
+		print "This is the e-mail we would send to owner %s" % owner.name
+		print "Subject: Request for %s is now %s" % (req.text, req.status)
+	else:
+		print "No one assigned!"
 
 
 def open_request(id):
