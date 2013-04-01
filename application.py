@@ -70,15 +70,16 @@ def notify(id):
 	owner = req.owners[0]
 	# print req.owners
 	print "This is the e-mail we would send to owner %s" % owner.name
-	print req.text
-	print req.status
+	print "Subject: Request for %s is now %s" % (req.text, req.status)
+
 
 def open_request(id):
 	change_request_status(id, "Open")
 	notify(id)
 
 def close_request(id):
-	return change_request_status(id, "Closed")
+	change_request_status(id, "Closed")
+	notify(id)
 
 
 @app.route('/', methods=['GET', 'POST'])
