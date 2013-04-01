@@ -24,14 +24,27 @@ class Request(db.Model):
 	def __repr__(self):
 		return self.text
 
+class Contact(db.Model):
+	__tablename__ = 'contact'
+	id = db.Column(db.Integer, primary_key =True)
+	owners = relationship("Owner")
+	# email = db.TextField('Email Address', [validators.Email(message='Invalid email address.')])
+	email = db.Column(db.String(100))
+	def __init__(self, email):
+		self.email = email
+	def __repr__(self):
+		return self.email
+
 class Owner(db.Model):
 	__tablename__ = 'owner'
 	id = db.Column(db.Integer, primary_key =True)
 	name = db.Column(db.String(20))
 	doc_id = db.Column(db.Integer)
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
+	contact_id = db.Column(db.Integer, db.ForeignKey('contact.id'))
 	def __init__(self, name, request_id):
 		self.name = name
 		self.request_id = request_id
 	def __repr__(self):
 		return self.name
+
