@@ -28,17 +28,35 @@ def show_request(request_id):
     if r.owners:
     	for owner in r.owners:
     		doc_ids.append(owner.doc_id)
-    return render_template('requested.html', text = r.text, request_id = request_id, doc_ids = doc_ids)
+    return render_template('requested.html', text = r.text, request_id = request_id, doc_ids = doc_ids, status = r.status)
 
+def make_request(str):
+	req = Request(str)
+	req.status = "Open"
+	db.session.add(req)
+	db.session.commit()
+	return req.id
+
+def change_request_status(id, status):
+	try:
+		req = Request.query.get(id)
+		req.status = status
+		db.session.commit()
+		return True
+	except:
+		return False
+
+def open_request(id):
+	return change_request_status(id, "Open")
+
+def close_request(id):
+	return change_request_status(id, "Closed")
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
 	if request.method == 'POST':
 		text = request.form['request_text']
-		record_request = Request(text)
-		db.session.add(record_request)
-		db.session.commit()
-		request_id = record_request.id
+		request_id = make_request(text)
 		return show_request(request_id)
 	else:
 		return render_template('index.html')
@@ -66,6 +84,7 @@ class Request(db.Model):
 	id = db.Column(db.Integer, primary_key =True)
 	text = db.Column(db.String(400), unique=True)
 	owners = relationship("Owner")
+	status = db.Column(db.String(400))
 	def __init__(self, text):
 		self.text = text
 	def __repr__(self):
