@@ -38,11 +38,14 @@
     </div>
     <div id="container">{% block content %}{% endblock %}</div>
     <div id="footer" class="well">
-      <p>Made by <a href="http://codeforamerica.org/2013-partners/oakland/">Code for America 2013 Fellows</a> - {% block date %}{% endblock %}</p>
-      <p><a href="https://github.com/codeforamerica/public-records"><i class="icon-github"></i>Project info</a></p>
+      <p>Made by <a href="http://codeforamerica.org/2013-partners/oakland/">Code for America 2013 Fellows</a> - last updated {% block date %}[Mar 17, 2013]{% endblock %}</p>
+      <p> <a href="https://github.com/codeforamerica/public-records"> <i class="icon-github"></i> Project info</a></p>
     </div>
 
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script src="js/bootstrap.js"></script>
+    <link rel="stylesheet" type="text/javascript" href="http://code.jquery.com/jquery-latest.js">
+    <link rel="stylesheet" type="text/javascript" href="{{ url_for('static', filename='bootstrap.js') }}">
+    <link rel="stylesheet" type="text/javascript" href="{{ url_for('static', filename='bootstrap-fileupload.js') }}">
+<!--    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="js/bootstrap.js"></script> -->
   </body>
 </html>
