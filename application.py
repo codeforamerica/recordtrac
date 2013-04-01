@@ -7,6 +7,11 @@ db = SQLAlchemy(app)
 db.create_all()
 from models import *
 
+
+@app.route('/test')
+def sandbox():
+	return render_template('test.html')
+
 @app.route('/upload', methods=['GET', 'POST'])
 def load():
 	if request.method == 'POST':
