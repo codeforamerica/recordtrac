@@ -1,11 +1,11 @@
 from flask import Flask, render_template, request, flash
-from models import *
 from upload import upload
 from flask.ext.sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/mydatabase'
 db = SQLAlchemy(app)
 db.create_all()
+from models import *
 
 @app.route('/upload', methods=['GET', 'POST'])
 def load():
@@ -27,15 +27,34 @@ def show_request(request_id):
     doc_ids = []
     if r.owners:
     	for owner in r.owners:
-    		doc_ids.append(owner.doc_id)
+    		if owner.doc_id:
+    			doc_ids.append(owner.doc_id)
+    		else:
+    			doc_ids.append("Nothing uploaded yet by %s" % owner.name)
     return render_template('requested.html', text = r.text, request_id = request_id, doc_ids = doc_ids, status = r.status)
+
+def assign_owner(request_id, name, email):
+	contact = Contact(email)
+	db.session.add(contact)
+	owner = Owner(name, id)
+	owner.contact_id = contact.id
+	owner.request_id = request_id
+	db.session.add(owner)
+	db.session.commit()
+	return owner.id
+
+# def view_owner(id):
+# 	owner = owner.query.get(id)
+# 	print "Owner"
 
 def make_request(str):
 	req = Request(str)
 	db.session.add(req)
 	db.session.commit()
+	assign_owner(req.id, "richa", "richa@codeforamerica.org")
 	open_request(req.id)
 	return req.id
+
 
 def change_request_status(id, status):
 	try:
@@ -46,12 +65,21 @@ def change_request_status(id, status):
 	except:
 		return False
 
+def notify(id):
+	req = Request.query.get(id)
+	owner = req.owners[0]
+	# print req.owners
+	print "This is the e-mail we would send to owner %s" % owner.name
+	print req.text
+	print req.status
+
 def open_request(id):
-	notify(id, status)
-	return change_request_status(id, "Open")
+	change_request_status(id, "Open")
+	notify(id)
 
 def close_request(id):
 	return change_request_status(id, "Closed")
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
