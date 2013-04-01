@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, flash
 from models import *
 from upload import upload
-
+from flask.ext.sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/mydatabase'
 db = SQLAlchemy(app)
@@ -32,9 +32,9 @@ def show_request(request_id):
 
 def make_request(str):
 	req = Request(str)
-	req.status = "Open"
 	db.session.add(req)
 	db.session.commit()
+	open_request(req.id)
 	return req.id
 
 def change_request_status(id, status):
@@ -47,6 +47,7 @@ def change_request_status(id, status):
 		return False
 
 def open_request(id):
+	notify(id, status)
 	return change_request_status(id, "Open")
 
 def close_request(id):
