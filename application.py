@@ -7,6 +7,11 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/mydatabase'
 db = SQLAlchemy(app)
 db.create_all()
 
+
+@app.route('/test')
+def sandbox():
+	return render_template('test.html')
+
 @app.route('/upload', methods=['GET', 'POST'])
 def load():
 	if request.method == 'POST':
