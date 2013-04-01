@@ -1,18 +1,51 @@
 <!doctype html>
 <html>
   <head>
-    {% block head %}
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
-    <title>{% block title %}{% endblock %} - My Webpage</title>
-    {% endblock %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <!-- HTML5 shim for IE backwards compatibility -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap-responsive.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap-fileupload.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='font-awesome.min.css') }}">
+<!--     <link href="../css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="../css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+    <link href="../css/bootstrap-fileupload.css" rel="stylesheet" type="text/css">
+    <link href="../FontAwesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
   </head>
-<body>
-  <div id="content">{% block content %}{% endblock %}</div>
-  <div id="footer">
-    <br></br>
-    cfa, yo(lo)
-    {% block footer %}
-    <!-- cfa, yo(lo) -->
-    {% endblock %}
-  </div>
-</body>
+  <body>
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <!-- Be sure to leave the brand out there if you want it shown -->
+          <a class="brand" href="#">Public Records Request Portal<small class="text-warning"><em> alpha</em></small></a>
+          <!-- Everything you want hidden at 940px or less, place within here -->
+          <div class="nav-collapse collapse">
+            <!-- .nav, .navbar-search, .navbar-form, etc -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="container">{% block content %}{% endblock %}</div>
+    <div id="footer" class="well">
+      <p class="text-center">Made by <a href="http://codeforamerica.org/2013-partners/oakland/">Code for America 2013 Fellows</a></p>
+      <p class="text-center"><a href="https://github.com/codeforamerica/public-records"> <i class="icon-github"></i> Project info</a> - last updated {% block date %}[Mar 17, 2013]{% endblock %}</p>
+    </div>
+
+    <link rel="stylesheet" type="text/javascript" href="http://code.jquery.com/jquery-latest.js">
+    <link rel="stylesheet" type="text/javascript" href="{{ url_for('static', filename='bootstrap.js') }}">
+    <link rel="stylesheet" type="text/javascript" href="{{ url_for('static', filename='bootstrap-fileupload.js') }}">
+<!--    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="js/bootstrap.js"></script> -->
+  </body>
+</html>

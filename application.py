@@ -1,20 +1,23 @@
 from flask import Flask, render_template, request, flash
 from upload import upload
 from flask.ext.sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import relationship
 app = Flask(__name__)
-app.secret_key = 'some_secret'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/mydatabase'
 db = SQLAlchemy(app)
+db.create_all()
+from models import *
 
+
+@app.route('/test')
+def sandbox():
+	return render_template('test.html')
 
 @app.route('/upload', methods=['GET', 'POST'])
 def load():
 	if request.method == 'POST':
 		doc_id = upload(request.form['filepath'])
 		request_id = request.form['request_id']
-		r = Request.query.get(request_id)
-		owner = Owner('anon', r.id)
+		owner = Owner('anon', request_id)
 		owner.doc_id = int(doc_id)
 		db.session.add(owner)
 		db.session.commit()
@@ -29,21 +32,76 @@ def show_request(request_id):
     doc_ids = []
     if r.owners:
     	for owner in r.owners:
-    		doc_ids.append(owner.doc_id)
-    return render_template('requested.html', text = r.text, request_id = request_id, doc_ids = doc_ids)
+    		if owner.doc_id:
+    			doc_ids.append(owner.doc_id)
+    		else:
+    			doc_ids.append("Nothing uploaded yet by %s" % owner.name)
+    return render_template('requested.html', text = r.text, request_id = request_id, doc_ids = doc_ids, status = r.status)
+
+def assign_owner(request_id, name, email):
+	contact = Contact(email)
+	db.session.add(contact)
+	owner = Owner(name, id)
+	owner.contact_id = contact.id
+	owner.request_id = request_id
+	db.session.add(owner)
+	db.session.commit()
+	return owner.id
+
+def unassign_owner(owner_id):
+	owner = Owner.query.get(owner_id)
+	db.session.delete(owner)
+	db.session.commit()
+
+
+# def view_owner(id):
+# 	owner = owner.query.get(id)
+# 	print "Owner"
+
+def make_request(str):
+	req = Request(str)
+	db.session.add(req)
+	db.session.commit()
+	owner_id = assign_owner(req.id, "richa", "richa@codeforamerica.org")
+	# unassign_owner(owner_id)
+	open_request(req.id)
+	return req.id
+
+
+def change_request_status(id, status):
+	try:
+		req = Request.query.get(id)
+		req.status = status
+		db.session.commit()
+		return True
+	except:
+		return False
+
+def notify(id):
+	req = Request.query.get(id)
+	if len(req.owners) != 0:
+		owner = req.owners[0]
+		print "This is the e-mail we would send to owner %s" % owner.name
+		print "Subject: Request for %s is now %s" % (req.text, req.status)
+	else:
+		print "No one assigned!"
+
+
+def open_request(id):
+	change_request_status(id, "Open")
+	notify(id)
+
+def close_request(id):
+	change_request_status(id, "Closed")
+	notify(id)
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
 	if request.method == 'POST':
 		text = request.form['request_text']
-		record_request = Request(text)
-		db.session.add(record_request)
-		db.session.commit()
-		# flash('Your request has been submitted.')
-		request_id = record_request.id
+		request_id = make_request(text)
 		return show_request(request_id)
-		# return render_template('requested.html', text = text)
 	else:
 		return render_template('index.html')
 
@@ -51,41 +109,6 @@ def index():
 def requests():
 	all_record_requests = Request.query.all()
 	return render_template('requests.html', all_record_requests = all_record_requests)
-
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True)
-    email = db.Column(db.String(120), unique=True)
-
-    def __init__(self, username, email):
-        self.username = username
-        self.email = email
-
-    def __repr__(self):
-        return '<User %r>' % self.username
-
-class Request(db.Model):
-	__tablename__ = 'request'
-	id = db.Column(db.Integer, primary_key =True)
-	text = db.Column(db.String(400), unique=True)
-	owners = relationship("Owner")
-	def __init__(self, text):
-		self.text = text
-	def __repr__(self):
-		return self.text
-
-class Owner(db.Model):
-	__tablename__ = 'owner'
-	id = db.Column(db.Integer, primary_key =True)
-	name = db.Column(db.String(20))
-	doc_id = db.Column(db.Integer)
-	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
-	def __init__(self, name, request_id):
-		self.name = name
-		self.request_id = request_id
-	def __repr__(self):
-		return self.name
 
 
 
