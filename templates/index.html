@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% block title %}Public records, yo{% endblock %}
+
+{% block title %}Public records{% endblock %}
 <style type="text/css">
   * { font-family: Verdana; font-size: 96%; }
   label { width: 10em; float: left; }
@@ -13,6 +14,7 @@
     $("#submitRequest").validate();
   });
 </script>
+
 {% block head %}
   {{ super() }}
   <style type="text/css">
@@ -20,9 +22,12 @@
   </style>
 {% endblock %}
 {% block content %}
-<!--  <h1>Public records, yo</h1>
+
+<!--
+  <h1>Public records</h1>
   <p class="important">
-    make a request, yo: <br></br>
+    Describe the record(s) you would like to obtain a copy of or view.<br></br>
+    <i>By submitting your request through this website, the public will be able to view your letter to the City of Oakland. Don’t include personal information like your address, phone number, or social security number in your message.</i> 
   <form name="input" action="" method="post">
 		Request: <input type="text" name="request_text">
 		<input type="submit" value="Submit">
