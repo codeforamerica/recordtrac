@@ -3,18 +3,16 @@ from upload import upload
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 app = Flask(__name__)
-app.secret_key = 'some_secret'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/mydatabase'
 db = SQLAlchemy(app)
-
+db.create_all()
 
 @app.route('/upload', methods=['GET', 'POST'])
 def load():
 	if request.method == 'POST':
 		doc_id = upload(request.form['filepath'])
 		request_id = request.form['request_id']
-		r = Request.query.get(request_id)
-		owner = Owner('anon', r.id)
+		owner = Owner('anon', request_id)
 		owner.doc_id = int(doc_id)
 		db.session.add(owner)
 		db.session.commit()
@@ -40,10 +38,8 @@ def index():
 		record_request = Request(text)
 		db.session.add(record_request)
 		db.session.commit()
-		# flash('Your request has been submitted.')
 		request_id = record_request.id
 		return show_request(request_id)
-		# return render_template('requested.html', text = text)
 	else:
 		return render_template('index.html')
 

@@ -1,7 +1,5 @@
 """
-Example: upload.py
-
-Uploading a text file to scribd.com and removing it afterwards.
+Uploading a text file to scribd.com.
 """
 
 import time
@@ -14,8 +12,6 @@ import scribd
 API_KEY = '4ure8weqmh0ert8t7ntht'
 API_SECRET = 'sec-bu2du9d37n6dngvt77h6rybvzn'
 
-# Uncomment to enable scribd package debugging.
-#logging.basicConfig(level=logging.DEBUG)
 
 last_bytes_sent = 0
 def progress(bytes_sent, bytes_total):
@@ -24,31 +20,22 @@ def progress(bytes_sent, bytes_total):
 def upload(filepath):
     # Configure the Scribd API.
     scribd.config(API_KEY, API_SECRET)
+    doc_id = None
     try:
         # Upload the document from a file.
-        print 'Uploading a document...'
-        
-        # Note that the default API user object is used.
         doc = scribd.api_user.upload(
             open(filepath,'rb'),
             progress_callback=progress,
             req_buffer = tempfile.TemporaryFile()
             )
-        print 'Done (doc_id=%s, access_key=%s).' % (doc.id, doc.access_key)
-        
         # Poll API until conversion is complete.
         while doc.get_conversion_status() != 'DONE':
-            print 'Document conversion is processing...'
             # Sleep to prevent a runaway loop that will block the script.
-            time.sleep(2)
-        print 'Document conversion is complete.'
-
-        
-        print 'Done (doc_id=%s).' % doc.id
-
+            time.sleep(2)        
+        doc_id = doc.id
     except scribd.ResponseError, err:
         print 'Scribd failed: code=%d, error=%s' % (err.errno, err.strerror)
-    return doc.id
+    return doc_id
 
 if __name__ == '__main__':
     main()

@@ -8,10 +8,14 @@
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link href="../css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap-responsive.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap-fileupload.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='font-awesome.min.css') }}">
+<!--     <link href="../css/bootstrap.css" rel="stylesheet" type="text/css">
     <link href="../css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
     <link href="../css/bootstrap-fileupload.css" rel="stylesheet" type="text/css">
-    <link href="../FontAwesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="../FontAwesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
   </head>
   <body>
     <div class="navbar">
