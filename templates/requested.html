@@ -1,12 +1,13 @@
 {% extends "base.html" %}
-{% block title %}Your request{% endblock %}
+{% block title %}Request {{ request_id }}{% endblock %}
 {% block head %}
-  {{ super() }}
+<!--  {{ super() }}
   <style type="text/css">
     .important { color: #336699; }
-  </style>
+  </style> -->
 {% endblock %}
 {% block content %}
+<!-- original from RA
   <h1>Your public records request</h1>
   <p class="important">
     thanks for submitting! your request is: <br></br> {{ text }} <br></br>
@@ -26,5 +27,45 @@
     <a href="http://www.scribd.com/doc/{{doc_id}}">{{doc_id}}</a></br>
     {% else %}
     No records uploaded yet!
-    {% endfor %}
+    {% endfor %} -->
+
+  <form name="input" class="form-horizontal" id="submitRecord" method="post" action="" autocomplete="on">
+    <fieldset>
+      <legend>Request {{ request_id }}</legend>
+
+      <div class="control-group">
+        <label class="control-label"><strong>Request</strong></label>
+        <div class="controls">
+          {{ text }}
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label"><strong>Add a record</strong></label>
+        <div class="row-fluid">
+          <div class="controls">
+            <div class="fileupload fileupload-new" data-provides="fileupload">
+              <input type="hidden" value name>
+              <div class="input-append">
+                <div class="uneditable-input span3">
+                  <i class="icon-file fileupload-exists"></i> 
+                  <span class="fileupload-preview"></span>
+                </div>
+                <span class="btn btn-file">
+                  <span class="fileupload-new">Select file</span>
+                  <span class="fileupload-exists">Change</span>
+                  <input type="file" name>
+                </span>
+                <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+              </div>
+              <button class="btn btn-primary" type="submit">Attach</button>
+            </div>
+          </div>
+        </div>
+      </div>
+          
+    </fieldset>
+  </form>
+
+
 {% endblock %}
