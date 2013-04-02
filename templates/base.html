@@ -36,8 +36,16 @@
         </div>
       </div>
     </div>
-    <div id="container">{% block content %}{% endblock %}</div>
-    <div id="footer" class="well">
+    <div id="container">
+      <div class="container">
+        <div class="row">
+          <div class="span10">
+            {% block content %}{% endblock %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="footer" class="well well-small">
       <p class="text-center">Made by <a href="http://codeforamerica.org/2013-partners/oakland/">Code for America 2013 Fellows</a></p>
       <p class="text-center"><a href="https://github.com/codeforamerica/public-records"> <i class="icon-github"></i> Project info</a> - last updated {% block date %}[Mar 17, 2013]{% endblock %}</p>
     </div>
