@@ -31,61 +31,44 @@ def show_request(request_id):
     # show the request with the given id, the id is an integer
     r = Request.query.get(request_id)
     doc_ids = []
-    if r.owners:
-    	for owner in r.owners:
-    		if owner.doc_id:
-    			doc_ids.append(owner.doc_id)
+    if r.records:
+    	for record in r.records:
+    		if record.scribd_id:
+    			doc_ids.append(record.scribd_id)
     		else:
     			doc_ids.append("Nothing uploaded yet by %s" % owner.name)
     return render_template('requested.html', text = r.text, request_id = request_id, doc_ids = doc_ids, status = r.status)
 
 
-
-# @app.route('/request/edit/<int:request_id>', methods=['GET', 'POST'])
-# def edit_request(request_id):
-# 	if request.method == 'POST':
-# 		owner_id = request.form['owner_id']
-# 		db.session.delete(Owner.query.get(owner_id))
-# 	# edit the request with the given id
-# 	owner_ids = []
-# 	owner_emails = []
-# 	req = Request.query.get(request_id)
-# 	if req.owners:
-# 		for owner in req.owners:
-# 			owner_ids.append(owner.id)
-# 			owner_emails.append(owner.email)
-
 def assign_owner(request_id, name, email):
-	contact = Contact(email)
-	db.session.add(contact)
-	owner = Owner(name, id)
-	owner.contact_id = contact.id
-	owner.request_id = request_id
+	subscriber = Subscriber(request_id = request_id, alias = name, email = email)
+	db.session.add(subscriber)
+	owner = Owner(alias = subscriber.alias, email = subscriber.email)
 	db.session.add(owner)
+	subscriber.owner_id = owner.id
 	db.session.commit()
 	return owner.id
 
-def unassign_owner(owner_id):
-	owner = Owner.query.get(owner_id)
-	db.session.delete(owner)
-	db.session.commit()
-
-
-# def view_owner(id):
-# 	owner = owner.query.get(id)
-# 	print "Owner"
+def unassign_owner(subscriber_id):
+	subscriber = Subscriber.query.get(subscriber_id)
+	if subscriber.owner_id:
+		owner = Owner.query.get(subscriber.owner_id)
+		db.session.delete(owner)
+		db.session.commit()
+		return True # Unassigned successfully
+	return False # No one to unassign
 
 def make_request(str):
-	try:
-		req = Request(str)
-		db.session.add(req)
-		db.session.commit()
-		owner_id = assign_owner(req.id, "richa", "richa@codeforamerica.org")
-		# unassign_owner(owner_id)
-		open_request(req.id)
-		return req.id
-	except:
-		return None
+	# try:
+	req = Request(str)
+	db.session.add(req)
+	db.session.commit()
+	owner_id = assign_owner(req.id, "richa", "richa@codeforamerica.org")
+	# unassign_owner(owner_id)
+	open_request(req.id)
+	return req.id
+	# except:
+		# return None
 	# except exc.InvalidRequestError:
 	# 	return None
 
@@ -100,12 +83,20 @@ def change_request_status(id, status):
 	except:
 		return False
 
-def notify(id):
-	req = Request.query.get(id)
-	if len(req.owners) != 0:
-		owner = req.owners[0]
-		print "This is the e-mail we would send to owner %s" % owner.name
-		print "Subject: Request for %s is now %s" % (req.text, req.status)
+def get_owners(request_id):
+	req = Request.query.get(request_id)
+	subscribers = req.subscribers
+	for subscriber in subscribers:
+		if subscriber.owner_id != null:
+			yield subscriber.owner_id
+
+def notify(request_id):
+	req = Request.query.get(request_id)
+	subscribers = req.subscribers
+	if len(subscribers) != 0:
+		for subscriber in subscribers:
+			print "This is the e-mail we would send to owner %s" % subscriber.alias
+			print "Subject: Request for %s is now %s" % (req.text, req.status)
 	else:
 		print "No one assigned!"
 
@@ -135,8 +126,6 @@ def index():
 def requests():
 	all_record_requests = Request.query.all()
 	return render_template('requests.html', all_record_requests = all_record_requests)
-
-
 
 if __name__ == '__main__':
 	app.run(use_debugger=True, debug=True)
