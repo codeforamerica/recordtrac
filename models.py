@@ -18,22 +18,6 @@ class Request(db.Model):
 	def __repr__(self):
 		return self.text
 
-# class Contact(db.Model): 
-# # Generic contact information. E-mail address to start.
-# 	__tablename__ = 'contact'
-# 	id = db.Column(db.Integer, primary_key =True)
-# 	date_created = db.Column(db.DateTime)
-# 	name = db.Column(db.String(20))
-# 	owners = relationship("Owner") # The list of owners associated with this contact information.
-# 	subscribers = relationship("Subscriber") # The list of subscribers associated with this contact information.
-# 	# email = db.TextField('Email Address', [validators.Email(message='Invalid email address.')])
-# 	email = db.Column(db.String(100), unique = True)
-# 	def __init__(self, name="anonymous"):
-# 		self.name = name
-# 		self.date_created = datetime.now()
-# 	def __repr__(self):
-# 		return name
-
 class Owner(db.Model): 
 # A member of city staff assigned to a particular request, that may or may not upload records towards that request. 
 	__tablename__ = 'owner'
@@ -47,7 +31,7 @@ class Owner(db.Model):
 		self.email = email
 		self.date_created = datetime.now()
 	def __repr__(self):
-		return records
+		return self.records
 
 
 class Subscriber(db.Model): 
@@ -64,7 +48,7 @@ class Subscriber(db.Model):
 		self.request_id = request_id
 		self.date_created = datetime.now()
 	def __repr__(self):
-		return alias
+		return self.alias
 
 
 class Record(db.Model):
@@ -80,6 +64,8 @@ class Record(db.Model):
 		self.request_id = request_id
 		self.owner_id = owner_id
 		self.date_created = datetime.now()
+	def __repr__(self):
+		return self.records
 
 class Note(db.Model):
 # A note on a request.
@@ -94,5 +80,5 @@ class Note(db.Model):
 		self.subscriber_id = subscriber_id
 		self.date_created = datetime.now()
 	def __repr__(self):
-		return "%s created by %s" % (text, Subscriber.query.get(subscriber_id))
+		return self.text
 
