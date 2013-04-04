@@ -15,4 +15,4 @@ In a new window:
     git clone git://github.com/codeforamerica/public-records.git
     cd public-records
     sudo pip install -r requirements.txt
-    
+    mkdir uploads
