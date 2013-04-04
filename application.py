@@ -3,7 +3,7 @@ from werkzeug import secure_filename
 from flask import Flask, render_template, request, flash, redirect, url_for
 from upload import upload
 from flask.ext.sqlalchemy import SQLAlchemy
-UPLOAD_FOLDER = "/Users/richa/apps/public-records/uploads"
+UPLOAD_FOLDER = "%s/uploads" % os.getcwd()
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc'])
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/mydatabase'
