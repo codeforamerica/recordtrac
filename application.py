@@ -1,9 +1,13 @@
-from flask import Flask, render_template, request, flash
+import os
+from werkzeug import secure_filename
+from flask import Flask, render_template, request, flash, redirect, url_for
 from upload import upload
 from flask.ext.sqlalchemy import SQLAlchemy
-# from flask.ext.sqlalchemy.exceptions import *
+UPLOAD_FOLDER = "/Users/richa/apps/public-records/uploads"
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc'])
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/mydatabase'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 db = SQLAlchemy(app)
 db.create_all()
 from models import *
@@ -13,10 +17,20 @@ from models import *
 def sandbox():
 	return render_template('test.html')
 
+def allowed_file(filename):
+	return '.' in filename and \
+		filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
 @app.route('/upload', methods=['GET', 'POST'])
 def load():
 	if request.method == 'POST':
-		doc_id = upload(request.form['filepath'])
+		doc_id = -1
+		file = request.files['record']
+		if file and allowed_file(file.filename):
+			filename = secure_filename(file.filename)
+			filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+			file.save(filepath)
+			doc_id = upload(filepath)
 		request_id = request.form['request_id']
 		owner = Owner('anon', request_id)
 		owner.doc_id = int(doc_id)
@@ -64,14 +78,8 @@ def make_request(str):
 	db.session.add(req)
 	db.session.commit()
 	owner_id = assign_owner(req.id, "richa", "richa@codeforamerica.org")
-	# unassign_owner(owner_id)
 	open_request(req.id)
 	return req.id
-	# except:
-		# return None
-	# except exc.InvalidRequestError:
-	# 	return None
-
 
 
 def change_request_status(id, status):
