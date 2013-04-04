@@ -29,7 +29,7 @@
     No records uploaded yet!
     {% endfor %} -->
 
-  <form name="input" class="form-horizontal" id="submitRecord" method="post" action="" autocomplete="on">
+  <form name="input" class="form-horizontal" id="submitRecord" method="post" action="/upload" autocomplete="on" enctype="multipart/form-data">
     <fieldset>
       <legend>Request {{ request_id }}</legend>
 
@@ -45,7 +45,7 @@
         <div class="row-fluid">
           <div class="controls">
             <div class="fileupload fileupload-new" data-provides="fileupload">
-              <input type="hidden" value name>
+              <input type="hidden" name="request_id" value="{{ request_id }}">
               <div class="input-append">
                 <div class="uneditable-input span3">
                   <i class="icon-file fileupload-exists"></i> 
@@ -54,7 +54,7 @@
                 <span class="btn btn-file">
                   <span class="fileupload-new">Select file</span>
                   <span class="fileupload-exists">Change</span>
-                  <input type="file" name>
+                  <input type="file" name="record">
                 </span>
                 <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
               </div>
