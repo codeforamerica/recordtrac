@@ -73,14 +73,15 @@ def unassign_owner(subscriber_id):
 	return False # No one to unassign
 
 def make_request(str):
-	# try:
-	req = Request(str)
-	db.session.add(req)
-	db.session.commit()
-	owner_id = assign_owner(req.id, "richa", "richa@codeforamerica.org")
-	open_request(req.id)
-	return req.id
-
+	try:
+		req = Request(str)
+		db.session.add(req)
+		db.session.commit()
+		owner_id = assign_owner(req.id, "richa", "richa@codeforamerica.org")
+		open_request(req.id)
+		return req.id
+	except:
+		return None
 
 def change_request_status(id, status):
 	try:
