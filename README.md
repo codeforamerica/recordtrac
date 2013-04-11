@@ -1,5 +1,6 @@
 public-records
 ==============
+
 This is a portal to display public record requests to the community and the City of Oakland.
 
 
@@ -16,3 +17,5 @@ In a new window:
     cd public-records
     sudo pip install -r requirements.txt
     mkdir uploads
+
+[![Build Status](https://travis-ci.org/codeforamerica/public-records.png?branch=master)](https://travis-ci.org/codeforamerica/public-records)
