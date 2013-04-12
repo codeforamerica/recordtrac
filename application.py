@@ -3,6 +3,7 @@ from werkzeug import secure_filename
 from flask import Flask, render_template, request, flash, redirect, url_for
 from upload import upload
 from flask.ext.sqlalchemy import SQLAlchemy
+from notifications import *
 UPLOAD_FOLDER = "%s/uploads" % os.getcwd()
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc'])
 app = Flask(__name__)
@@ -56,12 +57,12 @@ def show_request(request_id):
     return render_template('requested.html', text = r.text, request_id = request_id, doc_ids = doc_ids, status = r.status)
 
 
-def assign_owner(request_id, name, email):
-	subscriber = Subscriber(request_id = request_id, alias = name, email = email)
-	db.session.add(subscriber)
-	owner = Owner(alias = subscriber.alias, email = subscriber.email)
+def assign_owner(request_id, alias, email):
+	owner = Owner(alias = alias, email = email)
 	db.session.add(owner)
+	subscriber = Subscriber(request_id = request_id, alias = alias, email = email)
 	subscriber.owner_id = owner.id
+	db.session.add(subscriber)
 	db.session.commit()
 	return owner.id
 
@@ -74,16 +75,21 @@ def unassign_owner(subscriber_id):
 		return True # Unassigned successfully
 	return False # No one to unassign
 
-def make_request(str):
-	try:
-		req = Request(str)
-		db.session.add(req)
+def make_request(str, email = None):
+	# try:
+	req = Request(str)
+	db.session.add(req)
+	db.session.commit()
+	owner_id = assign_owner(req.id, app.config['DEFAULT_OWNER_NAME'], app.config['DEFAULT_OWNER_EMAIL'])
+	if email: # If the user provided an e-mail address, add them as a subscriber to the request.
+		subscriber = Subscriber(req.id, email)
+		db.session.add(subscriber)
 		db.session.commit()
-		owner_id = assign_owner(req.id, "richa", "richa@codeforamerica.org")
-		open_request(req.id)
-		return req.id
-	except:
-		return None
+	open_request(req.id)
+	db.session.commit()
+	return req.id
+	# except:
+		# return None
 
 def change_request_status(id, status):
 	try:
@@ -104,9 +110,10 @@ def get_owners(request_id):
 def notify(request_id):
 	req = Request.query.get(request_id)
 	subscribers = req.subscribers
+	print len(subscribers)
 	if len(subscribers) != 0:
 		for subscriber in subscribers:
-			print "This is the e-mail we would send to owner %s" % subscriber.alias
+			print "This is the e-mail we would send to %s" % subscriber.email
 			print "Subject: Request for %s is now %s" % (req.text, req.status)
 	else:
 		print "No one assigned!"
@@ -116,8 +123,8 @@ def open_request(id):
 	change_request_status(id, "Open")
 	notify(id)
 
-def close_request(id):
-	change_request_status(id, "Closed")
+def close_request(id, reason = ""):
+	change_request_status(id, "Closed. %s" %reason)
 	notify(id)
 
 
@@ -125,7 +132,8 @@ def close_request(id):
 def index():
 	if request.method == 'POST':
 		request_text = request.form['request_text']
-		request_id = make_request(request_text)
+		email = request.form['request_email']
+		request_id = make_request(request_text, email)
 		if request_id:
 			return show_request(request_id)
 		else:
