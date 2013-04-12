@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "requested.html" %}
 {% block title %}Index{% endblock %}
 {% block head %}
   {{ super() }}
@@ -7,7 +7,38 @@
   </style>
 {% endblock %}
 {% block content %}
-  <h1>Index</h1>
-  <p class="important">
-    Thanks! your doc ID is {{ doc_id }}
+    <!-- success banner -->
+    <div class="row-fluid">
+      <div class="span12">
+
+        <!-- success container -->
+        <div class="span6 bannerbubble" id="successBubble">
+
+          <!-- icon container -->
+          <div class="span2" class="bubbleIcon">
+            <i class="icon-ok-circle icon-2x iconBanner"></i>
+        </div>
+
+        <!-- text container -->
+        <div class="span10">
+
+          <!-- primary text -->
+            <div class="textBanner">
+              <p>Your request has been submitted.</p>
+                <p>You will be contacted via email at {{ email }}</p>
+          </div>
+          <!-- secondary text (link out) -->
+          <div>
+            <p><a class="linkBanner" href=" # ">What happens next?</a></p>
+          </div>
+
+          </div>
+      </div>
+        
+        <!-- empty div for fluid grid -->
+        <div class="span6">
+      </div>
+        
+    </div>
+  </div>
 {% endblock %}
