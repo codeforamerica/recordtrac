@@ -6,12 +6,11 @@ from flask.ext.sqlalchemy import SQLAlchemy
 UPLOAD_FOLDER = "%s/uploads" % os.getcwd()
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc'])
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/mydatabase'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 db = SQLAlchemy(app)
 db.create_all()
 from models import *
-
+config = os.path.join(app.root_path, 'settings.cfg')
+app.config.from_pyfile(config)
 
 @app.route('/test')
 def sandbox():
@@ -28,17 +27,20 @@ def load():
 		file = request.files['record']
 		if file and allowed_file(file.filename):
 			filename = secure_filename(file.filename)
-			filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+			filepath = os.path.join(UPLOAD_FOLDER, filename)
 			file.save(filepath)
-			doc_id = upload(filepath)
-		request_id = request.form['request_id']
-		owner = Owner('anon', request_id)
-		owner.doc_id = int(doc_id)
-		db.session.add(owner)
-		db.session.commit()
-		return render_template('uploaded.html', doc_id = doc_id)
-	else:
-		return render_template('error.html')
+			doc_id = upload(filepath, app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
+			try:
+				request_id = request.form['request_id']
+				owner = Owner('anon', request_id)
+				owner.doc_id = int(doc_id)
+				db.session.add(owner)
+				db.session.commit()
+				return render_template('uploaded.html', doc_id = doc_id)
+			except:
+				return render_template('error.html', message = doc_id)
+		else:
+			return render_template('error.html', message = "Not an allowed doc type")
 
 @app.route('/request/<int:request_id>')
 def show_request(request_id):
