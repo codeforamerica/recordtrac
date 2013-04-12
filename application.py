@@ -48,18 +48,24 @@ def show_request(request_id):
     # show the request with the given id, the id is an integer
     r = Request.query.get(request_id)
     doc_ids = []
+    owner_emails = []
+    owners = get_owners(request_id)
+    if owners:
+    	for owner in owners:
+    		owner_emails.append(Owner.query.get(owner).email)
     if r.records:
     	for record in r.records:
     		if record.scribd_id:
     			doc_ids.append(record.scribd_id)
     		else:
     			doc_ids.append("Nothing uploaded yet by %s" % owner.name)
-    return render_template('requested.html', text = r.text, request_id = request_id, doc_ids = doc_ids, status = r.status)
+    return render_template('requested.html', text = r.text, request_id = request_id, doc_ids = doc_ids, status = r.status, owner_emails = owner_emails)
 
 
 def assign_owner(request_id, alias, email):
 	owner = Owner(alias = alias, email = email)
 	db.session.add(owner)
+	db.session.commit()
 	subscriber = Subscriber(request_id = request_id, alias = alias, email = email)
 	subscriber.owner_id = owner.id
 	db.session.add(subscriber)
@@ -76,20 +82,20 @@ def unassign_owner(subscriber_id):
 	return False # No one to unassign
 
 def make_request(str, email = None):
-	# try:
-	req = Request(str)
-	db.session.add(req)
-	db.session.commit()
-	owner_id = assign_owner(req.id, app.config['DEFAULT_OWNER_NAME'], app.config['DEFAULT_OWNER_EMAIL'])
-	if email: # If the user provided an e-mail address, add them as a subscriber to the request.
-		subscriber = Subscriber(req.id, email)
-		db.session.add(subscriber)
+	try:
+		req = Request(str)
+		db.session.add(req)
 		db.session.commit()
-	open_request(req.id)
-	db.session.commit()
-	return req.id
-	# except:
-		# return None
+		owner_id = assign_owner(req.id, app.config['DEFAULT_OWNER_NAME'], app.config['DEFAULT_OWNER_EMAIL'])
+		if email: # If the user provided an e-mail address, add them as a subscriber to the request.
+			subscriber = Subscriber(req.id, email)
+			db.session.add(subscriber)
+			db.session.commit()
+		open_request(req.id)
+		db.session.commit()
+		return req.id
+	except:
+		return None
 
 def change_request_status(id, status):
 	try:
@@ -104,13 +110,12 @@ def get_owners(request_id):
 	req = Request.query.get(request_id)
 	subscribers = req.subscribers
 	for subscriber in subscribers:
-		if subscriber.owner_id != null:
+		if subscriber.owner_id != None:
 			yield subscriber.owner_id
 
 def notify(request_id):
 	req = Request.query.get(request_id)
 	subscribers = req.subscribers
-	print len(subscribers)
 	if len(subscribers) != 0:
 		for subscriber in subscribers:
 			print "This is the e-mail we would send to %s" % subscriber.email

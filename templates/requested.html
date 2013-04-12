@@ -32,7 +32,11 @@
   <form name="input" class="form-horizontal" id="submitRecord" method="post" action="/upload" autocomplete="on" enctype="multipart/form-data">
     <fieldset>
       <legend>Request {{ request_id }}</legend>
-
+      Status: {{status}} </br>
+      Owner(s): </br>
+      {% for owner in owner_emails %}
+          {{ owner }}
+      {% endfor %}
       <div class="control-group">
         <label class="control-label"><strong>Request</strong></label>
         <div class="controls">
