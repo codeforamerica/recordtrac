@@ -2,7 +2,8 @@ import os
 from werkzeug import secure_filename
 from flask import Flask, render_template, request, flash, redirect, url_for
 from upload import upload
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
+from sqlalchemy.exc import IntegrityError, InvalidRequestError
 # from notifications import *
 UPLOAD_FOLDER = "%s/uploads" % os.getcwd()
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc'])
@@ -94,7 +95,7 @@ def make_request(str, email = None):
 		open_request(req.id)
 		db.session.commit()
 		return req.id
-	except:
+	except IntegrityError:
 		return None
 
 def change_request_status(id, status):
@@ -142,6 +143,7 @@ def index():
 		if request_id:
 			return show_request(request_id)
 		else:
+			db.session.rollback()
 			req = Request.query.filter_by(text = request_text).first()
 			return render_template('error.html', message = "Your request is the same as /request/%s" % req.id)
 	return render_template('index.html')
