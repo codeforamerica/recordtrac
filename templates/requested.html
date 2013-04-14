@@ -35,7 +35,12 @@
       Status: {{status}} </br>
       Owner(s): 
       {% for owner in owner_emails %}
-          {{ owner }}
+          {{ owner }} 
+      {% endfor %}
+    </br>
+      Doc(s):
+      {% for doc in doc_ids %}
+          <a href="http://www.scribd.com/doc/{{ doc }}">{{doc}}   </a> 
       {% endfor %}
       <div class="control-group">
         <label class="control-label"><strong>Request</strong></label>

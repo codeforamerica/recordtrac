@@ -34,10 +34,20 @@ def load():
 			doc_id = upload(filepath, app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
 			try:
 				request_id = request.form['request_id']
-				owner = Owner('anon', request_id)
-				owner.doc_id = int(doc_id)
+				email = "citystaff@oakland.net"
+				alias = "city staff"
+				owner = Owner(email = email, alias = alias)
+				# Realistically we would get owner ID some other way and not create a new owner/subscriber
 				db.session.add(owner)
 				db.session.commit()
+				subscriber = Subscriber(request_id = request_id, email = email, alias = alias )
+				subscriber.owner_id = owner.id
+				db.session.add(subscriber)
+				db.session.commit()
+				record = Record(doc_id, request_id, owner.id)
+				db.session.add(record)
+				db.session.commit()
+
 				return render_template('uploaded.html', doc_id = doc_id)
 			except:
 				return render_template('error.html', message = doc_id)
