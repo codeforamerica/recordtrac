@@ -48,7 +48,7 @@ def load():
 				db.session.add(record)
 				db.session.commit()
 
-				return render_template('uploaded.html', doc_id = doc_id)
+				return render_template('uploaded.html', doc_id = doc_id, request_id = request_id)
 			except:
 				return render_template('error.html', message = doc_id)
 		else:
