@@ -4,6 +4,9 @@ from flask import Flask, render_template, request, flash, redirect, url_for
 from upload import upload
 from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
+from flask.ext.mail import Mail
+from flask.ext.mail import Message
+import website_copy
 # from notifications import *
 UPLOAD_FOLDER = "%s/uploads" % os.getcwd()
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc'])
@@ -13,6 +16,13 @@ db.create_all()
 from models import *
 config = os.path.join(app.root_path, 'settings.cfg')
 app.config.from_pyfile(config)
+mail = Mail(app)
+
+
+def send_email(body, recipients = ["richa.agarwal85@gmail.com"], subject = "No subject"):
+	message = Message(subject, recipients, sender = app.config['DEFAULT_MAIL_SENDER'])
+	message.html = body
+	mail.send(message)
 
 @app.route('/test')
 def sandbox():
@@ -22,16 +32,24 @@ def allowed_file(filename):
 	return '.' in filename and \
 		filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
+
+def upload_file(file): 
+# Uploads file to scribd.com and returns doc ID. File can be accessed at scribd.com/doc/id
+	if file and allowed_file(file.filename):
+		filename = secure_filename(file.filename)
+		filepath = os.path.join(UPLOAD_FOLDER, filename)
+		file.save(filepath)
+		doc_id = upload(filepath, app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
+		return doc_id
+	return None
+
+
 @app.route('/upload', methods=['GET', 'POST'])
 def load():
 	if request.method == 'POST':
 		doc_id = -1
 		file = request.files['record']
-		if file and allowed_file(file.filename):
-			filename = secure_filename(file.filename)
-			filepath = os.path.join(UPLOAD_FOLDER, filename)
-			file.save(filepath)
-			doc_id = upload(filepath, app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
+		if upload_file(file) != None:
 			try:
 				request_id = request.form['request_id']
 				email = "citystaff@oakland.net"
@@ -47,7 +65,6 @@ def load():
 				record = Record(doc_id, request_id, owner.id)
 				db.session.add(record)
 				db.session.commit()
-
 				return render_template('uploaded.html', doc_id = doc_id, request_id = request_id)
 			except:
 				return render_template('error.html', message = doc_id)
@@ -127,10 +144,18 @@ def get_owners(request_id):
 def notify(request_id):
 	req = Request.query.get(request_id)
 	subscribers = req.subscribers
+	owner_emails = []
+	for owner_id in get_owners(req.id):
+		email = Owner.query.get(owner_id).email
+		owner_emails.append(email)
+	city_subject, city_body = website_copy.request_submitted_city(req.text)
+	public_subject, public_body = website_copy.request_submitted(req.text, owner_emails, "510-555-1022") 
 	if len(subscribers) != 0:
 		for subscriber in subscribers:
-			print "This is the e-mail we would send to %s" % subscriber.email
-			print "Subject: Request for %s is now %s" % (req.text, req.status)
+			if subscriber.owner_id:
+				send_email(body = city_body, recipients = [subscriber.email], subject = city_subject)
+			else:
+				send_email(body = public_body, recipients = [subscriber.email], subject = public_subject)
 	else:
 		print "No one assigned!"
 
