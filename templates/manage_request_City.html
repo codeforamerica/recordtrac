@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "case.html" %}
 {% block title %}Request {{ request_id }}{% endblock %}
 {% block head %}
 <!--  {{ super() }}
@@ -8,6 +8,7 @@
 {% endblock head %}
 
 {% block content %}
+  {{ super() }}
 <!-- original from RA
   <h1>Your public records request</h1>
   <p class="important">
@@ -30,8 +31,8 @@
     No records uploaded yet!
     {% endfor %} -->
   
-  <form name="input" class="form-horizontal" id="submitRecord" method="post" action="/upload" autocomplete="on" enctype="multipart/form-data">
-    <fieldset>
+{#
+  
       <legend>Request {{ request_id }}</legend>
       Status: {{status}} </br>
       Owner(s): 
@@ -49,8 +50,12 @@
           {{ text }}
         </div>
       </div>
+#}
+{% endblock content %}
 
-{#
+{% block actions %}
+  <form name="input" class="form-horizontal" id="submitRecord" method="post" action="/upload" autocomplete="on" enctype="multipart/form-data">
+    <fieldset>    
       <div class="control-group">
         <label class="control-label"><strong>Add a record</strong></label>
         <div class="row-fluid">
@@ -68,16 +73,16 @@
                   <input type="file" name="record">
                 </span>
                 <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+
+<!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
+                <button class="btn btn-primary fileupload-exists" type="submit">Attach</button>
+                <button class="btn btn-primary fileupload-new disabled" type="submit">Attach</button>
+
               </div>
-              <button class="btn btn-primary" type="submit">Attach</button>
             </div>
           </div>
         </div>
       </div>
-      </br>
     </fieldset>
   </form>
-#}
-
-
-{% endblock content %}
+{% endblock actions %}

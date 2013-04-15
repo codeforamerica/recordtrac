@@ -161,7 +161,7 @@ def new_request():
 @app.route('/requests', methods=['GET', 'POST'])
 def requests():
 	all_record_requests = Request.query.all()
-	return render_template('requests.html', all_record_requests = all_record_requests)
+	return render_template('all_requests.html', all_record_requests = all_record_requests)
 
 if __name__ == '__main__':
 	app.run(use_debugger=True, debug=True)
