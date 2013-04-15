@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}All requests{% endblock %}
+{% block title %}All requests{% endblock title %}
 {% block head %}
   {{ super() }}
   <style type="text/css">
@@ -7,7 +7,7 @@
   </style>
 {% endblock %}
 {% block content %}
-  <h1>All requests</h1>
+  <legend>All Requests</legend>
   <p class="important">
     {% for r in all_record_requests %}
     <li>{{ r }}</li>
