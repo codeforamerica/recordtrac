@@ -1,4 +1,4 @@
-{% extends "index.html" %}
+{% extends "case.html" %}
 {% block title %}Index{% endblock %}
 {% block head %}
   {{ super() }}
@@ -6,8 +6,10 @@
     .important { color: #336699; }
   </style>
 {% endblock %}
-{% block content %}
-    <!-- success banner -->
+
+{% block banner %}
+	{{ super() }}
+	<!-- success banner -->
     <div class="row-fluid">
       <div class="span12">
 
@@ -34,11 +36,9 @@
 
           </div>
       </div>
-        
-        <!-- empty div for fluid grid -->
-        <div class="span6">
-      </div>
-        
-    </div>
-  </div>
+{% endblock %}
+
+{% block content %}
+	{{ super() }}
+  
 {% endblock %}
