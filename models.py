@@ -23,10 +23,10 @@ class Owner(db.Model):
 	__tablename__ = 'owner'
 	id = db.Column(db.Integer, primary_key =True)
 	alias = db.Column(db.String(20))
-	email = db.Column(db.String(100), unique = True)
+	email = db.Column(db.String(100))
 	date_created = db.Column(db.DateTime)
 	records = relationship("Record") # All records that have been uploaded
-	def __init__(self, alias, email):
+	def __init__(self, email, alias = None):
 		self.alias = alias
 		self.email = email
 		self.date_created = datetime.now()
@@ -38,13 +38,15 @@ class Subscriber(db.Model):
 # A person subscribed to a request, who may or may not have created the request, and may or may not own a part of the request.
 	__tablename__ = 'subscriber'
 	id = db.Column(db.Integer, primary_key = True)
-	email = db.Column(db.String(100), unique = True)
+	email = db.Column(db.String(100))
 	alias = db.Column(db.String(20))
 	date_created = db.Column(db.DateTime)
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
 	creator = db.Boolean() # True if they created the initial request.
 	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id')) # Not null if responsible for fulfilling a part of the request
- 	def __init__(self, request_id, email, alias="anonymous"):
+ 	def __init__(self, request_id, email, alias = None):
+ 		self.email = email
+ 		self.alias = alias
 		self.request_id = request_id
 		self.date_created = datetime.now()
 	def __repr__(self):
@@ -59,7 +61,8 @@ class Record(db.Model):
 	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id')) # The city staff who uploaded the record
 	scribd_id = db.Column(db.Integer) # The Scribd.com document ID. Currently using Scribd API to upload documents.
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id')) # The request this record was uploaded for
-	def __init__(self, scribd_id, request_id, owner_id):
+	description = db.Column(db.String(100)) # A short description of what the record is. 
+	def __init__(self, scribd_id, request_id, owner_id, description = None):
 		self.scribd_id = scribd_id
 		self.request_id = request_id
 		self.owner_id = owner_id
