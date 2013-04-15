@@ -7,7 +7,8 @@
   </style>
 {% endblock %}
 
-{% block banner %}
+{#
+ {% block banner %}
 	{{ super() }}
 	<!-- success banner -->
     <div class="row-fluid">
@@ -36,9 +37,10 @@
 
           </div>
       </div>
-{% endblock %}
+{% endblock banner %} 
+#}
 
 {% block content %}
 	{{ super() }}
   
-{% endblock %}
+{% endblock content %}
