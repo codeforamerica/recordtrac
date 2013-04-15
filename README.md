@@ -20,16 +20,16 @@ In a new window:
 
 Save example-settings.cfg as settings.cfg and update relevant fields.
 
-
-[![Build Status](https://travis-ci.org/codeforamerica/public-records.png?branch=master)](https://travis-ci.org/codeforamerica/public-records)
-
 ## Run locally
 
 To use the application locally, from a new terminal window, run:
     python application.py
 
 You should see something similar to:
+
     * Running on http://127.0.0.1:5000/
     * Restarting with reloader
 
 Navigate to the url in your browser.
+
+<!-- [![Build Status](https://travis-ci.org/codeforamerica/public-records.png?branch=master)](https://travis-ci.org/codeforamerica/public-records) -->
