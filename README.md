@@ -18,4 +18,7 @@ In a new window:
     sudo pip install -r requirements.txt
     mkdir uploads
 
+Save example-settings.cfg as settings.cfg and update relevant fields.
+
+
 [![Build Status](https://travis-ci.org/codeforamerica/public-records.png?branch=master)](https://travis-ci.org/codeforamerica/public-records)
