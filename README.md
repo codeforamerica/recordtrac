@@ -22,9 +22,10 @@ Save example-settings.cfg as settings.cfg and update relevant fields.
 
 ## Run locally
 
-To use the application locally, from a new terminal window, run:
+To use the application locally, in a new window:
 
     python application.py
+
 
 You should see something similar to:
 
