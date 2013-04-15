@@ -1,51 +1,13 @@
 {% extends "case.html" %}
 {% block title %}Request {{ request_id }}{% endblock %}
 {% block head %}
-  {{ super() }}
+<!--  {{ super() }}
   <style type="text/css">
     .important { color: #336699; }
-  </style> 
-{% endblock %}
-
-{% block banner %}
-  {{ super() }}
-  <!-- success banner -->
-    <div class="row-fluid">
-      <div class="span12">
-
-        <!-- success container -->
-        <div class="span6 bannerbubble" id="successBubble">
-
-          <!-- icon container -->
-          <div class="span2" class="bubbleIcon">
-            <i class="icon-ok-circle icon-2x iconBanner"></i>
-        </div>
-
-        <!-- text container -->
-        <div class="span10">
-
-          <!-- primary text -->
-            <div class="textBanner">
-              <p>Thanks! Your request has been uploaded.</p>
-                <p>You can view the original request and record <a href="/request/{{request_id}}">here.</p>
-          </div>
-          <!-- secondary text (link out) -->
-          <div>
-            <p><a class="linkBanner" href=" # ">What happens next?</a></p>
-          </div>
-
-          </div>
-      </div>
-{% endblock banner %}
-
+  </style> -->
+{% endblock head %}
 
 {% block content %}
-  {{ super() }}
-  
-{% endblock content %}
-
-{#
- {% block content %}
   {{ super() }}
 <!-- original from RA
   <h1>Your public records request</h1>
@@ -68,9 +30,9 @@
     {% else %}
     No records uploaded yet!
     {% endfor %} -->
-
-  <form name="input" class="form-horizontal" id="submitRecord" method="post" action="/upload" autocomplete="on" enctype="multipart/form-data">
-    <fieldset>
+  
+{#
+  
       <legend>Request {{ request_id }}</legend>
       Status: {{status}} </br>
       Owner(s): 
@@ -88,7 +50,12 @@
           {{ text }}
         </div>
       </div>
+#}
+{% endblock content %}
 
+{% block actions %}
+  <form name="input" class="form-horizontal" id="submitRecord" method="post" action="/upload" autocomplete="on" enctype="multipart/form-data">
+    <fieldset>    
       <div class="control-group">
         <label class="control-label"><strong>Add a record</strong></label>
         <div class="row-fluid">
@@ -106,16 +73,16 @@
                   <input type="file" name="record">
                 </span>
                 <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+
+<!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
+                <button class="btn btn-primary fileupload-exists" type="submit">Attach</button>
+                <button class="btn btn-primary fileupload-new disabled" type="submit">Attach</button>
+
               </div>
-              <button class="btn btn-primary" type="submit">Attach</button>
             </div>
           </div>
         </div>
       </div>
-      </br>
     </fieldset>
   </form>
-
-
-{% endblock content %}
-#}
+{% endblock actions %}

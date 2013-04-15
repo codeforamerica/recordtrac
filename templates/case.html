@@ -1,52 +1,13 @@
-{% extends "case.html" %}
+{% extends "base.html" %}
 {% block title %}Request {{ request_id }}{% endblock %}
 {% block head %}
-  {{ super() }}
+<!--  {{ super() }}
   <style type="text/css">
     .important { color: #336699; }
-  </style> 
-{% endblock %}
-
-{% block banner %}
-  {{ super() }}
-  <!-- success banner -->
-    <div class="row-fluid">
-      <div class="span12">
-
-        <!-- success container -->
-        <div class="span6 bannerbubble" id="successBubble">
-
-          <!-- icon container -->
-          <div class="span2" class="bubbleIcon">
-            <i class="icon-ok-circle icon-2x iconBanner"></i>
-        </div>
-
-        <!-- text container -->
-        <div class="span10">
-
-          <!-- primary text -->
-            <div class="textBanner">
-              <p>Thanks! Your request has been uploaded.</p>
-                <p>You can view the original request and record <a href="/request/{{request_id}}">here.</p>
-          </div>
-          <!-- secondary text (link out) -->
-          <div>
-            <p><a class="linkBanner" href=" # ">What happens next?</a></p>
-          </div>
-
-          </div>
-      </div>
-{% endblock banner %}
-
+  </style> -->
+{% endblock head %}
 
 {% block content %}
-  {{ super() }}
-  
-{% endblock content %}
-
-{#
- {% block content %}
-  {{ super() }}
 <!-- original from RA
   <h1>Your public records request</h1>
   <p class="important">
@@ -68,7 +29,7 @@
     {% else %}
     No records uploaded yet!
     {% endfor %} -->
-
+  
   <form name="input" class="form-horizontal" id="submitRecord" method="post" action="/upload" autocomplete="on" enctype="multipart/form-data">
     <fieldset>
       <legend>Request {{ request_id }}</legend>
@@ -89,6 +50,7 @@
         </div>
       </div>
 
+{#
       <div class="control-group">
         <label class="control-label"><strong>Add a record</strong></label>
         <div class="row-fluid">
@@ -115,7 +77,7 @@
       </br>
     </fieldset>
   </form>
+#}
 
 
 {% endblock content %}
-#}

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block title %}{% endblock title%}</title>
     <!-- HTML5 shim for IE backwards compatibility -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -41,7 +41,17 @@
       <div class="container">
         <div class="row">
           <div class="span10">
-            {% block content %}{% endblock %}
+            {% block banner %}{% endblock banner%}
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9 offset1">
+            {% block content %}{% endblock content%}
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9 offset1">
+            {% block actions %}{% endblock actions %}
           </div>
         </div>
       </div>

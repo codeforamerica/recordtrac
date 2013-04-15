@@ -170,7 +170,7 @@ def close_request(id, reason = ""):
 
 
 @app.route('/', methods=['GET', 'POST'])
-def index():
+def new_request():
 	if request.method == 'POST':
 		request_text = request.form['request_text']
 		email = request.form['request_email']
@@ -181,12 +181,12 @@ def index():
 			db.session.rollback()
 			req = Request.query.filter_by(text = request_text).first()
 			return render_template('error.html', message = "Your request is the same as /request/%s" % req.id)
-	return render_template('index.html')
+	return render_template('new_request.html')
 
 @app.route('/requests', methods=['GET', 'POST'])
 def requests():
 	all_record_requests = Request.query.all()
-	return render_template('requests.html', all_record_requests = all_record_requests)
+	return render_template('all_requests.html', all_record_requests = all_record_requests)
 
 if __name__ == '__main__':
 	app.run(use_debugger=True, debug=True)
