@@ -31,16 +31,9 @@ def load():
 		if upload_file(file) != None:
 			try:
 				request_id = request.form['request_id']
-				email = "citystaff@oakland.net"
-				alias = "city staff"
-				owner = Owner(email = email, alias = alias)
-				# Realistically we would get owner ID some other way and not create a new owner/subscriber
-				db.session.add(owner)
-				db.session.commit()
-				subscriber = Subscriber(request_id = request_id, email = email, alias = alias )
-				subscriber.owner_id = owner.id
-				db.session.add(subscriber)
-				db.session.commit()
+				owner_id = None
+				for owner in get_owners(request_id):
+					owner_id = owner.id
 				record = Record(doc_id, request_id, owner.id)
 				db.session.add(record)
 				db.session.commit()

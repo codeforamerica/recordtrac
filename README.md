@@ -9,7 +9,7 @@ This is a portal to display public record requests to the community and the City
 This application requires [Postgres](http://www.postgresapp.com/) and Xcode developer tools to be installed.
 
     /Applications/Postgres.app/Contents/MacOS/bin/psql
-    CREATE DATABASE publicrecords;
+    CREATE DATABASE your_database_name;
 
 In a new window:
 
