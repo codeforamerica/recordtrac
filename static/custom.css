@@ -1,0 +1,48 @@
+/*custom.css*/
+
+.bannerbubble {
+	opacity: 1;
+	border-radius: 0 1em 1em 0;
+}
+
+#successBubble {
+	/*background: green;*/
+	background: rgba(0, 128, 0, 0.75);
+}
+
+#clarificationBubble {
+	background: orange;
+}
+
+.bubbleIcon {
+	text-align: center;
+}
+
+.iconBanner {
+	color: white;
+}
+
+.textBanner {
+	color: white;
+}
+
+.textBanner p {
+		margin:0 0 0 0;
+		padding:0 0 0 0;
+}
+
+.linkBanner {
+	color: white;
+	border-bottom-style: dotted;
+	border-width: 1px;
+	font-style: italic;
+	font-size: 0.75em;
+}
+
+.container {
+	margin-left: 0;
+}
+
+textarea {
+	resize: none;
+}
