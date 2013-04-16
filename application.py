@@ -52,7 +52,7 @@ def load():
 
 @app.route('/city/request/<int:request_id>')
 def show_request_for_city(request_id):
-	return render_template('manage_request_City.html')
+	return render_template('manage_request_City.html', text = r.text, request_id = request_id, doc_ids = doc_ids, status = r.status, owner_emails = owner_emails)
 
 @app.route('/request/<int:request_id>')
 def show_request(request_id, type = None):
