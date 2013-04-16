@@ -1,11 +1,10 @@
 import os
 from werkzeug import secure_filename
 from flask import Flask, render_template, request, flash, redirect, url_for
-from upload import upload
 from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
-from flask.ext.mail import Mail
-from flask.ext.mail import Message
+from flask.ext.mail import Mail, Message
+from upload import upload
 import website_copy
 # from notifications import *
 UPLOAD_FOLDER = "%s/uploads" % os.getcwd()
@@ -18,8 +17,9 @@ config = os.path.join(app.root_path, 'settings.cfg')
 app.config.from_pyfile(config)
 mail = Mail(app)
 
+# Routing
 
-def send_email(body, recipients = ["richa.agarwal85@gmail.com"], subject = "No subject"):
+def send_email(body, recipients, subject):
 	message = Message(subject, recipients, sender = app.config['DEFAULT_MAIL_SENDER'])
 	message.html = body
 	mail.send(message)
