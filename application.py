@@ -19,30 +19,9 @@ mail = Mail(app)
 
 # Routing
 
-def send_email(body, recipients, subject):
-	message = Message(subject, recipients, sender = app.config['DEFAULT_MAIL_SENDER'])
-	message.html = body
-	mail.send(message)
-
 @app.route('/test')
 def sandbox():
 	return render_template('test.html')
-
-def allowed_file(filename):
-	return '.' in filename and \
-		filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
-
-
-def upload_file(file): 
-# Uploads file to scribd.com and returns doc ID. File can be accessed at scribd.com/doc/id
-	if file and allowed_file(file.filename):
-		filename = secure_filename(file.filename)
-		filepath = os.path.join(UPLOAD_FOLDER, filename)
-		file.save(filepath)
-		doc_id = upload(filepath, app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
-		return doc_id
-	return None
-
 
 @app.route('/upload', methods=['GET', 'POST'])
 def load():
@@ -76,7 +55,7 @@ def show_request_for_city(request_id):
 	return render_template('manage_request_City.html')
 
 @app.route('/request/<int:request_id>')
-def show_request(request_id):
+def show_request(request_id, type = None):
     # show the request with the given id, the id is an integer
     r = Request.query.get(request_id)
     doc_ids = []
@@ -91,8 +70,53 @@ def show_request(request_id):
     			doc_ids.append(record.scribd_id)
     		else:
     			doc_ids.append("Nothing uploaded yet by %s" % owner.name)
-    return render_template('case.html', text = r.text, request_id = request_id, doc_ids = doc_ids, status = r.status, owner_emails = owner_emails)
+    if type == "new":
+    	template = "requested.html"
+    else:
+    	template = "case.html"
+    return render_template(template, text = r.text, request_id = request_id, doc_ids = doc_ids, status = r.status, owner_emails = owner_emails)
 
+@app.route('/', methods=['GET', 'POST'])
+def new_request():
+	if request.method == 'POST':
+		request_text = request.form['request_text']
+		email = request.form['request_email']
+		request_id = make_request(request_text, email)
+		if request_id:
+			return show_request(request_id, "new")
+		else:
+			db.session.rollback()
+			req = Request.query.filter_by(text = request_text).first()
+			return render_template('error.html', message = "Your request is the same as /request/%s" % req.id)
+	return render_template('new_request.html')
+
+@app.route('/requests', methods=['GET', 'POST'])
+def requests():
+	all_record_requests = Request.query.all()
+	return render_template('all_requests.html', all_record_requests = all_record_requests)
+
+def allowed_file(filename):
+	return '.' in filename and \
+		filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
+def upload_file(file): 
+# Uploads file to scribd.com and returns doc ID. File can be accessed at scribd.com/doc/id
+	if file and allowed_file(file.filename):
+		filename = secure_filename(file.filename)
+		filepath = os.path.join(UPLOAD_FOLDER, filename)
+		file.save(filepath)
+		doc_id = upload(filepath, app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
+		return doc_id
+	return None
+
+def open_request(id):
+	change_request_status(id, "Open")
+	notify(id)
+
+def close_request(id, reason = ""):
+	change_request_status(id, "Closed. %s" %reason)
+	notify(id)
 
 def assign_owner(request_id, alias, email):
 	owner = Owner(alias = alias, email = email)
@@ -163,34 +187,10 @@ def notify(request_id):
 	else:
 		print "No one assigned!"
 
-
-def open_request(id):
-	change_request_status(id, "Open")
-	notify(id)
-
-def close_request(id, reason = ""):
-	change_request_status(id, "Closed. %s" %reason)
-	notify(id)
-
-
-@app.route('/', methods=['GET', 'POST'])
-def new_request():
-	if request.method == 'POST':
-		request_text = request.form['request_text']
-		email = request.form['request_email']
-		request_id = make_request(request_text, email)
-		if request_id:
-			return show_request(request_id)
-		else:
-			db.session.rollback()
-			req = Request.query.filter_by(text = request_text).first()
-			return render_template('error.html', message = "Your request is the same as /request/%s" % req.id)
-	return render_template('new_request.html')
-
-@app.route('/requests', methods=['GET', 'POST'])
-def requests():
-	all_record_requests = Request.query.all()
-	return render_template('all_requests.html', all_record_requests = all_record_requests)
+def send_email(body, recipients, subject):
+	message = Message(subject, recipients, sender = app.config['DEFAULT_MAIL_SENDER'])
+	message.html = body
+	mail.send(message)
 
 if __name__ == '__main__':
 	app.run(use_debugger=True, debug=True)
