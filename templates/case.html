@@ -30,23 +30,34 @@
     No records uploaded yet!
     {% endfor %} -->
   
-  <form name="input" class="form-horizontal" id="submitRecord" method="post" action="/upload" autocomplete="on" enctype="multipart/form-data">
-    <fieldset>
-      <legend>Request {{ request_id }}</legend>
-      Status: {{status}} </br>
-      Owner(s): 
-      {% for owner in owner_emails %}
-          {{ owner }} 
-      {% endfor %}
-    </br>
-      Doc(s):
-      {% for doc in doc_ids %}
-          <a href="http://www.scribd.com/doc/{{ doc }}">{{doc}}   </a> 
-      {% endfor %}
-      <div class="control-group">
-        <label class="control-label"><strong>Request</strong></label>
-        <div class="controls">
-          {{ text }}
+
+
+      <div class="row-fluid">
+        <div class="span12">
+          <div class="row-fluid">
+            <div class="span10">
+              <div class="row-fluid">
+                <div class="span4">
+                  <p><strong>Request {{request_id}} </strong></p>
+                </div>
+                <div class="span8">
+                  <p> {{ text }} </p>
+                </div>
+              </div>
+            </div>
+            <div class="span2">
+              Status: {{status}} </br>
+              Owner(s): 
+              {% for owner in owner_emails %}
+                  {{ owner }} 
+              {% endfor %}
+            </br>
+              Doc(s):
+              {% for doc in doc_ids %}
+                  <a href="http://www.scribd.com/doc/{{ doc }}">{{doc}}   </a> 
+              {% endfor %}
+            </div>
+          </div>
         </div>
       </div>
 

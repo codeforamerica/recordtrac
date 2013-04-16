@@ -71,6 +71,10 @@ def load():
 		else:
 			return render_template('error.html', message = "Not an allowed doc type")
 
+@app.route('/city/request/<int:request_id>')
+def show_request_for_city(request_id):
+	return render_template('manage_request_City.html')
+
 @app.route('/request/<int:request_id>')
 def show_request(request_id):
     # show the request with the given id, the id is an integer
@@ -87,7 +91,7 @@ def show_request(request_id):
     			doc_ids.append(record.scribd_id)
     		else:
     			doc_ids.append("Nothing uploaded yet by %s" % owner.name)
-    return render_template('requested.html', text = r.text, request_id = request_id, doc_ids = doc_ids, status = r.status, owner_emails = owner_emails)
+    return render_template('case.html', text = r.text, request_id = request_id, doc_ids = doc_ids, status = r.status, owner_emails = owner_emails)
 
 
 def assign_owner(request_id, alias, email):
