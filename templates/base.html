@@ -19,47 +19,54 @@
     <link href="../FontAwesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
   </head>
   <body>
-    <div class="navbar">
-      <div class="navbar-inner">
+    <div class="wrapper">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
+            <!-- Be sure to leave the brand out there if you want it shown -->
+            <a class="brand" href="#">Public Records Request Portal<small class="text-warning"><em> alpha</em></small></a>
+            <!-- Everything you want hidden at 940px or less, place within here -->
+            <div class="nav-collapse collapse">
+              <!-- .nav, .navbar-search, .navbar-form, etc -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="container">
         <div class="container">
-          <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <!-- Be sure to leave the brand out there if you want it shown -->
-          <a class="brand" href="#">Public Records Request Portal<small class="text-warning"><em> alpha</em></small></a>
-          <!-- Everything you want hidden at 940px or less, place within here -->
-          <div class="nav-collapse collapse">
-            <!-- .nav, .navbar-search, .navbar-form, etc -->
+          <div class="row">
+            <div class="span10">
+              {% block banner %}{% endblock banner%}
+            </div>
+          </div>
+          <div class="row">
+            <div class="span9 offset1">
+              {% block content %}{% endblock content%}
+            </div>
+          </div>
+          <div class="row">
+            <div class="span9 offset1">
+              {% block actions %}{% endblock actions %}
+            </div>
           </div>
         </div>
       </div>
+
+      <div class="push"></div>
     </div>
-    <div id="container">
-      <div class="container">
-        <div class="row">
-          <div class="span10">
-            {% block banner %}{% endblock banner%}
-          </div>
-        </div>
-        <div class="row">
-          <div class="span9 offset1">
-            {% block content %}{% endblock content%}
-          </div>
-        </div>
-        <div class="row">
-          <div class="span9 offset1">
-            {% block actions %}{% endblock actions %}
-          </div>
-        </div>
-      </div>
-    </div>
-    <div id="footer" class="well well-small">
+      
+    <div id="footer" class="well well-small footer">
       <p class="text-center">Made by <a href="http://codeforamerica.org/2013-partners/oakland/">Code for America 2013 Fellows</a></p>
       <p class="text-center"><a href="https://github.com/codeforamerica/public-records"> <i class="icon-github"></i> Project info</a> - last updated {% block date %}[Mar 17, 2013]{% endblock %}</p>
     </div>
+
+    
 
     <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.js') }}"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>

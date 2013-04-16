@@ -10,32 +10,12 @@
 {% block banner %}
   {{ super() }}
   <!-- success banner -->
-    <div class="row-fluid">
-      <div class="span12">
-
-        <!-- success container -->
-        <div class="span6 bannerbubble" id="successBubble">
-
-          <!-- icon container -->
-          <div class="span2" class="bubbleIcon">
-            <i class="icon-ok-circle icon-2x iconBanner"></i>
-        </div>
-
-        <!-- text container -->
-        <div class="span10">
-
-          <!-- primary text -->
-            <div class="textBanner">
-              <p>Thanks! Your request has been uploaded.</p>
-                <p>You can view the original request and record <a href="/request/{{request_id}}">here.</p>
-          </div>
-          <!-- secondary text (link out) -->
-          <div>
-            <p><a class="linkBanner" href=" # ">What happens next?</a></p>
-          </div>
-
-          </div>
-      </div>
+  <div class="alert alert-success">
+    <button type="button" class="close" data-dismiss="alert">x</button>
+    <i class="icon-ok-sign icon-large"> </i> 
+    <strong> Thanks! Your request has been uploaded.</strong>
+    You can view the original request and record <a href="/request/{{request_id}}">here.
+  </div>
 {% endblock banner %}
 
 
