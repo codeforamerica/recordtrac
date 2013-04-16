@@ -46,3 +46,20 @@
 textarea {
 	resize: none;
 }
+
+/* ----- Sticky Footer ----- by Ryan Fait http://ryanfait.com/ ----- */
+* {
+	margin: 0;
+}
+html, body {
+	height: 100%;
+}
+.wrapper {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -80px; /* the bottom margin is the negative value of the footer's height */
+}
+.footer, .push {
+	height: 80px; /* .push must be the same height as .footer */
+}

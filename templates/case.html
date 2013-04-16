@@ -44,18 +44,28 @@
                   <p> {{ text }} </p>
                 </div>
               </div>
+              <div class="row-fluid">
+                <div class="span4">
+                  <p><strong>Document(s)</strong></p>
+                </div>
+                <div class="span8">
+                  <p> 
+                    {% for doc in doc_ids %}
+                    <a href="http://www.scribd.com/doc/{{ doc }}">  {{doc}}  </a> 
+                    {% endfor %} 
+                  </p>
+                </div>
+              </div>
             </div>
             <div class="span2">
-              Status: {{status}} </br>
-              Owner(s): 
-              {% for owner in owner_emails %}
-                  {{ owner }} 
-              {% endfor %}
+              Status: <strong>{{status}}</strong> </br>
+              <span>
+                Owner(s): {% for owner in owner_emails %} {{ owner }} {% endfor %}
+                
+                    
+                
+              </span>
             </br>
-              Doc(s):
-              {% for doc in doc_ids %}
-                  <a href="http://www.scribd.com/doc/{{ doc }}">{{doc}}   </a> 
-              {% endfor %}
             </div>
           </div>
         </div>
