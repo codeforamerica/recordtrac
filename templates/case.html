@@ -38,7 +38,7 @@
             <div class="span10">
               <div class="row-fluid">
                 <div class="span4">
-                  <p><strong>Request {{request_id}} </strong></p>
+                  <h3><strong>Request {{request_id}} </strong></h3>
                 </div>
                 <div class="span8">
                   <p> {{ text }} </p>
@@ -58,12 +58,12 @@
               </div>
             </div>
             <div class="span2">
-              Status: <strong>{{status}}</strong> </br>
+              Status: <span class="label label-info">  {{status}}  </span> </br>
               <span>
-                Owner(s): {% for owner in owner_emails %} {{ owner }} {% endfor %}
-                
-                    
-                
+                Owner(s): 
+                {% for owner in owner_emails %} 
+                  {{ owner }} 
+                {% endfor %}
               </span>
             </br>
             </div>
