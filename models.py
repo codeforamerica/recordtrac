@@ -9,6 +9,8 @@ class Request(db.Model):
 	date_created = db.Column(db.DateTime)
 	text = db.Column(db.String(400), unique=True) # The actual request text.
 	subscribers = relationship("Subscriber") # The list of subscribers following this request.
+	owners = relationship("Owner") # The list of city staff ever assigned to the request.
+	current_owner = db.Column(db.Integer) # The Owner ID for the city staff that currently 'owns' the request.
 	records = relationship("Record") # The list of records that have been uploaded for this request.
 	notes = relationship("Note") # The list of notes appended to this request.
 	status = db.Column(db.String(400)) # The status of the request (open, closed, etc.)
@@ -26,12 +28,14 @@ class Owner(db.Model):
 	email = db.Column(db.String(100))
 	date_created = db.Column(db.DateTime)
 	records = relationship("Record") # All records that have been uploaded
-	def __init__(self, email, alias = None):
+	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
+	def __init__(self, request_id, email, alias = None):
 		self.alias = alias
 		self.email = email
+		self.request_id = request_id
 		self.date_created = datetime.now()
 	def __repr__(self):
-		return self.records
+		return self.alias
 
 
 class Subscriber(db.Model): 

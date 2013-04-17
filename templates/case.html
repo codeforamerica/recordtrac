@@ -58,10 +58,8 @@
             <div class="span4">
               <p>Status: <span class="label label-info">  {{status}}  </span></p> 
               <span>
-                Owner(s): 
-                {% for owner in owner_emails %} 
-                  {{ owner }} </br>
-                {% endfor %}
+                Owner: 
+                  {{ owner_email }} </br>
               </span>
             </div>
           </div>

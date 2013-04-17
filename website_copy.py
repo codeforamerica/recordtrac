@@ -1,5 +1,5 @@
 def request_submitted(request_text, city_employee, phone_number):
-	subject_line = "Thank  you for your request!"
+	subject_line = "Thank you for your request!"
 	email_body = "Thank you for submitting your public records request. You can find a copy of your message below:</br> %s </br> You can always review this message and our future response to your request, by clicking here. In the future, you may have to answer questions about your record requests. These questions are designed to help the City understand the type of information you need and help them provide you with the . If your record exists, you will receive an email notifying you that your record was posted online. </br> If you have any questions, feel free to send a message to %s by clicking here or calling %s. " %(request_text, city_employee, phone_number)
 	return subject_line, email_body
 
