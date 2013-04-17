@@ -6,6 +6,7 @@ from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from flask.ext.mail import Mail, Message
 from upload import upload
 import website_copy
+from datetime import datetime
 
 # Initialize Flask app and database:
 app = Flask(__name__)
@@ -62,7 +63,7 @@ def show_request(request_id, template = "case.html"):
     			doc_ids.append(record.scribd_id)
     		else:
     			doc_ids.append("Nothing uploaded yet by %s" % owner.name)
-    return render_template(template, text = req.text, request_id = request_id, doc_ids = doc_ids, status = req.status, owner_email = owner_email)
+    return render_template(template, text = req.text, request_id = request_id, doc_ids = doc_ids, status = req.status, owner_email = owner_email, date = owner.date_created.date())
 
 @app.route('/', methods=['GET', 'POST'])
 def new_request():
