@@ -191,3 +191,7 @@ def send_email(body, recipients, subject):
 if __name__ == '__main__':
 	app.run(use_debugger=True, debug=True)
 
+# test template:  I clearly don't know what should go here, but need to keep a testbed here.
+@app.route('/test')
+def show_test():
+	return render_template('test.html')
