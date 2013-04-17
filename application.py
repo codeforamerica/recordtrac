@@ -6,22 +6,24 @@ from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from flask.ext.mail import Mail, Message
 from upload import upload
 import website_copy
-# from notifications import *
-UPLOAD_FOLDER = "%s/uploads" % os.getcwd()
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc'])
+
+# Initialize Flask app and database:
 app = Flask(__name__)
 db = SQLAlchemy(app)
 db.create_all()
 from models import *
+
+# Get configuration settings from settings.cfg
 config = os.path.join(app.root_path, 'settings.cfg')
-app.config.from_pyfile(config)
+app.config.from_pyfile(config) 
+
 mail = Mail(app)
 
-# Routing
+# Define the local temporary folder where uploads will go
+UPLOAD_FOLDER = "%s/uploads" % os.getcwd()
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc'])
 
-@app.route('/test')
-def sandbox():
-	return render_template('test.html')
+# Routing
 
 @app.route('/upload', methods=['GET', 'POST'])
 def load():
@@ -87,6 +89,8 @@ def new_request():
 def requests():
 	all_record_requests = Request.query.all()
 	return render_template('all_requests.html', all_record_requests = all_record_requests)
+
+# Functions that should probably go somewhere else:
 
 def allowed_file(filename):
 	return '.' in filename and \
@@ -170,7 +174,7 @@ def notify(request_id):
 		email = Owner.query.get(owner_id).email
 		owner_emails.append(email)
 	city_subject, city_body = website_copy.request_submitted_city(req.text)
-	public_subject, public_body = website_copy.request_submitted(req.text, owner_emails, "510-555-1022") 
+	public_subject, public_body = website_copy.request_submitted(req.text, owner_emails, "xxx-xxx-xxxx") 
 	if len(subscribers) != 0:
 		for subscriber in subscribers:
 			if subscriber.owner_id:
