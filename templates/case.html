@@ -2,102 +2,54 @@
 
 {% extends "base.html" %}
 {% block title %}Request {{ request_id }}{% endblock %}
-{% block head %}
-<!--  {{ super() }}
-  <style type="text/css">
-    .important { color: #336699; }
-  </style> -->
-{% endblock head %}
+{% block head %} {% endblock head %}
 
 {% block content %}
-<!-- original from RA
-  <h1>Your public records request</h1>
-  <p class="important">
-    thanks for submitting! your request is: <br></br> {{ text }} <br></br>
-    the permalink is /request/{{ request_id}}
-
-      <h1>Public records, yo</h1>
-  <p class="important">
-    upload a record, yo:
-  <form name="input" action="/upload" method="post">
-		Filepath: <input type="text" name="filepath"><input type="hidden" name="request_id" value="{{ request_id }}">
-		<input type="submit" value="Submit">
-	</form>
-  <p class = "important">
-    status: {{status}} <br></br>
-  	records: <br></br>
-    {% for doc_id in doc_ids %}
-    <a href="http://www.scribd.com/doc/{{doc_id}}">{{doc_id}}</a></br>
-    {% else %}
-    No records uploaded yet!
-    {% endfor %} -->
-  
-
-
-      <div class="row-fluid well">
-        <div class="span12"> 
+  <div class="row-fluid well">
+    <div class="span12"> 
+      <div class="text-right">
+        <span>Routed [Insert date here] {{date}}  to 
+          <div class="btn-group">
+            <a class="btn dropdown-toggle btn-info" data-toggle="dropdown" href="#">
+              [Insert owner here]  {{owner}}
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- dropdown menu links -->
+            </ul>
+          </div>
+        </span>
+      </div>
+      <div class="row-fluid">
+        <div class="span8">
           <div class="row-fluid">
+            <h4>Request {{request_id}} </h4>
             <div class="span8">
-              <div class="row-fluid">
-                <h4>Request {{request_id}} </h4>
-                <div class="span8">
-                    <p class="lead"> {{ text }} </p>
-                </div>
-              </div>
-              <div class="row-fluid">
-                <h4>Document(s) </h4>
-                <div class="span8">
-                    <p>
-                      {% for doc in doc_ids %}
-                      <a href="http://www.scribd.com/doc/{{ doc }}">  {{doc}}  </a> 
-                      {% endfor %}
-                    </p>
-                </div>
-              </div>
+                <p class="lead"> {{ text }} </p>
             </div>
-            <div class="span4">
-              <p>Status: <span class="label label-info">  {{status}}  </span></p> 
-              <span>
-                Owner(s): 
-                {% for owner in owner_emails %} 
-                  {{ owner }} </br>
-                {% endfor %}
-              </span>
+          </div>
+          <div class="row-fluid">
+            <h4>Document(s) </h4>
+            <div class="span8">
+                <p>
+                  {% for doc in doc_ids %}
+                  <a href="http://www.scribd.com/doc/{{ doc }}"> <i class="icon-file-alt icon-3x"> </i> [Insert doc summary here] {{doc_summary}}  </a> <br />
+                  {% endfor %}
+                </p>
             </div>
           </div>
         </div>
+        <!-- Will need to remove below when app is updated to reflect single owner. -->
+        <!-- <div class="span4">
+          <p>Status: <span class="label label-info">  {{status}}  </span></p> 
+          <span>
+            Owner(s): 
+            {% for owner in owner_emails %} 
+              {{ owner }} </br>
+            {% endfor %}
+          </span>
+        </div> -->
       </div>
-
-
-<!-- This commented out section shouldn't be here, but leaving for now until it gets moved to "manage_request_City.html". -->
-{#
-      <div class="control-group">
-        <label class="control-label"><strong>Add a record</strong></label>
-        <div class="row-fluid">
-          <div class="controls">
-            <div class="fileupload fileupload-new" data-provides="fileupload">
-              <input type="hidden" name="request_id" value="{{ request_id }}">
-              <div class="input-append">
-                <div class="uneditable-input span3">
-                  <i class="icon-file fileupload-exists"></i> 
-                  <span class="fileupload-preview"></span>
-                </div>
-                <span class="btn btn-file">
-                  <span class="fileupload-new">Select file</span>
-                  <span class="fileupload-exists">Change</span>
-                  <input type="file" name="record">
-                </span>
-                <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-              </div>
-              <button class="btn btn-primary" type="submit">Attach</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      </br>
-    </fieldset>
-  </form>
-#}
-
-
+    </div>
+  </div>
 {% endblock content %}
