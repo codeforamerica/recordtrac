@@ -30,16 +30,18 @@ def load():
 	if request.method == 'POST':
 		doc_id = -1
 		file = request.files['record']
-		if upload_file(file) != None:
+		doc_id = upload_file(file)
+		if doc_id != None:
 			try:
 				request_id = request.form['request_id']
+				print request_id
 				owner_id = None
 				for owner in get_owners(request_id):
-					owner_id = owner.id
-				record = Record(doc_id, request_id, owner.id)
+					owner_id = owner
+				record = Record(scribd_id = doc_id, request_id = request_id, owner_id = owner_id, description = "")
 				db.session.add(record)
 				db.session.commit()
-				return render_template('uploaded.html', doc_id = doc_id, request_id = request_id)
+				return show_request(request_id, template = "case.html")
 			except:
 				return render_template('error.html', message = doc_id)
 		else:
@@ -47,10 +49,10 @@ def load():
 
 @app.route('/city/request/<int:request_id>')
 def show_request_for_city(request_id):
-	return render_template('manage_request_City.html', text = r.text, request_id = request_id, doc_ids = doc_ids, status = r.status, owner_emails = owner_emails)
-
+	return show_request(request_id = request_id, template = "manage_request_City.html")
+	
 @app.route('/request/<int:request_id>')
-def show_request(request_id, type = None):
+def show_request(request_id, template = "case.html"):
     # show the request with the given id, the id is an integer
     r = Request.query.get(request_id)
     doc_ids = []
@@ -65,10 +67,6 @@ def show_request(request_id, type = None):
     			doc_ids.append(record.scribd_id)
     		else:
     			doc_ids.append("Nothing uploaded yet by %s" % owner.name)
-    if type == "new":
-    	template = "requested.html"
-    else:
-    	template = "case.html"
     return render_template(template, text = r.text, request_id = request_id, doc_ids = doc_ids, status = r.status, owner_emails = owner_emails)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -78,7 +76,7 @@ def new_request():
 		email = request.form['request_email']
 		request_id = make_request(request_text, email)
 		if request_id:
-			return show_request(request_id, "new")
+			return show_request(request_id, "requested.html")
 		else:
 			db.session.rollback()
 			req = Request.query.filter_by(text = request_text).first()
@@ -164,6 +162,7 @@ def get_owners(request_id):
 	subscribers = req.subscribers
 	for subscriber in subscribers:
 		if subscriber.owner_id != None:
+			print subscriber.owner_id
 			yield subscriber.owner_id
 
 def notify(request_id):
