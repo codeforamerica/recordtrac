@@ -41,15 +41,15 @@ def load():
 				record = Record(scribd_id = doc_id, request_id = request_id, owner_id = owner_id, description = "")
 				db.session.add(record)
 				db.session.commit()
-				return show_request(request_id, template = "case.html")
+				return show_request(request_id, template = "uploaded.html")
 			except:
 				return render_template('error.html', message = doc_id)
 		else:
 			return render_template('error.html', message = "Not an allowed doc type")
 
-@app.route('/city/request/<int:request_id>')
-def show_request_for_city(request_id):
-	return show_request(request_id = request_id, template = "manage_request_City.html")
+@app.route('/<string:audience>/request/<int:request_id>')
+def show_request_for_x(audience, request_id):
+	return show_request(request_id = request_id, template = "manage_request_%s.html" %(audience))
 	
 @app.route('/request/<int:request_id>')
 def show_request(request_id, template = "case.html"):
