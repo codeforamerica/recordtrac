@@ -1,44 +1,18 @@
 {% extends "case.html" %}
-{% block title %}Index{% endblock %}
+{% block title %} Index {% endblock title%}
 {% block head %}
   {{ super() }}
-  <style type="text/css">
-    .important { color: #336699; }
-  </style>
-{% endblock %}
+{% endblock head %}
 
-{#
- {% block banner %}
+{% block banner %}
 	{{ super() }}
 	<!-- success banner -->
-    <div class="row-fluid">
-      <div class="span12">
-
-        <!-- success container -->
-        <div class="span6 bannerbubble" id="successBubble">
-
-          <!-- icon container -->
-          <div class="span2" class="bubbleIcon">
-            <i class="icon-ok-circle icon-2x iconBanner"></i>
-        </div>
-
-        <!-- text container -->
-        <div class="span10">
-
-          <!-- primary text -->
-            <div class="textBanner">
-              <p>Thanks! Your record has been uploaded.</p>
-                <p>You can view the original request and record <a href="/request/{{request_id}}">here.</p>
-          </div>
-          <!-- secondary text (link out) -->
-          <div>
-            <p><a class="linkBanner" href=" # ">What happens next?</a></p>
-          </div>
-
-          </div>
-      </div>
+  <div class="alert alert-success">
+    <button type="button" class="close" data-dismiss="alert">x</button>
+    <i class="icon-file-alt icon-large"> </i> 
+    <strong> Document <em> {{file}} </em> has been successfully uploaded to this request.</strong>
+  </div>
 {% endblock banner %} 
-#}
 
 {% block content %}
 	{{ super() }}
