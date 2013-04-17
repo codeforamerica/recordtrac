@@ -1,6 +1,8 @@
+<!-- This template is to initiate a new request. -->
+
 {% extends "base.html" %}
 
-{% block title %}Public records{% endblock %}
+{% block title %}Public records{% endblock title%}
 <style type="text/css">
   * { font-family: Verdana; font-size: 96%; }
   label { width: 10em; float: left; }
@@ -20,7 +22,7 @@
   <style type="text/css">
     .important { color: #336699; }
   </style>
-{% endblock %}
+{% endblock head %}
 
 {% block content %}
 <!--
@@ -33,7 +35,6 @@
 		<input type="submit" value="Submit">
 	</form> -->
 
-
 <!-- validation jQuery not working yet http://docs.jquery.com/Plugins/Validation 
       try this validation as well https://github.com/jzaefferer/jquery-validation -->
       <form name="input" class="form-horizontal" id="submitRequest" method="post" action="" autocomplete="on">
@@ -43,7 +44,7 @@
           <div class="control-group">
             <label class="control-label" for="requestTextarea">What are you trying to find?</label>
             <div class="controls">
-              <textarea name="request_text" class="input-xlarge" id="requestTextarea" rows="3" placeholder="Describe your request.  Be as specific as possible." class="required" minlength="1"></textarea>
+              <textarea id="requestTextarea" autofocus name="request_text" rows="3" cols="20" placeholder="Describe your request. Be as specific as possible." required></textarea>
             </div>
           </div>
 
@@ -70,11 +71,9 @@
             </div>
           </div> -->
           <div class="control-group">
-            <div class="control-group">
-              <label class="control-label" for="inputEmail">Email</label>
-              <div class="controls">
-                <input name="request_email" type="text" id="inputEmail" placeholder="youremail@company.com" class="required email" />
-              </div>
+            <label class="control-label" for="inputEmail">Email</label>
+            <div class="controls">
+              <input name="request_email" type="email" id="inputEmail" placeholder="yourname@email.com" />
             </div>
           </div>
 
@@ -87,4 +86,4 @@
         </fieldset>
       </form>
 
-{% endblock %}
+{% endblock content %}

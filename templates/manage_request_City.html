@@ -1,0 +1,59 @@
+<!-- This template is for testing purposes. -->
+
+{% extends "case.html" %}
+{% block title %}Request {{ request_id }}{% endblock %}
+{% block head %} {% endblock head %}
+
+{% block content %}
+  {{ super() }}
+{% endblock content %}
+
+{% block actions %}
+  <form name="input" class="form-horizontal" id="submitRecord" method="post" action="/upload" autocomplete="on" enctype="multipart/form-data">
+    <fieldset> 
+
+      <div class="row-fluid">
+        <div class="span2">
+          <h4>Add a record</h4>
+        </div>
+        <div class="span10">
+          
+          <div class="control-group">
+            <label class="control-label" for="inputSummary">Summary</label>
+            <div class="controls">
+              <input class="input-block-level" name="input_Summary" type="text" id="inputSummary" placeholder="Add a short explanation of what you are attaching." />
+            </div>
+          </div>
+       
+          <div class="control-group">
+            <label class="control-label">Document</label>
+            <div class="row-fluid">
+              <div class="controls">
+                <div class="fileupload fileupload-new" data-provides="fileupload">
+                  <input type="hidden" name="request_id" value="{{ request_id }}">
+                  <div class="input-append">
+                    <div class="uneditable-input span3">
+                      <i class="icon-file fileupload-exists"></i> 
+                      <span class="fileupload-preview"></span>
+                    </div>
+                    <span class="btn btn-file">
+                      <span class="fileupload-new">Select file</span>
+                      <span class="fileupload-exists">Change</span>
+                      <input type="file" name="record">
+                    </span>
+                    <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+
+    <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
+                    <button class="btn btn-primary fileupload-exists" type="submit">Attach</button>
+                    <button class="btn btn-primary fileupload-new disabled" type="submit">Attach</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </fieldset>
+  </form>
+{% endblock actions %}

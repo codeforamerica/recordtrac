@@ -1,32 +1,15 @@
-<!-- This template is to display success banner immediately after a new requests gets submitted. -->
+<!-- This template extends the "case" baseline to provide actions to public, as available. -->
 
-{% extends "case.html" %}
+{% extends "base.html" %}
 {% block title %}Request {{ request_id }}{% endblock %}
 {% block head %}
-  {{ super() }}
-{% endblock %}
-
-{% block banner %}
-  {{ super() }}
-  <!-- success banner -->
-  <div class="alert alert-success">
-    <button type="button" class="close" data-dismiss="alert">x</button>
-    <i class="icon-ok-sign icon-large"> </i> 
-    <strong> Thanks! Your request has been uploaded.</strong>
-    You can view the original request and record <a href="/request/{{request_id}}">here.
-  </div>
-{% endblock banner %}
-
+<!--  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+  </style> -->
+{% endblock head %}
 
 {% block content %}
-  <div>
-    {{ super() }}
-  </div>
-{% endblock content %}
-
-{#
- {% block content %}
-  {{ super() }}
 <!-- original from RA
   <h1>Your public records request</h1>
   <p class="important">
@@ -48,7 +31,7 @@
     {% else %}
     No records uploaded yet!
     {% endfor %} -->
-
+  
   <form name="input" class="form-horizontal" id="submitRecord" method="post" action="/upload" autocomplete="on" enctype="multipart/form-data">
     <fieldset>
       <legend>Request {{ request_id }}</legend>
@@ -69,6 +52,7 @@
         </div>
       </div>
 
+{#
       <div class="control-group">
         <label class="control-label"><strong>Add a record</strong></label>
         <div class="row-fluid">
@@ -95,7 +79,7 @@
       </br>
     </fieldset>
   </form>
+#}
 
 
 {% endblock content %}
-#}
