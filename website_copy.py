@@ -7,3 +7,12 @@ def request_submitted_city(request_text):
 	subject_line = "Request for Public Records"
 	email_body = "A public records request has been sent to you. The full text of the request can be found below:</br> %s </br> Click here to receive more details. You have the option to: <ul> <li> Route the request to another city employee who you believe owns the record </li> <li> Ask the person who requested the record more questions </li> <li> Immediately respond with the requested record </li> <li> Ask for an extension </li> </ul>" %(request_text)
 	return subject_line, email_body
+
+def request_routed():
+	return ""
+def request_routed_city():
+	return ""
+def request_fulfilled():
+	return ""
+def request_rejected():
+	return ""
