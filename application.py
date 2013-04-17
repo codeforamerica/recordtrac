@@ -6,6 +6,7 @@ from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from flask.ext.mail import Mail, Message
 from upload import upload
 import website_copy
+from datetime import datetime
 
 # Initialize Flask app and database:
 app = Flask(__name__)
@@ -34,10 +35,8 @@ def load():
 		if doc_id != None:
 			try:
 				request_id = request.form['request_id']
-				print request_id
-				owner_id = None
-				for owner in get_owners(request_id):
-					owner_id = owner
+				req = Request.query.get(request_id)
+				owner_id = req.current_owner
 				record = Record(scribd_id = doc_id, request_id = request_id, owner_id = owner_id, description = "")
 				db.session.add(record)
 				db.session.commit()
@@ -54,20 +53,17 @@ def show_request_for_x(audience, request_id):
 @app.route('/request/<int:request_id>')
 def show_request(request_id, template = "case.html"):
     # show the request with the given id, the id is an integer
-    r = Request.query.get(request_id)
+    req = Request.query.get(request_id)
     doc_ids = []
-    owner_emails = []
-    owners = get_owners(request_id)
-    if owners:
-    	for owner in owners:
-    		owner_emails.append(Owner.query.get(owner).email)
-    if r.records:
-    	for record in r.records:
+    owner = Owner.query.get(req.current_owner)
+    owner_email = owner.email
+    if req.records:
+    	for record in req.records:
     		if record.scribd_id:
     			doc_ids.append(record.scribd_id)
     		else:
     			doc_ids.append("Nothing uploaded yet by %s" % owner.name)
-    return render_template(template, text = r.text, request_id = request_id, doc_ids = doc_ids, status = r.status, owner_emails = owner_emails)
+    return render_template(template, text = req.text, request_id = request_id, doc_ids = doc_ids, status = req.status, owner_email = owner_email, date = owner.date_created.date())
 
 @app.route('/', methods=['GET', 'POST'])
 def new_request():
@@ -113,24 +109,24 @@ def close_request(id, reason = ""):
 	change_request_status(id, "Closed. %s" %reason)
 	notify(id)
 
-def assign_owner(request_id, alias, email):
-	owner = Owner(alias = alias, email = email)
+def assign_owner(request_id, alias, email): 
+# Called any time a new owner is assigned. This will overwrite the current owner.
+	owner = Owner(alias = alias, request_id = request_id, email = email)
 	db.session.add(owner)
 	db.session.commit()
-	subscriber = Subscriber(request_id = request_id, alias = alias, email = email)
-	subscriber.owner_id = owner.id
-	db.session.add(subscriber)
+	req = Request.query.get(request_id)
+	req.current_owner = owner.id
 	db.session.commit()
 	return owner.id
 
-def unassign_owner(subscriber_id):
-	subscriber = Subscriber.query.get(subscriber_id)
-	if subscriber.owner_id:
-		owner = Owner.query.get(subscriber.owner_id)
-		db.session.delete(owner)
+def remove_subscriber(subscriber_id): 
+	try:
+		subscriber = Subscriber.query.get(subscriber_id)
+		db.session.delete(subscriber)
 		db.session.commit()
 		return True # Unassigned successfully
-	return False # No one to unassign
+	except:
+		return False # No one to unassign
 
 def make_request(str, email = None):
 	try:
@@ -157,29 +153,17 @@ def change_request_status(id, status):
 	except:
 		return False
 
-def get_owners(request_id):
-	req = Request.query.get(request_id)
-	subscribers = req.subscribers
-	for subscriber in subscribers:
-		if subscriber.owner_id != None:
-			print subscriber.owner_id
-			yield subscriber.owner_id
 
 def notify(request_id):
 	req = Request.query.get(request_id)
 	subscribers = req.subscribers
-	owner_emails = []
-	for owner_id in get_owners(req.id):
-		email = Owner.query.get(owner_id).email
-		owner_emails.append(email)
+	owner = Owner.query.get(req.current_owner)
 	city_subject, city_body = website_copy.request_submitted_city(req.text)
-	public_subject, public_body = website_copy.request_submitted(req.text, owner_emails, "xxx-xxx-xxxx") 
+	public_subject, public_body = website_copy.request_submitted(req.text, owner.email, "xxx-xxx-xxxx")
+	send_email(body = city_body, recipients = [owner.email], subject = city_subject) 
 	if len(subscribers) != 0:
 		for subscriber in subscribers:
-			if subscriber.owner_id:
-				send_email(body = city_body, recipients = [subscriber.email], subject = city_subject)
-			else:
-				send_email(body = public_body, recipients = [subscriber.email], subject = public_subject)
+			send_email(body = public_body, recipients = [subscriber.email], subject = public_subject)
 	else:
 		print "No one assigned!"
 
