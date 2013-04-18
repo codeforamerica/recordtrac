@@ -7,6 +7,8 @@
 {% block content %}
   <div class="row-fluid well">
     <div class="span12"> 
+
+      {% block status %}
       <div class="row-fluid">
 
         <div class="span4">
@@ -21,22 +23,40 @@
 
         <div class="span8">
           <div class="text-right">Routed {{date}}  to  <span class="label label-info">{{owner_email}} </span>
-            <!-- <div class="btn-group">
+
+            <!-- dropdown markup -->
+            <div class="btn-group">
               <a class="btn dropdown-toggle btn-info" data-toggle="dropdown" href="#">
-                Owner: {{owner_email}}
+                {{owner_email}}
                 <span class="caret"></span>
               </a>
               <ul class="dropdown-menu">
                 <!-- dropdown menu links -->
-              <!-- </ul>
-            </div> -->
+                <li>Reassign to:</li>
+                <li><input name="reassign_email" class="span8" id="appendedInputButton" type="email" placeholder="name@email.com" required />
+                <button class="btn" type="submit"><i class="icon-envelope"> </i> </button></li>
+              </ul>
+            </div> 
+
+            <!-- popover markup -->
+            <div>
+              <a class="btn btn-info" data-toggle="popover" href="#" title data-content='<form><input type="email" placeholder="name@email.com" required />
+                <button class="btn" type="submit"><i class="icon-envelope"> </i> </button></form>' data-original-title='Reassign to:'>
+                {{owner_email}}
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <!-- dropdown menu links -->
+                <li>Reassign to:</li>
+                <li><input name="reassign_email" class="span8" id="appendedInputButton" type="email" placeholder="name@email.com" required />
+                <button class="btn" type="submit"><i class="icon-envelope"> </i> </button></li>
+              </ul>
+            </div> 
 
           </div>
         </div>
-
-        
-
       </div>
+      {% endblock status %}
 
       <div class="row-fluid">
         <div class="span8">
