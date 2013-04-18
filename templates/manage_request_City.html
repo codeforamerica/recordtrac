@@ -6,6 +6,55 @@
 
 {% block content %}
   {{ super() }}
+  {% block status %} 
+    <div class="row-fluid">
+
+        <div class="span4">
+          <form class="form-inline"> 
+            <label class="control-label" for="reassign_email">Reassign to:</label>                 
+            <div class="input-append">
+               <input name="reassign_email" class="span8" id="appendedInputButton" type="email" placeholder="name@email.com" required />
+              <button class="btn" type="submit"><i class="icon-envelope"> </i> </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="span8">
+          <div class="text-right">Routed {{date}}  to  <span class="label label-info">{{owner_email}} </span>
+
+            <!-- dropdown markup -->
+            <div class="btn-group">
+              <a class="btn dropdown-toggle btn-info" data-toggle="dropdown" href="#">
+                {{owner_email}}
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <!-- dropdown menu links -->
+                <li>Reassign to:</li>
+                <li><input name="reassign_email" class="span8" id="appendedInputButton" type="email" placeholder="name@email.com" required />
+                <button class="btn" type="submit"><i class="icon-envelope"> </i> </button></li>
+              </ul>
+            </div> 
+
+            <!-- popover markup -->
+            <div>
+              <a class="btn btn-info" data-toggle="popover" href="#" title data-content='<form><input type="email" placeholder="name@email.com" required />
+                <button class="btn" type="submit"><i class="icon-envelope"> </i> </button></form>' data-original-title='Reassign to:'>
+                {{owner_email}}
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <!-- dropdown menu links -->
+                <li>Reassign to:</li>
+                <li><input name="reassign_email" class="span8" id="appendedInputButton" type="email" placeholder="name@email.com" required />
+                <button class="btn" type="submit"><i class="icon-envelope"> </i> </button></li>
+              </ul>
+            </div> 
+
+          </div>
+        </div>
+      </div>
+  {% endblock status %}
 {% endblock content %}
 
 {% block actions %}
