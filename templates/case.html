@@ -8,7 +8,24 @@
   <div class="row-fluid well">
     <div class="span12"> 
 
-      <!-- {% block status %}{% endblock status %} -->
+      {% block status %}
+        <div class="row-fluid">
+          <div class="span4">
+            <form class="form-inline"> 
+              <label class="control-label" for="reassign_email">Reassign to:</label>                 
+              <div class="input-append">
+                 <input name="reassign_email" class="span8" id="appendedInputButton" type="email" placeholder="name@email.com" required />
+                <button class="btn" type="submit"><i class="icon-envelope"> </i> </button>
+              </div>
+            </form>
+          </div>
+
+          <div class="span8">
+            <div class="text-right">Routed {{date}}  to  <span class="label label-info">{{owner_email}} </span>
+            </div>
+          </div>
+        </div>
+      {% endblock status %}
 
       <div class="row-fluid">
         <div class="span8">
