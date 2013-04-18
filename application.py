@@ -26,7 +26,28 @@ ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc'])
 
 # Routing
 
-@app.route('/upload', methods=['GET', 'POST'])
+# Let's start with the index page! For now we'll let the users submit a new request.
+@app.route('/', methods=['GET', 'POST'])
+def index():
+	return new_request()
+
+# They can always submit a new request by navigating here, but the index might change.
+@app.route('/new', methods=['GET', 'POST'])
+def new_request():
+	if request.method == 'POST':
+		request_text = request.form['request_text']
+		email = request.form['request_email']
+		request_id = make_request(request_text, email)
+		if request_id:
+			return show_request(request_id, "requested.html")
+		else:
+			db.session.rollback()
+			req = Request.query.filter_by(text = request_text).first()
+			return render_template('error.html', message = "Your request is the same as /request/%s" % req.id)
+	return render_template('new_request.html')
+
+# Uploading is specific to a case, so this only gets called from a case (that only city staff have a view of)
+@app.route('/upload', methods=['POST'])
 def load():
 	if request.method == 'POST':
 		doc_id = -1
@@ -45,11 +66,13 @@ def load():
 				return render_template('error.html', message = doc_id)
 		else:
 			return render_template('error.html', message = "Not an allowed doc type")
+	return render_template('error.html', message = "You can only upload from a requests page!")
 
+# Returns a view of the case based on the audience. Currently views exist for city staff or general public.
 @app.route('/<string:audience>/request/<int:request_id>')
 def show_request_for_x(audience, request_id):
 	return show_request(request_id = request_id, template = "manage_request_%s.html" %(audience))
-	
+
 @app.route('/request/<int:request_id>')
 def show_request(request_id, template = "case.html"):
     # show the request with the given id, the id is an integer
@@ -65,24 +88,24 @@ def show_request(request_id, template = "case.html"):
     			doc_ids.append("Nothing uploaded yet by %s" % owner.name)
     return render_template(template, text = req.text, request_id = request_id, doc_ids = doc_ids, status = req.status, owner_email = owner_email, date = owner.date_created.date())
 
-@app.route('/', methods=['GET', 'POST'])
-def new_request():
-	if request.method == 'POST':
-		request_text = request.form['request_text']
-		email = request.form['request_email']
-		request_id = make_request(request_text, email)
-		if request_id:
-			return show_request(request_id, "requested.html")
-		else:
-			db.session.rollback()
-			req = Request.query.filter_by(text = request_text).first()
-			return render_template('error.html', message = "Your request is the same as /request/%s" % req.id)
-	return render_template('new_request.html')
-
+# Shows all public records requests that have been made.
 @app.route('/requests', methods=['GET', 'POST'])
 def requests():
 	all_record_requests = Request.query.all()
 	return render_template('all_requests.html', all_record_requests = all_record_requests)
+
+
+# test template:  I clearly don't know what should go here, but need to keep a testbed here.
+@app.route('/test')
+def show_test():
+	return render_template('test.html')
+
+@app.route('/<string:page>')
+def any_page(page):
+	try:
+		return render_template('%s.html' %(page))
+	except:
+		return render_template('error.html', message = "%s totally doesn't exist." %(page))
 
 # Functions that should probably go somewhere else:
 
@@ -153,7 +176,6 @@ def change_request_status(id, status):
 	except:
 		return False
 
-
 def notify(request_id):
 	req = Request.query.get(request_id)
 	subscribers = req.subscribers
@@ -175,7 +197,3 @@ def send_email(body, recipients, subject):
 if __name__ == '__main__':
 	app.run(use_debugger=True, debug=True)
 
-# test template:  I clearly don't know what should go here, but need to keep a testbed here.
-@app.route('/test')
-def show_test():
-	return render_template('test.html')
