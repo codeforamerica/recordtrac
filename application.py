@@ -86,7 +86,7 @@ def show_request(request_id, template = "case.html"):
     			doc_ids.append(record.scribd_id)
     		else:
     			doc_ids.append("Nothing uploaded yet by %s" % owner.name)
-    return render_template(template, text = req.text, request_id = request_id, doc_ids = doc_ids, status = req.status, owner_email = owner_email, date = owner.date_created.date())
+    return render_template(template, text = req.text, request_id = request_id, doc_ids = doc_ids, status = req.status, owner_email = owner_email, date = owner.date_created.date(), date_updated = req.status_updated)
 
 
 # Closing is specific to a case, so this only gets called from a case (that only city staff have a view of)
@@ -96,8 +96,8 @@ def close(request_id = None):
 		request_id = request.form['request_id']
 		close_request(request_id)
 		return show_request(request_id, template="closed.html")
-	return render_template('errr.html, message = "You can only close from a requests page!')
-	
+	return render_template('error.html, message = "You can only close from a requests page!')
+
 
 # Shows all public records requests that have been made.
 @app.route('/requests', methods=['GET', 'POST'])
@@ -182,6 +182,7 @@ def change_request_status(id, status):
 	try:
 		req = Request.query.get(id)
 		req.status = status
+		req.status_updated = datetime.now()
 		db.session.commit()
 		return True
 	except:

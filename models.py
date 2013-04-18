@@ -7,6 +7,7 @@ class Request(db.Model):
 	__tablename__ = 'request'
 	id = db.Column(db.Integer, primary_key =True)
 	date_created = db.Column(db.DateTime)
+	status_updated = db.Column(db.DateTime)
 	text = db.Column(db.String(400), unique=True) # The actual request text.
 	subscribers = relationship("Subscriber") # The list of subscribers following this request.
 	owners = relationship("Owner") # The list of city staff ever assigned to the request.
