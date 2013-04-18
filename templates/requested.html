@@ -7,7 +7,6 @@
 {% endblock %}
 
 {% block banner %}
-  {{ super() }}
   <!-- success banner -->
   <div class="alert alert-success">
     <button type="button" class="close" data-dismiss="alert">x</button>
@@ -19,83 +18,6 @@
 
 
 {% block content %}
-  <div>
-    {{ super() }}
-  </div>
-{% endblock content %}
-
-{#
- {% block content %}
   {{ super() }}
-<!-- original from RA
-  <h1>Your public records request</h1>
-  <p class="important">
-    thanks for submitting! your request is: <br></br> {{ text }} <br></br>
-    the permalink is /request/{{ request_id}}
-
-      <h1>Public records, yo</h1>
-  <p class="important">
-    upload a record, yo:
-  <form name="input" action="/upload" method="post">
-		Filepath: <input type="text" name="filepath"><input type="hidden" name="request_id" value="{{ request_id }}">
-		<input type="submit" value="Submit">
-	</form>
-  <p class = "important">
-    status: {{status}} <br></br>
-  	records: <br></br>
-    {% for doc_id in doc_ids %}
-    <a href="http://www.scribd.com/doc/{{doc_id}}">{{doc_id}}</a></br>
-    {% else %}
-    No records uploaded yet!
-    {% endfor %} -->
-
-  <form name="input" class="form-horizontal" id="submitRecord" method="post" action="/upload" autocomplete="on" enctype="multipart/form-data">
-    <fieldset>
-      <legend>Request {{ request_id }}</legend>
-      Status: {{status}} </br>
-      Owner(s): 
-      {% for owner in owner_emails %}
-          {{ owner }} 
-      {% endfor %}
-    </br>
-      Doc(s):
-      {% for doc in doc_ids %}
-          <a href="http://www.scribd.com/doc/{{ doc }}">{{doc}}   </a> 
-      {% endfor %}
-      <div class="control-group">
-        <label class="control-label"><strong>Request</strong></label>
-        <div class="controls">
-          {{ text }}
-        </div>
-      </div>
-
-      <div class="control-group">
-        <label class="control-label"><strong>Add a record</strong></label>
-        <div class="row-fluid">
-          <div class="controls">
-            <div class="fileupload fileupload-new" data-provides="fileupload">
-              <input type="hidden" name="request_id" value="{{ request_id }}">
-              <div class="input-append">
-                <div class="uneditable-input span3">
-                  <i class="icon-file fileupload-exists"></i> 
-                  <span class="fileupload-preview"></span>
-                </div>
-                <span class="btn btn-file">
-                  <span class="fileupload-new">Select file</span>
-                  <span class="fileupload-exists">Change</span>
-                  <input type="file" name="record">
-                </span>
-                <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-              </div>
-              <button class="btn btn-primary" type="submit">Attach</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      </br>
-    </fieldset>
-  </form>
-
-
 {% endblock content %}
-#}
+

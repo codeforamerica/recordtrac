@@ -39,12 +39,25 @@
 	font-size: 0.75em;
 }
 
+
 .container {
 	margin-left: 0;
 }
 
 textarea {
 	resize: none;
+}
+
+#submitRecord .control-label {
+	width: 80px;
+}
+
+#submitRecord .controls {
+	margin-left: 90px;
+}
+
+#closeRecord .controls {
+	margin-left: 90px;
 }
 
 /* ----- Sticky Footer ----- by Ryan Fait http://ryanfait.com/ ----- */

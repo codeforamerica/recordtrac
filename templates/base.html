@@ -33,19 +33,19 @@
             </a>
             <!-- Be sure to leave the brand out there if you want it shown -->
             <a class="brand" href="#">Public Records Request Portal<small class="text-warning"><em> alpha</em></small></a>
-            <!-- <form class="form-inline">
-              <input type="text" class="input-small" placeholder="Email">
-              <input type="password" class="input-small" placeholder="Password">
-              <label class="checkbox">
-                <input type="checkbox"> Remember me
-              </label>
-              <button type="submit" class="btn btn-small">Sign in</button>
-            </form> -->
+            <ul class="nav">
+              <li class="active"><a href="#">Request</a></li>
+              <li><a href="#">Explore</a></li>
+              <li><a href="#">About</a></li>
+            </ul>
+            
+            <!-- DO NOT REMOVE: Commenting out until functionality exists
             <form class="navbar-form pull-right">
               <input type="text" class="input-small" placeholder="Login">
               <input type="text" class="input-small" placeholder="Password">
               <input type="submit" value="Login" class="btn"/>
-            </form>
+            </form> -->
+
             <!-- Everything you want hidden at 940px or less, place within here -->
             <div class="nav-collapse collapse">
               <!-- .nav, .navbar-search, .navbar-form, etc -->
@@ -84,7 +84,8 @@
     
 
     <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.js') }}"></script>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.9.1.js') }}"></script>
+<!--    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
     <script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='bootstrap-fileupload.js') }}"></script>
 <!--    <script src="http://code.jquery.com/jquery-latest.js"></script>

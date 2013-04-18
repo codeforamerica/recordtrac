@@ -11,13 +11,12 @@
 {% block actions %}
   <form name="input" class="form-horizontal" id="submitRecord" method="post" action="/upload" autocomplete="on" enctype="multipart/form-data">
     <fieldset> 
-
       <div class="row-fluid">
-        <div class="span2">
+        <div class="span4">
           <h4>Add a record</h4>
         </div>
-        <div class="span10">
-          
+        <div class="span8">
+
           <div class="control-group">
             <label class="control-label" for="inputSummary">Summary</label>
             <div class="controls">
@@ -52,6 +51,24 @@
             </div>
           </div>
 
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+  <form name="close" class="form-horizontal" id="closeRecord" method="post" action="/close" enctype="multipart/form-data">
+    <fieldset> 
+
+      <div class="row-fluid">
+        <div class="span4">
+          <h4>Close this request</h4>
+        </div>
+        <div class="span8">
+          <div class="control-group">
+            <div class="controls">
+              <button type="submit" class="btn btn-inverse">Close</button>
+            </div>
+          </div>
         </div>
       </div>
     </fieldset>
