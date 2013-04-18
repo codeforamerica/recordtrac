@@ -88,6 +88,17 @@ def show_request(request_id, template = "case.html"):
     			doc_ids.append("Nothing uploaded yet by %s" % owner.name)
     return render_template(template, text = req.text, request_id = request_id, doc_ids = doc_ids, status = req.status, owner_email = owner_email, date = owner.date_created.date())
 
+
+# Closing is specific to a case, so this only gets called from a case (that only city staff have a view of)
+@app.route('/close', methods=['POST'])
+def close(request_id = None):
+	if request.method == 'POST':
+		request_id = request.form['request_id']
+		close_request(request_id)
+		return show_request(request_id, template="closed.html")
+	return render_template('errr.html, message = "You can only close from a requests page!')
+	
+
 # Shows all public records requests that have been made.
 @app.route('/requests', methods=['GET', 'POST'])
 def requests():

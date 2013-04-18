@@ -57,6 +57,7 @@
   </form>
 
   <form name="close" class="form-horizontal" id="closeRecord" method="post" action="/close" enctype="multipart/form-data">
+    <input type="hidden" name="request_id" value="{{ request_id }}">
     <fieldset> 
 
       <div class="row-fluid">
@@ -66,6 +67,7 @@
         <div class="span8">
           <div class="control-group">
             <div class="controls">
+
               <button type="submit" class="btn btn-inverse">Close</button>
             </div>
           </div>
