@@ -64,12 +64,13 @@ class Record(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
 	date_created = db.Column(db.DateTime)
 	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id')) # The city staff who uploaded the record
-	scribd_id = db.Column(db.Integer) # The Scribd.com document ID. Currently using Scribd API to upload documents.
+	doc_id = db.Column(db.Integer) # The document ID. Currently using Scribd API to upload documents.
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id')) # The request this record was uploaded for
 	description = db.Column(db.String(100)) # A short description of what the record is. 
 	filename = db.Column(db.String(100)) # The original name of the file being uploaded.
-	def __init__(self, scribd_id, request_id, owner_id, description = None):
-		self.scribd_id = scribd_id
+	url = db.Column(db.String(200)) # Where it exists on the internet.
+	def __init__(self, request_id, owner_id, url = None, doc_id = None, description = None):
+		self.doc_id = doc_id
 		self.request_id = request_id
 		self.owner_id = owner_id
 		self.date_created = datetime.now()

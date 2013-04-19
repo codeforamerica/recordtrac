@@ -46,30 +46,31 @@ def new_request():
 			return render_template('error.html', message = "Your request is the same as /request/%s" % req.id)
 	return render_template('new_request.html')
 
-# Uploading is specific to a case, so this only gets called from a case (that only city staff have a view of)
+# Uploading a record is specific to a case, so this only gets called from a case (that only city staff have a view of)
 @app.route('/upload', methods=['POST'])
 def load():
 	if request.method == 'POST':
-		doc_id = -1
-		file = request.files['record']
 		description = request.form['record_description']
-		doc_id, filename = upload_file(file)
-		if doc_id != None:
-			try:
-				request_id = request.form['request_id']
-				req = Request.query.get(request_id)
-				owner_id = req.current_owner
-				record = Record(scribd_id = doc_id, request_id = request_id, owner_id = owner_id, description = "")
+		request_id = request.form['request_id']
+		req = Request.query.get(request_id)
+		owner_id = req.current_owner
+		file = request.files['record']
+		if file: # If a document is being uploaded
+			doc_id, filename = upload_file(file)
+			if doc_id.isdigit():
+				record = Record(doc_id = doc_id, request_id = request_id, owner_id = owner_id, description = "")
 				if description:
 					record.description = description
 				record.filename = filename
-				db.session.add(record)
-				db.session.commit()
-				return show_request(request_id = request_id, template = "uploaded.html", record_uploaded = record)
-			except:
-				return render_template('error.html', message = doc_id)
-		else:
-			return render_template('error.html', message = "Not an allowed doc type")
+				record.url = app.config['HOST_URL'] + doc_id
+			else:
+				return render_template('error.html', message = "Not an allowed doc type")
+		else: # If they're just pointing to a URL where the document already exists
+			url = request.form['url']
+			record = Record(url = url, request_id = request_id, owner_id = owner_id, description = description)
+		db.session.add(record)
+		db.session.commit()
+		return show_request(request_id = request_id, template = "uploaded.html", record_uploaded = record)
 	return render_template('error.html', message = "You can only upload from a requests page!")
 
 # Returns a view of the case based on the audience. Currently views exist for city staff or general public.
@@ -131,7 +132,7 @@ def upload_file(file):
 		file.save(filepath)
 		doc_id = upload(filepath, app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
 		return doc_id, filename
-	return None
+	return None, None
 
 def open_request(id):
 	change_request_status(id, "Open")

@@ -30,7 +30,7 @@
             <div class="span8">
               <p>
                 {% for record in records %}
-                <a href="http://www.scribd.com/doc/{{ record.doc_id }}"> <i class="icon-file-alt icon-3x">  </i> {{record.description}}  </a> <br />
+                <a href="{{record.url}}"> <i class="icon-file-alt icon-3x">  </i> {{record.description}}  </a> <br />
                 {% endfor %}
               </p>
             </div>
