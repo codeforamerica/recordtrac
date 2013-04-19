@@ -53,7 +53,7 @@ def load():
 		doc_id = -1
 		file = request.files['record']
 		description = request.form['record_description']
-		doc_id = upload_file(file)
+		doc_id, filename = upload_file(file)
 		if doc_id != None:
 			try:
 				request_id = request.form['request_id']
@@ -62,9 +62,10 @@ def load():
 				record = Record(scribd_id = doc_id, request_id = request_id, owner_id = owner_id, description = "")
 				if description:
 					record.description = description
+				record.filename = filename
 				db.session.add(record)
 				db.session.commit()
-				return show_request(request_id, template = "uploaded.html")
+				return show_request(request_id = request_id, template = "uploaded.html", record_uploaded = record)
 			except:
 				return render_template('error.html', message = doc_id)
 		else:
@@ -77,19 +78,13 @@ def show_request_for_x(audience, request_id):
 	return show_request(request_id = request_id, template = "manage_request_%s.html" %(audience))
 
 @app.route('/request/<int:request_id>')
-def show_request(request_id, template = "case.html"):
+def show_request(request_id, template = "case.html", record_uploaded = None):
     # show the request with the given id, the id is an integer
     req = Request.query.get(request_id)
     doc_ids = []
     owner = Owner.query.get(req.current_owner)
     owner_email = owner.email
-    # if req.records:
-    # 	for record in req.records:
-    # 		if record.scribd_id:
-    # 			doc_ids.append(record.scribd_id)
-    # 		else:
-    # 			doc_ids.append("Nothing uploaded yet by %s" % owner.name)
-    return render_template(template, text = req.text, request_id = request_id, records = req.records, status = req.status, owner_email = owner_email, date = owner.date_created.date(), date_updated = req.status_updated)
+    return render_template(template, text = req.text, request_id = request_id, records = req.records, status = req.status, owner_email = owner_email, date = owner.date_created.date(), date_updated = req.status_updated, record_uploaded = record_uploaded)
 
 
 # Closing is specific to a case, so this only gets called from a case (that only city staff have a view of)
@@ -135,7 +130,7 @@ def upload_file(file):
 		filepath = os.path.join(UPLOAD_FOLDER, filename)
 		file.save(filepath)
 		doc_id = upload(filepath, app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
-		return doc_id
+		return doc_id, filename
 	return None
 
 def open_request(id):

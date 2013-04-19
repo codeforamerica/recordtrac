@@ -67,6 +67,7 @@ class Record(db.Model):
 	scribd_id = db.Column(db.Integer) # The Scribd.com document ID. Currently using Scribd API to upload documents.
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id')) # The request this record was uploaded for
 	description = db.Column(db.String(100)) # A short description of what the record is. 
+	filename = db.Column(db.String(100)) # The original name of the file being uploaded.
 	def __init__(self, scribd_id, request_id, owner_id, description = None):
 		self.scribd_id = scribd_id
 		self.request_id = request_id
