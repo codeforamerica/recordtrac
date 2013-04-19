@@ -3,6 +3,9 @@
 {% extends "base.html" %}
 {% block title %}Request {{ request_id }}{% endblock %}
 {% block head %} {% endblock head %}
+{% block body %}
+<div class="row-fluid well">
+    <div class="span12"> 
 {% block status %}
     <div class="row-fluid">
       <div class="text-right">Routed {{date}}  to  <span class="label label-info">{{owner_email}} </span>
@@ -34,3 +37,6 @@
         </div>
       </div>
 {% endblock content %}
+  </div>
+</div>
+{% endblock body %}
