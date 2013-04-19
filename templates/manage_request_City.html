@@ -3,10 +3,7 @@
 {% extends "case.html" %}
 {% block title %}Request {{ request_id }}{% endblock %}
 {% block head %} {% endblock head %}
-
-{% block content %}
-  {{ super() }}
-  {% block status %} 
+{% block status %} 
     <div class="row-fluid">
 
         <div class="span4">
@@ -54,7 +51,9 @@
           </div>
         </div>
       </div>
-  {% endblock status %}
+{% endblock status %}
+{% block content %}
+{{ super() }}
 {% endblock content %}
 
 {% block actions %}
