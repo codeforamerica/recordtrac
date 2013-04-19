@@ -29,8 +29,8 @@
             <h4>Document(s) </h4>
             <div class="span8">
               <p>
-                {% for doc in doc_ids %}
-                <a href="http://www.scribd.com/doc/{{ doc }}"> <i class="icon-file-alt icon-3x">  </i>  [Insert doc summary here] {{doc_summary}}  </a> <br />
+                {% for record in records %}
+                <a href="http://www.scribd.com/doc/{{ record.doc_id }}"> <i class="icon-file-alt icon-3x">  </i> {{record.description}}  </a> <br />
                 {% endfor %}
               </p>
             </div>

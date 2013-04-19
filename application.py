@@ -52,6 +52,7 @@ def load():
 	if request.method == 'POST':
 		doc_id = -1
 		file = request.files['record']
+		description = request.form['record_description']
 		doc_id = upload_file(file)
 		if doc_id != None:
 			try:
@@ -59,6 +60,8 @@ def load():
 				req = Request.query.get(request_id)
 				owner_id = req.current_owner
 				record = Record(scribd_id = doc_id, request_id = request_id, owner_id = owner_id, description = "")
+				if description:
+					record.description = description
 				db.session.add(record)
 				db.session.commit()
 				return show_request(request_id, template = "uploaded.html")
@@ -80,13 +83,13 @@ def show_request(request_id, template = "case.html"):
     doc_ids = []
     owner = Owner.query.get(req.current_owner)
     owner_email = owner.email
-    if req.records:
-    	for record in req.records:
-    		if record.scribd_id:
-    			doc_ids.append(record.scribd_id)
-    		else:
-    			doc_ids.append("Nothing uploaded yet by %s" % owner.name)
-    return render_template(template, text = req.text, request_id = request_id, doc_ids = doc_ids, status = req.status, owner_email = owner_email, date = owner.date_created.date(), date_updated = req.status_updated)
+    # if req.records:
+    # 	for record in req.records:
+    # 		if record.scribd_id:
+    # 			doc_ids.append(record.scribd_id)
+    # 		else:
+    # 			doc_ids.append("Nothing uploaded yet by %s" % owner.name)
+    return render_template(template, text = req.text, request_id = request_id, records = req.records, status = req.status, owner_email = owner_email, date = owner.date_created.date(), date_updated = req.status_updated)
 
 
 # Closing is specific to a case, so this only gets called from a case (that only city staff have a view of)
