@@ -3,14 +3,6 @@ $(function(){$(".alert").alert()})
 
 
 /* navbar active page indicator */
-
-// $(document).ready(function () {
-// 	$('.nav li').click(function() {
-// 		$('.nav li:active').removeClass('active');
-// 	 $('this').addClass('active');
-// 	});
-// });
-
 $(function(){
   function stripTrailingSlash(str) {
     if(str.substr(-1) == '/') {
@@ -31,13 +23,26 @@ $(function(){
   });
 });
 
+// $(document).ready(function () {
+// 	$('.nav li').click(function() {
+// 		$('.nav li:active').removeClass('active');
+// 	 $('this').addClass('active');
+// 	});
+// });
+
 /* form in reroute popover */
-$('#popover').popover({ 
+$('#reroutePopover').popover({ 
     html : true,
     title: function() {
-      return $("#popover-head").html();
+      return $("#reroutePopover-head").html();
     },
     content: function() {
-      return $("#popover-content").html();
+      return $("#reroutePopover-content").html();
     }
 });
+
+/* need to include a way to close the popover by clicking anywhere outside the popover - 
+currently have to click on button */
+// $('rel["clickover"]').clickover();
+
+	
