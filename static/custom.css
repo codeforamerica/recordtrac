@@ -60,6 +60,18 @@ textarea {
 	margin-left: 90px;
 }
 
+.navbar-inner {	
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+
+.footer {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+
 /* ----- Sticky Footer ----- by Ryan Fait http://ryanfait.com/ ----- */
 * {
 	margin: 0;
