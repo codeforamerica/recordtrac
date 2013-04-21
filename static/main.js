@@ -1,6 +1,9 @@
 /* banner dismissal */
 $(function(){$(".alert").alert()})
 
+
+/* navbar active page indicator */
+
 // $(document).ready(function () {
 // 	$('.nav li').click(function() {
 // 		$('.nav li:active').removeClass('active');
@@ -8,8 +11,6 @@ $(function(){$(".alert").alert()})
 // 	});
 // });
 
-
-/* navbar active page indicator */
 $(function(){
   function stripTrailingSlash(str) {
     if(str.substr(-1) == '/') {
@@ -28,4 +29,15 @@ $(function(){
       $(this).parent().addClass('active'); 
     } 
   });
+});
+
+/* form in reroute popover */
+$('#popover').popover({ 
+    html : true,
+    title: function() {
+      return $("#popover-head").html();
+    },
+    content: function() {
+      return $("#popover-content").html();
+    }
 });
