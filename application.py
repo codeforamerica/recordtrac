@@ -93,8 +93,9 @@ def show_request(request_id, template = "case.html", record_uploaded = None):
     	return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
     doc_ids = []
     owner = Owner.query.get(req.current_owner)
-    owner_email = owner.email
-    return render_template(template, text = req.text, request_id = request_id, records = req.records, status = req.status, owner_email = owner_email, date = owner.date_created.date(), date_updated = req.status_updated, record_uploaded = record_uploaded)
+    if "Closed" in req.status:
+    	template = "closed.html"
+    return render_template(template, text = req.text, request_id = request_id, records = req.records, status = req.status, owner = owner, date = owner.date_created.date(), date_updated = req.status_updated.date(), record_uploaded = record_uploaded)
 
 
 # Closing is specific to a case, so this only gets called from a case (that only city staff have a view of)

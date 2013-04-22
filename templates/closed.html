@@ -1,7 +1,7 @@
 <!-- This template extends the baseline case information but shows a record as closed. -->
 <!-- This template should be eventually updated so that status/owner info is a consistent block between "case" and "closed". -->
 
-{% extends "base.html" %}
+{% extends "case.html" %}
 {% block title %}Request {{ request_id }}{% endblock %}
 {% block head %} {% endblock head %}
 
@@ -9,7 +9,7 @@
   <div class="row-fluid well">
     <div class="span12"> 
       <div class="text-right">
-        <span class="label label-info">Closed {{date_updated}} by {{owner_email}} </span>
+        <span class="label label-info">Closed {{date_updated}} by {{owner.alias or owner.email}} </span>
       </div>
     
     </div>
