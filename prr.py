@@ -66,6 +66,6 @@ def notify(request_id):
 	application.send_email(body = city_body, recipients = [owner.email], subject = city_subject) 
 	if len(subscribers) != 0:
 		for subscriber in subscribers:
-			send_email(body = public_body, recipients = [subscriber.email], subject = public_subject)
+			application.send_email(body = public_body, recipients = [subscriber.email], subject = public_subject)
 	else:
 		print "No one assigned!"
