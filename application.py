@@ -60,7 +60,7 @@ def load():
 		file = request.files['record']
 		if file: # If a document is being uploaded
 			doc_id, filename = upload_file(file)
-			if doc_id.isdigit():
+			if str(doc_id).isdigit():
 				record = Record(doc_id = doc_id, request_id = request_id, owner_id = owner_id, description = "")
 				if description:
 					record.description = description
