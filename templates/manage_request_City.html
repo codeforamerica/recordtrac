@@ -75,7 +75,7 @@
     </fieldset>
   </form>
 
- <form name="input_url" class="form-horizontal" id="submitRecord" method="post" action="/upload" autocomplete="on">
+ <form name="input_url" class="form-horizontal" id="submitLink" method="post" action="/upload" autocomplete="on">
     <fieldset> 
       <div class="row-fluid">
         <div class="span4">
@@ -94,10 +94,10 @@
           <div class="control-group">
             <label class="control-label">Link</label>
             <div class="row-fluid">
-              <div class="controls">
+              <span><div class="controls">
                 <input name="record_url" type="url" id="inputUrl" placeholder="Copy and paste link here" required/>
                 <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
-                <button class="btn btn-primary" type="submit">Attach</button>
+                <button class="btn btn-primary" type="submit">Attach</button></span>
               </div>
             </div>
           </div>
@@ -111,21 +111,27 @@
 
   <form name="close" class="form-horizontal" id="closeRecord" method="post" action="/close" enctype="multipart/form-data">
     <input type="hidden" name="request_id" value="{{ request_id }}"/>
-    <input type="text" name="reason" placeholder="Say why."/>
     <fieldset> 
 
       <div class="row-fluid">
         <div class="span4">
           <h4>Close this request</h4>
         </div>
-        <div class="span8">
-          <div class="control-group">
-            <div class="controls">
 
-              <button type="submit" class="btn btn-inverse">Close</button>
+        <div class="span8">
+
+          <div class="control-group">
+            <label class="control-label">Explanation</label>
+            <div class="row-fluid">
+              <div class="controls">
+                <input type="text" name="reason" placeholder="Say why."/>
+                <button type="submit" class="btn btn-inverse">Close</button>
+              </div>
             </div>
           </div>
+
         </div>
+
       </div>
     </fieldset>
   </form>

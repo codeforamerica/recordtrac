@@ -52,7 +52,19 @@ textarea {
 	width: 80px;
 }
 
+#submitLink .control-label {
+	width: 80px;
+}
+
+#closeRecord .control-label {
+	width: 80px;
+}
+
 #submitRecord .controls {
+	margin-left: 90px;
+}
+
+#submitLink .controls {
 	margin-left: 90px;
 }
 
