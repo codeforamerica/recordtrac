@@ -75,6 +75,39 @@
     </fieldset>
   </form>
 
+ <form name="input" class="form-horizontal" id="submitRecord" method="post" action="/upload" autocomplete="on" enctype="multipart/form-data">
+    <fieldset> 
+      <div class="row-fluid">
+        <div class="span4">
+          <h4>Add a link</h4>
+        </div>
+        <div class="span8">
+
+          <div class="control-group">
+            <label class="control-label" for="inputSummary">Summary</label>
+            <div class="controls">
+              <input class="input-block-level" name="link_description" type="text" id="linkSummary" placeholder="Add a short explanation of what can be found here." />
+            </div>
+          </div>
+       
+          <div class="control-group">
+            <label class="control-label">Link</label>
+            <div class="row-fluid">
+              <div class="controls">
+                <input name="request_email" type="url" id="inputUrl" placeholder="Copy and paste link here" />
+                <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
+                <button class="btn btn-primary" type="submit">Attach</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+
   <form name="close" class="form-horizontal" id="closeRecord" method="post" action="/close" enctype="multipart/form-data">
     <input type="hidden" name="request_id" value="{{ request_id }}">
     <fieldset> 
