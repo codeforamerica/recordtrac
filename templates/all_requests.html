@@ -11,8 +11,8 @@
 {% block content %}
   <legend>All Requests</legend>
   <p class="important">
-    {% for r in all_record_requests %}
-    <li>{{ r }}</li>
+    {% for record in all_record_requests %}
+    <li><a href="/request/{{record.id}}">{{ record }}</a></li>
   {% else %}
     <li><em>Unbelievable.  No entries here so far</em></li>
   {% endfor %}
