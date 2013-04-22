@@ -28,7 +28,7 @@
 {% endblock content %}
 
 {% block actions %}
-  <form name="input" class="form-horizontal" id="submitRecord" method="post" action="/upload" autocomplete="on" enctype="multipart/form-data">
+  <form name="input_doc" class="form-horizontal" id="submitRecord" method="post" action="/upload" autocomplete="on" enctype="multipart/form-data">
     <fieldset> 
       <div class="row-fluid">
         <div class="span4">
@@ -75,7 +75,7 @@
     </fieldset>
   </form>
 
- <form name="input" class="form-horizontal" id="submitRecord" method="post" action="/upload" autocomplete="on" enctype="multipart/form-data">
+ <form name="input_url" class="form-horizontal" id="submitRecord" method="post" action="/upload" autocomplete="on">
     <fieldset> 
       <div class="row-fluid">
         <div class="span4">
@@ -86,7 +86,8 @@
           <div class="control-group">
             <label class="control-label" for="inputSummary">Summary</label>
             <div class="controls">
-              <input class="input-block-level" name="link_description" type="text" id="linkSummary" placeholder="Add a short explanation of what can be found here." />
+              <input class="input-block-level" name="record_description" type="text" id="linkSummary" placeholder="Add a short explanation of what can be found here." />
+              <input type="hidden" name="request_id" value="{{ request_id }}">
             </div>
           </div>
        
@@ -94,7 +95,7 @@
             <label class="control-label">Link</label>
             <div class="row-fluid">
               <div class="controls">
-                <input name="request_email" type="url" id="inputUrl" placeholder="Copy and paste link here" />
+                <input name="record_url" type="url" id="inputUrl" placeholder="Copy and paste link here" required/>
                 <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
                 <button class="btn btn-primary" type="submit">Attach</button>
               </div>

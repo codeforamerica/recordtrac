@@ -57,23 +57,23 @@ def load():
 		request_id = request.form['request_id']
 		req = Request.query.get(request_id)
 		owner_id = req.current_owner
-		file = request.files['record']
-		if file: # If a document is being uploaded
+		if 'record_url' in request.form: # If they're just pointing to a URL where the document already exists
+			url = request.form['record_url']
+			record = Record(url = url, request_id = request_id, owner_id = owner_id, description = description)
+			db.session.add(record)
+		else:
+			file = request.files['record']
 			doc_id, filename = upload_file(file)
 			if str(doc_id).isdigit():
-				record = Record(doc_id = doc_id, request_id = request_id, owner_id = owner_id, description = "")
-				if description:
-					record.description = description
+				record = Record(doc_id = doc_id, request_id = request_id, owner_id = owner_id, description = description)
+				db.session.add(record)
+				db.session.commit()
 				record.filename = filename
 				record.url = app.config['HOST_URL'] + doc_id
 			else:
 				return render_template('error.html', message = "Not an allowed doc type")
-		else: # If they're just pointing to a URL where the document already exists
-			url = request.form['url']
-			record = Record(url = url, request_id = request_id, owner_id = owner_id, description = description)
-		db.session.add(record)
 		db.session.commit()
-		return show_request(request_id = request_id, template = "uploaded.html", record_uploaded = record)
+		return show_request(request_id = request_id, template = "uploaded.html", record_uploaded = None)
 	return render_template('error.html', message = "You can only upload from a requests page!")
 
 # Returns a view of the case based on the audience. Currently views exist for city staff or general public.

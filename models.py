@@ -74,6 +74,8 @@ class Record(db.Model):
 		self.request_id = request_id
 		self.owner_id = owner_id
 		self.date_created = datetime.now()
+		self.description = description
+		self.url = url
 	def __repr__(self):
 		return self.records
 
