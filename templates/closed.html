@@ -6,12 +6,9 @@
 {% block head %} {% endblock head %}
 
 {% block status %}
-  <div class="row-fluid well">
-    <div class="span12"> 
+  <div class="row-fluid">
       <div class="text-right">
-        <span class="label label-info">{{status}} {{date_updated}} by {{owner.alias or owner.email}} </span>
-      </div>
-    
+        <span class="label label-info">{{status}} {{date_updated}} by {{owner.alias or owner.email}} </span>    
     </div>
   </div>
 {% endblock status %}
