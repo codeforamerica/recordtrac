@@ -77,8 +77,12 @@ def load():
 	return render_template('error.html', message = "You can only upload from a requests page!")
 
 # Returns a view of the case based on the audience. Currently views exist for city staff or general public.
-@app.route('/<string:audience>/request/<int:request_id>')
+@app.route('/<string:audience>/request/<int:request_id>', methods=['GET', 'POST'])
 def show_request_for_x(audience, request_id):
+	if request.method == 'POST':
+		owner_email = request.form['owner_email']
+		if owner_email:
+			assign_owner(request_id, "", owner_email)
 	return show_request(request_id = request_id, template = "manage_request_%s.html" %(audience))
 
 @app.route('/request/<int:request_id>')
