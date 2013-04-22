@@ -5,14 +5,14 @@ from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from flask.ext.mail import Mail, Message
 from upload import upload
-import website_copy
 from datetime import datetime
 
 # Initialize Flask app and database:
 app = Flask(__name__)
 db = SQLAlchemy(app)
 db.create_all()
-from models import *
+
+from prr import *
 
 # Get configuration settings from settings.cfg
 config = os.path.join(app.root_path, 'settings.cfg')
@@ -37,7 +37,10 @@ def new_request():
 	if request.method == 'POST':
 		request_text = request.form['request_text']
 		email = request.form['request_email']
-		request_id = make_request(request_text, email)
+		try:
+			request_id = make_request(request_text, email, app.config['DEFAULT_OWNER_NAME'], app.config['DEFAULT_OWNER_EMAIL'])
+		except IntegrityError:
+			return None
 		if request_id:
 			return show_request(request_id, "requested.html")
 		else:
@@ -74,8 +77,12 @@ def load():
 	return render_template('error.html', message = "You can only upload from a requests page!")
 
 # Returns a view of the case based on the audience. Currently views exist for city staff or general public.
-@app.route('/<string:audience>/request/<int:request_id>')
+@app.route('/<string:audience>/request/<int:request_id>', methods=['GET', 'POST'])
 def show_request_for_x(audience, request_id):
+	if request.method == 'POST':
+		owner_email = request.form['owner_email']
+		if owner_email:
+			assign_owner(request_id, "", owner_email)
 	return show_request(request_id = request_id, template = "manage_request_%s.html" %(audience))
 
 @app.route('/request/<int:request_id>')
@@ -123,7 +130,6 @@ def allowed_file(filename):
 	return '.' in filename and \
 		filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-
 def upload_file(file): 
 # Uploads file to scribd.com and returns doc ID. File can be accessed at scribd.com/doc/id
 	if file and allowed_file(file.filename):
@@ -134,71 +140,6 @@ def upload_file(file):
 		return doc_id, filename
 	return None, None
 
-def open_request(id):
-	change_request_status(id, "Open")
-	notify(id)
-
-def close_request(id, reason = ""):
-	change_request_status(id, "Closed. %s" %reason)
-	notify(id)
-
-def assign_owner(request_id, alias, email): 
-# Called any time a new owner is assigned. This will overwrite the current owner.
-	owner = Owner(alias = alias, request_id = request_id, email = email)
-	db.session.add(owner)
-	db.session.commit()
-	req = Request.query.get(request_id)
-	req.current_owner = owner.id
-	db.session.commit()
-	return owner.id
-
-def remove_subscriber(subscriber_id): 
-	try:
-		subscriber = Subscriber.query.get(subscriber_id)
-		db.session.delete(subscriber)
-		db.session.commit()
-		return True # Unassigned successfully
-	except:
-		return False # No one to unassign
-
-def make_request(str, email = None):
-	try:
-		req = Request(str)
-		db.session.add(req)
-		db.session.commit()
-		owner_id = assign_owner(req.id, app.config['DEFAULT_OWNER_NAME'], app.config['DEFAULT_OWNER_EMAIL'])
-		if email: # If the user provided an e-mail address, add them as a subscriber to the request.
-			subscriber = Subscriber(req.id, email)
-			db.session.add(subscriber)
-			db.session.commit()
-		open_request(req.id)
-		db.session.commit()
-		return req.id
-	except IntegrityError:
-		return None
-
-def change_request_status(id, status):
-	try:
-		req = Request.query.get(id)
-		req.status = status
-		req.status_updated = datetime.now()
-		db.session.commit()
-		return True
-	except:
-		return False
-
-def notify(request_id):
-	req = Request.query.get(request_id)
-	subscribers = req.subscribers
-	owner = Owner.query.get(req.current_owner)
-	city_subject, city_body = website_copy.request_submitted_city(req.text)
-	public_subject, public_body = website_copy.request_submitted(req.text, owner.email, "xxx-xxx-xxxx")
-	send_email(body = city_body, recipients = [owner.email], subject = city_subject) 
-	if len(subscribers) != 0:
-		for subscriber in subscribers:
-			send_email(body = public_body, recipients = [subscriber.email], subject = public_subject)
-	else:
-		print "No one assigned!"
 
 def send_email(body, recipients, subject):
 	message = Message(subject, recipients, sender = app.config['DEFAULT_MAIL_SENDER'])

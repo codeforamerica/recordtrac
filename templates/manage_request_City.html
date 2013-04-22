@@ -12,9 +12,9 @@
               <a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{owner_email}} <span class="caret"></span> </a>
                 <div id="reroutePopover-head" class="hide">Reassign to:</div>
                 <div id="reroutePopover-content" class="hide">
-                  <form class="form-inline">
+                  <form class="form-inline" method ="post" action="">
                     <!-- my form -->
-                    <input type="email" class="input-small" placeholder="name@email.com" required />
+                    <input type="email" name="owner_email" class="input-small" placeholder="name@email.com" required />
                     <button class="btn" type="submit"><i class="icon-envelope"> </i> </button>
                   </form>
                 </div>
