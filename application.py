@@ -89,6 +89,8 @@ def show_request_for_x(audience, request_id):
 def show_request(request_id, template = "case.html", record_uploaded = None):
     # show the request with the given id, the id is an integer
     req = Request.query.get(request_id)
+    if not req:
+    	return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
     doc_ids = []
     owner = Owner.query.get(req.current_owner)
     owner_email = owner.email
@@ -99,9 +101,15 @@ def show_request(request_id, template = "case.html", record_uploaded = None):
 @app.route('/close', methods=['POST'])
 def close(request_id = None):
 	if request.method == 'POST':
+		template = 'closed.html'
 		request_id = request.form['request_id']
+		req = Request.query.get(request_id)
+		subscribers = req.subscribers
 		close_request(request_id)
-		return show_request(request_id, template="closed.html")
+		for subscriber in subscribers:
+			body = show_request(request_id, template = template)
+			# send_email(body, [subscriber.id], "The request you are subscribed to has been closed.")
+		return show_request(request_id, template= template)
 	return render_template('error.html, message = "You can only close from a requests page!')
 
 

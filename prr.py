@@ -21,11 +21,11 @@ def make_request(str, email = None, assigned_to_name = None, assigned_to_email =
 
 def open_request(id):
 	change_request_status(id, "Open")
-	notify(id)
+	# notify(id)
 
 def close_request(id, reason = ""):
 	change_request_status(id, "Closed. %s" %reason)
-	notify(id)
+	# notify(id)
 
 def assign_owner(request_id, alias, email): 
 	""" Called any time a new owner is assigned. This will overwrite the current owner."""
