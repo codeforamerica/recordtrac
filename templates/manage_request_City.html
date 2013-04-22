@@ -110,7 +110,8 @@
 
 
   <form name="close" class="form-horizontal" id="closeRecord" method="post" action="/close" enctype="multipart/form-data">
-    <input type="hidden" name="request_id" value="{{ request_id }}">
+    <input type="hidden" name="request_id" value="{{ request_id }}"/>
+    <input type="text" name="reason" placeholder="Say why."/>
     <fieldset> 
 
       <div class="row-fluid">

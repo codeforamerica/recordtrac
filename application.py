@@ -106,7 +106,7 @@ def close(request_id = None):
 		request_id = request.form['request_id']
 		req = Request.query.get(request_id)
 		subscribers = req.subscribers
-		close_request(request_id)
+		close_request(request_id, request.form['reason'])
 		for subscriber in subscribers:
 			body = show_request(request_id, template = template)
 			# send_email(body, [subscriber.id], "The request you are subscribed to has been closed.")
