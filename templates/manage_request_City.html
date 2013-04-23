@@ -6,8 +6,8 @@
 
 {% block status %} 
     <div class="row-fluid">
-
             <!-- popover -->
+            [Requester's email]{{request_email}}
             <div class="btn-group pull-right">
               <a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{owner.alias or owner.email}} <span class="caret"></span> </a>
                 <div id="reroutePopover-head" class="hide">Reassign to:</div>
