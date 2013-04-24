@@ -11,12 +11,24 @@ This application requires [Postgres](http://www.postgresapp.com/) and Xcode deve
     /Applications/Postgres.app/Contents/MacOS/bin/psql
     CREATE DATABASE your_database_name;
 
+If you are using a standard Postgres installation or from [Homebrew](http://mxcl.github.com/homebrew/) you can also use:
+
+        createdb publicrecords
+
 In a new window:
 
     git clone git://github.com/codeforamerica/public-records.git
     cd public-records
     sudo pip install -r requirements.txt
     mkdir uploads
+	python 
+
+Then from the Python prompt type the following commands to load database
+
+	from prflask import db
+	db.create_all()
+	quit()
+
 
 Save example-settings.cfg as settings.cfg and update relevant fields.
 
