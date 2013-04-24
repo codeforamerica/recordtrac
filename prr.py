@@ -1,7 +1,7 @@
 """ Things one can do relating to a public records request. """
 
 from models import *
-import application
+import prflask
 from prflask import db
 import website_copy
 
