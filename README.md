@@ -21,6 +21,14 @@ In a new window:
     cd public-records
     sudo pip install -r requirements.txt
     mkdir uploads
+	python 
+
+Then from the Python prompt type the following commands to load database
+
+	from prflask import db
+	db.create_all()
+	quit()
+
 
 Save example-settings.cfg as settings.cfg and update relevant fields.
 
