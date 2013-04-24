@@ -3,17 +3,36 @@
 {% extends "base.html" %}
 {% block title %}All requests{% endblock title %}
 {% block head %}
-  {{ super() }}
-  <style type="text/css">
-    .important { color: #336699; }
-  </style>
+
 {% endblock %}
 {% block content %}
-  <legend>All Requests</legend>
-  <p class="important">
-    {% for record in all_record_requests %}
-    <li><a href="/request/{{record.id}}">{{ record }}</a></li>
-  {% else %}
-    <li><em>Unbelievable.  No entries here so far</em></li>
-  {% endfor %}
+<legend>All Requests</legend>
+<div>
+  <table id="allrequestTable" class="table table-striped tablesorter">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Date Received</th>
+        <th>Request</th>
+        <th>Date Last Touched</th>
+        <th>Owner</th>
+        
+      </tr>
+    </thead>
+    <tbody>
+      {% for record in all_record_requests %}
+        <tr>
+          <td><a href="/request/{{record.id}}">{{ record.id }}</a></td>
+          <td><a href="/request/{{record.id}}">[insert date submitted here] {{ initialdate }}</a></td>
+          <td><a href="/request/{{record.id}}">{{ record }}</a></td>
+          <td><a href="/request/{{record.id}}">[insert current date here] </a></td>
+          <td><a href="/request/{{record.id}}">[insert owner here]</a></td>
+        </tr>
+      {% else %}
+        
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
 {% endblock %}

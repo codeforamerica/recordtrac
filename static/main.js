@@ -45,5 +45,9 @@ $('#reroutePopover').popover({
 currently have to click on button */
 // $('rel["clickover"]').clickover();
 
+/* table sort */
+$(document).ready(function(){
+    $('#allrequestTable').dataTable();
+});
 
 	
