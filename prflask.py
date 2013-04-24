@@ -79,6 +79,7 @@ def load():
 		return show_request(request_id = request_id, template = "uploaded.html", record_uploaded = None)
 	return render_template('error.html', message = "You can only upload from a requests page!")
 
+
 # Returns a view of the case based on the audience. Currently views exist for city staff or general public.
 @app.route('/<string:audience>/request/<int:request_id>', methods=['GET', 'POST'])
 def show_request_for_x(audience, request_id):
@@ -98,7 +99,18 @@ def show_request(request_id, template = "case.html", record_uploaded = None):
     owner = Owner.query.get(req.current_owner)
     if "Closed" in req.status:
     	template = "closed.html"
-    return render_template(template, text = req.text, request_id = request_id, records = req.records, status = req.status, owner = owner, date = owner.date_created.date(), date_updated = req.status_updated.date(), record_uploaded = record_uploaded)
+    return render_template(template, text = req.text, request_id = request_id, records = req.records, status = req.status, owner = owner, date = owner.date_created.date(), date_updated = req.status_updated.date(), record_uploaded = record_uploaded, notes = req.notes)
+
+@app.route('/note', methods=['POST'])
+def add_note():
+	if request.method == 'POST':
+		request_id = request.form['request_id']
+		req = Request.query.get(request_id)
+		note = Note(request_id = req.id, text = request.form['note'], owner_id = req.current_owner)
+		db.session.add(note)
+		db.session.commit()
+		return show_request(request_id, template = "manage_request_city.html")
+	return render_template('error.html', message = "You can only add a note from a requests page!")
 
 
 # Closing is specific to a case, so this only gets called from a case (that only city staff have a view of)

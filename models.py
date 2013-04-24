@@ -87,9 +87,12 @@ class Note(db.Model):
 	text = db.Column(db.String(400))
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id')) # The request it belongs to.
 	subscriber_id = db.Column(db.Integer, db.ForeignKey('subscriber.id')) # The subscriber who wrote the note
-	def __init__(self, subscriber_id, request_id, text):
+	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id'))
+	def __init__(self, request_id, text, subscriber_id = None, owner_id = None):
+		self.text = text
 		self.request_id = request_id
 		self.subscriber_id = subscriber_id
+		self.owner_id = owner_id
 		self.date_created = datetime.now()
 	def __repr__(self):
 		return self.text
