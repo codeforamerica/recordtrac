@@ -7,18 +7,29 @@
 {% block status %} 
     <div class="row-fluid">
             <!-- popover -->
-            [Requester's email]{{request_email}}
-            <div class="btn-group pull-right">
+            <div class="span4">[Requester's email]{{request_email}}</div>
+            <div class="pull-right">Routed {{date}}  to  <span> 
+<div class="btn-group">
               <div><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{owner.alias or owner.email}} <span class="caret"></span> </a></div>
                 <div id="reroutePopover-head" class="hide">Reassign to:</div>
                 <div id="reroutePopover-content" class="hide">
+                  
                   <form id="rerouteForm" class="form-inline" method ="post" action="">
                     <!-- my form -->
-                    <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" required />
-                    <button id="rerouteButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
+                    <div class="control-group">
+                      <div class="controls">
+                        <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" required />
+                        <button id="rerouteButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
+                      </div>
+                    </div>
                   </form>
+                
                 </div>
             </div>
+
+            </span>
+      </div>
+            
 
       </div>
 {% endblock status %}
