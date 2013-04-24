@@ -11,6 +11,10 @@ This application requires [Postgres](http://www.postgresapp.com/) and Xcode deve
     /Applications/Postgres.app/Contents/MacOS/bin/psql
     CREATE DATABASE your_database_name;
 
+If you are using a standard Postgres installation or from [Homebrew](http://mxcl.github.com/homebrew/) you can also use:
+
+        createdb publicrecords
+
 In a new window:
 
     git clone git://github.com/codeforamerica/public-records.git
