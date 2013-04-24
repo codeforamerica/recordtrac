@@ -2,7 +2,7 @@
 
 from models import *
 import application
-from application import db
+from prflask import db
 import website_copy
 
 def make_request(str, email = None, assigned_to_name = None, assigned_to_email = None):
@@ -63,9 +63,9 @@ def notify(request_id):
 	owner = Owner.query.get(req.current_owner)
 	city_subject, city_body = website_copy.request_submitted_city(req.text)
 	public_subject, public_body = website_copy.request_submitted(req.text, owner.email, "xxx-xxx-xxxx")
-	application.send_email(body = city_body, recipients = [owner.email], subject = city_subject) 
+	prflask.send_email(body = city_body, recipients = [owner.email], subject = city_subject) 
 	if len(subscribers) != 0:
 		for subscriber in subscribers:
-			application.send_email(body = public_body, recipients = [subscriber.email], subject = public_subject)
+			prflask.send_email(body = public_body, recipients = [subscriber.email], subject = public_subject)
 	else:
 		print "No one assigned!"

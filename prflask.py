@@ -21,7 +21,10 @@ app.config.from_pyfile(config)
 mail = Mail(app)
 
 # Define the local temporary folder where uploads will go
-UPLOAD_FOLDER = "%s/uploads" % os.getcwd()
+if app.config['PRODUCTION']:
+	UPLOAD_FOLDER = app.config['UPLOAD_FOLDER']
+else:
+	UPLOAD_FOLDER = "%s/uploads" % os.getcwd()
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc'])
 
 # Routing

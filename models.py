@@ -1,4 +1,4 @@
-from application import db
+from prflask import db
 from sqlalchemy.orm import relationship
 from datetime import datetime
 

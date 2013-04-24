@@ -24,7 +24,7 @@ Save example-settings.cfg as settings.cfg and update relevant fields.
 
 To use the application locally, in a new window:
 
-    python application.py
+    python prflask.py
 
 
 You should see something similar to:
