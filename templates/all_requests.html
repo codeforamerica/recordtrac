@@ -20,13 +20,13 @@
       </tr>
     </thead>
     <tbody>
-      {% for record in all_record_requests %}
+      {% for request in all_record_requests %}
         <tr>
-          <td><a href="/request/{{record.id}}">{{ record.id }}</a></td>
-          <td><a href="/request/{{record.id}}">[insert date submitted here] {{ initialdate }}</a></td>
-          <td><a href="/request/{{record.id}}">{{ record }}</a></td>
-          <td><a href="/request/{{record.id}}">[insert current date here] </a></td>
-          <td><a href="/request/{{record.id}}">[insert owner here]</a></td>
+          <td><a href="/request/{{request.id}}">{{ request.id }}</a></td>
+          <td><a href="/request/{{request.id}}">{{ request.date_created | date }}</a></td>
+          <td><a href="/request/{{request.id}}">{{ request }}</a></td>
+          <td><a href="/request/{{request.id}}">{{request.status_updated | date }} </a></td>
+          <td><a href="/request/{{request.id}}">{{ request.current_owner | owner_name }}</a></td>
         </tr>
       {% else %}
         

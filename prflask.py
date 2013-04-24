@@ -6,6 +6,7 @@ from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from flask.ext.mail import Mail, Message
 from upload import upload
 from datetime import datetime
+from filters import *
 
 # Initialize Flask app and database:
 app = Flask(__name__)
@@ -157,6 +158,19 @@ def send_email(body, recipients, subject):
 	message = Message(subject, recipients, sender = app.config['DEFAULT_MAIL_SENDER'])
 	message.html = body
 	mail.send(message)
+
+# Filters
+
+@app.template_filter('date')
+def date(obj):
+	return obj.date()
+
+@app.template_filter('owner_name')
+def owner_name(oid):
+	owner = Owner.query.get(oid)
+	if owner.alias:
+		return owner.alias
+	return owner.email
 
 if __name__ == '__main__':
 	app.run(use_debugger=True, debug=True)
