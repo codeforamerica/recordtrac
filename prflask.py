@@ -6,7 +6,6 @@ from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from flask.ext.mail import Mail, Message
 from upload import upload
 from datetime import datetime
-from filters import *
 
 # Initialize Flask app and database:
 app = Flask(__name__)
