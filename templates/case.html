@@ -39,7 +39,7 @@
             <div class="span8">
               <p>
                 {% for note in notes %}
-                 <p class="lead"> {{ note }} </p>
+                 <p class="lead"> {{ note }} noted by {{note.owner_id | owner_name }}</p>
                 {% endfor %}
               </p>
             </div>
