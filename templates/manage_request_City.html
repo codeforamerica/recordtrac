@@ -40,7 +40,7 @@
 {% endblock content %}
 
 {% block actions %}
-  <form name="input_doc" class="form-horizontal" id="submitRecord" method="post" action="/upload" autocomplete="on" enctype="multipart/form-data">
+  <form name="input_doc" class="form-horizontal" id="submitRecord" method="post" action="/upload" autocomplete="on" enctype="multipart/form-data" >
     <fieldset> 
 
       <div class="row-fluid">
@@ -52,7 +52,7 @@
           <div class="control-group">
             <label class="control-label" for="inputSummary">Summary</label>
             <div class="controls">
-              <input class="input-block-level" name="record_description" type="text" id="inputSummary" placeholder="Add a short explanation of what you are attaching" />
+              <input class="input-block-level" name="record_description" type="text" id="inputSummary" placeholder="Add a short explanation of what you are attaching" autofocus/>
             </div>
           </div>
        
@@ -135,8 +135,7 @@
           <label class="control-label">Note</label>
           <div class="row-fluid">
             <div class="controls">
-              <textarea id="noteTextarea" autofocus name="note_text" rows="3" cols="20" placeholder="Enter your note here" required></textarea>
-              
+              <textarea id="noteTextarea" name="note_text" rows="3" cols="20" placeholder="Enter your note here" required></textarea>
               <button type="submit" class="btn btn-primary">Add</button>
             </div>
           </div>
