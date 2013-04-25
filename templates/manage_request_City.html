@@ -52,7 +52,7 @@
           <div class="control-group">
             <label class="control-label" for="inputSummary">Summary</label>
             <div class="controls">
-              <input class="input-block-level" name="record_description" type="text" id="inputSummary" placeholder="Add a short explanation of what you are attaching." />
+              <input class="input-block-level" name="record_description" type="text" id="inputSummary" placeholder="Add a short explanation of what you are attaching" />
             </div>
           </div>
        
@@ -99,7 +99,7 @@
           <div class="control-group">
             <label class="control-label" for="inputSummary">Summary</label>
             <div class="controls">
-              <input class="input-block-level" name="record_description" type="text" id="linkSummary" placeholder="Add a short explanation of what can be found here." />
+              <input class="input-block-level" name="record_description" type="text" id="linkSummary" placeholder="Add a short explanation of what can be found here" />
               <input type="hidden" name="request_id" value="{{ request_id }}">
             </div>
           </div>
@@ -120,6 +120,33 @@
     </fieldset>
   </form>
 
+<form name="note" class="form-horizontal" id="note" method="post" action="/note">
+  <input type="hidden" name="request_id" value="{{ request_id }}"/>
+  <fieldset> 
+
+    <div class="row-fluid">
+      <div class="span4">
+        <h4>Add a note</h4>
+      </div>
+
+      <div class="span8">
+
+        <div class="control-group">
+          <label class="control-label">Note</label>
+          <div class="row-fluid">
+            <div class="controls">
+              <textarea id="noteTextarea" autofocus name="note_text" rows="3" cols="20" placeholder="Enter your note here" required></textarea>
+              
+              <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </fieldset>
+</form>
 
 
   <form name="close" class="form-horizontal" id="closeRequest" method="post" action="/close">
@@ -148,30 +175,5 @@
       </div>
     </fieldset>
   </form>
-    <form name="note" class="form-horizontal" id="note" method="post" action="/note">
-    <input type="hidden" name="request_id" value="{{ request_id }}"/>
-    <fieldset> 
-
-      <div class="row-fluid">
-        <div class="span4">
-          <h4>Add a note</h4>
-        </div>
-
-        <div class="span8">
-
-          <div class="control-group">
-            <label class="control-label"></label>
-            <div class="row-fluid">
-              <div class="controls">
-                <input type="text" name="note" placeholder="Your note on this request." required/>
-                <button type="submit" class="btn btn-inverse">Submit</button>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </fieldset>
-  </form>
+    
 {% endblock actions %}

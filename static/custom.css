@@ -16,9 +16,18 @@ textarea {
 	width: 80px;
 }
 
-#closeRecord .control-label {
+#closeRequest .control-label {
 	width: 80px;
 }
+
+#note .control-label {
+	width: 80px;
+}
+
+#note .controls {
+	margin-left: 90px;
+}
+
 
 #submitRecord .controls {
 	margin-left: 90px;
@@ -28,7 +37,7 @@ textarea {
 	margin-left: 90px;
 }
 
-#closeRecord .controls {
+#closeRequest .controls {
 	margin-left: 90px;
 }
 
