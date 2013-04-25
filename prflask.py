@@ -119,7 +119,8 @@ def add_note():
 # Clears/updates tables in the database until I figure out how I want to deal with migrations
 @app.route('/clear')
 def clear_db():
-	if app.config['PRODUCTION'] == False:
+	message = "You can't do that here."
+	if not app.config['PRODUCTION']:
 		try:
 			db.session.commit()
 			db.drop_all()
