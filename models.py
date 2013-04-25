@@ -30,7 +30,9 @@ class Owner(db.Model):
 	date_created = db.Column(db.DateTime)
 	records = relationship("Record") # All records that have been uploaded
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
-	def __init__(self, request_id, email, alias = None):
+	reason = db.Column(db.String(400)) # Reason they were assigned
+	def __init__(self, request_id, email, reason= None, alias = None):
+		self.reason = reason
 		self.alias = alias
 		self.email = email
 		self.request_id = request_id

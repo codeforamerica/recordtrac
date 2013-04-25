@@ -25,7 +25,7 @@
           <td><a href="/request/{{request.id}}">{{ request.id }}</a></td>
           <td><a href="/request/{{request.id}}">{{ request.date_created | date }}</a></td>
           <td><a href="/request/{{request.id}}">{{ request }}</a></td>
-          <td><a href="/request/{{request.id}}">{{request.status_updated | date }} </a></td>
+          <td><a href="/request/{{request.id}}">{{ request.status_updated | date }} </a></td>
           <td><a href="/request/{{request.id}}">{{ request.current_owner | owner_name }}</a></td>
         </tr>
       {% else %}

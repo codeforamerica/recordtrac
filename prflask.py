@@ -41,7 +41,7 @@ def new_request():
 		request_text = request.form['request_text']
 		email = request.form['request_email']
 		try:
-			request_id = make_request(request_text, email, app.config['DEFAULT_OWNER_NAME'], app.config['DEFAULT_OWNER_EMAIL'])
+			request_id = make_request(request_text, email, app.config['DEFAULT_OWNER_NAME'], app.config['DEFAULT_OWNER_EMAIL'], app.config['DEFAULT_OWNER_REASON'])
 		except IntegrityError:
 			return None
 		if request_id:
@@ -85,8 +85,12 @@ def load():
 def show_request_for_x(audience, request_id):
 	if request.method == 'POST':
 		owner_email = request.form['owner_email']
+		owner_reason = request.form['owner_reason']
 		if owner_email:
-			assign_owner(request_id, "", owner_email)
+			reason = ""
+			if owner_reason:
+				reason = owner_reason
+			assign_owner(request_id, "", owner_email, reason)
 	return show_request(request_id = request_id, template = "manage_request_%s.html" %(audience))
 
 @app.route('/request/<int:request_id>')

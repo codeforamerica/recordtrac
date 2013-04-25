@@ -5,12 +5,12 @@ import prflask
 from prflask import db
 import website_copy
 
-def make_request(str, email = None, assigned_to_name = None, assigned_to_email = None):
+def make_request(str, email = None, assigned_to_name = None, assigned_to_email = None, assigned_to_reason = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
 	req = Request(str)
 	db.session.add(req)
 	db.session.commit()
-	owner_id = assign_owner(req.id, assigned_to_name, assigned_to_email)
+	owner_id = assign_owner(req.id, assigned_to_name, assigned_to_email, assigned_to_reason)
 	if email: # If the user provided an e-mail address, add them as a subscriber to the request.
 		subscriber = Subscriber(req.id, email)
 		db.session.add(subscriber)
@@ -27,9 +27,9 @@ def close_request(id, reason = ""):
 	change_request_status(id, "Closed. %s" %reason)
 	# notify(id)
 
-def assign_owner(request_id, alias, email): 
+def assign_owner(request_id, alias, email, reason): 
 	""" Called any time a new owner is assigned. This will overwrite the current owner."""
-	owner = Owner(alias = alias, request_id = request_id, email = email)
+	owner = Owner(alias = alias, request_id = request_id, email = email, reason = reason)
 	db.session.add(owner)
 	db.session.commit()
 	req = Request.query.get(request_id)
