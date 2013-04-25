@@ -116,6 +116,19 @@ def add_note():
 		return show_request(request_id, template = "manage_request_city.html")
 	return render_template('error.html', message = "You can only add a note from a requests page!")
 
+# Clears/updates tables in the database until I figure out how I want to deal with migrations
+@app.route('/clear')
+def clear_db():
+	if app.config['PRODUCTION'] == False:
+		try:
+			db.session.commit()
+			db.drop_all()
+			db.create_all()
+			db.session.commit()
+			return requests()
+		except:
+			message = "Dropping the tables didn't work :("
+	return render_template('error.html', message = message)
 
 # Closing is specific to a case, so this only gets called from a case (that only city staff have a view of)
 @app.route('/close', methods=['POST'])
@@ -125,16 +138,16 @@ def close(request_id = None):
 		request_id = request.form['request_id']
 		req = Request.query.get(request_id)
 		subscribers = req.subscribers
-		close_request(request_id, request.form['reason'])
 		for subscriber in subscribers:
-			body = show_request(request_id, template = template)
+			body = show_request(request_id, template = 'email_case.html')
 			# send_email(body, [subscriber.id], "The request you are subscribed to has been closed.")
+		close_request(request_id, request.form['reason'])
 		return show_request(request_id, template= template)
 	return render_template('error.html, message = "You can only close from a requests page!')
 
 
 # Shows all public records requests that have been made.
-@app.route('/requests', methods=['GET', 'POST'])
+@app.route('/requests')
 def requests():
 	all_record_requests = Request.query.all()
 	return render_template('all_requests.html', all_record_requests = all_record_requests)
@@ -151,6 +164,7 @@ def any_page(page):
 		return render_template('%s.html' %(page))
 	except:
 		return render_template('error.html', message = "%s totally doesn't exist." %(page))
+
 
 # Functions that should probably go somewhere else:
 
@@ -186,6 +200,7 @@ def owner_name(oid):
 	if owner.alias:
 		return owner.alias
 	return owner.email
+
 
 if __name__ == '__main__':
 	app.run(use_debugger=True, debug=True)
