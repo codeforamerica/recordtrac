@@ -26,6 +26,13 @@ if app.config['PRODUCTION']:
 else:
 	UPLOAD_FOLDER = "%s/uploads" % os.getcwd()
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc'])
+NOTIFICATIONS = [
+					# 'note', 
+					# 'new', 
+					# 'close', 
+					# 'reroute',
+					# 'record'
+				]
 
 # Routing
 
@@ -45,6 +52,7 @@ def new_request():
 		except IntegrityError:
 			return None
 		if request_id:
+			send_emails(body = show_request(request_id), request_id = request_id, type = "new")
 			return show_request(request_id, "requested.html")
 		else:
 			db.session.rollback()
@@ -60,6 +68,7 @@ def load():
 		request_id = request.form['request_id']
 		req = Request.query.get(request_id)
 		owner_id = req.current_owner
+		record = None
 		if 'record_url' in request.form: # If they're just pointing to a URL where the document already exists
 			url = request.form['record_url']
 			record = Record(url = url, request_id = request_id, owner_id = owner_id, description = description)
@@ -76,7 +85,8 @@ def load():
 			else:
 				return render_template('error.html', message = "Not an allowed doc type")
 		db.session.commit()
-		return show_request(request_id = request_id, template = "uploaded.html", record_uploaded = None)
+		send_emails(body = show_request(request_id), request_id = request_id, type = "record")
+		return show_request(request_id = request_id, template = "uploaded.html", record_uploaded = record)
 	return render_template('error.html', message = "You can only upload from a requests page!")
 
 
@@ -110,9 +120,10 @@ def add_note():
 	if request.method == 'POST':
 		request_id = request.form['request_id']
 		req = Request.query.get(request_id)
-		note = Note(request_id = req.id, text = request.form['note'], owner_id = req.current_owner)
+		note = Note(request_id = req.id, text = request.form['note_text'], owner_id = req.current_owner)
 		db.session.add(note)
 		db.session.commit()
+		send_emails(body = show_request(request_id), request_id = request_id, type = "note")
 		return show_request(request_id, template = "manage_request_city.html")
 	return render_template('error.html', message = "You can only add a note from a requests page!")
 
@@ -139,10 +150,8 @@ def close(request_id = None):
 		request_id = request.form['request_id']
 		req = Request.query.get(request_id)
 		subscribers = req.subscribers
-		for subscriber in subscribers:
-			body = show_request(request_id, template = 'email_case.html')
-			# send_email(body, [subscriber.id], "The request you are subscribed to has been closed.")
 		close_request(request_id, request.form['reason'])
+		send_emails(body = show_request(request_id), request_id = request_id, type = "close")
 		return show_request(request_id, template= template)
 	return render_template('error.html, message = "You can only close from a requests page!')
 
@@ -188,6 +197,34 @@ def send_email(body, recipients, subject):
 	message = Message(subject, recipients, sender = app.config['DEFAULT_MAIL_SENDER'])
 	message.html = body
 	mail.send(message)
+
+def send_emails(body, request_id, type):
+	req = Request.query.get(request_id)
+	if type in NOTIFICATIONS:
+		owner = Owner.query.get(req.current_owner)
+		subject_subscriber = ""
+		subject_owner = ""
+		if type == 'new':
+			send_to_owner, send_to_subscribers = True, False
+			subject_subscriber, additional_body = website_copy.request_submitted("", "", "")
+			subject_owner, additional_body = website_copy.request_submitted_city("")
+		elif type == 'note':
+			send_to_owner, send_to_subscribers = False, True
+			subject_subscriber, subject_owner = website_copy.note_added(owner.alias)
+		elif type == 'record':
+			send_to_owner, send_to_subscribers = False, True
+			subject_subscriber, subject_owner = website_copy.record_added(owner.alias)
+		elif type == 'close':
+			send_to_owner, send_to_subscribers = False, True
+			subject_subscriber = "Your request has been closed."
+		if send_to_subscribers:
+			for subscriber in req.subscribers:
+				send_email(body, [subscriber.email], subject_subscriber)
+		if send_to_owner:
+			send_email(body, [owner.email], subject_owner)
+	else:
+		print 'Not a valid notification type.'
+
 
 # Filters
 

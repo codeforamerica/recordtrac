@@ -1,3 +1,9 @@
+def note_added(city_employee):
+	return "A note has been added to your request by %s" %(city_employee), "Your note has been added."
+
+def record_added(city_employee):
+	return "A record has been added to your request by %s" %(city_employee), "Your record has been uploaded."
+
 def request_submitted(request_text, city_employee, phone_number):
 	subject_line = "Thank you for your request!"
 	email_body = "<p>Thank you for submitting your public records request. You can find a copy of your message below:</p></br> %s </br><p>You can always review this message and our future response to your request, by clicking here.</p><p>In the future, you may have to answer questions about your record requests. These questions are designed to help the City understand the type of information you need and help them quickly provide you with your documents. If your record exists, you will receive an email notifying you that your record was posted online.</p><p>If you have any questions, feel free to send a message to %s by clicking here or calling %s.</p>" %(request_text, city_employee, phone_number)

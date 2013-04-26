@@ -10,7 +10,7 @@
   <div class="alert alert-success">
     <button type="button" class="close" data-dismiss="alert">x</button>
     <i class="icon-file-alt icon-large"> </i> 
-    <strong> Document <em> {{record_uploaded.filename}} </em> has been successfully uploaded to this request.</strong>
+    <strong> <em> {{record_uploaded.filename or record_uploaded.description}} </em> has been successfully uploaded to this request.</strong>
   </div>
 {% endblock banner %} 
 
