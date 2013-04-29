@@ -45,7 +45,19 @@
 
       <div class="row-fluid">
         <div class="span4">
-          <h4>Add a record</h4>
+          <h4>Add a record <span id="recordTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="Supported formats:<ul>
+            <li>Adobe PDF (.pdf)</li>
+            <li>Adobe PostScript (.ps)</li>
+            <li>Microsoft Word (.doc/ .docx)</li>
+            <li>Microsoft PowerPoint (.ppt/.pps/.pptx)</li>
+            <li>Microsoft Excel (.xls/.xlsx)</li>
+            <li>OpenOffice Text Document (.odt, .sxw)</li>
+            <li>OpenOffice Presentation Document (.odp, .sxi)</li>
+            <li>OpenOffice Spreadsheet (.ods, .sxc)</li>
+            <li>All OpenDocument formats</li>
+            <li>Plain text (.txt)</li>
+            <li>Rich text format (.rtf)</li>
+            </ul>"><small><i class="icon-info-sign"></i></small></span></h4>
         </div>
         <div class="span8">
 
@@ -92,7 +104,7 @@
     <fieldset> 
       <div class="row-fluid">
         <div class="span4">
-          <h4>Add a link</h4>
+          <h4>Add a link <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="You must include 'http://' in front of your link."><small><i class="icon-info-sign"></i></small></span></h4>
         </div>
         <div class="span8">
 
@@ -108,7 +120,7 @@
             <label class="control-label">Link</label>
             <div class="row-fluid">
               <div class="controls">
-                <input name="record_url" type="url" id="inputUrl" placeholder="Copy and paste link here" required/>
+                  <input name="record_url" type="url" id="inputUrl" placeholder="Copy and paste link here" required/>
                 <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
                 <button class="btn btn-primary" type="submit">Attach</button>
               </div>
@@ -126,7 +138,7 @@
 
     <div class="row-fluid">
       <div class="span4">
-        <h4>Add a note</h4>
+        <h4>Add a note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="Notes added here will be publicly viewable."><small><i class="icon-info-sign"></i></small></span></h4>
       </div>
 
       <div class="span8">
@@ -154,7 +166,7 @@
 
       <div class="row-fluid">
         <div class="span4">
-          <h4>Close this request</h4>
+          <h4>Close this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="Signal that this request is complete.  The requester is automatically notified."><small><i class="icon-info-sign"></i></small></span></h4>
         </div>
 
         <div class="span8">

@@ -41,6 +41,9 @@ $('#reroutePopover').popover({
     }
 });
 
+/* tooptip */
+$('[rel=tooltip]').tooltip({html:true}) 
+
 /* need to include a way to close the popover by clicking anywhere outside the popover - 
 currently have to click on button */
 // $('rel["clickover"]').clickover();

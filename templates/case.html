@@ -28,7 +28,7 @@
             <div class="span8">
               <p>
                 {% for record in records %}
-                <a href="{{record.url}}">  {{record.description}}  <i class="icon-file-alt icon-3x">  </i></a> <br />
+                <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}}  <i class="icon-file-alt icon-3x">  </i></a> <br />
                 {% endfor %}
               </p>
             </div>
@@ -39,7 +39,7 @@
             <div class="span8">
               <p>
                 {% for note in notes %}
-                 <p class="lead"> {{ note }} noted by {{note.owner_id | owner_name }}</p>
+                 <p> {{ note }} noted by {{note.owner_id | owner_name }}</p>
                 {% endfor %}
               </p>
             </div>

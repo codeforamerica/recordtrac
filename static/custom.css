@@ -57,6 +57,16 @@
 margin: 0 0 0px;
 }
 
+/* all infotips appear as superscript */
+.icon-info-sign {
+	vertical-align: super;
+}
+
+/* NOT WORKING: tooltip text is left-aligned */
+#recordTooltip {
+	text-align: left !important;
+}
+
 /*#rerouteEmail {
 display: inline-block;
 }
