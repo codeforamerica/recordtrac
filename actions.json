@@ -1,0 +1,5 @@
+{
+    "Upload a document": "Uploads a document from your computer and attaches it to this request. It will be publicly viewable. The document represents a public record towards fulfilling the request.",
+    "Add a link": "Provide a link to a document that already exists on the web. The document represents a public record towards fulfilling the request.",
+    "Add a note": "This is a work in progress in order to capture additional information government staff may want to convey about the request."
+}

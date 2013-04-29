@@ -6,6 +6,7 @@ from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from flask.ext.mail import Mail, Message
 from upload import upload
 from datetime import datetime
+import json
 
 # Initialize Flask app and database:
 app = Flask(__name__)
@@ -40,6 +41,15 @@ NOTIFICATIONS = [
 @app.route('/', methods=['GET', 'POST'])
 def index():
 	return new_request()
+
+@app.route('/actions')
+def explain_all_actions():
+	action_json = open('actions.json')
+	json_data = json.load(action_json)
+	actions = []
+	for data in json_data:
+		actions.append("%s: %s" %(data, json_data[data]))
+	return render_template('actions.html', actions = actions)
 
 # They can always submit a new request by navigating here, but the index might change.
 @app.route('/new', methods=['GET', 'POST'])
@@ -226,6 +236,7 @@ def send_emails(body, request_id, type):
 		print 'Not a valid notification type.'
 
 
+
 # Filters
 
 @app.template_filter('date')
@@ -238,6 +249,13 @@ def owner_name(oid):
 	if owner.alias:
 		return owner.alias
 	return owner.email
+
+@app.template_filter('explain_action')
+def explain_action(action):
+	action_json = open('actions.json')
+	json_data = json.load(action_json)
+	return json_data[action]
+
 
 
 if __name__ == '__main__':
