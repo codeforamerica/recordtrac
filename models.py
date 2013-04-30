@@ -1,6 +1,7 @@
-from prflask import db
+from prflask import db, app
 from sqlalchemy.orm import relationship
 from datetime import datetime
+import flask.ext.restless
 
 class Request(db.Model): 
 # The public records request
@@ -99,3 +100,6 @@ class Note(db.Model):
 	def __repr__(self):
 		return self.text
 
+# Create API
+manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
+manager.create_api(Request, methods=['GET', 'POST', 'DELETE'])
