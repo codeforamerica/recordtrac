@@ -19,6 +19,9 @@ from prr import *
 config = os.path.join(app.root_path, 'settings.cfg')
 app.config.from_pyfile(config) 
 
+# Get filepath for actions.json
+actions_filepath = os.path.join(app.root_path, 'actions.json')
+
 mail = Mail(app)
 
 # Define the local temporary folder where uploads will go
@@ -266,7 +269,7 @@ def owner_name(oid):
 
 @app.template_filter('explain_action')
 def explain_action(action):
-	action_json = open('actions.json')
+	action_json = open(actions_filepath)
 	json_data = json.load(action_json)
 	return json_data[action]
 
