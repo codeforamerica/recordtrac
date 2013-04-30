@@ -29,7 +29,7 @@ if app.config['PRODUCTION']:
 	UPLOAD_FOLDER = app.config['UPLOAD_FOLDER']
 else:
 	UPLOAD_FOLDER = "%s/uploads" % os.getcwd()
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc'])
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff'])
 NOTIFICATIONS = [
 					'note', 
 					'new', 
@@ -228,10 +228,10 @@ def send_emails(body, request_id, type, past_owner = None):
 			subject_owner, additional_body = website_copy.request_submitted_city("")
 		elif type == 'note':
 			send_to_owner, send_to_subscribers = False, True
-			subject_subscriber, subject_owner = website_copy.note_added(owner.alias)
+			subject_subscriber, subject_owner = website_copy.note_added(owner.email)
 		elif type == 'record':
 			send_to_owner, send_to_subscribers = False, True
-			subject_subscriber, subject_owner = website_copy.record_added(owner.alias)
+			subject_subscriber, subject_owner = website_copy.record_added(owner.email)
 		elif type == 'close':
 			send_to_owner, send_to_subscribers = False, True
 			subject_subscriber = "Your request has been closed."
