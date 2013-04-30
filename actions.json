@@ -1,5 +1,7 @@
 {
     "Upload a document": "Uploads a document from your computer and attaches it to this request. It will be publicly viewable. The document represents a public record towards fulfilling the request.",
-    "Add a link": "Provide a link to a document that already exists on the web. The document represents a public record towards fulfilling the request.",
-    "Add a note": "This is a work in progress in order to capture additional information government staff may want to convey about the request."
+    "Describe document": "Enter a short description of the document you are uploading to this page. This description will help the public understand the type of document being posted on the website."
+    "Add a link": "Provide a link to a document that already exists on the web. The link can also be to another website that will give the requester the information they need.",
+    "Add a note": "This is a work in progress. Use this section to communicate with other city employees about this particular records request. Remember everything you write here can be viewed by the general public."
+    "Close a request": "You can close a request if you have uploaded a document or posted a link providing the desired information.  If the City of Oakland does not have the requested document, please write a short note explaining why the City does not have it. If a request must be withheld, you are required to provide legal justification for not releasing the record to the public."
 }
