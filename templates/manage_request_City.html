@@ -7,7 +7,7 @@
 {% block status %} 
     <div class="row-fluid">
             <!-- popover -->
-            <div class="span4">[Requester's email]{{request_email}}</div>
+            <div class="span4">Requester: {{requester_email}}</div>
             <div class="pull-right">Routed {{date}}  to  <span> 
 <div class="btn-group">
               <div><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{owner.alias or owner.email}} <span class="caret"></span> </a></div>
@@ -92,7 +92,7 @@
     <fieldset> 
       <div class="row-fluid">
         <div class="span4">
-          <h4>Add a link <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="You must include 'http://' in front of your link."><small><i class="icon-info-sign"></i></small></span></h4>
+          <h4>Add a link <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a link" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></h4>
         </div>
         <div class="span8">
 
@@ -154,7 +154,7 @@
 
       <div class="row-fluid">
         <div class="span4">
-          <h4>Close this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="Signal that this request is complete.  The requester is automatically notified."><small><i class="icon-info-sign"></i></small></span></h4>
+          <h4>Close this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></h4>
         </div>
 
         <div class="span8">

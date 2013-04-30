@@ -123,7 +123,8 @@ def show_request(request_id, template = "case.html", record_uploaded = None):
     owner = Owner.query.get(req.current_owner)
     if "Closed" in req.status:
     	template = "closed.html"
-    return render_template(template, text = req.text, request_id = request_id, records = req.records, status = req.status, owner = owner, date = owner.date_created.date(), date_updated = req.status_updated.date(), record_uploaded = record_uploaded, notes = req.notes)
+    requester = get_requester(request_id)
+    return render_template(template, text = req.text, request_id = request_id, records = req.records, status = req.status, owner = owner, date = owner.date_created.date(), date_updated = req.status_updated.date(), record_uploaded = record_uploaded, notes = req.notes, requester_email = requester.email )
 
 @app.route('/note', methods=['POST'])
 def add_note():
@@ -235,6 +236,12 @@ def send_emails(body, request_id, type):
 	else:
 		print 'Not a valid notification type.'
 
+def get_requester(request_id):
+	req = Request.query.get(request_id)
+	for subscriber in req.subscribers:
+		if subscriber.creator:
+			return subscriber
+	return None
 
 
 # Filters
