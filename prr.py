@@ -33,9 +33,10 @@ def assign_owner(request_id, alias, email, reason):
 	db.session.add(owner)
 	db.session.commit()
 	req = Request.query.get(request_id)
+	past_owner_id = req.current_owner
 	req.current_owner = owner.id
 	db.session.commit()
-	return owner.id
+	return past_owner_id, owner.id
 
 def remove_subscriber(subscriber_id): 
 	try:

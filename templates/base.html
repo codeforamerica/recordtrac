@@ -29,6 +29,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </a>
+            {% if not for_email_notification %}
             <!-- Be sure to leave the brand out there if you want it shown -->
             <a class="brand" href="#">Public Records Request Portal<small class="text-warning"><em> alpha</em></small></a>
             <ul class="nav">
@@ -36,7 +37,7 @@
               <li><a href="/requests">Explore</a></li>
               <li><a href="/about">About</a></li>
             </ul>
-            
+            {% endif %}
             <!-- DO NOT REMOVE: Commenting out until functionality exists
             <form class="navbar-form pull-right">
               <input type="text" class="input-small" placeholder="Login">

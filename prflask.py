@@ -28,11 +28,11 @@ else:
 	UPLOAD_FOLDER = "%s/uploads" % os.getcwd()
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc'])
 NOTIFICATIONS = [
-					# 'note', 
-					# 'new', 
-					# 'close', 
-					# 'reroute',
-					# 'record'
+					'note', 
+					'new', 
+					'close', 
+					'reroute',
+					'record'
 				]
 
 # Routing
@@ -62,7 +62,7 @@ def new_request():
 		except IntegrityError:
 			return None
 		if request_id:
-			send_emails(body = show_request(request_id), request_id = request_id, type = "new")
+			send_emails(body = show_request(request_id, for_email_notification = True), request_id = request_id, type = "new")
 			return show_request(request_id, "requested.html")
 		else:
 			db.session.rollback()
@@ -95,7 +95,7 @@ def load():
 			else:
 				return render_template('error.html', message = "Not an allowed doc type")
 		db.session.commit()
-		send_emails(body = show_request(request_id), request_id = request_id, type = "record")
+		send_emails(body = show_request(request_id, for_email_notification = True), request_id = request_id, type = "record")
 		return show_request(request_id = request_id, template = "uploaded.html", record_uploaded = record)
 	return render_template('error.html', message = "You can only upload from a requests page!")
 
@@ -110,11 +110,13 @@ def show_request_for_x(audience, request_id):
 			reason = ""
 			if owner_reason:
 				reason = owner_reason
-			assign_owner(request_id, "", owner_email, reason)
+			past_owner_id, current_owner_id = assign_owner(request_id, "", owner_email, reason)
+			past_owner = Owner.query.get(past_owner_id)
+			send_emails(body = show_request(request_id, for_email_notification = True), request_id = request_id, type = "reroute", past_owner = past_owner)
 	return show_request(request_id = request_id, template = "manage_request_%s.html" %(audience))
 
 @app.route('/request/<int:request_id>')
-def show_request(request_id, template = "case.html", record_uploaded = None):
+def show_request(request_id, template = "case.html", record_uploaded = None, for_email_notification = False):
     # show the request with the given id, the id is an integer
     req = Request.query.get(request_id)
     if not req:
@@ -124,7 +126,7 @@ def show_request(request_id, template = "case.html", record_uploaded = None):
     if "Closed" in req.status:
     	template = "closed.html"
     requester = get_requester(request_id)
-    return render_template(template, text = req.text, request_id = request_id, records = req.records, status = req.status, owner = owner, date = owner.date_created.date(), date_updated = req.status_updated.date(), record_uploaded = record_uploaded, notes = req.notes, requester_email = requester.email )
+    return render_template(template, text = req.text, request_id = request_id, records = req.records, status = req.status, owner = owner, date = owner.date_created.date(), date_updated = req.status_updated.date(), record_uploaded = record_uploaded, notes = req.notes, requester_email = requester.email, for_email_notification = for_email_notification)
 
 @app.route('/note', methods=['POST'])
 def add_note():
@@ -134,7 +136,7 @@ def add_note():
 		note = Note(request_id = req.id, text = request.form['note_text'], owner_id = req.current_owner)
 		db.session.add(note)
 		db.session.commit()
-		send_emails(body = show_request(request_id), request_id = request_id, type = "note")
+		send_emails(body = show_request(request_id, for_email_notification = True), request_id = request_id, type = "note")
 		return show_request(request_id, template = "manage_request_city.html")
 	return render_template('error.html', message = "You can only add a note from a requests page!")
 
@@ -162,7 +164,7 @@ def close(request_id = None):
 		req = Request.query.get(request_id)
 		subscribers = req.subscribers
 		close_request(request_id, request.form['reason'])
-		send_emails(body = show_request(request_id), request_id = request_id, type = "close")
+		send_emails(body = show_request(request_id, for_email_notification = True), request_id = request_id, type = "close")
 		return show_request(request_id, template= template)
 	return render_template('error.html, message = "You can only close from a requests page!')
 
@@ -209,7 +211,9 @@ def send_email(body, recipients, subject):
 	message.html = body
 	mail.send(message)
 
-def send_emails(body, request_id, type):
+def send_emails(body, request_id, type, past_owner = None):
+	city_page = "%scity/request/%s" %(app.config['APPLICATION_URL'],request_id)
+	public_page = "%srequest/%s" %(app.config['APPLICATION_URL'],request_id)
 	req = Request.query.get(request_id)
 	if type in NOTIFICATIONS:
 		owner = Owner.query.get(req.current_owner)
@@ -228,11 +232,14 @@ def send_emails(body, request_id, type):
 		elif type == 'close':
 			send_to_owner, send_to_subscribers = False, True
 			subject_subscriber = "Your request has been closed."
+		elif type == 'reroute':
+			send_to_owner, send_to_subscribers = True, False
+			subject_subscriber, subject_owner = website_copy.request_routed(past_owner.email)
 		if send_to_subscribers:
 			for subscriber in req.subscribers:
-				send_email(body, [subscriber.email], subject_subscriber)
+				send_email("View this request: " + public_page + "</br>" + body, [subscriber.email], subject_subscriber)
 		if send_to_owner:
-			send_email(body, [owner.email], subject_owner)
+			send_email("View and manage this request: " + city_page + "</br>" + body, [owner.email], subject_owner)
 	else:
 		print 'Not a valid notification type.'
 

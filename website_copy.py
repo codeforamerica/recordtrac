@@ -4,6 +4,9 @@ def note_added(city_employee):
 def record_added(city_employee):
 	return "A record has been added to your request by %s" %(city_employee), "Your record has been uploaded."
 
+def request_routed(city_employee):
+	return "Your request has been rerouted.", "%s has routed this public records request to you." %(city_employee)
+
 def request_submitted(request_text, city_employee, phone_number):
 	subject_line = "Thank you for your request!"
 	email_body = "<p>Thank you for submitting your public records request. You can find a copy of your message below:</p></br> %s </br><p>You can always review this message and our future response to your request, by clicking here.</p><p>In the future, you may have to answer questions about your record requests. These questions are designed to help the City understand the type of information you need and help them quickly provide you with your documents. If your record exists, you will receive an email notifying you that your record was posted online.</p><p>If you have any questions, feel free to send a message to %s by clicking here or calling %s.</p>" %(request_text, city_employee, phone_number)
@@ -14,10 +17,10 @@ def request_submitted_city(request_text):
 	email_body = "<p>A public records request has been sent to you. The full text of the request can be found below:</p></br> %s </br><p>Click here to view more details.</p><p>You have the option to: <ul> <li> Route the request to another city employee who you believe owns the record </li> <li> Ask the person who requested the record more questions </li> <li> Immediately respond with the requested record </li> <li> Ask for an extension </li> </ul></p>" %(request_text)
 	return subject_line, email_body
 
-def request_routed(city_employee, phone_number, request_text):
-	subject_line = "An update on your public records request"
-	email_body = "<p>Your public records request has been sent to %s, who is responsible for sending you the information you need.</p><p>If you have any questions or concerns, feel free to send a message to %s by clicking here or calling %s. You can read the full text of your records request below:</p><p></br>%s</br></p>" %(city_employee, phone_number, request_text)
-	return subject_line, email_body
+# def request_routed(city_employee, phone_number, request_text):
+# 	subject_line = "An update on your public records request"
+# 	email_body = "<p>Your public records request has been sent to %s, who is responsible for sending you the information you need.</p><p>If you have any questions or concerns, feel free to send a message to %s by clicking here or calling %s. You can read the full text of your records request below:</p><p></br>%s</br></p>" %(city_employee, phone_number, request_text)
+# 	return subject_line, email_body
 
 def request_routed_city(city_employee, note, request_text, date, number):
 	subject_line = "You have been sent a public records request"
