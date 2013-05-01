@@ -3,10 +3,10 @@ from werkzeug import secure_filename
 from flask import Flask, render_template, request, flash, redirect, url_for
 from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
-from flask.ext.mail import Mail, Message
 from upload import upload
 from datetime import datetime
 import json
+import sendgrid
 
 # Initialize Flask app and database:
 app = Flask(__name__)
@@ -21,8 +21,8 @@ app.config.from_pyfile(config)
 
 # Get filepath for actions.json
 actions_filepath = os.path.join(app.root_path, 'actions.json')
+mail = sendgrid.Sendgrid(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'], secure = True)
 
-mail = Mail(app)
 
 # Define the local temporary folder where uploads will go
 if app.config['PRODUCTION']:
@@ -209,10 +209,14 @@ def upload_file(file):
 	return None, None
 
 
-def send_email(body, recipients, subject):
-	message = Message(subject, recipients, sender = app.config['DEFAULT_MAIL_SENDER'])
-	message.html = body
-	mail.send(message)
+def send_email(body, recipient, subject):
+	sender = app.config['DEFAULT_MAIL_SENDER']
+	plaintext = ""
+	html = body
+	message = sendgrid.Message(sender, subject, plaintext, html)
+	message.add_to(recipient)
+	message.add_bcc(sender)
+	mail.web.send(message)
 
 def send_emails(body, request_id, type, past_owner = None):
 	city_page = "%scity/request/%s" %(app.config['APPLICATION_URL'],request_id)
@@ -240,9 +244,9 @@ def send_emails(body, request_id, type, past_owner = None):
 			subject_subscriber, subject_owner = website_copy.request_routed(past_owner.email)
 		if send_to_subscribers:
 			for subscriber in req.subscribers:
-				send_email("View this request: " + public_page + "</br>" + body, [subscriber.email], subject_subscriber)
+				send_email("View this request: " + public_page + "</br>" + body, subscriber.email, subject_subscriber)
 		if send_to_owner:
-			send_email("View and manage this request: " + city_page + "</br>" + body, [owner.email], subject_owner)
+			send_email("View and manage this request: " + city_page + "</br>" + body, owner.email, subject_owner)
 	else:
 		print 'Not a valid notification type.'
 
