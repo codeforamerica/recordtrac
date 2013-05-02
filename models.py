@@ -26,7 +26,7 @@ class Owner(db.Model):
 # A member of city staff assigned to a particular request, that may or may not upload records towards that request. 
 	__tablename__ = 'owner'
 	id = db.Column(db.Integer, primary_key =True)
-	alias = db.Column(db.String(20))
+	alias = db.Column(db.String(100))
 	email = db.Column(db.String(100))
 	date_created = db.Column(db.DateTime)
 	records = relationship("Record") # All records that have been uploaded
@@ -47,7 +47,7 @@ class Subscriber(db.Model):
 	__tablename__ = 'subscriber'
 	id = db.Column(db.Integer, primary_key = True)
 	email = db.Column(db.String(100))
-	alias = db.Column(db.String(20))
+	alias = db.Column(db.String(100))
 	date_created = db.Column(db.DateTime)
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
 	creator = db.Boolean() # True if they created the initial request.
