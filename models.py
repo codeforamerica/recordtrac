@@ -9,7 +9,7 @@ class Request(db.Model):
 	id = db.Column(db.Integer, primary_key =True)
 	date_created = db.Column(db.DateTime)
 	status_updated = db.Column(db.DateTime)
-	text = db.Column(db.String(400), unique=True) # The actual request text.
+	text = db.Column(db.String(), unique=True) # The actual request text.
 	subscribers = relationship("Subscriber") # The list of subscribers following this request.
 	owners = relationship("Owner") # The list of city staff ever assigned to the request.
 	current_owner = db.Column(db.Integer) # The Owner ID for the city staff that currently 'owns' the request.
@@ -31,7 +31,7 @@ class Owner(db.Model):
 	date_created = db.Column(db.DateTime)
 	records = relationship("Record") # All records that have been uploaded
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
-	reason = db.Column(db.String(400)) # Reason they were assigned
+	reason = db.Column(db.String()) # Reason they were assigned
 	def __init__(self, request_id, email, reason= None, alias = None):
 		self.reason = reason
 		self.alias = alias
@@ -69,9 +69,9 @@ class Record(db.Model):
 	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id')) # The city staff who uploaded the record
 	doc_id = db.Column(db.Integer) # The document ID. Currently using Scribd API to upload documents.
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id')) # The request this record was uploaded for
-	description = db.Column(db.String(100)) # A short description of what the record is. 
-	filename = db.Column(db.String(100)) # The original name of the file being uploaded.
-	url = db.Column(db.String(200)) # Where it exists on the internet.
+	description = db.Column(db.String(400)) # A short description of what the record is. 
+	filename = db.Column(db.String(400)) # The original name of the file being uploaded.
+	url = db.Column(db.String()) # Where it exists on the internet.
 	def __init__(self, request_id, owner_id, url = None, doc_id = None, description = None):
 		self.doc_id = doc_id
 		self.request_id = request_id
@@ -87,7 +87,7 @@ class Note(db.Model):
 	__tablename__ = 'note'
 	id = db.Column(db.Integer, primary_key = True)
 	date_created = db.Column(db.DateTime)
-	text = db.Column(db.String(400))
+	text = db.Column(db.String())
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id')) # The request it belongs to.
 	subscriber_id = db.Column(db.Integer, db.ForeignKey('subscriber.id')) # The subscriber who wrote the note
 	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id'))
