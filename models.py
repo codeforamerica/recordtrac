@@ -102,5 +102,6 @@ class Note(db.Model):
 
 # Create API
 manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
-manager.create_api(Request, methods=['GET', 'POST', 'DELETE'])
-manager.create_api(Note, methods=['GET', 'POST', 'DELETE'])
+manager.create_api(Request, methods=['GET'], exclude_columns=['subscribers'])
+manager.create_api(Note, methods=['GET'])
+manager.create_api(Record, methods=['GET'])
