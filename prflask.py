@@ -242,7 +242,8 @@ def send_emails(body, request_id, type, past_owner = None):
 			subject_subscriber, subject_owner = website_copy.request_routed(past_owner.email)
 		if send_to_subscribers:
 			for subscriber in req.subscribers:
-				send_email("View this request: " + public_page + "</br>" + body, subscriber.email, subject_subscriber)
+				if subscriber.email:
+					send_email("View this request: " + public_page + "</br>" + body, subscriber.email, subject_subscriber)
 		if send_to_owner:
 			send_email("View and manage this request: " + city_page + "</br>" + body, owner.email, subject_owner)
 	else:
