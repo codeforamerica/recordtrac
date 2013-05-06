@@ -3,7 +3,6 @@ from werkzeug import secure_filename
 from flask import Flask, render_template, request, flash, redirect, url_for
 from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
-from upload import upload
 from datetime import datetime
 import json
 import sendgrid
@@ -31,11 +30,11 @@ else:
 	UPLOAD_FOLDER = "%s/uploads" % os.getcwd()
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff'])
 NOTIFICATIONS = [
-					'note', 
-					'new', 
-					'close', 
-					'reroute',
-					'record'
+					# 'note', 
+					# 'new', 
+					# 'close', 
+					# 'reroute',
+					# 'record'
 				]
 
 # Routing
@@ -120,16 +119,15 @@ def show_request_for_x(audience, request_id):
 
 @app.route('/request/<int:request_id>')
 def show_request(request_id, template = "case.html", record_uploaded = None, for_email_notification = False):
-    # show the request with the given id, the id is an integer
-    req = Request.query.get(request_id)
+    req = get_request(request_id = request_id, url = app.config['APPLICATION_URL'])
     if not req:
     	return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
     doc_ids = []
-    owner = Owner.query.get(req.current_owner)
-    if "Closed" in req.status:
+    owner = Owner.query.get(req['current_owner'])
+    if "Closed" in req['status']:
     	template = "closed.html"
     requester = get_requester(request_id)
-    return render_template(template, text = req.text, request_id = request_id, records = req.records, status = req.status, owner = owner, date = owner.date_created.date(), date_updated = req.status_updated.date(), record_uploaded = record_uploaded, notes = req.notes, requester_email = requester.email, for_email_notification = for_email_notification)
+    return render_template(template, text = req['text'], request_id = request_id, records = req['records'], status = req['status'], owner = owner, date = owner.date_created.date(), date_updated = req['status_updated'], record_uploaded = record_uploaded, notes = req['notes'], requester_email = requester.email, for_email_notification = for_email_notification)
 
 @app.route('/note', methods=['POST'])
 def add_note():
@@ -262,7 +260,10 @@ def get_requester(request_id):
 
 @app.template_filter('date')
 def date(obj):
-	return obj.date()
+	try:
+		return obj.date()
+	except:
+		return time.strptime(obj, '%Y-%m-%d')
 
 @app.template_filter('owner_name')
 def owner_name(oid):

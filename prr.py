@@ -4,6 +4,16 @@ from models import *
 import prflask
 from prflask import db
 import website_copy
+import tempfile
+import scribd # Used for uploading documents, could use another service
+import time
+import requests as seaturtle
+import json
+
+def get_request(request_id, url):
+	headers = {'content-type': 'application/json; charset=utf-8'}
+	r = seaturtle.get("%s/api/request/%s" %(url, request_id), headers=headers)
+	return r.json()
 
 def make_request(str, email = None, assigned_to_name = None, assigned_to_email = None, assigned_to_reason = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
@@ -70,3 +80,39 @@ def notify(request_id):
 			prflask.send_email(body = public_body, recipients = [subscriber.email], subject = public_subject)
 	else:
 		print "No one assigned!"
+
+def progress(bytes_sent, bytes_total):
+    print("%s of %s (%s%%)" % (bytes_sent, bytes_total, bytes_sent*100/bytes_total))
+
+def upload(filepath, API_KEY, API_SECRET):
+    # Configure the Scribd API.
+    scribd.config(API_KEY, API_SECRET)
+    doc_id = None
+    try:
+        # Upload the document from a file.
+        doc = scribd.api_user.upload(
+            open(filepath,'rb'),
+            progress_callback=progress,
+            req_buffer = tempfile.TemporaryFile()
+            )
+        # Poll API until conversion is complete.
+        while doc.get_conversion_status() != 'DONE':
+            # Sleep to prevent a runaway loop that will block the script.
+            time.sleep(2)        
+        doc_id = doc.id
+        return doc_id
+    except scribd.ResponseError, err:
+        print 'Scribd failed: code=%d, error=%s' % (err.errno, err.strerror)
+        return err.strerror
+
+def make_public(doc_id, API_KEY, API_SECRET):
+    scribd.config(API_KEY, API_SECRET)
+    doc = scribd.api_user.get(doc_id)
+    doc.access = 'public'
+    doc.save()
+
+def make_private(doc_id, API_KEY, API_SECRET):
+    scribd.config(API_KEY, API_SECRET)
+    doc = scribd.api_user.get(doc_id)
+    doc.access = 'private'
+    doc.save()

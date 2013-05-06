@@ -1,8 +1,7 @@
-public-records
+Public Records 
 ==============
 
-This is a portal to display public record requests to the community and the City of Oakland.
-
+This is a portal to display public record requests to the community and the City of Oakland. It's currently in a research and development phase by the Code for America 2013 Oakland team. We hope to update the documentation soon! In the meantime you can [e-mail](oakland@codeforamerica.org) us or [open an issue](https://github.com/codeforamerica/public-records/issues?state=open) if you have any questions.
 
 ## Installation
 
@@ -36,14 +35,17 @@ Save example-settings.cfg as settings.cfg and update relevant fields. To test e-
 
 To use the application locally, in a new window:
 
-    python prflask.py
+    gunicorn -w 2 -u your_user_name prflask:app
 
 
 You should see something similar to:
 
-    * Running on http://127.0.0.1:5000/
-    * Restarting with reloader
+    2013-05-06 12:16:53 [1776] [INFO] Starting gunicorn 0.17.4
+    2013-05-06 12:16:53 [1776] [INFO] Listening at: http://127.0.0.1:8000 (1776)
+    2013-05-06 12:16:53 [1776] [INFO] Using worker: sync
+    2013-05-06 12:16:53 [1779] [INFO] Booting worker with pid: 1779
+    2013-05-06 12:16:53 [1780] [INFO] Booting worker with pid: 1780
 
-Navigate to the url in your browser.
+Navigate to the url (in this case, http://127.0.0.1:8000) in your browser.
 
 <!-- [![Build Status](https://travis-ci.org/codeforamerica/public-records.png?branch=master)](https://travis-ci.org/codeforamerica/public-records) -->
