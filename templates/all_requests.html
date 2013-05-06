@@ -12,9 +12,9 @@
     <thead>
       <tr>
         <th>#</th>
-        <th>Date Received</th>
+        <th>Received</th>
         <th>Request</th>
-        <th>Date Last Touched</th>
+        <th>Updated</th>
         <th>Owner</th>
         
       </tr>
@@ -22,11 +22,11 @@
     <tbody>
       {% for request in all_record_requests %}
         <tr>
-          <td><a href="/request/{{request.id}}">{{ request.id }}</a></td>
-          <td><a href="/request/{{request.id}}">{{ request.date_created | date }}</a></td>
+          <td><a href="/request/{{request.id}}">{{ request.id }} </a></td>
+          <td>{{ request.date_created | date }}</td>
           <td><a href="/request/{{request.id}}">{{ request }}</a></td>
-          <td><a href="/request/{{request.id}}">{{ request.status_updated | date }} </a></td>
-          <td><a href="/request/{{request.id}}">{{ request.current_owner | owner_name }}</a></td>
+          <td>{{ request.status_updated | date }} </td>
+          <td>{{ request.current_owner | owner_name }}</td>
         </tr>
       {% else %}
         
