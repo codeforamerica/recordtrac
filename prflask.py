@@ -127,7 +127,7 @@ def show_request(request_id, template = "case.html", record_uploaded = None, for
     if "Closed" in req['status']:
     	template = "closed.html"
     requester = get_requester(request_id)
-    return render_template(template, text = req['text'], request_id = request_id, records = req['records'], status = req['status'], owner = owner, date = owner.date_created.date(), date_updated = req['status_updated'], record_uploaded = record_uploaded, notes = req['notes'], requester_email = requester.email, for_email_notification = for_email_notification)
+    return render_template(template, text = req['text'], request_id = request_id, records = req['records'], status = req['status'], owner = owner, date = owner.date_created.date(), date_updated = req['status_updated'], record_uploaded = record_uploaded, notes = req['notes'], requester_email = requester['email'], for_email_notification = for_email_notification)
 
 @app.route('/note', methods=['POST'])
 def add_note():
