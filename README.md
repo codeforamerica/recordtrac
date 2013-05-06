@@ -1,7 +1,7 @@
 Public Records 
 ==============
 
-This is a portal to display public record requests to the community and the City of Oakland. It's currently in a research and development phase by the Code for America 2013 Oakland team. We hope to update the documentation soon! In the meantime you can [e-mail](oakland@codeforamerica.org) us or [open an issue](https://github.com/codeforamerica/public-records/issues?state=open) if you have any questions.
+This is a portal to display public record requests to the community and the City of Oakland. It's currently in a research and development phase by the Code for America 2013 Oakland team. We hope to update the documentation soon! In the meantime you can e-mail us at oakland at codeforamerica dot org or [open an issue](https://github.com/codeforamerica/public-records/issues?state=open) if you have any questions.
 
 ## Installation
 
@@ -35,7 +35,7 @@ Save example-settings.cfg as settings.cfg and update relevant fields. To test e-
 
 To use the application locally, in a new window:
 
-    gunicorn -w 2 -u your_user_name prflask:app
+    gunicorn -w 2 prflask:app
 
 
 You should see something similar to:
