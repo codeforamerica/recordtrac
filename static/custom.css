@@ -62,9 +62,9 @@ margin: 0 0 0px;
 	vertical-align: super;
 }
 
-/* NOT WORKING: tooltip text is left-aligned */
-#recordTooltip {
-	text-align: left !important;
+/* tooltip text, left-aligned */
+ .tooltip-inner {
+	text-align: left ;
 }
 
 /*#rerouteEmail {
