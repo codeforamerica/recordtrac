@@ -6,29 +6,29 @@
 
 {% block status %} 
     <div class="row-fluid">
-            <!-- popover -->
-            <div class="span4">Requester: {{requester_email}}</div>
-            <div class="pull-right">Routed {{date}}  to  <span> 
-<div class="btn-group">
-              <div><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{owner.alias or owner.email}} <span class="caret"></span> </a></div>
-                <div id="reroutePopover-head" class="hide">Reassign to:</div>
-                <div id="reroutePopover-content" class="hide">
-                  
-                  <form id="rerouteForm" class="form-inline" method ="post" action="">
-                    <!-- my form -->
-                    <div class="control-group">
-                      <div class="controls">
-                        <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" required />
-                        <input id="rerouteReason" type="text" name="owner_reason" placeholder="Say why." />
-                        <button id="rerouteButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
-                      </div>
-                    </div>
-                  </form>
+      <!-- popover -->
+      <div class="pull-right">Routed {{date}}  to  
+        <span> 
+          <div class="btn-group">
+            <div><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{owner.alias or owner.email}} <span class="caret"></span> </a></div>
+              <div id="reroutePopover-head" class="hide">Reassign to:</div>
+              <div id="reroutePopover-content" class="hide">
                 
-                </div>
-            </div>
+                <form id="rerouteForm" class="form-inline" method ="post" action="">
+                  <!-- my form -->
+                  <div class="control-group">
+                    <div class="controls">
+                      <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" required />
+                      <input id="rerouteReason" type="text" name="owner_reason" placeholder="Say why." />
+                      <button id="rerouteButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
+                    </div>
+                  </div>
+                </form>
+              
+              </div>
+          </div>
 
-            </span>
+        </span>
       </div>
             
 
@@ -45,7 +45,7 @@
 
       <div class="row-fluid">
         <div class="span4">
-          <h4>Add a record <span id="recordTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Upload a document" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></h4>
+          <h4>Add a record <span id="recordTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Upload a document" | explain_action}}" class="text_left"><small><i class="icon-info-sign"></i></small></span></h4>
         </div>
         <div class="span8">
 
