@@ -9,6 +9,9 @@ import scribd # Used for uploading documents, could use another service
 import time
 import requests as seaturtle
 import json
+from flask import Flask, render_template, request, flash, redirect, url_for
+from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
+from sqlalchemy.exc import IntegrityError, InvalidRequestError
 
 def get_request(request_id, url):
 	headers = {'content-type': 'application/json; charset=utf-8'}
@@ -22,24 +25,43 @@ def make_request(str, email = None, assigned_to_name = None, assigned_to_email =
 	db.session.commit()
 	owner_id = assign_owner(req.id, assigned_to_name, assigned_to_email, assigned_to_reason)
 	if email: # If the user provided an e-mail address, add them as a subscriber to the request.
-		subscriber = Subscriber(req.id, email)
+		user_id = create_or_return_user(email = email)
+		subscriber = Subscriber(request_id = req.id, user_id = user_id)
 		db.session.add(subscriber)
 		db.session.commit()
 	open_request(req.id)
 	db.session.commit()
 	return req.id
 
+def create_or_return_user(email, alias = None):
+	try:
+		user = User(email = email, alias = alias)
+		db.session.add(user)
+		db.session.commit()
+		return user.id
+	except IntegrityError:
+		# db.session.rollback()
+		return get_user(email = email)
+
+
+def get_user(user_id):
+	return User.query.get(subscriber.user_id)
+
 def open_request(id):
 	change_request_status(id, "Open")
-	# notify(id)
 
 def close_request(id, reason = ""):
 	change_request_status(id, "Closed. %s" %reason)
-	# notify(id)
+
+def get_user(email):
+	user = User.query.filter_by(email = email).first()
+	return user.id
+
 
 def assign_owner(request_id, alias, email, reason): 
 	""" Called any time a new owner is assigned. This will overwrite the current owner."""
-	owner = Owner(alias = alias, request_id = request_id, email = email, reason = reason)
+	user_id = create_or_return_user(email = email, alias = alias)
+	owner = Owner(request_id = request_id, user_id = user_id, reason = reason)
 	db.session.add(owner)
 	db.session.commit()
 	req = Request.query.get(request_id)
@@ -53,9 +75,9 @@ def remove_subscriber(subscriber_id):
 		subscriber = Subscriber.query.get(subscriber_id)
 		db.session.delete(subscriber)
 		db.session.commit()
-		return True # Unassigned successfully
+		return True # removed successfully
 	except:
-		return False # No one to unassign
+		return False 
 
 def change_request_status(id, status):
 	try:

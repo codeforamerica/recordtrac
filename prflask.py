@@ -123,14 +123,15 @@ def show_request(request_id, template = "case.html", record_uploaded = None, for
     if not req:
     	return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
     doc_ids = []
-    owner = Owner.query.get(req['current_owner'])
+    owner= Owner.query.get(req['current_owner'])
+    owner_email = User.query.get(owner.user_id).email
     if "Closed" in req['status']:
     	template = "closed.html"
     requester = get_requester(request_id)
     requester_email = None
     if requester:
-    	requester_email = requester.email
-    return render_template(template, text = req['text'], request_id = request_id, records = req['records'], status = req['status'], owner = owner, date = owner.date_created.date(), date_updated = req['status_updated'], record_uploaded = record_uploaded, notes = req['notes'], requester_email = requester_email, for_email_notification = for_email_notification)
+    	requester_email = User.query.get(requester.user_id).email
+    return render_template(template, text = req['text'], request_id = request_id, records = req['records'], status = req['status'], owner = owner, owner_email = owner_email, date = owner.date_created.date(), date_updated = req['status_updated'], record_uploaded = record_uploaded, notes = req['notes'], requester_email = requester_email, for_email_notification = for_email_notification)
 
 @app.route('/note', methods=['POST'])
 def add_note():
@@ -170,7 +171,7 @@ def close(request_id = None):
 		close_request(request_id, request.form['reason'])
 		send_emails(body = show_request(request_id, for_email_notification = True), request_id = request_id, notification_type = "close")
 		return show_request(request_id, template= template)
-	return render_template('error.html, message = "You can only close from a requests page!')
+	return render_template('error.html', message = "You can only close from a requests page!")
 
 
 # Shows all public records requests that have been made.
@@ -216,7 +217,6 @@ def send_email(body, recipient, subject):
 	html = body
 	message = sendgrid.Message(sender, subject, plaintext, html)
 	message.add_to(recipient)
-	message.add_bcc(sender)
 	mail.web.send(message)
 
 def send_emails(body, request_id, notification_type, past_owner = None):
@@ -227,28 +227,34 @@ def send_emails(body, request_id, notification_type, past_owner = None):
 		owner = Owner.query.get(req.current_owner)
 		subject_subscriber = ""
 		subject_owner = ""
+		owner_email = User.query.get(owner.user_id).email
+		past_owner_email = None
+		if past_owner:
+			past_owner_email = User.query.get(past_owner.user_id).email
 		if notification_type == 'new':
 			send_to_owner, send_to_subscribers = True, False
 			subject_subscriber, additional_body = website_copy.request_submitted("", "", "")
 			subject_owner, additional_body = website_copy.request_submitted_city("")
 		elif notification_type == 'note':
 			send_to_owner, send_to_subscribers = False, True
-			subject_subscriber, subject_owner = website_copy.note_added(owner.email)
+			subject_subscriber, subject_owner = website_copy.note_added(owner_email)
 		elif notification_type == 'record':
 			send_to_owner, send_to_subscribers = False, True
-			subject_subscriber, subject_owner = website_copy.record_added(owner.email)
+			subject_subscriber, subject_owner = website_copy.record_added(owner_email)
 		elif notification_type == 'close':
 			send_to_owner, send_to_subscribers = False, True
 			subject_subscriber = "Your request has been closed."
 		elif notification_type == 'reroute':
 			send_to_owner, send_to_subscribers = True, False
-			subject_subscriber, subject_owner = website_copy.request_routed(past_owner.email)
+			subject_subscriber, subject_owner = website_copy.request_routed(past_owner_email)
 		if send_to_subscribers:
 			for subscriber in req.subscribers:
-				if subscriber.email:
-					send_email("View this request: " + public_page + "</br>" + body, subscriber.email, subject_subscriber)
+				subscriber_email = User.query.get(subscriber.user_id).email
+				email_body = "View this request: %s </br> %s" % (public_page, body)
+				send_email(email_body, subscriber_email,subject_subscriber)
 		if send_to_owner:
-			send_email("View and manage this request: " + city_page + "</br>" + body, owner.email, subject_owner)
+			email_body = "View and manage this request: %s </br> %s" %(city_page, body)
+			send_email(email_body.as_string(), owner_email, subject_owner)
 	else:
 		print 'Not a valid notification type.'
 
@@ -266,15 +272,18 @@ def get_requester(request_id):
 def date(obj):
 	try:
 		return obj.date()
-	except:
-		return time.strptime(obj, '%Y-%m-%d')
+	except: # Not a datetime object
+		o = datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f")
+		return o.date()
+
 
 @app.template_filter('owner_name')
 def owner_name(oid):
 	owner = Owner.query.get(oid)
-	if owner.alias:
-		return owner.alias
-	return owner.email
+	user = User.query.get(owner.user_id)
+	if user.alias:
+		return user.alias
+	return user.email
 
 @app.template_filter('explain_action')
 def explain_action(action):
