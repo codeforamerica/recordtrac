@@ -5,50 +5,92 @@
 {% block head %} {% endblock head %}
 {% block body %}
 <div class="row-fluid well">
-    <div class="span12"> 
-{% block status %}
-    <div class="row-fluid">
-      <div class="text-right">Routed {{date | date }} to </br> <span class="label label-info">{{owner_email}} </span> because {{ owner.reason }} 
-      </div>
-    </div>
-{% endblock status %}
-{% block content %}
-      <div class="row-fluid">
-        <div class="span8">
+  <div> 
+    {% block status %}
+        <div class="row-fluid">
+          <div class="text-right">Routed {{date | date }} to </br> <span class="label label-info">{{owner.alias or owner.email}} </span> because {{ owner.reason }} 
+          </div>
+        </div>
+    {% endblock status %}
 
-          <div class="row-fluid">
-            <h4>Request</h4>
-            <div class="span8">
-                <p class="lead"> {{ text }} </p>
-            </div>
-          </div>
-          {% if records %}
-          <div class="row-fluid">
-            <h4>Document(s) </h4>
-            <div class="span8">
-              <p>
-                {% for record in records %}
-                <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}}  <i class="icon-file-alt icon-3x">  </i></a> <br />
-                {% endfor %}
-              </p>
-            </div>
-          </div>
-          {% endif %}
-          {% if notes %}
-          <div class="row-fluid">
-            <h4>Note(s) </h4>
-            <div class="span8">
-              <p>
-                {% for note in notes %}
-                 <p> {{ note }} noted by {{note.owner_id | owner_name }}</p>
-                {% endfor %}
-              </p>
-            </div>
-          </div>
-          {% endif %}
+    {% block content %}
+      <div class="row-fluid">
+        <h4>Request</h4>
+        <div class="span10">
+            <p class="lead"> {{ text }} </p>
         </div>
       </div>
-{% endblock content %}
+      <div class="row-fluid">
+        <h4>Response</h4>
+        
+          {% if links %}
+            <div class="span10">
+              {% for link in links %}
+                <div class="row-fluid response">
+                  <div class="span2 text-center">
+                    <i class="icon-link icon-3x">  </i></br>
+                    <small> {{ time }} [May 4, 2013]</small> </br>
+                  </div>
+                  <div class="span10">
+                    <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{link.description}} </a> - <em>{{link.owner_id | owner_name }}</em></p>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% if records %}
+            <div class="span10">
+              {% for record in records %}
+                <div class="row-fluid response">
+                  <div class="span2 text-center">
+                    <i class="icon-file-alt icon-3x">  </i></br>
+                    <small> {{ time }} [May 4, 2013]</small> </br>
+                  </div>
+                  <div class="span10">
+                    <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.owner_id | owner_name }}</em></p>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% if notes %}
+            <div class="span10">
+              {% for note in notes %}
+                <div class="row-fluid response">
+                  <div class="span2 text-center">
+                    <i class="icon-edit icon-3x">  </i> </br>
+                    <small> {{ time }} [May 4, 2013]</small> </br>
+                  </div>
+                  <div class="span10">
+                    <p> {{ note }} - <em>{{note.owner_id | owner_name }}</em></p>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% if questions %}
+            <div class="span10">
+              {% for question in questions %}
+                <div class="row-fluid response">
+                  <div class="span2 text-center">
+                    <i class="icon-question-sign icon-3x">  </i> </br>
+                    <small> {{ time }} [May 4, 2013]</small> </br>
+                  </div>
+                  <div class="span10">
+                    <p> {{ note }} - <em>{{question.owner_id | owner_name }}</em></p>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+        </div>
+      </div>
+    {% endblock content %}
+    
   </div>
 </div>
 {% endblock body %}

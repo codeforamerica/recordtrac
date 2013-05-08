@@ -67,17 +67,11 @@ margin: 0 0 0px;
 	text-align: left ;
 }
 
-/*#rerouteEmail {
-display: inline-block;
+/*  */
+.response {
+	padding-top: 2%;
 }
 
-#rerouteButton {
-display: inline-block;
-}*/
-
-/*.popover {
-   width: 900px !important;
-}*/
 
 /* ----- Sticky Footer ----- by Ryan Fait http://ryanfait.com/ ----- */
 * {
