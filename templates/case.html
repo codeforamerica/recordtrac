@@ -71,6 +71,22 @@
             </div>
           {% endif %}
 
+          {% if questions %}
+            <div class="span10">
+              {% for question in questions %}
+                <div class="row-fluid response">
+                  <div class="span2 text-center">
+                    <i class="icon-question-sign icon-3x">  </i> </br>
+                    <small> {{ time }} [May 4, 2013]</small> </br>
+                  </div>
+                  <div class="span10">
+                    <p> {{ note }} - <em>{{question.owner_id | owner_name }}</em></p>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
         </div>
       </div>
     {% endblock content %}
