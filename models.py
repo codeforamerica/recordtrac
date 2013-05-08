@@ -3,6 +3,20 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 import flask.ext.restless
 
+class User(db.Model):
+	id = db.Column(db.Integer, primary_key = True)
+	alias = db.Column(db.String(100))
+	email = db.Column(db.String(100), unique=True)
+	date_created = db.Column(db.DateTime)
+	owners = db.relationship("Owner")
+	subscribers = db.relationship("Subscriber")
+	def __init__(self, email, alias = None):
+		self.email = email
+		self.alias = alias
+		self.date_created = datetime.now()
+	def __repr__(self):
+		return self.email
+
 class Request(db.Model): 
 # The public records request
 	__tablename__ = 'request'
@@ -26,39 +40,35 @@ class Owner(db.Model):
 # A member of city staff assigned to a particular request, that may or may not upload records towards that request. 
 	__tablename__ = 'owner'
 	id = db.Column(db.Integer, primary_key =True)
-	alias = db.Column(db.String(100))
-	email = db.Column(db.String(100))
-	date_created = db.Column(db.DateTime)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	records = relationship("Record") # All records that have been uploaded
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
 	reason = db.Column(db.String()) # Reason they were assigned
-	def __init__(self, request_id, email, reason= None, alias = None):
+	date_created = db.Column(db.DateTime)
+	def __init__(self, request_id, user_id, reason= None):
 		self.reason = reason
-		self.alias = alias
-		self.email = email
+		self.user_id = user_id
 		self.request_id = request_id
 		self.date_created = datetime.now()
 	def __repr__(self):
-		return self.alias
+		return self.user_id
 
 
 class Subscriber(db.Model): 
 # A person subscribed to a request, who may or may not have created the request, and may or may not own a part of the request.
 	__tablename__ = 'subscriber'
 	id = db.Column(db.Integer, primary_key = True)
-	email = db.Column(db.String(100))
-	alias = db.Column(db.String(100))
-	date_created = db.Column(db.DateTime)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
 	creator = db.Boolean() # True if they created the initial request.
+	date_created = db.Column(db.DateTime)
 	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id')) # Not null if responsible for fulfilling a part of the request
- 	def __init__(self, request_id, email, alias = None):
- 		self.email = email
- 		self.alias = alias
+ 	def __init__(self, request_id, user_id):
+ 		self.user_id = user_id
 		self.request_id = request_id
 		self.date_created = datetime.now()
 	def __repr__(self):
-		return self.alias
+		return self.user_id
 
 
 class Record(db.Model):
@@ -105,3 +115,4 @@ manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
 manager.create_api(Request, methods=['GET'], exclude_columns=['subscribers'])
 manager.create_api(Note, methods=['GET'])
 manager.create_api(Record, methods=['GET'])
+manager.create_api(User, methods=['GET'])
