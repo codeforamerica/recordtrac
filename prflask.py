@@ -217,6 +217,7 @@ def send_email(body, recipient, subject):
 	html = body
 	message = sendgrid.Message(sender, subject, plaintext, html)
 	message.add_to(recipient)
+	# message.add_bcc(sender)
 	mail.web.send(message)
 
 def send_emails(body, request_id, notification_type, past_owner = None):
