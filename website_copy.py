@@ -13,7 +13,7 @@ def request_submitted(request_text, city_employee, phone_number):
 	return subject_line, email_body
 
 def request_submitted_city(request_text):
-	subject_line = "Request for Public Records"
+	subject_line = "A public records request has been sent to you."
 	email_body = "<p>A public records request has been sent to you. The full text of the request can be found below:</p></br> %s </br><p>Click here to view more details.</p><p>You have the option to: <ul> <li> Route the request to another city employee who you believe owns the record </li> <li> Ask the person who requested the record more questions </li> <li> Immediately respond with the requested record </li> <li> Ask for an extension </li> </ul></p>" %(request_text)
 	return subject_line, email_body
 

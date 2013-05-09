@@ -7,13 +7,12 @@
 {% block status %} 
   <div class="row-fluid">
     <!-- popover -->
-    <div class="pull-right">Routed {{date}}  to  
+    <div class="pull-right">Routed {{date | date }}  to  
       <span> 
         <div class="btn-group">
-          <div><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{owner.alias or owner.email}} <span class="caret"></span> </a></div>
+          <div><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{owner_email}} <span class="caret"></span> </a></div>
             <div id="reroutePopover-head" class="hide">Reassign to:</div>
-            <div id="reroutePopover-content" class="hide">
-              
+            <div id="reroutePopover-content" class="hide">              
               <form id="rerouteForm" class="form-inline" method ="post" action="">
                 <!-- my form -->
                 <div class="control-group">

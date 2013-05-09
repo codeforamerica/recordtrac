@@ -8,7 +8,7 @@
 {% block status %}
   <div class="row-fluid">
       <div class="text-right">
-        <span class="label label-info">{{status}} {{date_updated}} by {{owner.alias or owner.email}} </span>    
+        <span class="label label-info">{{status}} {{date_updated | date }} by {{owner_email}} </span>    
     </div>
   </div>
 {% endblock status %}
