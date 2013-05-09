@@ -14,8 +14,8 @@
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap-responsive.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap-fileupload.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='font-awesome.min.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='custom.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='jquery.dataTables.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='custom.css') }}">
 
   <!-- google analytics -->
     <!-- for later: guide to add event-driven analytics http://www.sitepoint.com/google-analytics-track-javascript-ajax-events/ -->
@@ -44,7 +44,7 @@
             {% if not for_email_notification %}
             <!-- Be sure to leave the brand out there if you want it shown -->
             <a class="brand" href="/new">Public Records Request Portal<small class="text-warning"><em> alpha</em></small></a>
-            <div class="nav-collapse navbar-responsive-collapse collapse">
+            <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
               <ul class="nav">
                 <li><a href="/new">Request</a></li>
                 <li><a href="/requests">Explore</a></li>
@@ -101,6 +101,7 @@
     <script type="text/javascript" src="{{ url_for('static', filename='custom.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='bootstrap-fileupload.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='dataTables.scrollingPagination.js') }}"></script>
 
   </body>
 </html>

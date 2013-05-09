@@ -1,56 +1,67 @@
 /* banner dismissal */
-$(function(){$(".alert").alert()})
+  $(function(){$(".alert").alert()})
 
 
 /* navbar active page indicator */
-$(function(){
-  function stripTrailingSlash(str) {
-    if(str.substr(-1) == '/') {
-      return str.substr(0, str.length - 1);
+  $(function(){
+    function stripTrailingSlash(str) {
+      if(str.substr(-1) == '/') {
+        return str.substr(0, str.length - 1);
+      }
+      return str;
     }
-    return str;
-  }
 
-  var url = window.location.pathname;  
-  var activePage = stripTrailingSlash(url);
+    var url = window.location.pathname;  
+    var activePage = stripTrailingSlash(url);
 
-  $('.nav li a').each(function(){  
-    var currentPage = stripTrailingSlash($(this).attr('href'));
+    $('.nav li a').each(function(){  
+      var currentPage = stripTrailingSlash($(this).attr('href'));
 
-    if (activePage == currentPage) {
-      $(this).parent().addClass('active'); 
-    } 
+      if (activePage == currentPage) {
+        $(this).parent().addClass('active'); 
+      } 
+    });
   });
-});
 
-// $(document).ready(function () {
-// 	$('.nav li').click(function() {
-// 		$('.nav li:active').removeClass('active');
-// 	 $('this').addClass('active');
-// 	});
-// });
+/* submit disable and enable on valid form entry */
+  // $(document).ready(function () {
+  // 	$('.nav li').click(function() {
+  // 		$('.nav li:active').removeClass('active');
+  // 	 $('this').addClass('active');
+  // 	});
+  // });
 
 /* form in reroute popover */
-$('#reroutePopover').popover({ 
-    html : true,
-    title: function() {
-      return $("#reroutePopover-head").html();
-    },
-    content: function() {
-      return $("#reroutePopover-content").html();
-    }
-});
+  $('#reroutePopover').popover({ 
+      html : true,
+      title: function() {
+        return $("#reroutePopover-head").html();
+      },
+      content: function() {
+        return $("#reroutePopover-content").html();
+      }
+  });
 
 /* tooptip */
-$('[rel=tooltip]').tooltip({html:true}) 
+  $('[rel=tooltip]').tooltip({html:true}) 
 
 /* need to include a way to close the popover by clicking anywhere outside the popover - 
 currently have to click on button */
-// $('rel["clickover"]').clickover();
+  // $('rel["clickover"]').clickover();
 
 /* table sort */
-$(document).ready(function(){
-    $('#allrequestTable').dataTable();
-});
+  // $(document).ready(function(){
+  //     $('#allrequestTable').dataTable();
+  // });
 
-	
+  $(document).ready(function() {
+    $('#allrequestTable').dataTable( {
+        "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>"
+    } );
+  } );
+
+  $.extend( $.fn.dataTableExt.oStdClasses, {
+    "sWrapper": "dataTables_wrapper form-inline"
+  } );
+
+  
