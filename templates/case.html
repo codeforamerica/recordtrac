@@ -8,7 +8,7 @@
   <div> 
     {% block status %}
         <div class="row-fluid">
-          <div class="text-right">Routed {{date | date }} to </br> <span class="label label-info">{{owner.alias or owner.email}} </span> because {{ owner.reason }} 
+          <div class="text-right">Routed {{date | date }} to </br> <span class="label label-info">{{owner_email}} </span> because {{ owner.reason }} 
           </div>
         </div>
     {% endblock status %}
@@ -32,7 +32,8 @@
                     <small> {{ time }} [May 4, 2013]</small> </br>
                   </div>
                   <div class="span10">
-                    <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{link.description}} </a> - <em>{{link.owner_id | owner_name }}</em></p>
+                    <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{link.description}} </a> - <em>{{link[
+                      'owner_id'] | owner_name }}</em></p>
                   </div>
                 </div>
               {% endfor %}
@@ -64,7 +65,7 @@
                     <small> {{ time }} [May 4, 2013]</small> </br>
                   </div>
                   <div class="span10">
-                    <p> {{ note }} - <em>{{note.owner_id | owner_name }}</em></p>
+                    <p> {{ note.text}} - <em>{{note.owner_id | owner_name }}</em></p>
                   </div>
                 </div>
               {% endfor %}
@@ -80,7 +81,7 @@
                     <small> {{ time }} [May 4, 2013]</small> </br>
                   </div>
                   <div class="span10">
-                    <p> {{ note }} - <em>{{question.owner_id | owner_name }}</em></p>
+                    <p> {{ question.text }} - <em>{{question.owner_id | owner_name }}</em></p>
                   </div>
                 </div>
               {% endfor %}

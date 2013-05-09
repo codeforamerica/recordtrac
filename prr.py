@@ -1,8 +1,6 @@
 """ Things one can do relating to a public records request. """
 
 from models import *
-import prflask
-from prflask import db
 import website_copy
 import tempfile
 import scribd # Used for uploading documents, could use another service
@@ -13,39 +11,45 @@ from flask import Flask, render_template, request, flash, redirect, url_for
 from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 
-def get_request(request_id, url):
+def get_resource(resource, url, resource_id):
 	headers = {'content-type': 'application/json; charset=utf-8'}
-	r = seaturtle.get("%s/api/request/%s" %(url, request_id), headers=headers)
-	return r.json()
+	r = seaturtle.get("%s/api/%s/%s" %(url, resource, resource_id), headers=headers)
+	if r:
+		return r.json()
+	return None
 
-def make_request(str, email = None, assigned_to_name = None, assigned_to_email = None, assigned_to_reason = None):
+def get_resources(resource, url):
+	headers = {'content-type': 'application/json; charset=utf-8'}
+	r = seaturtle.get("%s/api/%s" %(url, resource), headers=headers)
+	if r:
+		return r.json()
+	return None
+
+def make_request(text, email = None, assigned_to_name = None, assigned_to_email = None, assigned_to_reason = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
-	req = Request(str)
-	db.session.add(req)
-	db.session.commit()
-	owner_id = assign_owner(req.id, assigned_to_name, assigned_to_email, assigned_to_reason)
-	if email: # If the user provided an e-mail address, add them as a subscriber to the request.
-		user_id = create_or_return_user(email = email)
-		subscriber = Subscriber(request_id = req.id, user_id = user_id)
-		db.session.add(subscriber)
+	req = Request.query.filter_by(text = text).first()
+	if not req:
+		req = Request(text)
+		db.session.add(req)
 		db.session.commit()
-	open_request(req.id)
-	db.session.commit()
-	return req.id
+		past_owner_id, owner_id = assign_owner(request_id = req.id, reason = assigned_to_reason, email = assigned_to_email, alias = assigned_to_name)
+		if email: # If the user provided an e-mail address, add them as a subscriber to the request.
+			user = create_or_return_user(email = email)
+			subscriber = Subscriber(request_id = req.id, user_id = user.id)
+			db.session.add(subscriber)
+			db.session.commit()
+		open_request(req.id)
+		db.session.commit()
+		return req.id, True
+	return req.id, False
 
 def create_or_return_user(email, alias = None):
-	try:
+	user = User.query.filter_by(email = email).first()
+	if not user:
 		user = User(email = email, alias = alias)
 		db.session.add(user)
 		db.session.commit()
-		return user.id
-	except IntegrityError:
-		# db.session.rollback()
-		return get_user(email = email)
-
-
-def get_user(user_id):
-	return User.query.get(subscriber.user_id)
+	return user
 
 def open_request(id):
 	change_request_status(id, "Open")
@@ -55,17 +59,20 @@ def close_request(id, reason = ""):
 
 def get_user(email):
 	user = User.query.filter_by(email = email).first()
-	return user.id
+	return user
 
 
-def assign_owner(request_id, alias, email, reason): 
+def assign_owner(request_id, reason, email = None, alias = None): 
 	""" Called any time a new owner is assigned. This will overwrite the current owner."""
-	user_id = create_or_return_user(email = email, alias = alias)
-	owner = Owner(request_id = request_id, user_id = user_id, reason = reason)
+	user = create_or_return_user(email = email, alias = alias)
+	owner = Owner(request_id = request_id, user_id = user.id, reason = reason)
 	db.session.add(owner)
 	db.session.commit()
 	req = Request.query.get(request_id)
-	past_owner_id = req.current_owner
+	if req.current_owner:
+		past_owner_id = req.current_owner
+	else:
+		past_owner_id = None
 	req.current_owner = owner.id
 	db.session.commit()
 	return past_owner_id, owner.id

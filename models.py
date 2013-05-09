@@ -1,7 +1,12 @@
-from prflask import db, app
+from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
 from sqlalchemy.orm import relationship
 from datetime import datetime
 import flask.ext.restless
+from flask import Flask
+# Initialize Flask app and database:
+app = Flask(__name__)
+db = SQLAlchemy(app)
+db.create_all()
 
 class User(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
@@ -10,6 +15,14 @@ class User(db.Model):
 	date_created = db.Column(db.DateTime)
 	owners = db.relationship("Owner")
 	subscribers = db.relationship("Subscriber")
+	def is_authenticated(self):
+		return True
+	def is_active(self):
+		return True
+	def is_anonymous(self):
+		return False
+	def get_id(self):
+		return unicode(self.id)
 	def __init__(self, email, alias = None):
 		self.email = email
 		self.alias = alias
@@ -112,7 +125,9 @@ class Note(db.Model):
 
 # Create API
 manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
-manager.create_api(Request, methods=['GET'], exclude_columns=['subscribers'])
+manager.create_api(Request, methods=['GET'])
+manager.create_api(Owner, methods=['GET'])
 manager.create_api(Note, methods=['GET'])
 manager.create_api(Record, methods=['GET'])
 manager.create_api(User, methods=['GET'])
+manager.create_api(Note, methods=['GET'])
