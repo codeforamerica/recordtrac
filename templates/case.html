@@ -12,8 +12,15 @@
           </div>
         </div>
     {% endblock status %}
-
     {% block content %}
+    [Owner history]
+    </br>
+    {% for owner in owners %}
+      {{ owner.reason }}
+      {{ owner.id | owner_name }}
+      {{ owner.date_created | date }}
+    </br>
+    {% endfor %}
       <div class="row-fluid">
         <h4>Request</h4>
         <div class="span10">
