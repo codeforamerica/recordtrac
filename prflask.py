@@ -119,13 +119,7 @@ def show_request(request_id, template = "case.html", record_uploaded = None, for
     owner_email = user['email']
     if "Closed" in req['status']:
     	template = "closed.html"
-    requester = get_resource("subscriber", app.config['APPLICATION_URL'], request_id)
-    requester_email = None
-    print req['notes']
-    if requester:
-    	requester_user = get_resource("user", app.config['APPLICATION_URL'], requester['user_id'])
-    	requester_email = requester_user['email']
-    return render_template(template, text = req['text'], request_id = request_id, records = req['records'], status = req['status'], owner = owner, owner_email = owner_email, date = owner['date_created'], date_updated = req['status_updated'], record_uploaded = record_uploaded, notes = req['notes'], requester_email = requester_email, for_email_notification = for_email_notification)
+    return render_template(template, text = req['text'], request_id = request_id, records = req['records'], status = req['status'], owner = owner, owner_email = owner_email, date = owner['date_created'], date_updated = req['status_updated'], record_uploaded = record_uploaded, notes = req['notes'], for_email_notification = for_email_notification)
 
 @app.route('/note', methods=['POST'])
 def add_note():
@@ -160,8 +154,6 @@ def close(request_id = None):
 	if request.method == 'POST':
 		template = 'closed.html'
 		request_id = request.form['request_id']
-		req = get_resource("request", app.config['APPLICATION_URL'], request_id)
-		subscribers = req['subscribers']
 		close_request(request_id, request.form['reason'])
 		send_emails(body = show_request(request_id, for_email_notification = True), request_id = request_id, notification_type = "close")
 		return show_request(request_id, template= template)
@@ -181,12 +173,9 @@ def requests():
 @login_required
 def your_requests():
 	all_record_requests = []
-	print current_user.id
 	owners = Owner.query.filter_by(user_id = current_user.id) # TODO: Make API call instead
-	print owners
 	for owner in owners:
 		req = Request.query.filter_by(current_owner = owner.id) # TODO: Make API call instead
-		print req
 		all_record_requests.append(req)
 	return render_template('all_requests.html', all_record_requests = all_record_requests)
 

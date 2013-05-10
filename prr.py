@@ -5,7 +5,7 @@ import website_copy
 import tempfile
 import scribd # Used for uploading documents, could use another service
 import time
-import requests as seaturtle
+import requests as seaturtle # HTTP requests library, renaming because it's confusing otherwise
 import json
 from flask import Flask, render_template, request, flash, redirect, url_for
 from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
