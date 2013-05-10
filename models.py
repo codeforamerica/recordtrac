@@ -35,6 +35,7 @@ class Request(db.Model):
 	__tablename__ = 'request'
 	id = db.Column(db.Integer, primary_key =True)
 	date_created = db.Column(db.DateTime)
+	qas = relationship("QA") # The list of QA units for this request
 	status_updated = db.Column(db.DateTime)
 	text = db.Column(db.String(), unique=True) # The actual request text.
 	subscribers = relationship("Subscriber") # The list of subscribers following this request.
@@ -49,11 +50,28 @@ class Request(db.Model):
 	def __repr__(self):
 		return self.text
 
+class QA(db.Model):
+# A Q & A block for a request 
+	__tablename__ = 'qa'
+	id = db.Column(db.Integer, primary_key = True)
+	question = db.Column(db.String())
+	answer = db.Column(db.String())
+	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
+	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id'))
+	subscriber_id = db.Column(db.Integer, db.ForeignKey('subscriber.id'))
+	def __init__(self, request_id, question):
+		self.question = question
+		self.request_id = request_id
+		self.date_created = datetime.now()
+	def __repr__(self):
+		return "Q: %s A: %s" %(question, answer)
+
 class Owner(db.Model): 
-# A member of city staff assigned to a particular request, that may or may not upload records towards that request. 
+# A member of city staff assigned to a particular request, that may or may not upload records towards that request.
 	__tablename__ = 'owner'
 	id = db.Column(db.Integer, primary_key =True)
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	qas = relationship("QA") # All Q&A blocks that this owner has asked
 	records = relationship("Record") # All records that have been uploaded
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
 	reason = db.Column(db.String()) # Reason they were assigned
@@ -73,6 +91,7 @@ class Subscriber(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
+	qas = relationship("QA") # All Q&A blocks that this subscriber has answered
 	creator = db.Boolean() # True if they created the initial request.
 	date_created = db.Column(db.DateTime)
 	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id')) # Not null if responsible for fulfilling a part of the request
@@ -131,3 +150,4 @@ manager.create_api(Note, methods=['GET'])
 manager.create_api(Record, methods=['GET'])
 manager.create_api(User, methods=['GET'])
 manager.create_api(Note, methods=['GET'])
+manager.create_api(QA, methods=['GET'])

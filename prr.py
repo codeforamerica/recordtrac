@@ -39,9 +39,24 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 			db.session.add(subscriber)
 			db.session.commit()
 		open_request(req.id)
-		db.session.commit()
 		return req.id, True
 	return req.id, False
+
+def ask_a_question(request_id, owner_id, question):
+	""" City staff can ask a question about a request they are confused about."""
+	qa = QA(request_id = request_id, question = question)
+	qa.owner_id = owner_id
+	db.session.add(qa)
+	db.session.commit()
+	return qa.id
+
+def answer_a_question(qa_id, subscriber_id, answer):
+	""" A requester can answer a question city staff asked them about their request."""
+	qa = QA.query.get(qa_id) 
+	qa.subscriber_id = subscriber_id
+	qa.answer = answer
+	db.session.add(qa)
+	db.session.commit()
 
 def create_or_return_user(email, alias = None):
 	user = User.query.filter_by(email = email).first()

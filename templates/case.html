@@ -72,16 +72,19 @@
             </div>
           {% endif %}
 
-          {% if questions %}
+          {% if qas %}
             <div class="span10">
-              {% for question in questions %}
+              {% for qa in qas %}
                 <div class="row-fluid response">
                   <div class="span2 text-center">
                     <i class="icon-question-sign icon-3x">  </i> </br>
                     <small> {{ time }} [May 4, 2013]</small> </br>
                   </div>
                   <div class="span10">
-                    <p> {{ question.text }} - <em>{{question.owner_id | owner_name }}</em></p>
+                    <p> {{ qa.question }} - <em>{{qa.owner_id | owner_name }}</em></p>
+                    {% if qa.response %}
+                      <p>{{ qa.response }} - <em>{{qa.subscriber_id | subscriber_name }}</em></p>
+                    {% endif %}
                   </div>
                 </div>
               {% endfor %}

@@ -119,7 +119,7 @@ def show_request(request_id, template = "case.html", record_uploaded = None, for
     owner_email = user['email']
     if "Closed" in req['status']:
     	template = "closed.html"
-    return render_template(template, text = req['text'], request_id = request_id, records = req['records'], status = req['status'], owner = owner, owner_email = owner_email, date = owner['date_created'], date_updated = req['status_updated'], record_uploaded = record_uploaded, notes = req['notes'], for_email_notification = for_email_notification)
+    return render_template(template, text = req['text'], request_id = request_id, records = req['records'], status = req['status'], owner = owner, owner_email = owner_email, date = owner['date_created'], date_updated = req['status_updated'], record_uploaded = record_uploaded, notes = req['notes'], for_email_notification = for_email_notification, qas = req['qas'])
 
 @app.route('/note', methods=['POST'])
 def add_note():
@@ -294,6 +294,14 @@ def date(obj):
 def owner_name(oid):
 	owner = get_resource("owner", app.config['APPLICATION_URL'], oid)
 	user = get_resource("user", app.config['APPLICATION_URL'], owner['user_id'])
+	if user['alias']:
+		return user['alias']
+	return user['email']
+
+@app.template_filter('subscriber_name')
+def subscriber_name(sid):
+	subscriber = get_resource("subscriber", app.config['APPLICATION_URL'], sid)
+	user = get_resource("user", app.config['APPLICATION_URL'], subscriber['user_id'])
 	if user['alias']:
 		return user['alias']
 	return user['email']
