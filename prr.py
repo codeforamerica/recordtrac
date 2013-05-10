@@ -84,7 +84,7 @@ def assign_owner(request_id, reason, email = None, alias = None):
 	current_owner = req.current_owner
 	owner = Owner.query.filter_by(request_id = request_id, user_id = user.id).first()
 	if current_owner and owner:
-		if current_owner.id == owner.id
+		if current_owner.id == owner.id:
 			return None, None
 	owner = Owner(request_id = request_id, user_id = user.id, reason = reason)
 	db.session.add(owner)
