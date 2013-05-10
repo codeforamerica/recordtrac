@@ -81,16 +81,16 @@ def assign_owner(request_id, reason, email = None, alias = None):
 	""" Called any time a new owner is assigned. This will overwrite the current owner."""
 	user = create_or_return_user(email = email, alias = alias)
 	req = Request.query.get(request_id)
-	current_owner = req.current_owner
+	current_owner_id = req.current_owner
 	owner = Owner.query.filter_by(request_id = request_id, user_id = user.id).first()
-	if current_owner and owner:
-		if current_owner.id == owner.id:
+	if current_owner_id and owner:
+		if current_owner_id == owner.id:
 			return None, None
 	owner = Owner(request_id = request_id, user_id = user.id, reason = reason)
 	db.session.add(owner)
 	db.session.commit()
-	if current_owner:
-		past_owner_id = current_owner.id
+	if current_owner_id:
+		past_owner_id = current_owner_id
 	else:
 		past_owner_id = None
 	req.current_owner = owner.id
