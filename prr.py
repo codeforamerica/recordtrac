@@ -80,6 +80,9 @@ def get_user(email):
 def assign_owner(request_id, reason, email = None, alias = None): 
 	""" Called any time a new owner is assigned. This will overwrite the current owner."""
 	user = create_or_return_user(email = email, alias = alias)
+	owner = Owner.query.filter_by(request_id = request_id, user_id = user.id).first()
+	if owner:
+		return None, None
 	owner = Owner(request_id = request_id, user_id = user.id, reason = reason)
 	db.session.add(owner)
 	db.session.commit()

@@ -104,8 +104,13 @@ def show_request_for_x(audience, request_id):
 			if owner_reason:
 				reason = owner_reason
 			past_owner_id, current_owner_id = assign_owner(request_id = request_id, reason = reason, email = owner_email)
-			past_owner = get_resource("owner", app.config['APPLICATION_URL'], past_owner_id)
-			send_emails(body = show_request(request_id, for_email_notification = True), request_id = request_id, notification_type = "reroute", past_owner = past_owner)
+			past_owner = None
+			if past_owner_id:
+				past_owner = get_resource("owner", app.config['APPLICATION_URL'], past_owner_id)
+			if current_owner_id:
+				send_emails(body = show_request(request_id, for_email_notification = True), request_id = request_id, notification_type = "reroute", past_owner = past_owner)
+			else:
+				print "Can't reassign to same owner." #TODO: Do we need to convey this to the user?
 	return show_request(request_id = request_id, template = "manage_request_%s.html" %(audience))
 
 @app.route('/request/<int:request_id>')
