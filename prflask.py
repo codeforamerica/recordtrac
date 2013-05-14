@@ -118,13 +118,9 @@ def show_request(request_id, template = "case.html", record_uploaded = None, for
     req = get_resource("request", app.config['APPLICATION_URL'], request_id)
     if not req:
     	return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
-    doc_ids = []
-    owner = get_resource("owner", app.config['APPLICATION_URL'], req['current_owner'])
-    user = get_resource("user", app.config['APPLICATION_URL'], owner['user_id'])
-    owner_email = user['email']
     if "Closed" in req['status']:
     	template = "closed.html"
-    return render_template(template, text = req['text'], request_id = request_id, records = req['records'], status = req['status'], owner = owner, owner_email = owner_email, date = owner['date_created'], date_updated = req['status_updated'], record_uploaded = record_uploaded, notes = req['notes'], for_email_notification = for_email_notification, qas = req['qas'], owners = req['owners'])
+    return render_template(template, req = req, for_email_notification = for_email_notification, record_uploaded = record_uploaded)
 
 @app.route('/note', methods=['POST'])
 def add_note():
@@ -202,8 +198,8 @@ def load_user(userid):
     return user
 
 @app.route("/login", methods=["GET", "POST"])
-def login():
-	user = create_or_return_user(email="richa@codeforamerica.org")
+def login(email):
+	user = create_or_return_user(email=email)
 	login_user(user)
 	return index()
 
@@ -310,6 +306,7 @@ def subscriber_name(sid):
 	if user['alias']:
 		return user['alias']
 	return user['email']
+
 
 @app.template_filter('explain_action')
 def explain_action(action):
