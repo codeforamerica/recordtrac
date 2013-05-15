@@ -47,7 +47,11 @@ def new_request():
 	if request.method == 'POST':
 		request_text = request.form['request_text']
 		email = request.form['request_email']
-		request_id, is_new = make_request(text = request_text, email = email, assigned_to_name = app.config['DEFAULT_OWNER_NAME'], assigned_to_email = app.config['DEFAULT_OWNER_EMAIL'], assigned_to_reason = app.config['DEFAULT_OWNER_REASON'], user_id = current_user.id)
+		if current_user.is_anonymous:
+			current_user_id = None
+		else:
+			current_user_id = current_user.id
+		request_id, is_new = make_request(text = request_text, email = email, assigned_to_name = app.config['DEFAULT_OWNER_NAME'], assigned_to_email = app.config['DEFAULT_OWNER_EMAIL'], assigned_to_reason = app.config['DEFAULT_OWNER_REASON'], user_id = current_user_id)
 		if is_new:
 			# send_emails(body = show_request(request_id, for_email_notification = True), request_id = request_id, notification_type = "new")
 			return show_request(request_id, banner_msg = "Thanks! Your request has been uploaded.", template = "requested.html")
