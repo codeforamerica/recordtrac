@@ -2,10 +2,7 @@ from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
 from sqlalchemy.orm import relationship
 from datetime import datetime
 import flask.ext.restless
-from public_records_portal import app
-
-db = SQLAlchemy(app)
-db.create_all()
+from public_records_portal import app, db
 
 class User(db.Model):
 	id = db.Column(db.Integer, primary_key = True)

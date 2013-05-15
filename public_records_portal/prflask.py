@@ -66,6 +66,7 @@ def load():
 
 # Returns a view of the case based on the audience. Currently views exist for city staff or general public.
 @app.route('/<string:audience>/request/<int:request_id>', methods=['GET', 'POST'])
+@login_required
 def show_request_for_x(audience, request_id):
 	if request.method == 'POST':
 		owner_email = request.form['owner_email']
@@ -166,7 +167,9 @@ def load_user(userid):
 	return user
 
 @app.route("/login", methods=["GET", "POST"])
-def login(email):
+def login(email=None):
+	if not email:
+		email = "richa@codeforamerica.org" # Obviously this is a hack for now
 	user = create_or_return_user(email=email)
 	login_user(user)
 	return index()
