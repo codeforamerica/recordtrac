@@ -132,7 +132,6 @@ def get_user(email):
 	user = User.query.filter_by(email = email).first()
 	return user
 
-
 def assign_owner(request_id, reason, email = None, alias = None): 
 	""" Called any time a new owner is assigned. This will overwrite the current owner."""
 	user = create_or_return_user(email = email, alias = alias)
@@ -172,20 +171,6 @@ def change_request_status(id, status):
 		return True
 	except:
 		return False
-
-
-def notify(request_id):
-	req = Request.query.get(request_id)
-	subscribers = req.subscribers
-	owner = Owner.query.get(req.current_owner)
-	city_subject, city_body = website_copy.request_submitted_city(req.text)
-	public_subject, public_body = website_copy.request_submitted(req.text, owner.email, "xxx-xxx-xxxx")
-	prflask.send_email(body = city_body, recipients = [owner.email], subject = city_subject) 
-	if len(subscribers) != 0:
-		for subscriber in subscribers:
-			prflask.send_email(body = public_body, recipients = [subscriber.email], subject = public_subject)
-	else:
-		print "No one assigned!"
 
 def progress(bytes_sent, bytes_total):
     print("%s of %s (%s%%)" % (bytes_sent, bytes_total, bytes_sent*100/bytes_total))
