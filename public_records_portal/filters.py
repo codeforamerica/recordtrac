@@ -21,11 +21,15 @@ def date(obj):
 			return obj # Just return the thing, maybe it's already a date
 
 @app.template_filter('date_granular')
-def date_granular(obj):
-	if not obj:
+def date_granular(timestamp):
+	if not timestamp:
 		return None
-	timestamp = datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f")
+	if type(timestamp) is not datetime:
+		timestamp = datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%S.%f")
 	delta = datetime.now() - timestamp
+	# days, hours, minutes, seconds = 0, 0, 0, 0
+	# for day in enumerate(delta.days):
+
 	days, hours, minutes, seconds = delta.days, delta.seconds//3600, delta.seconds//60, delta.seconds
 	if days > 1:
 		return "%s days ago" % days
@@ -50,11 +54,14 @@ def owner_name(oid):
 @app.template_filter('subscriber_name')
 def subscriber_name(sid):
 	subscriber = get_resource("subscriber", app.config['APPLICATION_URL'], sid)
-	user = get_resource("user", app.config['APPLICATION_URL'], subscriber['user_id'])
+	return user_name(subscriber['user_id'])
+
+@app.template_filter('user_name')
+def user_name(uid):
+	user = get_resource("user", app.config['APPLICATION_URL'], uid)
 	if user['alias']:
 		return user['alias']
 	return user['email']
-
 
 @app.template_filter('explain_action')
 def explain_action(action):

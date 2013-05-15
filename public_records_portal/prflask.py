@@ -145,7 +145,7 @@ def your_requests():
 	all_record_requests = []
 	owners = Owner.query.filter_by(user_id = current_user.id) # TODO: Make API call instead
 	for owner in owners:
-		req = Request.query.filter_by(current_owner = owner.id) # TODO: Make API call instead
+		req = Request.query.filter_by(current_owner = owner.id).first() # TODO: Make API call instead
 		all_record_requests.append(req)
 	return render_template('all_requests.html', all_record_requests = all_record_requests)
 

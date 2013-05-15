@@ -55,6 +55,7 @@ class QA(db.Model):
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
 	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id'))
 	subscriber_id = db.Column(db.Integer, db.ForeignKey('subscriber.id'))
+	date_created = db.Column(db.DateTime)
 	def __init__(self, request_id, question):
 		self.question = question
 		self.request_id = request_id
