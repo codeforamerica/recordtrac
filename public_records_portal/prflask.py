@@ -54,7 +54,7 @@ def new_request():
 		request_id, is_new = make_request(text = request_text, email = email, assigned_to_name = app.config['DEFAULT_OWNER_NAME'], assigned_to_email = app.config['DEFAULT_OWNER_EMAIL'], assigned_to_reason = app.config['DEFAULT_OWNER_REASON'], user_id = current_user_id)
 		if is_new:
 			# send_emails(body = show_request(request_id, for_email_notification = True), request_id = request_id, notification_type = "new")
-			return show_request(request_id, "requested.html")
+			return show_request(request_id, banner_msg = "Thanks! Your request has been uploaded.", template = "requested.html")
 		return render_template('error.html', message = "Your request is the same as /request/%s" % request_id)
 	return render_template('new_request.html')
 
@@ -90,7 +90,7 @@ def show_request_for_x(audience, request_id):
 	return show_request(request_id = request_id, template = "manage_request_%s.html" %(audience))
 
 @app.route('/request/<int:request_id>')
-def show_request(request_id, template = None, record_uploaded = None, for_email_notification = False):
+def show_request(request_id, template = None, record_uploaded = None, for_email_notification = False, banner_msg = None):
 	if not template:
 		template = "case.html"
 	req = get_resource("request", app.config['APPLICATION_URL'], request_id)
@@ -98,7 +98,7 @@ def show_request(request_id, template = None, record_uploaded = None, for_email_
 		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
 	if "Closed" in req['status']:
 		template = "closed.html"
-	return render_template(template, req = req, for_email_notification = for_email_notification, record_uploaded = record_uploaded)
+	return render_template(template, req = req, for_email_notification = for_email_notification, record_uploaded = record_uploaded, banner_msg = banner_msg)
 @app.route('/add_a_<string:resource>', methods=['GET', 'POST'])
 def add_a_resource(resource):
 	if request.method == 'POST':
