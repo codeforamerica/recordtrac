@@ -22,12 +22,6 @@ In a new window:
     mkdir uploads
 	python 
 
-Then from the Python prompt type the following commands to load database
-
-	from prflask import db
-	db.create_all()
-	quit()
-
 
 Save exampleconfig.py as websiteconfig.py and update relevant fields. To test e-mail, sign up for a free account with SendGrid and provide the username and password in MAIL_USERNAME and MAIL_PASSWORD.
 
