@@ -40,6 +40,7 @@ class Request(db.Model):
 	records = relationship("Record") # The list of records that have been uploaded for this request.
 	notes = relationship("Note") # The list of notes appended to this request.
 	status = db.Column(db.String(400)) # The status of the request (open, closed, etc.)
+	creator_id = db.Column(db.Integer, db.ForeignKey('user.id')) # If city staff created it on behalf of the public, otherwise the creator is the subscriber with creator = true
 	def __init__(self, text):
 		self.text = text
 		self.date_created = datetime.now()
