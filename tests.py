@@ -6,13 +6,7 @@ import random, string
 
 class PublicRecordsTestCase(unittest.TestCase):
 	def setUp(self):
-	# 	app.config['TESTING'] = True
 		self.app = app.test_client()
-	# 	# app.init_db()
-
-	# def tearDown(self):
-	# 	# os.close(self.db_fd)
-	# 	os.unlink(app.config['DATABASE'])
 
 	def test_empty_db(self):
 		page = self.app.get('/requests')
