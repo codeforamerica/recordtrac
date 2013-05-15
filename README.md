@@ -5,10 +5,20 @@ This is a portal to display public record requests to the community and the City
 
 ## Installation
 
+### Mac OS X Pre-requisites
+
 This application requires [Postgres](http://www.postgresapp.com/) and Xcode developer tools to be installed.
 
     /Applications/Postgres.app/Contents/MacOS/bin/psql
     CREATE DATABASE your_database_name;
+
+### Ubuntu Pre-requisites
+
+Install Postgres, Python, and other required packages.
+
+    sudo apt-get install postgresql-9.1 postgresql-server-dev-9.1 python-dev
+
+### Postgres & Python
 
 If you are using a standard Postgres installation or from [Homebrew](http://mxcl.github.com/homebrew/) you can also use:
 
@@ -22,20 +32,14 @@ In a new window:
     mkdir uploads
 	python 
 
-Then from the Python prompt type the following commands to load database
 
-	from prflask import db
-	db.create_all()
-	quit()
-
-
-Save example-settings.cfg as settings.cfg and update relevant fields. To test e-mail, sign up for a free account with SendGrid and provide the username and password in MAIL_USERNAME and MAIL_PASSWORD.
+Save exampleconfig.py as websiteconfig.py and update relevant fields. To test e-mail, sign up for a free account with SendGrid and provide the username and password in MAIL_USERNAME and MAIL_PASSWORD.
 
 ## Run locally
 
 To use the application locally, in a new window:
 
-    gunicorn -w 2 prflask:app
+    gunicorn -w 2 public_records_portal:app
 
 
 You should see something similar to:

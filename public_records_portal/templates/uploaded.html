@@ -1,0 +1,20 @@
+{% extends "case.html" %}
+{% block title %} Index {% endblock title%}
+{% block head %}
+  {{ super() }}
+{% endblock head %}
+
+{% block banner %}
+  {{ super() }}
+  <!-- success banner -->
+  <div class="alert alert-success">
+    <button type="button" class="close" data-dismiss="alert">x</button>
+    <i class="icon-file-alt icon-large"> </i> 
+    <strong> <em> {{record_uploaded.filename or record_uploaded.description}} </em> has been successfully uploaded to this request.</strong>
+  </div>
+{% endblock banner %} 
+
+{% block content %}
+  {{ super() }}
+  
+{% endblock content %}

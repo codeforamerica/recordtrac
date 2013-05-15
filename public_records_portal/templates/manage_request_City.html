@@ -1,0 +1,180 @@
+<!-- This template is for testing purposes. -->
+
+{% extends "case.html" %}
+{% block title %}Request {{ req.id }}{% endblock %}
+{% block head %} {% endblock head %}
+
+{% block status %} 
+  <div class="row-fluid">
+    <!-- popover -->
+
+    <div class="pull-right">
+      Routed {{req.date_created | date }}  to  
+        <div class="btn-group">
+          <div><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{req.current_owner | owner_name}} <span class="caret"></span> </a></div>
+          <div id="reroutePopover-head" class="hide">Reassign to:</div>
+          <div id="reroutePopover-content" class="hide">              
+            <form id="rerouteForm" class="form-inline" method ="post" action="">
+              <!-- my form -->
+              <div class="control-group">
+                <div class="controls">
+                  <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" required />
+                  <input id="rerouteReason" type="text" name="owner_reason" placeholder="Say why." />
+                  <button id="rerouteButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <a data-placement="bottom" href="#" id="historyPopover"> <i class="icon-time"></i>  </a>
+      <div id="historyPopover-head" class="hide">History</div>
+      <div id="historyPopover-content" class="hide">              
+        BLAH!
+      </div>
+    </div>
+          
+  </div>
+{% endblock status %}
+
+{% block content %}
+  {{ super() }}
+{% endblock content %}
+
+{% block actions %}
+  <form name="input_doc" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data" >
+    <fieldset> 
+
+      <div class="row-fluid">
+        <div class="span4">
+          <h4>Add a record <span id="recordTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Upload a document" | explain_action}}" ><small><i class="icon-info-sign"></i></small></span></h4>
+        </div>
+        <div class="span8">
+
+          <div class="control-group">
+            <label class="control-label" for="inputSummary">Summary</label>
+            <div class="controls">
+              <input class="input-block-level" name="record_description" type="text" id="inputSummary" placeholder="Add a short explanation of what you are attaching" autofocus/>
+            </div>
+          </div>
+       
+          <div class="control-group">
+            <label class="control-label">Document</label>
+            <div class="row-fluid">
+              <div class="controls">
+                <div class="fileupload fileupload-new" data-provides="fileupload">
+                  <input type="hidden" name="request_id" value="{{ req.id }}">
+                  <div class="input-append">
+                    <div class="uneditable-input span3">
+                      <i class="icon-file fileupload-exists"></i> 
+                      <span class="fileupload-preview"></span>
+                    </div>
+                    <span class="btn btn-file">
+                      <span class="fileupload-new">Select file</span>
+                      <span class="fileupload-exists">Change</span>
+                      <input type="file" name="record">
+                    </span>
+                    <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+
+    <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
+                    <button class="btn btn-primary fileupload-exists" type="submit">Attach</button>
+                    <button class="btn btn-primary fileupload-new disabled" type="submit">Attach</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+ <form name="input_url" class="form-horizontal" id="submitLink" method="post" action="/add_a_link" autocomplete="on">
+    <fieldset> 
+      <div class="row-fluid">
+        <div class="span4">
+          <h4>Add a link <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a link" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></h4>
+        </div>
+        <div class="span8">
+
+          <div class="control-group">
+            <label class="control-label" for="inputSummary">Summary</label>
+            <div class="controls">
+              <input class="input-block-level" name="record_description" type="text" id="linkSummary" placeholder="Add a short explanation of what can be found here" />
+              <input type="hidden" name="request_id" value="{{ req.id }}">
+            </div>
+          </div>
+       
+          <div class="control-group">
+            <label class="control-label">Link</label>
+            <div class="row-fluid">
+              <div class="controls">
+                  <input name="record_url" type="url" id="inputUrl" placeholder="Copy and paste link here" required/>
+                <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
+                <button id="addalink" class="btn btn-primary disabled" type="submit">Attach</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+<form name="note" class="form-horizontal" id="note" method="post" action="/add_a_note">
+  <input type="hidden" name="request_id" value="{{ req.id }}"/>
+  <fieldset> 
+
+    <div class="row-fluid">
+      <div class="span4">
+        <h4>Add a note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
+      </div>
+
+      <div class="span8">
+
+        <div class="control-group">
+          <label class="control-label">Note</label>
+          <div class="row-fluid">
+            <div class="controls">
+              <textarea id="noteTextarea" name="note_text" rows="3" cols="20" placeholder="Enter your note here" required></textarea>
+              <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </fieldset>
+</form>
+
+
+  <form name="close" class="form-horizontal" id="closeRequest" method="post" action="/close">
+    <input type="hidden" name="request_id" value="{{ req.id }}"/>
+    <fieldset> 
+
+      <div class="row-fluid">
+        <div class="span4">
+          <h4>Close this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></h4>
+        </div>
+
+        <div class="span8">
+
+          <div class="control-group">
+            <label class="control-label">Explanation</label>
+            <div class="row-fluid">
+              <div class="controls">
+                <input type="text" name="reason" placeholder="Say why you are closing"/>
+                <button type="submit" class="btn btn-inverse">Close</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </fieldset>
+  </form>
+    
+{% endblock actions %}

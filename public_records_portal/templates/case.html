@@ -1,0 +1,151 @@
+<!-- This template houses the baseline case information (request, documents, status, etc.) only. -->
+
+{% extends "base.html" %}
+{% block title %}Request{% endblock %}
+{% block head %} {% endblock head %}
+{% block body %}
+  <div class="row-fluid"> 
+    {% block status %}
+        <div class="row-fluid">
+          <div class="text-right">Routed {{req.date_created | date }} to </br> <span class="label label-info">{{req.current_owner | owner_name}} </span> 
+          </div>
+        </div>
+    {% endblock status %}
+    {% block content %}
+<<<<<<< HEAD:templates/case.html
+      <!-- request area -->
+=======
+    [Owner history]
+    </br>
+    {% for owner in req.owners %}
+      {{ owner.reason }}
+      {{ owner.id | owner_name }}
+      {{ owner.date_created | date }}
+    </br>
+    {% endfor %}
+>>>>>>> 7edc4dc9b74329381604a5d568c371e099eb04f7:public_records_portal/templates/case.html
+      <div class="row-fluid">
+        <h3>Request</h3>
+        <div class="span10">
+            <p class="lead"> {{ req.text }} </p>
+        </div>
+      </div>
+
+      <!-- shows any existing Q&A: meaningless placeholder code below -->
+      {% if questions %}  
+        <div class="span10">
+          {% for question in questions %}
+            <div class="row-fluid response">
+              <div class="span2 text-center">
+                <i class="icon-question-sign icon-3x">  </i></br>
+                <small> {{ time }} [May 4, 2013]</small> </br>
+              </div>
+              <div class="span10">
+                <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{link.description}} </a> - <em>{{link[
+                  'owner_id'] | owner_name }}</em></p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <!-- initiate new question -->
+      <div class="row-fluid">
+        <button class="btn" type="button"><i class="icon-question-sign"></i> Ask requester a question </button>
+      </div>
+
+
+      <!-- response area: need to give this more space between the request area-->
+      <div class="row-fluid">
+        <h3>Response</h3>
+
+          <!-- initiate a new response -->
+          <div class="row-fluid">
+            <div class="btn-group">
+              <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-question-sign"></i>
+                Add a response
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <!-- dropdown menu links -->
+                <li>
+                  <a href="#">Attach a document</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- shows all existing responses (links, documents, offline docs, notes) -->
+          {% if links %}
+            <div class="span10">
+              {% for link in links %}
+                <div class="row-fluid response">
+                  <div class="span2 text-center">
+                    <i class="icon-link icon-3x">  </i></br>
+                    <small> {{ time }} [May 4, 2013]</small> </br>
+                  </div>
+                  <div class="span10">
+                    <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{link.description}} </a> - <em>{{link[
+                      'owner_id'] | owner_name }}</em></p>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% if req.records %}
+            <div class="span10">
+              {% for record in req.records %}
+                <div class="row-fluid response">
+                  <div class="span2 text-center">
+                    <i class="icon-file-alt icon-3x">  </i></br>
+                    <small> {{ time }} [May 4, 2013]</small> </br>
+                  </div>
+                  <div class="span10">
+                    <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.owner_id | owner_name }}</em></p>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% if req.notes %}
+            <div class="span10">
+              {% for note in req.notes %}
+                <div class="row-fluid response">
+                  <div class="span2 text-center">
+                    <i class="icon-edit icon-3x">  </i> </br>
+                    <small> {{ time }} [May 4, 2013]</small> </br>
+                  </div>
+                  <div class="span10">
+                    <p> {{ note.text}} - <em>{{note.owner_id | owner_name }}</em></p>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% if req.qas %}
+            <div class="span10">
+              {% for qa in req.qas %}
+                <div class="row-fluid response">
+                  <div class="span2 text-center">
+                    <i class="icon-question-sign icon-3x">  </i> </br>
+                    <small> {{ time }} [May 4, 2013]</small> </br>
+                  </div>
+                  <div class="span10">
+                    <p> {{ qa.question }} - <em>{{qa.owner_id | owner_name }}</em></p>
+                    {% if qa.response %}
+                      <p>{{ qa.response }} - <em>{{qa.subscriber_id | subscriber_name }}</em></p>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+        </div>
+      </div>
+    {% endblock content %}
+  </div>
+{% endblock body %}

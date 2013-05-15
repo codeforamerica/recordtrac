@@ -1,0 +1,14 @@
+PRODUCTION = False
+DEBUG = True
+SCRIBD_API_KEY = 'Change this'
+SCRIBD_API_SECRET = 'Change this'
+SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/your_database_name'
+DEFAULT_OWNER_NAME = 'Change this'
+DEFAULT_OWNER_EMAIL = 'Change this'
+DEFAULT_OWNER_REASON = 'Change this'
+MAIL_USERNAME = 'Change this'
+MAIL_PASSWORD = 'Change this'
+DEFAULT_MAIL_SENDER = 'Change this'
+APPLICATION_URL = "http://127.0.0.1:5000/"
+HOST_URL = "https://www.scribd.com/doc/"
+SECRET_KEY = "Change this"
