@@ -1,12 +1,20 @@
+import os 
 from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
 from sqlalchemy.orm import relationship
 from datetime import datetime
 import flask.ext.restless
 from flask import Flask
+
+#TODO: Move this all into init file
+
 # Initialize Flask app and database:
 app = Flask(__name__)
 db = SQLAlchemy(app)
 db.create_all()
+
+# Get configuration settings from settings.cfg
+config = os.path.join(app.root_path, 'settings.cfg')
+app.config.from_pyfile(config)
 
 class User(db.Model):
 	id = db.Column(db.Integer, primary_key = True)

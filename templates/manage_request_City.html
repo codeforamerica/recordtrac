@@ -38,7 +38,7 @@
 {% endblock content %}
 
 {% block actions %}
-  <form name="input_doc" class="form-horizontal" id="submitRecord" method="post" action="/upload" autocomplete="on" enctype="multipart/form-data" >
+  <form name="input_doc" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data" >
     <fieldset> 
 
       <div class="row-fluid">
@@ -86,7 +86,7 @@
     </fieldset>
   </form>
 
- <form name="input_url" class="form-horizontal" id="submitLink" method="post" action="/upload" autocomplete="on">
+ <form name="input_url" class="form-horizontal" id="submitLink" method="post" action="/add_a_link" autocomplete="on">
     <fieldset> 
       <div class="row-fluid">
         <div class="span4">
@@ -118,7 +118,7 @@
     </fieldset>
   </form>
 
-<form name="note" class="form-horizontal" id="note" method="post" action="/note">
+<form name="note" class="form-horizontal" id="note" method="post" action="/add_a_note">
   <input type="hidden" name="request_id" value="{{ req.id }}"/>
   <fieldset> 
 

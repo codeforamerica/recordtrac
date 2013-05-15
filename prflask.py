@@ -1,16 +1,12 @@
-import os 
-from werkzeug import secure_filename
 from flask import render_template, request, flash, redirect, url_for
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
-from datetime import datetime
+from datetime import datetime, timedelta
 from prr import *
 import json
 import sendgrid
 
-# Get configuration settings from settings.cfg
-config = os.path.join(app.root_path, 'settings.cfg')
-app.config.from_pyfile(config) 
+ 
 
 # Initialize login
 login_manager = LoginManager()
@@ -20,18 +16,14 @@ login_manager.init_app(app)
 actions_filepath = os.path.join(app.root_path, 'actions.json')
 mail = sendgrid.Sendgrid(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'], secure = True)
 
-# Define the local temporary folder where uploads will go
-if app.config['PRODUCTION']:
-	UPLOAD_FOLDER = app.config['UPLOAD_FOLDER']
-else:
-	UPLOAD_FOLDER = "%s/uploads" % os.getcwd()
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff'])
 NOTIFICATIONS = [
-	                   # 'note', 
-	                   # 'new', 
-	                   # 'close',                                      
-	                   # 'reroute',                                     
-	                   # 'record'
+					   # 'note', 
+					   # 'new', 
+					   # 'close',                                      
+					   # 'reroute',                                     
+					   # 'record',
+					   # 'link',
+					   # 'qa'
 				]
 
 # Routing
@@ -67,28 +59,8 @@ def new_request():
 @app.route('/upload', methods=['POST'])
 def load():
 	if request.method == 'POST':
-		description = request.form['record_description']
-		request_id = request.form['request_id']
-		req = get_resource("request", app.config['APPLICATION_URL'], request_id)
-		owner_id = req['current_owner']
-		record = None
-		if 'record_url' in request.form: # If they're just pointing to a URL where the document already exists
-			url = request.form['record_url']
-			record = Record(url = url, request_id = request_id, owner_id = owner_id, description = description)
-			db.session.add(record)
-		else:
-			file = request.files['record']
-			doc_id, filename = upload_file(file)
-			if str(doc_id).isdigit():
-				record = Record(doc_id = doc_id, request_id = request_id, owner_id = owner_id, description = description)
-				db.session.add(record)
-				db.session.commit()
-				record.filename = filename
-				record.url = app.config['HOST_URL'] + doc_id
-			else:
-				return render_template('error.html', message = "Not an allowed doc type")
-		db.session.commit()
-		send_emails(body = show_request(request_id, for_email_notification = True), request_id = request_id, notification_type = "record")
+
+
 		return show_request(request_id = request_id, template = "uploaded.html", record_uploaded = record)
 	return render_template('error.html', message = "You can only upload from a requests page!")
 
@@ -114,26 +86,23 @@ def show_request_for_x(audience, request_id):
 	return show_request(request_id = request_id, template = "manage_request_%s.html" %(audience))
 
 @app.route('/request/<int:request_id>')
-def show_request(request_id, template = "case.html", record_uploaded = None, for_email_notification = False):
-    req = get_resource("request", app.config['APPLICATION_URL'], request_id)
-    if not req:
-    	return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
-    if "Closed" in req['status']:
-    	template = "closed.html"
-    return render_template(template, req = req, for_email_notification = for_email_notification, record_uploaded = record_uploaded)
-
-@app.route('/note', methods=['POST'])
-def add_note():
+def show_request(request_id, template = None, record_uploaded = None, for_email_notification = False):
+	if not template:
+		template = "case.html"
+	req = get_resource("request", app.config['APPLICATION_URL'], request_id)
+	if not req:
+		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
+	if "Closed" in req['status']:
+		template = "closed.html"
+	return render_template(template, req = req, for_email_notification = for_email_notification, record_uploaded = record_uploaded)
+@app.route('/add_a_<string:resource>', methods=['GET', 'POST'])
+def add_a_resource(resource):
 	if request.method == 'POST':
-		request_id = request.form['request_id']
-		req = get_resource("request", app.config['APPLICATION_URL'], request_id)
-		note = Note(request_id = request_id, text = request.form['note_text'], owner_id = req['current_owner'])
-		db.session.add(note)
-		db.session.commit()
-		send_emails(body = show_request(request_id, for_email_notification = True), request_id = request_id, notification_type = "note")
-		return show_request(request_id, template = "manage_request_city.html")
-	return render_template('error.html', message = "You can only add a note from a requests page!")
-
+		add_resource(resource, request)
+		send_emails(body = show_request(request.form['request_id'], for_email_notification = True), request_id = request.form['request_id'], notification_type = resource)
+		return show_request(request.form['request_id'], template = "manage_request_city.html")
+	return render_template('error.html', message = "You can only add a %s from a request page!" %resource)
+		
 # Clears/updates tables in the database until I figure out how I want to deal with migrations
 @app.route('/clear')
 def clear_db():
@@ -194,8 +163,8 @@ def any_page(page):
 
 @login_manager.user_loader
 def load_user(userid):
-    user = User.query.get(userid)
-    return user
+	user = User.query.get(userid)
+	return user
 
 @app.route("/login", methods=["GET", "POST"])
 def login(email):
@@ -206,24 +175,10 @@ def login(email):
 @app.route("/logout")
 @login_required
 def logout():
-    logout_user()
-    return index()
+	logout_user()
+	return index()
 
 # Functions that should probably go somewhere else:
-
-def allowed_file(filename):
-	return '.' in filename and \
-		filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
-
-def upload_file(file): 
-# Uploads file to scribd.com and returns doc ID. File can be accessed at scribd.com/doc/id
-	if file and allowed_file(file.filename):
-		filename = secure_filename(file.filename)
-		filepath = os.path.join(UPLOAD_FOLDER, filename)
-		file.save(filepath)
-		doc_id = upload(filepath, app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
-		return doc_id, filename
-	return None, None
 
 
 def send_email(body, recipient, subject):
@@ -290,6 +245,25 @@ def date(obj):
 			return datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f").date()
 		except:
 			return obj # Just return the thing, maybe it's already a date
+
+@app.template_filter('date_granular')
+def date_granular(obj):
+	if not obj:
+		return None
+	timestamp = datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f")
+	delta = datetime.now() - timestamp
+	days, hours, minutes, seconds = delta.days, delta.seconds//3600, delta.seconds//60, delta.seconds
+	if days > 1:
+		return "%s days ago" % days
+	elif hours > 1:
+		return "%s hours ago" % hours
+	elif minutes > 1:
+		return "%s minutes ago" % minutes
+	elif seconds > 1:
+		return "%s seconds ago" % seconds
+	else:
+		return "Just now."
+
 
 @app.template_filter('owner_name')
 def owner_name(oid):

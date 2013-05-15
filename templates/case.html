@@ -8,7 +8,7 @@
   <div> 
     {% block status %}
         <div class="row-fluid">
-          <div class="text-right">Routed {{req.date_created | date }} to </br> <span class="label label-info">{{req.current_owner | owner_name}} </span> because {{ req.current_owner.reason }} 
+          <div class="text-right">Routed {{req.date_created | date }} to </br> <span class="label label-info">{{req.current_owner | owner_name}} </span> 
           </div>
         </div>
     {% endblock status %}
