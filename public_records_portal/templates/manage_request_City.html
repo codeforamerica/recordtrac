@@ -9,7 +9,7 @@
     <!-- popover -->
 
     <div class="pull-right">
-      Routed {{req.date_created | date }}  to  
+      Routed to  
       <div class="btn-group">
         <div><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{req.current_owner | owner_name}} <span class="caret"></span> </a></div>
         <div id="reroutePopover-head" class="hide">Reassign to:</div>
@@ -26,10 +26,28 @@
           </form>
         </div>
       </div>
-      <a data-placement="bottom" href="#" id="historyPopover"> <i class="icon-time"></i>  </a>
-      <div id="historyPopover-head" class="hide">History</div>
+      <a data-placement="left" href="#" id="historyPopover"> <i class="icon-time"></i>  </a>
+      <!-- <div id="historyPopover-head" class="hide">History</div> -->
       <div id="historyPopover-content" class="hide">              
-        BLAH!
+        <table class="table table-condensed">
+         <!--  <thead>
+            <tr>
+              <th>Date</th>
+              <th>Owner</th>
+              <th>Note</th>
+            </tr>
+          </thead> -->
+          <tbody>
+            <!-- the order of data returned here should be reverse chonological (right now it's shown as oldest first)-->
+            {% for owner in req.owners %}
+              <tr>
+                <td>{{ owner.date_created | date }}</td>
+                <td>{{ owner.id | owner_name }}</td>
+                <td>{{ owner.reason }}</td>
+              </tr>              
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -155,24 +173,30 @@
 
       <div class="row-fluid">
         <div class="span4">
-          <h4>Close this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></h4>
-        </div>
-
-        <div class="span8">
-
-          <div class="control-group">
-            <label class="control-label">Explanation</label>
-            <div class="row-fluid">
-              <div class="controls">
-                <input type="text" name="reason" placeholder="Say why you are closing"/>
-                <button type="submit" class="btn btn-inverse">Close</button>
-              </div>
-            </div>
+          <div class="btn-group">
+            <a class="btn btn-inverse dropdown-toggle" data-toggle="dropdown" href="#">
+              Close this request
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="#">Fulfilled</a>
+              </li>
+              <li>
+                <a href="#">Partially fulfilled</a>
+              </li>
+              <li>
+                <a href="#">Information not available</a>
+              </li>
+              <li>
+                <a href="#">Requester does not want</a>
+              </li>
+            </ul>
           </div>
-
+          <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request" | explain_action}}"><small><i class="icon-info-sign"></i></small></span>
         </div>
-
       </div>
+      
     </fieldset>
   </form>
     

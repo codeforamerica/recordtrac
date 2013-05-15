@@ -50,7 +50,8 @@
   });
 
   /* form in history popover */
-  $('#historyPopover').popover({ 
+  $('#historyPopover').popover({
+      trigger: 'hover', 
       html : true,
       title: function() {
         return $("#historyPopover-head").html();

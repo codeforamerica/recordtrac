@@ -17,14 +17,14 @@
     {% block content %}
       
       <!-- placeholder for history info -->
-      [Owner history]
+   <!--    [Owner history]
       </br>
       {% for owner in req.owners %}
         {{ owner.reason }}
         {{ owner.id | owner_name }}
         {{ owner.date_created | date }}
       </br>
-      {% endfor %}
+      {% endfor %} -->
 
     <!-- request area -->
       <div class="row-fluid">
@@ -53,9 +53,9 @@
       {% endif %}
 
       <!-- initiate new question -->
-      <div class="row-fluid">
+<!--       <div class="row-fluid">
         <button class="btn" type="button"><i class="icon-question-sign"></i> Ask requester a question </button>
-      </div>
+      </div> -->
 
 
       <!-- response area: need to give this more space between the request area-->
@@ -63,20 +63,19 @@
         <h3>Response</h3>
 
           <!-- initiate a new response -->
-          <div class="row-fluid">
+<!--           <div class="row-fluid">
             <div class="btn-group">
               <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-question-sign"></i>
                 Add a response
                 <span class="caret"></span>
               </a>
               <ul class="dropdown-menu">
-                <!-- dropdown menu links -->
                 <li>
                   <a href="#">Attach a document</a>
                 </li>
               </ul>
             </div>
-          </div>
+          </div> -->
 
           <!-- shows all existing responses (links, documents, offline docs, notes) -->
           {% if links %}
