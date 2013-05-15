@@ -12,18 +12,18 @@
         </div>
     {% endblock status %}
     {% block content %}
-<<<<<<< HEAD:templates/case.html
-      <!-- request area -->
-=======
-    [Owner history]
-    </br>
-    {% for owner in req.owners %}
-      {{ owner.reason }}
-      {{ owner.id | owner_name }}
-      {{ owner.date_created | date }}
-    </br>
-    {% endfor %}
->>>>>>> 7edc4dc9b74329381604a5d568c371e099eb04f7:public_records_portal/templates/case.html
+      
+      <!-- placeholder for history info -->
+      [Owner history]
+      </br>
+      {% for owner in req.owners %}
+        {{ owner.reason }}
+        {{ owner.id | owner_name }}
+        {{ owner.date_created | date }}
+      </br>
+      {% endfor %}
+
+    <!-- request area -->
       <div class="row-fluid">
         <h3>Request</h3>
         <div class="span10">
