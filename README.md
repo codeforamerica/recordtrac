@@ -29,13 +29,13 @@ Then from the Python prompt type the following commands to load database
 	quit()
 
 
-Save example-settings.cfg as settings.cfg and update relevant fields. To test e-mail, sign up for a free account with SendGrid and provide the username and password in MAIL_USERNAME and MAIL_PASSWORD.
+Save exampleconfig.py as websiteconfig.py and update relevant fields. To test e-mail, sign up for a free account with SendGrid and provide the username and password in MAIL_USERNAME and MAIL_PASSWORD.
 
 ## Run locally
 
 To use the application locally, in a new window:
 
-    gunicorn -w 2 prflask:app
+    gunicorn -w 2 public_records_portal:app
 
 
 You should see something similar to:

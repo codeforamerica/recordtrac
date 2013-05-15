@@ -1,0 +1,107 @@
+<!-- This template houses the baseline case information (request, documents, status, etc.) only. -->
+
+{% extends "base.html" %}
+{% block title %}Request{% endblock %}
+{% block head %} {% endblock head %}
+{% block body %}
+<div class="row-fluid well">
+  <div> 
+    {% block status %}
+        <div class="row-fluid">
+          <div class="text-right">Routed {{req.date_created | date }} to </br> <span class="label label-info">{{req.current_owner | owner_name}} </span> 
+          </div>
+        </div>
+    {% endblock status %}
+    {% block content %}
+    [Owner history]
+    </br>
+    {% for owner in req.owners %}
+      {{ owner.reason }}
+      {{ owner.id | owner_name }}
+      {{ owner.date_created | date }}
+    </br>
+    {% endfor %}
+      <div class="row-fluid">
+        <h4>Request</h4>
+        <div class="span10">
+            <p class="lead"> {{ req.text }} </p>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <h4>Response</h4>
+        
+          {% if links %}
+            <div class="span10">
+              {% for link in links %}
+                <div class="row-fluid response">
+                  <div class="span2 text-center">
+                    <i class="icon-link icon-3x">  </i></br>
+                    <small> {{ time }} [May 4, 2013]</small> </br>
+                  </div>
+                  <div class="span10">
+                    <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{link.description}} </a> - <em>{{link[
+                      'owner_id'] | owner_name }}</em></p>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% if req.records %}
+            <div class="span10">
+              {% for record in req.records %}
+                <div class="row-fluid response">
+                  <div class="span2 text-center">
+                    <i class="icon-file-alt icon-3x">  </i></br>
+                    <small> {{ time }} [May 4, 2013]</small> </br>
+                  </div>
+                  <div class="span10">
+                    <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.owner_id | owner_name }}</em></p>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% if req.notes %}
+            <div class="span10">
+              {% for note in req.notes %}
+                <div class="row-fluid response">
+                  <div class="span2 text-center">
+                    <i class="icon-edit icon-3x">  </i> </br>
+                    <small> {{ time }} [May 4, 2013]</small> </br>
+                  </div>
+                  <div class="span10">
+                    <p> {{ note.text}} - <em>{{note.owner_id | owner_name }}</em></p>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% if req.qas %}
+            <div class="span10">
+              {% for qa in req.qas %}
+                <div class="row-fluid response">
+                  <div class="span2 text-center">
+                    <i class="icon-question-sign icon-3x">  </i> </br>
+                    <small> {{ time }} [May 4, 2013]</small> </br>
+                  </div>
+                  <div class="span10">
+                    <p> {{ qa.question }} - <em>{{qa.owner_id | owner_name }}</em></p>
+                    {% if qa.response %}
+                      <p>{{ qa.response }} - <em>{{qa.subscriber_id | subscriber_name }}</em></p>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+        </div>
+      </div>
+    {% endblock content %}
+    
+  </div>
+</div>
+{% endblock body %}

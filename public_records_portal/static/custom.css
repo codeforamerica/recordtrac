@@ -1,0 +1,90 @@
+/*custom.css*/
+
+.container {
+	margin-left: 0;
+}
+
+/*textarea {
+	resize: none;
+}*/
+
+#submitRecord .control-label {
+	width: 80px;
+}
+
+#submitLink .control-label {
+	width: 80px;
+}
+
+#closeRequest .control-label {
+	width: 80px;
+}
+
+#note .control-label {
+	width: 80px;
+}
+
+#note .controls {
+	margin-left: 90px;
+}
+
+
+#submitRecord .controls {
+	margin-left: 90px;
+}
+
+#submitLink .controls {
+	margin-left: 90px;
+}
+
+#closeRequest .controls {
+	margin-left: 90px;
+}
+
+.navbar-inner {	
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+
+.footer {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+
+#rerouteForm {
+margin: 0 0 0px;
+}
+
+/* all infotips appear as superscript */
+.icon-info-sign {
+	vertical-align: super;
+}
+
+/* tooltip text, left-aligned */
+ .tooltip-inner {
+	text-align: left ;
+}
+
+/* gives the responses a bit more white space between */
+.response {
+	padding-top: 2%;
+}
+
+/* ----- Sticky Footer ----- by Ryan Fait http://ryanfait.com/ ----- */
+* {
+	margin: 0;
+}
+html, body {
+	height: 100%;
+}
+.wrapper {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -80px; /* the bottom margin is the negative value of the footer's height */
+}
+.footer, .push {
+	height: 80px; /* .push must be the same height as .footer */
+}
