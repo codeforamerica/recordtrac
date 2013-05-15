@@ -7,27 +7,29 @@
 {% block status %} 
   <div class="row-fluid">
     <!-- popover -->
-    <div class="pull-right">Routed {{date | date }}  to  
-      <span> 
-        <div class="btn-group">
-          <div><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{owner_email}} <span class="caret"></span> </a></div>
-            <div id="reroutePopover-head" class="hide">Reassign to:</div>
-            <div id="reroutePopover-content" class="hide">              
-              <form id="rerouteForm" class="form-inline" method ="post" action="">
-                <!-- my form -->
-                <div class="control-group">
-                  <div class="controls">
-                    <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" required />
-                    <input id="rerouteReason" type="text" name="owner_reason" placeholder="Say why." />
-                    <button id="rerouteButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
-                  </div>
+    <div class="pull-right">
+      Routed {{date | date }}  to  
+      <div class="btn-group">
+        <div><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{owner_email}} <span class="caret"></span> </a></div>
+          <div id="reroutePopover-head" class="hide">Reassign to:</div>
+          <div id="reroutePopover-content" class="hide">              
+            <form id="rerouteForm" class="form-inline" method ="post" action="">
+              <!-- my form -->
+              <div class="control-group">
+                <div class="controls">
+                  <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" required />
+                  <input id="rerouteReason" type="text" name="owner_reason" placeholder="Say why." />
+                  <button id="rerouteButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
                 </div>
-              </form>
-            
-            </div>
-        </div>
-
-      </span>
+              </div>
+            </form>
+          </div>
+      </div>
+      <a data-placement="bottom" href="#" id="historyPopover"> <i class="icon-time"></i>  </a>
+      <div id="historyPopover-head" class="hide">History</div>
+      <div id="historyPopover-content" class="hide">              
+        BLAH!
+      </div>
     </div>
           
   </div>
@@ -108,7 +110,7 @@
               <div class="controls">
                   <input name="record_url" type="url" id="inputUrl" placeholder="Copy and paste link here" required/>
                 <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
-                <button class="btn btn-primary" type="submit">Attach</button>
+                <button id="addalink" class="btn btn-primary disabled" type="submit">Attach</button>
               </div>
             </div>
           </div>

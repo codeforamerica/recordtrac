@@ -30,6 +30,13 @@
   // 	 $('this').addClass('active');
   // 	});
   // });
+  // $(document).ready(function () {
+  //  $('inputUrl:valid').keyup(function() {
+  //    // $('inputUrl:valid').removeClass('disabled');
+  //   $('addalink').removeClass('disabled');
+  //  });
+  // });
+
 
 /* form in reroute popover */
   $('#reroutePopover').popover({ 
@@ -39,6 +46,17 @@
       },
       content: function() {
         return $("#reroutePopover-content").html();
+      }
+  });
+
+  /* form in history popover */
+  $('#historyPopover').popover({ 
+      html : true,
+      title: function() {
+        return $("#historyPopover-head").html();
+      },
+      content: function() {
+        return $("#historyPopover-content").html();
       }
   });
 
