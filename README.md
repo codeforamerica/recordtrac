@@ -5,10 +5,20 @@ This is a portal to display public record requests to the community and the City
 
 ## Installation
 
+### Mac OS X Pre-requisites
+
 This application requires [Postgres](http://www.postgresapp.com/) and Xcode developer tools to be installed.
 
     /Applications/Postgres.app/Contents/MacOS/bin/psql
     CREATE DATABASE your_database_name;
+
+### Ubuntu Pre-requisites
+
+Install Postgres, Python, and other required packages.
+
+    sudo apt-get install postgresql-9.1 postgresql-server-dev-9.1 python-dev
+
+### Postgres & Python
 
 If you are using a standard Postgres installation or from [Homebrew](http://mxcl.github.com/homebrew/) you can also use:
 
