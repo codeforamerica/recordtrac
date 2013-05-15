@@ -11,7 +11,7 @@
           </div>
         </div>
         {% if req.creator_id %}
-        <div>This request was made on behalf of the public by {{ req.creator_id |user_name }}</div>
+        <div>This request was made on behalf of the public by {{ req.creator_id | user_name }}</div>
         {% endif %}
     {% endblock status %}
     {% block content %}
