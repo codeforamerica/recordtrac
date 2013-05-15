@@ -79,11 +79,13 @@ def add_link(request_id, url, description):
 	change_request_status(request_id, "A response has been added.")
 			
 
-def make_request(text, email = None, assigned_to_name = None, assigned_to_email = None, assigned_to_reason = None):
+def make_request(text, email = None, assigned_to_name = None, assigned_to_email = None, assigned_to_reason = None, user_id = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
 	req = Request.query.filter_by(text = text).first()
 	if not req:
 		req = Request(text)
+		if user_id:
+			req.creator_id = user_id
 		db.session.add(req)
 		db.session.commit()
 		past_owner_id, owner_id = assign_owner(request_id = req.id, reason = assigned_to_reason, email = assigned_to_email, alias = assigned_to_name)

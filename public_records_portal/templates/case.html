@@ -10,6 +10,9 @@
           <div class="text-right">Routed {{req.date_created | date }} to </br> <span class="label label-info">{{req.current_owner | owner_name}} </span> 
           </div>
         </div>
+        {% if req.creator_id %}
+        <div>This request was made on behalf of the public by {{ req.creator_id |user_name }}</div>
+        {% endif %}
     {% endblock status %}
     {% block content %}
       
