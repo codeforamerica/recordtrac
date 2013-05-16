@@ -201,23 +201,29 @@
 
     <div class="row-fluid">
       <div class="span4">
-        <h4><div class="btn-group">
-          <a class="btn btn-inverse dropdown-toggle" data-toggle="dropdown" href="#">
-            Close this request
-            <span class="caret"></span>
-          </a>
-          <ul class="dropdown-menu">
-            <li> <a href="#">Fulfilled</a></li>
-            <li> <a href="#">Record does not exist</a> </li>
-            <li> <a href="#">Can not release - privacy</a> </li>
-            <li> <a href="#">Can not release - ongoing lawsuit</a> </li>
-            <li> <a href="#">Can not release - investigative report</a> </li>
-            <li> <a href="#">Requester no longer needs</a> </li>
-          </ul>
+        <h4>Close this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
+      </div>
+
+      <div class="span8">
+
+        <div class="control-group">
+          <label class="control-label">Reason</label>
+            <div class="controls">
+              <select>
+                <option>Fulfilled</option>
+                <option>Record does not exist</option>
+                <option>Can not release - privacy</option>
+                <option>Can not release - ongoing lawsuit</option>
+                <option>Can not release - investigative report</option>
+                <option>Requester no longer needs</option>
+              </select>
+              <button type="submit" class="btn btn-inverse">Close this request</button>
+            </div>
         </div>
-        <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></h4>
+
       </div>
     </div>
+
 
   </fieldset>
 </form>
