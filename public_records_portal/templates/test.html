@@ -1,19 +1,213 @@
-<!-- This template extends the baseline case information but shows a record as closed. -->
-<!-- This template should be eventually updated so that status/owner info is a consistent block between "case" and "closed". -->
+<!-- This template houses the baseline case information (request, documents, status, etc.) only. -->
 
-{% extends "case.html" %}
-{% block title %}Request {{ request_id }}{% endblock %}
+{% extends "base.html" %}
+{% block title %}Request{% endblock %}
 {% block head %} {% endblock head %}
-
-{% block content %}
-  {% block status %}
-  
+{% block body %}
+  <div class="row-fluid well"> 
+    {% block status %}
       <div class="row-fluid">
-        <div class="text-right">
-          <span class="label label-info">Closed {{date_updated}} by {{owner_email}} </span>
+        <div class="text-right">Routed to <span class="label label-info">{{req.current_owner | owner_name}} </span> 
+          <a data-placement="left" href="#" id="historyPopover"> <i class="icon-time"></i>  </a>
+          <!-- <div id="historyPopover-head" class="hide">History</div> -->
+          <div id="historyPopover-content" class="hide">              
+            <table class="table table-condensed">
+             <!--  <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Owner</th>
+                  <th>Note</th>
+                </tr>
+              </thead> -->
+              <tbody>
+                <!-- the order of data returned here should be reverse chonological (right now it's shown as oldest first)-->
+                {% for owner in req.owners %}
+                  <tr>
+                    <td>{{ owner.date_created | date }}</td>
+                    <td>{{ owner.id | owner_name }}</td>
+                    <td>{{ owner.reason }}</td>
+                  </tr>              
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-      
-  {% endblock status %}
-   {{ super() }}
-{% endblock content %}
+    {% endblock status %}
+    {% block content %}
+
+    <!-- request area -->
+      <div class="row-fluid">
+        <h3>Request</h3>
+        <div class="span10">
+            <p class="lead"> {{ req.text }} <small>{% if req.creator_id %}
+        <div>This request was made on behalf of the requester by {{ req.creator_id | user_name }}.</div>
+        {% endif %}</small></p>
+        </div>
+      </div>
+
+      <!-- ask a question -->
+      <form name="input_url" class="form-horizontal" id="submitLink" method="post" action="/add_a_link" autocomplete="on">
+        <fieldset> 
+          <div class="row-fluid">
+            <div class="span4">
+              <h4>Ask a question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a link" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></h4>
+            </div>
+            <div class="span8">
+
+              <div class="control-group">
+                <label class="control-label" for="inputSummary">Question</label>
+                <div class="controls">
+                  <input class="input-block-level" name="record_description" type="text" id="linkSummary" placeholder="Ask the requester a question" />
+                  <input type="hidden" name="request_id" value="{{ req.id }}">
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </fieldset>
+      </form>
+
+      <!-- shows any existing Q&A: meaningless placeholder code below -->
+      {% if questions %}  
+        <div class="span10">
+          {% for question in questions %}
+            <div class="row-fluid response">
+              <div class="span2 text-center">
+                <i class="icon-question-sign icon-3x">  </i></br>
+                <small> {{ time }} [May 4, 2013]</small> </br>
+              </div>
+              <div class="span10">
+                <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{link.description}} </a> - <em>{{link[
+                  'owner_id'] | owner_name }}</em></p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <!-- initiate new question -->
+<!--       <div class="row-fluid">
+        <button class="btn" type="button"><i class="icon-question-sign"></i> Ask requester a question </button>
+      </div> -->
+
+
+      <!-- response area: need to give this more space between the request area-->
+      <div class="row-fluid">
+        <h3>Response</h3>
+
+          <!-- initiate a new response -->
+<!--           <div class="row-fluid">
+            <div class="btn-group">
+              <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-question-sign"></i>
+                Add a response
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="#">Attach a document</a>
+                </li>
+              </ul>
+            </div>
+          </div> -->
+
+          <!-- shows all existing responses (links, documents, offline docs, notes) -->
+          {% if links %}
+            <div class="span10">
+              {% for link in links %}
+                <div class="row-fluid response">
+                  <div class="span2 text-center">
+                    <i class="icon-link icon-3x">  </i></br>
+                    <small> {{ time }} [May 4, 2013]</small> </br>
+                  </div>
+                  <div class="span10">
+                    <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{link.description}} </a> - <em>{{link[
+                      'owner_id'] | owner_name }}</em></p>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% if req.records %}
+            <div class="span10">
+              {% for record in req.records %}
+                <div class="row-fluid response">
+                  <div class="span2 text-center">
+                    <i class="icon-file-alt icon-3x">  </i></br>
+                    <small> {{ time }} [May 4, 2013]</small> </br>
+                  </div>
+                  <div class="span10">
+                    <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.owner_id | owner_name }}</em></p>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% if req.notes %}
+            <div class="span10">
+              {% for note in req.notes %}
+                <div class="row-fluid response">
+                  <div class="span2 text-center">
+                    <i class="icon-edit icon-3x">  </i> </br>
+                    <small> {{ time }} [May 4, 2013]</small> </br>
+                  </div>
+                  <div class="span10">
+                    <p> {{ note.text}} - <em>{{note.owner_id | owner_name }}</em></p>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% if req.qas %}
+            <div class="span10">
+              {% for qa in req.qas %}
+                <div class="row-fluid response">
+                  <div class="span2 text-center">
+                    <i class="icon-question-sign icon-3x">  </i> </br>
+                    <small> {{ time }} [May 4, 2013]</small> </br>
+                  </div>
+                  <div class="span10">
+                    <p> {{ qa.question }} - <em>{{qa.owner_id | owner_name }}</em></p>
+                    {% if qa.response %}
+                      <p>{{ qa.response }} - <em>{{qa.subscriber_id | subscriber_name }}</em></p>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+<!-- This code will definitely not work.  All it's meant to do is convey that we need to post whatever the "close" reason is for the case in the page itself. --> 
+          {% if [closed] %}
+            <div class="span10">
+              <div class="row-fluid response">
+                <div class="span2 text-center">
+                  <i class="icon-lock icon-3x">  </i> </br>
+                  <small> {{ request.status_updated | date_granular }} </small> </br>
+                </div>
+                <div class="span10">
+                  {% if request_fulfilled_city %}
+                    <p> {{request_fulfilled_city.email_body}} </p>
+                    {% elif request_rejected_norecord %}
+                    <p> {{request_rejected_norecord.email_body}} </p>
+                    {% elif equest_rejected_privacy %}
+                    <p> {{equest_rejected_privacy}} </p>
+                    {% elif request_rejected_lawsuit %}
+                    <p> {{request_rejected_lawsuit}} </p>
+                    {% elif request_rejected_investigation %}
+                    <p> {{request_rejected_investigation}} </p>
+                    {% elif request_withdrawn %}
+                    <p> {{request_withdrawn}} </p>
+                  {% endif %}
+                </div>
+              </div>
+            </div> 
+          {% endif %}
+  
+      </div>
+    {% endblock content %}
+  </div>
+{% endblock body %}
