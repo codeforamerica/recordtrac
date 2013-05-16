@@ -58,37 +58,60 @@
                 <small> {{ time }} [May 4, 2013]</small> </br>
               </div>
               <div class="span10">
-                <p> {{ qa.question }} - <em>{{qa.owner_id | owner_name }}</em></p>
+                <p> {{ qa.question }} - <em>{{qa.owner_id | user_name }}</em></p>
                 {% if qa.response %}
-                  <p>{{ qa.response }} - <em>{{qa.subscriber_id | subscriber_name }}</em></p>
+                  <p>{{ qa.response }} - <em>{{qa.subscriber_id | user_name }}</em></p>
+                {% else %}
+                      <!-- respond to a question -->
+                        <form name="respond_question" class="form-horizontal" id="answer" method="post" action="/add_a_qa" autocomplete="on">
+                          <fieldset> 
+                            <div class="row-fluid">
+                              <div class="control-group span8">
+                                <label class="control-label">Answer</label>
+                                  <div class="controls">
+                                      <input type="hidden" name="user_id" value="{{ user_id }}"/>
+                                      <input type="hidden" name="qa_id" value="{{ qa.id }}"/>
+                                      <input id="answerTextarea" name="answer_text" type="text" rows="3" cols="20" placeholder="Can you respond to the above question?" required/>
+                                    <button id="askQuestion" class="btn btn-primary" type="submit">Respond</button>
+                                  </div>
+                              </div>
+                            </div>
+                          </fieldset>
+                        </form>
                 {% endif %}
               </div>
             </div>
           {% endfor %}
         </div>
       {% endif %}
-
-      <!-- respond to a question -->
-      <form name="respond_question" class="form-horizontal" id="answer" method="post" action="/add_a_qa" autocomplete="on">
+    {% if user_id %}
+          <!-- ask a question -->
+      <form name="ask_question" class="form-horizontal" id="question" method="post" action="/add_a_qa" autocomplete="on">
         <fieldset> 
           <div class="row-fluid">
-
             <div class="span4">
-              <h4>Respond <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a link" | explain_action}}"><small><i class="icon-question-sign"></i></small></span></h4>
+              <h4>Ask a question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></h4>
             </div>
+            <div>
 
-            <div class="control-group span8">
-              <label class="control-label">Answer</label>
-                <div class="controls">
-                    <textarea id="answerTextarea" name="answer_text" rows="3" cols="20" placeholder="Please respond with the detail requested" required></textarea>
-                  <button id="askQuestion" class="btn btn-primary" type="submit">Respond</button>
+              <div class="control-group">
+                <label class="control-label">Question</label>
+                <div class="row-fluid">
+                  <div class="controls">
+                      <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                      <input type="hidden" name="user_id" value="{{ user_id }}"/>
+                      <input id="questionTextarea" type="text" name="question_text" rows="3" cols="20" placeholder="Ask the requester a question" required/>
+                    <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
+                  </div>
                 </div>
-            </div>
+              </div>
 
+            </div>
           </div>
         </fieldset>
       </form>
-
+      {% endif %}
+    
     {% endblock request %}
 
     {% block response %}

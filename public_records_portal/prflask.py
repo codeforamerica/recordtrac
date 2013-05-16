@@ -172,9 +172,12 @@ def login(email=None):
 		email = request.form['email']
 	else:
 		email = "richa@codeforamerica.org" # Obviously this is a hack for now
-	user = create_or_return_user(email=email)
-	login_user(user)
-	return render_template('new_request.html', user_id = user.id)
+	if email_validation(email) == True:
+		user = create_or_return_user(email=email)
+		login_user(user)
+		return render_template('new_request.html', user_id = user.id)
+	else:
+		return render_template('new_request.html', user_id = None) # TODO: Give feedback
 
 @app.route("/logout")
 @login_required

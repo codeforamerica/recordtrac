@@ -9,8 +9,9 @@ class User(db.Model):
 	alias = db.Column(db.String(100))
 	email = db.Column(db.String(100), unique=True)
 	date_created = db.Column(db.DateTime)
-	owners = db.relationship("Owner")
-	subscribers = db.relationship("Subscriber")
+	# owners = db.relationship("Owner") # All owners this user is
+	# subscribers = db.relationship("Subscriber") # All subscribers this user is
+	# qas = db.relationship("QA") # All QAs this user has participated in
 	def is_authenticated(self):
 		return True
 	def is_active(self):
@@ -31,14 +32,14 @@ class Request(db.Model):
 	__tablename__ = 'request'
 	id = db.Column(db.Integer, primary_key =True)
 	date_created = db.Column(db.DateTime)
-	qas = relationship("QA") # The list of QA units for this request
+	qas = relationship("QA", cascade="all,delete") # The list of QA units for this request
 	status_updated = db.Column(db.DateTime)
 	text = db.Column(db.String(), unique=True) # The actual request text.
 	subscribers = relationship("Subscriber") # The list of subscribers following this request.
-	owners = relationship("Owner") # The list of city staff ever assigned to the request.
+	owners = relationship("Owner", cascade="all,delete") # The list of city staff ever assigned to the request.
 	current_owner = db.Column(db.Integer) # The Owner ID for the city staff that currently 'owns' the request.
-	records = relationship("Record") # The list of records that have been uploaded for this request.
-	notes = relationship("Note") # The list of notes appended to this request.
+	records = relationship("Record", cascade="all,delete") # The list of records that have been uploaded for this request.
+	notes = relationship("Note", cascade="all,delete") # The list of notes appended to this request.
 	status = db.Column(db.String(400)) # The status of the request (open, closed, etc.)
 	creator_id = db.Column(db.Integer, db.ForeignKey('user.id')) # If city staff created it on behalf of the public, otherwise the creator is the subscriber with creator = true
 	def __init__(self, text):
@@ -54,8 +55,8 @@ class QA(db.Model):
 	question = db.Column(db.String())
 	answer = db.Column(db.String())
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
-	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id'))
-	subscriber_id = db.Column(db.Integer, db.ForeignKey('subscriber.id'))
+	owner_id = db.Column(db.Integer, db.ForeignKey('user.id')) # Actually just a user ID
+	subscriber_id = db.Column(db.Integer, db.ForeignKey('user.id')) # Actually just a user ID
 	date_created = db.Column(db.DateTime)
 	def __init__(self, request_id, question):
 		self.question = question
@@ -69,8 +70,7 @@ class Owner(db.Model):
 	__tablename__ = 'owner'
 	id = db.Column(db.Integer, primary_key =True)
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-	qas = relationship("QA") # All Q&A blocks that this owner has asked
-	records = relationship("Record") # All records that have been uploaded
+	records = relationship("Record", cascade="all,delete") # All records that have been uploaded
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
 	reason = db.Column(db.String()) # Reason they were assigned
 	date_created = db.Column(db.DateTime)
@@ -89,7 +89,6 @@ class Subscriber(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
-	qas = relationship("QA") # All Q&A blocks that this subscriber has answered
 	creator = db.Boolean() # True if they created the initial request.
 	date_created = db.Column(db.DateTime)
 	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id')) # Not null if responsible for fulfilling a part of the request

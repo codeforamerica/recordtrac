@@ -44,11 +44,18 @@ def add_resource(resource, request_body):
 	elif "link" in resource:
 		add_link(fields['request_id'], fields['record_url'], fields['record_description'])
 	elif "qa" in resource:
-		owner_id = None #TODO: get logged in user
-		ask_a_question(fields['request_id'], owner_id, fields['question'])
+		ask_a_question(fields['request_id'], fields['user_id'], fields['question_text'])
 	else:
 		return False
 	return True
+
+def update_resource(resource, request_body):
+	fields = request_body.form
+	if "qa" in resource:
+		answer_a_question(fields['qa_id'], fields['answer_text'], fields['user_id'])
+		return True
+	else:
+		return False
 
 def add_note(request_id, text, owner_id):
 	note = Note(request_id = request_id, text = text, owner_id = owner_id)
@@ -98,16 +105,16 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 		return req.id, True
 	return req.id, False
 
-def ask_a_question(request_id, owner_id, question):
+def ask_a_question(request_id, user_id, question):
 	""" City staff can ask a question about a request they are confused about."""
 	qa = QA(request_id = request_id, question = question)
-	qa.owner_id = owner_id
+	qa.owner_id = user_id
 	db.session.add(qa)
 	db.session.commit()
 	change_request_status(request_id, "Pending")
 	return qa.id
 
-def answer_a_question(qa_id, subscriber_id, answer):
+def answer_a_question(qa_id, answer, subscriber_id = None):
 	""" A requester can answer a question city staff asked them about their request."""
 	qa = QA.query.get(qa_id) 
 	qa.subscriber_id = subscriber_id
@@ -214,6 +221,12 @@ def make_private(doc_id, API_KEY, API_SECRET):
 def allowed_file(filename):
 	return '.' in filename and \
 		filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+def email_validation(email):
+	name, domain = email.split("@")
+	if domain == "oakland.net" or domain == "codeforamerica.org":
+		return True
+	return False
 
 def upload_file(file): 
 # Uploads file to scribd.com and returns doc ID. File can be accessed at scribd.com/doc/id
