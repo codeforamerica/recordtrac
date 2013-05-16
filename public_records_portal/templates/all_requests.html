@@ -23,7 +23,7 @@
       {% for request in all_record_requests %}
         <tr>
           <td><a href="/request/{{request.id}}">{{ request.id }} </a></td>
-          <td> [open or closed] </td>
+          <td> {{ request.status }} </td>
           <td>{{ request.date_created | date_granular }}</td>
           <td><a href="/request/{{request.id}}">{{ request.text }}</a></td>
           <td>{{ request.status_updated | date_granular }} </td>

@@ -53,12 +53,18 @@
             </div>
             {% endif %}
             <!-- Login area -->
-            <form class="navbar-form pull-right">
-              <input type="text" class="input-small" placeholder="Email">
+            {% if user_id %}
+            <form class="navbar-form pull-right" id="logoutForm" action="/logout">
+            Logged in as {{ user_id | user_name }}
+            <input type="submit" value="Logout" class="btn"/>
+            </form>
+            {% else %}
+            <form class="navbar-form pull-right" method="post" id="loginForm" action="/login">
+              <input type="text" class="input-small" name="email" placeholder="Email">
 <!--               <input type="text" class="input-small" placeholder="Password"> -->
               <input type="submit" value="Login" class="btn"/>
             </form>
-
+            {% endif %}
             <!-- Everything you want hidden at 940px or less, place within here -->
             <div class="nav-collapse collapse">
               <!-- .nav, .navbar-search, .navbar-form, etc -->
