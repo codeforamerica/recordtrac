@@ -62,3 +62,8 @@ def request_rejected_investigation(city_employee, phone_number):
 	email_body = "<p>The City of Oakland is unable to send you the documents you requested. The California Public Records Act prohibits the City from releasing investigative records for crimes committed or police incident reports, rap sheets, and arrest records.  Contact %s if you want copies of those records.</p><p><ul>If you are unsatisfied, you can do the following:<li>Send %s a message by clicking here or calling %s to speak with them directly.</li><li>File a complaint with the Public Ethics Commission.</li></ul></p>" %(city_employee, phone_number)
 	return subject_line, email_body
 
+def request_withdrawn(city_employee, phone_number):
+	subject_line = "Your public records request has been closed"
+	email_body = "<p>The City of Oakland understands that you no longer need the requested records.</p><p><ul>If you are unsatisfied, you can do the following:<li>Send %s a message by clicking here or calling %s to speak with them directly.</li><li>File a complaint with the Public Ethics Commission.</li></ul></p>" %(city_employee, phone_number)
+	return subject_line, email_body
+

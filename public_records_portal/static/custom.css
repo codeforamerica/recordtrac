@@ -67,6 +67,9 @@ margin: 0 0 0px;
 	text-align: left ;
 }
 
+/* history popover fit size to content*/
+
+
 /* gives the responses a bit more white space between */
 .response {
 	padding-top: 2%;
