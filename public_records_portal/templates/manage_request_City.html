@@ -56,6 +56,29 @@
 
 {% block content %}
   {{ super() }}
+        <!-- ask a question -->
+      <form name="ask_question" class="form-horizontal" id="form_Question" method="post" action="/add_a_qa" autocomplete="on">
+        <fieldset> 
+          <div class="row-fluid">
+            <div class="span4">
+              <h4>Ask a question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a link" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></h4>
+            </div>
+            <div class="span8">
+
+              <div class="control-group">
+                <label class="control-label">Question</label>
+                <div class="row-fluid">
+                  <div class="controls">
+                      <input name="question" type="text" id="inputQuestion" placeholder="Ask the requester a question" required/>
+                    <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </fieldset>
+      </form>
 {% endblock content %}
 
 {% block actions %}
