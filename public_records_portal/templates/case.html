@@ -46,28 +46,26 @@
         </div>
       </div>
 
-      <!-- shows any existing Q&A: meaningless placeholder code below -->
-      {% if questions %}  
+      <!-- shows any existing Q&A -->
+      {% if req.qas %}
         <div class="span10">
-          {% for question in questions %}
+          {% for qa in req.qas %}
             <div class="row-fluid response">
               <div class="span2 text-center">
-                <i class="icon-question-sign icon-3x">  </i></br>
+                <i class="icon-question-sign icon-3x">  </i> </br>
                 <small> {{ time }} [May 4, 2013]</small> </br>
               </div>
               <div class="span10">
-                <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{link.description}} </a> - <em>{{link[
-                  'owner_id'] | owner_name }}</em></p>
+                <p> {{ qa.question }} - <em>{{qa.owner_id | owner_name }}</em></p>
+                {% if qa.response %}
+                  <p>{{ qa.response }} - <em>{{qa.subscriber_id | subscriber_name }}</em></p>
+                {% endif %}
               </div>
             </div>
           {% endfor %}
         </div>
       {% endif %}
 
-      <!-- initiate new question -->
-<!--       <div class="row-fluid">
-        <button class="btn" type="button"><i class="icon-question-sign"></i> Ask requester a question </button>
-      </div> -->
     {% endblock request %}
 
     {% block response %}
@@ -140,24 +138,7 @@
             </div>
           {% endif %}
 
-          {% if req.qas %}
-            <div class="span10">
-              {% for qa in req.qas %}
-                <div class="row-fluid response">
-                  <div class="span2 text-center">
-                    <i class="icon-question-sign icon-3x">  </i> </br>
-                    <small> {{ time }} [May 4, 2013]</small> </br>
-                  </div>
-                  <div class="span10">
-                    <p> {{ qa.question }} - <em>{{qa.owner_id | owner_name }}</em></p>
-                    {% if qa.response %}
-                      <p>{{ qa.response }} - <em>{{qa.subscriber_id | subscriber_name }}</em></p>
-                    {% endif %}
-                  </div>
-                </div>
-              {% endfor %}
-            </div>
-          {% endif %}
+          
 
 <!-- This code will definitely not work.  All it's meant to do is convey that we need to post whatever the "close" reason is for the case in the page itself. --> 
           {% if [closed] %}
