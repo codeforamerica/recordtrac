@@ -24,6 +24,15 @@
 	width: 80px;
 }
 
+#question .control-label {
+	width: 80px;
+	margin-right: 20px;
+}
+
+#question .controls {
+	margin-left: 90px;
+}
+
 #note .controls {
 	margin-left: 90px;
 }
