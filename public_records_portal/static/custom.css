@@ -104,6 +104,10 @@ margin: 0 0 0px;
 	padding-top: 2%;
 }
 
+/* gives the close button a bit of breathing room */
+#closeRequest {
+	margin-bottom: 10%;
+}
 
 /* ----- Sticky Footer ----- by Ryan Fait http://ryanfait.com/sticky-footer/ ----- */
 * {
