@@ -52,7 +52,7 @@
           {% for qa in req.qas %}
             <div class="row-fluid response">
               <div class="span2 text-center">
-                <i class="icon-question-sign icon-3x">  </i> </br>
+                <i class="icon-question icon-3x">  </i> </br>
                 <small> {{ time }} [May 4, 2013]</small> </br>
               </div>
               <div class="span10">
@@ -65,6 +65,27 @@
           {% endfor %}
         </div>
       {% endif %}
+
+      <!-- respond to a question -->
+      <form name="respond_question" class="form-horizontal" id="answer" method="post" action="/add_a_qa" autocomplete="on">
+        <fieldset> 
+          <div class="row-fluid">
+
+            <div class="span4">
+              <h4>Respond <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a link" | explain_action}}"><small><i class="icon-question-sign"></i></small></span></h4>
+            </div>
+
+            <div class="control-group span8">
+              <label class="control-label">Answer</label>
+                <div class="controls">
+                    <textarea id="answerTextarea" name="answer_text" rows="3" cols="20" placeholder="Please respond with the detail requested" required></textarea>
+                  <button id="askQuestion" class="btn btn-primary" type="submit">Respond</button>
+                </div>
+            </div>
+
+          </div>
+        </fieldset>
+      </form>
 
     {% endblock request %}
 
