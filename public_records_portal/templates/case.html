@@ -20,7 +20,7 @@
                 </tr>
               </thead>
               <tbody>
-                <!-- the order of data returned here should be reverse chonological (right now it's shown as oldest first)-->
+                <!-- the order of data returned here should be reverse chronological (right now it's shown as oldest first)-->
                 {% for owner in req.owners %}
                   <tr>
                     <td>{{ owner.date_created | date }}</td>

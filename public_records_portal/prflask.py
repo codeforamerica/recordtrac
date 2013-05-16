@@ -44,29 +44,19 @@ def explain_all_actions():
 # They can always submit a new request by navigating here, but the index might change.
 @app.route('/new', methods=['GET', 'POST'])
 def new_request():
+	current_user_id = None
+	if current_user.is_anonymous() == False:
+		current_user_id = current_user.id
 	if request.method == 'POST':
 		request_text = request.form['request_text']
 		email = request.form['request_email']
-		if current_user.is_anonymous:
-			current_user_id = None
-		else:
-			current_user_id = current_user.id
 		request_id, is_new = make_request(text = request_text, email = email, assigned_to_name = app.config['DEFAULT_OWNER_NAME'], assigned_to_email = app.config['DEFAULT_OWNER_EMAIL'], assigned_to_reason = app.config['DEFAULT_OWNER_REASON'], user_id = current_user_id)
 		if is_new:
-			# send_emails(body = show_request(request_id, for_email_notification = True), request_id = request_id, notification_type = "new")
+			send_emails(body = show_request(request_id, for_email_notification = True), request_id = request_id, notification_type = "new")
+			# return redirect(url_for('show_request', request_id = request_id, banner_msg = "Thanks! Your request has been uploaded.", template = "requested.html"))
 			return show_request(request_id, banner_msg = "Thanks! Your request has been uploaded.", template = "requested.html")
 		return render_template('error.html', message = "Your request is the same as /request/%s" % request_id)
-	return render_template('new_request.html')
-
-# Uploading a record is specific to a case, so this only gets called from a case (that only city staff have a view of)
-@app.route('/upload', methods=['POST'])
-def load():
-	if request.method == 'POST':
-
-
-		return show_request(request_id = request_id, template = "uploaded.html", record_uploaded = record)
-	return render_template('error.html', message = "You can only upload from a requests page!")
-
+	return render_template('new_request.html', user_id = current_user_id)
 
 # Returns a view of the case based on the audience. Currently views exist for city staff or general public.
 @app.route('/<string:audience>/request/<int:request_id>', methods=['GET', 'POST'])
@@ -91,6 +81,9 @@ def show_request_for_x(audience, request_id):
 
 @app.route('/request/<int:request_id>')
 def show_request(request_id, template = None, record_uploaded = None, for_email_notification = False, banner_msg = None):
+	current_user_id = None
+	if current_user.is_anonymous() == False:
+		current_user_id = current_user.id
 	if not template:
 		template = "case.html"
 	req = get_resource("request", app.config['APPLICATION_URL'], request_id)
@@ -98,7 +91,7 @@ def show_request(request_id, template = None, record_uploaded = None, for_email_
 		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
 	if "Closed" in req['status']:
 		template = "closed.html"
-	return render_template(template, req = req, for_email_notification = for_email_notification, record_uploaded = record_uploaded, banner_msg = banner_msg)
+	return render_template(template, req = req, for_email_notification = for_email_notification, record_uploaded = record_uploaded, banner_msg = banner_msg, user_id = current_user_id)
 @app.route('/add_a_<string:resource>', methods=['GET', 'POST'])
 def add_a_resource(resource):
 	if request.method == 'POST':
@@ -137,9 +130,12 @@ def close(request_id = None):
 # Shows all public records requests that have been made.
 @app.route('/requests')
 def requests():
+	current_user_id = None
+	if current_user.is_anonymous() == False:
+		current_user_id = current_user.id
 	all_record_requests = get_resources("request", app.config['APPLICATION_URL'])
 	if all_record_requests:
-		return render_template('all_requests.html', all_record_requests = all_record_requests['objects'])
+		return render_template('all_requests.html', all_record_requests = all_record_requests['objects'], user_id = current_user_id)
 	return index()
 
 # Shows all public records requests that have been made by current owner. This doesn't work currently.
@@ -151,7 +147,7 @@ def your_requests():
 	for owner in owners:
 		req = Request.query.filter_by(current_owner = owner.id).first() # TODO: Make API call instead
 		all_record_requests.append(req)
-	return render_template('all_requests.html', all_record_requests = all_record_requests)
+	return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = current_user.id)
 
 # test template:  I clearly don't know what should go here, but need to keep a testbed here.
 @app.route('/test')
@@ -172,11 +168,13 @@ def load_user(userid):
 
 @app.route("/login", methods=["GET", "POST"])
 def login(email=None):
-	if not email:
+	if request.method == 'POST':
+		email = request.form['email']
+	else:
 		email = "richa@codeforamerica.org" # Obviously this is a hack for now
 	user = create_or_return_user(email=email)
 	login_user(user)
-	return index()
+	return render_template('new_request.html', user_id = user.id)
 
 @app.route("/logout")
 @login_required

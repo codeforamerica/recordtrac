@@ -153,7 +153,7 @@ def assign_owner(request_id, reason, email = None, alias = None):
 		past_owner_id = None
 	req.current_owner = owner.id
 	db.session.commit()
-	change_request_status(request_id, "Assigned to %s" % email)
+	change_request_status(request_id, "Pending")
 	return past_owner_id, owner.id
 
 def remove_subscriber(subscriber_id): 
