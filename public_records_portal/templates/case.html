@@ -4,11 +4,10 @@
 {% block title %}Request{% endblock %}
 {% block head %} {% endblock head %}
 {% block body %}
-  <div class="row-fluid"> 
+  <div class="row-fluid well"> 
     {% block status %}
-        <div class="row-fluid">
-          <div class="text-right">Routed to <span class="label label-info">{{req.current_owner | owner_name}} </span> 
-          </div>
+      <div class="row-fluid">
+        <div class="text-right">Routed to <span class="label label-info">{{req.current_owner | owner_name}} </span> 
           <a data-placement="left" href="#" id="historyPopover"> <i class="icon-time"></i>  </a>
           <!-- <div id="historyPopover-head" class="hide">History</div> -->
           <div id="historyPopover-content" class="hide">              
@@ -33,9 +32,7 @@
             </table>
           </div>
         </div>
-        {% if req.creator_id %}
-        <div>This request was made on behalf of the public by {{ req.creator_id | user_name }}</div>
-        {% endif %}
+      </div>
     {% endblock status %}
     {% block content %}
 
@@ -43,7 +40,9 @@
       <div class="row-fluid">
         <h3>Request</h3>
         <div class="span10">
-            <p class="lead"> {{ req.text }} </p>
+            <p class="lead"> {{ req.text }} <small>{% if req.creator_id %}
+        <div>This request was made on behalf of the requester by {{ req.creator_id | user_name }}.</div>
+        {% endif %}</small></p>
         </div>
       </div>
 
@@ -161,31 +160,31 @@
 
 <!-- This code will definitely not work.  All it's meant to do is convey that we need to post whatever the "close" reason is for the case in the page itself. --> 
           {% if [closed] %}
-          <div class="span10">
-            <div class="row-fluid response">
-              <div class="span2 text-center">
-                <i class="icon-question-sign icon-3x">  </i> </br>
-                <small> {{ time }} [May 4, 2013]</small> </br>
+            <div class="span10">
+              <div class="row-fluid response">
+                <div class="span2 text-center">
+                  <i class="icon-lock icon-3x">  </i> </br>
+                  <small> {{ request.status_updated | date_granular }} </small> </br>
+                </div>
+                <div class="span10">
+                  {% if request_fulfilled_city %}
+                    <p> {{request_fulfilled_city.email_body}} </p>
+                    {% elif request_rejected_norecord %}
+                    <p> {{request_rejected_norecord.email_body}} </p>
+                    {% elif equest_rejected_privacy %}
+                    <p> {{equest_rejected_privacy}} </p>
+                    {% elif request_rejected_lawsuit %}
+                    <p> {{request_rejected_lawsuit}} </p>
+                    {% elif request_rejected_investigation %}
+                    <p> {{request_rejected_investigation}} </p>
+                    {% elif request_withdrawn %}
+                    <p> {{request_withdrawn}} </p>
+                  {% endif %}
+                </div>
               </div>
-              <div class="span10">
-                {% if request_fulfilled_city %}
-                  <p> {{request_fulfilled_city.email_body}} </p>
-                  {% elseif request_rejected_norecord %}
-                  <p> {{request_rejected_norecord.email_body}} </p>
-                  {% elseif equest_rejected_privacy %}
-                  <p> {{equest_rejected_privacy}} </p>
-                  {% elseif request_rejected_lawsuit %}
-                  <p> {{request_rejected_lawsuit}} </p>
-                  {% elseif request_rejected_investigation %}
-                  <p> {{request_rejected_investigation}} </p>
-                  {% elseif request_withdrawn %}
-                  <p> {{request_withdrawn}} </p>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-
-        
+            </div> 
+          {% endif %}
+  
       </div>
     {% endblock content %}
   </div>
