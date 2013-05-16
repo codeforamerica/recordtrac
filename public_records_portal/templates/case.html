@@ -34,8 +34,8 @@
         </div>
       </div>
     {% endblock status %}
-    {% block content %}
 
+    {% block request %}
     <!-- request area -->
       <div class="row-fluid">
         <h3>Request</h3>
@@ -68,8 +68,9 @@
 <!--       <div class="row-fluid">
         <button class="btn" type="button"><i class="icon-question-sign"></i> Ask requester a question </button>
       </div> -->
+    {% endblock request %}
 
-
+    {% block response %}
       <!-- response area: need to give this more space between the request area-->
       <div class="row-fluid">
         <h3>Response</h3>
@@ -184,8 +185,9 @@
               </div>
             </div> 
           {% endif %}
-  
+
       </div>
-    {% endblock content %}
+    {% endblock response %}
+
   </div>
 {% endblock body %}

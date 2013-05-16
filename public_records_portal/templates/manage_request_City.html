@@ -54,7 +54,7 @@
           
 {% endblock status %}
 
-{% block content %}
+{% block request %}
   {{ super() }}
         <!-- ask a question -->
       <form name="ask_question" class="form-horizontal" id="question" method="post" action="/add_a_qa" autocomplete="on">
@@ -79,7 +79,11 @@
           </div>
         </fieldset>
       </form>
-{% endblock content %}
+{% endblock request %}
+
+{% block response %}
+  {{ super() }}
+{% endblock response %}
 
 {% block actions %}
   <form name="input_doc" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data" >
