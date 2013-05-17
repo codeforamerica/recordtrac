@@ -28,7 +28,7 @@ NOTIFICATIONS = [
 # Routing
 
 # Let's start with the index page! For now we'll let the users submit a new request.
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def index():
 	return new_request()
 
@@ -42,7 +42,7 @@ def explain_all_actions():
 	return render_template('actions.html', actions = actions)
 
 # They can always submit a new request by navigating here, but the index might change.
-@app.route('/new', methods=['GET', 'POST'])
+@app.route('/new', methods=['GET','POST'])
 def new_request():
 	current_user_id = None
 	if current_user.is_anonymous() == False:
@@ -56,7 +56,8 @@ def new_request():
 			# return redirect(url_for('show_request', request_id = request_id, banner_msg = "Thanks! Your request has been uploaded.", template = "requested.html"))
 			return show_request(request_id, banner_msg = "Thanks! Your request has been uploaded.", template = "requested.html")
 		return render_template('error.html', message = "Your request is the same as /request/%s" % request_id)
-	return render_template('new_request.html', user_id = current_user_id)
+	else:
+		return render_template('new_request.html', user_id = current_user_id)
 
 # Returns a view of the case based on the audience. Currently views exist for city staff or general public.
 @app.route('/<string:audience>/request/<int:request_id>', methods=['GET', 'POST'])
@@ -136,7 +137,8 @@ def requests():
 	all_record_requests = get_resources("request", app.config['APPLICATION_URL'])
 	if all_record_requests:
 		return render_template('all_requests.html', all_record_requests = all_record_requests['objects'], user_id = current_user_id)
-	return index()
+	else:
+		return index()
 
 # Shows all public records requests that have been made by current owner. This doesn't work currently.
 @app.route('/your_requests')
