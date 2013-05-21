@@ -8,7 +8,7 @@
     {% block status %}
       <div class="row-fluid">
         <div class="text-right">Routed to <span class="label label-info">{{req.current_owner | owner_name}} </span> 
-          <a data-placement="bottom" data-toggle="popover" href="#" class="historyPopover"> <i class="icon-time"></i>  </a>
+          <a data-placement="bottom" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"> <i class="icon-time"></i>  </a>
           <div id="historyPopover-head" class="hide">Routing history</div>
           <div id="historyPopover-content" class="hide">              
             <table class="table table-condensed">
