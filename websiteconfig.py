@@ -1,5 +1,5 @@
 DEBUG = True
-PRODUCTION = True
+PRODUCTION = False
 SCRIBD_API_KEY = '6lq9wei7i1dzlxuxdnu13'
 SCRIBD_API_SECRET = 'sec-4sc7mfw4lqooxwv01jhehrwpih'
 HOST_URL = 'https://www.scribd.com/doc/'
