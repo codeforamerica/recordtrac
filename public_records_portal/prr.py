@@ -189,7 +189,9 @@ def assign_owner(request_id, reason, email = None, alias = None):
 	""" Called any time a new owner is assigned. This will overwrite the current owner."""
 	user = create_or_return_user(email = email, alias = alias)
 	req = get_resource("request", request_id)
-	current_owner_id = req['current_owner']
+	current_owner_id = None
+	if not req['current_owner']:
+		current_owner_id = req['current_owner']
 	owner = None
 	owner_resource = get_resource_filter("owner", [dict(name='request_id', op='eq', val=int(request_id)), dict(name='user_id', op='eq', val=int(user['id']))])
 	if owner_resource['objects']:
