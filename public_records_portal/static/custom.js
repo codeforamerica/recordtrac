@@ -1,7 +1,6 @@
 /* banner dismissal */
   $(function(){$(".alert").alert()})
 
-
 /* navbar active page indicator */
   $(function(){
     function stripTrailingSlash(str) {
@@ -50,7 +49,7 @@
   });
 
   /* form in history popover */
-  $('#historyPopover').popover({
+  $('.historyPopover').popover({
       trigger: 'hover', 
       html : true,
       title: function() {

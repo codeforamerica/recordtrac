@@ -8,7 +8,7 @@
     {% block status %}
       <div class="row-fluid">
         <div class="text-right">Routed to <span class="label label-info">{{req.current_owner | owner_name}} </span> 
-          <a data-placement="left" href="#" id="historyPopover"> <i class="icon-time"></i>  </a>
+          <a data-placement="bottom" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"> <i class="icon-time"></i>  </a>
           <div id="historyPopover-head" class="hide">Routing history</div>
           <div id="historyPopover-content" class="hide">              
             <table class="table table-condensed">
@@ -55,7 +55,7 @@
             <div class="row-fluid response">
               <div class="span2 text-center">
                 <i class="icon-question icon-3x">  </i> </br>
-                <small> {{ time }} [May 4, 2013]</small> </br>
+                <small> {{ time }} [insert date here]</small> </br>
               </div>
               <div class="span10">
                 <p> {{ qa.question }} - <em>{{qa.owner_id | user_name }}</em></p>
@@ -69,10 +69,9 @@
                               <div class="control-group span8">
                                 <label class="control-label">Answer</label>
                                   <div class="controls">
-                                      <input type="hidden" name="user_id" value="{{ user_id }}"/>
-                                      <input type="hidden" name="qa_id" value="{{ qa.id }}"/>
-                                      <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                                      <input id="answerTextarea" name="answer_text" type="text" rows="3" cols="20" placeholder="Can you respond to the above question?" required/>
+                                    <input type="hidden" name="user_id" value="{{ user_id }}"/>
+                                    <input type="hidden" name="qa_id" value="{{ qa.id }}"/>
+                                    <textarea id="answerTextarea" name="answer_text" type="text" rows="3" cols="20" placeholder="Can you respond to the above question?" required/></textarea>
                                     <button id="askQuestion" class="btn btn-primary" type="submit">Respond</button>
                                   </div>
                               </div>
