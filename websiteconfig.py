@@ -1,4 +1,4 @@
-DEBUG = False
+DEBUG = True
 PRODUCTION = True
 SCRIBD_API_KEY = '6lq9wei7i1dzlxuxdnu13'
 SCRIBD_API_SECRET = 'sec-4sc7mfw4lqooxwv01jhehrwpih'
