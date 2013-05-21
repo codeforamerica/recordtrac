@@ -160,8 +160,9 @@ def login(email=None):
 		email = "richa@codeforamerica.org" # Obviously this is a hack for now
 	if email_validation(email) == True:
 		user = create_or_return_user(email=email)
-		login_user(user)
-		return render_template('new_request.html', user_id = user.id)
+		user_for_login = User.query.get(user['id'])
+		login_user(user_for_login)
+		return render_template('new_request.html', user_id = user['id'])
 	else:
 		return render_template('new_request.html', user_id = None) # TODO: Give feedback
 
