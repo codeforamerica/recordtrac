@@ -20,6 +20,10 @@ mail = sendgrid.Sendgrid(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'
 def index():
 	return new_request()
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
 @app.route('/actions')
 def explain_all_actions():
 	action_json = open(os.path.join(app.root_path, 'actions.json'))
