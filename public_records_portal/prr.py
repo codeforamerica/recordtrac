@@ -132,7 +132,7 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 		past_owner_id, owner_id = assign_owner(request_id = req['id'], reason = assigned_to_reason, email = assigned_to_email, alias = assigned_to_name)
 		if email: # If the user provided an e-mail address, add them as a subscriber to the request.
 			user = create_or_return_user(email = email)
-			subscriber = Subscriber(request_id = req['id'], user_id = user.id)
+			subscriber = Subscriber(request_id = req['id'], user_id = user['id'])
 			subscriber.creator = True
 			db.session.add(subscriber)
 			db.session.commit()
@@ -167,7 +167,7 @@ def create_or_return_user(email, alias = None):
 	return resource['objects'][0]
 
 def open_request(request_id):
-	change_request_status(id, "Open")
+	change_request_status(request_id, "Open")
 
 def close_request(request_id, reason = ""):
 	change_request_status(request_id, "Closed. %s" %reason)
