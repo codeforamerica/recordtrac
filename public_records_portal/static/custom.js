@@ -1,7 +1,6 @@
 /* banner dismissal */
   $(function(){$(".alert").alert()})
 
-
 /* navbar active page indicator */
   $(function(){
     function stripTrailingSlash(str) {

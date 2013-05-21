@@ -67,9 +67,9 @@
         <div class="span8">
 
           <div class="control-group">
-            <label class="control-label" for="inputSummary">Summary</label>
+            <label class="control-label" for="recordSummary">Summary</label>
             <div class="controls">
-              <input class="input-block-level" name="record_description" type="text" id="inputSummary" placeholder="Add a short explanation of what you are attaching" autofocus/>
+              <input class="input-block-level" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of what you are attaching" autofocus/>
             </div>
           </div>
        
@@ -77,17 +77,18 @@
             <label class="control-label">Document</label>
             <div class="row-fluid">
               <div class="controls">
+
                 <div class="fileupload fileupload-new" data-provides="fileupload">
-                  <input type="hidden" name="request_id" value="{{ req.id }}">
+                  <!-- <input type="hidden" name="request_id" value="{{ req.id }}"> -->
                   <div class="input-append">
                     <div class="uneditable-input span3">
                       <i class="icon-file fileupload-exists"></i> 
-                      <span class="fileupload-preview"></span>
+                      <span class="fileupload-preview" />
                     </div>
                     <span class="btn btn-file">
                       <span class="fileupload-new">Select file</span>
                       <span class="fileupload-exists">Change</span>
-                      <input type="file" name="record">
+                      <input type="file" name="record" />
                     </span>
                     <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
 
@@ -189,7 +190,6 @@
               <button type="submit" class="btn btn-inverse">Close this request</button>
             </div>
         </div>
-        <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></h4>
       </div>
     </div>
 
