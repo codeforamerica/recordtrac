@@ -90,13 +90,18 @@
                       <span class="fileupload-exists">Change</span>
                       <input type="file" name="record" />
                     </span>
-                    <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-
-    <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
-                    <button class="btn btn-primary fileupload-exists" type="submit">Attach</button>
-                    <button class="btn btn-primary fileupload-new disabled" type="submit">Attach</button>
+                    <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>              
                   </div>
                 </div>
+
+                <div>
+                  <label class="checkbox">
+                    <input type="checkbox" name="legalcheckbox"> <i class="icon-legal"></i> Legal review needed
+                  </label>                
+                </div>
+
+                <button class="btn btn-primary fileupload-exists" type="submit">Attach</button>
+
               </div>
             </div>
           </div>
