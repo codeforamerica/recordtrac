@@ -15,10 +15,16 @@ from werkzeug import secure_filename
 import sendgrid
 
 mail = sendgrid.Sendgrid(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'], secure = True)
-app_url = app.config['APPLICATION_URL']
+if app.config['ENVIRONMENT'] == "STAGING":
+	app_url = app.config['APPLICATION_URL']
+elif app.config['ENVIRONMENT'] == 'PRODUCTION':
+	app_url = None
+else:
+	app_url = "http://127.0.0.1:8000"
+
 # Define the local temporary folder where uploads will go
-if app.config['PRODUCTION']:
-	UPLOAD_FOLDER = app.config['UPLOAD_FOLDER']
+if app.config['ENVIRONMENT'] == "PRODUCTION":
+	UPLOAD_FOLDER = None # To do
 else:
 	UPLOAD_FOLDER = "%s/uploads" % os.getcwd()
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff'])
@@ -124,7 +130,7 @@ def add_link(request_id, url, description):
 def make_request(text, email = None, assigned_to_name = None, assigned_to_email = None, assigned_to_reason = None, user_id = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
 	resource = get_resource_filter("request", [dict(name='text', op='eq', val=text)])
-	if not resource['objects']:
+	if not resource or not resource['objects']:
 		payload = dict(text=text)
 		if user_id:
 			payload = dict(text=text, creator_id = user_id)
@@ -284,7 +290,7 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 		uid = requester['user_id']
 	email_address = get_user_email(uid)
 	email_body = "You can view the request and take any necessary action at the following webpage: %s" % (page)
-	if app.config['DEBUG'] == True:
+	if app.config['ENVIRONMENT'] != "PRODUCTION":
 		print "%s to %s with subject %s" % (render_template("generic_email.html", email_body = email_body), email_address, email_subject)
 	else:
 		send_email(render_template("generic_email.html", email_body = email_body), email_address, email_subject)

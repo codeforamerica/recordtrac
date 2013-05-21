@@ -10,9 +10,6 @@ class User(db.Model):
 	alias = db.Column(db.String(100))
 	email = db.Column(db.String(100), unique=True)
 	date_created = db.Column(db.DateTime)
-	# owners = db.relationship("Owner") # All owners this user is
-	# subscribers = db.relationship("Subscriber") # All subscribers this user is
-	# qas = db.relationship("QA") # All QAs this user has participated in
 	def is_authenticated(self):
 		return True
 	def is_active(self):

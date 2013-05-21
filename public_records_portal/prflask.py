@@ -12,7 +12,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 mail = sendgrid.Sendgrid(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'], secure = True)
-
 # Routing
 
 # Let's start with the index page! For now we'll let the users submit a new request.
@@ -92,7 +91,7 @@ def update_a_resource(resource):
 @app.route('/clear')
 def clear_db():
 	message = "You can't do that here."
-	if not app.config['PRODUCTION']:
+	if app.config['ENVIRONMENT'] != "PRODUCTION":
 		try:
 			db.session.commit()
 			db.drop_all()

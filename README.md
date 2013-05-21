@@ -33,13 +33,13 @@ In a new window:
 	python 
 
 
-Save exampleconfig.py as websiteconfig.py and update relevant fields. To test e-mail, sign up for a free account with SendGrid and provide the username and password in MAIL_USERNAME and MAIL_PASSWORD.
+Save exampleconfig.py as local_config.py and update relevant fields. To test e-mail, sign up for a free account with SendGrid and provide the username and password in MAIL_USERNAME and MAIL_PASSWORD.
 
 ## Run locally
 
 To use the application locally, in a new window:
 
-    gunicorn -w 2 public_records_portal:app
+    gunicorn -w 3 -t 180 public_records_portal:app
 
 
 You should see something similar to:
