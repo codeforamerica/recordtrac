@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 import flask.ext.restless
 from public_records_portal import app, db
+import json
 
 class User(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
@@ -23,7 +24,7 @@ class User(db.Model):
 	def __init__(self, email, alias = None):
 		self.email = email
 		self.alias = alias
-		self.date_created = datetime.now()
+		self.date_created = datetime.now().isoformat()
 	def __repr__(self):
 		return self.email
 
@@ -35,16 +36,17 @@ class Request(db.Model):
 	qas = relationship("QA", cascade="all,delete") # The list of QA units for this request
 	status_updated = db.Column(db.DateTime)
 	text = db.Column(db.String(), unique=True) # The actual request text.
-	subscribers = relationship("Subscriber") # The list of subscribers following this request.
+	subscribers = relationship("Subscriber", cascade ="all, delete") # The list of subscribers following this request.
 	owners = relationship("Owner", cascade="all,delete") # The list of city staff ever assigned to the request.
 	current_owner = db.Column(db.Integer) # The Owner ID for the city staff that currently 'owns' the request.
 	records = relationship("Record", cascade="all,delete") # The list of records that have been uploaded for this request.
 	notes = relationship("Note", cascade="all,delete") # The list of notes appended to this request.
 	status = db.Column(db.String(400)) # The status of the request (open, closed, etc.)
 	creator_id = db.Column(db.Integer, db.ForeignKey('user.id')) # If city staff created it on behalf of the public, otherwise the creator is the subscriber with creator = true
-	def __init__(self, text):
+	def __init__(self, text, creator_id = None):
 		self.text = text
-		self.date_created = datetime.now()
+		self.date_created = datetime.now().isoformat()
+		self.creator_id = creator_id
 	def __repr__(self):
 		return self.text
 
@@ -61,7 +63,7 @@ class QA(db.Model):
 	def __init__(self, request_id, question):
 		self.question = question
 		self.request_id = request_id
-		self.date_created = datetime.now()
+		self.date_created = datetime.now().isoformat()
 	def __repr__(self):
 		return "Q: %s A: %s" %(question, answer)
 
@@ -78,7 +80,7 @@ class Owner(db.Model):
 		self.reason = reason
 		self.user_id = user_id
 		self.request_id = request_id
-		self.date_created = datetime.now()
+		self.date_created = datetime.now().isoformat()
 	def __repr__(self):
 		return self.user_id
 
@@ -95,7 +97,7 @@ class Subscriber(db.Model):
  	def __init__(self, request_id, user_id):
  		self.user_id = user_id
 		self.request_id = request_id
-		self.date_created = datetime.now()
+		self.date_created = datetime.now().isoformat()
 	def __repr__(self):
 		return self.user_id
 
@@ -115,7 +117,7 @@ class Record(db.Model):
 		self.doc_id = doc_id
 		self.request_id = request_id
 		self.owner_id = owner_id
-		self.date_created = datetime.now()
+		self.date_created = datetime.now().isoformat()
 		self.description = description
 		self.url = url
 	def __repr__(self):
@@ -128,23 +130,22 @@ class Note(db.Model):
 	date_created = db.Column(db.DateTime)
 	text = db.Column(db.String())
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id')) # The request it belongs to.
-	subscriber_id = db.Column(db.Integer, db.ForeignKey('subscriber.id')) # The subscriber who wrote the note
-	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id'))
-	def __init__(self, request_id, text, subscriber_id = None, owner_id = None):
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id')) # The user who wrote the note. Right now only city staff can.
+	def __init__(self, request_id, text, user_id):
 		self.text = text
 		self.request_id = request_id
-		self.subscriber_id = subscriber_id
-		self.owner_id = owner_id
-		self.date_created = datetime.now()
+		self.user_id = user_id
+		self.date_created = datetime.now().isoformat()
 	def __repr__(self):
 		return self.text
 
 # Create API
 manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
-manager.create_api(Request, methods=['GET'])
-manager.create_api(Owner, methods=['GET'])
+manager.create_api(Request, methods=['GET', 'POST', 'PUT'])
+manager.create_api(Owner, methods=['GET', 'POST'])
 manager.create_api(Note, methods=['GET'])
 manager.create_api(Record, methods=['GET'])
 manager.create_api(User, methods=['GET'])
 manager.create_api(Note, methods=['GET'])
-manager.create_api(QA, methods=['GET'])
+manager.create_api(QA, methods=['GET', 'POST', 'PUT'])
+manager.create_api(Subscriber, methods=['GET'])

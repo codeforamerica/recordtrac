@@ -59,19 +59,19 @@
               </div>
               <div class="span10">
                 <p> {{ qa.question }} - <em>{{qa.owner_id | user_name }}</em></p>
-                {% if qa.response %}
-                  <p>{{ qa.response }} - <em>{{qa.subscriber_id | user_name }}</em></p>
+                {% if qa.answer %}
+                  <p>{{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></p>
                 {% else %}
                       <!-- respond to a question -->
-                        <form name="respond_question" class="form-horizontal" id="answer" method="post" action="/add_a_qa" autocomplete="on">
+                        <form name="respond_question" class="form-horizontal" id="answer" method="post" action="/update_a_qa" autocomplete="on">
                           <fieldset> 
                             <div class="row-fluid">
                               <div class="control-group span8">
                                 <label class="control-label">Answer</label>
                                   <div class="controls">
-                                      <input type="hidden" name="user_id" value="{{ user_id }}"/>
-                                      <input type="hidden" name="qa_id" value="{{ qa.id }}"/>
-                                      <textarea id="answerTextarea" name="answer_text" type="text" rows="3" cols="20" placeholder="Can you respond to the above question?" required/></textarea>
+                                    <input type="hidden" name="user_id" value="{{ user_id }}"/>
+                                    <input type="hidden" name="qa_id" value="{{ qa.id }}"/>
+                                    <textarea id="answerTextarea" name="answer_text" type="text" rows="3" cols="20" placeholder="Can you respond to the above question?" required/></textarea>
                                     <button id="askQuestion" class="btn btn-primary" type="submit">Respond</button>
                                   </div>
                               </div>
@@ -177,7 +177,7 @@
                     <small> {{ time }} [May 4, 2013]</small> </br>
                   </div>
                   <div class="span10">
-                    <p> {{ note.text}} - <em>{{note.owner_id | owner_name }}</em></p>
+                    <p> {{ note.text}} - <em>{{note.user_id | user_name }}</em></p>
                   </div>
                 </div>
               {% endfor %}
@@ -192,7 +192,7 @@
               <div class="row-fluid response">
                 <div class="span2 text-center">
                   <i class="icon-lock icon-3x">  </i> </br>
-                  <small> {{ request.status_updated | date_granular }} </small> </br>
+                  <small> {{ request.status_updated | date_granular }} </small> </br> 
                 </div>
                 <div class="span10">
                   {% if request_fulfilled_city %}
