@@ -1,0 +1,15 @@
+DEBUG = False
+PRODUCTION = True
+SCRIBD_API_KEY = '6lq9wei7i1dzlxuxdnu13'
+SCRIBD_API_SECRET = 'sec-4sc7mfw4lqooxwv01jhehrwpih'
+HOST_URL = 'https://www.scribd.com/doc/'
+SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/mydatabase'
+DEFAULT_OWNER_NAME = 'Arly Flores'
+DEFAULT_OWNER_EMAIL = 'oakland-public-records@codeforamerica.org'
+DEFAULT_OWNER_REASON = 'she is the open government coordinator'
+MAIL_USERNAME = 'Oakland Public Records'
+MAIL_PASSWORD = 'HellaOakland'
+DEFAULT_MAIL_SENDER = 'oakland-public-records@codeforamerica.org'
+UPLOAD_FOLDER = '/var/lib/openshift/5176c7aee0b8cd3d8900023d/app-root/repo/uploads'
+APPLICATION_URL = "http://shielded-brushlands-1669.herokuapp.com/"
+SECRET_KEY = "wheiowheowhro21"
