@@ -127,10 +127,12 @@ def requests():
 @login_required
 def your_requests():
 	all_record_requests = []
-	owners = Owner.query.filter_by(user_id = current_user.id) # TODO: Make API call instead
-	for owner in owners:
-		req = Request.query.filter_by(current_owner = owner.id).first() # TODO: Make API call instead
-		all_record_requests.append(req)
+	owner_resource = get_resource_filter("owner", [dict(name='user_id', op='eq', val=current_user.id)])
+	for owner in owner_resource['objects']:
+		req_resource = get_resource_filter("request", [dict(name='current_owner', op='eq', val=owner['id'])])
+		if req_resource['objects']:
+			req = req_resource['objects'][0]
+			all_record_requests.append(req)
 	return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = current_user.id)
 
 # test template:  I clearly don't know what should go here, but need to keep a testbed here.
@@ -144,13 +146,6 @@ def any_page(page):
 		return render_template('%s.html' %(page))
 	except:
 		return render_template('error.html', message = "%s totally doesn't exist." %(page))
-
-# @app.route('/<string:page>/<string:page2>')
-# def any_pagex(page, page2):
-# 	try:
-# 		return render_template('%s.html' %(page))
-# 	except:
-# 		return render_template('error.html', message = "%s totally doesn't exist." %(page))
 
 @login_manager.user_loader
 def load_user(userid):
@@ -175,45 +170,3 @@ def login(email=None):
 def logout():
 	logout_user()
 	return index()
-
-# Functions that should probably go somewhere else:
-
-
-
-	# if notification_type in NOTIFICATIONS:
-	# 	owner = get_resource("owner", app.config['APPLICATION_URL'], req['current_owner'])
-	# 	subject_subscriber = ""
-	# 	subject_owner = ""
-	# 	user = get_resource("user", app.config['APPLICATION_URL'], owner['user_id'])
-	# 	owner_email = user['email']
-	# 	if notification_type == 'new':
-	# 		send_to_owner, send_to_subscribers = True, False
-	# 		subject_subscriber, additional_body = website_copy.request_submitted("", "", "")
-	# 		subject_owner, additional_body = website_copy.request_submitted_city("")
-	# 	elif notification_type == 'note':
-	# 		send_to_owner, send_to_subscribers = False, True
-	# 		subject_subscriber, subject_owner = website_copy.note_added(owner_email)
-	# 	elif notification_type == 'record':
-	# 		send_to_owner, send_to_subscribers = False, True
-	# 		subject_subscriber, subject_owner = website_copy.record_added(owner_email)
-	# 	elif notification_type == 'close':
-	# 		send_to_owner, send_to_subscribers = False, True
-	# 		subject_subscriber = "Your request has been closed."
-	# 	elif notification_type == 'reroute':
-	# 		send_to_owner, send_to_subscribers = True, False
-	# 		subject_subscriber, subject_owner = website_copy.request_routed(past_owner_email)
-	# 	elif notification_type == 'question':
-	# 		send_to_owner, send_to_subscribers = False, True
-	# 		# subject_subscriber, subject_owner = website_copy.r
-	# 		# blah blah
-	# 	if send_to_subscribers:
-	# 		for subscriber in req.subscribers:
-	# 			subscriber_user = get_resource("user", app.config['APPLICATION_URL'], subscriber['user_id'])
-	# 			subscriber_email = subscriber_user['email']
-	# 			email_body = "You can view the request and take any necessary action at the following webpage: %s </br> %s" % (public_page, body)
-	# 			send_email(email_body, subscriber_email,subject_subscriber)
-	# 	if send_to_owner:
-	# 		email_body = "You can view the request and take any necessary action at the following webpage: %s </br> %s" %(city_page, body)
-	# 		send_email(email_body.as_string(), owner_email, subject_owner)
-	# else:
-	# 	print 'Not a valid notification type.'
