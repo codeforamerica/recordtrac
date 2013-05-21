@@ -111,6 +111,37 @@
     </fieldset>
   </form>
 
+  <form name="input_offlinedoc" class="form-horizontal" id="submitOfflinedoc" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data" >
+    <fieldset> 
+
+      <div class="row-fluid">
+        <div class="span4">
+          <h4>Add an offline document <span id="offlinedocTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Upload a document" | explain_action}}" ><small><i class="icon-info-sign"></i></small></span></h4>
+        </div>
+        <div class="span8">
+
+          <div class="control-group">
+            <label class="control-label" for="recordSummary">Summary</label>
+            <div class="controls">
+              <input class="input-block-level" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of what you are attaching" autofocus/>
+            </div>
+          </div>
+       
+          <div class="control-group">
+            <label class="control-label">Access info</label>
+            <div class="row-fluid">
+              <div class="controls">
+                <textarea class="input-xlarge" id="offlineDoc_textarea" name="offlinedoc_textarea" rows="3" placeholder="How can the requester get this record?  Ex. 'Sent via mail on a CD', 'Print out awaiting requester at City Clerk desk'" required></textarea>
+                <button type="submit" class="btn btn-primary">Add</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
  <form name="input_url" class="form-horizontal" id="submitLink" method="post" action="/add_a_link" autocomplete="on">
     <fieldset> 
       <div class="row-fluid">
@@ -158,7 +189,7 @@
           <label class="control-label">Note</label>
           <div class="row-fluid">
             <div class="controls">
-              <textarea id="noteTextarea" name="note_text" rows="3" cols="20" placeholder="Enter your note here" required></textarea>
+              <textarea class="input-xlarge" id="noteTextarea" name="note_text" rows="3" placeholder="Enter your note here" required></textarea>
               <button type="submit" class="btn btn-primary">Add</button>
             </div>
           </div>
