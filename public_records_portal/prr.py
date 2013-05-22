@@ -61,7 +61,7 @@ def add_resource(resource, request_body, current_user_id = None):
 	elif "record" in resource:
 		upload_record(fields['request_id'], request.files['record'], fields['record_description'])
 	elif "link" in resource:
-		add_link(fields['request_id'], fields['record_url'], fields['record_description'])
+		add_link(fields['request_id'], fields['link_url'], fields['link_description'])
 	elif "qa" in resource:
 		ask_a_question(fields['request_id'], fields['user_id'], fields['question_text'])
 	else:
