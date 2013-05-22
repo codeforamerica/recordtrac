@@ -3,10 +3,6 @@ from public_records_portal import app
 from prr import *
 import os
 
-# Get filepath for actions.json
-actions_filepath = os.path.join(app.root_path, 'actions.json')
-
-
 # Filters
 
 @app.template_filter('date')
@@ -28,9 +24,6 @@ def date_granular(timestamp):
 	if type(timestamp) is not datetime:
 		timestamp = datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%S.%f")
 	delta = datetime.now() - timestamp
-	# days, hours, minutes, seconds = 0, 0, 0, 0
-	# for day in enumerate(delta.days):
-
 	days, hours, minutes, seconds = delta.days, delta.seconds//3600, delta.seconds//60, delta.seconds
 	if days > 1:
 		return "%s days ago" % days
@@ -42,7 +35,6 @@ def date_granular(timestamp):
 		return "%s seconds ago" % seconds
 	else:
 		return "Just now."
-
 
 @app.template_filter('owner_name')
 def owner_name(oid):
@@ -66,7 +58,8 @@ def user_name(uid):
 
 @app.template_filter('explain_action')
 def explain_action(action):
-	return action
-	# action_json = open(actions_filepath)
-	# json_data = json.load(action_json)
-	# return json_data[action]
+	# Get filepath for actions.json
+	actions_filepath = os.path.join(app.root_path, 'actions.json')
+	action_json = open(actions_filepath)
+	json_data = json.load(action_json)
+	return json_data[action]

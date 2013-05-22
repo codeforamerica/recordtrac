@@ -281,11 +281,11 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 	page = None
 	uid = None
 	if owner_id:
-		page = "%scity/request/%s" %(app.config['APPLICATION_URL'],request_id)
+		page = "%scity/request/%s" %(app_url,request_id)
 		owner = get_resource("owner", owner_id)
 		uid = owner['user_id']
 	if requester_id:
-		page = "%srequest/%s" %(app.config['APPLICATION_URL'],request_id)
+		page = "%srequest/%s" %(app_url,request_id)
 		requester = get_resource("subscriber", requester_id)
 		uid = requester['user_id']
 	email_address = get_user_email(uid)
