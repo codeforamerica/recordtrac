@@ -225,6 +225,7 @@ def progress(bytes_sent, bytes_total):
 
 def upload(filepath, API_KEY, API_SECRET):
     # Configure the Scribd API.
+    print filepath
     scribd.config(API_KEY, API_SECRET)
     doc_id = None
     try:
