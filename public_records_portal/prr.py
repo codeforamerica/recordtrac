@@ -26,7 +26,7 @@ else:
 if app.config['ENVIRONMENT'] == "PRODUCTION":
 	UPLOAD_FOLDER = None # To do
 elif app.config['ENVIRONMENT'] == "STAGING":
-	UPLOADED_FOLDER = "/uploads"
+	UPLOAD_FOLDER = "/uploads"
 else:
 	UPLOAD_FOLDER = "%s/uploads" % os.getcwd()
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff'])
