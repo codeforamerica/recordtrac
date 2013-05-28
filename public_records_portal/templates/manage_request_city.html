@@ -154,7 +154,6 @@
             <label class="control-label" for="inputSummary">Summary</label>
             <div class="controls">
               <input class="input-block-level" name="link_description" type="text" id="linkSummary" placeholder="Add a short explanation of what can be found here" />
-              <input type="hidden" name="request_id" value="{{ req.id }}">
             </div>
           </div>
        
@@ -164,6 +163,7 @@
               <div class="controls">
                   <input name="link_url" type="url" id="inputUrl" placeholder="Copy and paste link here" required/>
                 <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
+                <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <button id="addalink" class="btn btn-primary" type="submit">Attach</button>
               </div>
             </div>
@@ -189,7 +189,7 @@
           <label class="control-label">Note</label>
           <div class="row-fluid">
             <div class="controls">
-              <textarea class="input-xlarge" id="noteTextarea" name="note_text" rows="3" placeholder="Enter your note here" required></textarea>
+              <textarea class="input-xlarge" id="noteTextarea" name="note_text" rows="3" placeholder="Enter your note here. If documents uploaded for this request have been redacted, please indicate so." required></textarea>
               <button type="submit" class="btn btn-primary">Add</button>
             </div>
           </div>
@@ -206,7 +206,7 @@
   <fieldset> 
     <div class="row-fluid">
       <div class="span4">
-        <h4>Close this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
+        <h4>Close this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
       </div>
       <div class="span8">
         <div class="control-group">
@@ -214,9 +214,8 @@
             <div class="controls">
             <select name="close_reason">
             <option>Fulfilled</option>
-            <option>Information Redacted</option>
-            <option>Record Does Not Exist</option>
-            <option>Contact Another Agency</option>
+            <option>Not a public records request</option>
+            <option>Do not have this record</option>
             <option>Can Not Release - Personal Files</option>
             <option>Can Not Release - Ongoing Litigation</option>
             <option>Can Not Release - Investigative Reports</option>
