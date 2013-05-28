@@ -263,7 +263,7 @@ def allowed_file(filename):
 
 def email_validation(email):
 	name, domain = email.split("@")
-	if domain == "oakland.net" or domain == "codeforamerica.org":
+	if domain == "oakland.net" or domain == "oaklandnet.com" or domain == "codeforamerica.org":
 		return True
 	return False
 
