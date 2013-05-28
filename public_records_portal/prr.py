@@ -271,6 +271,7 @@ def upload_file(file):
 	if file and allowed_file(file.filename):
 		filename = secure_filename(file.filename)
 		filepath = os.path.join(UPLOAD_FOLDER, filename)
+		print filepath
 		file.save(filepath)
 		doc_id = upload(filepath, app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
 		return doc_id, filename
