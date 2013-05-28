@@ -20,7 +20,7 @@ if app.config['ENVIRONMENT'] == "STAGING":
 elif app.config['ENVIRONMENT'] == 'PRODUCTION':
 	app_url = None
 else:
-	app_url = "http://127.0.0.1:8000"
+	app_url = "http://127.0.0.1:8000/"
 
 # Define the local temporary folder where uploads will go
 if app.config['ENVIRONMENT'] == "PRODUCTION":
@@ -285,11 +285,11 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 	page = None
 	uid = None
 	if owner_id:
-		page = "%s/city/request/%s" %(app_url,request_id)
+		page = "%scity/request/%s" %(app_url,request_id)
 		owner = get_resource("owner", owner_id)
 		uid = owner['user_id']
 	if requester_id:
-		page = "%s/request/%s" %(app_url,request_id)
+		page = "%srequest/%s" %(app_url,request_id)
 		requester = get_resource("subscriber", requester_id)
 		uid = requester['user_id']
 	email_address = get_user_email(uid)
