@@ -39,11 +39,12 @@ def date_granular(timestamp):
 @app.template_filter('owner_name')
 def owner_name(oid):
 	owner = get_resource("owner", oid)
-	user = get_resource("user", owner['user_id'])
-	if user['alias']:
-		return user['alias']
-	return user['email']
-
+	if owner:
+		user = get_resource("user", owner['user_id'])
+		if user['alias']:
+			return user['alias']
+		return user['email']
+	return None
 @app.template_filter('subscriber_name')
 def subscriber_name(sid):
 	subscriber = get_resource("subscriber", sid)
