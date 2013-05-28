@@ -1,11 +1,13 @@
 from flask import render_template, request, flash, redirect, url_for
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
-from public_records_portal import app, filters, prr
+from public_records_portal import app, filters, prr, db
 from filters import *
 from prr import *
 import json
 import os
+import flask.ext.restless
+from flask.ext.restless import APIManager, ProcessingException
 
 # Initialize login
 login_manager = LoginManager()
@@ -58,6 +60,11 @@ def show_request_for_x(audience, request_id):
 		owner_reason = request.form['owner_reason']
 		assign_owner(request_id = request_id, reason = owner_reason, email = owner_email)
 	return show_request(request_id = request_id, template = "manage_request_%s.html" %(audience))
+
+@app.route('/r/<int:request_id>')
+def show(request_id):
+	req = Request.query.get(request_id)
+	return render_template("case.html", req = req)
 
 @app.route('/request/<int:request_id>')
 def show_request(request_id, template = None, record_uploaded = None, for_email_notification = False, banner_msg = None):
@@ -143,6 +150,18 @@ def your_requests():
 def show_test():
 	return render_template('test.html')
 
+# # Admin page
+# @app.route('/admin', methods=['GET', 'POST'])
+# @login_required
+# def admin():
+# 	email = filters.user_name(current_user.id)
+# 	if email != "an email":
+# 		return index()
+# 	if request.method == 'POST':
+# 		# DO STUFF
+# 	else:
+# 		return render_template('admin.html')
+
 @app.route('/<page>')
 def any_page(page):
 	try:
@@ -174,3 +193,15 @@ def login(email=None):
 def logout():
 	logout_user()
 	return index()
+
+# Create API
+manager = APIManager(app, flask_sqlalchemy_db=db)
+manager.create_api(Request, methods=['GET', 'POST', 'PUT', 'DELETE'])
+manager.create_api(Owner, methods=['GET', 'POST', 'PUT', 'DELETE'])
+manager.create_api(Note, methods=['GET', 'POST', 'PUT', 'DELETE'])
+manager.create_api(Record, methods=['GET', 'POST', 'PUT', 'DELETE'])
+manager.create_api(User, methods = ['GET', 'POST', 'PUT', 'DELETE'])
+manager.create_api(User, methods = ['GET', 'POST', 'PUT', 'DELETE'])
+manager.create_api(Note, methods=['GET', 'POST', 'PUT', 'DELETE'])
+manager.create_api(QA, methods=['GET', 'POST', 'PUT', 'DELETE'])
+manager.create_api(Subscriber, methods=['GET', 'POST', 'PUT', 'DELETE'])

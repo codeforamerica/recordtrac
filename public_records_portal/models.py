@@ -1,7 +1,6 @@
 from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
 from sqlalchemy.orm import relationship
 from datetime import datetime
-import flask.ext.restless
 from public_records_portal import app, db
 import json
 
@@ -136,13 +135,3 @@ class Note(db.Model):
 	def __repr__(self):
 		return self.text
 
-# Create API
-manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
-manager.create_api(Request, methods=['GET', 'POST', 'PUT', 'DELETE'])
-manager.create_api(Owner, methods=['GET', 'POST', 'PUT', 'DELETE'])
-manager.create_api(Note, methods=['GET', 'POST', 'PUT', 'DELETE'])
-manager.create_api(Record, methods=['GET', 'POST', 'PUT', 'DELETE'])
-manager.create_api(User, methods=['GET', 'POST', 'PUT', 'DELETE'])
-manager.create_api(Note, methods=['GET', 'POST', 'PUT', 'DELETE'])
-manager.create_api(QA, methods=['GET', 'POST', 'PUT', 'DELETE'])
-manager.create_api(Subscriber, methods=['GET', 'POST', 'PUT', 'DELETE'])
