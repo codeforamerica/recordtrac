@@ -225,7 +225,7 @@ def progress(bytes_sent, bytes_total):
 
 def upload(filepath, API_KEY, API_SECRET):
     # Configure the Scribd API.
-    print filepath
+    print "This is the filepath passed to upload %s" %(filepath)
     scribd.config(API_KEY, API_SECRET)
     doc_id = None
     try:
@@ -272,7 +272,7 @@ def upload_file(file):
 	if file and allowed_file(file.filename):
 		filename = secure_filename(file.filename)
 		filepath = os.path.join(UPLOAD_FOLDER, filename)
-		print filepath
+		print "This is the filepath: %s" % (filepath)
 		file.save(filepath)
 		doc_id = upload(filepath, app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
 		return doc_id, filename
