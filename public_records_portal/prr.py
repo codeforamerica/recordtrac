@@ -26,7 +26,7 @@ else:
 if app.config['ENVIRONMENT'] == "PRODUCTION":
 	UPLOAD_FOLDER = None # To do
 elif app.config['ENVIRONMENT'] == "STAGING":
-	UPLOAD_FOLDER = "%s/static" % os.path.abspath(os.path.dirname(__file__))
+	UPLOAD_FOLDER = "%s/tmp" % os.path.abspath(os.path.dirname(__file__))
 else:
 	UPLOAD_FOLDER = "%s/uploads" % os.getcwd()
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff'])
@@ -293,11 +293,10 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 		requester = get_resource("subscriber", requester_id)
 		uid = requester['user_id']
 	email_address = get_user_email(uid)
-	email_body = "You can view the request and take any necessary action at the following webpage: %s" % (page)
 	if app.config['ENVIRONMENT'] == "PRODUCTION":
-		print "%s to %s with subject %s" % (render_template("generic_email.html", email_body = email_body), email_address, email_subject)
+		print "%s to %s with subject %s" % (render_template("generic_email.html", page = page), email_address, email_subject)
 	else:
-		send_email(render_template("generic_email.html", email_body = email_body), email_address, email_subject)
+		send_email(render_template("generic_email.html", page = page), email_address, email_subject)
 
 def get_user_email(uid):
 	user = get_resource("user", uid)
