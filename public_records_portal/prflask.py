@@ -1,19 +1,17 @@
 from flask import render_template, request, flash, redirect, url_for
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
-from public_records_portal import app, filters, prr, db
+from public_records_portal import app, filters, prr, models
 from filters import *
 from prr import *
 import json
 import os
-import flask.ext.restless
-from flask.ext.restless import APIManager, ProcessingException
 
 # Initialize login
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-mail = sendgrid.Sendgrid(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'], secure = True)
+
 # Routing
 
 # Let's start with the index page! For now we'll let the users submit a new request.
@@ -43,7 +41,13 @@ def new_request():
 	if request.method == 'POST':
 		request_text = request.form['request_text']
 		email = request.form['request_email']
-		request_id, is_new = make_request(text = request_text, email = email, assigned_to_name = app.config['DEFAULT_OWNER_NAME'], assigned_to_email = app.config['DEFAULT_OWNER_EMAIL'], assigned_to_reason = app.config['DEFAULT_OWNER_REASON'], user_id = current_user_id)
+		alias = None
+		phone = None
+		if 'request_alias' in request.form:
+			alias = request.form['request_alias']
+		if 'request_phone' in request.form:
+			phone = request.form['request_phone']
+		request_id, is_new = make_request(text = request_text, email = email, assigned_to_name = app.config['DEFAULT_OWNER_NAME'], assigned_to_email = app.config['DEFAULT_OWNER_EMAIL'], assigned_to_reason = app.config['DEFAULT_OWNER_REASON'], user_id = current_user_id, alias = alias, phone = phone)
 		if is_new:
 			# return redirect(url_for('show_request', request_id = request_id, banner_msg = "Thanks! Your request has been uploaded.", template = "requested.html"))
 			return show_request(request_id, banner_msg = "Thanks! Your request has been uploaded.", template = "requested.html")
@@ -94,20 +98,20 @@ def update_a_resource(resource):
 		return show_request(request.form['request_id'], template = "case.html")
 	return render_template('error.html', message = "You can only add a %s from a request page!" %resource)
 
-# Clears/updates tables in the database until I figure out how I want to deal with migrations
-@app.route('/clear')
-def clear_db():
-	message = "You can't do that here."
-	if app.config['ENVIRONMENT'] != "PRODUCTION":
-		try:
-			db.session.commit()
-			db.drop_all()
-			db.create_all()
-			db.session.commit()
-			return requests()
-		except:
-			message = "Dropping the tables didn't work :("
-	return render_template('error.html', message = message)
+# # Clears/updates tables in the database until I figure out how I want to deal with migrations
+# @app.route('/clear')
+# def clear_db():
+# 	message = "You can't do that here."
+# 	if app.config['ENVIRONMENT'] != "PRODUCTION":
+# 		try:
+# 			db.session.commit()
+# 			db.drop_all()
+# 			db.create_all()
+# 			db.session.commit()
+# 			return requests()
+# 		except:
+# 			message = "Dropping the tables didn't work :("
+# 	return render_template('error.html', message = message)
 
 # Closing is specific to a case, so this only gets called from a case (that only city staff have a view of)
 @app.route('/close', methods=['POST'])
@@ -130,7 +134,7 @@ def requests():
 	if all_record_requests:
 		return render_template('all_requests.html', all_record_requests = all_record_requests['objects'], user_id = current_user_id)
 	else:
-		return index()
+		return redirect(url_for(index()))
 
 # Shows all public records requests that have been made by current owner. This doesn't work currently.
 @app.route('/your_requests')
@@ -171,7 +175,7 @@ def any_page(page):
 
 @login_manager.user_loader
 def load_user(userid):
-	user = User.query.get(userid)
+	user = models.User.query.get(userid)
 	return user
 
 @app.route("/login", methods=["GET", "POST"])
@@ -193,15 +197,3 @@ def login(email=None):
 def logout():
 	logout_user()
 	return index()
-
-# Create API
-manager = APIManager(app, flask_sqlalchemy_db=db)
-manager.create_api(Request, methods=['GET', 'POST', 'PUT', 'DELETE'])
-manager.create_api(Owner, methods=['GET', 'POST', 'PUT', 'DELETE'])
-manager.create_api(Note, methods=['GET', 'POST', 'PUT', 'DELETE'])
-manager.create_api(Record, methods=['GET', 'POST', 'PUT', 'DELETE'])
-manager.create_api(User, methods = ['GET', 'POST', 'PUT', 'DELETE'])
-manager.create_api(User, methods = ['GET', 'POST', 'PUT', 'DELETE'])
-manager.create_api(Note, methods=['GET', 'POST', 'PUT', 'DELETE'])
-manager.create_api(QA, methods=['GET', 'POST', 'PUT', 'DELETE'])
-manager.create_api(Subscriber, methods=['GET', 'POST', 'PUT', 'DELETE'])

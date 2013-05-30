@@ -30,16 +30,24 @@ In a new window:
     cd public-records
     sudo pip install -r requirements.txt
     mkdir uploads
-	python 
-
 
 Save exampleconfig.py as local_config.py and update relevant fields. To test e-mail, sign up for a free account with SendGrid and provide the username and password in MAIL_USERNAME and MAIL_PASSWORD.
 
 ## Run locally
 
-To use the application locally, in a new window:
+If creating the database for the first time, run:
 
-    gunicorn -w 3 -t 180 public_records_portal:app
+    python
+    from public_records_portal import db
+    db.create_all()
+
+For database migrations, run:
+
+    alembic upgrade head
+
+To use the application locally, run:
+
+    gunicorn -w 3 -t 180 public_records_portal.prflask:app
 
 
 You should see something similar to:
