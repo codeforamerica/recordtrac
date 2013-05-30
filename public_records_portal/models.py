@@ -1,13 +1,14 @@
 from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from public_records_portal import app, db
+from public_records_portal import db
 import json
 
 class User(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
 	alias = db.Column(db.String(100))
 	email = db.Column(db.String(100), unique=True)
+	phone = db.Column(db.String())
 	date_created = db.Column(db.DateTime)
 	def is_authenticated(self):
 		return True
@@ -17,9 +18,10 @@ class User(db.Model):
 		return False
 	def get_id(self):
 		return unicode(self.id)
-	def __init__(self, email, alias = None):
+	def __init__(self, email, alias = None, phone=None):
 		self.email = email
 		self.alias = alias
+		self.phone = phone
 		self.date_created = datetime.now().isoformat()
 	def __repr__(self):
 		return self.email
@@ -87,10 +89,9 @@ class Subscriber(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
-	creator = db.Boolean() # True if they created the initial request.
 	date_created = db.Column(db.DateTime)
 	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id')) # Not null if responsible for fulfilling a part of the request
- 	def __init__(self, request_id, user_id):
+ 	def __init__(self, request_id, user_id, creator = False):
  		self.user_id = user_id
 		self.request_id = request_id
 		self.date_created = datetime.now().isoformat()
