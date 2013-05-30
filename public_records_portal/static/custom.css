@@ -4,61 +4,6 @@
 	margin-left: 0;
 }
 
-/*textarea {
-	resize: none;
-}*/
-
-/*#submitRecord .control-label {
-	width: 80px;
-}
-
-#submitLink .control-label {
-	width: 80px;
-}
-
-#closeRequest .control-label {
-	width: 80px;
-}
-
-#note .control-label {
-	width: 80px;
-}*/
-
-/*#question .control-label {
-	width: 80px;
-	margin-right: 20px;
-}*/
-
-#answer .control-label {
-	width: 80px;
-	margin-left: -30px;
-}
-
-#answer .controls {
-	margin-left: 70px;
-}
-
-/*#question .controls {
-	margin-left: 90px;
-}*/
-
-/*#note .controls {
-	margin-left: 90px;
-}
-
-
-#submitRecord .controls {
-	margin-left: 90px;
-}
-
-#submitLink .controls {
-	margin-left: 90px;
-}
-
-#closeRequest .controls {
-	margin-left: 90px;
-}*/
-
 .navbar-inner {	
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -75,6 +20,21 @@
 margin: 0 0 0px;
 }
 
+
+/* give the logout button more space */
+#logout_form {
+	margin-left: 10%;
+}
+
+/* pull answer form left */
+#answer .control-label {
+	width: 80px;
+	margin-left: -30px;
+}
+
+#answer .controls {
+	margin-left: 70px;
+}
 
 /* all infotips appear as superscript */
 .icon-info-sign {
