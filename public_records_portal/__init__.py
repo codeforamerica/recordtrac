@@ -1,9 +1,12 @@
 from os import environ
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.restless import APIManager
+import flask.ext.restless
 
 # Initialize Flask app and database:
 app = Flask(__name__)
+app.debug = True
 try:
 	app.config.from_object('local_config')
 except:
@@ -21,6 +24,17 @@ except:
 	app.config['SQLALCHEMY_DATABASE_URI'] = environ['SQLALCHEMY_DATABASE_URI']
 
 db = SQLAlchemy(app)
-db.create_all()
- 
-from public_records_portal import prflask
+from public_records_portal import models
+from models import *
+
+# Create API
+manager = APIManager(app, flask_sqlalchemy_db=db)
+manager.create_api(Request, methods=['GET', 'POST', 'PUT', 'DELETE'])
+manager.create_api(Owner, methods=['GET', 'POST', 'PUT', 'DELETE'])
+manager.create_api(Note, methods=['GET', 'POST', 'PUT', 'DELETE'])
+manager.create_api(Record, methods=['GET', 'POST', 'PUT', 'DELETE'])
+manager.create_api(User, methods = ['GET', 'POST', 'PUT', 'DELETE'])
+manager.create_api(User, methods = ['GET', 'POST', 'PUT', 'DELETE'])
+manager.create_api(Note, methods=['GET', 'POST', 'PUT', 'DELETE'])
+manager.create_api(QA, methods=['GET', 'POST', 'PUT', 'DELETE'])
+manager.create_api(Subscriber, methods=['GET', 'POST', 'PUT', 'DELETE'])
