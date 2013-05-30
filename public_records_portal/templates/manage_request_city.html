@@ -61,15 +61,12 @@
     <fieldset> 
 
       <div class="row-fluid">
-        <div class="span4">
           <h4>Add a document <span id="recordTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Upload a document" | explain_action}}" ><small><i class="icon-info-sign"></i></small></span></h4>
-        </div>
-        <div class="span8">
 
           <div class="control-group">
             <label class="control-label" for="recordSummary">Summary</label>
             <div class="controls">
-              <input class="input-block-level" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of what you are attaching" autofocus/>
+              <input class="input-xxlarge" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of what you are attaching" />
             </div>
           </div>
        
@@ -94,11 +91,11 @@
                   </div>
                 </div>
 
-                <div>
+                <!-- <div>
                   <label class="checkbox">
                     <input type="checkbox" name="legalcheckbox"> <i class="icon-legal"></i> Legal review needed
                   </label>                
-                </div>
+                </div> -->
 
                 <button class="btn btn-primary fileupload-exists" type="submit">Attach</button>
 
@@ -106,7 +103,6 @@
             </div>
           </div>
 
-        </div>
       </div>
     </fieldset>
   </form>
@@ -115,15 +111,12 @@
     <fieldset> 
 
       <div class="row-fluid">
-        <div class="span4">
           <h4>Add an offline document <span id="offlinedocTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Upload a document" | explain_action}}" ><small><i class="icon-info-sign"></i></small></span></h4>
-        </div>
-        <div class="span8">
 
           <div class="control-group">
             <label class="control-label" for="recordSummary">Summary</label>
             <div class="controls">
-              <input class="input-block-level" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of what you are attaching" autofocus/>
+              <input class="input-xxlarge" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of what you are attaching" />
             </div>
           </div>
        
@@ -137,7 +130,6 @@
             </div>
           </div>
 
-        </div>
       </div>
     </fieldset>
   </form>
@@ -145,15 +137,12 @@
  <form name="input_url" class="form-horizontal" id="submitLink" method="post" action="/add_a_link" autocomplete="on">
     <fieldset> 
       <div class="row-fluid">
-        <div class="span4">
           <h4>Add a link <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a link" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></h4>
-        </div>
-        <div class="span8">
 
           <div class="control-group">
             <label class="control-label" for="inputSummary">Summary</label>
             <div class="controls">
-              <input class="input-block-level" name="link_description" type="text" id="linkSummary" placeholder="Add a short explanation of what can be found here" />
+              <input class="input-xxlarge" name="link_description" type="text" id="linkSummary" placeholder="Add a short explanation of what can be found here" />
             </div>
           </div>
        
@@ -169,7 +158,6 @@
             </div>
           </div>
 
-        </div>
       </div>
     </fieldset>
   </form>
@@ -179,11 +167,7 @@
   <fieldset> 
 
     <div class="row-fluid">
-      <div class="span4">
         <h4>Add a note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
-      </div>
-
-      <div class="span8">
 
         <div class="control-group">
           <label class="control-label">Note</label>
@@ -195,8 +179,6 @@
           </div>
         </div>
 
-      </div>
-
     </div>
   </fieldset>
 </form>
@@ -205,10 +187,7 @@
   <input type="hidden" name="request_id" value="{{ req.id }}"/>
   <fieldset> 
     <div class="row-fluid">
-      <div class="span4">
         <h4>Close this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
-      </div>
-      <div class="span8">
         <div class="control-group">
           <label class="control-label">Reason</label>
             <div class="controls">
@@ -225,7 +204,6 @@
               <button type="submit" class="btn btn-inverse">Close this request</button>
             </div>
         </div>
-      </div>
     </div>
 
   </fieldset>

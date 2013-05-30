@@ -8,7 +8,7 @@
 	resize: none;
 }*/
 
-#submitRecord .control-label {
+/*#submitRecord .control-label {
 	width: 80px;
 }
 
@@ -22,12 +22,12 @@
 
 #note .control-label {
 	width: 80px;
-}
+}*/
 
-#question .control-label {
+/*#question .control-label {
 	width: 80px;
 	margin-right: 20px;
-}
+}*/
 
 #answer .control-label {
 	width: 80px;
@@ -38,11 +38,11 @@
 	margin-left: 70px;
 }
 
-#question .controls {
+/*#question .controls {
 	margin-left: 90px;
-}
+}*/
 
-#note .controls {
+/*#note .controls {
 	margin-left: 90px;
 }
 
@@ -57,7 +57,7 @@
 
 #closeRequest .controls {
 	margin-left: 90px;
-}
+}*/
 
 .navbar-inner {	
   -webkit-border-radius: 0;

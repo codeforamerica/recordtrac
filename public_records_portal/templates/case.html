@@ -69,7 +69,7 @@
                         <form name="respond_question" class="form-horizontal" id="answer" method="post" action="/update_a_qa" autocomplete="on">
                           <fieldset> 
                             <div class="row-fluid">
-                              <div class="control-group span8">
+                              <!-- <div class="control-group span8"> -->
                                 <label class="control-label">Answer</label>
                                   <div class="controls">
                                     <input type="hidden" name="user_id" value="{{ user_id }}"/>
@@ -78,7 +78,7 @@
                                     <textarea id="answerTextarea" name="answer_text" type="text" rows="3" cols="20" placeholder="Can you respond to the above question?" required/></textarea>
                                     <button id="askQuestion" class="btn btn-primary" type="submit">Respond</button>
                                   </div>
-                              </div>
+                              <!-- </div> -->
                             </div>
                           </fieldset>
                         </form>
@@ -93,9 +93,9 @@
       <form name="ask_question" class="form-horizontal" id="question" method="post" action="/add_a_qa" autocomplete="on">
         <fieldset> 
           <div class="row-fluid">
-            <div class="span4">
+            <!-- <div class="span4"> -->
               <h4>Ask a question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
-            </div>
+            <!-- </div> -->
             <div>
 
               <div class="control-group">
