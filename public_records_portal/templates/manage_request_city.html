@@ -161,7 +161,7 @@
             <label class="control-label">Link</label>
             <div class="row-fluid">
               <div class="controls">
-                  <input name="link_url" type="url" id="inputUrl" placeholder="Copy and paste link here" required/>
+                  <input value="http://" name="link_url" type="url" id="inputUrl" placeholder="Copy and paste link here" required/>
                 <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <button id="addalink" class="btn btn-primary" type="submit">Attach</button>
