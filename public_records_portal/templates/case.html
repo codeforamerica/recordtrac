@@ -8,7 +8,7 @@
     {% block status %}
       <div class="row-fluid">
         <div class="text-right">Routed to <span class="label label-info">{{req.current_owner | owner_name}} </span> 
-          <a data-placement="bottom" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"> <i class="icon-time"></i>  </a>
+          <a data-placement="left" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"> <i class="icon-time"></i>  </a>
           <div id="historyPopover-head" class="hide">Routing history</div>
           <div id="historyPopover-content" class="hide">              
             <table class="table table-condensed">
@@ -40,10 +40,13 @@
     {% block request %}
     <!-- request area -->
       <div class="row-fluid">
-        <h3>Request</h3>
+        <h3>Request {{request.id}} [insert # here]</h3>
         <div class="span10">
             <p class="lead"> {{ req.text }} <small>{% if req.creator_id %}
-        <div>This request was made on behalf of the requester by {{ req.creator_id | user_name }}.</div>
+        <div>This request was made on behalf of the requester by {{ req.creator_id | user_name }}.</div> 
+
+        {% else %} <div>This request was made by {{ user_alias }} [insert requester's name here]. {{ user_phone }} [insert phone number here]</div>
+
         {% endif %}</small></p>
         </div>
       </div>
@@ -66,7 +69,7 @@
                         <form name="respond_question" class="form-horizontal" id="answer" method="post" action="/update_a_qa" autocomplete="on">
                           <fieldset> 
                             <div class="row-fluid">
-                              <div class="control-group span8">
+                              <!-- <div class="control-group span8"> -->
                                 <label class="control-label">Answer</label>
                                   <div class="controls">
                                     <input type="hidden" name="user_id" value="{{ user_id }}"/>
@@ -75,7 +78,7 @@
                                     <textarea id="answerTextarea" name="answer_text" type="text" rows="3" cols="20" placeholder="Can you respond to the above question?" required/></textarea>
                                     <button id="askQuestion" class="btn btn-primary" type="submit">Respond</button>
                                   </div>
-                              </div>
+                              <!-- </div> -->
                             </div>
                           </fieldset>
                         </form>
@@ -90,9 +93,9 @@
       <form name="ask_question" class="form-horizontal" id="question" method="post" action="/add_a_qa" autocomplete="on">
         <fieldset> 
           <div class="row-fluid">
-            <div class="span4">
+            <!-- <div class="span4"> -->
               <h4>Ask a question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
-            </div>
+            <!-- </div> -->
             <div>
 
               <div class="control-group">
