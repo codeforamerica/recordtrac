@@ -36,6 +36,7 @@ Save exampleconfig.py as local_config.py and update relevant fields. To test e-m
 ## Run locally
 
 If creating the database for the first time, run:
+
     python
     from public_records_portal import db
     db.create_all()
