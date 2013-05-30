@@ -10,12 +10,15 @@ def date(obj):
 	if not obj:
 		return None
 	try:
-		return obj.date()
+		return format_date(obj.date())
 	except: # Not a datetime object
 		try:
-			return datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f").date()
+			return format_date(datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f").date())
 		except:
-			return obj # Just return the thing, maybe it's already a date
+			return format_date(obj) # Just return the thing, maybe it's already a date
+
+def format_date(obj):
+	return obj.strftime('%b %d, %Y')
 
 @app.template_filter('date_granular')
 def date_granular(timestamp):
