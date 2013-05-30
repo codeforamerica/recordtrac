@@ -39,7 +39,7 @@ Save exampleconfig.py as local_config.py and update relevant fields. To test e-m
 
 To use the application locally, in a new window:
 
-    gunicorn -w 3 -t 180 public_records_portal:app
+    gunicorn -w 3 -t 180 public_records_portal.prflask:app
 
 
 You should see something similar to:
