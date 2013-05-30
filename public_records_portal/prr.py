@@ -1,18 +1,16 @@
 """ Things one can do relating to a public records request. """
 
-from public_records_portal import app, models, website_copy
-from models import *
+from public_records_portal import app, website_copy
 import os
 import tempfile
 import scribd # Used for uploading documents, could use another service
 import time
 import requests as seaturtle # HTTP requests library, renaming because it's confusing otherwise
 import json
-from flask import Flask, render_template, request, flash, redirect, url_for
-from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
-from sqlalchemy.exc import IntegrityError, InvalidRequestError
+from flask import Flask, render_template, request, flash, redirect
 from werkzeug import secure_filename
 import sendgrid
+from datetime import datetime
 
 mail = sendgrid.Sendgrid(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'], secure = True)
 if app.config['ENVIRONMENT'] == "STAGING":
@@ -129,7 +127,7 @@ def add_link(request_id, url, description):
 	change_request_status(request_id, "A response has been added.")
 	send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
 			
-def make_request(text, email = None, assigned_to_name = None, assigned_to_email = None, assigned_to_reason = None, user_id = None):
+def make_request(text, email = None, assigned_to_name = None, assigned_to_email = None, assigned_to_reason = None, user_id = None, phone = None, alias = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
 	resource = get_resource_filter("request", [dict(name='text', op='eq', val=text)])
 	if not resource or not resource['objects']:
@@ -139,11 +137,8 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 		req = create_resource("request", payload)
 		past_owner_id, owner_id = assign_owner(request_id = req['id'], reason = assigned_to_reason, email = assigned_to_email, alias = assigned_to_name)
 		if email: # If the user provided an e-mail address, add them as a subscriber to the request.
-			user = create_or_return_user(email = email)
-			subscriber = Subscriber(request_id = req['id'], user_id = user['id'])
-			subscriber.creator = True
-			db.session.add(subscriber)
-			db.session.commit()
+			user = create_or_return_user(email = email, alias = alias, phone = phone)
+			subscriber = create_resource("subscriber", dict(request_id = req['id'], user_id = user['id']))
 		open_request(req['id'])
 		return req['id'], True
 	return resource['objects'][0]['id'], False
@@ -167,10 +162,10 @@ def answer_a_question(qa_id, answer, subscriber_id = None):
 	req = get_resource("request", qa['request_id'])
 	send_prr_email(request_id = qa['request_id'], notification_type = "Question answered", owner_id = req['current_owner'])
 
-def create_or_return_user(email, alias = None):
+def create_or_return_user(email, alias = None, phone = None):
 	resource = get_resource_filter("user", [dict(name='email', op='eq', val=email)])
 	if not resource['objects']:
-		user = create_resource("user", dict(email = email, alias = alias))
+		user = create_resource("user", dict(email = email, alias = alias, phone = phone))
 		return user
 	return resource['objects'][0]
 
@@ -189,13 +184,10 @@ def get_requester(request_id):
 	subscribers = get_subscribers(request_id)
 	for subscriber in subscribers:
 		return subscriber['id'] # Return first one for now
-		# if 'creator' in subscriber:
-		# 	if subscriber['creator'] == True:
-		# 		return subscriber.id
 
-def assign_owner(request_id, reason, email = None, alias = None): 
+def assign_owner(request_id, reason, email = None, alias = None, phone = None): 
 	""" Called any time a new owner is assigned. This will overwrite the current owner."""
-	user = create_or_return_user(email = email, alias = alias)
+	user = create_or_return_user(email = email, alias = alias, phone = phone)
 	req = get_resource("request", request_id)
 	current_owner_id = None
 	if not req['current_owner']:
