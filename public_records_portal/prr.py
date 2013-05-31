@@ -20,13 +20,7 @@ elif app.config['ENVIRONMENT'] == 'PRODUCTION':
 else:
 	app_url = "http://127.0.0.1:8000/"
 
-# Define the local temporary folder where uploads will go
-if app.config['ENVIRONMENT'] == "PRODUCTION":
-	UPLOAD_FOLDER = None # To do
-elif app.config['ENVIRONMENT'] == "STAGING":
-	UPLOAD_FOLDER = "/app" 
-else:
-	UPLOAD_FOLDER = "%s/uploads" % os.getcwd()
+
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff'])
 
 def get_resource(resource, resource_id, url = None):
