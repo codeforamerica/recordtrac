@@ -29,7 +29,6 @@ In a new window:
     git clone git://github.com/codeforamerica/public-records.git
     cd public-records
     sudo pip install -r requirements.txt
-    mkdir uploads
 
 Save exampleconfig.py as local_config.py and update relevant fields. To test e-mail, sign up for a free account with SendGrid and provide the username and password in MAIL_USERNAME and MAIL_PASSWORD.
 

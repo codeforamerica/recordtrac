@@ -7,7 +7,7 @@ import scribd # Used for uploading documents, could use another service
 import time
 import requests as seaturtle # HTTP requests library, renaming because it's confusing otherwise
 import json
-from flask import Flask, render_template, request, flash, redirect
+from flask import Flask, render_template, request
 from werkzeug import secure_filename
 import sendgrid
 from datetime import datetime
@@ -20,13 +20,7 @@ elif app.config['ENVIRONMENT'] == 'PRODUCTION':
 else:
 	app_url = "http://127.0.0.1:8000/"
 
-# Define the local temporary folder where uploads will go
-if app.config['ENVIRONMENT'] == "PRODUCTION":
-	UPLOAD_FOLDER = None # To do
-elif app.config['ENVIRONMENT'] == "STAGING":
-	UPLOAD_FOLDER = "/app" 
-else:
-	UPLOAD_FOLDER = "%s/uploads" % os.getcwd()
+
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff'])
 
 def get_resource(resource, resource_id, url = None):
@@ -108,12 +102,7 @@ def upload_record(request_id, file, description):
 	doc_id, filename = upload_file(file)
 	req = get_resource("request", request_id)
 	if str(doc_id).isdigit():
-		record = Record(doc_id = doc_id, request_id = request_id, owner_id = req['current_owner'], description = description)
-		db.session.add(record)
-		db.session.commit()
-		record.filename = filename
-		record.url = app.config['HOST_URL'] + doc_id
-		db.session.commit()
+		record = create_resource("record", dict(doc_id = doc_id, request_id = request_id, owner_id = req['current_owner'], description = description, filename = filename, url = app.config['HOST_URL'] + doc_id))
 		change_request_status(request_id, "A response has been added.")
 		send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
 	else:
@@ -215,15 +204,15 @@ def change_request_status(request_id, status):
 def progress(bytes_sent, bytes_total):
     print("%s of %s (%s%%)" % (bytes_sent, bytes_total, bytes_sent*100/bytes_total))
 
-def upload(filepath, API_KEY, API_SECRET):
+def upload(file, filename, API_KEY, API_SECRET):
     # Configure the Scribd API.
-    print "This is the filepath passed to upload %s" %(filepath)
     scribd.config(API_KEY, API_SECRET)
     doc_id = None
     try:
         # Upload the document from a file.
         doc = scribd.api_user.upload(
-            open(filepath,'rb'),
+            targetfile = file,
+            name = filename,
             progress_callback=progress,
             req_buffer = tempfile.TemporaryFile()
             )
@@ -263,10 +252,7 @@ def upload_file(file):
 # Uploads file to scribd.com and returns doc ID. File can be accessed at scribd.com/doc/id
 	if file and allowed_file(file.filename):
 		filename = secure_filename(file.filename)
-		filepath = os.path.join(UPLOAD_FOLDER, filename)
-		print "This is the filepath: %s" % (filepath)
-		file.save(filepath)
-		doc_id = upload(filepath, app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
+		doc_id = upload(file, filename, app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
 		return doc_id, filename
 	return None, None
 
@@ -285,14 +271,19 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 		requester = get_resource("subscriber", requester_id)
 		uid = requester['user_id']
 	email_address = get_user_email(uid)
-	if app.config['ENVIRONMENT'] == "PRODUCTION":
-		print "%s to %s with subject %s" % (render_template("generic_email.html", page = page), email_address, email_subject)
-	else:
-		send_email(render_template("generic_email.html", page = page), email_address, email_subject)
+	if email_address:
+		if app.config['ENVIRONMENT'] == "PRODUCTION":
+			print "%s to %s with subject %s" % (render_template("generic_email.html", page = page), email_address, email_subject)
+		else:
+			send_email(render_template("generic_email.html", page = page), email_address, email_subject)
 
 def get_user_email(uid):
-	user = get_resource("user", uid)
-	return user['email']
+	if uid:
+		user = get_resource("user", uid)
+		if user:
+			return user['email']
+	else:
+		return None
 
 def send_email(body, recipient, subject):
 	sender = app.config['DEFAULT_MAIL_SENDER']
