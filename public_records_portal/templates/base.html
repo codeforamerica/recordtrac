@@ -67,11 +67,6 @@
               </li>
             </ul>
 
-            <!-- <form class="navbar-form pull-right" id="logoutForm" action="/logout">
-              <span class="navbar-text"> Logged in as {{ user_id | user_name }}</span>
-              <input type="submit" value="Logout" class="btn"/>
-            </form> -->
-
             {% else %}
             <form class="navbar-form pull-right" method="post" id="loginForm" action="/login">
               <input type="text" class="input-small" name="email" placeholder="Email">

@@ -42,12 +42,7 @@
       <div class="row-fluid">
         <h3>Request {{req.id}}</h3>
         <div class="span10">
-            <p class="lead"> {{ req.text }} <small>{% if req.creator_id %}
-        <div>This request was made on behalf of the requester by {{ req.creator_id | user_name }}.</div> 
-
-        {% else %} <div>This request was made by {{ user_alias }} [insert requester's name here]. {{ user_phone }} [insert phone number here]</div>
-
-        {% endif %}</small></p>
+            <p class="lead"> {{ req.text }} </p>
         </div>
       </div>
 

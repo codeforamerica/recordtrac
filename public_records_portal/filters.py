@@ -5,6 +5,8 @@ import os
 
 # Filters
 
+app.jinja_env.filters['get_requester'] = get_requester
+
 @app.template_filter('date')
 def date(obj):
 	if not obj:
@@ -51,12 +53,25 @@ def subscriber_name(sid):
 	subscriber = get_resource("subscriber", sid)
 	return user_name(subscriber['user_id'])
 
+@app.template_filter('subscriber_phone')
+def subscriber_phone(sid):
+	subscriber = get_resource("subscriber", sid)
+	return user_phone(subscriber['user_id'])
+
+@app.template_filter('user_phone')
+def user_phone(uid):
+	user = User.query.get(uid)
+	if user.phone:
+		return user.phone
+	return None
+
 @app.template_filter('user_name')
 def user_name(uid):
 	user = User.query.get(uid)
 	if user.alias:
 		return user.alias
 	return user.email
+
 
 @app.template_filter('explain_action')
 def explain_action(action):

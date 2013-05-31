@@ -3,7 +3,13 @@
 {% extends "case.html" %}
 {% block title %}Request {{ req.id }}{% endblock %}
 {% block head %} {% endblock head %}
-
+{% block request %}
+<small>{% if req.creator_id %}
+        <div>This request was submitted on behalf of the requester by {{ req.creator_id | user_name }}.</div> 
+        {% endif %}
+<div>Requester's name: {{ (req.id | get_requester) | subscriber_name }} and phone number: {{ (req.id | get_requester) | subscriber_phone }}</div></small>
+{{ super() }}
+{% endblock request %}
 {% block status %} 
   <div class="row-fluid">
     <!-- popover -->
