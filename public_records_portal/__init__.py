@@ -23,6 +23,7 @@ except:
 	app.config['SECRET_KEY'] = environ['SECRET_KEY']
 	app.config['SCRIBD_API_KEY'] = environ['SCRIBD_API_KEY']
 	app.config['SCRIBD_API_SECRET'] = environ['SCRIBD_API_SECRET']
+	app.config['HOST_URL'] = environ['HOST_URL']
 	app.config['SQLALCHEMY_DATABASE_URI'] = environ['SQLALCHEMY_DATABASE_URI']
 
 db = SQLAlchemy(app)
