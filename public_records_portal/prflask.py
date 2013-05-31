@@ -134,7 +134,7 @@ def requests():
 	if all_record_requests:
 		return render_template('all_requests.html', all_record_requests = all_record_requests['objects'], user_id = current_user_id)
 	else:
-		return redirect(url_for(index()))
+		return index()
 
 # Shows all public records requests that have been made by current owner. This doesn't work currently.
 @app.route('/your_requests')
@@ -148,6 +148,10 @@ def your_requests():
 			req = req_resource['objects'][0]
 			all_record_requests.append(req)
 	return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = current_user.id)
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    return render_template('alpha.html')
 
 # test template:  I clearly don't know what should go here, but need to keep a testbed here.
 @app.route('/test')
