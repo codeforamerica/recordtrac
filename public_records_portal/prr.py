@@ -1,6 +1,6 @@
 """ Things one can do relating to a public records request. """
 
-from public_records_portal import app, website_copy
+from public_records_portal import app, website_copy, db
 import os
 import tempfile
 import scribd # Used for uploading documents, could use another service
@@ -11,6 +11,7 @@ from flask import Flask, render_template, request
 from werkzeug import secure_filename
 import sendgrid
 from datetime import datetime
+from models import User
 
 mail = sendgrid.Sendgrid(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'], secure = True)
 if app.config['ENVIRONMENT'] == "STAGING":
@@ -127,7 +128,7 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 		past_owner_id, owner_id = assign_owner(request_id = req['id'], reason = assigned_to_reason, email = assigned_to_email, alias = assigned_to_name)
 		if email: # If the user provided an e-mail address, add them as a subscriber to the request.
 			user = create_or_return_user(email = email, alias = alias, phone = phone)
-			subscriber = create_resource("subscriber", dict(request_id = req['id'], user_id = user['id']))
+			subscriber = create_resource("subscriber", dict(request_id = req['id'], user_id = user.id))
 		open_request(req['id'])
 		return req['id'], True
 	return resource['objects'][0]['id'], False
@@ -151,12 +152,22 @@ def answer_a_question(qa_id, answer, subscriber_id = None):
 	req = get_resource("request", qa['request_id'])
 	send_prr_email(request_id = qa['request_id'], notification_type = "Question answered", owner_id = req['current_owner'])
 
+# def create_or_return_user(email, alias = None, phone = None):
+# 	resource = get_resource_filter("user", [dict(name='email', op='eq', val=email)])
+# 	if not resource['objects']:
+# 		user = create_resource("user", dict(email = email, alias = alias, phone = phone))
+# 		return user
+# 	return resource['objects'][0]
+
 def create_or_return_user(email, alias = None, phone = None):
-	resource = get_resource_filter("user", [dict(name='email', op='eq', val=email)])
-	if not resource['objects']:
-		user = create_resource("user", dict(email = email, alias = alias, phone = phone))
-		return user
-	return resource['objects'][0]
+	user = User.query.filter_by(email = email).first()
+	if not user.password:
+		user.password = app.config['ADMIN_PASSWORD']
+	if not user:
+		user = User(email = email, alias = alias, phone = phone, password = app.config['ADMIN_PASSWORD'])
+	db.session.add(user)
+	db.session.commit()
+	return user
 
 def open_request(request_id):
 	change_request_status(request_id, "Open")
@@ -182,13 +193,13 @@ def assign_owner(request_id, reason, email = None, alias = None, phone = None):
 	if not req['current_owner']:
 		current_owner_id = req['current_owner']
 	owner = None
-	owner_resource = get_resource_filter("owner", [dict(name='request_id', op='eq', val=int(request_id)), dict(name='user_id', op='eq', val=int(user['id']))])
+	owner_resource = get_resource_filter("owner", [dict(name='request_id', op='eq', val=int(request_id)), dict(name='user_id', op='eq', val=int(user.id))])
 	if owner_resource['objects']:
 		owner = owner_resource['objects']['0']
 	if current_owner_id and owner:
 		if current_owner_id == owner['id']:
 			return None, None
-	new_owner = create_resource("owner", dict(request_id = request_id, user_id = user['id'], reason = reason))
+	new_owner = create_resource("owner", dict(request_id = request_id, user_id = user.id, reason = reason))
 	if current_owner_id:
 		past_owner_id = current_owner_id
 	else:
@@ -279,9 +290,9 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 
 def get_user_email(uid):
 	if uid:
-		user = get_resource("user", uid)
+		user = User.query.get(uid)
 		if user:
-			return user['email']
+			return user.email
 	else:
 		return None
 

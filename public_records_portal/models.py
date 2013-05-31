@@ -10,6 +10,7 @@ class User(db.Model):
 	email = db.Column(db.String(100), unique=True)
 	phone = db.Column(db.String())
 	date_created = db.Column(db.DateTime)
+	password = db.Column(db.String(255))
 	def is_authenticated(self):
 		return True
 	def is_active(self):

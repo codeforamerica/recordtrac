@@ -10,3 +10,4 @@ MAIL_PASSWORD = "Change this"
 DEFAULT_MAIL_SENDER = "Change this"
 SECRET_KEY = "Change this"
 SQLALCHEMY_DATABASE_URI = "postgresql://localhost/your_database_name"
+ADMIN_PASSWORD = 'Change this'

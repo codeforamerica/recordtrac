@@ -43,11 +43,9 @@ def date_granular(timestamp):
 def owner_name(oid):
 	owner = get_resource("owner", oid)
 	if owner:
-		user = get_resource("user", owner['user_id'])
-		if user['alias']:
-			return user['alias']
-		return user['email']
+		return user_name(owner['user_id'])
 	return None
+
 @app.template_filter('subscriber_name')
 def subscriber_name(sid):
 	subscriber = get_resource("subscriber", sid)
@@ -55,10 +53,10 @@ def subscriber_name(sid):
 
 @app.template_filter('user_name')
 def user_name(uid):
-	user = get_resource("user", uid)
-	if user['alias']:
-		return user['alias']
-	return user['email']
+	user = User.query.get(uid)
+	if user.alias:
+		return user.alias
+	return user.email
 
 @app.template_filter('explain_action')
 def explain_action(action):
