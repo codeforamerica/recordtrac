@@ -254,9 +254,10 @@ def allowed_file(filename):
 		filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 def email_validation(email):
-	name, domain = email.split("@")
-	if domain == "oakland.net" or domain == "oaklandnet.com" or domain == "codeforamerica.org":
-		return True
+	if email:
+		name, domain = email.split("@")
+		if domain == "oakland.net" or domain == "oaklandnet.com" or domain == "codeforamerica.org":
+			return True
 	return False
 
 def upload_file(file): 
