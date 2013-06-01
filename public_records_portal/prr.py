@@ -106,8 +106,8 @@ def upload_record(request_id, file, description):
 		record = create_resource("record", dict(doc_id = doc_id, request_id = request_id, owner_id = req['current_owner'], description = description, filename = filename, url = app.config['HOST_URL'] + doc_id))
 		change_request_status(request_id, "A response has been added.")
 		send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
-	else:
-		return "Not an allowed doc type"
+		return True
+	return False
 
 def add_link(request_id, url, description):
 	req = get_resource("request", request_id)
