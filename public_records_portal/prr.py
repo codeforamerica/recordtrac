@@ -93,9 +93,7 @@ def update_resource(resource, request_body):
 		return False
 
 def add_note(request_id, text, user_id):
-	note = Note(request_id = request_id, text = text, user_id = user_id)
-	db.session.add(note)
-	db.session.commit()
+	note = create_resource("note", dict(request_id = request_id, text = text, user_id = user_id))
 	change_request_status(request_id, "A response has been added.")
 	send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
 
@@ -111,9 +109,7 @@ def upload_record(request_id, file, description):
 
 def add_link(request_id, url, description):
 	req = get_resource("request", request_id)
-	record = Record(url = url, request_id = request_id, owner_id = req['current_owner'], description = description)
-	db.session.add(record)
-	db.session.commit()
+	record = create_resource("record", dict(url = url, request_id = request_id, owner_id = req['current_owner'], description = description))
 	change_request_status(request_id, "A response has been added.")
 	send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
 			
@@ -135,10 +131,7 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 
 def ask_a_question(request_id, user_id, question):
 	""" City staff can ask a question about a request they are confused about."""
-	qa = QA(request_id = request_id, question = question)
-	qa.owner_id = user_id
-	db.session.add(qa)
-	db.session.commit()
+	qa = create_resource("qa", dict(request_id = request_id, question = question, owner_id = user_id))
 	change_request_status(request_id, "Pending")
 	send_prr_email(request_id = qa.request_id, notification_type = "Question asked", requester_id = get_requester(request_id))
 	return qa.id
