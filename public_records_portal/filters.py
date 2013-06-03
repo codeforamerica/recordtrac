@@ -79,4 +79,4 @@ def explain_action(action):
 	actions_filepath = os.path.join(app.root_path, 'actions.json')
 	action_json = open(actions_filepath)
 	json_data = json.load(action_json)
-	return json_data[action]
+	return json_data[action]['What']

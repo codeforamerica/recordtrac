@@ -1,25 +1,100 @@
 {
-    "Ask a question": "Use this space to ask a question to will help you understand what the requester needs. An email containing your question will automatically be sent to the requester and your question will be publicly viewable.",
-    "Upload a document": "Upload the document(s) that would fulfill this request. An email will be sent to the requester informing them a document has been uploaded and the document will be immediately viewable by the public.",
-    "Describe document": "Enter a short description of the document you are uploading to this page. This description will help the public understand the type of document being posted on the website.",
-    "Add an offline document": "Use this space if you WILL NOT upload a record and plan on providing the requester with hard copies of the documents. An email will be automatically sent to the requester with this information. The public will be able to view this response as well.",
-    "Describe hard copies": "Enter a short description of the documents you will provide to the requester. Please include when and where they will pick up the records and any fee the requester may have to pay to obtain them. An email will be automatically sent to the requester with this information.",
-    "Access Info": "Identify where a requester must go to pick up their documents. Please include when and where they will pick up the records and any fee the requester may have to pay to obtain them. An email will be automatically sent to the requester with this information.",
-    "Add a link": "Provide a link to a document that already exists online. The link can also be to another website that will give the requester the information they need. An email will be automatically sent to the requester with this information.",
-    "Add a note": "This is a work in progress. Use this section to communicate with other city employees about this particular records request. Remember everything you write here can be viewed by the general public.",
-    "Legal review": "If sensitive information needs to be removed from the requested document or you are unsure if it can be released, check this box. An email will automatically will be sent to the City Attorney's office, prompting them to review the document. The City Attorney's will then indicate if the document can be released. While the document is being reviewed, it cannot be accessed by the general public.",
-    "Close a request": "You can close a request by selecting one of the reasons listed in the dropdown. If you would like to provide the requester with more information, please add a note. An email will be automatically be sent to the requester indicating the request is close and a document may have been added.",
-    "Extension - Large Amount": "In the next 14 business days, a city employee will search for, collect, and examine a large number of records (Government Code Section 6253(c)(2)).",
-    "Extension - Separate Facility": "In the next 14 business days, a city employee will search for and collect the requested records from separate facility (Government Code Section 6253(c)(1)).",
-    "Extension - Another Agency": "In the next 14 business days, a city employee must consult with another agency outside of the City of Oakland before we are able to deliver your record (Government Code Section 6253(c)(3)).",
-    "Extension - Data": "In the next 14 business days, a city employee needs to compile data or create a computer program to extract data (Government Code Section 6253(c)(4)).",
-    "Fulfilled": "The City released all of the requested documents to the public. Anyone can now view the documents online.",
-    "Information Redacted": "The City released all of the requested documents to the public. Anyone can now view the documents online. Personal information, such as home addresses, telephone numbers, and credit card numbers, were removed from the documents you requested to protect the privacy or identity of another individual (Government Code Section 6254(c)).",
-    "Record Does Not Exist": "The record you asked for does not exist.",
-    "Contact Another Agency": "The City does not have the records requested. Contact Alameda County for copies of those records.",
-    "Can Not Release - Personal Files": "The California Public Records Act prohibits the City from releasing an individual’s employment, medical,  or similar files to protect their privacy (Government Code Section 6254(c)).",
-    "Can Not Release - Ongoing Litigation": "The California Public Records Act prohibits the City from releasing records related to an on-going lawsuit (Government Code Section 6254(b)).",
-    "Can Not Release - Investigative Reports": "The California Public Records Act prohibits the City from releasing investigative records for crimes committed or police incident reports, rap sheets, and arrest records (Government Code Section 6254(f)).",
-    "Can Not Release - Finances": "The California Public Records Act prohibits the City from releasing information on an individual’s personal finances (Government Code Section 6254(n)(o)).",
-    "Requester Not Interested/Request Withdrawn": "The person who asked for this record determined they no longer need it."
+    "Ask a question": 
+        {
+            "What":"Use this space to ask a question to will help you understand what the requester needs.",
+            "Who":"Anyone",
+            "Action":"The question will be posted here and the requester will be notified via e-mail that a question has been posted."
+
+        },
+    "Upload a document": 
+        {
+            "What":"Upload the document(s) that would fulfill this request.", 
+            "Who":"Anyone", 
+            "Action":"The document will be sent to Scribd.com or Socrata to be hosted there, and the requester will be notified via e-mail that the document has been uploaded."
+        },
+    "Describe document": 
+        {
+            "What":"Enter a short description of the document you are uploading to this page. This description will help the public understand the type of document being posted on the website."
+        },
+    "Add an offline document": 
+        {
+            "What":"Use this space if you WILL NOT upload a record and plan on providing the requester with hard copies of the documents. An email will be automatically sent to the requester with this information. The public will be able to view this response as well."
+        },
+    "Describe hard copies": 
+        {
+            "What":"Enter a short description of the documents you will provide to the requester. Please include when and where they will pick up the records and any fee the requester may have to pay to obtain them. An email will be automatically sent to the requester with this information."
+        },
+    "Access Info": 
+        {
+            "What":"Identify where a requester must go to pick up their documents. Please include when and where they will pick up the records and any fee the requester may have to pay to obtain them. An email will be automatically sent to the requester with this information."
+        },
+    "Add a link": 
+        {
+            "What":"Provide a link to a document that already exists online. The link can also be to another website that will give the requester the information they need. An email will be automatically sent to the requester with this information."
+        },
+    "Add a note": 
+        {
+            "What":"This is a work in progress. Use this section to communicate with other city employees about this particular records request. Remember everything you write here can be viewed by the general public."
+        },
+    "Legal review": 
+        {
+            "What":"If sensitive information needs to be removed from the requested document or you are unsure if it can be released, check this box. An email will automatically will be sent to the City Attorney's office, prompting them to review the document. The City Attorney's will then indicate if the document can be released. While the document is being reviewed, it cannot be accessed by the general public."
+        },
+    "Close a request": 
+        {
+            "What":"You can close a request by selecting one of the reasons listed in the dropdown. If you would like to provide the requester with more information, please add a note. An email will be automatically be sent to the requester indicating the request is close and a document may have been added."
+        },
+    "Extension - Large Amount": 
+        {
+            "What":"In the next 14 business days, a city employee will search for, collect, and examine a large number of records (Government Code Section 6253(c)(2))."
+        },
+    "Extension - Separate Facility": 
+        {
+            "What":"In the next 14 business days, a city employee will search for and collect the requested records from separate facility (Government Code Section 6253(c)(1))."
+        },
+    "Extension - Another Agency": 
+        {
+            "What":"In the next 14 business days, a city employee must consult with another agency outside of the City of Oakland before we are able to deliver your record (Government Code Section 6253(c)(3))."
+        },
+    "Extension - Data": 
+        {
+            "What":"In the next 14 business days, a city employee needs to compile data or create a computer program to extract data (Government Code Section 6253(c)(4))."
+        },
+    "Fulfilled": 
+        {
+            "What":"The City released all of the requested documents to the public. Anyone can now view the documents online."
+        },
+    "Information Redacted": 
+        {
+            "What":"The City released all of the requested documents to the public. Anyone can now view the documents online. Personal information, such as home addresses, telephone numbers, and credit card numbers, were removed from the documents you requested to protect the privacy or identity of another individual (Government Code Section 6254(c))."
+        },
+    "Record Does Not Exist": 
+        {
+            "What":"The record you asked for does not exist."
+        },
+    "Contact Another Agency": 
+        {
+            "What":"The City does not have the records requested. Contact Alameda County for copies of those records."
+        },
+    "Can Not Release - Personal Files": 
+        {
+            "What":"The California Public Records Act prohibits the City from releasing an individual’s employment, medical,  or similar files to protect their privacy (Government Code Section 6254(c))."
+        },
+    "Can Not Release - Ongoing Litigation": 
+        {
+            "What":"The California Public Records Act prohibits the City from releasing records related to an on-going lawsuit (Government Code Section 6254(b))."
+        },
+    "Can Not Release - Investigative Reports": 
+        {
+            "What":"The California Public Records Act prohibits the City from releasing investigative records for crimes committed or police incident reports, rap sheets, and arrest records (Government Code Section 6254(f))."
+        },
+    "Can Not Release - Finances": 
+        {
+            "What":"The California Public Records Act prohibits the City from releasing information on an individual’s personal finances (Government Code Section 6254(n)(o))."
+        },
+    "Requester Not Interested/Request Withdrawn": 
+        {
+            "What":"The person who asked for this record determined they no longer need it."
+        }
+
 }

@@ -222,10 +222,10 @@ def upload(file, filename, API_KEY, API_SECRET):
             progress_callback=progress,
             req_buffer = tempfile.TemporaryFile()
             )
-        # Poll API until conversion is complete.
-        while doc.get_conversion_status() != 'DONE':
-            # Sleep to prevent a runaway loop that will block the script.
-            time.sleep(2)        
+        # # Poll API until conversion is complete.
+        # while doc.get_conversion_status() != 'DONE':
+        #     # Sleep to prevent a runaway loop that will block the script.
+        #     time.sleep(2)        
         doc_id = doc.id
         return doc_id
     except scribd.ResponseError, err:
