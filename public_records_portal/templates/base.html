@@ -70,9 +70,8 @@
             {% else %}
             <form class="navbar-form pull-right" method="post" id="loginForm" action="/login">
               <input type="text" class="input-medium" name="email" placeholder="you@oaklandnet.com">
-              <input type="password" class="input-small" name="password" placeholder="Password">
-<!--               <input type="text" class="input-small" placeholder="Password"> -->
-              <input type="submit" value="City Login" class="btn"/>
+              <input type="password" class="input-small" name="password" placeholder="password">
+              <input type="submit" value="City login" class="btn"/>
             </form>
             {% endif %}
             <!-- Everything you want hidden at 940px or less, place within here -->
@@ -116,6 +115,7 @@
     <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='custom.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='bootstrap-fileupload.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery.placeholderpatch.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='jquery.dataTables.js') }}"></script>
 <!--     // <script type="text/javascript" src="{{ url_for('static', filename='dataTables.scrollingPagination.js') }}"></script> -->
 
