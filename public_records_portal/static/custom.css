@@ -20,6 +20,12 @@
 margin: 0 0 0px;
 }
 
+/* new request explanation text */
+.request_field_explanation {
+	margin-left: 5%;
+	vertical-align: top;
+}
+
 /* give the logout button more space */
 #logout_form {
 	margin-left: 10%;
