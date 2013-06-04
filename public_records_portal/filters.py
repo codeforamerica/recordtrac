@@ -79,6 +79,15 @@ def explain_action(action, explanation_type = None):
 	actions_filepath = os.path.join(app.root_path, 'actions.json')
 	action_json = open(actions_filepath)
 	json_data = json.load(action_json)
+	explanation = json_data[action]
 	if explanation_type:
-		return json_data[action][explanation_type]
-	return json_data[action]['What']
+		return explanation[explanation_type]
+	else:
+		explanation_str = ""
+		if 'What' in explanation:
+			explanation_str = explanation_str + explanation['What']
+		if 'Who' in explanation:
+			explanation_str = explanation_str + " " + explanation['Who']
+		if 'Action' in explanation:
+			explanation_str = explanation_str + " " + explanation['Action']
+		return explanation_str
