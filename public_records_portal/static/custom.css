@@ -84,3 +84,5 @@ html, body {
 .footer, .push {
 	height: 80px; /* .push must be the same height as .footer */
 }
+
+/* datatables */
