@@ -74,9 +74,11 @@ def user_name(uid):
 
 
 @app.template_filter('explain_action')
-def explain_action(action):
+def explain_action(action, explanation_type = None):
 	# Get filepath for actions.json
 	actions_filepath = os.path.join(app.root_path, 'actions.json')
 	action_json = open(actions_filepath)
 	json_data = json.load(action_json)
+	if explanation_type:
+		return json_data[action][explanation_type]
 	return json_data[action]['What']
