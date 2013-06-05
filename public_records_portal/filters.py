@@ -43,34 +43,44 @@ def date_granular(timestamp):
 
 @app.template_filter('owner_name')
 def owner_name(oid):
-	owner = get_resource("owner", oid)
-	if owner:
-		return user_name(owner['user_id'])
+	if oid:
+		owner = get_resource("owner", oid)
+		if owner and owner['user_id']:
+			return user_name(owner['user_id'])
 	return None
 
 @app.template_filter('subscriber_name')
 def subscriber_name(sid):
-	subscriber = get_resource("subscriber", sid)
-	return user_name(subscriber['user_id'])
+	if sid:
+		subscriber = get_resource("subscriber", sid)
+		if subscriber and subscriber['user_id']:
+			return user_name(subscriber['user_id'])
+	return None
 
 @app.template_filter('subscriber_phone')
 def subscriber_phone(sid):
-	subscriber = get_resource("subscriber", sid)
-	return user_phone(subscriber['user_id'])
+	if sid:
+		subscriber = get_resource("subscriber", sid)
+		if subscriber and subscriber['user_id']:
+			return user_phone(subscriber['user_id'])
+	return None
 
 @app.template_filter('user_phone')
 def user_phone(uid):
-	user = User.query.get(uid)
-	if user.phone:
-		return user.phone
+	if uid:
+		user = User.query.get(uid)
+		if user.phone:
+			return user.phone
 	return None
 
 @app.template_filter('user_name')
 def user_name(uid):
-	user = User.query.get(uid)
-	if user.alias:
-		return user.alias
-	return user.email
+	if uid:
+		user = User.query.get(uid)
+		if user.alias:
+			return user.alias
+		return user.email
+	return None
 
 
 @app.template_filter('explain_action')
