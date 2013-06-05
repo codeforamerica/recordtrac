@@ -1,164 +1,159 @@
 {
     "Ask a question": 
         {
-            "What":"Use this space to ask a question to will help you understand what the requester needs.",
-            "Who":"Anyone",
-            "Action":"The question will be posted here and the requester will be notified via e-mail that a question has been posted."
-
+            "What":"Use this space to ask a question about this particular public records request to will help you understand what the requester needs.",
+            "Who":"Members of the general public will be able to view this question.",
+            "Action":"The question will be posted here and the requester will be notified via email that a question has been posted."
         },
     "Add a note": 
         {
-            "What":"This is a work in progress. Use this section to communicate with other city employees about this particular records request. Remember everything you write here can be viewed by the general public."
+            "What":"Use this section to communicate with the requester about this particular records request.",
+            "Who":"Members of the general public will be able to view this message.",
+            "Action":"This message will be posted online and the requester will be notified by email the message has been posted."
         },
     "Enter email address": 
         {
-            "What": "This is not a required field. Use this space to enter your email address.",
-            "Who": "No one will be able to view your email address.",
-            "Action": "This address will be used to send you updates about your public records requests and notify you when it has been fulfilled. If you do not provide an email address, you will have to monitor the URL provided to you to understand what is happening with your public records request."
+            "What":"This is not a required field. Use this space to enter your email address.",
+            "Who":"No one will be able to view your email address.",
+            "Action":"This address will be used to send you updates about your public records requests and notify you when it has been fulfilled. If you do not provide an email address, you will have to monitor the URL provided to you to understand what is happening with your public records request."
         },
     "Enter name": 
         {
-            "What": "This is an optional field. Use this space to enter your name.",
-            "Who": "Only City of Oakland employees will be able to view your name.",
-            "Action" : "This name will be used to address you if a city employee needs to call you about your records request."
+            "What":"This is an optional field. Use this space to enter your name.",
+            "Who":"Only City of Oakland employees will be able to view your name.",
+            "Action":"This name will be used to address you if a city employee needs to call you about your records request."
         },
    "Enter phone number": 
         {
-            "What": "This is an optional field. Use this space to enter your phone number.",
-            "Who": "Only City of Oakland employees will be able to view your phone number.",
-            "Action" : "A City employee will use this number to contact you about your records request."
+            "What":"This is an optional field. Use this space to enter your phone number.",
+            "Who":"Only City of Oakland employees will be able to view your phone number.",
+            "Action":"A City employee may use this number to contact you about your records request."
         },
     "Upload a document": 
         {
-            "What":"Upload the document(s) that would fulfill this request.", 
-            "Who":"Anyone can view this document.", 
+            "What":"Upload the document(s) that would fulfill this particular public records request.", 
+            "Who":"Members of the general public will be able to view this document.",
             "Action":"The document will be sent to Scribd.com or Socrata to be hosted there, and the requester will be notified via email that the document has been uploaded."
         },
     "Describe document": 
         {
             "What":"Enter a short description of the document you are uploading to this page. This description will help the public understand the type of document being posted on the website.",
-            "Who":"Anyone will be able to view this description.",
+            "Who":"Members of the general public will be able to view this description.",
             "Action":"This description will be automatically posted online. "
         },
     "Add an offline document": 
         {
             "What":"Use this space if you WILL NOT upload a record and plan on providing the requester with hard copies of the documents.",
-            "Who":"Anyone will be able to view this information.",
-            "Action": "This description will automatically be posted online."
+            "Who":"Members of the general public will be able to view this message.",
+            "Action":"This description will automatically be posted online."
         },
     "Describe hard copies": 
         {
             "What":"Enter a short description of the documents you will provide to the requester. Please include when and where they will pick up the records and any fee the requester may have to pay to obtain them.",
-            "Who": "Anyone will be able to view this information.",
+            "Who":"Members of the general public will be able to view this description.",
             "Action": "The description will be posted online. An email will be automatically sent to the requester prompting them to view the response."
         },
     "Access Info": 
         {
             "What":"Identify where a requester must go to pick up their documents. Please include when and where they will pick up the records and any fee the requester may have to pay to obtain them.",
-            "Who":"Anyone is able to view these instructions.",
-            "What": "These instructions will be automatically posted online "
+            "Who":"Members of the general public will be able to view this description.",
+            "What":"These instructions will be automatically posted online, and the requester will be notified via email of these instructions."
         },
     "Add a link": 
         {
-            "What":"Provide a link to a document that already exists online. The link can also be to another website that will give the requester the information they need.",
-            "Who": "Anyone will be able to view this information.",
-            "Action": "An email will be automatically sent to the requester with this information. The information will also be posted online."
-        },
-    "Send a note to requester": 
-        {
-            "What":"Use this section to communicate with the requester about this particular records request.",
-            "Who": "Anyone will be able to view this information",
-            "Action": "An email will be automatically sent to the requester with this information. The information will also be posted online."
+            "What":"Provide a link to a document or information already online that will answer this particular records request. The link can also be to another website that will give the requester the information they need.",
+            "Who":"Members of the general public will be able to view this link.",
+            "Action":"The link will automatically posted online, and the requester will be notified via email of this link."
         },
     "Legal review": 
         {
             "What":"If sensitive information needs to be removed from the requested document or you are unsure if it can be released, check this box.",
-            "Who": "Only a lawyer in the City Attorney's office or the Open Government Coordinator will be able to view this document.",
-            "Action": "An email will automatically will be sent to the City Attorney's office, prompting them to review the document."
+            "Who":"Only a lawyer in the City Attorney's office or the Open Government Coordinator will be able to view this document.",
+            "Action":"An email will automatically will be sent to the City Attorney's office, prompting them to review the document."
         },
     "Close a request": 
         {
             "What":"You can close a request by selecting one of the reasons listed in the dropdown. If you would like to provide the requester with more information, please add a note.",
-            "Who": "Anyone will be able to view this message.",
-            "Action": "An email will be automatically be sent to the requester indicating the request is close and a document may have been added. The same message will be posted online."
+            "Who":"Members of the general public will be able to view this message.",
+            "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
     "Extension - Large Amount": 
         {
             "What":"In the next 14 business days, a city employee will search for, collect, and examine a large number of records (Government Code Section 6253(c)(2)).",
-            "Who": "Anyone will be able to view this message.",
-            "Action": "This message will automatically be posted online."
+            "Who":"Members of the general public will be able to view this message.",
+            "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
     "Extension - Separate Facility": 
         {
             "What":"In the next 14 business days, a city employee will search for and collect the requested records from separate facility (Government Code Section 6253(c)(1)).",
-            "Who": "Anyone will be able to view this message.",
-            "Action": "This message will automatically be posted online."
+            "Who":"Members of the general public will be able to view this message.",
+            "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
     "Extension - Another Agency": 
         {
             "What":"In the next 14 business days, a city employee must consult with another agency outside of the City of Oakland before we are able to deliver your record (Government Code Section 6253(c)(3)).",
-            "Who": "Anyone will be able to view this message.",
-            "Action": "This message will automatically be posted online."
+            "Who":"Members of the general public will be able to view this message.",
+            "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
     "Extension - Data": 
         {
             "What":"In the next 14 business days, a city employee needs to compile data or create a computer program to extract data (Government Code Section 6253(c)(4)).",
-            "Who": "Anyone will be able to view this message.",
-            "Action": "This message will automatically be posted online."
+            "Who":"Members of the general public will be able to view this message.",
+            "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
     "Fulfilled": 
         {
             "What":"The City released all of the requested documents to the public. Anyone can now view the documents online.",
-            "Who": "Anyone will be able to view this message.",
-            "Action": "This message will automatically be posted online."
+            "Who":"Members of the general public will be able to view this message.",
+            "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
     "Information Redacted": 
         {
             "What":"The City released all of the requested documents to the public. Anyone can now view the documents online. Personal information, such as home addresses, telephone numbers, and credit card numbers, were removed from the documents you requested to protect the privacy or identity of another individual (Government Code Section 6254(c)).",
-            "Who": "Anyone will be able to view this message.",
-            "Action": "This message will automatically be posted online."
+            "Who":"Members of the general public will be able to view this message.",
+            "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
     "Record Does Not Exist": 
         {
             "What":"The record you asked for does not exist.",
-            "Who": "Anyone will be able to view this message.",
-            "Action": "This message will automatically be posted online."
+            "Who":"Members of the general public will be able to view this message.",
+            "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
     "Contact Another Agency": 
         {
             "What":"The City does not have the records requested. Contact Alameda County for copies of those records.",
-             "Who": "Anyone will be able to view this message.",
-            "Action": "This message will automatically be posted online."
+            "Who":"Members of the general public will be able to view this message.",
+            "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
     "Can Not Release - Personal Files": 
         {
             "What":"The California Public Records Act prohibits the City from releasing an individual’s employment, medical,  or similar files to protect their privacy (Government Code Section 6254(c)).",
-             "Who": "Anyone will be able to view this message.",
-            "Action": "This message will automatically be posted online."
+            "Who":"Members of the general public will be able to view this message.",
+            "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
     "Can Not Release - Ongoing Litigation": 
         {
             "What":"The California Public Records Act prohibits the City from releasing records related to an on-going lawsuit (Government Code Section 6254(b)).",
-            "Who": "Anyone will be able to view this message.",
-            "Action": "This message will automatically be posted online."
+            "Who":"Members of the general public will be able to view this message.",
+            "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
     "Can Not Release - Investigative Reports": 
         {
             "What":"The California Public Records Act prohibits the City from releasing investigative records for crimes committed or police incident reports, rap sheets, and arrest records (Government Code Section 6254(f)).",
-             "Who": "Anyone will be able to view this message.",
-            "Action": "This message will automatically be posted online."
+            "Who":"Members of the general public will be able to view this message.",
+            "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
     "Can Not Release - Finances": 
         {
             "What":"The California Public Records Act prohibits the City from releasing information on an individual’s personal finances (Government Code Section 6254(n)(o)).",
-            "Who": "Anyone will be able to view this message.",
-            "Action": "This message will automatically be posted online."
+            "Who":"Members of the general public will be able to view this message.",
+            "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
     "Requester Not Interested/Request Withdrawn": 
         {
-            "What":"The person who asked for this record determined they no longer need it.",
-            "Who": "Anyone will be able to view this message.",
-            "Action": "This message will automatically be posted online."
+            "What":"The person who submitted this request determined they no longer needed the record.",
+            "Who":"Members of the general public will be able to view this message.",
+            "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         }
 
 }
