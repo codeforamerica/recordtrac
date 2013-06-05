@@ -9,7 +9,13 @@
         {
             "What":"Use this section to communicate with the requester about this particular records request.",
             "Who":"Members of the general public will be able to view this message.",
-            "Action":"This message will be posted online and the requester will be notified by email the message has been posted."
+            "Action":"This message will be posted online and the requester will be notified by email of this message."
+        },
+      "Enter records request": 
+        {
+            "What":"Describe the documents or information you would like to obtain from the City of Oakland. Please be as detailed as possible.",
+            "Who":"Members of the general public will be able to view this message.",
+            "Action":"The message will be immediately posted online. An email will be automatically sent to the Open Government Coordinator alerting them a request was made."
         },
     "Enter email address": 
         {
@@ -51,7 +57,7 @@
         {
             "What":"Enter a short description of the documents you will provide to the requester. Please include when and where they will pick up the records and any fee the requester may have to pay to obtain them.",
             "Who":"Members of the general public will be able to view this description.",
-            "Action": "The description will be posted online. An email will be automatically sent to the requester prompting them to view the response."
+            "Action":"The description will be posted online. An email will be automatically sent to the requester prompting them to view the response."
         },
     "Access Info": 
         {
@@ -149,7 +155,7 @@
             "Who":"Members of the general public will be able to view this message.",
             "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
-    "Requester Not Interested/Request Withdrawn": 
+    "Requester Not Interested": 
         {
             "What":"The person who submitted this request determined they no longer needed the record.",
             "Who":"Members of the general public will be able to view this message.",
