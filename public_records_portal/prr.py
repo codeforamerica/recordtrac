@@ -277,10 +277,10 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 	email_address = get_user_email(uid)
 	if email_address:
 		try:
-			if app.config['ENVIRONMENT'] == "PRODUCTION":
-				print "%s to %s with subject %s" % (render_template("generic_email.html", page = page), email_address, email_subject)
-			else:
+			if app.config['ENVIRONMENT'] != "LOCAL":
 				send_email(render_template("generic_email.html", page = page), email_address, email_subject)
+			else:
+				print "%s to %s with subject %s" % (render_template("generic_email.html", page = page), email_address, email_subject)
 		except:
 			print "E-mail was not sent."
 
