@@ -8,6 +8,10 @@ import flask.ext.restless
 app = Flask(__name__)
 app.debug = True
 app.config['SECRET_KEY'] = "Not really a secret."
+app.config['ENVIRONMENT'] = "LOCAL"
+app.config['DEFAULT_OWNER_NAME'] = "Default owner name"
+app.config['DEFAULT_OWNER_REASON'] = 'Default owner reason'
+
 try:
 	app.config.from_object('local_config')
 except:
