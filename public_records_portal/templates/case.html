@@ -134,36 +134,32 @@
           </div> -->
 
           <!-- shows all existing responses (links, documents, offline docs, notes) -->
-          [if any response exists]<!--added an if then to check to see if any responses exist - if no then show text in "else" below -->
-            {% if links %}
-              <div class="span10">
-                {% for link in links %}
-                  <div class="row-fluid response">
-                    <div class="span2 text-center">
-                      <i class="icon-link icon-3x">  </i></br>
-                      <small> {{ time }} [May 4, 2013]</small> </br>
-                    </div>
-                    <div class="span10">
-                      <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{link.description}} </a> - <em>{{link[
-                        'owner_id'] | owner_name }}</em></p>
-                    </div>
-                  </div>
-                {% endfor %}
-              </div>
-            {% endif %}
+          {% if req.records or req.notes %} 
 
             {% if req.records %}
               <div class="span10">
                 {% for record in req.records %}
-                  <div class="row-fluid response">
-                    <div class="span2 text-center">
-                      <i class="icon-file-alt icon-3x">  </i></br>
-                      <small> {{ time }} [May 4, 2013]</small> </br>
+                  {% if not record.doc_id %} <!-- treat it as a link -->
+                      <div class="row-fluid response">
+                      <div class="span2 text-center">
+                        <i class="icon-link icon-3x">  </i></br>
+                        <small> {{ time }} [May 4, 2013]</small> </br>
+                      </div>
+                      <div class="span10">
+                        <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.owner_id | owner_name }}</em></p>
+                      </div>
                     </div>
-                    <div class="span10">
-                      <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.owner_id | owner_name }}</em></p>
+                  {% else %}
+                    <div class="row-fluid response">
+                      <div class="span2 text-center">
+                        <i class="icon-file-alt icon-3x">  </i></br>
+                        <small> {{ time }} [May 4, 2013]</small> </br>
+                      </div>
+                      <div class="span10">
+                        <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.owner_id | owner_name }}</em></p>
+                      </div>
                     </div>
-                  </div>
+                  {% endif %}
                 {% endfor %}
               </div>
             {% endif %}
@@ -184,11 +180,11 @@
               </div>
             {% endif %}
 
-            [ else ]<!--added an if then to check to see if any responses exist - if no then show text here for the "if any response exists" above -->
+          {% else %}<!--added an if then to check to see if any responses exist - if no then show text here for the "if any response exists" above -->
             <div class="span10">
               <p>There are no records uploaded just yet.  Stay tuned!</p>
             </div>
-          [ endif ]
+        {% endif %}
 
           
 
