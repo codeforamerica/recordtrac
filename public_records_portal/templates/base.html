@@ -1,7 +1,7 @@
 <!-- This template provides the header, footer, and basic layout for ALL pages. -->
 
 <!doctype html>
-<html>
+<html class="no-js">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,12 +10,15 @@
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap-responsive.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap-responsive.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='font-awesome/font/font-awesome.min.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap-fileupload.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='custom.css') }}">
-    <link rel=stylesheet type=text/css href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='DT_bootstrap.css') }}">
+
+  <!-- modernizr -->
+  <script type="text/javascript" src="{{ url_for('static', filename='modernizr-latest.js') }}"></script>
 
 
   <!-- google analytics -->
