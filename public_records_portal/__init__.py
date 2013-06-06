@@ -7,10 +7,12 @@ import flask.ext.restless
 # Initialize Flask app and database:
 app = Flask(__name__)
 app.debug = True
+app.config['SECRET_KEY'] = "Not really a secret."
 try:
 	app.config.from_object('local_config')
 except:
 	try:
+		app.config['SECRET_KEY'] = environ['SECRET_KEY']
 		app.config['ENVIRONMENT'] = environ['ENVIRONMENT']
 		app.config['APPLICATION_URL'] = environ['APPLICATION_URL']
 		app.config['SCRIBD_API_KEY'] = environ['SCRIBD_API_KEY']
@@ -21,9 +23,6 @@ except:
 		app.config['MAIL_USERNAME'] = environ['MAIL_USERNAME']
 		app.config['MAIL_PASSWORD'] = environ['MAIL_PASSWORD']
 		app.config['DEFAULT_MAIL_SENDER'] = environ['DEFAULT_MAIL_SENDER']
-		app.config['SECRET_KEY'] = environ['SECRET_KEY']
-		app.config['SCRIBD_API_KEY'] = environ['SCRIBD_API_KEY']
-		app.config['SCRIBD_API_SECRET'] = environ['SCRIBD_API_SECRET']
 		app.config['HOST_URL'] = environ['HOST_URL']
 		app.config['SQLALCHEMY_DATABASE_URI'] = environ['SQLALCHEMY_DATABASE_URI']
 	except:
