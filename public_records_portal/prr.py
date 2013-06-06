@@ -13,7 +13,6 @@ import sendgrid
 from datetime import datetime
 from models import User
 
-mail = sendgrid.Sendgrid(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'], secure = True)
 app_url = url_for(index)
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff'])
@@ -286,6 +285,7 @@ def get_user_email(uid):
 		return None
 
 def send_email(body, recipient, subject):
+	mail = sendgrid.Sendgrid(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'], secure = True)
 	sender = app.config['DEFAULT_MAIL_SENDER']
 	plaintext = ""
 	html = body
