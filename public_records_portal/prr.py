@@ -41,10 +41,13 @@ def get_resource_filter(resource, filters, url = None):
 		return r.json()
 	return None
 
-def get_resources(resource, url = None):
+def get_resources(resource, url = None, order_by = None):
 	url = app_url
 	headers = {'content-type': 'application/json; charset=utf-8'}
-	r = seaturtle.get("%s/api/%s" %(url, resource), headers=headers)
+	params = None
+	if order_by:
+		params = dict(q=json.dumps(dict(order_by=order_by)))
+	r = seaturtle.get("%s/api/%s" %(url, resource), params = params, headers=headers)
 	if r:
 		return r.json()
 	return None
@@ -156,10 +159,10 @@ def answer_a_question(qa_id, answer, subscriber_id = None):
 
 def create_or_return_user(email, alias = None, phone = None):
 	user = User.query.filter_by(email = email).first()
-	if not user.password:
-		user.password = app.config['ADMIN_PASSWORD']
 	if not user:
 		user = User(email = email, alias = alias, phone = phone, password = app.config['ADMIN_PASSWORD'])
+	if not user.password:
+		user.password = app.config['ADMIN_PASSWORD']
 	db.session.add(user)
 	db.session.commit()
 	return user
