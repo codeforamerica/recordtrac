@@ -72,19 +72,20 @@ def show(request_id):
 
 @app.route('/request/<int:request_id>')
 def show_request(request_id, template = None, record_uploaded = None, for_email_notification = False, banner_msg = None):
+	req = get_resource("request", request_id)
+	if not req:
+		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
 	current_user_id = None
 	if current_user.is_anonymous() == False:
 		current_user_id = current_user.id
 	if not template:
 		template = "case.html"
-	req = get_resource("request", request_id)
-	if not req:
-		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
-	if "Closed" in req['status']:
+	if req['status'] and "Closed" in req['status']:
 		template = "closed.html"
 	return render_template(template, req = req, for_email_notification = for_email_notification, record_uploaded = record_uploaded, banner_msg = banner_msg, user_id = current_user_id)
 
 @app.route('/add_a_<string:resource>', methods=['GET', 'POST'])
+@login_required
 def add_a_resource(resource):
 	if request.method == 'POST':
 		add_resource(resource = resource, request_body = request, current_user_id = current_user.id)
@@ -97,21 +98,6 @@ def update_a_resource(resource):
 		update_resource(resource, request)
 		return show_request(request.form['request_id'], template = "case.html")
 	return render_template('error.html', message = "You can only add a %s from a request page!" %resource)
-
-# # Clears/updates tables in the database until I figure out how I want to deal with migrations
-# @app.route('/clear')
-# def clear_db():
-# 	message = "You can't do that here."
-# 	if app.config['ENVIRONMENT'] != "PRODUCTION":
-# 		try:
-# 			db.session.commit()
-# 			db.drop_all()
-# 			db.create_all()
-# 			db.session.commit()
-# 			return requests()
-# 		except:
-# 			message = "Dropping the tables didn't work :("
-# 	return render_template('error.html', message = message)
 
 # Closing is specific to a case, so this only gets called from a case (that only city staff have a view of)
 @app.route('/close', methods=['POST'])
@@ -130,7 +116,7 @@ def requests():
 	current_user_id = None
 	if current_user.is_anonymous() == False:
 		current_user_id = current_user.id
-	all_record_requests = get_resources("request")
+	all_record_requests = get_resources(resource = "request")
 	if all_record_requests:
 		return render_template('all_requests.html', all_record_requests = all_record_requests['objects'], user_id = current_user_id)
 	else:
@@ -183,7 +169,7 @@ def load_user(userid):
 	return user
 
 @app.route("/login", methods=["GET", "POST"])
-def login(email=None):
+def login(email=None, password=None):
 	if request.method == 'POST':
 		email = request.form['email']
 		password = request.form['password']
