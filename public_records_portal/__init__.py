@@ -10,7 +10,8 @@ app.debug = True
 app.config['SECRET_KEY'] = "Not really a secret."
 app.config['ENVIRONMENT'] = "LOCAL"
 app.config['DEFAULT_OWNER_NAME'] = "Default owner name"
-app.config['DEFAULT_OWNER_REASON'] = 'Default owner reason'
+app.config['DEFAULT_OWNER_REASON'] = "Default owner reason"
+app.config['DEFAULT_OWNER_EMAIL'] = "Default owner email"
 
 try:
 	app.config.from_object('local_config')
