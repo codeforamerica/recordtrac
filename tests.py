@@ -14,7 +14,6 @@ class PublicRecordsTestCase(unittest.TestCase):
 
 	def setUp(self):
 		self.app = app.test_client()
-		self.login('richa@codeforamerica.org', app.config['ADMIN_PASSWORD'])
 
 	def test_empty_db(self):
 		page = self.app.get('/requests')
@@ -38,6 +37,7 @@ class PublicRecordsTestCase(unittest.TestCase):
 		return self.submit_request('richa@richa.com', request), request
 
 	def test_question(self):
+		self.login('richa@codeforamerica.org', app.config['ADMIN_PASSWORD'])
 		question = 'this is a test question'
 		fields = dict(request_id = 33, user_id = 2, question_text = question)
 		page = self.submit_generic(fields = fields, endpoint = "add_a_qa")
