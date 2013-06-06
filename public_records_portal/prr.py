@@ -14,13 +14,7 @@ from datetime import datetime
 from models import User
 
 mail = sendgrid.Sendgrid(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'], secure = True)
-if app.config['ENVIRONMENT'] == "STAGING":
-	app_url = app.config['APPLICATION_URL']
-elif app.config['ENVIRONMENT'] == 'PRODUCTION':
-	app_url = None
-else:
-	app_url = "http://127.0.0.1:8000/"
-
+app_url = url_for(index)
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff'])
 
@@ -150,13 +144,6 @@ def answer_a_question(qa_id, answer, subscriber_id = None):
 	req = get_resource("request", qa['request_id'])
 	send_prr_email(request_id = qa['request_id'], notification_type = "Question answered", owner_id = req['current_owner'])
 
-# def create_or_return_user(email, alias = None, phone = None):
-# 	resource = get_resource_filter("user", [dict(name='email', op='eq', val=email)])
-# 	if not resource['objects']:
-# 		user = create_resource("user", dict(email = email, alias = alias, phone = phone))
-# 		return user
-# 	return resource['objects'][0]
-
 def create_or_return_user(email, alias = None, phone = None):
 	user = User.query.filter_by(email = email).first()
 	if not user:
@@ -282,10 +269,13 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 		uid = requester['user_id']
 	email_address = get_user_email(uid)
 	if email_address:
-		if app.config['ENVIRONMENT'] == "PRODUCTION":
-			print "%s to %s with subject %s" % (render_template("generic_email.html", page = page), email_address, email_subject)
-		else:
-			send_email(render_template("generic_email.html", page = page), email_address, email_subject)
+		try:
+			if app.config['ENVIRONMENT'] == "PRODUCTION":
+				print "%s to %s with subject %s" % (render_template("generic_email.html", page = page), email_address, email_subject)
+			else:
+				send_email(render_template("generic_email.html", page = page), email_address, email_subject)
+		except:
+			print "E-mail was not sent."
 
 def get_user_email(uid):
 	if uid:
