@@ -13,7 +13,15 @@ import sendgrid
 from datetime import datetime
 from models import User
 
-app_url = url_for(index)
+try:
+	if app.config['ENVIRONMENT'] == "STAGING":
+		app_url = app.config['APPLICATION_URL']
+	elif app.config['ENVIRONMENT'] == 'PRODUCTION':
+		app_url = None
+	else:
+		app_url = "http://127.0.0.1:8000/"
+except:
+	app_url = "http://shielded-brushlands-1669.herokuapp.com/" # Need to define API endpoint for now
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff'])
 
