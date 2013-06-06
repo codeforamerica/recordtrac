@@ -24,6 +24,9 @@ margin: 0 0 0px;
 .request_field_explanation {
 	margin-left: 5%;
 	vertical-align: top;
+	display: inline-block;
+	max-width: 600px;
+	color: #606060  ;
 }
 
 /* give the logout button more space */
