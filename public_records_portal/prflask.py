@@ -88,7 +88,7 @@ def show_request(request_id, template = None, record_uploaded = None, for_email_
 	return render_template(template, req = req, for_email_notification = for_email_notification, record_uploaded = record_uploaded, banner_msg = banner_msg, user_id = current_user_id)
 
 @app.route('/add_a_<string:resource>', methods=['GET', 'POST'])
-@login_required
+@login_requiredf
 def add_a_resource(resource):
 	if request.method == 'POST':
 		add_resource(resource = resource, request_body = request, current_user_id = current_user.id)
