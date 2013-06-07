@@ -25,7 +25,7 @@
             <div class="control-group">
               <div class="controls">
                 <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" required />
-                <input id="rerouteReason" type="text" name="owner_reason" placeholder="Say why." />
+                <input id="rerouteReason" type="text" name="owner_reason" placeholder="Say why." required />
                 <button id="rerouteButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
               </div>
             </div>
@@ -72,7 +72,7 @@
           <div class="control-group">
             <label class="control-label" for="recordSummary">Summary</label>
             <div class="controls">
-              <input class="input-xxlarge" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of what you are attaching" />
+              <input class="input-xxlarge" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of what you are attaching" required />
             </div>
           </div>
        
@@ -82,7 +82,7 @@
               <div class="controls">
 
                 <div class="fileupload fileupload-new" data-provides="fileupload">
-                  <input type="hidden" name="request_id" value="{{ req.id }}">
+                  <input type="hidden" name="request_id" value="{{ req.id }}"/>
                   <div class="input-append">
                     <div class="uneditable-input span3">
                       <i class="icon-file fileupload-exists"></i> 
@@ -91,18 +91,11 @@
                     <span class="btn btn-file">
                       <span class="fileupload-new">Select file</span>
                       <span class="fileupload-exists">Change</span>
-                      <input type="file" name="record" />
+                      <input type="file" name="record" required />
                     </span>
                     <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>              
                   </div>
                 </div>
-
-                <!-- <div>
-                  <label class="checkbox">
-                    <input type="checkbox" name="legalcheckbox"> <i class="icon-legal"></i> Legal review needed
-                  </label>                
-                </div> -->
-
                 <button class="btn btn-primary fileupload-exists" type="submit">Attach</button>
 
               </div>
@@ -122,7 +115,8 @@
           <div class="control-group">
             <label class="control-label" for="recordSummary">Summary</label>
             <div class="controls">
-              <input class="input-xxlarge" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of what you are attaching" />
+              <input class="input-xxlarge" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of what you are attaching" required />
+              <input type="hidden" name="request_id" value="{{ req.id }}"/>
             </div>
           </div>
        
@@ -130,7 +124,7 @@
             <label class="control-label">Access info</label>
             <div class="row-fluid">
               <div class="controls">
-                <textarea class="input-xlarge" id="offlineDoc_textarea" name="offlinedoc_textarea" rows="3" placeholder="How can the requester get this record?  Ex. 'Sent via mail on a CD', 'Print out awaiting requester at City Clerk desk'" required></textarea>
+                <textarea class="input-xlarge" id="offlineDoc_textarea" name="record_access" rows="3" placeholder="How can the requester get this record?  Ex. 'Sent via mail on a CD', 'Print out awaiting requester at City Clerk desk'" required></textarea>
                 <button type="submit" class="btn btn-primary">Add</button>
               </div>
             </div>
@@ -147,7 +141,7 @@
           <div class="control-group">
             <label class="control-label" for="inputSummary">Summary</label>
             <div class="controls">
-              <input class="input-xxlarge" name="link_description" type="text" id="linkSummary" placeholder="Add a short explanation of what can be found here" />
+              <input class="input-xxlarge" name="link_description" type="text" id="linkSummary" placeholder="Add a short explanation of what can be found here" required />
             </div>
           </div>
        

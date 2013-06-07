@@ -58,11 +58,14 @@ def add_resource(resource, request_body, current_user_id = None):
 	if "note" in resource:
 		add_note(fields['request_id'], fields['note_text'], current_user_id)
 	elif "record" in resource:
-		upload_record(fields['request_id'], request.files['record'], fields['record_description'])
+		if 'record_access' in fields:
+			add_offline_record(fields['request_id'], fields['record_description'], fields['record_access'], current_user_id)
+		else:
+			upload_record(fields['request_id'], request.files['record'], fields['record_description'], current_user_id)
 	elif "link" in resource:
-		add_link(fields['request_id'], fields['link_url'], fields['link_description'])
+		add_link(fields['request_id'], fields['link_url'], fields['link_description'], current_user_id)
 	elif "qa" in resource:
-		ask_a_question(fields['request_id'], fields['user_id'], fields['question_text'])
+		ask_a_question(fields['request_id'], current_user_id, fields['question_text'])
 	else:
 		return False
 	return True
@@ -102,19 +105,23 @@ def add_note(request_id, text, user_id):
 	send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
 	return note['id']
 
-def upload_record(request_id, file, description):
+def upload_record(request_id, file, description, user_id):
 	doc_id, filename = upload_file(file)
-	req = get_resource("request", request_id)
 	if str(doc_id).isdigit():
-		record = create_resource("record", dict(doc_id = doc_id, request_id = request_id, owner_id = req['current_owner'], description = description, filename = filename, url = app.config['HOST_URL'] + doc_id))
+		record = create_resource("record", dict(doc_id = doc_id, request_id = request_id, user_id = user_id, description = description, filename = filename, url = app.config['HOST_URL'] + doc_id))
 		change_request_status(request_id, "A response has been added.")
 		send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
 		return True
 	return False
 
-def add_link(request_id, url, description):
-	req = get_resource("request", request_id)
-	record = create_resource("record", dict(url = url, request_id = request_id, owner_id = req['current_owner'], description = description))
+def add_offline_record(request_id, description, access, user_id):
+	record = create_resource("record", dict(request_id = request_id, user_id = user_id, access = access, description = description))
+	change_request_status(request_id, "A response has been added.")
+	send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
+	return record['id']
+
+def add_link(request_id, url, description, user_id):
+	record = create_resource("record", dict(url = url, request_id = request_id, user_id = user_id, description = description))
 	change_request_status(request_id, "A response has been added.")
 	send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
 	return record['id']
@@ -135,9 +142,9 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 		return req['id'], True
 	return resource['objects'][0]['id'], False
 
-def ask_a_question(request_id, user_id, question):
+def ask_a_question(request_id, owner_id, question):
 	""" City staff can ask a question about a request they are confused about."""
-	qa = create_resource("qa", dict(request_id = request_id, question = question, owner_id = user_id))
+	qa = create_resource("qa", dict(request_id = request_id, question = question, owner_id = owner_id))
 	change_request_status(request_id, "Pending")
 	send_prr_email(request_id, notification_type = "Question asked", requester_id = get_requester(request_id))
 	return qa['id']
@@ -256,8 +263,11 @@ def upload_file(file):
 # Uploads file to scribd.com and returns doc ID. File can be accessed at scribd.com/doc/id
 	if file and allowed_file(file.filename):
 		filename = secure_filename(file.filename)
-		doc_id = upload(file, filename, app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
-		return doc_id, filename
+		if app.config['ENVIRONMENT'] != "LOCAL":
+			doc_id = upload(file, filename, app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
+			return doc_id, filename
+		else:
+			return '0', filename # Don't need to do real uploads locally
 	return None, None
 
 def send_prr_email(request_id, notification_type, requester_id = None, owner_id = None):

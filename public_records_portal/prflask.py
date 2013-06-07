@@ -17,7 +17,10 @@ login_manager.init_app(app)
 # Let's start with the index page! For now we'll let the users submit a new request.
 @app.route('/', methods = ['GET', 'POST'])
 def index():
-	return new_request()
+	if current_user.is_anonymous() == False:
+		return your_requests()
+	else:
+		return new_request()
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -178,11 +181,10 @@ def login(email=None, password=None):
 			if user.password == password:
 				user_for_login = models.User.query.get(user.id)
 				login_user(user_for_login)
-				return render_template('new_request.html', user_id = user.id)
-	return render_template('new_request.html', user_id = None) # TODO: Give feedback
+				return index()
+	return index() # TODO: Give feedback
 
 @app.route("/logout")
-@login_required
 def logout():
 	logout_user()
 	return index()
