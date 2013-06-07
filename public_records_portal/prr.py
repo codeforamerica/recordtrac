@@ -94,7 +94,7 @@ def put_resource(resource, payload, resource_id, url = None):
 def update_resource(resource, request_body):
 	fields = request_body.form
 	if "qa" in resource:
-		answer_a_question(fields['qa_id'], fields['answer_text'], fields['user_id'])
+		answer_a_question(fields['qa_id'], fields['answer_text'])
 		return True
 	else:
 		return False
@@ -154,7 +154,6 @@ def answer_a_question(qa_id, answer, subscriber_id = None):
 	qa = get_resource("qa", qa_id)
 	put_resource("qa", dict(subscriber_id = subscriber_id, answer = answer),int(qa_id))
 	change_request_status(qa['request_id'], "Pending")
-	# change_request_status(request_id, "%s needs to take action." %) # Pass the buck to the current owner
 	req = get_resource("request", qa['request_id'])
 	send_prr_email(request_id = qa['request_id'], notification_type = "Question answered", owner_id = req['current_owner'])
 

@@ -60,6 +60,9 @@
                 {% if qa.answer %}
                   <p>{{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></p>
                 {% else %}
+                  {% if user_id %}
+                    Requester hasn't answered yet.
+                  {% else %}
                       <!-- respond to a question -->
                         <form name="respond_question" class="form-horizontal" id="answer" method="post" action="/update_a_qa" autocomplete="on">
                           <fieldset> 
@@ -67,7 +70,6 @@
                               <!-- <div class="control-group span8"> -->
                                 <label class="control-label">Answer</label>
                                   <div class="controls">
-                                    <input type="hidden" name="user_id" value="{{ user_id }}"/>
                                     <input type="hidden" name="qa_id" value="{{ qa.id }}"/>
                                     <input type="hidden" name="request_id" value="{{ req.id }}"/>
                                     <textarea id="answerTextarea" name="answer_text" type="text" rows="3" cols="20" placeholder="Can you respond to the above question?" required/></textarea>
@@ -77,61 +79,21 @@
                             </div>
                           </fieldset>
                         </form>
+                      {% endif %}
                 {% endif %}
               </div>
             </div>
           {% endfor %}
         </div>
       {% endif %}
-    {% if user_id %}
-          <!-- ask a question -->
-      <form name="ask_question" class="form-horizontal" id="question" method="post" action="/add_a_qa" autocomplete="on">
-        <fieldset> 
-          <div class="row-fluid">
-            <!-- <div class="span4"> -->
-              <h4>Ask a question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
-            <!-- </div> -->
-            <div>
 
-              <div class="control-group">
-                <label class="control-label">Question</label>
-                <div class="row-fluid">
-                  <div class="controls">
-                      <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                      <input id="questionTextarea" type="text" name="question_text" rows="3" cols="20" placeholder="Ask the requester a question" required/>
-                    <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </fieldset>
-      </form>
-      {% endif %}
-    
     {% endblock request %}
 
     {% block response %}
+
       <!-- response area: need to give this more space between the request area-->
       <div class="row-fluid">
         <h3>Response</h3>
-
-          <!-- initiate a new response -->
-<!--           <div class="row-fluid">
-            <div class="btn-group">
-              <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-question-sign"></i>
-                Add a response
-                <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu">
-                <li>
-                  <a href="#">Attach a document</a>
-                </li>
-              </ul>
-            </div>
-          </div> -->
-
           <!-- shows all existing responses (links, documents, offline docs, notes) -->
           {% if req.records or req.notes %} 
 

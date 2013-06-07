@@ -9,6 +9,30 @@
         {% endif %}
 <div>Requester's name: {{ (req.id | get_requester) | subscriber_name }} and phone number: {{ (req.id | get_requester) | subscriber_phone }}</div></small>
 {{ super() }}
+          <!-- ask a question -->
+      <form name="ask_question" class="form-horizontal" id="question" method="post" action="/add_a_qa" autocomplete="on">
+        <fieldset> 
+          <div class="row-fluid">
+            <!-- <div class="span4"> -->
+              <h4>Ask a question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
+            <!-- </div> -->
+            <div>
+
+              <div class="control-group">
+                <label class="control-label">Question</label>
+                <div class="row-fluid">
+                  <div class="controls">
+                      <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                      <input id="questionTextarea" type="text" name="question_text" rows="3" cols="20" placeholder="Ask the requester a question" required/>
+                    <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </fieldset>
+      </form>
 {% endblock request %}
 {% block status %} 
   <div class="row-fluid">
