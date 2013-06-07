@@ -47,7 +47,7 @@ def owner_name(oid):
 		owner = get_resource("owner", oid)
 		if owner and owner['user_id']:
 			return user_name(owner['user_id'])
-	return None
+	return "Owner"
 
 @app.template_filter('subscriber_name')
 def subscriber_name(sid):
@@ -55,7 +55,7 @@ def subscriber_name(sid):
 		subscriber = get_resource("subscriber", sid)
 		if subscriber and subscriber['user_id']:
 			return user_name(subscriber['user_id'])
-	return None
+	return "Requester"
 
 @app.template_filter('subscriber_phone')
 def subscriber_phone(sid):
@@ -71,7 +71,7 @@ def user_phone(uid):
 		user = User.query.get(uid)
 		if user.phone:
 			return user.phone
-	return None
+	return "Not given"
 
 @app.template_filter('user_name')
 def user_name(uid):
