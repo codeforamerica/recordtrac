@@ -53,7 +53,7 @@
             <div class="row-fluid response">
               <div class="span2 text-center">
                 <i class="icon-question icon-3x">  </i> </br>
-                <small> {{ time }} [insert date here]</small> </br>
+                <small> {{ qa.date_created | date_granular }}</small> </br>
               </div>
               <div class="span10">
                 <p> {{ qa.question }} - <em>{{qa.owner_id | user_name }}</em></p>
