@@ -14,7 +14,7 @@
         <fieldset> 
           <div class="row-fluid">
             <!-- <div class="span4"> -->
-              <h4>Ask a question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
+              <h4>Ask a question about this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
             <!-- </div> -->
             <div>
 
@@ -87,26 +87,22 @@
 {% endblock status %}
 
 {% block actions %}
-  <form name="input_doc" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data" >
+  <form name="input_doc" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data">
+  <input type="hidden" name="request_id" value="{{ req.id }}"/>
     <fieldset> 
-
       <div class="row-fluid">
-          <h4>Add a document <span id="recordTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Upload a document" | explain_action}}" ><small><i class="icon-info-sign"></i></small></span></h4>
-
+          <h4>Add a record</h4>
           <div class="control-group">
             <label class="control-label" for="recordSummary">Summary</label>
             <div class="controls">
-              <input class="input-xxlarge" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of what you are attaching" required />
+              <input class="input-xxlarge" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of the record" required />
             </div>
           </div>
-       
           <div class="control-group">
-            <label class="control-label">Document</label>
+            <label class="control-label">Upload a record <span id="recordTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Upload a document" | explain_action}}" ><small><i class="icon-info-sign"></i></small></span></label>
             <div class="row-fluid">
               <div class="controls">
-
                 <div class="fileupload fileupload-new" data-provides="fileupload">
-                  <input type="hidden" name="request_id" value="{{ req.id }}"/>
                   <div class="input-append">
                     <div class="uneditable-input span3">
                       <i class="icon-file fileupload-exists"></i> 
@@ -115,94 +111,51 @@
                     <span class="btn btn-file">
                       <span class="fileupload-new">Select file</span>
                       <span class="fileupload-exists">Change</span>
-                      <input type="file" name="record" required />
+                      <input type="file" name="record" />
                     </span>
                     <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>              
                   </div>
                 </div>
-                <button class="btn btn-primary fileupload-exists" type="submit">Attach</button>
-
               </div>
             </div>
           </div>
-
-      </div>
-    </fieldset>
-  </form>
-
-  <form name="input_offlinedoc" class="form-horizontal" id="submitOfflinedoc" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data" >
-    <fieldset> 
-
-      <div class="row-fluid">
-          <h4>Add an offline document <span id="offlinedocTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Upload a document" | explain_action}}" ><small><i class="icon-info-sign"></i></small></span></h4>
-
           <div class="control-group">
-            <label class="control-label" for="recordSummary">Summary</label>
-            <div class="controls">
-              <input class="input-xxlarge" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of what you are attaching" required />
-              <input type="hidden" name="request_id" value="{{ req.id }}"/>
-            </div>
-          </div>
-       
-          <div class="control-group">
-            <label class="control-label">Access info</label>
+            <label class="control-label">Or provide a link to a record <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a link" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></label>
             <div class="row-fluid">
               <div class="controls">
-                <textarea class="input-xlarge" id="offlineDoc_textarea" name="record_access" rows="3" placeholder="How can the requester get this record?  Ex. 'Sent via mail on a CD', 'Print out awaiting requester at City Clerk desk'" required></textarea>
-                <button type="submit" class="btn btn-primary">Add</button>
-              </div>
-            </div>
-          </div>
-
-      </div>
-    </fieldset>
-  </form>
-
- <form name="input_url" class="form-horizontal" id="submitLink" method="post" action="/add_a_link" autocomplete="on">
-    <fieldset> 
-      <div class="row-fluid">
-          <h4>Add a link <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a link" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></h4>
-          <div class="control-group">
-            <label class="control-label" for="inputSummary">Summary</label>
-            <div class="controls">
-              <input class="input-xxlarge" name="link_description" type="text" id="linkSummary" placeholder="Add a short explanation of what can be found here" required />
-            </div>
-          </div>
-       
-          <div class="control-group">
-            <label class="control-label">Link</label>
-            <div class="row-fluid">
-              <div class="controls">
-                  <input value="http://" name="link_url" type="url" id="inputUrl" placeholder="Copy and paste link here" required/>
+                  <input name="link_url" id="inputUrl"/>
                 <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
-                <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                <button id="addalink" class="btn btn-primary" type="submit">Attach</button>
               </div>
             </div>
           </div>
-
+          <div class="control-group">
+            <label class="control-label">Or indicate how the record can be accessed offline <span id="offlinedocTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Describe hard copies" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></label>
+            <div class="row-fluid">
+              <div class="controls">
+                <textarea class="input-xlarge" id="offlineDoc_textarea" name="record_access" rows="3" placeholder="How can the requester get this record?  Ex. 'Sent via mail on a CD', 'Print out awaiting requester at City Clerk desk'" ></textarea>
+              </div>
+            </div>
+          </div>
       </div>
+      <button type="submit" class="btn btn-primary">Add record</button>
     </fieldset>
   </form>
 
 <form name="note" class="form-horizontal" id="note" method="post" action="/add_a_note">
   <input type="hidden" name="request_id" value="{{ req.id }}"/>
   <fieldset> 
-
     <div class="row-fluid">
-        <h4>Add a note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
-
+        <h4>Add a note</h4>
         <div class="control-group">
-          <label class="control-label">Note</label>
+          <label class="control-label">Note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
           <div class="row-fluid">
             <div class="controls">
-              <textarea class="input-xlarge" id="noteTextarea" name="note_text" rows="3" placeholder="Enter your note here. If documents uploaded for this request have been redacted, please indicate so." required></textarea>
-              <button type="submit" class="btn btn-primary">Add</button>
+              <input type="text" class="input-xlarge" id="noteTextarea" name="note_text" rows="3" placeholder="Anything else the requester should know."required/>
             </div>
           </div>
         </div>
-
     </div>
+     <button type="submit" class="btn btn-primary">Add note</button>
   </fieldset>
 </form>
 
@@ -228,7 +181,6 @@
             </div>
         </div>
     </div>
-
   </fieldset>
 </form>
     

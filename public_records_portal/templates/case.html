@@ -100,28 +100,37 @@
             {% if req.records %}
               <div class="span10">
                 {% for record in req.records %}
-                  {% if not record.doc_id and record.url %} <!-- treat it as a link -->
-                      <div class="row-fluid response">
-                      <div class="span2 text-center">
-                        <i class="icon-link icon-3x">  </i></br>
-                        <small> {{ time }} [May 4, 2013]</small> </br>
-                      </div>
-                      <div class="span10">
-                        <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.owner_id | owner_name }}</em></p>
-                      </div>
-                    </div>
-                  {% else %}
+                  {% if record.doc_id %}
                     <div class="row-fluid response">
                       <div class="span2 text-center">
                         <i class="icon-file-alt icon-3x">  </i></br>
-                        <small> {{ time }} [May 4, 2013]</small> </br>
+                        <small> {{ record.date_created | date_granular }} </small> </br>
                       </div>
                       <div class="span10">
-                        {% if record.access %}
+                        <p> 
+                            <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.user_id | user_name }}</em>
+                        </p>
+                      </div>
+                    </div>
+                    {% elif record.access %}
+                      <div class="row-fluid response">
+                        <div class="span2 text-center">
+                          <i class="icon-file-alt icon-3x">  </i></br>
+                          <small> {{ record.date_created | date_granular }} </small> </br>
+                        </div>
+                        <div class="span10">
+                        <p> 
                           <p>{{record.description}} can be accessed: {{record.access}} </a> - <em>{{record.user_id | user_name }}</em></p>
-                        {% else %}
-                          <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.user_id | user_name }}</em></p>
-                        {% endif %}
+                        </div>
+                      </div>
+                  {% else %} <!-- treat it as a link -->
+                      <div class="row-fluid response">
+                      <div class="span2 text-center">
+                        <i class="icon-link icon-3x">  </i></br>
+                        <small> {{ record.date_created | date_granular }} </small> </br>
+                      </div>
+                      <div class="span10">
+                        <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.owner_id | owner_name }}</em></p>
                       </div>
                     </div>
                   {% endif %}
@@ -135,7 +144,7 @@
                   <div class="row-fluid response">
                     <div class="span2 text-center">
                       <i class="icon-edit icon-3x">  </i> </br>
-                      <small> {{ time }} [May 4, 2013]</small> </br>
+                      <small> {{ note.date_created | date_granular }} </small> </br>
                     </div>
                     <div class="span10">
                       <p> {{ note.text}} - <em>{{note.user_id | user_name }}</em></p>

@@ -58,12 +58,12 @@ def add_resource(resource, request_body, current_user_id = None):
 	if "note" in resource:
 		add_note(fields['request_id'], fields['note_text'], current_user_id)
 	elif "record" in resource:
-		if 'record_access' in fields:
+		if 'record_access' in fields and fields['record_access'] != "":
 			add_offline_record(fields['request_id'], fields['record_description'], fields['record_access'], current_user_id)
+		elif 'link_url' in fields and fields['link_url'] != "":
+			add_link(fields['request_id'], fields['link_url'], fields['record_description'], current_user_id)
 		else:
 			upload_record(fields['request_id'], request.files['record'], fields['record_description'], current_user_id)
-	elif "link" in resource:
-		add_link(fields['request_id'], fields['link_url'], fields['link_description'], current_user_id)
 	elif "qa" in resource:
 		ask_a_question(fields['request_id'], current_user_id, fields['question_text'])
 	else:
@@ -266,7 +266,7 @@ def upload_file(file):
 			doc_id = upload(file, filename, app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
 			return doc_id, filename
 		else:
-			return '0', filename # Don't need to do real uploads locally
+			return '1', filename # Don't need to do real uploads locally
 	return None, None
 
 def send_prr_email(request_id, notification_type, requester_id = None, owner_id = None):
