@@ -12,5 +12,4 @@ before_script:
 - psql -c 'create database myapp_test;' -U postgres
 
 script:  
-- python run.py
 - python tests.py
