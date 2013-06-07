@@ -78,10 +78,10 @@ class PublicRecordsTestCase(unittest.TestCase):
 
 	def test_add_link(self):
 		self.login('richa@codeforamerica.org', app.config['ADMIN_PASSWORD'])
-		link_description = self.random_content('link description')
+		record_description = self.random_content('link description')
 		link_url = 'http://www.google.com'
-		fields = dict(request_id = 33, link_description = link_description, link_url = link_url)
-		page = self.submit_generic(fields = fields, endpoint = "add_a_link")
+		fields = dict(request_id = 33, record_description = record_description, link_url = link_url)
+		page = self.submit_generic(fields = fields, endpoint = "add_a_record")
 		assert link_description in page.data
 
 	def test_submit_duplicate_request(self):
