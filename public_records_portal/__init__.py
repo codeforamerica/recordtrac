@@ -27,6 +27,7 @@ except:
 		app.config['DEFAULT_OWNER_REASON'] = environ['DEFAULT_OWNER_REASON']
 		app.config['MAIL_USERNAME'] = environ['MAIL_USERNAME']
 		app.config['MAIL_PASSWORD'] = environ['MAIL_PASSWORD']
+		app.config['ADMIN_PASSWORD'] = environ['ADMIN_PASSWORD']
 		app.config['DEFAULT_MAIL_SENDER'] = environ['DEFAULT_MAIL_SENDER']
 		app.config['HOST_URL'] = environ['HOST_URL']
 		app.config['SQLALCHEMY_DATABASE_URI'] = environ['SQLALCHEMY_DATABASE_URI']
