@@ -35,14 +35,14 @@ margin: 0 0 0px;
 }
 
 /* pull answer form left */
-#answer .control-label {
+/*#answer .control-label {
 	width: 80px;
 	margin-left: -30px;
 }
 
 #answer .controls {
 	margin-left: 70px;
-}
+}*/
 
 /* all infotips appear as superscript */
 .icon-info-sign {

@@ -48,11 +48,11 @@
 
       <!-- shows any existing Q&A -->
       {% if req.qas %}
-        <div class="span10">
+        <div class="row-fluid">
           {% for qa in req.qas %}
             <div class="row-fluid response">
               <div class="span2 text-center">
-                <i class="icon-question icon-3x">  </i> </br>
+                <i class="icon-question icon-2x">  </i> </br>
                 <small> {{ qa.date_created | date_granular }}</small> </br>
               </div>
               <div class="span10">
@@ -93,7 +93,7 @@
 
       <!-- response area: need to give this more space between the request area-->
       <div class="row-fluid">
-        <h3>Response</h3>
+        <h3 class="response">Response</h3>
           <!-- shows all existing responses (links, documents, offline docs, notes) -->
           {% if req.records or req.notes %} 
 
@@ -119,12 +119,11 @@
                           <small> {{ record.date_created | date_granular }} </small> </br>
                         </div>
                         <div class="span10">
-                        <p> 
                           <p>{{record.description}} can be accessed: {{record.access}} </a> - <em>{{record.user_id | user_name }}</em></p>
                         </div>
                       </div>
                   {% else %} <!-- treat it as a link -->
-                      <div class="row-fluid response">
+                    <div class="row-fluid response">
                       <div class="span2 text-center">
                         <i class="icon-link icon-3x">  </i></br>
                         <small> {{ record.date_created | date_granular }} </small> </br>
