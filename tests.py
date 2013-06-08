@@ -21,6 +21,13 @@ class PublicRecordsTestCase(unittest.TestCase):
 	def setUp(self):
 		self.app = app.test_client()
 
+	def test_route_request(self):
+		self.login('richa@codeforamerica.org', app.config['ADMIN_PASSWORD'])
+		reason = self.random_content('reason')
+		fields = dict(request_id = 33, owner_email = "richa@codeforamerica.org", owner_reason = reason)
+		page = self.submit_generic(fields = fields, endpoint = "update_a_owner")
+		assert reason in page.data
+
 	def test_index_logged_in(self):
 		self.login('oakland-public-records@codeforamerica.org', app.config['ADMIN_PASSWORD'])
 		page = self.app.get('/', follow_redirects= True)

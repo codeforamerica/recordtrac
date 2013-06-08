@@ -62,11 +62,8 @@ def new_request():
 @app.route('/<string:audience>/request/<int:request_id>', methods=['GET', 'POST'])
 @login_required
 def show_request_for_x(audience, request_id):
-	if request.method == 'POST':
-		owner_email = request.form['owner_email']
-		owner_reason = request.form['owner_reason']
-		assign_owner(request_id = request_id, reason = owner_reason, email = owner_email)
 	return show_request(request_id = request_id, template = "manage_request_%s.html" %(audience))
+
 
 @app.route('/r/<int:request_id>')
 def show(request_id):

@@ -96,6 +96,8 @@ def update_resource(resource, request_body):
 	if "qa" in resource:
 		answer_a_question(fields['qa_id'], fields['answer_text'])
 		return True
+	elif "owner" in resource:
+		assign_owner(fields['request_id'], fields['owner_reason'], fields['owner_email'])
 	else:
 		return False
 
@@ -193,7 +195,7 @@ def assign_owner(request_id, reason, email = None, alias = None, phone = None):
 	owner = None
 	owner_resource = get_resource_filter("owner", [dict(name='request_id', op='eq', val=int(request_id)), dict(name='user_id', op='eq', val=int(user.id))])
 	if owner_resource['objects']:
-		owner = owner_resource['objects']['0']
+		owner = owner_resource['objects'][0]
 	if current_owner_id and owner:
 		if current_owner_id == owner['id']:
 			return None, None
