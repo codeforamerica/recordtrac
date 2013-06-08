@@ -21,7 +21,7 @@ except:
 		app.config['ENVIRONMENT'] = environ['ENVIRONMENT']
 		app.config['APPLICATION_URL'] = environ['APPLICATION_URL']
 		app.config['SCRIBD_API_KEY'] = environ['SCRIBD_API_KEY']
-		app.config['SCRIPT_API_SECRET'] = environ['SCRIBD_API_SECRET']
+		app.config['SCRIBD_API_SECRET'] = environ['SCRIBD_API_SECRET']
 		app.config['DEFAULT_OWNER_NAME'] = environ['DEFAULT_OWNER_NAME']
 		app.config['DEFAULT_OWNER_EMAIL'] = environ['DEFAULT_OWNER_EMAIL']
 		app.config['DEFAULT_OWNER_REASON'] = environ['DEFAULT_OWNER_REASON']
