@@ -88,8 +88,13 @@ def show_request(request_id, template = None, record_uploaded = None, for_email_
 @login_required
 def add_a_resource(resource):
 	if request.method == 'POST':
-		add_resource(resource = resource, request_body = request, current_user_id = current_user.id)
-		return show_request(request.form['request_id'], template = "manage_request_city.html")
+		message = add_resource(resource = resource, request_body = request, current_user_id = current_user.id)
+		if message == True:
+			return show_request(request.form['request_id'], template = "manage_request_city.html")
+		elif message == False:
+			return render_template('error.html', message = message)
+		else:
+			return render_template('help_with_uploads.html', message = message)
 	return render_template('error.html', message = "You can only add a %s from a request page!" %resource)
 
 @app.route('/update_a_<string:resource>', methods=['GET', 'POST'])
