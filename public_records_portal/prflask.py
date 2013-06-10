@@ -118,7 +118,7 @@ def requests():
 		current_user_id = current_user.id
 	all_record_requests = get_resources(resource = "request")
 	if all_record_requests:
-		return render_template('all_requests.html', all_record_requests = all_record_requests['objects'], user_id = current_user_id)
+		return render_template('all_requests.html', all_record_requests = all_record_requests['objects'], user_id = current_user_id, title = "All Requests")
 	else:
 		return index()
 
@@ -133,7 +133,7 @@ def your_requests():
 		if req_resource['objects']:
 			req = req_resource['objects'][0]
 			all_record_requests.append(req)
-	return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = current_user.id)
+	return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = current_user.id, title = "Requests assigned to you")
 
 @login_manager.unauthorized_handler
 def unauthorized():
