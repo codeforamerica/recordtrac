@@ -163,6 +163,11 @@ def create_or_return_user(email, alias = None, phone = None):
 	user = User.query.filter_by(email = email).first()
 	if not user:
 		user = User(email = email, alias = alias, phone = phone, password = app.config['ADMIN_PASSWORD'])
+	else:
+		if alias:
+			user.alias = alias
+		if phone:
+			user.phone = phone
 	if not user.password:
 		user.password = app.config['ADMIN_PASSWORD']
 	db.session.add(user)

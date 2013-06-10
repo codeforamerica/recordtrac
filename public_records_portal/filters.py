@@ -54,7 +54,7 @@ def subscriber_name(sid):
 	if sid:
 		subscriber = get_resource("subscriber", sid)
 		if subscriber and subscriber['user_id']:
-			return user_name(subscriber['user_id'])
+			return user_alias(subscriber['user_id'])
 	return "Requester"
 
 @app.template_filter('subscriber_phone')
@@ -82,6 +82,12 @@ def user_name(uid):
 		return user.email
 	return None
 
+def user_alias(uid):
+	if uid:
+		user = User.query.get(uid)
+		if user.alias:
+			return user.alias
+	return "Requester"
 
 @app.template_filter('explain_action')
 def explain_action(action, explanation_type = None):
