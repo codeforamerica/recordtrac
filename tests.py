@@ -85,11 +85,18 @@ class PublicRecordsTestCase(unittest.TestCase):
 
 	def test_add_link(self):
 		self.login('richa@codeforamerica.org', app.config['ADMIN_PASSWORD'])
-		record_description = self.random_content('link description')
+		link_description = self.random_content('link description')
 		link_url = 'http://www.google.com'
-		fields = dict(request_id = 33, record_description = record_description, link_url = link_url)
+		fields = dict(request_id = 33, record_description = link_description, link_url = link_url)
 		page = self.submit_generic(fields = fields, endpoint = "add_a_record")
 		assert link_description in page.data
+
+	def test_close_request(self):
+		self.login('richa@codeforamerica.org', app.config['ADMIN_PASSWORD'])
+		close_reason = self.random_content('close reason')
+		fields = dict(request_id = 33, close_reason = close_reason)
+		page = self.submit_generic(fields = fields, endpoint = "close")
+		assert close_reason in page.data
 
 	def test_submit_duplicate_request(self):
 		request = 'this is a duplicate request'
