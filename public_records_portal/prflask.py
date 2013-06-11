@@ -163,10 +163,13 @@ def show_test():
 
 @app.route('/<page>')
 def any_page(page):
+	current_user_id = None
+	if current_user.is_anonymous() == False:
+		current_user_id = current_user.id
 	try:
-		return render_template('%s.html' %(page))
+		return render_template('%s.html' %(page), user_id = current_user_id)
 	except:
-		return render_template('error.html', message = "%s totally doesn't exist." %(page))
+		return render_template('error.html', message = "%s totally doesn't exist." %(page), user_id = current_user_id)
 
 @login_manager.user_loader
 def load_user(userid):
