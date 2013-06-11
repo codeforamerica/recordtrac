@@ -14,7 +14,7 @@ from datetime import datetime
 from models import User
 
 try:
-	if app.config['ENVIRONMENT'] == "STAGING" or app.config['ENVIRONMENT'] == 'PRODUCTION'
+	if app.config['ENVIRONMENT'] == "STAGING" or app.config['ENVIRONMENT'] == "PRODUCTION":
 		app_url = app.config['APPLICATION_URL']
 	else:
 		app_url = "http://127.0.0.1:8000/"
