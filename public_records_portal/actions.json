@@ -21,17 +21,17 @@
         {
             "What":"This is not a required field. Use this space to enter your email address.",
             "Who":"No one will be able to view your email address.",
-            "Action":"This address will be used to send you updates about your public records requests and notify you when it has been fulfilled. If you do not provide an email address, you will have to monitor the URL provided to you to understand what is happening with your public records request."
+            "Action":"This address will be used to send you updates about your public records requests and notify you when it has been fulfilled. If you do not provide an email address, you will have to check the website to understand what is happening with your public records request."
         },
     "Enter name": 
         {
-            "What":"This is an optional field. Use this space to enter your name.",
+            "What":"Optional",
             "Who":"Only City of Oakland employees will be able to view your name.",
             "Action":"This name will be used to address you if a city employee needs to call you about your records request."
         },
    "Enter phone number": 
         {
-            "What":"This is an optional field. Use this space to enter your phone number.",
+            "What":"Optional",
             "Who":"Only City of Oakland employees will be able to view your phone number.",
             "Action":"A City employee may use this number to contact you about your records request."
         },
