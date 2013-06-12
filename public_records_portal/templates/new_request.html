@@ -8,7 +8,7 @@
 
 {% block content %}
 
-<!-- validation jQuery not working yet http://docs.jquery.com/Plugins/Validation 
+<!-- validation jQuery only working for request_text:required and request_email:email only http://docs.jquery.com/Plugins/Validation 
       try this validation as well https://github.com/jzaefferer/jquery-validation -->
       <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="on">
         <fieldset>
@@ -18,7 +18,7 @@
           <div class="control-group">
             <label class="control-label" for="requestTextarea">What are you trying to find?</label>
             <div class="controls">
-              <textarea id="requestTextarea" autofocus  name="request_text" rows="3" cols="20" placeholder="Describe your request. Be as specific as possible." required></textarea>
+              <textarea id="requestTextarea" autofocus  name="request_text" rows="3" cols="20" placeholder="Describe your request. Be as specific as possible." minlength="2" required></textarea>
               <span class="request_field_explanation"><p>{{"Enter records request" | explain_action("What")}}</p><p><em>{{"Enter records request" | explain_action("Who")}}</em> {{"Enter records request" | explain_action("Action")}}</p></span>
             </div>
           </div>
