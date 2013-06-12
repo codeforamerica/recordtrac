@@ -88,8 +88,13 @@ def show_request(request_id, template = None, record_uploaded = None, for_email_
 @login_required
 def add_a_resource(resource):
 	if request.method == 'POST':
-		add_resource(resource = resource, request_body = request, current_user_id = current_user.id)
-		return show_request(request.form['request_id'], template = "manage_request_city.html")
+		message = add_resource(resource = resource, request_body = request, current_user_id = current_user.id)
+		if message == True:
+			return show_request(request.form['request_id'], template = "manage_request_city.html")
+		elif message == False:
+			return render_template('error.html', message = message)
+		else:
+			return render_template('help_with_uploads.html', message = message)
 	return render_template('error.html', message = "You can only add a %s from a request page!" %resource)
 
 @app.route('/update_a_<string:resource>', methods=['GET', 'POST'])
@@ -118,7 +123,7 @@ def requests():
 		current_user_id = current_user.id
 	all_record_requests = get_resources(resource = "request")
 	if all_record_requests:
-		return render_template('all_requests.html', all_record_requests = all_record_requests['objects'], user_id = current_user_id)
+		return render_template('all_requests.html', all_record_requests = all_record_requests['objects'], user_id = current_user_id, title = "All Requests")
 	else:
 		return index()
 
@@ -133,7 +138,7 @@ def your_requests():
 		if req_resource['objects']:
 			req = req_resource['objects'][0]
 			all_record_requests.append(req)
-	return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = current_user.id)
+	return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = current_user.id, title = "Requests assigned to you")
 
 @login_manager.unauthorized_handler
 def unauthorized():
@@ -158,10 +163,13 @@ def show_test():
 
 @app.route('/<page>')
 def any_page(page):
+	current_user_id = None
+	if current_user.is_anonymous() == False:
+		current_user_id = current_user.id
 	try:
-		return render_template('%s.html' %(page))
+		return render_template('%s.html' %(page), user_id = current_user_id)
 	except:
-		return render_template('error.html', message = "%s totally doesn't exist." %(page))
+		return render_template('error.html', message = "%s totally doesn't exist." %(page), user_id = current_user_id)
 
 @login_manager.user_loader
 def load_user(userid):

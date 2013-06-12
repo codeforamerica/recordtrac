@@ -14,16 +14,14 @@ from datetime import datetime
 from models import User
 
 try:
-	if app.config['ENVIRONMENT'] == "STAGING":
+	if app.config['ENVIRONMENT'] == "STAGING" or app.config['ENVIRONMENT'] == "PRODUCTION":
 		app_url = app.config['APPLICATION_URL']
-	elif app.config['ENVIRONMENT'] == 'PRODUCTION':
-		app_url = None
 	else:
 		app_url = "http://127.0.0.1:8000/"
 except:
 	app_url = "http://shielded-brushlands-1669.herokuapp.com/" # Need to define API endpoint for now
 
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff'])
+ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff']
 
 def get_resource(resource, resource_id, url = None):
 	url = app_url
@@ -63,7 +61,7 @@ def add_resource(resource, request_body, current_user_id = None):
 		elif 'link_url' in fields and fields['link_url'] != "":
 			add_link(fields['request_id'], fields['link_url'], fields['record_description'], current_user_id)
 		else:
-			upload_record(fields['request_id'], request.files['record'], fields['record_description'], current_user_id)
+			return upload_record(fields['request_id'], request.files['record'], fields['record_description'], current_user_id)
 	elif "qa" in resource:
 		ask_a_question(fields['request_id'], current_user_id, fields['question_text'])
 	else:
@@ -109,12 +107,15 @@ def add_note(request_id, text, user_id):
 
 def upload_record(request_id, file, description, user_id):
 	doc_id, filename = upload_file(file)
-	if str(doc_id).isdigit():
-		record = create_resource("record", dict(doc_id = doc_id, request_id = request_id, user_id = user_id, description = description, filename = filename, url = app.config['HOST_URL'] + doc_id))
-		change_request_status(request_id, "A response has been added.")
-		send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
-		return True
-	return False
+	if doc_id == False:
+		return "Extension type '%s' is not allowed." % filename
+	else:
+		if str(doc_id).isdigit():
+			record = create_resource("record", dict(doc_id = doc_id, request_id = request_id, user_id = user_id, description = description, filename = filename, url = app.config['HOST_URL'] + doc_id))
+			change_request_status(request_id, "A response has been added.")
+			send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
+			return True
+	return "There was an issue with your upload."
 
 def add_offline_record(request_id, description, access, user_id):
 	record = create_resource("record", dict(request_id = request_id, user_id = user_id, access = access, description = description))
@@ -163,6 +164,11 @@ def create_or_return_user(email, alias = None, phone = None):
 	user = User.query.filter_by(email = email).first()
 	if not user:
 		user = User(email = email, alias = alias, phone = phone, password = app.config['ADMIN_PASSWORD'])
+	else:
+		if alias:
+			user.alias = alias
+		if phone:
+			user.phone = phone
 	if not user.password:
 		user.password = app.config['ADMIN_PASSWORD']
 	db.session.add(user)
@@ -250,8 +256,8 @@ def make_private(doc_id, API_KEY, API_SECRET):
     doc.save()
 
 def allowed_file(filename):
-	return '.' in filename and \
-		filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+	ext = filename.rsplit('.', 1)[1]
+	return ext in ALLOWED_EXTENSIONS, ext
 
 def email_validation(email):
 	if email:
@@ -262,13 +268,17 @@ def email_validation(email):
 
 def upload_file(file): 
 # Uploads file to scribd.com and returns doc ID. File can be accessed at scribd.com/doc/id
-	if file and allowed_file(file.filename):
-		filename = secure_filename(file.filename)
-		if app.config['ENVIRONMENT'] != "LOCAL":
-			doc_id = upload(file, filename, app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
-			return doc_id, filename
+	if file:
+		allowed = allowed_file(file.filename)
+		if allowed[0]:
+			filename = secure_filename(file.filename)
+			if app.config['ENVIRONMENT'] != "LOCAL":
+				doc_id = upload(file, filename, app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
+				return doc_id, filename
+			else:
+				return '1', filename # Don't need to do real uploads locally
 		else:
-			return '1', filename # Don't need to do real uploads locally
+			return allowed # Returns false and extension
 	return None, None
 
 def send_prr_email(request_id, notification_type, requester_id = None, owner_id = None):
