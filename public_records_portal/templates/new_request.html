@@ -3,77 +3,26 @@
 {% extends "base.html" %}
 
 {% block title %}Public records{% endblock title%}
-<style type="text/css">
-  * { font-family: Verdana; font-size: 96%; }
-  label { width: 10em; float: left; }
-  label.error { float: none; color: red; padding-left: .5em; vertical-align: top; }
-  p { clear: both; }
-  .submit { margin-left: 12em; }
-  em { font-weight: bold; padding-right: 1em; vertical-align: top; }
-</style>
-<script>
-  $(document).ready(function(){
-    $("#submitRequest").validate();
-  });
-</script>
 
-{% block head %}
-  {{ super() }}
-  <style type="text/css">
-    .important { color: #336699; }
-  </style>
-{% endblock head %}
+
 
 {% block content %}
-<!--
-  <h1>Public records</h1>
-  <p class="important">
-    Describe the record(s) you would like to obtain a copy of or view.<br></br>
-    <i>By submitting your request through this website, the public will be able to view your letter to the City of Oakland. Don’t include personal information like your address, phone number, or social security number in your message.</i> 
-  <form name="input" action="" method="post">
-    Request: <input type="text" name="request_text">
-    <input type="submit" value="Submit">
-  </form> -->
 
 <!-- validation jQuery not working yet http://docs.jquery.com/Plugins/Validation 
       try this validation as well https://github.com/jzaefferer/jquery-validation -->
       <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="on">
         <fieldset>
+
           <legend>Submit a Request</legend>
 
-            <div class="control-group">
-              <label class="control-label" for="requestTextarea">What are you trying to find?</label>
-              <div class="controls">
-                <textarea id="requestTextarea" autofocus  name="request_text" rows="3" cols="20" placeholder="Describe your request. Be as specific as possible." required></textarea>
-                <span class="request_field_explanation"><p>{{"Enter records request" | explain_action("What")}}</p><p><em>{{"Enter records request" | explain_action("Who")}}</em> {{"Enter records request" | explain_action("Action")}}</p></span>
-              </div>
-            </div>
-              
-
-          
-
-<!-- Do Not Erase: dropdown selection for contact info options         
           <div class="control-group">
-            <label class="control-label" for="contactPrependedDropdownButton">How would you like to be contacted?</label>
+            <label class="control-label" for="requestTextarea">What are you trying to find?</label>
             <div class="controls">
-              <div class="input-prepend">
-                <div class="btn-group">
-                  <button class="btn dropdown-toggle" data-toggle="dropdown">
-                    <i class="icon-envelope-alt"></i>  Email
-                    <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li><a href="#"><i class="icon-envelope-alt"></i> Email</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#"><i class="icon-phone"></i> Phone</a></li>
-                    <li><a href="#"><i class="icon-file"></i> Fax</a></li>
-                    <li><a href="#"><i class="icon-envelope"></i> Mail</a></li>
-                  </ul>
-                </div>
-                <input id="contactPrependedDropdownButton" type="text">
-              </div>
+              <textarea id="requestTextarea" autofocus  name="request_text" rows="3" cols="20" placeholder="Describe your request. Be as specific as possible." required></textarea>
+              <span class="request_field_explanation"><p>{{"Enter records request" | explain_action("What")}}</p><p><em>{{"Enter records request" | explain_action("Who")}}</em> {{"Enter records request" | explain_action("Action")}}</p></span>
             </div>
-          </div> -->
+          </div>
+            
           <div class="control-group">
             <label class="control-label" for="inputEmail">Your email</label>
             <div class="controls">
