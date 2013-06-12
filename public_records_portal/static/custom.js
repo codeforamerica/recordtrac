@@ -1,3 +1,18 @@
+
+/* validation */
+$(document).ready(function () {
+
+    $('#submitRequest').validate({ // initialize the plugin
+        rules: {
+            request_text: {
+              required: true,
+            },
+        }
+    });
+
+});
+
+
 /* banner dismissal */
   $(function(){$(".alert").alert()})
 
