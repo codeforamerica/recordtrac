@@ -45,7 +45,13 @@ class PublicRecordsTestCase(unittest.TestCase):
 
 	def test_not_empty_db(self):
 		page = self.app.get('/requests')
-		assert 'All requests' in page.data
+		assert 'All Requests' in page.data
+
+	def test_not_empty_db_city(self):
+		self.login('richa@codeforamerica.org', app.config['ADMIN_PASSWORD'])
+		page = self.app.get('/your_requests')
+		assert "Requests assigned to you" in page.data
+		self.logout()
 
 	def test_submit_request(self):
 		request = self.random_content('request')
@@ -108,6 +114,24 @@ class PublicRecordsTestCase(unittest.TestCase):
 		request = 'this is a duplicate request'
 		page = self.submit_request('richa@richa.com', request)
 		assert 'You broke the internet' in page.data
+
+	def test_all_requests_logged_in(self):
+		self.login('richa@codeforamerica.org', app.config['ADMIN_PASSWORD'])
+		page = self.app.get('/requests')
+		self.logout()
+		assert '/city/request/' in page.data
+
+	def test_all_requests_logged_out(self):
+		page = self.app.get('/requests')
+		assert '/request/' in page.data
+
+	def test_reroute_owner(self):
+		self.login('richa@codeforamerica.org', app.config['ADMIN_PASSWORD'])
+		reroute_reason = self.random_content('reroute reason')
+		fields = dict(request_id = 73, owner_reason = reroute_reason, owner_email = "richa@codeforamerica.org")
+		page = self.submit_generic(fields = fields, endpoint = "update_a_owner")
+		self.logout()
+		assert reroute_reason in page.data
 
 	def submit_request(self, email, text):
 		return self.app.post('/new', data=dict(

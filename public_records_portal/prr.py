@@ -8,6 +8,7 @@ import time
 import requests as seaturtle # HTTP requests library, renaming because it's confusing otherwise
 import json
 from flask import Flask, render_template, request
+from flask.ext.login import current_user
 from werkzeug import secure_filename
 import sendgrid
 from datetime import datetime
@@ -95,6 +96,7 @@ def update_resource(resource, request_body):
 		answer_a_question(fields['qa_id'], fields['answer_text'])
 		return True
 	elif "owner" in resource:
+		change_request_status(fields['request_id'], "Rerouted")
 		assign_owner(fields['request_id'], fields['owner_reason'], fields['owner_email'])
 	else:
 		return False
@@ -179,6 +181,11 @@ def open_request(request_id):
 	change_request_status(request_id, "Open")
 
 def close_request(request_id, reason = ""):
+	req = get_resource("request", request_id)
+	if current_user.is_anonymous() == False:
+		current_owner = get_resource("owner", req['current_owner'])
+		if current_user.id != current_owner['user_id']:
+			assign_owner(request_id = request_id, reason = "Closed request.", email = current_user.email, alias = current_user.alias, phone = current_user.phone)
 	change_request_status(request_id, "Closed. %s" %reason)
 	send_prr_email(request_id = request_id, notification_type = "Request closed", requester_id = get_requester(request_id))
 
@@ -211,7 +218,6 @@ def assign_owner(request_id, reason, email = None, alias = None, phone = None):
 	else:
 		past_owner_id = None
 	put_resource("request", dict(current_owner = new_owner['id']) ,int(request_id))
-	change_request_status(request_id, "Pending")
 	send_prr_email(request_id = request_id, notification_type = "Request assigned", owner_id = new_owner['id'])
 	return past_owner_id, new_owner['id']
 
@@ -262,7 +268,7 @@ def allowed_file(filename):
 def email_validation(email):
 	if email:
 		name, domain = email.split("@")
-		if domain == "oakland.net" or domain == "oaklandnet.com" or domain == "codeforamerica.org":
+		if domain in ['oakland.net', 'oaklandnet.com', 'codeforamerica.org', 'oaklandcityattorney.org']:
 			return True
 	return False
 
