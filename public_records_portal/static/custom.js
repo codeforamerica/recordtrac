@@ -1,18 +1,3 @@
-
-/* validation */
-$(document).ready(function () {
-
-    $('#submitRequest').validate({ // initialize the plugin
-        rules: {
-            request_text: {
-              required: true,
-            },
-        }
-    });
-
-});
-
-
 /* banner dismissal */
   $(function(){$(".alert").alert()})
 
@@ -83,6 +68,6 @@ currently have to click on button */
   // $('rel["clickover"]').clickover();
 
 /* table sort */
-$(document).ready(function() {
-  $('#allrequestTable').dataTable();
-} );
+// $(document).ready(function() {
+//   $('#allrequestTable').dataTable();
+// } );
