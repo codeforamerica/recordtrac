@@ -76,10 +76,12 @@ def user_phone(uid):
 @app.template_filter('user_name')
 def user_name(uid):
 	if uid:
+		print uid
 		user = User.query.get(uid)
-		if user.alias:
-			return user.alias
-		return user.email
+		if user:
+			if user.alias:
+				return user.alias
+			return user.email
 	return None
 
 def user_alias(uid):
