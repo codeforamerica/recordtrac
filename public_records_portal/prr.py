@@ -13,6 +13,7 @@ from werkzeug import secure_filename
 import sendgrid
 from datetime import datetime
 from models import User
+from timeout import timeout
 
 try:
 	if app.config['ENVIRONMENT'] == "STAGING" or app.config['ENVIRONMENT'] == "PRODUCTION":
@@ -108,7 +109,10 @@ def add_note(request_id, text, user_id):
 	return note['id']
 
 def upload_record(request_id, file, description, user_id):
-	doc_id, filename = upload_file(file)
+	try:
+		doc_id, filename = upload_file(file)
+	except:
+		return "The upload timed out, please try again."
 	if doc_id == False:
 		return "Extension type '%s' is not allowed." % filename
 	else:
@@ -238,11 +242,7 @@ def upload(file, filename, API_KEY, API_SECRET):
             name = filename,
             progress_callback=progress,
             req_buffer = tempfile.TemporaryFile()
-            )
-        # # Poll API until conversion is complete.
-        # while doc.get_conversion_status() != 'DONE':
-        #     # Sleep to prevent a runaway loop that will block the script.
-        #     time.sleep(2)        
+            )       
         doc_id = doc.id
         return doc_id
     except scribd.ResponseError, err:
@@ -272,6 +272,7 @@ def email_validation(email):
 			return True
 	return False
 
+@timeout(seconds=20)
 def upload_file(file): 
 # Uploads file to scribd.com and returns doc ID. File can be accessed at scribd.com/doc/id
 	if file:
