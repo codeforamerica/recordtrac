@@ -87,7 +87,7 @@ def user_alias(uid):
 		user = User.query.get(uid)
 		if user.alias:
 			return user.alias
-	return "Requester"
+	return "Not given"
 
 @app.template_filter('explain_action')
 def explain_action(action, explanation_type = None):
