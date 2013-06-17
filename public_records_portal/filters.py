@@ -76,7 +76,6 @@ def user_phone(uid):
 @app.template_filter('user_name')
 def user_name(uid):
 	if uid:
-		print uid
 		user = User.query.get(uid)
 		if user:
 			if user.alias:
