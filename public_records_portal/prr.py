@@ -189,7 +189,7 @@ def close_request(request_id, reason = ""):
 	if current_user.is_anonymous() == False:
 		current_owner = get_resource("owner", req['current_owner'])
 		if current_user.id != current_owner['user_id']:
-			assign_owner(request_id = request_id, reason = "Closed request.", email = current_user.email, alias = current_user.alias, phone = current_user.phone)
+			assign_owner(request_id = request_id, reason = "Closed request.", email = current_user.email, alias = current_user.alias, phone = current_user.phone, notify = False)
 	change_request_status(request_id, "Closed. %s" %reason)
 	send_prr_email(request_id = request_id, notification_type = "Request closed", requester_id = get_requester(request_id))
 
@@ -202,7 +202,7 @@ def get_requester(request_id):
 	for subscriber in subscribers:
 		return subscriber['id'] # Return first one for now
 
-def assign_owner(request_id, reason, email = None, alias = None, phone = None): 
+def assign_owner(request_id, reason, email = None, alias = None, phone = None, notify = True): 
 	""" Called any time a new owner is assigned. This will overwrite the current owner."""
 	user = create_or_return_user(email = email, alias = alias, phone = phone)
 	req = get_resource("request", request_id)
@@ -222,7 +222,8 @@ def assign_owner(request_id, reason, email = None, alias = None, phone = None):
 	else:
 		past_owner_id = None
 	put_resource("request", dict(current_owner = new_owner['id']) ,int(request_id))
-	send_prr_email(request_id = request_id, notification_type = "Request assigned", owner_id = new_owner['id'])
+	if notify:
+		send_prr_email(request_id = request_id, notification_type = "Request assigned", owner_id = new_owner['id'])
 	return past_owner_id, new_owner['id']
 
 def change_request_status(request_id, status):
