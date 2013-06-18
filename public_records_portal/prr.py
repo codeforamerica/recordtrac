@@ -228,6 +228,12 @@ def assign_owner(request_id, reason, email = None, alias = None, phone = None):
 def change_request_status(request_id, status):
 	return put_resource("request", dict(status = status, status_updated = datetime.now().isoformat()),int(request_id))
 
+def is_request_open(request_id):
+	req = get_resource("request", request_id)
+	if req['status'] and 'Closed' in req['status']:
+		return False
+	return True
+
 def progress(bytes_sent, bytes_total):
     print("%s of %s (%s%%)" % (bytes_sent, bytes_total, bytes_sent*100/bytes_total))
 

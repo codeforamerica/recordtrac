@@ -6,6 +6,7 @@ import os
 # Filters
 
 app.jinja_env.filters['get_requester'] = get_requester
+app.jinja_env.filters['is_request_open'] = is_request_open
 
 @app.template_filter('date')
 def date(obj):
