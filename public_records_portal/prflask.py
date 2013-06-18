@@ -43,6 +43,8 @@ def new_request():
 		current_user_id = current_user.id
 	if request.method == 'POST':
 		request_text = request.form['request_text']
+		if request_text == "":
+			return render_template('error.html', message = "You cannot submit an empty request.")
 		email = request.form['request_email']
 		alias = None
 		phone = None
@@ -92,17 +94,17 @@ def add_a_resource(resource):
 		if message == True:
 			return show_request(request.form['request_id'], template = "manage_request_city.html")
 		elif message == False:
-			return render_template('error.html', message = message)
+			return render_template('error.html')
 		else:
 			return render_template('help_with_uploads.html', message = message)
-	return render_template('error.html', message = "You can only add a %s from a request page!" %resource)
+	return render_template('error.html', message = "You can only update requests from a request page!")
 
 @app.route('/update_a_<string:resource>', methods=['GET', 'POST'])
 def update_a_resource(resource):
 	if request.method == 'POST':
 		update_resource(resource, request)
 		return show_request(request.form['request_id'], template = "case.html")
-	return render_template('error.html', message = "You can only add a %s from a request page!" %resource)
+	return render_template('error.html', message = "You can only update requests from a request page!")
 
 # Closing is specific to a case, so this only gets called from a case (that only city staff have a view of)
 @app.route('/close', methods=['POST'])
