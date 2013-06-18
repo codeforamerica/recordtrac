@@ -62,6 +62,7 @@
                   {% if user_id %}
                     Requester hasn't answered yet.
                   {% else %}
+                    {% if (req.id | is_request_open) %}
                       <!-- respond to a question -->
                         <form name="respond_question" class="form-horizontal" id="answer" method="post" action="/update_a_qa" autocomplete="on">
                           <fieldset> 
@@ -78,6 +79,7 @@
                             </div>
                           </fieldset>
                         </form>
+                        {% endif %}
                       {% endif %}
                 {% endif %}
               </div>
