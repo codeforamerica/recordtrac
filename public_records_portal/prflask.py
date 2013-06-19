@@ -148,18 +148,6 @@ def unauthorized():
 def show_test():
 	return render_template('test.html')
 
-# # Admin page
-# @app.route('/admin', methods=['GET', 'POST'])
-# @login_required
-# def admin():
-# 	email = filters.user_name(current_user.id)
-# 	if email != "an email":
-# 		return index()
-# 	if request.method == 'POST':
-# 		# DO STUFF
-# 	else:
-# 		return render_template('admin.html')
-
 @app.route('/<page>')
 def any_page(page):
 	current_user_id = None
@@ -186,7 +174,7 @@ def login(email=None, password=None):
 				user_for_login = models.User.query.get(user.id)
 				login_user(user_for_login)
 				return index()
-	return index() # TODO: Give feedback
+	return render_template('error.html', message = "Oops, your e-mail/ password combo didn't work.") 
 
 @app.route("/logout")
 def logout():
