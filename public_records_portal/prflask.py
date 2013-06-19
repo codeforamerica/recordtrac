@@ -66,12 +66,6 @@ def new_request():
 def show_request_for_x(audience, request_id):
 	return show_request(request_id = request_id, template = "manage_request_%s.html" %(audience))
 
-
-@app.route('/r/<int:request_id>')
-def show(request_id):
-	req = Request.query.get(request_id)
-	return render_template("case.html", req = req)
-
 @app.route('/request/<int:request_id>')
 def show_request(request_id, template = None, record_uploaded = None, for_email_notification = False, banner_msg = None):
 	req = get_resource("request", request_id)
@@ -92,7 +86,7 @@ def add_a_resource(resource):
 	if request.method == 'POST':
 		message = add_resource(resource = resource, request_body = request, current_user_id = current_user.id)
 		if message == True:
-			return show_request(request.form['request_id'], template = "manage_request_city.html")
+			return redirect(url_for('show_request_for_x', audience='city', request_id = request.form['request_id']))
 		elif message == False:
 			return render_template('error.html')
 		else:
@@ -103,7 +97,10 @@ def add_a_resource(resource):
 def update_a_resource(resource):
 	if request.method == 'POST':
 		update_resource(resource, request)
-		return show_request(request.form['request_id'], template = "case.html")
+		if current_user.is_anonymous() == False:
+			return redirect(url_for('show_request_for_x', audience='city', request_id = request.form['request_id']))
+		else:
+			return redirect(url_for('show_request', request_id = request.form['request_id']))
 	return render_template('error.html', message = "You can only update requests from a request page!")
 
 # Closing is specific to a case, so this only gets called from a case (that only city staff have a view of)
