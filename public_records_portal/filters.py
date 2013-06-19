@@ -131,7 +131,7 @@ def directory(oid):
 		email = user_email(uid)
 		print email
 		if email:
-			dir_json = open(os.path.join(app.root_path, 'directory.json'))
+			dir_json = open(os.path.join(app.root_path, 'static/directory.json'))
 			json_data = json.load(dir_json)
 			for line in json_data:
 				if line['EMAIL_ADDRESS'] == email:
