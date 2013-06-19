@@ -50,6 +50,13 @@ def owner_name(oid):
 			return user_name(owner['user_id'])
 	return "Owner"
 
+def owner_uid(oid):
+	if oid:
+		owner = get_resource("owner", oid)
+		if owner and owner['user_id']:
+			return owner['user_id']
+	return None
+
 @app.template_filter('subscriber_name')
 def subscriber_name(sid):
 	if sid:
@@ -84,6 +91,13 @@ def user_name(uid):
 			return user.email
 	return None
 
+def user_email(uid):
+	if uid:
+		user = User.query.get(uid)
+		if user:
+			return user.email
+	return None
+
 def user_alias(uid):
 	if uid:
 		user = User.query.get(uid)
@@ -109,3 +123,19 @@ def explain_action(action, explanation_type = None):
 		if 'Action' in explanation:
 			explanation_str = explanation_str + " " + explanation['Action']
 		return explanation_str
+
+@app.template_filter('directory')
+def directory(oid):
+	uid = owner_uid(oid)
+	if uid:
+		email = user_email(uid)
+		print email
+		if email:
+			dir_json = open(os.path.join(app.root_path, 'directory.json'))
+			json_data = json.load(dir_json)
+			for line in json_data:
+				if line['EMAIL_ADDRESS'] == email:
+					last, first = line['FULL_NAME'].split(",")
+					return "%s %s, %s" % (first, last, line['JOB_TITLE'])
+	return None
+
