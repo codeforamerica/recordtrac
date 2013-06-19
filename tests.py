@@ -24,7 +24,7 @@ class PublicRecordsTestCase(unittest.TestCase):
 	def test_route_request(self):
 		self.login('richa@codeforamerica.org', app.config['ADMIN_PASSWORD'])
 		reason = self.random_content('reason')
-		fields = dict(request_id = 33, owner_email = "richa@codeforamerica.org", owner_reason = reason)
+		fields = dict(request_id = 5, owner_email = "richa@codeforamerica.org", owner_reason = reason)
 		page = self.submit_generic(fields = fields, endpoint = "update_a_owner")
 		self.logout()
 		assert reason in page.data
@@ -65,21 +65,21 @@ class PublicRecordsTestCase(unittest.TestCase):
 	def test_ask_question(self):
 		self.login('richa@codeforamerica.org', app.config['ADMIN_PASSWORD'])
 		question = self.random_content('question')
-		fields = dict(request_id = 33, question_text = question)
+		fields = dict(request_id = 5, question_text = question)
 		page = self.submit_generic(fields = fields, endpoint = "add_a_qa")
 		self.logout()
 		assert question in page.data
 
 	def test_answer_question(self):
 		answer = self.random_content('answer')
-		fields = dict(request_id = 33, qa_id = 26, user_id = 2, answer_text = answer)
+		fields = dict(request_id = 5, qa_id = 15, user_id = 2, answer_text = answer)
 		page = self.submit_generic(fields = fields, endpoint = "update_a_qa")
 		assert answer in page.data
 
 	def test_add_note(self):
 		self.login('richa@codeforamerica.org', app.config['ADMIN_PASSWORD'])
 		note_text = self.random_content('note')
-		fields = dict(request_id = 33, note_text = note_text)
+		fields = dict(request_id = 5, note_text = note_text)
 		page = self.submit_generic(fields = fields, endpoint = "add_a_note")
 		self.logout()
 		assert note_text in page.data
@@ -88,7 +88,7 @@ class PublicRecordsTestCase(unittest.TestCase):
 		self.login('richa@codeforamerica.org', app.config['ADMIN_PASSWORD'])
 		record_description = self.random_content('record description')
 		record_access = self.random_content('record access')
-		fields = dict(request_id = 33, record_description = record_description, record_access = record_access)
+		fields = dict(request_id = 5, record_description = record_description, record_access = record_access)
 		page = self.submit_generic(fields = fields, endpoint = "add_a_record")
 		self.logout()
 		assert record_access in page.data
@@ -97,7 +97,7 @@ class PublicRecordsTestCase(unittest.TestCase):
 		self.login('richa@codeforamerica.org', app.config['ADMIN_PASSWORD'])
 		link_description = self.random_content('link description')
 		link_url = 'http://www.google.com'
-		fields = dict(request_id = 33, record_description = link_description, link_url = link_url)
+		fields = dict(request_id = 5, record_description = link_description, link_url = link_url)
 		page = self.submit_generic(fields = fields, endpoint = "add_a_record")
 		self.logout()
 		assert link_description in page.data
@@ -105,7 +105,7 @@ class PublicRecordsTestCase(unittest.TestCase):
 	def test_close_request(self):
 		self.login('richa@codeforamerica.org', app.config['ADMIN_PASSWORD'])
 		close_reason = self.random_content('close reason')
-		fields = dict(request_id = 33, close_reason = close_reason)
+		fields = dict(request_id = 4, close_reason = close_reason)
 		page = self.submit_generic(fields = fields, endpoint = "close")
 		self.logout()
 		assert close_reason in page.data
@@ -113,7 +113,7 @@ class PublicRecordsTestCase(unittest.TestCase):
 	def test_submit_duplicate_request(self):
 		request = 'this is a duplicate request'
 		page = self.submit_request('richa@richa.com', request)
-		assert 'You broke the internet' in page.data
+		assert 'Your request is the same as' in page.data
 
 	def test_all_requests_logged_in(self):
 		self.login('richa@codeforamerica.org', app.config['ADMIN_PASSWORD'])
@@ -128,7 +128,7 @@ class PublicRecordsTestCase(unittest.TestCase):
 	def test_reroute_owner(self):
 		self.login('richa@codeforamerica.org', app.config['ADMIN_PASSWORD'])
 		reroute_reason = self.random_content('reroute reason')
-		fields = dict(request_id = 73, owner_reason = reroute_reason, owner_email = "richa@codeforamerica.org")
+		fields = dict(request_id = 5, owner_reason = reroute_reason, owner_email = "richa@codeforamerica.org")
 		page = self.submit_generic(fields = fields, endpoint = "update_a_owner")
 		self.logout()
 		assert reroute_reason in page.data
