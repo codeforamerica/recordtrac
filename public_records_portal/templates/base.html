@@ -128,7 +128,9 @@
     <script type="text/javascript" src="{{ url_for('static', filename='jquery.dataTables.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='custom.dataTables.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='DT_bootstrap.js') }}"></script>
-   
+    
+    {% block bottom_script %}
+    {% endblock bottom_script %}
 
   </body>
 </html>
