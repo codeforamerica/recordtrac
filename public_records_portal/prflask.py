@@ -176,6 +176,23 @@ def login(email=None, password=None):
 				return index()
 	return render_template('error.html', message = "Oops, your e-mail/ password combo didn't work.") 
 
+@app.route("/update_password", methods=["GET", "POST"])
+@login_required
+def update_password(password=None):
+	current_user_id = current_user.id
+	if request.method == 'POST':
+		try:
+			password = request.form['password']
+			user = models.User.query.get(current_user_id)
+			user.password = password
+			db.session.add(user)
+			db.session.commit()
+			return index()
+		except:
+			return render_template('error.html', message = "Something went wrong updating your password.")
+	else:
+		return render_template('update_password.html', user_id = current_user_id)
+
 @app.route("/logout")
 def logout():
 	logout_user()
