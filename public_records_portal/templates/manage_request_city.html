@@ -3,89 +3,68 @@
 {% extends "case.html" %}
 {% block title %}Request {{ req.id }}{% endblock %}
 {% block head %} {% endblock head %}
-{% block request %}
-<small>{% if req.creator_id %}
-        <div>This request was submitted on behalf of the requester by {{ req.creator_id | user_name }}.</div> 
-        {% endif %}
-<div>Requester's name: {{ (req.id | get_requester) | subscriber_name }} and phone number: {{ (req.id | get_requester) | subscriber_phone }}</div></small>
-{{ super() }}
-          <!-- ask a question -->
-      <form name="ask_question" class="form-horizontal" id="question" method="post" action="/add_a_qa" autocomplete="on">
-        <fieldset> 
-          <div class="row-fluid">
-            <!-- <div class="span4"> -->
-              <h4>Ask a question about this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
-            <!-- </div> -->
-            <div>
-
+{% block status %}
+    <div class="pull-right">
+      {% block routing %}
+        Routed to  
+        <div class="btn-group">
+          <div><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{req.current_owner | owner_name}} <span class="caret"></span> </a></div>
+          <div id="reroutePopover-head" class="hide">Reassign to:</div>
+          <div id="reroutePopover-content" class="hide">              
+            <form id="rerouteForm" class="form-inline" method ="post" action="/update_a_owner">
+              <!-- my form -->
               <div class="control-group">
-                <label class="control-label">Question</label>
-                <div class="row-fluid">
-                  <div class="controls">
-                      <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                      <input id="questionTextarea" type="text" name="question_text" rows="3" cols="20" placeholder="Ask the requester a question" required/>
-                    <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
-                  </div>
+                <div class="controls">
+                  <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                  <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" required />
+                  <input id="rerouteReason" type="text" name="owner_reason" placeholder="Say why." required />
+                  <button id="rerouteButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
                 </div>
               </div>
-
-            </div>
+            </form>
           </div>
-        </fieldset>
-      </form>
-{% endblock request %}
-{% block status %} 
-  <div class="row-fluid">
-    <!-- popover -->
+        </div>
+      {% endblock routing %}
+      {% block history %}
+        {{ super() }}
+      {% endblock history %}
+    </div>
+  {% endblock status %}
 
-    <div class="pull-right">
-      Routed to  
-      <div class="btn-group">
-        <div><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{req.current_owner | owner_name}} <span class="caret"></span> </a></div>
-        <div id="reroutePopover-head" class="hide">Reassign to:</div>
-        <div id="reroutePopover-content" class="hide">              
-          <form id="rerouteForm" class="form-inline" method ="post" action="/update_a_owner">
-            <!-- my form -->
-            <div class="control-group">
-              <div class="controls">
-                <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" required />
-                <input id="rerouteReason" type="text" name="owner_reason" placeholder="Say why." required />
-                <button id="rerouteButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
+  {% block request %}
+  <small>{% if req.creator_id %}
+          <div>This request was submitted on behalf of the requester by {{ req.creator_id | user_name }}.</div> 
+          {% endif %}
+  <div>Requester's name: {{ (req.id | get_requester) | subscriber_name }} and phone number: {{ (req.id | get_requester) | subscriber_phone }}</div></small>
+  {{ super() }}
+            <!-- ask a question -->
+        <form name="ask_question" class="form-horizontal" id="question" method="post" action="/add_a_qa" autocomplete="on">
+          <fieldset> 
+            <div class="row-fluid">
+              <!-- <div class="span4"> -->
+                <h4>Ask a question about this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
+              <!-- </div> -->
+              <div>
+
+                <div class="control-group">
+                  <label class="control-label">Question</label>
+                  <div class="row-fluid">
+                    <div class="controls">
+                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                        <input id="questionTextarea" type="text" name="question_text" rows="3" cols="20" placeholder="Ask the requester a question" required/>
+                      <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
-          </form>
-        </div>
-      </div>
-      <a data-placement="left" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"> <i class="icon-time"></i>  </a>
-      <div id="historyPopover-head" class="hide">Routing history</div>
-      <div id="historyPopover-content" class="hide">              
-        <table class="table table-condensed">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th></th>
-              <th>To</th>
-              <th>Note</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- the order of data returned here should be reverse chronological (right now it's shown as oldest first)-->
-            {% for owner in req.owners %}
-              <tr>
-                <td>{{ owner.date_created | date }}</td>
-                <td><i class="icon-circle-arrow-right"></i></td>
-                <td>{{ owner.id | owner_name }}</td>
-                <td>{{ owner.reason }}</td>
-              </tr>              
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+          </fieldset>
+        </form>
+  {% endblock request %}
+
+    
           
-{% endblock status %}
 
 {% block actions %}
   <form name="input_doc" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data">
