@@ -191,6 +191,7 @@ def close_request(request_id, reason = ""):
 		if current_user.id != current_owner['user_id']:
 			assign_owner(request_id = request_id, reason = "Closed request.", email = current_user.email, alias = current_user.alias, phone = current_user.phone, notify = False)
 	change_request_status(request_id, "Closed. %s" %reason)
+	# closed = create_resource("note", dict(request_id = request_id, text = reason, user_id = user_id))
 	send_prr_email(request_id = request_id, notification_type = "Request closed", requester_id = get_requester(request_id))
 
 def get_subscribers(request_id):
@@ -312,7 +313,7 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 	email_address = get_user_email(uid)
 	if email_address:
 		try:
-			if app.config['ENVIRONMENT'] != "LOCAL":
+			if app.config['ENVIRONMENT'] == "PRODUCTION":
 				send_email(render_template("generic_email.html", page = page), email_address, email_subject)
 			else:
 				print "%s to %s with subject %s" % (render_template("generic_email.html", page = page), email_address, email_subject)
