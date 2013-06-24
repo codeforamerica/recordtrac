@@ -59,11 +59,16 @@
               <p class="lead"> {{ req.text }} </p>
           </div>
         </div>
+      {% block requester_info %}
+      {% endblock requester_info %}
+      {% endblock request %}
 
+      {% block qas %}
         <!-- shows any existing Q&A -->
         {% if req.qas %}
           <div class="row-fluid">
             {% for qa in req.qas %}
+            {% set qa_id = qa.id %}
               <div class="row-fluid response">
                 <div class="span2 text-center">
                   <i class="icon-question icon-2x">  </i> </br>
@@ -74,28 +79,8 @@
                   {% if qa.answer %}
                     <p>{{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></p>
                   {% else %}
-                    {% if user_id %}
-                      Requester hasn't answered yet.
-                    {% else %}
-                      {% if (req.id | is_request_open) %}
-                        <!-- respond to a question -->
-                          <form name="respond_question" class="form-horizontal" id="answer" method="post" action="/update_a_qa" autocomplete="on">
-                            <fieldset> 
-                              <div class="row-fluid">
-                                <!-- <div class="control-group span8"> -->
-                                  <label class="control-label">Answer</label>
-                                    <div class="controls">
-                                      <input type="hidden" name="qa_id" value="{{ qa.id }}"/>
-                                      <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                                      <textarea id="answerTextarea" name="answer_text" type="text" rows="3" cols="20" placeholder="Can you respond to the above question?" required/></textarea>
-                                      <button id="askQuestion" class="btn btn-primary" type="submit">Respond</button>
-                                    </div>
-                                <!-- </div> -->
-                              </div>
-                            </fieldset>
-                          </form>
-                          {% endif %}
-                        {% endif %}
+                    {% block answer %}
+                    {% endblock answer %}
                   {% endif %}
                 </div>
               </div>
@@ -103,7 +88,10 @@
           </div>
         {% endif %}
 
-      {% endblock request %}
+      {% endblock qas %}
+
+      {% block clarify_request %}
+      {% endblock clarify_request %}
 
       {% block response %}
 

@@ -31,12 +31,18 @@
     </div>
   {% endblock status %}
 
-  {% block request %}
+  {% block requester_info %}
   <small>{% if req.creator_id %}
           <div>This request was submitted on behalf of the requester by {{ req.creator_id | user_name }}.</div> 
           {% endif %}
   <div>Requester's name: {{ (req.id | get_requester) | subscriber_name }} and phone number: {{ (req.id | get_requester) | subscriber_phone }}</div></small>
-  {{ super() }}
+  {% endblock requester_info %}
+
+  {% block answer %}
+    Requester hasn't answered yet.
+  {% endblock answer %}
+
+  {% block clarify_request %}
             <!-- ask a question -->
         <form name="ask_question" class="form-horizontal" id="question" method="post" action="/add_a_qa" autocomplete="on">
           <fieldset> 
@@ -61,7 +67,7 @@
             </div>
           </fieldset>
         </form>
-  {% endblock request %}
+  {% endblock clarify_request %}
 
     
           
