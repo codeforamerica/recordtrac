@@ -169,16 +169,40 @@
           <label class="control-label">Reason</label>
             <div class="controls">
             <select name="close_reason">
-            <option>Fulfilled</option>
-            <option>Not a public records request</option>
-            <option>Do not have this record</option>
-            <option>Can Not Release - Personal Files</option>
-            <option>Can Not Release - Ongoing Litigation</option>
-            <option>Can Not Release - Investigative Reports</option>
-            <option>Can Not Release - Finances</option>
-            <option>Requester Not Interested</option>
+              <option>Fulfilled</option>
+              <option>Not a public records request</option>
+              <option>Do not have this record</option>
+              <option>Can Not Release - Personal Files</option>
+              <option>Can Not Release - Ongoing Litigation</option>
+              <option>Can Not Release - Investigative Reports</option>
+              <option>Can Not Release - Finances</option>
+              <option>Requester Not Interested</option>
             </select>
-              <button type="submit" class="btn btn-inverse">Close this request</button>
+              <!-- <button type="submit" class="btn btn-inverse">Close this request</button> -->
+              <!-- Button to trigger modal -->
+              <a href="#closeModal" role="button" class="btn btn-inverse" data-toggle="modal">Close request...</a>
+               
+              <!-- Modal -->
+              <div id="closeModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="closeModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                  <h3 id="closeModalLabel">Reason for closing</h3>
+                </div>
+                <form>
+                  <div class="modal-body">
+                    <!-- NOTE: need to remove the line breaks in the CODE in textarea in order to remove the funky indentation -->
+                    <textarea class="input-block-level" rows="10">
+                      for loop starts here
+                        <p>returns copy here</p>
+                      and ends here
+                    </textarea>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    <button type="submit" class="btn btn-inverse">Close this request</button>
+                  </div>
+                </form>
+              </div>
             </div>
         </div>
     </div>
