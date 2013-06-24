@@ -2,37 +2,37 @@
     "Ask a question": 
         {
             "What":"Use this space to ask a question about this particular public records request to will help you understand what the requester needs.",
-            "Who":"Members of the general public will be able to view this question.",
+            "Who":"Members of the general public will be able to view this question online.",
             "Action":"The question will be posted here and the requester will be notified via email that a question has been posted."
         },
     "Add a note": 
         {
             "What":"Use this section to communicate with the requester about this particular records request.",
-            "Who":"Members of the general public will be able to view this message.",
+            "Who":"Members of the general public will be able to view this message online.",
             "Action":"This message will be posted online and the requester will be notified by email of this message."
         },
-      "Enter records request": 
+    "Enter records request": 
         {
             "What":"Describe the documents or information you would like to obtain from the City of Oakland. Please be as detailed as possible.",
-            "Who":"Members of the general public will be able to view this message.",
+            "Who":"Members of the general public will be able to view this message online.",
             "Action":"The message will be immediately posted online. An email will be automatically sent to the Open Government Coordinator alerting them a request was made."
         },
     "Enter email address": 
         {
             "What":"This is not a required field. Use this space to enter your email address.",
-            "Who":"No one will be able to view your email address.",
+            "Who":"No one will be able to view your email address through this website.",
             "Action":"This address will be used to send you updates about your public records requests and notify you when it has been fulfilled. If you do not provide an email address, you will have to check the website to understand what is happening with your public records request."
         },
     "Enter name": 
         {
             "What":"Optional",
-            "Who":"Only City of Oakland employees will be able to view your name.",
+            "Who":"Only City of Oakland employees will be able to view your name through this website.",
             "Action":"This name will be used to address you if a city employee needs to call you about your records request."
         },
    "Enter phone number": 
         {
             "What":"Optional",
-            "Who":"Only City of Oakland employees will be able to view your phone number.",
+            "Who":"Only City of Oakland employees will be able to view your phone number through this website.",
             "Action":"A City employee may use this number to contact you about your records request."
         },
     "Upload a document": 
@@ -80,6 +80,12 @@
     "Close a request": 
         {
             "What":"You can close a request by selecting one of the reasons listed in the dropdown. If you would like to provide the requester with more information, please add a note.",
+            "Who":"Members of the general public will be able to view this message.",
+            "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
+        },
+    "Generic Response": 
+        {
+            "What":"The City of Oakland has the documents you requested. Copies of the documents will be sent to you by the following date: .",
             "Who":"Members of the general public will be able to view this message.",
             "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
