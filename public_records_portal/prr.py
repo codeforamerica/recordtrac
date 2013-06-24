@@ -36,7 +36,10 @@ def get_resource(resource, resource_id, url = None):
 def get_resource_filter(resource, filters, url = None, order_by = None):
 	url = app_url
 	headers = {'Content-Type': 'application/json'}
-	params = dict(q=json.dumps(dict(filters=filters, order_by = order_by)))
+	if order_by:
+		params = dict(q=json.dumps(dict(filters=filters, order_by = order_by)))
+	else:
+		params = dict(q=json.dumps(dict(filters=filters)))
 	r = seaturtle.get("%s/api/%s" %(url, resource), params=params, headers = headers)
 	if r:
 		return r.json()
