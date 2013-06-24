@@ -10,13 +10,12 @@
         {% block status %}
           <div class="text-right">
             {% block routing %}
-              Routed to <span class="label label-info">{{req.current_owner | owner_name}} </span> 
-              <a data-placement="left" data-toggle="popover" href="#" class="hidden-phone hidden-tablet"> Routed to <span class="label label-info">{{req.current_owner | owner_name}} </span>   </a>
-              <div id="routingPopover-head" class="hide">Contact information</div>
-              <div id="routingPopover-content" class="hide">
-                <p>one</p>
-                <p>two</p>
-                <p>three</p>
+              Routed to <a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopover" class="hidden-phone hidden-tablet"><span class="label label-info">{{req.current_owner | owner_name}} </span></a>
+              <div id="contactinfoPopover-head" class="hide">Contact information</div>
+              <div id="contactinfoPopover-content" class="hide">
+                <p class="tight_paragraph"><span class="muted">Department:</span> [Department]</p>
+                <p class="tight_paragraph"><span class="muted">Email:</span> [Email]</p>
+                <p class="tight_paragraph"><span class="muted">Phone:</span> [Phone]</p>
               </div>
             {% endblock routing %}
             {% block history %}
