@@ -166,21 +166,24 @@
     <div class="row-fluid">
         <h4>Close this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
         <div class="control-group">
+
           <label class="control-label">Reason</label>
             <div class="controls">
-            <select name="close_reason">
-              <option>Fulfilled</option>
-              <option>Not a public records request</option>
-              <option>Do not have this record</option>
-              <option>Can Not Release - Personal Files</option>
-              <option>Can Not Release - Ongoing Litigation</option>
-              <option>Can Not Release - Investigative Reports</option>
-              <option>Can Not Release - Finances</option>
-              <option>Requester Not Interested</option>
-            </select>
+              <select name="close_reason" multiple="multiple">
+                <option>Fulfilled</option>
+                <option>Not a public records request</option>
+                <option>Do not have this record</option>
+                <option>Can Not Release - Personal Files</option>
+                <option>Can Not Release - Ongoing Litigation</option>
+                <option>Can Not Release - Investigative Reports</option>
+                <option>Can Not Release - Finances</option>
+                <option>Requester Not Interested</option>
+              </select>
+
               <!-- <button type="submit" class="btn btn-inverse">Close this request</button> -->
               <!-- Button to trigger modal -->
               <a href="#closeModal" role="button" class="btn btn-inverse" data-toggle="modal">Close request...</a>
+              <p class="help-block">You can select multiple reasons by using Ctrl (Win) or ⌘ (Mac).</p>
                
               <!-- Modal -->
               <div id="closeModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="closeModalLabel" aria-hidden="true">
