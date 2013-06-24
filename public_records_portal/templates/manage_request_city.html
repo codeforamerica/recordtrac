@@ -137,8 +137,13 @@
               </div>
             </div>
           </div>
+        <div class="control-group">
+          <div class="controls">
+            <button type="submit" class="btn btn-primary">Add record</button>
+          </div>
+        </div>
       </div>
-      <button type="submit" class="btn btn-primary">Add record</button>
+      
     </fieldset>
   </form>
 
@@ -149,14 +154,16 @@
         <h4>Add a note</h4>
         <div class="control-group">
           <label class="control-label">Note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
-          <div class="row-fluid">
-            <div class="controls">
-              <input type="text" class="input-xlarge" id="noteTextarea" name="note_text" rows="3" placeholder="Anything else the requester should know."required/>
-            </div>
+          <div class="controls">
+            <input type="text" class="input-xlarge" id="noteTextarea" name="note_text" rows="3" placeholder="Anything else the requester should know."required/>
+          </div>
+        </div>
+        <div class="control-group">
+          <div class="controls">
+            <button type="submit" class="btn btn-primary">Add note</button>
           </div>
         </div>
     </div>
-     <button type="submit" class="btn btn-primary">Add note</button>
   </fieldset>
 </form>
 
@@ -169,7 +176,7 @@
 
           <label class="control-label">Reason</label>
             <div class="controls">
-              <select name="close_reason" multiple="multiple">
+              <select name="close_reason" multiple="multiple" required>
                 <option>Fulfilled</option>
                 <option>Not a public records request</option>
                 <option>Do not have this record</option>
@@ -179,11 +186,13 @@
                 <option>Can Not Release - Finances</option>
                 <option>Requester Not Interested</option>
               </select>
-
-              <!-- <button type="submit" class="btn btn-inverse">Close this request</button> -->
+              <p class="help-block">You can select multiple reasons by using Ctrl (Win) or ⌘ (Mac).</p>
+            </div>
+        </div>
+        <div class="control-group">
+          <div class="controls">
               <!-- Button to trigger modal -->
               <a href="#closeModal" role="button" class="btn btn-inverse" data-toggle="modal">Close request...</a>
-              <p class="help-block">You can select multiple reasons by using Ctrl (Win) or ⌘ (Mac).</p>
                
               <!-- Modal -->
               <div id="closeModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="closeModalLabel" aria-hidden="true">
