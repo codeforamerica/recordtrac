@@ -20,6 +20,11 @@
 margin: 0 0 0px;
 }
 
+/* tighter paragraphs */
+.tight_paragraph {
+	margin-bottom: 0;
+}
+
 
 /* new request form field explanations */
 .request_field_explanation {
