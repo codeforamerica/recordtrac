@@ -33,10 +33,10 @@ def get_resource(resource, resource_id, url = None):
 		return r.json()
 	return None
 
-def get_resource_filter(resource, filters, url = None):
+def get_resource_filter(resource, filters, url = None, order_by = None):
 	url = app_url
 	headers = {'Content-Type': 'application/json'}
-	params = dict(q=json.dumps(dict(filters=filters)))
+	params = dict(q=json.dumps(dict(filters=filters, order_by = order_by)))
 	r = seaturtle.get("%s/api/%s" %(url, resource), params=params, headers = headers)
 	if r:
 		return r.json()
@@ -181,17 +181,21 @@ def create_or_return_user(email, alias = None, phone = None):
 	db.session.commit()
 	return user
 
+def last_note(request_id):
+	notes = get_resource_filter(resource = "note", filters= [dict(name='request_id', op='eq', val=request_id)], order_by = [dict(field="date_created", direction="desc")])
+	return notes['objects'][0]
+
 def open_request(request_id):
 	change_request_status(request_id, "Open")
 
 def close_request(request_id, reason = ""):
 	req = get_resource("request", request_id)
-	if current_user.is_anonymous() == False:
-		current_owner = get_resource("owner", req['current_owner'])
-		if current_user.id != current_owner['user_id']:
-			assign_owner(request_id = request_id, reason = "Closed request.", email = current_user.email, alias = current_user.alias, phone = current_user.phone, notify = False)
-	change_request_status(request_id, "Closed. %s" %reason)
-	# closed = create_resource("note", dict(request_id = request_id, text = reason, user_id = user_id))
+	current_owner = get_resource("owner", req['current_owner'])
+	# if current_user.id != current_owner['user_id']:
+	# 	assign_owner(request_id = request_id, reason = "Closed request.", email = current_user.email, alias = current_user.alias, phone = current_user.phone, notify = False)
+	change_request_status(request_id, "Closed")
+	# Create a note to capture closed information:
+	create_resource("note", dict(request_id = request_id, text = reason, user_id = current_user.id))
 	send_prr_email(request_id = request_id, notification_type = "Request closed", requester_id = get_requester(request_id))
 
 def get_subscribers(request_id):
