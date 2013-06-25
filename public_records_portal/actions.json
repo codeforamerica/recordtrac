@@ -109,7 +109,13 @@
         },
     "Fulfilled": 
         {
-            "What":"The City released all of the requested documents to the public. Anyone can now view the documents online.",
+            "What":"The City released all of the requested documents to the public.",
+            "Who":"Members of the general public will be able to view this message.",
+            "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
+        },
+    "Not a public records request": 
+        {
+            "What":"The request was not for a specific public record.  It was most likely a general information request.  Please visit Oakland Answers for general information.",
             "Who":"Members of the general public will be able to view this message.",
             "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
@@ -121,7 +127,7 @@
         },
     "Record Does Not Exist": 
         {
-            "What":"The record you asked for does not exist.",
+            "What":"The record you asked for does not exist or can not be located.",
             "Who":"Members of the general public will be able to view this message.",
             "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
@@ -133,7 +139,7 @@
         },
     "Can Not Release - Personal Files": 
         {
-            "What":"The California Public Records Act prohibits the City from releasing an individual’s employment, medical,  or similar files to protect their privacy (Government Code Section 6254(c)).",
+            "What":"The California Public Records Act prohibits the City from releasing an individual’s employment, medical, or similar files to protect their privacy (Government Code Section 6254(c)).",
             "Who":"Members of the general public will be able to view this message.",
             "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
