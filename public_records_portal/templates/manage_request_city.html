@@ -31,11 +31,13 @@
     </div>
   {% endblock status %}
 
+  {% block proxyrequester_info %}
+    {{ super() }}
+  {% endblock proxyrequester_info %}
   {% block requester_info %}
-  <small>{% if req.creator_id %}
-          <div>This request was submitted on behalf of the requester by {{ req.creator_id | user_name }}.</div> 
-          {% endif %}
-  <div>Requester's name: {{ (req.id | get_requester) | subscriber_name }} and phone number: {{ (req.id | get_requester) | subscriber_phone }}</div></small>
+    <small>
+      <span> Requester's name: {{ (req.id | get_requester) | subscriber_name }} and phone number: {{ (req.id | get_requester) | subscriber_phone }}</span>
+    </small>
   {% endblock requester_info %}
 
   {% block answer %}
