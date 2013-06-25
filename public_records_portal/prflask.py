@@ -74,8 +74,11 @@ def show_request(request_id, template = None, record_uploaded = None, for_email_
 	current_user_id = None
 	if current_user.is_anonymous() == False:
 		current_user_id = current_user.id
-	if not template:
-		template = "case.html"
+	if template:
+		if "city" in template and not current_user_id:
+			return render_template('alpha.html')
+	else:
+		template = "manage_request_public.html"
 	if req['status'] and "Closed" in req['status']:
 		template = "closed.html"
 	return render_template(template, req = req, for_email_notification = for_email_notification, record_uploaded = record_uploaded, banner_msg = banner_msg, user_id = current_user_id)
