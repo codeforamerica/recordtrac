@@ -176,15 +176,15 @@
 
         <label class="control-label">Reason</label>
           <div class="controls">
-            <select name="close_reason" multiple="multiple" required>
-              <option>Fulfilled</option>
-              <option>Not a public records request</option>
-              <option>Do not have this record</option>
-              <option>Can Not Release - Personal Files</option>
-              <option>Can Not Release - Ongoing Litigation</option>
-              <option>Can Not Release - Investigative Reports</option>
-              <option>Can Not Release - Finances</option>
-              <option>Requester Not Interested</option>
+            <select id="close_reason" name="close_reason" multiple="multiple" required>
+              <option value="{{"Fulfilled" | explain_action("What")}}">Fulfilled</option>
+              <option value="{{"Not a public records request" | explain_action("What")}}">Not a public records request</option>
+              <option value="{{"Record Does Not Exist" | explain_action("What")}}">Do not have this record</option>
+              <option value="{{"Can Not Release - Personal Files" | explain_action("What")}}">Can Not Release - Privacy</option>
+              <option value="{{"Can Not Release - Ongoing Litigation" | explain_action("What")}}">Can Not Release - Ongoing Litigation</option>
+              <option value="{{"Can Not Release - Investigative Reports" | explain_action("What")}}">Can Not Release - Investigative Reports</option>
+              <option value="{{"Can Not Release - Finances" | explain_action("What")}}">Can Not Release - Finances</option>
+              <option value="{{"Requester Not Interested" | explain_action("What")}}">Requester Not Interested</option>
             </select>
             <p class="help-block">You can select multiple reasons by using Ctrl (Win) or ⌘ (Mac).</p>
           </div>
@@ -202,15 +202,11 @@
             </div>
             <div class="modal-body">
               <!-- NOTE: need to remove the line breaks in the CODE in textarea in order to remove the funky indentation -->
-              <textarea class="input-block-level" rows="10">
-                for loop starts here
-                  <p>returns copy here</p>
-                and ends here
-              </textarea>
+              <textarea id="closeTextarea" class="input-block-level" rows="10"></textarea>
             </div>
             <div class="modal-footer">
               <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-              <button type="submit" class="btn btn-inverse">Close this request</button>
+              <button id="closeButton" type="submit" class="btn btn-inverse">Close this request</button>
             </div>
           </div>
         </div>
@@ -222,6 +218,25 @@
 {% endblock actions %}
 
 {% block bottom_script %}
+<script>
+  /* takes text from json file for each reason and populates the editable textarea in the modal */
+  $("#close_reason").change(function () {
+    var str = "";
+    $("#close_reason option:selected").each(function () {
+          str += $(this).val() + " ";
+        });
+    $("#closeTextarea").text(str);
+    // console.log($("#closeTextarea"));
+  });
+
+  /* takes the edited text in the modal as a variable for use in posting to the case */
+  $("#closeButton").click(function () {
+    var estr = $("#closeTextarea").val();
+    console.log(estr);
+  });
+    
+</script>
+
  <script>
 $(document).ready(function() {
   var emails = [];

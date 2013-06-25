@@ -1,3 +1,4 @@
+
 /* banner dismissal */
   $(function(){$(".alert").alert()})
 
