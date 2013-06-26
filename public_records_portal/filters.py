@@ -88,7 +88,9 @@ def user_name(uid):
 		if user:
 			if user.alias:
 				return user.alias
-			return user.email
+			else:
+				return user.email
+
 	return None
 
 def user_email(uid):
@@ -125,17 +127,28 @@ def explain_action(action, explanation_type = None):
 		return explanation_str
 
 @app.template_filter('directory')
-def directory(oid):
+def directory(oid, info_type = None):
 	uid = owner_uid(oid)
 	if uid:
 		email = user_email(uid)
-		print email
 		if email:
 			dir_json = open(os.path.join(app.root_path, 'static/directory.json'))
 			json_data = json.load(dir_json)
 			for line in json_data:
 				if line['EMAIL_ADDRESS'] == email:
 					last, first = line['FULL_NAME'].split(",")
+					if info_type == 'name':
+						return "%s %s" % (first, last)
 					return "%s %s, %s" % (first, last, line['JOB_TITLE'])
 	return None
 
+@app.template_filter('staff_name')
+def staff_name(uid):
+	email =  user_email(uid)
+	dir_json = open(os.path.join(app.root_path, 'static/directory.json'))
+	json_data = json.load(dir_json)
+	for line in json_data:
+		if line['EMAIL_ADDRESS'].lower() == email.lower():
+			last, first = line['FULL_NAME'].split(",")
+			return "%s %s" % (first, last)
+	return None

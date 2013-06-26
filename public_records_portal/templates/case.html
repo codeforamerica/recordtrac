@@ -62,7 +62,7 @@
         {% block proxyrequester_info %}
           <small>
             {% if req.creator_id %}
-              <span>This request was submitted on behalf of the requester by {{ req.creator_id | user_name }}. </span>
+              <span>This request was submitted on behalf of the requester by {{ req.creator_id | staff_name }}.</span>
             {% endif %}
           </small>
         {% endblock proxyrequester_info %}
