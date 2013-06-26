@@ -1,8 +1,12 @@
 <!-- This template is for testing purposes. -->
 
 {% extends "case.html" %}
-{% block title %}Request (#{{ req.id }}){% endblock %}
+{% block title %}Request {{ req.id }}{% endblock %}
 {% block head %} {% endblock head %}
+{% block content %}
+  <div class="btn-group"><a class="btn btn-mini" href="#submitRecord">Add a record <i class="icon-double-angle-down"></i></a> <a class="btn btn-mini" href="#note">Add a note <i class="icon-double-angle-down"></i> </a> <a class="btn btn-mini" href="#closeRequest">Close request <i class="icon-double-angle-down"></i></a></div>
+  {{ super() }}
+{% endblock content %}
 {% block status %}
     <div class="pull-right">
       {% block routing %}
