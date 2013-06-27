@@ -102,6 +102,8 @@ def update_resource(resource, request_body):
 	elif "owner" in resource:
 		change_request_status(fields['request_id'], "Rerouted")
 		assign_owner(fields['request_id'], fields['owner_reason'], fields['owner_email'])
+	elif "request" in resource:
+		change_request_status(fields['request_id'], "Reopened")
 	else:
 		return False
 
