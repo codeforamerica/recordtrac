@@ -171,6 +171,7 @@
 
 <form name="close" class="form-horizontal" id="closeRequest" method="post" action="/close">
   <input type="hidden" name="request_id" value="{{ req.id }}"/>
+  <input type="hidden" name="close_reason"/>
   <fieldset> 
     <div class="row-fluid">
       <h4>Close this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
@@ -178,7 +179,7 @@
 
         <label class="control-label">Reason</label>
           <div class="controls">
-            <select id="close_reason" name="close_reason" multiple="multiple" required>
+            <select id="close_reasons" name="close_reasons" multiple="multiple" required>
               <option value="{{"Fulfilled" | explain_action("What")}}">Fulfilled</option>
               <option value="{{"Not a public records request" | explain_action("What")}}">Not a public records request</option>
               <option value="{{"Record Does Not Exist" | explain_action("What")}}">Do not have this record</option>
@@ -223,21 +224,21 @@
 {% block bottom_script %}
 <script>
   /* takes text from json file for each reason and populates the editable textarea in the modal */
-  $("#close_reason").change(function () {
+  $("#close_reasons").change(function () {
     var str = "";
-    $("#close_reason option:selected").each(function () {
+    $("#close_reasons option:selected").each(function () {
           str += $(this).val() + " ";
         });
     $("#closeTextarea").text(str);
-    // console.log($("#closeTextarea"));
   });
 
   /* takes the edited text in the modal as a variable for use in posting to the case */
   $("#closeButton").click(function () {
     var estr = $("#closeTextarea").val();
-    console.log(estr);
+    $('input[name=close_reason]').val(estr);
   });
-    
+
+
 </script>
 
  <script>
