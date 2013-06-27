@@ -8,6 +8,15 @@ import os
 app.jinja_env.filters['get_requester'] = get_requester
 app.jinja_env.filters['is_request_open'] = is_request_open
 
+@app.template_filter('due_date')
+def due_date(obj):
+	if not obj:
+		return None
+	if type(obj) is not datetime:
+		obj = datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f")
+	due_date = obj + timedelta(days = 10)
+	return format_date(due_date.date())
+
 @app.template_filter('date')
 def date(obj):
 	if not obj:

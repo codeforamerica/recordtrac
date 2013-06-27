@@ -16,6 +16,8 @@
     <li><a href="#note">Add a note <i class="icon-arrow-down"></i></a></li>
     <li><a href="#closeRequest">Close request <i class="icon-arrow-down"></i></a></li>
   </ul>
+  Date submitted: {{ req.date_created | date }}
+  Due date: {{ req.date_created | due_date }}
   {{ super() }}
 {% endblock content %}
 {% block status %}
