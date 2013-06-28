@@ -17,14 +17,18 @@
 }
 
 #rerouteForm {
-margin: 0 0 0px;
+	margin: 0 0 0px;
 }
 
-/* tighter paragraphs */
+/* request text format */
+/*#request_text {
+	white-space: pre;
+}*/
+
+/* tighter paragraphs in contact hover */
 .tight_paragraph {
 	margin-bottom: 0;
 }
-
 
 /* new request form field explanations */
 .request_field_explanation {
@@ -101,3 +105,32 @@ html, body {
 }
 
 /* datatables */
+
+table#allrequestTable tbody tr td div{
+/*width:160px;*/
+max-height:4.5em;
+overflow:hidden;
+}
+
+
+/*span.wrapandhide {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 30em;
+}*/
+
+/*table#allrequestTable { width:100%;table-layout:fixed; }
+table#allrequestTable tr { height:1em;  }
+table#allrequestTable td { overflow:hidden;white-space:nowrap;  }*/
+
+/*table#allrequestTable tbody tr  {
+	height: 70px;
+	overflow: hidden;
+	white-space: pre;
+}
+
+table#allrequestTable tbody td { 
+	overflow: hidden;
+	white-space: nowrap;  
+}*/

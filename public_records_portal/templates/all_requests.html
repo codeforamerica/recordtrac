@@ -27,9 +27,9 @@
           <td> {{ request.status }} </td>
           <td>{{ request.date_created | date }}</td>
           {% if user_id %}
-          <td><a href="/city/request/{{request.id}}">{{ request.text }}</a></td>
+          <td><div><a href="/city/request/{{request.id}}">{{ request.text }}</a></div></td>
           {% else %}
-          <td><a href="/request/{{request.id}}">{{ request.text }}</a></td>
+          <td><div><a href="/request/{{request.id}}">{{ request.text }}</a></div></td>
           {% endif %}
           <td>{{ request.status_updated | date_granular }} </td>
           <td>{{ request.current_owner | owner_name}}</td>
