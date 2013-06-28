@@ -127,6 +127,13 @@ max-height:4.5em;
 overflow:hidden;
 }
 
+/*.ellipsis {
+    
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+}*/
+
 
 /*span.wrapandhide {
     display: inline-block;
