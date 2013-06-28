@@ -267,6 +267,18 @@ def upload(file, filename, API_KEY, API_SECRET):
         print 'Scribd failed: code=%d, error=%s' % (err.errno, err.strerror)
         return err.strerror
 
+def get_scribd_download_url(doc_id, API_KEY = None, API_SECRET = None):
+	if not API_KEY:
+		API_KEY = app.config['SCRIBD_API_KEY']
+	if not API_SECRET:
+		API_SECERT = app.config['SCRIBD_API_SECRET']
+	try:
+		scribd.config(API_KEY, API_SECRET)
+		doc = scribd.api_user.get(doc_id)
+		return doc.get_download_url()
+	except:
+		return None
+
 def make_public(doc_id, API_KEY, API_SECRET):
     scribd.config(API_KEY, API_SECRET)
     doc = scribd.api_user.get(doc_id)

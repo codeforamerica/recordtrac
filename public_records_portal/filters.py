@@ -8,6 +8,14 @@ import os
 app.jinja_env.filters['get_requester'] = get_requester
 app.jinja_env.filters['is_request_open'] = is_request_open
 
+
+@app.template_filter('scribd_download_url')
+def scribd_download_url(doc_id):
+	download_url = get_scribd_download_url(doc_id)
+	if download_url:
+		return download_url
+	else:
+		return "Check back later for the direct download link!"
 @app.template_filter('due_date')
 def due_date(obj):
 	if not obj:
