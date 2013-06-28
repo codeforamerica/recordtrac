@@ -271,7 +271,7 @@ def get_scribd_download_url(doc_id, API_KEY = None, API_SECRET = None):
 	if not API_KEY:
 		API_KEY = app.config['SCRIBD_API_KEY']
 	if not API_SECRET:
-		API_SECERT = app.config['SCRIBD_API_SECRET']
+		API_SECRET = app.config['SCRIBD_API_SECRET']
 	try:
 		scribd.config(API_KEY, API_SECRET)
 		doc = scribd.api_user.get(doc_id)
