@@ -3,26 +3,23 @@
 
 {% extends "case.html" %}
 {% block title %}Request {{ req.id }}{% endblock %}
+
 {% block status %}
-  <div class="row-fluid">
-      <div class="text-right">
-        <span class="label label-info">{{req.status}} {{req.status_updated | date }} by {{req.current_owner | owner_name}} </span>    
+  {% if user_id %}
+    <div class="span6">
+      <form name="reopen_request" class="form-inline" id="question" method="post" action="/update_a_request">
+        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+        <button id="reopenRequest" class="btn btn-primary" type="submit">Reopen request</button>
+      </form>
     </div>
-    {% if user_id %}
-            <form name="reopen_request" class="form-horizontal" id="question" method="post" action="/update_a_request">
-          <fieldset> 
-              <div>
-                <div class="control-group">
-                  <div class="row-fluid">
-                    <div class="controls">
-                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                      <button id="reopenRequest" class="btn btn-primary" type="submit">Reopen this request</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-          </fieldset>
-        </form>
-    {% endif %}
+  {% endif %}
+
+  <div class="text-right">
+    {% block routing %}
+      <span class="label label-info">{{req.status}} {{req.status_updated | date }} by {{req.current_owner | owner_name}} </span>   
+    {% endblock routing %}
+    {% block history %}
+      {{ super() }}
+    {% endblock history %}
   </div>
 {% endblock status %}

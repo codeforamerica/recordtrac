@@ -25,7 +25,22 @@
 	white-space: pre;
 }*/
 
-/* tighter paragraphs in contact hover */
+/* validation style */
+label.valid {
+  width: 24px;
+  height: 24px;
+  background: url(images/valid.png) center center no-repeat;
+  display: inline-block;
+  text-indent: -9999px;
+}
+label.error {
+  font-weight: bold;
+  color: red;
+  padding: 2px 8px;
+  margin-top: 2px;
+}
+
+/* tighter paragraphs in contact hover, request date */
 .tight_paragraph {
 	margin-bottom: 0;
 }
@@ -104,7 +119,7 @@ html, body {
 	height: 80px; /* .push must be the same height as .footer */
 }
 
-/* datatables */
+/* all requests table truncation */
 
 table#allrequestTable tbody tr td div{
 /*width:160px;*/
