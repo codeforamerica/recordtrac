@@ -8,5 +8,21 @@
       <div class="text-right">
         <span class="label label-info">{{req.status}} {{req.status_updated | date }} by {{req.current_owner | owner_name}} </span>    
     </div>
+    {% if user_id %}
+            <form name="reopen_request" class="form-horizontal" id="question" method="post" action="/update_a_request">
+          <fieldset> 
+              <div>
+                <div class="control-group">
+                  <div class="row-fluid">
+                    <div class="controls">
+                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                      <button id="reopenRequest" class="btn btn-primary" type="submit">Reopen this request</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </fieldset>
+        </form>
+    {% endif %}
   </div>
 {% endblock status %}

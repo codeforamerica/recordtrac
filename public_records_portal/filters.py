@@ -8,6 +8,15 @@ import os
 app.jinja_env.filters['get_requester'] = get_requester
 app.jinja_env.filters['is_request_open'] = is_request_open
 
+@app.template_filter('due_date')
+def due_date(obj):
+	if not obj:
+		return None
+	if type(obj) is not datetime:
+		obj = datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f")
+	due_date = obj + timedelta(days = 10)
+	return format_date(due_date.date())
+
 @app.template_filter('date')
 def date(obj):
 	if not obj:
@@ -93,6 +102,7 @@ def user_name(uid):
 
 	return None
 
+@app.template_filter('user_email')
 def user_email(uid):
 	if uid:
 		user = User.query.get(uid)
@@ -126,29 +136,24 @@ def explain_action(action, explanation_type = None):
 			explanation_str = explanation_str + " " + explanation['Action']
 		return explanation_str
 
+
 @app.template_filter('directory')
-def directory(oid, info_type = None):
-	uid = owner_uid(oid)
-	if uid:
+def directory(uid, info_type = None):
+	email =  user_email(uid)
+	if not email:
+		uid = owner_uid(uid)
 		email = user_email(uid)
-		if email:
-			dir_json = open(os.path.join(app.root_path, 'static/directory.json'))
-			json_data = json.load(dir_json)
-			for line in json_data:
-				if line['EMAIL_ADDRESS'] == email:
+	if email:
+		if info_type == "email":
+			return email
+		dir_json = open(os.path.join(app.root_path, 'static/directory.json'))
+		json_data = json.load(dir_json)
+		for line in json_data:
+			if line['EMAIL_ADDRESS'].lower() == email.lower():
+				if info_type == 'name':
 					last, first = line['FULL_NAME'].split(",")
-					if info_type == 'name':
-						return "%s %s" % (first, last)
-					return "%s %s, %s" % (first, last, line['JOB_TITLE'])
+					return "%s %s" % (first, last)
+				if info_type == 'dept':
+					return line['DEPARTMENT']
 	return None
 
-@app.template_filter('staff_name')
-def staff_name(uid):
-	email =  user_email(uid)
-	dir_json = open(os.path.join(app.root_path, 'static/directory.json'))
-	json_data = json.load(dir_json)
-	for line in json_data:
-		if line['EMAIL_ADDRESS'].lower() == email.lower():
-			last, first = line['FULL_NAME'].split(",")
-			return "%s %s" % (first, last)
-	return None
