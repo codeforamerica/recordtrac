@@ -118,7 +118,8 @@
                         </div>
                         <div class="span10">
                           <p> 
-                              <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.user_id | user_name }}</em>. Direct download: {{ record.doc_id | scribd_download_url}}
+                            {% set direct_download_url = (record.doc_id | get_scribd_download_url) %}
+                              <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.user_id | user_name }}</em>. {% if direct_download_url %} <a href = "{{ direct_download_url }}" rel="tooltip" data-toggle="tooltip" dataplacement="right" title="">Direct Download</a> {% endif %}
                           </p>
                         </div>
                       </div>
