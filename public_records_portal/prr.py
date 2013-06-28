@@ -61,6 +61,8 @@ def add_resource(resource, request_body, current_user_id = None):
 	if "note" in resource:
 		add_note(fields['request_id'], fields['note_text'], current_user_id)
 	elif "record" in resource:
+		if fields['record_description'] == "":
+			return "When uploading a record, please fill out the 'summary' field."
 		if 'record_access' in fields and fields['record_access'] != "":
 			add_offline_record(fields['request_id'], fields['record_description'], fields['record_access'], current_user_id)
 		elif 'link_url' in fields and fields['link_url'] != "":
