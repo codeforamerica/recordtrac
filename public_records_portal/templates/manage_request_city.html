@@ -4,20 +4,15 @@
 {% block title %}Request {{ req.id }}{% endblock %}
 {% block head %} {% endblock head %}
 {% block content %}
-  <!-- Shortcuts 
-  <div class="btn-group">
-    <a class="btn btn-mini" href="#submitRecord">Add a record <i class="icon-arrow-down"></i></a>
-    <a class="btn btn-mini" href="#note">Add a note <i class="icon-arrow-down"></i> </a>
-    <a class="btn btn-mini" href="#closeRequest">Close request <i class="icon-arrow-down"></i></a>
-  </div> -->
-  <ul class="nav nav-pills">
+  <div class="span8">
+  <ul class="nav nav-pills hidden-phone hidden-tablet">
     <li class="disabled"><a href="#">Shortcuts </a></li>
     <li><a href="#submitRecord">Add a record <i class="icon-arrow-down"></i></a></li>
     <li><a href="#note">Add a note <i class="icon-arrow-down"></i></a></li>
     <li><a href="#closeRequest">Close request <i class="icon-arrow-down"></i></a></li>
   </ul>
-  Date submitted: {{ req.date_created | date }}
-  Due date: {{ req.date_created | due_date }}
+</div>
+  <p class="text-right">Due: {{ req.date_created | due_date }} <span class="muted">(Submitted {{ req.date_created | date }})</span></p>
   {{ super() }}
 {% endblock content %}
 {% block status %}
@@ -224,6 +219,28 @@
 
 
 {% block bottom_script %}
+<script>
+ /* validates add a record form */
+$(document).ready(function(){
+   $("#submitRecord").validate({
+      rules: {
+        record_description: {
+          required: true,
+          minlength: 2
+             }
+         },
+       highlight: function(element) {
+          $(element).closest('.control-group').removeClass('success').addClass('error');
+        },
+        success: function(element) {
+          element
+          .text('OK!').addClass('valid')
+          .closest('.control-group').removeClass('error').addClass('success');
+        }
+     });
+});
+</script>
+
 <script>
   /* takes text from json file for each reason and populates the editable textarea in the modal */
   $("#close_reasons").change(function () {
