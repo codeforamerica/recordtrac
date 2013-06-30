@@ -15,40 +15,39 @@ from datetime import datetime
 from models import User
 from timeout import timeout
 
-try:
-	if app.config['ENVIRONMENT'] == "STAGING" or app.config['ENVIRONMENT'] == "PRODUCTION":
-		app_url = app.config['APPLICATION_URL']
-	else:
-		app_url = "http://127.0.0.1:8000/"
-except:
-	app_url = "http://shielded-brushlands-1669.herokuapp.com/" # Need to define API endpoint for now
 
 ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff']
 
-def get_resource(resource, resource_id, url = None):
-	url = app_url
+def get_resource(resource, resource_id, app_url = None):
+	if not app_url:
+		app_url = app.config['APPLICATION_URL']
 	headers = {'Content-Type': 'application/json'}
-	r = seaturtle.get("%s/api/%s/%s" %(url, resource, resource_id), headers=headers)
+	r = seaturtle.get("%s/api/%s/%s" %(app_url, resource, resource_id), headers=headers)
 	if r:
 		return r.json()
 	return None
 
-def get_resource_filter(resource, filters, url = None):
-	url = app_url
+def get_resource_filter(resource, filters, app_url = None, order_by = None):
+	if not app_url:
+		app_url = app.config['APPLICATION_URL']
 	headers = {'Content-Type': 'application/json'}
-	params = dict(q=json.dumps(dict(filters=filters)))
-	r = seaturtle.get("%s/api/%s" %(url, resource), params=params, headers = headers)
+	if order_by:
+		params = dict(q=json.dumps(dict(filters=filters, order_by = order_by)))
+	else:
+		params = dict(q=json.dumps(dict(filters=filters)))
+	r = seaturtle.get("%s/api/%s" %(app_url, resource), params=params, headers = headers)
 	if r:
 		return r.json()
 	return None
 
-def get_resources(resource, url = None, order_by = None):
-	url = app_url
+def get_resources(resource, app_url = None, order_by = None):
+	if not app_url:
+		app_url = app.config['APPLICATION_URL']
 	headers = {'content-type': 'application/json; charset=utf-8'}
 	params = None
 	if order_by:
 		params = dict(q=json.dumps(dict(order_by=order_by)))
-	r = seaturtle.get("%s/api/%s" %(url, resource), params = params, headers=headers)
+	r = seaturtle.get("%s/api/%s" %(app_url, resource), params = params, headers=headers)
 	if r:
 		return r.json()
 	return None
@@ -58,6 +57,8 @@ def add_resource(resource, request_body, current_user_id = None):
 	if "note" in resource:
 		add_note(fields['request_id'], fields['note_text'], current_user_id)
 	elif "record" in resource:
+		if fields['record_description'] == "":
+			return "When uploading a record, please fill out the 'summary' field."
 		if 'record_access' in fields and fields['record_access'] != "":
 			add_offline_record(fields['request_id'], fields['record_description'], fields['record_access'], current_user_id)
 		elif 'link_url' in fields and fields['link_url'] != "":
@@ -70,23 +71,26 @@ def add_resource(resource, request_body, current_user_id = None):
 		return False
 	return True
 
-def create_resource(resource, payload, url = None):
-	url = app_url
-	r = seaturtle.post("%s/api/%s" %(url, resource), data=json.dumps(payload))
+def create_resource(resource, payload, app_url = None):
+	if not app_url:
+		app_url = app.config['APPLICATION_URL']
+	r = seaturtle.post("%s/api/%s" %(app_url, resource), data=json.dumps(payload))
 	if r:
 		return r.json()
 	return None
 
-def delete_resource(resource, resource_id, url = None):
-	url = app_url
-	r = seaturtle.delete("%s/api/%s/%s" %(url, resource, resource_id))
+def delete_resource(resource, resource_id, app_url = None):
+	if not app_url:
+		app_url = app.config['APPLICATION_URL']
+	r = seaturtle.delete("%s/api/%s/%s" %(app_url, resource, resource_id))
 	if r.status_code == '204':
 		return True
 	return False
 
-def put_resource(resource, payload, resource_id, url = None):
-	url = app_url
-	r = seaturtle.put("%s/api/%s/%s" %(url, resource, resource_id), data=json.dumps(payload))
+def put_resource(resource, payload, resource_id, app_url = None):
+	if not app_url:
+		app_url = app.config['APPLICATION_URL']
+	r = seaturtle.put("%s/api/%s/%s" %(app_url, resource, resource_id), data=json.dumps(payload))
 	if r.status_code == '201':
 		return True
 	return False
@@ -99,6 +103,8 @@ def update_resource(resource, request_body):
 	elif "owner" in resource:
 		change_request_status(fields['request_id'], "Rerouted")
 		assign_owner(fields['request_id'], fields['owner_reason'], fields['owner_email'])
+	elif "request" in resource:
+		change_request_status(fields['request_id'], "Reopened")
 	else:
 		return False
 
@@ -181,17 +187,21 @@ def create_or_return_user(email, alias = None, phone = None):
 	db.session.commit()
 	return user
 
+def last_note(request_id):
+	notes = get_resource_filter(resource = "note", filters= [dict(name='request_id', op='eq', val=request_id)], order_by = [dict(field="date_created", direction="desc")])
+	return notes['objects'][0]
+
 def open_request(request_id):
 	change_request_status(request_id, "Open")
 
 def close_request(request_id, reason = ""):
 	req = get_resource("request", request_id)
-	if current_user.is_anonymous() == False:
-		current_owner = get_resource("owner", req['current_owner'])
-		if current_user.id != current_owner['user_id']:
-			assign_owner(request_id = request_id, reason = "Closed request.", email = current_user.email, alias = current_user.alias, phone = current_user.phone, notify = False)
-	change_request_status(request_id, "Closed. %s" %reason)
-	# closed = create_resource("note", dict(request_id = request_id, text = reason, user_id = user_id))
+	current_owner = get_resource("owner", req['current_owner'])
+	# if current_user.id != current_owner['user_id']:
+	# 	assign_owner(request_id = request_id, reason = "Closed request.", email = current_user.email, alias = current_user.alias, phone = current_user.phone, notify = False)
+	change_request_status(request_id, "Closed")
+	# Create a note to capture closed information:
+	create_resource("note", dict(request_id = request_id, text = reason, user_id = current_user.id))
 	send_prr_email(request_id = request_id, notification_type = "Request closed", requester_id = get_requester(request_id))
 
 def get_subscribers(request_id):
@@ -257,6 +267,18 @@ def upload(file, filename, API_KEY, API_SECRET):
         print 'Scribd failed: code=%d, error=%s' % (err.errno, err.strerror)
         return err.strerror
 
+def get_scribd_download_url(doc_id, API_KEY = None, API_SECRET = None):
+	if not API_KEY:
+		API_KEY = app.config['SCRIBD_API_KEY']
+	if not API_SECRET:
+		API_SECRET = app.config['SCRIBD_API_SECRET']
+	try:
+		scribd.config(API_KEY, API_SECRET)
+		doc = scribd.api_user.get(doc_id)
+		return doc.get_download_url()
+	except:
+		return None
+
 def make_public(doc_id, API_KEY, API_SECRET):
     scribd.config(API_KEY, API_SECRET)
     doc = scribd.api_user.get(doc_id)
@@ -297,6 +319,7 @@ def upload_file(file):
 	return None, None
 
 def send_prr_email(request_id, notification_type, requester_id = None, owner_id = None):
+	app_url = app.config['APPLICATION_URL']
 	email_json = open(os.path.join(app.root_path, 'emails.json'))
 	json_data = json.load(email_json)
 	email_subject = "Public Records Request %s: %s" %(request_id, json_data[notification_type])

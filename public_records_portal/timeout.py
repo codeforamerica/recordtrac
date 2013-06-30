@@ -13,7 +13,6 @@ def timeout(seconds=10, error_message=os.strerror(errno.ETIME)):
             signal.signal(signal.SIGALRM, _handle_timeout)
             signal.alarm(seconds)
             try:
-                print 'hi'
                 result = func(*args, **kwargs)
             finally:
                 signal.alarm(0)

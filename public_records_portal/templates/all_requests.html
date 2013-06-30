@@ -24,12 +24,12 @@
           {% else %}
           <td><a href="/request/{{request.id}}">{{ request.id }}</a></td>
           {% endif %}
-          <td> {{ request.status }} </td>
+          <td>{{ request.status }} </td>
           <td>{{ request.date_created | date }}</td>
           {% if user_id %}
-          <td><a href="/city/request/{{request.id}}">{{ request.text }}</a></td>
+          <td><a href="/city/request/{{request.id}}"><div>{{ request.text }}</div></a></td>
           {% else %}
-          <td><a href="/request/{{request.id}}">{{ request.text }}</a></td>
+          <td><a href="/request/{{request.id}}"><div>{{ request.text }}</div></a></td>
           {% endif %}
           <td>{{ request.status_updated | date_granular }} </td>
           <td>{{ request.current_owner | owner_name}}</td>
@@ -41,3 +41,12 @@
 </div>
 
 {% endblock %}
+
+{% block bottom_script %}
+<script>
+$('table#allrequestTable tbody tr td div').ellipsis({
+    row: 3
+});
+  
+</script>
+{% endblock bottom_script %}

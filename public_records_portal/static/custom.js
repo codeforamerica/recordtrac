@@ -1,3 +1,4 @@
+
 /* banner dismissal */
   $(function(){$(".alert").alert()})
 
@@ -36,6 +37,17 @@
   //  });
   // });
 
+/* form in contact info popover */
+  $('#contactinfoPopover').popover({ 
+      trigger: 'hover',
+      html : true,
+      title: function() {
+        return $("#contactinfoPopover-head").html();
+      },
+      content: function() {
+        return $("#contactinfoPopover-content").html();
+      }
+  });
 
 /* form in reroute popover */
   $('#reroutePopover').popover({ 
