@@ -10,7 +10,7 @@
 
 <!-- validation jQuery only working for request_text:required and request_email:email only http://docs.jquery.com/Plugins/Validation 
       try this validation as well https://github.com/jzaefferer/jquery-validation -->
-      <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="on">
+      <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="on"novalidate="novalidate">
         <fieldset>
 
           <legend>Submit a Request</legend>
@@ -18,7 +18,7 @@
           <div class="control-group">
             <label class="control-label" for="requestTextarea">What are you trying to find?</label>
             <div class="controls">
-              <textarea id="requestTextarea" autofocus  name="request_text" rows="3" cols="20" placeholder="Describe your request. Be as specific as possible." required ></textarea>
+              <textarea id="requestTextarea" autofocus  name="request_text" rows="3" cols="20" placeholder="Describe your request. Be as specific as possible." ></textarea>
               <span class="request_field_explanation"><p>{{"Enter records request" | explain_action("What")}}</p><p><em>{{"Enter records request" | explain_action("Who")}}</em> {{"Enter records request" | explain_action("Action")}}</p></span>
             </div>
           </div>
@@ -57,3 +57,29 @@
       </form>
 
 {% endblock content %}
+{% block bottom_script %}
+  <script>
+  /* validates add a record form */
+$(document).ready(function(){
+   $("#submitRequest").validate({
+      rules: {
+        request_text: {
+          required: true,
+          minlength: 2
+             },
+        request_email: {
+          required: true
+             } 
+         },
+       highlight: function(element) {
+          $(element).closest('.control-group').removeClass('success').addClass('error');
+        },
+        success: function(element) {
+          element
+          .text('OK!').addClass('valid')
+          .closest('.control-group').removeClass('error').addClass('success');
+        }
+     });
+});
+  </script>
+{% endblock bottom_script %}

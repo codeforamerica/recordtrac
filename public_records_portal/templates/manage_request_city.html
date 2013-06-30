@@ -3,89 +3,88 @@
 {% extends "case.html" %}
 {% block title %}Request {{ req.id }}{% endblock %}
 {% block head %} {% endblock head %}
-{% block request %}
-<small>{% if req.creator_id %}
-        <div>This request was submitted on behalf of the requester by {{ req.creator_id | user_name }}.</div> 
-        {% endif %}
-<div>Requester's name: {{ (req.id | get_requester) | subscriber_name }} and phone number: {{ (req.id | get_requester) | subscriber_phone }}</div></small>
-{{ super() }}
-          <!-- ask a question -->
-      <form name="ask_question" class="form-horizontal" id="question" method="post" action="/add_a_qa" autocomplete="on">
-        <fieldset> 
-          <div class="row-fluid">
-            <!-- <div class="span4"> -->
-              <h4>Ask a question about this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
-            <!-- </div> -->
-            <div>
-
+{% block content %}
+  <div class="span8">
+  <ul class="nav nav-pills hidden-phone hidden-tablet">
+    <li class="disabled"><a href="#">Shortcuts </a></li>
+    <li><a href="#submitRecord">Add a record <i class="icon-arrow-down"></i></a></li>
+    <li><a href="#note">Add a note <i class="icon-arrow-down"></i></a></li>
+    <li><a href="#closeRequest">Close request <i class="icon-arrow-down"></i></a></li>
+  </ul>
+</div>
+  <p class="text-right">Due: {{ req.date_created | due_date }} <span class="muted">(Submitted {{ req.date_created | date }})</span></p>
+  {{ super() }}
+{% endblock content %}
+{% block status %}
+    <div class="pull-right">
+      {% block routing %}
+        Routed to  
+        <div class="btn-group">
+          <div><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{req.current_owner | directory("name")}} <span class="caret"></span> </a></div>
+          <div id="reroutePopover-head" class="hide">Reassign to:</div>
+          <div id="reroutePopover-content" class="hide">              
+            <form id="rerouteForm" class="form-inline" method ="post" action="/update_a_owner">
+              <!-- my form -->
               <div class="control-group">
-                <label class="control-label">Question</label>
-                <div class="row-fluid">
-                  <div class="controls">
-                      <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                      <input id="questionTextarea" type="text" name="question_text" rows="3" cols="20" placeholder="Ask the requester a question" required/>
-                    <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
-                  </div>
+                <div class="controls">
+                  <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                  <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" required />
+                  <input id="rerouteReason" type="text" name="owner_reason" placeholder="Say why." required />
+                  <button id="rerouteButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
                 </div>
               </div>
-
-            </div>
+            </form>
           </div>
-        </fieldset>
-      </form>
-{% endblock request %}
-{% block status %} 
-  <div class="row-fluid">
-    <!-- popover -->
+        </div>
+      {% endblock routing %}
+      {% block history %}
+        {{ super() }}
+      {% endblock history %}
+    </div>
+  {% endblock status %}
 
-    <div class="pull-right">
-      Routed to  
-            <div class="btn-group"  style="font-size:15px">
-        <div><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{req.current_owner | owner_name}} <span class="caret"></span> </a></div>
-        <div id="reroutePopover-head" class="hide">Reassign to:</div>
-        <div id="reroutePopover-content" class="hide">              
-          <form id="rerouteForm" class="form-inline" method ="post" action="/update_a_owner">
-            <!-- my form -->
-            <div class="control-group">
-              <div class="controls">
-                <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
-                <input id="rerouteReason" type="text" name="owner_reason" placeholder="Say why." required />
-                <button id="rerouteButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
+  {% block proxyrequester_info %}
+    {{ super() }}
+  {% endblock proxyrequester_info %}
+  {% block requester_info %}
+    <small>
+      <span> Requester's name: {{ (req.id | get_requester) | subscriber_name }} and phone number: {{ (req.id | get_requester) | subscriber_phone }}</span>
+    </small>
+  {% endblock requester_info %}
+
+  {% block answer %}
+    Requester hasn't answered yet.
+  {% endblock answer %}
+
+  {% block clarify_request %}
+            <!-- ask a question -->
+        <form name="ask_question" class="form-horizontal" id="question" method="post" action="/add_a_qa" autocomplete="on">
+          <fieldset> 
+            <div class="row-fluid">
+              <!-- <div class="span4"> -->
+                <h4>Ask a question about this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
+              <!-- </div> -->
+              <div>
+
+                <div class="control-group">
+                  <label class="control-label">Question</label>
+                  <div class="row-fluid">
+                    <div class="controls">
+                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                        <input id="questionTextarea" type="text" name="question_text" rows="3" cols="20" placeholder="Ask the requester a question" required/>
+                      <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
-          </form>
-        </div>
-      </div>
-      <a data-placement="left" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"> <i class="icon-time"></i>  </a>
-      <div id="historyPopover-head" class="hide">Routing history</div>
-      <div id="historyPopover-content" class="hide">              
-        <table class="table table-condensed">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th></th>
-              <th>To</th>
-              <th>Note</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- the order of data returned here should be reverse chronological (right now it's shown as oldest first)-->
-            {% for owner in req.owners %}
-              <tr>
-                <td>{{ owner.date_created | date }}</td>
-                <td><i class="icon-circle-arrow-right"></i></td>
-                <td>{{ owner.id | owner_name }}</td>
-                <td>{{ owner.reason }}</td>
-              </tr>              
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+          </fieldset>
+        </form>
+  {% endblock clarify_request %}
+
+    
           
-{% endblock status %}
 
 {% block actions %}
   <form name="input_doc" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data">
@@ -137,8 +136,13 @@
               </div>
             </div>
           </div>
+        <div class="control-group">
+          <div class="controls">
+            <button type="submit" class="btn btn-primary">Add record</button>
+          </div>
+        </div>
       </div>
-      <button type="submit" class="btn btn-primary">Add record</button>
+      
     </fieldset>
   </form>
 
@@ -149,45 +153,113 @@
         <h4>Add a note</h4>
         <div class="control-group">
           <label class="control-label">Note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
-          <div class="row-fluid">
-            <div class="controls">
-              <input type="text" class="input-xlarge" id="noteTextarea" name="note_text" rows="3" placeholder="Anything else the requester should know."required/>
-            </div>
+          <div class="controls">
+            <input type="text" class="input-xlarge" id="noteTextarea" name="note_text" rows="3" placeholder="Anything else the requester should know."required/>
+          </div>
+        </div>
+        <div class="control-group">
+          <div class="controls">
+            <button type="submit" class="btn btn-primary">Add note</button>
           </div>
         </div>
     </div>
-     <button type="submit" class="btn btn-primary">Add note</button>
   </fieldset>
 </form>
 
 <form name="close" class="form-horizontal" id="closeRequest" method="post" action="/close">
   <input type="hidden" name="request_id" value="{{ req.id }}"/>
+  <input type="hidden" name="close_reason"/>
   <fieldset> 
     <div class="row-fluid">
-        <h4>Close this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
-        <div class="control-group">
-          <label class="control-label">Reason</label>
-            <div class="controls">
-            <select name="close_reason">
-            <option>Fulfilled</option>
-            <option>Not a public records request</option>
-            <option>Do not have this record</option>
-            <option>Can Not Release - Personal Files</option>
-            <option>Can Not Release - Ongoing Litigation</option>
-            <option>Can Not Release - Investigative Reports</option>
-            <option>Can Not Release - Finances</option>
-            <option>Requester Not Interested</option>
+      <h4>Close this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
+      <div class="control-group">
+
+        <label class="control-label">Reason</label>
+          <div class="controls">
+            <select id="close_reasons" name="close_reasons" multiple="multiple" required>
+              <option value="{{"Fulfilled" | explain_action("What")}}">Fulfilled</option>
+              <option value="{{"Not a public records request" | explain_action("What")}}">Not a public records request</option>
+              <option value="{{"Record Does Not Exist" | explain_action("What")}}">Do not have this record</option>
+              <option value="{{"Can Not Release - Personal Files" | explain_action("What")}}">Can Not Release - Privacy</option>
+              <option value="{{"Can Not Release - Ongoing Litigation" | explain_action("What")}}">Can Not Release - Ongoing Litigation</option>
+              <option value="{{"Can Not Release - Investigative Reports" | explain_action("What")}}">Can Not Release - Investigative Reports</option>
+              <option value="{{"Can Not Release - Finances" | explain_action("What")}}">Can Not Release - Finances</option>
+              <option value="{{"Requester Not Interested" | explain_action("What")}}">Requester Not Interested</option>
             </select>
-              <button type="submit" class="btn btn-inverse">Close this request</button>
+            <p class="help-block">You can select multiple reasons by using Ctrl (Win) or ⌘ (Mac).</p>
+          </div>
+      </div>
+      <div class="control-group">
+        <div class="controls">
+          <!-- Button to trigger modal -->
+          <a href="#closeModal" role="button" class="btn btn-inverse" data-toggle="modal">Close request...</a>
+           
+          <!-- Modal -->
+          <div id="closeModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="closeModalLabel" aria-hidden="true">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h3 id="closeModalLabel">Reason for closing</h3>
             </div>
+            <div class="modal-body">
+              <!-- NOTE: need to remove the line breaks in the CODE in textarea in order to remove the funky indentation -->
+              <textarea id="closeTextarea" class="input-block-level" rows="10"></textarea>
+            </div>
+            <div class="modal-footer">
+              <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+              <button id="closeButton" type="submit" class="btn btn-inverse">Close this request</button>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
   </fieldset>
 </form>
     
 {% endblock actions %}
 
+
 {% block bottom_script %}
+<script>
+ /* validates add a record form */
+$(document).ready(function(){
+   $("#submitRecord").validate({
+      rules: {
+        record_description: {
+          required: true,
+          minlength: 2
+             }
+         },
+       highlight: function(element) {
+          $(element).closest('.control-group').removeClass('success').addClass('error');
+        },
+        success: function(element) {
+          element
+          .text('OK!').addClass('valid')
+          .closest('.control-group').removeClass('error').addClass('success');
+        }
+     });
+});
+</script>
+
+<script>
+  /* takes text from json file for each reason and populates the editable textarea in the modal */
+  $("#close_reasons").change(function () {
+    var str = "";
+    $("#close_reasons option:selected").each(function () {
+          str += $(this).val() + " ";
+        });
+    $("#closeTextarea").text(str);
+  });
+
+  /* takes the edited text in the modal as a variable for use in posting to the case */
+  $("#closeButton").click(function () {
+    var estr = $("#closeTextarea").val();
+    $('input[name=close_reason]').val(estr);
+  });
+
+
+</script>
+
  <script>
 $(document).ready(function() {
   var emails = [];
@@ -207,3 +279,4 @@ $(document).ready(function() {
 });
 </script>
 {% endblock bottom_script %}
+

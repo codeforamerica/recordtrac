@@ -1,0 +1,23 @@
+<!-- This template houses the baseline case information (request, documents, status, etc.) only. -->
+
+{% extends "case.html" %}
+{% block answer %}
+  {% if (req.id | is_request_open) %}
+  <!-- respond to a question -->
+    <form name="respond_question" class="form-horizontal" id="answer" method="post" action="/update_a_qa" autocomplete="on">
+      <fieldset> 
+        <div class="row-fluid">
+          <!-- <div class="control-group span8"> -->
+            <label class="control-label">Answer</label>
+              <div class="controls">
+                <input type="hidden" name="qa_id" value="{{ qa_id }}"/>
+                <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                <textarea id="answerTextarea" name="answer_text" type="text" rows="3" cols="20" placeholder="Can you respond to the above question?" required/></textarea>
+                <button id="askQuestion" class="btn btn-primary" type="submit">Respond</button>
+              </div>
+          <!-- </div> -->
+        </div>
+      </fieldset>
+    </form>
+  {% endif %}
+{% endblock answer %}

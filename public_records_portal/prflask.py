@@ -74,8 +74,11 @@ def show_request(request_id, template = None, record_uploaded = None, for_email_
 	current_user_id = None
 	if current_user.is_anonymous() == False:
 		current_user_id = current_user.id
-	if not template:
-		template = "case.html"
+	if template:
+		if "city" in template and not current_user_id:
+			return render_template('alpha.html')
+	else:
+		template = "manage_request_public.html"
 	if req['status'] and "Closed" in req['status']:
 		template = "closed.html"
 	return render_template(template, req = req, for_email_notification = for_email_notification, record_uploaded = record_uploaded, banner_msg = banner_msg, user_id = current_user_id)
@@ -175,6 +178,23 @@ def login(email=None, password=None):
 				login_user(user_for_login)
 				return index()
 	return render_template('error.html', message = "Oops, your e-mail/ password combo didn't work.") 
+
+@app.route("/update_password", methods=["GET", "POST"])
+@login_required
+def update_password(password=None):
+	current_user_id = current_user.id
+	if request.method == 'POST':
+		try:
+			password = request.form['password']
+			user = models.User.query.get(current_user_id)
+			user.password = password
+			db.session.add(user)
+			db.session.commit()
+			return index()
+		except:
+			return render_template('error.html', message = "Something went wrong updating your password.")
+	else:
+		return render_template('update_password.html', user_id = current_user_id)
 
 @app.route("/logout")
 def logout():

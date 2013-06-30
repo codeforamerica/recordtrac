@@ -2,195 +2,207 @@
 
 {% extends "base.html" %}
 {% block title %}Request{% endblock %}
-{% block body %}
-  <div class="row-fluid well"> 
-    {% block status %}
+
+{% block content %}
+  {% block well %}
+    <div class="row-fluid well"> 
       <div class="row-fluid">
-        <div class="text-right">Routed to <span class="label label-info">{{req.current_owner | directory }} </span> 
-          <a data-placement="left" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"> <i class="icon-time"></i>  </a>
-          <div id="historyPopover-head" class="hide">Routing history</div>
-          <div id="historyPopover-content" class="hide">              
-            <table class="table table-condensed">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th></th>
-                  <th>To</th>
-                  <th>Note</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- the order of data returned here should be reverse chronological (right now it's shown as oldest first)-->
-                {% for owner in req.owners %}
-                  <tr>
-                    <td>{{ owner.date_created | date }}</td>
-                    <td><i class="icon-circle-arrow-right"></i></td>
-                    <td>{{ owner.id | owner_name }}</td>
-                    <td>{{ owner.reason }}</td>
-                  </tr>              
-                {% endfor %}
-              </tbody>
-            </table>
+        {% block status %}
+          <div class="text-right">
+            {% block routing %}
+              Routed to <a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopover" class="hidden-phone hidden-tablet"><span class="label label-info">{{req.current_owner | directory("name")}} </span></a>
+              <div id="contactinfoPopover-head" class="hide">Contact information</div>
+              <div id="contactinfoPopover-content" class="hide">
+                <p class="tight_paragraph"><span class="muted">Department:</span> {{req.current_owner | directory("dept")}}</p>
+                <p class="tight_paragraph"><span class="muted">Email:</span> {{ req.current_owner | directory("email") }}</p>
+                <p class="tight_paragraph"><span class="muted">Phone:</span> [Phone]</p>
+              </div>
+            {% endblock routing %}
+            {% block history %}
+              <a data-placement="left" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"> <i class="icon-time"></i>  </a>
+              <div id="historyPopover-head" class="hide">Routing history</div>
+              <div id="historyPopover-content" class="hide">              
+                <table class="table table-condensed">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th></th>
+                      <th>To</th>
+                      <th>Note</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- the order of data returned here should be reverse chronological (right now it's shown as oldest first)-->
+                    {% for owner in req.owners %}
+                      <tr>
+                        <td>{{ owner.date_created | date }}</td>
+                        <td><i class="icon-circle-arrow-right"></i></td>
+                        <td>{{ owner.id | directory("name") }}</td>
+                        <td>{{ owner.reason }}</td>
+                      </tr>              
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            {% endblock history %}
+          </div>
+        {% endblock status %}
+      </div>
+    
+      
+
+      {% block request %}
+      <!-- request area -->
+        <div class="row-fluid">
+          <h3 >Request <span class="muted">#{{req.id}}</span></h3>
+          <div class="span10">
+              <p class="lead"> {{ req.text }} </p>
           </div>
         </div>
-      </div>
-    {% endblock status %}
+        {% block proxyrequester_info %}
+          <small>
+            {% if req.creator_id %}
+              <span>This request was submitted on behalf of the requester by {{ req.creator_id | directory("name") }}.</span>
+            {% endif %}
+          </small>
+        {% endblock proxyrequester_info %}
+        {% block requester_info %}{% endblock requester_info %}
+      {% endblock request %}
 
-    {% block request %}
-    <!-- request area -->
-      <div class="row-fluid">
-        <h3>Request {{req.id}}</h3>
-        <div class="span10">
-            <p class="lead"> {{ req.text }} </p>
-        </div>
-      </div>
-
-      <!-- shows any existing Q&A -->
-      {% if req.qas %}
-        <div class="row-fluid">
-          {% for qa in req.qas %}
-            <div class="row-fluid response">
-              <div class="span2 text-center">
-                <i class="icon-question icon-2x">  </i> </br>
-                <small> {{ qa.date_created | date_granular }}</small> </br>
-              </div>
-              <div class="span10">
-                <p> {{ qa.question }} - <em>{{qa.owner_id | user_name }}</em></p>
-                {% if qa.answer %}
-                  <p>{{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></p>
-                {% else %}
-                  {% if user_id %}
-                    Requester hasn't answered yet.
+      {% block qas %}
+        <!-- shows any existing Q&A -->
+        {% if req.qas %}
+          <div class="row-fluid">
+            {% for qa in req.qas %}
+            {% set qa_id = qa.id %}
+              <div class="row-fluid response">
+                <div class="span2 text-center">
+                  <i class="icon-question icon-2x">  </i> </br>
+                  <small> {{ qa.date_created | date_granular }}</small> </br>
+                </div>
+                <div class="span10">
+                  <p> {{ qa.question }} - <em>{{qa.owner_id | user_name }}</em></p>
+                  {% if qa.answer %}
+                    <p>{{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></p>
                   {% else %}
-                    {% if (req.id | is_request_open) %}
-                      <!-- respond to a question -->
-                        <form name="respond_question" class="form-horizontal" id="answer" method="post" action="/update_a_qa" autocomplete="on">
-                          <fieldset> 
-                            <div class="row-fluid">
-                              <!-- <div class="control-group span8"> -->
-                                <label class="control-label">Answer</label>
-                                  <div class="controls">
-                                    <input type="hidden" name="qa_id" value="{{ qa.id }}"/>
-                                    <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                                    <textarea id="answerTextarea" name="answer_text" type="text" rows="3" cols="20" placeholder="Can you respond to the above question?" required/></textarea>
-                                    <button id="askQuestion" class="btn btn-primary" type="submit">Respond</button>
-                                  </div>
-                              <!-- </div> -->
-                            </div>
-                          </fieldset>
-                        </form>
-                        {% endif %}
-                      {% endif %}
-                {% endif %}
+                    {% block answer %}
+                    {% endblock answer %}
+                  {% endif %}
+                </div>
               </div>
-            </div>
-          {% endfor %}
-        </div>
-      {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
 
-    {% endblock request %}
+      {% endblock qas %}
 
-    {% block response %}
+      {% block clarify_request %}
+      {% endblock clarify_request %}
 
-      <!-- response area: need to give this more space between the request area-->
-      <div class="row-fluid">
-        <h3 class="response">Response</h3>
-          <!-- shows all existing responses (links, documents, offline docs, notes) -->
-          {% if req.records or req.notes %} 
+      {% block response %}
 
-            {% if req.records %}
-              <div class="span10">
-                {% for record in req.records %}
-                  {% if record.doc_id %}
-                    <div class="row-fluid response">
-                      <div class="span2 text-center">
-                        <i class="icon-file-alt icon-3x">  </i></br>
-                        <small> {{ record.date_created | date_granular }} </small> </br>
-                      </div>
-                      <div class="span10">
-                        <p> 
-                            <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.user_id | user_name }}</em>
-                        </p>
-                      </div>
-                    </div>
-                    {% elif record.access %}
+        <!-- response area: need to give this more space between the request area-->
+        <div class="row-fluid">
+          <h3 class="response">Response</h3>
+            <!-- shows all existing responses (links, documents, offline docs, notes) -->
+            {% if req.records or req.notes %} 
+
+              {% if req.records %}
+                <div class="span10">
+                  {% for record in req.records %}
+                    {% if record.doc_id %}
                       <div class="row-fluid response">
                         <div class="span2 text-center">
                           <i class="icon-file-alt icon-3x">  </i></br>
                           <small> {{ record.date_created | date_granular }} </small> </br>
                         </div>
                         <div class="span10">
-                          <p>{{record.description}} can be accessed: {{record.access}} </a> - <em>{{record.user_id | user_name }}</em></p>
+                          <p> 
+                            {% set direct_download_url = (record.doc_id | get_scribd_download_url) %}
+                              <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.user_id | user_name }}</em>. {% if direct_download_url %} <a href = "{{ direct_download_url }}" rel="tooltip" data-toggle="tooltip" dataplacement="right" title="">Direct Download</a> {% endif %}
+                          </p>
                         </div>
                       </div>
-                  {% else %} <!-- treat it as a link -->
+                      {% elif record.access %}
+                        <div class="row-fluid response">
+                          <div class="span2 text-center">
+                            <i class="icon-file-alt icon-3x">  </i></br>
+                            <small> {{ record.date_created | date_granular }} </small> </br>
+                          </div>
+                          <div class="span10">
+                            <p>{{record.description}} can be accessed: {{record.access}} </a> - <em>{{record.user_id | user_name }}</em></p>
+                          </div>
+                        </div>
+                    {% else %} <!-- treat it as a link -->
+                      <div class="row-fluid response">
+                        <div class="span2 text-center">
+                          <i class="icon-link icon-3x">  </i></br>
+                          <small> {{ record.date_created | date_granular }} </small> </br>
+                        </div>
+                        <div class="span10">
+                          <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.owner_id | owner_name }}</em></p>
+                        </div>
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              {% if req.notes %}
+                <div class="span10">
+                  {% for note in req.notes %}
                     <div class="row-fluid response">
                       <div class="span2 text-center">
-                        <i class="icon-link icon-3x">  </i></br>
-                        <small> {{ record.date_created | date_granular }} </small> </br>
+                        <i class="icon-edit icon-3x">  </i> </br>
+                        <small> {{ note.date_created | date_granular }} </small> </br>
                       </div>
                       <div class="span10">
-                        <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.owner_id | owner_name }}</em></p>
+                        <p> {{ note.text}} - <em>{{note.user_id | user_name }}</em></p>
                       </div>
                     </div>
-                  {% endif %}
-                {% endfor %}
-              </div>
-            {% endif %}
+                  {% endfor %}
+                </div>
+              {% endif %}
 
-            {% if req.notes %}
+            {% else %}<!--added an if then to check to see if any responses exist - if no then show text here for the "if any response exists" above -->
               <div class="span10">
-                {% for note in req.notes %}
-                  <div class="row-fluid response">
-                    <div class="span2 text-center">
-                      <i class="icon-edit icon-3x">  </i> </br>
-                      <small> {{ note.date_created | date_granular }} </small> </br>
-                    </div>
-                    <div class="span10">
-                      <p> {{ note.text}} - <em>{{note.user_id | user_name }}</em></p>
-                    </div>
-                  </div>
-                {% endfor %}
+                <p>There are no records uploaded just yet.  Stay tuned!</p>
               </div>
-            {% endif %}
-
-          {% else %}<!--added an if then to check to see if any responses exist - if no then show text here for the "if any response exists" above -->
-            <div class="span10">
-              <p>There are no records uploaded just yet.  Stay tuned!</p>
-            </div>
-        {% endif %}
-
-          
-
-<!-- This code will definitely not work.  All it's meant to do is convey that we need to post whatever the "close" reason is for the case in the page itself. --> 
-          {% if closed %}
-            <div class="span10">
-              <div class="row-fluid response">
-                <div class="span2 text-center">
-                  <i class="icon-lock icon-3x">  </i> </br>
-                  <small> {{ request.status_updated | date_granular }} </small> </br> 
-                </div>
-                <div class="span10">
-                  {% if request_fulfilled_city %}
-                    <p> {{request_fulfilled_city.email_body}} </p>
-                    {% elif request_rejected_norecord %}
-                    <p> {{request_rejected_norecord.email_body}} </p>
-                    {% elif equest_rejected_privacy %}
-                    <p> {{equest_rejected_privacy}} </p>
-                    {% elif request_rejected_lawsuit %}
-                    <p> {{request_rejected_lawsuit}} </p>
-                    {% elif request_rejected_investigation %}
-                    <p> {{request_rejected_investigation}} </p>
-                    {% elif request_withdrawn %}
-                    <p> {{request_withdrawn}} </p>
-                  {% endif %}
-                </div>
-              </div>
-            </div> 
           {% endif %}
 
-      </div>
-    {% endblock response %}
+            
 
-  </div>
-{% endblock body %}
+  <!-- This code will definitely not work.  All it's meant to do is convey that we need to post whatever the "close" reason is for the case in the page itself. --> 
+            {% if closed %}
+              <div class="span10">
+                <div class="row-fluid response">
+                  <div class="span2 text-center">
+                    <i class="icon-lock icon-3x">  </i> </br>
+                    <small> {{ request.status_updated | date_granular }} </small> </br> 
+                  </div>
+                  <div class="span10">
+                    {% if request_fulfilled_city %}
+                      <p> {{request_fulfilled_city.email_body}} </p>
+                      {% elif request_rejected_norecord %}
+                      <p> {{request_rejected_norecord.email_body}} </p>
+                      {% elif equest_rejected_privacy %}
+                      <p> {{equest_rejected_privacy}} </p>
+                      {% elif request_rejected_lawsuit %}
+                      <p> {{request_rejected_lawsuit}} </p>
+                      {% elif request_rejected_investigation %}
+                      <p> {{request_rejected_investigation}} </p>
+                      {% elif request_withdrawn %}
+                      <p> {{request_withdrawn}} </p>
+                    {% endif %}
+                  </div>
+                </div>
+              </div> 
+            {% endif %}
+
+        </div>
+      {% endblock response %}
+
+      </div>
+    </div>
+  {% endblock well %}
+{% endblock content %}

@@ -99,15 +99,12 @@
         </div>
         <div class="row-fluid">
           <div class="span10 offset1">
-            {% block body %}
-              {% block status %}{% endblock status %}
               {% block content %}{% endblock content %}
-            {% endblock body %}
           </div>
         </div>
         <div class="row-fluid">
           <div class="span10 offset1">
-            {% block actions %}{% endblock actions %}
+              {% block actions %}{% endblock actions %}
           </div>
         </div>
       </div>
@@ -121,6 +118,7 @@
     </div>
 
     <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.10.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery.validate.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='custom.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='bootstrap-fileupload.js') }}"></script>
@@ -128,9 +126,16 @@
     <script type="text/javascript" src="{{ url_for('static', filename='jquery.dataTables.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='custom.dataTables.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='DT_bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery.ellipsis.js') }}"></script>
     
     {% block bottom_script %}
     {% endblock bottom_script %}
 
+    <!-- get satisfaction feedback tab -->
+    <div id="getsat-widget-6266"></div>
+    <script type="text/javascript" src="https://loader.engage.gsfn.us/loader.js"></script>
+    <script type="text/javascript">
+    if (typeof GSFN !== "undefined") { GSFN.loadWidget(6266,{"containerId":"getsat-widget-6266"}); }
+    </script>
   </body>
 </html>
