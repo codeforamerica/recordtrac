@@ -7,6 +7,8 @@ import os
 
 app.jinja_env.filters['get_requester'] = get_requester
 app.jinja_env.filters['is_request_open'] = is_request_open
+app.jinja_env.filters['get_scribd_download_url'] = get_scribd_download_url
+
 
 @app.template_filter('due_date')
 def due_date(obj):
