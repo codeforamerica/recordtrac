@@ -61,6 +61,7 @@ def owner_name(oid):
 			return user_name(owner['user_id'])
 	return "Owner"
 
+@app.template_filter('owner_uid')
 def owner_uid(oid):
 	if oid:
 		owner = get_resource("owner", oid)
