@@ -10,11 +10,11 @@
         {% block status %}
           <div class="text-right">
             {% block routing %}
-              Routed to <a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopover" class="hidden-phone hidden-tablet"><span class="label label-info">{{req.current_owner | directory("name")}} </span></a>
+              Routed to <a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopover" class="hidden-phone hidden-tablet"><span class="label label-info">{{(req.current_owner | owner_uid) | directory("name")}} </span></a>
               <div id="contactinfoPopover-head" class="hide">Contact information</div>
               <div id="contactinfoPopover-content" class="hide">
-                <p class="tight_paragraph"><span class="muted">Department:</span> {{req.current_owner | directory("dept")}}</p>
-                <p class="tight_paragraph"><span class="muted">Email:</span> {{ req.current_owner | directory("email") }}</p>
+                <p class="tight_paragraph"><span class="muted">Department:</span> {{(req.current_owner | owner_uid) | directory("dept")}}</p>
+                <p class="tight_paragraph"><span class="muted">Email:</span> {{ (req.current_owner | owner_uid) | directory("email") }}</p>
                 <p class="tight_paragraph"><span class="muted">Phone:</span> [Phone]</p>
               </div>
             {% endblock routing %}
@@ -37,7 +37,7 @@
                       <tr>
                         <td>{{ owner.date_created | date }}</td>
                         <td><i class="icon-circle-arrow-right"></i></td>
-                        <td>{{ owner.id | directory("name") }}</td>
+                        <td>{{ owner.user_id | directory("name") }}</td>
                         <td>{{ owner.reason }}</td>
                       </tr>              
                     {% endfor %}

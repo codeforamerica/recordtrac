@@ -20,7 +20,7 @@
       {% block routing %}
         Routed to  
         <div class="btn-group">
-          <div><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{req.current_owner | directory("name")}} <span class="caret"></span> </a></div>
+          <div><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{(req.current_owner | owner_uid)| directory("name")}} <span class="caret"></span> </a></div>
           <div id="reroutePopover-head" class="hide">Reassign to:</div>
           <div id="reroutePopover-content" class="hide">              
             <form id="rerouteForm" class="form-inline" method ="post" action="/update_a_owner">

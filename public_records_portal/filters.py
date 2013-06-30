@@ -142,9 +142,6 @@ def explain_action(action, explanation_type = None):
 @app.template_filter('directory')
 def directory(uid, info_type = None):
 	email =  user_email(uid)
-	if not email:
-		uid = owner_uid(uid)
-		email = user_email(uid)
 	if email:
 		if info_type == "email":
 			return email
