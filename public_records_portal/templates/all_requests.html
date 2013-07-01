@@ -32,7 +32,7 @@
           <td><a href="/request/{{request.id}}"><div>{{ request.text }}</div></a></td>
           {% endif %}
           <td>{{ request.status_updated | date_granular }} </td>
-          <td>{{ request.current_owner | owner_name}}</td>
+          <td>{{ (request.current_owner | owner_uid) | directory("name")}}</td>
         </tr>
       {% else %}
       {% endfor %}

@@ -1,23 +1,40 @@
 <!-- This template houses the baseline case information (request, documents, status, etc.) only. -->
 
 {% extends "case.html" %}
-{% block answer %}
-  {% if (req.id | is_request_open) %}
-  <!-- respond to a question -->
-    <form name="respond_question" class="form-horizontal" id="answer" method="post" action="/update_a_qa" autocomplete="on">
-      <fieldset> 
-        <div class="row-fluid">
-          <!-- <div class="control-group span8"> -->
-            <label class="control-label">Answer</label>
-              <div class="controls">
-                <input type="hidden" name="qa_id" value="{{ qa_id }}"/>
-                <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                <textarea id="answerTextarea" name="answer_text" type="text" rows="3" cols="20" placeholder="Can you respond to the above question?" required/></textarea>
-                <button id="askQuestion" class="btn btn-primary" type="submit">Respond</button>
+    {% block qas %}
+          <div class="row-fluid">
+          {% for qa in req.qas %}
+              <div class="row-fluid response">
+                <div class="span2 text-center">
+                  <i class="icon-question icon-2x">  </i> </br>
+                  <small> {{ qa.date_created | date_granular }}</small> </br>
+                </div>
+                <div class="span10">
+                  <p> {{ qa.question }} - <em>{{ qa.owner_id | directory("name")}}</em></p>
+                  {% if qa.answer %}
+                    <p>{{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></p>
+                  {% else %}
+                  {% if (req.id | is_request_open) %}
+                  <!-- respond to a question -->
+                    <form name="respond_question" class="form-horizontal" id="answer" method="post" action="/update_a_qa" autocomplete="on">
+                      <fieldset> 
+                        <div class="row-fluid">
+                          <!-- <div class="control-group span8"> -->
+                            <label class="control-label">Answer</label>
+                              <div class="controls">
+                                <input type="hidden" name="qa_id" value="{{ qa.id }}"/>
+                                <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                                <textarea id="answerTextarea" name="answer_text" type="text" rows="3" cols="20" placeholder="Can you respond to the above question?" required/></textarea>
+                                <button id="askQuestion" class="btn btn-primary" type="submit">Respond</button>
+                              </div>
+                          <!-- </div> -->
+                        </div>
+                      </fieldset>
+                    </form>
+                  {% endif %}
+                  {% endif %}
+                </div>
               </div>
-          <!-- </div> -->
-        </div>
-      </fieldset>
-    </form>
-  {% endif %}
-{% endblock answer %}
+            {% endfor %}
+          </div>
+          {% endblock qas %}

@@ -16,7 +16,8 @@
 
   <div class="text-right">
     {% block routing %}
-      <span class="label label-info">{{req.status}} {{req.status_updated | date }} by {{req.current_owner | owner_name}} </span>   
+    {% set note = req.id | last_note %}
+      <span class="label label-info">{{req.status}} {{note.date_created | date }} by {{ note.user_id | directory("name")}} </span>   
     {% endblock routing %}
     {% block history %}
       {{ super() }}

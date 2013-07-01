@@ -20,7 +20,7 @@
       {% block routing %}
         Routed to  
         <div class="btn-group">
-          <div><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{req.current_owner | directory("name")}} <span class="caret"></span> </a></div>
+          <div><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{(req.current_owner | owner_uid)| directory("name")}} <span class="caret"></span> </a></div>
           <div id="reroutePopover-head" class="hide">Reassign to:</div>
           <div id="reroutePopover-content" class="hide">              
             <form id="rerouteForm" class="form-inline" method ="post" action="/update_a_owner">
@@ -219,28 +219,6 @@
 
 
 {% block bottom_script %}
-<script>
- /* validates add a record form */
-$(document).ready(function(){
-   $("#submitRecord").validate({
-      rules: {
-        record_description: {
-          required: true,
-          minlength: 2
-             }
-         },
-       highlight: function(element) {
-          $(element).closest('.control-group').removeClass('success').addClass('error');
-        },
-        success: function(element) {
-          element
-          .text('OK!').addClass('valid')
-          .closest('.control-group').removeClass('error').addClass('success');
-        }
-     });
-});
-</script>
-
 <script>
   /* takes text from json file for each reason and populates the editable textarea in the modal */
   $("#close_reasons").change(function () {

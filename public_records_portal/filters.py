@@ -8,6 +8,7 @@ import os
 app.jinja_env.filters['get_requester'] = get_requester
 app.jinja_env.filters['is_request_open'] = is_request_open
 app.jinja_env.filters['get_scribd_download_url'] = get_scribd_download_url
+app.jinja_env.filters['last_note'] = last_note
 
 
 @app.template_filter('due_date')
@@ -59,8 +60,9 @@ def owner_name(oid):
 		owner = get_resource("owner", oid)
 		if owner and owner['user_id']:
 			return user_name(owner['user_id'])
-	return "Owner"
+	return "City staff"
 
+@app.template_filter('owner_uid')
 def owner_uid(oid):
 	if oid:
 		owner = get_resource("owner", oid)
@@ -102,7 +104,7 @@ def user_name(uid):
 			else:
 				return user.email
 
-	return None
+	return "Requester"
 
 @app.template_filter('user_email')
 def user_email(uid):
@@ -142,9 +144,6 @@ def explain_action(action, explanation_type = None):
 @app.template_filter('directory')
 def directory(uid, info_type = None):
 	email =  user_email(uid)
-	if not email:
-		uid = owner_uid(uid)
-		email = user_email(uid)
 	if email:
 		if info_type == "email":
 			return email
