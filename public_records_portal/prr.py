@@ -194,14 +194,12 @@ def last_note(request_id):
 def open_request(request_id):
 	change_request_status(request_id, "Open")
 
-def close_request(request_id, reason = ""):
+def close_request(request_id, reason = "", current_user_id = None):
 	req = get_resource("request", request_id)
 	current_owner = get_resource("owner", req['current_owner'])
-	# if current_user.id != current_owner['user_id']:
-	# 	assign_owner(request_id = request_id, reason = "Closed request.", email = current_user.email, alias = current_user.alias, phone = current_user.phone, notify = False)
 	change_request_status(request_id, "Closed")
 	# Create a note to capture closed information:
-	create_resource("note", dict(request_id = request_id, text = reason, user_id = current_user.id))
+	create_resource("note", dict(request_id = request_id, text = reason, user_id = current_user_id))
 	send_prr_email(request_id = request_id, notification_type = "Request closed", requester_id = get_requester(request_id))
 
 def get_subscribers(request_id):

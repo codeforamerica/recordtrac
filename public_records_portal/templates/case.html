@@ -69,19 +69,18 @@
         {% block requester_info %}{% endblock requester_info %}
       {% endblock request %}
 
-      {% block qas %}
         <!-- shows any existing Q&A -->
         {% if req.qas %}
+        {% block qas %}
           <div class="row-fluid">
             {% for qa in req.qas %}
-            {% set qa_id = qa.id %}
               <div class="row-fluid response">
                 <div class="span2 text-center">
                   <i class="icon-question icon-2x">  </i> </br>
                   <small> {{ qa.date_created | date_granular }}</small> </br>
                 </div>
                 <div class="span10">
-                  <p> {{ qa.question }} - <em>{{qa.owner_id | user_name }}</em></p>
+                  <p> {{ qa.question }} - <em>{{qa.owner_id | directory("name") }}</em></p>
                   {% if qa.answer %}
                     <p>{{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></p>
                   {% else %}
@@ -92,9 +91,9 @@
               </div>
             {% endfor %}
           </div>
+          {% endblock qas %}
         {% endif %}
 
-      {% endblock qas %}
 
       {% block clarify_request %}
       {% endblock clarify_request %}
@@ -119,7 +118,7 @@
                         <div class="span10">
                           <p> 
                             {% set direct_download_url = (record.doc_id | get_scribd_download_url) %}
-                              <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.user_id | user_name }}</em>. {% if direct_download_url %} <a href = "{{ direct_download_url }}" rel="tooltip" data-toggle="tooltip" dataplacement="right" title="">Direct Download</a> {% endif %}
+                              <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.user_id | directory("name") }}</em>. {% if direct_download_url %} <a href = "{{ direct_download_url }}" rel="tooltip" data-toggle="tooltip" dataplacement="right" title="">Direct Download</a> {% endif %}
                           </p>
                         </div>
                       </div>
@@ -130,7 +129,7 @@
                             <small> {{ record.date_created | date_granular }} </small> </br>
                           </div>
                           <div class="span10">
-                            <p>{{record.description}} can be accessed: {{record.access}} </a> - <em>{{record.user_id | user_name }}</em></p>
+                            <p>{{record.description}} can be accessed: {{record.access}} </a> - <em>{{record.user_id | directory("name")}}</em></p>
                           </div>
                         </div>
                     {% else %} <!-- treat it as a link -->
@@ -140,7 +139,7 @@
                           <small> {{ record.date_created | date_granular }} </small> </br>
                         </div>
                         <div class="span10">
-                          <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.owner_id | owner_name }}</em></p>
+                          <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.owner_id | directory("name") }}</em></p>
                         </div>
                       </div>
                     {% endif %}
@@ -157,7 +156,7 @@
                         <small> {{ note.date_created | date_granular }} </small> </br>
                       </div>
                       <div class="span10">
-                        <p> {{ note.text}} - <em>{{note.user_id | user_name }}</em></p>
+                        <p> {{ note.text}} - <em>{{note.user_id | directory("name") }}</em></p>
                       </div>
                     </div>
                   {% endfor %}
