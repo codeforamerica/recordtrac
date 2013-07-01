@@ -219,27 +219,6 @@
 
 
 {% block bottom_script %}
-<script>
- /* validates add a record form */
-$(document).ready(function(){
-   $("#submitRecord").validate({
-      rules: {
-        record_description: {
-          required: true,
-          minlength: 2
-             }
-         },
-       highlight: function(element) {
-          $(element).closest('.control-group').removeClass('success').addClass('error');
-        },
-        success: function(element) {
-          element
-          .text('OK!').addClass('valid')
-          .closest('.control-group').removeClass('error').addClass('success');
-        }
-     });
-});
-</script>
 
 <script>
   /* takes text from json file for each reason and populates the editable textarea in the modal */
