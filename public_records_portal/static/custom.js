@@ -23,31 +23,6 @@
     });
   });
 
-/* submit disable and enable on valid form entry */
-  // $(document).ready(function () {
-  // 	$('.nav li').click(function() {
-  // 		$('.nav li:active').removeClass('active');
-  // 	 $('this').addClass('active');
-  // 	});
-  // });
-  // $(document).ready(function () {
-  //  $('inputUrl:valid').keyup(function() {
-  //    // $('inputUrl:valid').removeClass('disabled');
-  //   $('addalink').removeClass('disabled');
-  //  });
-  // });
-
-/* form in contact info popover */
-  $('#contactinfoPopover').popover({ 
-      trigger: 'hover',
-      html : true,
-      title: function() {
-        return $("#contactinfoPopover-head").html();
-      },
-      content: function() {
-        return $("#contactinfoPopover-content").html();
-      }
-  });
 
 /* form in reroute popover */
   $('#reroutePopover').popover({ 
@@ -71,6 +46,22 @@
         return $("#historyPopover-content").html();
       }
   });
+
+function directoryPopover(staffName, staffDept, elemID){
+   /* all popovers */
+  $(elemID).popover({
+      trigger: 'hover', 
+      html : true,
+      title: function() {
+        return $("Contact information");
+      },
+      content: function() {
+            var $cont = $("<p class='tight_paragraph'><span class='muted'>Department: </span>"+staffDept+"</p><p class='tight_paragraph'><span class='muted'>Email: </span>"+staffName+"</p><p class='tight_paragraph'><span class='muted'>Phone: </span>[Phone]</p>");
+            return $cont;
+      }
+  });
+}
+
 
 /* tooptip */
   $('[rel=tooltip]').tooltip({html:true}) 
