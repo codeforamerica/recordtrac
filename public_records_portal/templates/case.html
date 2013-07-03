@@ -114,6 +114,7 @@
                     {% set uid = record.user_id %}
                     {% set staffName = (uid | directory("name")) %}
                     {% set staffDept = (uid | directory("dept")) %}
+                    {% set staffEmail = (uid | user_email) %}
                     {% if record.doc_id %}
                       <div class="row-fluid response">
                         <div class="span2 text-center">
