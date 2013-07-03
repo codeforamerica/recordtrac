@@ -139,7 +139,7 @@
                           <small> {{ record.date_created | date_granular }} </small> </br>
                         </div>
                         <div class="span10">
-                          <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.owner_id | directory("name") }}</em></p>
+                          <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em>{{record.user_id | directory("name") }}</em></p>
                         </div>
                       </div>
                     {% endif %}
