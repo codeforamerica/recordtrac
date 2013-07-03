@@ -131,11 +131,24 @@
     {% block bottom_script %}
     {% endblock bottom_script %}
 
-    <!-- get satisfaction feedback tab -->
+    <!-- get satisfaction feedback tab 
     <div id="getsat-widget-6266"></div>
     <script type="text/javascript" src="https://loader.engage.gsfn.us/loader.js"></script>
     <script type="text/javascript">
     if (typeof GSFN !== "undefined") { GSFN.loadWidget(6266,{"containerId":"getsat-widget-6266"}); }
-    </script>
+    </script> -->
+
+    <!-- gforms feedback tab -->
+    <h4 class="text-center"><a id="floating_link" href="#feedbackModal" data-toggle="modal"><small><i class="icon-plus"></i></small> Feedback</a></h4>
+     
+    <!-- Modal -->
+    <div id="feedbackModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+      <div class="modal-body">
+        <iframe src="https://docs.google.com/forms/d/1UYbs_Rk9eeK4OAKFpfSQnxPBTQ8DcG7iO6RnIiB6Qaw/viewform?embedded=true" width="500" height="390" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+      </div>
+    </div>
   </body>
 </html>

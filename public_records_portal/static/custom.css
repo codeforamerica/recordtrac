@@ -25,6 +25,32 @@
 	white-space: pre;
 }*/
 
+/* feedback form */
+#floating_link {
+     position: fixed;
+     left: -50px;
+     top: 200px;
+     /*display: block;*/
+     width: 125px;
+     height: 50px;
+     /*text-indent: -100px;*/
+     background-color: purple;
+     overflow: hidden;
+     border-radius: 5px;
+     color: white;
+     writing-mode: bt-lr; 
+	-webkit-transform: rotate(270deg);	
+	-moz-transform: rotate(270deg);
+	-ms-transform: rotate(270deg);
+	-o-transform: rotate(270deg);
+	transform: rotate(270deg);
+	line-height : 60px;
+}
+
+#floating_link:hover {text-decoration:none;}
+
+#floating_link i {color:white;}
+
 /* validation style */
 label.valid {
   width: 24px;
