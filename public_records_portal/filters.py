@@ -156,5 +156,7 @@ def directory(uid, info_type = None):
 					return "%s %s" % (first, last)
 				if info_type == 'dept':
 					return line['DEPARTMENT']
+		name,domain = email.split('@')
+		return name
 	return None
 
