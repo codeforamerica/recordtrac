@@ -19,7 +19,7 @@
     <div class="pull-right">
       {% block routing %}
         Routed to  
-        <div class="btn-group">
+        <div class="btn-group"  style="font-size:15px">
           <div><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{(req.current_owner | owner_uid)| directory("name")}} <span class="caret"></span> </a></div>
           <div id="reroutePopover-head" class="hide">Reassign to:</div>
           <div id="reroutePopover-content" class="hide">              
@@ -28,7 +28,7 @@
               <div class="control-group">
                 <div class="controls">
                   <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                  <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" required />
+                  <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
                   <input id="rerouteReason" type="text" name="owner_reason" placeholder="Say why." required />
                   <button id="rerouteButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
                 </div>
@@ -238,6 +238,21 @@ $(document).ready(function(){
           .closest('.control-group').removeClass('error').addClass('success');
         }
      });
+
+   var emails = [];
+  $.getJSON("{{ url_for('static', filename='directory.json') }}", function(data) {
+        $.each(data, function (i, line) {
+              emails.push(line.EMAIL_ADDRESS);
+          });
+          $('#rerouteEmail').typeahead.defaults = {
+    source: emails
+  , items: 8
+  , menu: '<ul class="typeahead dropdown-menu"></ul>'
+  , item: '<li><a href="#"></a></li>'
+  , minLength: 1
+  }
+
+    }); 
 });
 </script>
 
@@ -260,22 +275,4 @@ $(document).ready(function(){
 
 </script>
 
- <script>
-$(document).ready(function() {
-  var emails = [];
-  $.getJSON("{{ url_for('static', filename='directory.json') }}", function(data) {
-        $.each(data, function (i, line) {
-              emails.push(line.EMAIL_ADDRESS);
-          });
-          $('#rerouteEmail').typeahead.defaults = {
-    source: emails
-  , items: 8
-  , menu: '<ul class="typeahead dropdown-menu"></ul>'
-  , item: '<li><a href="#"></a></li>'
-  , minLength: 1
-  }
-
-    }); 
-});
-</script>
 {% endblock bottom_script %}

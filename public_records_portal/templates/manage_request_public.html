@@ -9,8 +9,12 @@
                   <i class="icon-question icon-2x">  </i> </br>
                   <small> {{ qa.date_created | date_granular }}</small> </br>
                 </div>
-                <div class="span10">
-                  <p> {{ qa.question }} - <em>{{ qa.owner_id | directory("name")}}</em></p>
+                 <div class="span10">
+                   {% set uid = qa.owner_id %}
+                   {% set staffName = (uid | directory("name")) %}
+                   {% set staffDept = (uid | directory("dept")) %}
+                   {% set staffEmail = (uid | user_email) %}
+                  <p> {{ qa.question }} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="label label-info" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staffName }}</span></a></em></p>
                   {% if qa.answer %}
                     <p>{{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></p>
                   {% else %}
