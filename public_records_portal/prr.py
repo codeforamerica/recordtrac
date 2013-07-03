@@ -170,7 +170,7 @@ def answer_a_question(qa_id, answer, subscriber_id = None):
 	put_resource("qa", dict(subscriber_id = subscriber_id, answer = answer),int(qa_id))
 	change_request_status(qa['request_id'], "Pending")
 	req = get_resource("request", qa['request_id'])
-	send_prr_email(request_id = qa['request_id'], notification_type = "Question answered", owner_id = req['current_owner'])
+	send_prr_email(request_id = qa['request_id'], notification_type = "Question answered", owner_id = qa['owner_id'])
 
 def create_or_return_user(email, alias = None, phone = None):
 	user = User.query.filter_by(email = email).first()
