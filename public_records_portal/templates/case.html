@@ -13,7 +13,8 @@
             {% set uid = (req.current_owner | owner_uid) %}
             {% set staffName = (uid | directory("name")) %}
             {% set staffDept = (uid | directory("dept")) %}
-              Routed to <a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverRoute" class="hidden-phone hidden-tablet"><span class="label label-info" onmouseover="directoryPopover('{{staffName}}', '{{staffDept}}', '#contactinfoPopoverRoute')">{{ staffName }}</span></a>
+            {% set staffEmail = (uid | user_email) %}
+              Routed to <a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverRoute" class="hidden-phone hidden-tablet"><span class="label label-info" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverRoute')">{{ staffName }}</span></a>
             {% endblock routing %}
             {% block history %}
               <a data-placement="left" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"> <i class="icon-time"></i>  </a>
@@ -80,7 +81,8 @@
                    {% set uid = qa.owner_id %}
                    {% set staffName = (uid | directory("name")) %}
                    {% set staffDept = (uid | directory("dept")) %}
-                  <p> {{ qa.question }} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="label label-info" onmouseover="directoryPopover('{{staffName}}', '{{staffDept}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staffName }}</span></a></em></p>
+                   {% set staffEmail = (uid | user_email) %}
+                  <p> {{ qa.question }} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="label label-info" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staffName }}</span></a></em></p>
                   {% if qa.answer %}
                     <p>{{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></p>
                   {% else %}
@@ -156,13 +158,14 @@
                     {% set uid = note.user_id %}
                     {% set staffName = (uid | directory("name")) %}
                     {% set staffDept = (uid | directory("dept")) %}
+                    {% set staffEmail = (uid | user_email) %}
                     <div class="row-fluid response">
                       <div class="span2 text-center">
                         <i class="icon-edit icon-3x">  </i> </br>
                         <small> {{ note.date_created | date_granular }} </small> </br>
                       </div>
                       <div class="span10">
-                        <p> {{ note.text}} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverNote{{loop.index}}" class="hidden-phone hidden-tablet"><span class="label label-info" onmouseover="directoryPopover('{{staffName}}', '{{staffDept}}', '#contactinfoPopoverNote{{loop.index}}')">{{ staffName }}</span></a></em></p>
+                        <p> {{ note.text}} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverNote{{loop.index}}" class="hidden-phone hidden-tablet"><span class="label label-info" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverNote{{loop.index}}')">{{ staffName }}</span></a></em></p>
                       </div>
                     </div>
                   {% endfor %}
