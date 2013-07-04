@@ -118,7 +118,7 @@
                     {% if record.doc_id %}
                       <div class="row-fluid response">
                         <div class="span2 text-center">
-                          <i class="icon-file-alt icon-3x">  </i></br>
+                          <i class="icon-file-alt icon-2x">  </i></br>
                           <small> {{ record.date_created | date_granular }} </small> </br>
                         </div>
                         <div class="span10">
@@ -131,7 +131,7 @@
                       {% elif record.access %}
                         <div class="row-fluid response">
                           <div class="span2 text-center">
-                            <i class="icon-file-alt icon-3x">  </i></br>
+                            <i class="icon-file-alt icon-2x">  </i></br>
                             <small> {{ record.date_created | date_granular }} </small> </br>
                           </div>
                           <div class="span10">
@@ -141,7 +141,7 @@
                     {% else %} <!-- treat it as a link -->
                       <div class="row-fluid response">
                         <div class="span2 text-center">
-                          <i class="icon-link icon-3x">  </i></br>
+                          <i class="icon-link icon-2x">  </i></br>
                           <small> {{ record.date_created | date_granular }} </small> </br>
                         </div>
                         <div class="span10">
@@ -162,7 +162,7 @@
                     {% set staffEmail = (uid | user_email) %}
                     <div class="row-fluid response">
                       <div class="span2 text-center">
-                        <i class="icon-edit icon-3x">  </i> </br>
+                        <i class="icon-edit icon-2x">  </i> </br>
                         <small> {{ note.date_created | date_granular }} </small> </br>
                       </div>
                       <div class="span10">
@@ -186,7 +186,7 @@
               <div class="span10">
                 <div class="row-fluid response">
                   <div class="span2 text-center">
-                    <i class="icon-lock icon-3x">  </i> </br>
+                    <i class="icon-lock icon-2x">  </i> </br>
                     <small> {{ request.status_updated | date_granular }} </small> </br> 
                   </div>
                   <div class="span10">

@@ -20,10 +20,17 @@
 	margin: 0 0 0px;
 }
 
+
+
 /* request text format */
 /*#request_text {
 	white-space: pre;
 }*/
+
+/* xxxxx */
+#contactinfoPopoverNote span {
+	color: #3a87ad;
+}
 
 /* feedback form */
 #floating_link {
