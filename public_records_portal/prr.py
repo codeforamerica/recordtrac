@@ -189,7 +189,9 @@ def create_or_return_user(email, alias = None, phone = None):
 
 def last_note(request_id):
 	notes = get_resource_filter(resource = "note", filters= [dict(name='request_id', op='eq', val=request_id)], order_by = [dict(field="date_created", direction="desc")])
-	return notes['objects'][0]
+	if notes['objects']:
+		return notes['objects'][0]
+	return None
 
 def open_request(request_id):
 	change_request_status(request_id, "Open")
