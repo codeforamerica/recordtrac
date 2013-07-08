@@ -41,7 +41,7 @@ from models import *
 # Create API
 manager = APIManager(app, flask_sqlalchemy_db=db)
 manager.create_api(Request, methods=['GET', 'POST', 'PUT', 'DELETE'], results_per_page=None)
-manager.create_api(Owner, methods=['GET', 'POST', 'PUT', 'DELETE'])
+manager.create_api(Owner, methods=['GET', 'POST', 'PUT', 'DELETE'], results_per_page = None)
 manager.create_api(Note, methods=['GET', 'POST', 'PUT', 'DELETE'])
 manager.create_api(Record, methods=['GET', 'POST', 'PUT', 'DELETE'])
 manager.create_api(Note, methods=['GET', 'POST', 'PUT', 'DELETE'])
