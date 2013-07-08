@@ -91,25 +91,25 @@
         },
     "Extension - Large Amount": 
         {
-            "What":"In the next 14 business days, a city employee will search for, collect, and examine a large number of records (Government Code Section 6253(c)(2)).",
+            "What":"A city employee will search for, collect, and examine a large number of records (Government Code Section 6253(c)(2)).",
             "Who":"Members of the general public will be able to view this message.",
             "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
     "Extension - Separate Facility": 
         {
-            "What":"In the next 14 business days, a city employee will search for and collect the requested records from separate facility (Government Code Section 6253(c)(1)).",
+            "What":"A city employee will need to search for and collect the requested records from separate facility or set of facilities (Government Code Section 6253(c)(1)).",
             "Who":"Members of the general public will be able to view this message.",
             "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
     "Extension - Another Agency": 
         {
-            "What":"In the next 14 business days, a city employee must consult with another agency outside of the City of Oakland before we are able to deliver your record (Government Code Section 6253(c)(3)).",
+            "What":"A city employee must consult with another agency outside of the City of Oakland before we are able to deliver your record (Government Code Section 6253(c)(3)).",
             "Who":"Members of the general public will be able to view this message.",
             "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
     "Extension - Data": 
         {
-            "What":"In the next 14 business days, a city employee needs to compile data or create a computer program to extract data (Government Code Section 6253(c)(4)).",
+            "What":"A city employee needs to compile data or create a computer program to extract data (Government Code Section 6253(c)(4)).",
             "Who":"Members of the general public will be able to view this message.",
             "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
