@@ -33,6 +33,7 @@ class Request(db.Model):
 	__tablename__ = 'request'
 	id = db.Column(db.Integer, primary_key =True)
 	date_created = db.Column(db.DateTime)
+	extended = db.Column(db.Boolean, default = False) # Has the due date been extended?
 	qas = relationship("QA", cascade="all,delete") # The list of QA units for this request
 	status_updated = db.Column(db.DateTime)
 	text = db.Column(db.String(), unique=True) # The actual request text.
