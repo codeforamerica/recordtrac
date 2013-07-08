@@ -11,6 +11,13 @@
             "Who":"Members of the general public will be able to view this message online.",
             "Action":"This message will be posted online and the requester will be notified by email of this message."
         },
+
+    "Add a public note":
+        {
+            "What":"Use this section to communicate with the city about this particular records request.",
+            "Who":"City employees and members of the general public will be able to view this message online.",
+            "Action":"This message will be posted online and the city employee responsible for this request will be notified by email of this message."
+        },
     "Enter records request": 
         {
             "What":"Describe the documents or information you would like to obtain from the City of Oakland. Please be as detailed as possible.",
