@@ -96,6 +96,18 @@ def add_a_resource(resource):
 			return render_template('help_with_uploads.html', message = message)
 	return render_template('error.html', message = "You can only update requests from a request page!")
 
+@app.route('/public_add_a_<string:resource>', methods = ['GET', 'POST'])
+def add_a_resource_public(resource):
+	if request.method == 'POST':
+		if resource == "note":
+			message = add_resource(resource = resource, request_body = request, current_user_id = None)
+		if message == True:
+			return redirect(url_for('show_request_for_x', audience='public', request_id = request.form['request_id']))
+		elif message == False:
+			return render_template('error.html')
+	return render_template('error.html')
+
+
 @app.route('/update_a_<string:resource>', methods=['GET', 'POST'])
 def update_a_resource(resource):
 	if request.method == 'POST':
