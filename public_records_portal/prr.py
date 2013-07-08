@@ -103,8 +103,10 @@ def update_resource(resource, request_body):
 	elif "owner" in resource:
 		change_request_status(fields['request_id'], "Rerouted")
 		assign_owner(fields['request_id'], fields['owner_reason'], fields['owner_email'])
-	elif "request" in resource:
+	elif "reopen" in resource:
 		change_request_status(fields['request_id'], "Reopened")
+	elif "extend" in resource:
+		extend_request(fields['request_id'])
 	else:
 		return False
 
@@ -134,6 +136,10 @@ def add_offline_record(request_id, description, access, user_id):
 	change_request_status(request_id, "A response has been added.")
 	send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
 	return record['id']
+
+def extend_request(request_id):
+	put_resource("request", dict(extended = True),int(request_id))
+	# Create note etc
 
 def add_link(request_id, url, description, user_id):
 	record = create_resource("record", dict(url = url, request_id = request_id, user_id = user_id, description = description))
