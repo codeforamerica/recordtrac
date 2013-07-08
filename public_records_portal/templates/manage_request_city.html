@@ -12,7 +12,7 @@
     <li><a href="#closeRequest">Close request <i class="icon-arrow-down"></i></a></li>
   </ul>
 </div>
-  <p class="text-right">Due: {{ req.date_created | due_date }} <span class="muted">(Submitted {{ req.date_created | date }})</span></p>
+  <p class="text-right">Due: {{ req.date_created | due_date(req.extended) }} <span class="muted">(Submitted {{ req.date_created | date }})</span></p>
   {{ super() }}
 {% endblock content %}
 {% block status %}
@@ -164,8 +164,15 @@
         </div>
     </div>
   </fieldset>
+<fieldset>
 </form>
-
+          <div class="row-fluid"> Placeholder for requesting an extension
+      <form name="extend_request" class="form-inline" id="extension" method="post" action="/update_a_request_extend">
+        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+        <button id="extendRequest" class="btn btn-primary" type="submit">Request an extension</button>
+      </form>
+    </div>
+</fieldset>
 <form name="close" class="form-horizontal" id="closeRequest" method="post" action="/close">
   <input type="hidden" name="request_id" value="{{ req.id }}"/>
   <input type="hidden" name="close_reason"/>
