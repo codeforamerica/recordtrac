@@ -7,7 +7,7 @@
 {% block status %}
   {% if user_id %}
     <div class="span6">
-      <form name="reopen_request" class="form-inline" id="question" method="post" action="/update_a_request">
+      <form name="reopen_request" class="form-inline" id="question" method="post" action="/update_a_request_reopen">
         <input type="hidden" name="request_id" value="{{ req.id }}"/>
         <button id="reopenRequest" class="btn btn-primary" type="submit">Reopen request</button>
       </form>
