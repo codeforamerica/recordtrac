@@ -94,7 +94,19 @@
       <div id="container">
         <div class="row-fluid">
           <div class="span10">
-            {% block banner %}{% endblock banner%}
+            {% block banner %}
+            <!-- success banner -->
+            <div class="alert alert-block">
+              <div class="span1 text-right"><i class="icon-warning-sign icon-2x"> </i></div>
+              <div class="offset1">
+<!--                 <h4><i class="icon-warning-sign icon-large"> </i> Testing </h4>
+ -->                <p> <strong>This website is currently being tested</strong> by the City of Oakland and the <!-- <a href="http://codeforamerica.org/2013-partners/oakland/"> -->2013 Code for America fellows<!-- </a> -->. You may notice some features may not work or may change over time. All public records requests will be processed in accordance with the <!-- <a href="http://www.leginfo.ca.gov/cgi-bin/displaycode?section=gov&group=06001-07000&file=6250-6270"> -->California Public Records Act<!-- </a> --> and the <!-- <a href="http://www2.oaklandnet.com/oakca1/groups/cityclerk/documents/standard/oak022566.pdf"> -->Oakland Sunshine Ordinance<!-- </a> -->.</p>
+
+                <p>You can still submit your request using the City’s <a href="http://www.oaklandcityattorney.org/resources/PubInfoRequest.html">old public records request system</a>.</p>  
+              </div>
+            </div>
+
+            {% endblock banner%}
           </div>
         </div>
         <div class="row-fluid">
