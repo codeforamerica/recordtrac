@@ -3,42 +3,36 @@
 {% extends "case.html" %}
 {% block qas %}
   <div class="row-fluid">
-  {% for qa in req.qas %}
-    <div class="row-fluid response">
-      <div class="span2 text-center">
-        <i class="icon-question icon-2x">  </i> </br>
-        <small> {{ qa.date_created | date_granular }}</small> </br>
-      </div>
-      <div class="span10">
-       {% set uid = qa.owner_id %}
-       {% set staffName = (uid | directory("name")) %}
-       {% set staffDept = (uid | directory("dept")) %}
-       {% set staffEmail = (uid | user_email) %}
-      <p> {{ qa.question }} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staffName }}</span></a></em></p>
-      {% if qa.answer %}
-        <p>{{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></p>
-      {% else %}
-      {% if (req.id | is_request_open) %}
-      <!-- respond to a question -->
-        <form name="respond_question" class="form-horizontal" id="answer" method="post" action="/update_a_qa" autocomplete="on">
-          <fieldset> 
-            <div class="row-fluid">
-              <!-- <div class="control-group span8"> -->
-              <label class="control-label">Answer</label>
-              <div class="controls">
+    {% for qa in req.qas %}
+      <div class="row-fluid response">
+        <div class="span2 text-center">
+          <i class="icon-question icon-2x">  </i> </br>
+          <small> {{ qa.date_created | date_granular }}</small> </br>
+        </div>
+        <div class="span10">
+           {% set uid = qa.owner_id %}
+           {% set staffName = (uid | directory("name")) %}
+           {% set staffDept = (uid | directory("dept")) %}
+           {% set staffEmail = (uid | user_email) %}
+          <p> {{ qa.question }} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staffName }}</span></a></em></p>
+          
+          {% if qa.answer %}
+            <p>{{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></p>
+          {% else %}
+            {% if (req.id | is_request_open) %}
+              <!-- respond to a question -->
+              <form name="respond_question" class="form-inline" id="answer" method="post" action="/update_a_qa" autocomplete="on">
+                <label class="control-label">Answer</label>
                 <input type="hidden" name="qa_id" value="{{ qa.id }}"/>
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                <textarea id="answerTextarea" name="answer_text" type="text" rows="3" cols="20" placeholder="Can you respond to the above question?" required/></textarea>
+                <textarea id="answerTextarea" name="answer_text" type="text" rows="3" placeholder="Can you respond to the above question?" required/></textarea>
                 <button id="askQuestion" class="btn btn-primary" type="submit">Respond</button>
-              </div>
-              <!-- </div> -->
-            </div>
-          </fieldset>
-        </form>
-      {% endif %}
-      {% endif %}
+              </form>
+            {% endif %}
+          {% endif %}
+        </div>
+
       </div>
-    </div>
     {% endfor %}
   </div>
 {% endblock qas %}

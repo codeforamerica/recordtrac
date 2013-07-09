@@ -26,15 +26,14 @@
 	white-space: pre;
 }*/
 
+/* de-indent answer field for Q&A */
+/*#answer {margin-left: -12%;}*/
+
 /* contact info hover link */
-.contactinfoPopover span {
-	color: #3a87ad;
-}
+.contactinfoPopover span {color: #3a87ad;}
 
 /* public note section indent */
-#public_note {
-	margin-left: 5%;
-}
+#public_note {margin-left: 5%;}
 
 /* feedback form */
 #floating_link {
@@ -64,9 +63,7 @@
 	left: -45px;
 }
 
-#floating_link i {
-	color:white;
-}
+#floating_link i {color:white;}
 
 /* validation style */
 label.valid {
@@ -102,16 +99,6 @@ label.error {
 	margin-left: 10%;
 }
 
-/* pull answer form left */
-/*#answer .control-label {
-	width: 80px;
-	margin-left: -30px;
-}
-
-#answer .controls {
-	margin-left: 70px;
-}*/
-
 /* all infotips appear as superscript */
 .icon-info-sign {
 	vertical-align: super;
@@ -128,12 +115,10 @@ label.error {
 	width: auto;
 }
 
-
 /* pull history popover back into view */
 /*#historyPopover {
 	margin-right: 20%;
 }*/
-
 
 /* gives the responses a bit more white space between */
 .response {
