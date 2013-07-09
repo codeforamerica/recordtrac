@@ -44,7 +44,7 @@
 {% endblock qas %}
 
 {% block public_note %}
-  <form name="public_note" class="form-inline response" id="public_note" method="post" action="/add_a_public_note">
+  <form name="public_note" class="form-inline response" id="public_note" method="post" action="/add_a_note_public">
     <div class="row-fluid">
       <input type="hidden" name="request_id" value="{{ req.id }}"/>
       <label class="control-label">Add a note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a public note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
