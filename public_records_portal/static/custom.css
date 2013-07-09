@@ -21,14 +21,13 @@
 }
 
 
-
 /* request text format */
 /*#request_text {
 	white-space: pre;
 }*/
 
-/* xxxxx */
-#contactinfoPopoverNote span {
+/* contact info hover link */
+.contactinfoPopover span {
 	color: #3a87ad;
 }
 
@@ -43,9 +42,8 @@
      left: -50px;
      top: 200px;
      /*display: block;*/
-     width: 125px;
+     width: 100px;
      height: 50px;
-     /*text-indent: -100px;*/
      background-color: purple;
      overflow: hidden;
      border-radius: 5px;
@@ -56,12 +54,19 @@
 	-ms-transform: rotate(270deg);
 	-o-transform: rotate(270deg);
 	transform: rotate(270deg);
-	line-height : 60px;
+	line-height : 70px;
+	transition: left 0.25s;
+	-webkit-transition: left 0.2s;
 }
 
-#floating_link:hover {text-decoration:none;}
+#floating_link:hover {
+	text-decoration:none;
+	left: -45px;
+}
 
-#floating_link i {color:white;}
+#floating_link i {
+	color:white;
+}
 
 /* validation style */
 label.valid {

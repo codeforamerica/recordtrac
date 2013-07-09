@@ -78,11 +78,7 @@
                 <small> {{ public_note.date_created | date_granular }}</small> </br>
               </div>
               <div class="span10">
-                 {% set uid = qa.owner_id %}
-                 {% set staffName = (uid | directory("name")) %}
-                 {% set staffDept = (uid | directory("dept")) %}
-                 {% set staffEmail = (uid | user_email) %}
-                <p> {{ req.public_note }} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="label label-info" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staffName }}</span></a></em></p>
+                <p>{{ req.public_note }} - <em>Requester</em></p>
               </div>
             </div>
           {% endfor %}
@@ -102,7 +98,7 @@
                    {% set staffName = (uid | directory("name")) %}
                    {% set staffDept = (uid | directory("dept")) %}
                    {% set staffEmail = (uid | user_email) %}
-                  <p> {{ qa.question }} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="label label-info" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staffName }}</span></a></em></p>
+                  <p> {{ qa.question }} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staffName }}</span></a></em></p>
                   {% if qa.answer %}
                     <p>{{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></p>
                   {% else %}
@@ -148,7 +144,7 @@
                         <div class="span10">
                           <p> 
                             {% set direct_download_url = (record.doc_id | get_scribd_download_url) %}
-                              <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverRecord{{loop.index}}" class="hidden-phone hidden-tablet"><span class="label label-info" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverRecord{{loop.index}}')">{{ staffName }}</span></a></em>. {% if direct_download_url %} <a href = "{{ direct_download_url }}" rel="tooltip" data-toggle="tooltip" dataplacement="right" title="">Direct Download</a> {% endif %}
+                              <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} <sup><i class="icon-external-link"></i></sup></a> - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverRecord{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverRecord{{loop.index}}')">{{ staffName }}</span></a></em>. {% if direct_download_url %} <a href = "{{ direct_download_url }}" rel="tooltip" data-toggle="tooltip" dataplacement="right" title="">Direct Download</a> {% endif %}
                           </p>
                         </div>
                       </div>
@@ -159,7 +155,7 @@
                             <small> {{ record.date_created | date_granular }} </small> </br>
                           </div>
                           <div class="span10">
-                            <p>{{record.description}} can be accessed: {{record.access}} </a> - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverRecord{{loop.index}}" class="hidden-phone hidden-tablet"><span class="label label-info" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverRecord{{loop.index}}')">{{ staffName }}</span></a></em></p>
+                            <p>{{record.description}} can be accessed: {{record.access}} </a> - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverRecord{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverRecord{{loop.index}}')">{{ staffName }}</span></a></em></p>
                           </div>
                         </div>
                     {% else %} <!-- treat it as a link -->
@@ -169,7 +165,7 @@
                           <small> {{ record.date_created | date_granular }} </small> </br>
                         </div>
                         <div class="span10">
-                          <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} </a> - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverRecord{{loop.index}}" class="hidden-phone hidden-tablet"><span class="label label-info" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverRecord{{loop.index}}')">{{ staffName }}</span></a></em></p>
+                          <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} <sup><i class="icon-external-link"></i></sup></a> - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverRecord{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverRecord{{loop.index}}')">{{ staffName }}</span></a></em></p>
                         </div>
                       </div>
                     {% endif %}
@@ -190,7 +186,7 @@
                         <small> {{ note.date_created | date_granular }} </small> </br>
                       </div>
                       <div class="span10">
-                        <p> {{ note.text}} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverNote{{loop.index}}" class="hidden-phone hidden-tablet"><span class="label label-info" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverNote{{loop.index}}')">{{ staffName }}</span></a></em></p>
+                        <p> {{ note.text}} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverNote{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverNote{{loop.index}}')">{{ staffName }}</span></a></em></p>
                       </div>
                     </div>
                   {% endfor %}
