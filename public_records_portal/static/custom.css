@@ -56,11 +56,18 @@
 	-o-transform: rotate(270deg);
 	transform: rotate(270deg);
 	line-height : 70px;
+	transition: left 0.25s;
+	-webkit-transition: left 0.2s;
 }
 
-#floating_link:hover {text-decoration:none;}
+#floating_link:hover {
+	text-decoration:none;
+	left: -45px;
+}
 
-#floating_link i {color:white;}
+#floating_link i {
+	color:white;
+}
 
 /* validation style */
 label.valid {

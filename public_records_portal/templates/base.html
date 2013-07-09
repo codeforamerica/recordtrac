@@ -141,6 +141,14 @@
     <script type="text/javascript" src="{{ url_for('static', filename='jquery.ellipsis.js') }}"></script>
     
     {% block bottom_script %}
+<!--       $(document).ready(function(){
+        $("#floating_link").hover(function(){
+          $(this).filter(':not(:animated)').animate({ left: "-50px" });
+        }, 
+        function() {
+          $(this).animate({ left: "-40px" });
+        });
+      }); -->
     {% endblock bottom_script %}
 
     <!-- get satisfaction feedback tab 
