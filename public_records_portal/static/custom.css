@@ -43,9 +43,8 @@
      left: -50px;
      top: 200px;
      /*display: block;*/
-     width: 125px;
+     width: 100px;
      height: 50px;
-     /*text-indent: -100px;*/
      background-color: purple;
      overflow: hidden;
      border-radius: 5px;
@@ -56,7 +55,7 @@
 	-ms-transform: rotate(270deg);
 	-o-transform: rotate(270deg);
 	transform: rotate(270deg);
-	line-height : 60px;
+	line-height : 70px;
 }
 
 #floating_link:hover {text-decoration:none;}
