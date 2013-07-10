@@ -146,7 +146,7 @@
                         <div class="span10">
                           <p> 
                             {% set direct_download_url = (record.doc_id | get_scribd_download_url) %}
-                              <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} <sup><i class="icon-external-link"></i></sup></a> - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverRecord{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverRecord{{loop.index}}')">{{ staffName }}</span></a></em>. {% if direct_download_url %} <a href = "{{ direct_download_url }}" rel="tooltip" data-toggle="tooltip" dataplacement="right" title="">Direct Download</a> {% endif %}
+                              <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} <i class="icon-external-link"></i></a> - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverRecord{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverRecord{{loop.index}}')">{{ staffName }}</span></a></em>. {% if direct_download_url %} <a href = "{{ direct_download_url }}" rel="tooltip" data-toggle="tooltip" dataplacement="right" title="">Direct Download</a> {% endif %}
                           </p>
                         </div>
                       </div>
@@ -167,7 +167,7 @@
                           <small> {{ record.date_created | date_granular }} </small> </br>
                         </div>
                         <div class="span10">
-                          <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} <sup><i class="icon-external-link"></i></sup></a> - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverRecord{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverRecord{{loop.index}}')">{{ staffName }}</span></a></em></p>
+                          <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} <i class="icon-external-link"></i></a> - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverRecord{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverRecord{{loop.index}}')">{{ staffName }}</span></a></em></p>
                         </div>
                       </div>
                     {% endif %}

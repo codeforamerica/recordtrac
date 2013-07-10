@@ -26,8 +26,12 @@
 	white-space: pre;
 }*/
 
-/* de-indent answer field for Q&A */
-/*#answer {margin-left: -12%;}*/
+i[class|="icon-external-link"] {
+	vertical-align: super;
+	font-size:10px;
+}
+
+
 
 /* contact info hover link */
 .contactinfoPopover span {color: #3a87ad;}
