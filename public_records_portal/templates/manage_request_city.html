@@ -199,7 +199,7 @@
       <div class="control-group">
         <div class="controls">
           <!-- Button to trigger modal -->
-          <a href="#closeModal" role="button" class="btn btn-inverse" data-toggle="modal">Close request...</a>
+          <a id="closeRequest_button" href="#closeModal" role="button" class="btn btn-inverse" data-toggle="modal">Close request...</a>
            
           <!-- Modal -->
           <div id="closeModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="closeModalLabel" aria-hidden="true">
@@ -227,25 +227,66 @@
 
 {% block bottom_script %}
 <script>
- /* validates add a record form */
 $(document).ready(function(){
-   $("#submitRecord").validate({
-      rules: {
-        record_description: {
-          required: true,
-          minlength: 2
-             }
-         },
-       highlight: function(element) {
-          $(element).closest('.control-group').removeClass('success').addClass('error');
-        },
-        success: function(element) {
-          element
-          .text('OK!').addClass('valid')
-          .closest('.control-group').removeClass('error').addClass('success');
-        }
-     });
+  /* validates add a record form */
+  $("#submitRecord").validate({
+    rules: {
+      record_description: {
+        required: true,
+        minlength: 2
+           }
+       },
+     highlight: function(element) {
+        $(element).closest('.control-group').removeClass('success').addClass('error');
+      },
+      success: function(element) {
+        element
+        .text('OK!').addClass('valid')
+        .closest('.control-group').removeClass('error').addClass('success');
+      }
+  });
 
+  /* validates close request form */
+  $("#closeRequest_button").click(function() {
+    if($("#closeRequest").valid()) {
+       $('#closeModal').modal('show');
+    }
+    else{
+      $("#closeRequest").valid({
+        rules: {
+          close_reasons: {
+            required: true,
+               }
+           },
+        highlight: function(element) {
+            $(element).closest('.control-group').removeClass('success').addClass('error');
+          },
+        success: function(element) {
+            element
+            .text('OK!').addClass('valid')
+            .closest('.control-group').removeClass('error').addClass('success');
+          }
+    });
+  });
+
+
+    // $("#closeRequest").valid({
+    //   rules: {
+    //     close_reasons: {
+    //       required: true,
+    //          }
+    //      },
+    //    highlight: function(element) {
+    //       $(element).closest('.control-group').removeClass('success').addClass('error');
+    //     },
+    //     success: function(element) {
+    //       element
+    //       .text('OK!').addClass('valid')
+    //       .closest('.control-group').removeClass('error').addClass('success');
+    //     }
+    // });
+
+  /* typeahead for email in reroute form */
    var emails = [];
   $.getJSON("{{ url_for('static', filename='directory.json') }}", function(data) {
         $.each(data, function (i, line) {

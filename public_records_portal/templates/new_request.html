@@ -59,27 +59,27 @@
 {% endblock content %}
 {% block bottom_script %}
   <script>
-  /* validates add a record form */
-$(document).ready(function(){
-   $("#submitRequest").validate({
-      rules: {
-        request_text: {
-          required: true,
-          minlength: 2
+    /* validates add a record form */
+    $(document).ready(function(){
+       $("#submitRequest").validate({
+          rules: {
+            request_text: {
+              required: true,
+              minlength: 2
+                 },
+            request_email: {
+              required: true
+                 } 
              },
-        request_email: {
-          required: true
-             } 
-         },
-       highlight: function(element) {
-          $(element).closest('.control-group').removeClass('success').addClass('error');
-        },
-        success: function(element) {
-          element
-          .text('OK!').addClass('valid')
-          .closest('.control-group').removeClass('error').addClass('success');
-        }
-     });
-});
+           highlight: function(element) {
+              $(element).closest('.control-group').removeClass('success').addClass('error');
+            },
+            success: function(element) {
+              element
+              .text('OK!').addClass('valid')
+              .closest('.control-group').removeClass('error').addClass('success');
+            }
+         });
+    });
   </script>
 {% endblock bottom_script %}
