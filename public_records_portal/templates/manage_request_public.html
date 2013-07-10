@@ -44,11 +44,11 @@
 {% endblock qas %}
 
 {% block public_note %}
-  <form name="public_note" class="form-inline response" id="public_note" method="post" action="/add_a_note_public">
+  <form name="public_note" class="form-inline response" id="public_note" method="post" action="/public_add_a_note">
     <div class="row-fluid">
       <input type="hidden" name="request_id" value="{{ req.id }}"/>
       <label class="control-label">Add a note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a public note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
-      <textarea id="public_noteTextarea" name="public_noteTextarea" type="text" rows="3" placeholder="Use this field to note anything else the city should know about your request." required/></textarea>
+      <textarea id="public_noteTextarea" name="note_text" type="text" rows="3" placeholder="Use this field to note anything else the city should know about your request." required/></textarea>
       <!-- <input type="text" class="input-xxlarge" id="noteTextarea" name="note_text" rows="3" placeholder="Use this field to note anything else the city should know about your request."required/> -->
       <button type="submit" class="btn btn-primary">Add note</button>
     </div>

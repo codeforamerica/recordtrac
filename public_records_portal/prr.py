@@ -55,21 +55,20 @@ def get_resources(resource, app_url = None, order_by = None):
 def add_resource(resource, request_body, current_user_id = None):
 	fields = request_body.form
 	if "note" in resource:
-		add_note(fields['request_id'], fields['note_text'], current_user_id)
+		return add_note(fields['request_id'], fields['note_text'], current_user_id)
 	elif "record" in resource:
 		if fields['record_description'] == "":
 			return "When uploading a record, please fill out the 'summary' field."
 		if 'record_access' in fields and fields['record_access'] != "":
-			add_offline_record(fields['request_id'], fields['record_description'], fields['record_access'], current_user_id)
+			return add_offline_record(fields['request_id'], fields['record_description'], fields['record_access'], current_user_id)
 		elif 'link_url' in fields and fields['link_url'] != "":
-			add_link(fields['request_id'], fields['link_url'], fields['record_description'], current_user_id)
+			return add_link(fields['request_id'], fields['link_url'], fields['record_description'], current_user_id)
 		else:
 			return upload_record(fields['request_id'], request.files['record'], fields['record_description'], current_user_id)
 	elif "qa" in resource:
-		ask_a_question(fields['request_id'], current_user_id, fields['question_text'])
+		return ask_a_question(fields['request_id'], current_user_id, fields['question_text'])
 	else:
 		return False
-	return True
 
 def create_resource(resource, payload, app_url = None):
 	if not app_url:
@@ -98,23 +97,26 @@ def put_resource(resource, payload, resource_id, app_url = None):
 def update_resource(resource, request_body):
 	fields = request_body.form
 	if "qa" in resource:
-		answer_a_question(fields['qa_id'], fields['answer_text'])
-		return True
+		return answer_a_question(fields['qa_id'], fields['answer_text'])
 	elif "owner" in resource:
 		change_request_status(fields['request_id'], "Rerouted")
-		assign_owner(fields['request_id'], fields['owner_reason'], fields['owner_email'])
+		return assign_owner(fields['request_id'], fields['owner_reason'], fields['owner_email'])
 	elif "reopen" in resource:
 		change_request_status(fields['request_id'], "Reopened")
+		return fields['request_id']
 	elif "extend" in resource:
 		extend_request(fields['request_id'])
+		return fields['request_id']
 	else:
 		return False
 
 def add_note(request_id, text, user_id):
 	note = create_resource("note", dict(request_id = request_id, text = text, user_id = user_id))
-	change_request_status(request_id, "A response has been added.")
-	send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
-	return note['id']
+	if note:
+		change_request_status(request_id, "A response has been added.")
+		send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
+		return note['id']
+	return False
 
 def upload_record(request_id, file, description, user_id):
 	try:
@@ -133,9 +135,11 @@ def upload_record(request_id, file, description, user_id):
 
 def add_offline_record(request_id, description, access, user_id):
 	record = create_resource("record", dict(request_id = request_id, user_id = user_id, access = access, description = description))
-	change_request_status(request_id, "A response has been added.")
-	send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
-	return record['id']
+	if record:
+		change_request_status(request_id, "A response has been added.")
+		send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
+		return record['id']
+	return False
 
 def extend_request(request_id):
 	put_resource("request", dict(extended = True),int(request_id))
@@ -143,9 +147,11 @@ def extend_request(request_id):
 
 def add_link(request_id, url, description, user_id):
 	record = create_resource("record", dict(url = url, request_id = request_id, user_id = user_id, description = description))
-	change_request_status(request_id, "A response has been added.")
-	send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
-	return record['id']
+	if record:
+		change_request_status(request_id, "A response has been added.")
+		send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
+		return record['id']
+	return False
 			
 def make_request(text, email = None, assigned_to_name = None, assigned_to_email = None, assigned_to_reason = None, user_id = None, phone = None, alias = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
@@ -155,7 +161,7 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 		if user_id:
 			payload = dict(text=text, creator_id = user_id)
 		req = create_resource("request", payload)
-		past_owner_id, owner_id = assign_owner(request_id = req['id'], reason = assigned_to_reason, email = assigned_to_email, alias = assigned_to_name)
+		new_owner_id = assign_owner(request_id = req['id'], reason = assigned_to_reason, email = assigned_to_email, alias = assigned_to_name)
 		if email: # If the user provided an e-mail address, add them as a subscriber to the request.
 			user = create_or_return_user(email = email, alias = alias, phone = phone)
 			subscriber = create_resource("subscriber", dict(request_id = req['id'], user_id = user.id))
@@ -166,9 +172,11 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 def ask_a_question(request_id, owner_id, question):
 	""" City staff can ask a question about a request they are confused about."""
 	qa = create_resource("qa", dict(request_id = request_id, question = question, owner_id = owner_id))
-	change_request_status(request_id, "Pending")
-	send_prr_email(request_id, notification_type = "Question asked", requester_id = get_requester(request_id))
-	return qa['id']
+	if qa:
+		change_request_status(request_id, "Pending")
+		send_prr_email(request_id, notification_type = "Question asked", requester_id = get_requester(request_id))
+		return qa['id']
+	return False
 
 def answer_a_question(qa_id, answer, subscriber_id = None):
 	""" A requester can answer a question city staff asked them about their request."""
@@ -234,14 +242,10 @@ def assign_owner(request_id, reason, email = None, alias = None, phone = None, n
 		if current_owner_id == owner['id']:
 			return None, None
 	new_owner = create_resource("owner", dict(request_id = request_id, user_id = user.id, reason = reason))
-	if current_owner_id:
-		past_owner_id = current_owner_id
-	else:
-		past_owner_id = None
 	put_resource("request", dict(current_owner = new_owner['id']) ,int(request_id))
 	if notify:
 		send_prr_email(request_id = request_id, notification_type = "Request assigned", owner_id = new_owner['id'])
-	return past_owner_id, new_owner['id']
+	return new_owner['id']
 
 def change_request_status(request_id, status):
 	return put_resource("request", dict(status = status, status_updated = datetime.now().isoformat()),int(request_id))
@@ -284,6 +288,8 @@ def get_scribd_download_url(doc_id, API_KEY = None, API_SECRET = None):
 		return doc.get_download_url()
 	except:
 		return None
+
+# make batch download for get_scribd_download_url
 
 def make_public(doc_id, API_KEY, API_SECRET):
     scribd.config(API_KEY, API_SECRET)
