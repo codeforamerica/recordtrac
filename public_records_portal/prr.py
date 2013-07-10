@@ -14,9 +14,17 @@ import sendgrid
 from datetime import datetime
 from models import User
 from timeout import timeout
-
+import urllib
 
 ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff']
+
+# Set flags:
+upload_to_scribd = True
+send_emails = False
+if app.config['ENVIRONMENT'] != 'LOCAL':
+	upload_to_scribd = True
+if app.config['ENVIRONMENT'] == 'PRODUCTION':
+	send_emails = True
 
 def get_resource(resource, resource_id, app_url = None):
 	if not app_url:
@@ -277,7 +285,7 @@ def upload(file, filename, API_KEY, API_SECRET):
         print 'Scribd failed: code=%d, error=%s' % (err.errno, err.strerror)
         return err.strerror
 
-def get_scribd_download_url(doc_id, API_KEY = None, API_SECRET = None):
+def get_scribd_download_url(doc_id, record_id = None, API_KEY = None, API_SECRET = None):
 	if not API_KEY:
 		API_KEY = app.config['SCRIBD_API_KEY']
 	if not API_SECRET:
@@ -285,11 +293,21 @@ def get_scribd_download_url(doc_id, API_KEY = None, API_SECRET = None):
 	try:
 		scribd.config(API_KEY, API_SECRET)
 		doc = scribd.api_user.get(doc_id)
-		return doc.get_download_url()
+		doc_url = doc.get_download_url()
+		if record_id:
+			set_scribd_download_url(doc_url, record_id)
+		return doc_url
 	except:
 		return None
 
-# make batch download for get_scribd_download_url
+def set_scribd_download_url(download_url, record_id):
+	return put_resource("record", dict(download_url = download_url),int(record_id))
+
+def scribd_batch_download(): 
+	records = get_resources("record")
+	for record in records['objects']:
+		if record['download_url']:
+			urllib.urlretrieve(record['download_url'], "saved_records/%s" %(record['filename']))
 
 def make_public(doc_id, API_KEY, API_SECRET):
     scribd.config(API_KEY, API_SECRET)
@@ -321,7 +339,7 @@ def upload_file(file):
 		allowed = allowed_file(file.filename)
 		if allowed[0]:
 			filename = secure_filename(file.filename)
-			if app.config['ENVIRONMENT'] != "LOCAL":
+			if upload_to_scribd: # Check flag
 				doc_id = upload(file, filename, app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
 				return doc_id, filename
 			else:
@@ -348,7 +366,7 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 	email_address = get_user_email(uid)
 	if email_address:
 		try:
-			if app.config['ENVIRONMENT'] == "PRODUCTION":
+			if send_emails:
 				send_email(render_template("generic_email.html", page = page), email_address, email_subject)
 			else:
 				print "%s to %s with subject %s" % (render_template("generic_email.html", page = page), email_address, email_subject)
