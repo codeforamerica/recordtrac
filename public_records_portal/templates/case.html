@@ -68,19 +68,21 @@
       {% endblock request %}
 
       <!-- shows any existing Q&A or public notes -->
-      {% if req.public_note or req.qas %}
+      {% if req.notes or req.qas %}
         <!-- shows any existing public notes -->
-        {% if req.public_note %}
-          {% for public_note in req.public_note %}
+        {% if req.notes %}
+          {% for note in req.notes %}
+          {% if not note.user_id %}
             <div class="row-fluid response">
               <div class="span2 text-center">
                 <i class="icon-edit icon-2x">  </i> </br>
-                <small> {{ public_note.date_created | date_granular }}</small> </br>
+                <small> {{ note.date_created | date_granular }}</small> </br>
               </div>
               <div class="span10">
-                <p>{{ req.public_note }} - <em>Requester</em></p>
+                <p>{{ note.text }} - <em>Requester</em></p>
               </div>
             </div>
+          {% endif %}
           {% endfor %}
         {% endif %}
         <!-- shows any existing Q&A -->
@@ -176,6 +178,7 @@
               {% if req.notes %}
                 <div class="span10">
                   {% for note in req.notes %}
+                  {% if note.user_id %}
                     {% set uid = note.user_id %}
                     {% set staffName = (uid | directory("name")) %}
                     {% set staffDept = (uid | directory("dept")) %}
@@ -189,6 +192,7 @@
                         <p> {{ note.text}} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverNote{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverNote{{loop.index}}')">{{ staffName }}</span></a></em></p>
                       </div>
                     </div>
+                  {% endif %}
                   {% endfor %}
                 </div>
               {% endif %}

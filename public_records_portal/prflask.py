@@ -62,8 +62,9 @@ def new_request():
 
 # Returns a view of the case based on the audience. Currently views exist for city staff or general public.
 @app.route('/<string:audience>/request/<int:request_id>', methods=['GET', 'POST'])
-@login_required
 def show_request_for_x(audience, request_id):
+	if "city" in audience and current_user.is_anonymous():
+		return render_template('alpha.html')
 	return show_request(request_id = request_id, template = "manage_request_%s.html" %(audience))
 
 @app.route('/request/<int:request_id>')
@@ -87,24 +88,21 @@ def show_request(request_id, template = None, record_uploaded = None, for_email_
 @login_required
 def add_a_resource(resource):
 	if request.method == 'POST':
-		message = add_resource(resource = resource, request_body = request, current_user_id = current_user.id)
-		if message == True:
+		resource_id = add_resource(resource = resource, request_body = request, current_user_id = current_user.id)
+		if float(resource_id):
 			return redirect(url_for('show_request_for_x', audience='city', request_id = request.form['request_id']))
-		elif message == False:
+		elif resource_id == False:
 			return render_template('error.html')
 		else:
-			return render_template('help_with_uploads.html', message = message)
+			return render_template('help_with_uploads.html', message = resource_id)
 	return render_template('error.html', message = "You can only update requests from a request page!")
 
 @app.route('/public_add_a_<string:resource>', methods = ['GET', 'POST'])
-def add_a_resource_public(resource):
-	if request.method == 'POST':
-		if resource == "note":
-			message = add_resource(resource = resource, request_body = request, current_user_id = None)
-		if message == True:
+def public_add_a_resource(resource):
+	if request.method == 'POST' and "note" in resource:
+		resource_id = add_resource(resource = resource, request_body = request, current_user_id = None)
+		if float(resource_id):
 			return redirect(url_for('show_request_for_x', audience='public', request_id = request.form['request_id']))
-		elif message == False:
-			return render_template('error.html')
 	return render_template('error.html')
 
 
