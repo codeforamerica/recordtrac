@@ -145,7 +145,10 @@
                         </div>
                         <div class="span10">
                           <p> 
-                            {% set direct_download_url = (record.doc_id | get_scribd_download_url) %}
+                            {% set direct_download_url = record.download_url %}
+                            {% if not direct_download_url %}
+                            {% set direct_download_url = (record.doc_id | get_scribd_download_url(record.id)) %}
+                            {% endif %}
                               <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} <sup><i class="icon-external-link"></i></sup></a> - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverRecord{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverRecord{{loop.index}}')">{{ staffName }}</span></a></em>. {% if direct_download_url %} <a href = "{{ direct_download_url }}" rel="tooltip" data-toggle="tooltip" dataplacement="right" title="">Direct Download</a> {% endif %}
                           </p>
                         </div>
