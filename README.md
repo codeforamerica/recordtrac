@@ -1,7 +1,7 @@
 Public Records 
 ==============
 
-This is a portal to display public record requests to the community and the City of Oakland. It's currently in a research and development phase by the Code for America 2013 Oakland team. We hope to update the documentation soon! In the meantime you can e-mail us at oakland at codeforamerica dot org or [open an issue](https://github.com/codeforamerica/public-records/issues?state=open) if you have any questions.
+This is a portal to manage and display public record requests, built by the Code for America 2013 Oakland team. The project is currently being piloted with [the City of Oakland](http://www2.oaklandnet.com/Government/o/CityAdministration/PublicRecordsRequest/index.htm), but hopefully extensible to other municipalities.We'd love your feedback. E-mail us at oakland at codeforamerica dot org or [open an issue](https://github.com/codeforamerica/public-records/issues?state=open) if you have any questions.
 
 ## Installation
 

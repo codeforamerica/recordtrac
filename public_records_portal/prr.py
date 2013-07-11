@@ -11,12 +11,20 @@ from flask import Flask, render_template, request
 from flask.ext.login import current_user
 from werkzeug import secure_filename
 import sendgrid
-from datetime import datetime
+from datetime import datetime, timedelta
 from models import User
 from timeout import timeout
-
+import urllib
 
 ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff']
+
+# Set flags:
+upload_to_scribd = False
+send_emails = False
+if app.config['ENVIRONMENT'] != 'LOCAL':
+	upload_to_scribd = True
+if app.config['ENVIRONMENT'] == 'PRODUCTION':
+	send_emails = True
 
 def get_resource(resource, resource_id, app_url = None):
 	if not app_url:
@@ -277,7 +285,7 @@ def upload(file, filename, API_KEY, API_SECRET):
         print 'Scribd failed: code=%d, error=%s' % (err.errno, err.strerror)
         return err.strerror
 
-def get_scribd_download_url(doc_id, API_KEY = None, API_SECRET = None):
+def get_scribd_download_url(doc_id, record_id = None, API_KEY = None, API_SECRET = None):
 	if not API_KEY:
 		API_KEY = app.config['SCRIBD_API_KEY']
 	if not API_SECRET:
@@ -285,11 +293,21 @@ def get_scribd_download_url(doc_id, API_KEY = None, API_SECRET = None):
 	try:
 		scribd.config(API_KEY, API_SECRET)
 		doc = scribd.api_user.get(doc_id)
-		return doc.get_download_url()
+		doc_url = doc.get_download_url()
+		if record_id:
+			set_scribd_download_url(doc_url, record_id)
+		return doc_url
 	except:
 		return None
 
-# make batch download for get_scribd_download_url
+def set_scribd_download_url(download_url, record_id):
+	return put_resource("record", dict(download_url = download_url),int(record_id))
+
+def scribd_batch_download(): 
+	records = get_resources("record")
+	for record in records['objects']:
+		if record['download_url']:
+			urllib.urlretrieve(record['download_url'], "saved_records/%s" %(record['filename']))
 
 def make_public(doc_id, API_KEY, API_SECRET):
     scribd.config(API_KEY, API_SECRET)
@@ -321,7 +339,7 @@ def upload_file(file):
 		allowed = allowed_file(file.filename)
 		if allowed[0]:
 			filename = secure_filename(file.filename)
-			if app.config['ENVIRONMENT'] != "LOCAL":
+			if upload_to_scribd: # Check flag
 				doc_id = upload(file, filename, app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
 				return doc_id, filename
 			else:
@@ -348,7 +366,7 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 	email_address = get_user_email(uid)
 	if email_address:
 		try:
-			if app.config['ENVIRONMENT'] == "PRODUCTION":
+			if send_emails:
 				send_email(render_template("generic_email.html", page = page), email_address, email_subject)
 			else:
 				print "%s to %s with subject %s" % (render_template("generic_email.html", page = page), email_address, email_subject)
@@ -373,5 +391,42 @@ def send_email(body, recipient, subject):
 	message.add_bcc(sender)
 	mail.web.send(message)
 
+def due_date(date_obj, extended = None, format = True):
+	days_to_fulfill = 10
+	if extended == True:
+		days_to_fulfill = days_to_fulfill + 14
+	if not date_obj:
+		return None
+	if type(date_obj) is not datetime:
+		date_obj = datetime.strptime(date_obj, "%Y-%m-%dT%H:%M:%S.%f")
+	due_date = date_obj + timedelta(days = days_to_fulfill)
+	if format:
+		return format_date(due_date.date())
+	return due_date.date()
 
+def is_due_soon(date_obj, extended = None):
+	current_date = datetime.now().date()
+	due = due_date(date_obj = date_obj, extended = extended, format = False)
+	num_days = 11
+	if (current_date + timedelta(days = num_days)) > due:
+		return True, due
+	return False, due
 
+def notify_due_soon():
+	requests = get_resources("request")
+	for req in requests['objects']:
+		due_soon, date_due = is_due_soon(req['date_created'], req['extended'])
+		if due_soon:
+			owner = get_resource("owner", req['current_owner'])
+			uid = owner['user_id']
+			email_address = get_user_email(uid)
+			email_json = open(os.path.join(app.root_path, 'emails.json'))
+			json_data = json.load(email_json)
+			email_subject = "Public Records Request %s: %s" %(req['id'], json_data["Request due"])
+			# Need to update body, but am doing it out of the application context so can't use render template
+			send_email(body = req['text'], recipient = email_address, subject = email_subject)
+		else:
+			print "You've got time. Due %s" %(date_due)
+
+def format_date(obj):
+	return obj.strftime('%b %d, %Y')

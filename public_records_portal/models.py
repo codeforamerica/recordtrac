@@ -113,6 +113,7 @@ class Record(db.Model):
 	description = db.Column(db.String(400)) # A short description of what the record is. 
 	filename = db.Column(db.String(400)) # The original name of the file being uploaded.
 	url = db.Column(db.String()) # Where it exists on the internet.
+	download_url = db.Column(db.String()) # Where it can be downloaded on the internet.
 	access = db.Column(db.String()) # How to access it. Probably only defined on offline docs for now.
 	def __init__(self, request_id, user_id, url = None, filename = None, doc_id = None, description = None, access = None):
 		self.doc_id = doc_id
