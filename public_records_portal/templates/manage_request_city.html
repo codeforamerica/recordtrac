@@ -62,12 +62,12 @@
           <fieldset> 
             <div class="row-fluid">
               <!-- <div class="span4"> -->
-                <h4>Ask a question about this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
+                <h4>Ask a question about this request</h4>
               <!-- </div> -->
               <div>
 
                 <div class="control-group">
-                  <label class="control-label">Question</label>
+                  <label class="control-label">Question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
                   <div class="row-fluid">
                     <div class="controls">
                         <input type="hidden" name="request_id" value="{{ req.id }}"/>
@@ -199,10 +199,10 @@
     <input type="hidden" name="close_reason"/>
     <fieldset> 
       <div class="row-fluid">
-        <h4>Close this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
+        <h4>Close this request </h4>
         <div class="control-group">
 
-          <label class="control-label">Reason</label>
+          <label class="control-label">Reason <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
             <div class="controls">
               <select id="close_reasons" name="close_reasons" multiple="multiple" size="8" class="input-xxlarge" required>
                 <option value="{{"Fulfilled" | explain_action("What")}}">Fulfilled</option>
