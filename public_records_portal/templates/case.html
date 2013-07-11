@@ -197,6 +197,28 @@
                 </div>
               {% endif %}
 
+              {% if req.extension %}
+                <div class="span10">
+                  {% for note in req.extension %}
+                  {% if extension.user_id %}
+                    {% set uid = extension.user_id %}
+                    {% set staffName = (uid | directory("name")) %}
+                    {% set staffDept = (uid | directory("dept")) %}
+                    {% set staffEmail = (uid | user_email) %}
+                    <div class="row-fluid response">
+                      <div class="span2 text-center">
+                        <i class="icon-calendar icon-2x">  </i> </br>
+                        <small> {{ extension.date_created | date_granular }} </small> </br>
+                      </div>
+                      <div class="span10">
+                        <p> {{ extension.text}} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverNote{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverNote{{loop.index}}')">{{ staffName }}</span></a></em></p>
+                      </div>
+                    </div>
+                  {% endif %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+
             {% else %}<!--added an if then to check to see if any responses exist - if no then show text here for the "if any response exists" above -->
               <div class="span10">
                 <p>There are no records uploaded just yet.  Stay tuned!</p>
