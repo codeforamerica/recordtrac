@@ -21,10 +21,12 @@ ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'o
 # Set flags:
 upload_to_scribd = False
 send_emails = False
+test = "[TEST] "
 if app.config['ENVIRONMENT'] != 'LOCAL':
 	upload_to_scribd = True
 if app.config['ENVIRONMENT'] == 'PRODUCTION':
 	send_emails = True
+	test = ""
 
 def get_resource(resource, resource_id, app_url = None):
 	if not app_url:
@@ -422,9 +424,9 @@ def notify_due_soon():
 			email_address = get_user_email(uid)
 			email_json = open(os.path.join(app.root_path, 'emails.json'))
 			json_data = json.load(email_json)
-			email_subject = "Public Records Request %s: %s" %(req['id'], json_data["Request due"])
+			email_subject = "%sPublic Records Request %s: %s" %(test, req['id'], json_data["Request due"])
 			# Need to update body, but am doing it out of the application context so can't use render template
-			send_email(body = req['text'], recipient = email_address, subject = email_subject)
+			send_email(body = req['text'], recipient = "email_address", subject = email_subject)
 		else:
 			print "You've got time. Due %s" %(date_due)
 
