@@ -11,7 +11,7 @@ from flask import Flask, render_template, request
 from flask.ext.login import current_user
 from werkzeug import secure_filename
 import sendgrid
-from datetime import datetime
+from datetime import datetime, timedelta
 from models import User
 from timeout import timeout
 import urllib
@@ -391,5 +391,42 @@ def send_email(body, recipient, subject):
 	message.add_bcc(sender)
 	mail.web.send(message)
 
+def due_date(date_obj, extended = None, format = True):
+	days_to_fulfill = 10
+	if extended == True:
+		days_to_fulfill = days_to_fulfill + 14
+	if not date_obj:
+		return None
+	if type(date_obj) is not datetime:
+		date_obj = datetime.strptime(date_obj, "%Y-%m-%dT%H:%M:%S.%f")
+	due_date = date_obj + timedelta(days = days_to_fulfill)
+	if format:
+		return format_date(due_date.date())
+	return due_date.date()
 
+def is_due_soon(date_obj, extended = None):
+	current_date = datetime.now().date()
+	due = due_date(date_obj = date_obj, extended = extended, format = False)
+	num_days = 11
+	if (current_date + timedelta(days = num_days)) > due:
+		return True, due
+	return False, due
 
+def notify_due_soon():
+	requests = get_resources("request")
+	for req in requests['objects']:
+		due_soon, date_due = is_due_soon(req['date_created'], req['extended'])
+		if due_soon:
+			owner = get_resource("owner", req['current_owner'])
+			uid = owner['user_id']
+			email_address = get_user_email(uid)
+			email_json = open(os.path.join(app.root_path, 'emails.json'))
+			json_data = json.load(email_json)
+			email_subject = "Public Records Request %s: %s" %(req['id'], json_data["Request due"])
+			# Need to update body, but am doing it out of the application context so can't use render template
+			send_email(body = req['text'], recipient = email_address, subject = email_subject)
+		else:
+			print "You've got time. Due %s" %(date_due)
+
+def format_date(obj):
+	return obj.strftime('%b %d, %Y')
