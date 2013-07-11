@@ -86,7 +86,7 @@
         },
     "Close a request": 
         {
-            "What":"You can close a request by selecting one of the reasons listed in the dropdown. If you would like to provide the requester with more information, please add a note.",
+            "What":"You can close a request by selecting one of the reasons listed in the dropdown. If you would like to provide the requester with more information, you can add comments in the next screen.",
             "Who":"Members of the general public will be able to view this message.",
             "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
@@ -120,6 +120,13 @@
             "Who":"Members of the general public will be able to view this message.",
             "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
         },
+    "Request an extension": 
+        {
+            "What":"You can request an extension by selecting one of the reasons listed in the dropdown. If you would like to provide the requester with more information, please add a note.",
+            "Who":"Members of the general public will be able to view this message.",
+            "Action":"The message will automatically be posted online, and the requester will be notified via email of this message."
+        },
+
     "Fulfilled": 
         {
             "What":"The City released all of the requested documents to the public.",

@@ -62,12 +62,12 @@
           <fieldset> 
             <div class="row-fluid">
               <!-- <div class="span4"> -->
-                <h4>Ask a question about this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
+                <h4>Ask a question about this request</h4>
               <!-- </div> -->
               <div>
 
                 <div class="control-group">
-                  <label class="control-label">Question</label>
+                  <label class="control-label">Question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
                   <div class="row-fluid">
                     <div class="controls">
                         <input type="hidden" name="request_id" value="{{ req.id }}"/>
@@ -84,9 +84,8 @@
   {% endblock clarify_request %}
 
     
-          
-
 {% block actions %}
+  <!-- Add a record form -->
   <form name="input_doc" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data">
   <input type="hidden" name="request_id" value="{{ req.id }}"/>
     <fieldset> 
@@ -146,81 +145,103 @@
     </fieldset>
   </form>
 
-<form name="note" class="form-horizontal" id="note" method="post" action="/add_a_note">
-  <input type="hidden" name="request_id" value="{{ req.id }}"/>
-  <fieldset> 
-    <div class="row-fluid">
-        <h4>Add a note</h4>
-        <div class="control-group">
-          <label class="control-label">Note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
-          <div class="controls">
-            <input type="text" class="input-xlarge" id="noteTextarea" name="note_text" rows="3" placeholder="Anything else the requester should know."required/>
+  <!-- Add a note form -->
+  <form name="note" class="form-horizontal" id="note" method="post" action="/add_a_note">
+    <input type="hidden" name="request_id" value="{{ req.id }}"/>
+    <fieldset> 
+      <div class="row-fluid">
+          <h4>Add a note</h4>
+          <div class="control-group">
+            <label class="control-label">Note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+            <div class="controls">
+              <input type="text" class="input-xlarge" id="noteTextarea" name="note_text" rows="3" placeholder="Anything else the requester should know."required/>
+            </div>
           </div>
-        </div>
-        <div class="control-group">
-          <div class="controls">
-            <button type="submit" class="btn btn-primary">Add note</button>
+          <div class="control-group">
+            <div class="controls">
+              <button type="submit" class="btn btn-primary">Add note</button>
+            </div>
           </div>
-        </div>
-    </div>
-  </fieldset>
-<fieldset>
-</form>
-          <div class="row-fluid"> Placeholder for requesting an extension
-      <form name="extend_request" class="form-inline" id="extension" method="post" action="/update_a_request_extend">
-        <input type="hidden" name="request_id" value="{{ req.id }}"/>
-        <button id="extendRequest" class="btn btn-primary" type="submit">Request an extension</button>
-      </form>
-    </div>
-</fieldset>
-<form name="close" class="form-horizontal" id="closeRequest" method="post" action="/close">
-  <input type="hidden" name="request_id" value="{{ req.id }}"/>
-  <input type="hidden" name="close_reason"/>
-  <fieldset> 
-    <div class="row-fluid">
-      <h4>Close this request <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></h4>
-      <div class="control-group">
+      </div>
+    </fieldset>
+  </form>
 
-        <label class="control-label">Reason</label>
+  <!-- Request an extension form -->
+  <form name="extend_request" class="form-horizontal" id="extension" method="post" action="/update_a_request_extend">
+    <input type="hidden" name="request_id" value="{{ req.id }}"/>
+    <fieldset>
+      <div class="row-fluid">
+        <h4>Request an extension</h4>
+        <div class="control-group">
+          <label class="control-label">Reason <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Request an extension"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+            <div class="controls">
+              <select id="extend_reasons" name="extend_reasons" multiple="multiple" required>
+                <option value="{{"Extension - Large Amount" | explain_action("What")}}">Large amount</option>
+                <option value="{{"Extension - Separate Facility" | explain_action("What")}}">Separate facility</option>
+                <option value="{{"Extension - Another Agency" | explain_action("What")}}">Another agency</option>
+                <option value="{{"Extension - Data" | explain_action("What")}}">Data extraction</option>
+              </select>
+              <p class="help-block">You can select multiple reasons by using Ctrl (Win) or ⌘ (Mac).</p>
+            </div>
+        </div>
+        <div class="control-group">
           <div class="controls">
-            <select id="close_reasons" name="close_reasons" multiple="multiple" required>
-              <option value="{{"Fulfilled" | explain_action("What")}}">Fulfilled</option>
-              <option value="{{"Not a public records request" | explain_action("What")}}">Not a public records request</option>
-              <option value="{{"Record Does Not Exist" | explain_action("What")}}">Do not have this record</option>
-              <option value="{{"Can Not Release - Personal Files" | explain_action("What")}}">Can Not Release - Privacy</option>
-              <option value="{{"Can Not Release - Ongoing Litigation" | explain_action("What")}}">Can Not Release - Ongoing Litigation</option>
-              <option value="{{"Can Not Release - Investigative Reports" | explain_action("What")}}">Can Not Release - Investigative Reports</option>
-              <option value="{{"Can Not Release - Finances" | explain_action("What")}}">Can Not Release - Finances</option>
-              <option value="{{"Requester Not Interested" | explain_action("What")}}">Requester Not Interested</option>
-            </select>
-            <p class="help-block">You can select multiple reasons by using Ctrl (Win) or ⌘ (Mac).</p>
+            <button id="extendRequest" class="btn btn-primary" type="submit">Request an extension</button>
           </div>
+        </div>
       </div>
-      <div class="control-group">
-        <div class="controls">
-          <!-- Button to trigger modal -->
-          <a id="closeRequest_button" href="#closeModal" role="button" class="btn btn-inverse" data-toggle="modal">Close request...</a>
-           
-          <!-- Modal -->
-          <div id="closeModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="closeModalLabel" aria-hidden="true">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-              <h3 id="closeModalLabel">Reason for closing</h3>
+    </fieldset>
+  </form>
+
+  <!-- Close request form -->
+  <form name="close" class="form-horizontal" id="closeRequest" method="post" action="/close">
+    <input type="hidden" name="request_id" value="{{ req.id }}"/>
+    <input type="hidden" name="close_reason"/>
+    <fieldset> 
+      <div class="row-fluid">
+        <h4>Close this request </h4>
+        <div class="control-group">
+
+          <label class="control-label">Reason <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+            <div class="controls">
+              <select id="close_reasons" name="close_reasons" multiple="multiple" size="8" class="input-xxlarge" required>
+                <option value="{{"Fulfilled" | explain_action("What")}}">Fulfilled</option>
+                <option value="{{"Not a public records request" | explain_action("What")}}">Not a public records request</option>
+                <option value="{{"Record Does Not Exist" | explain_action("What")}}">Do not have this record</option>
+                <option value="{{"Can Not Release - Personal Files" | explain_action("What")}}">Can Not Release - Privacy</option>
+                <option value="{{"Can Not Release - Ongoing Litigation" | explain_action("What")}}">Can Not Release - Ongoing Litigation</option>
+                <option value="{{"Can Not Release - Investigative Reports" | explain_action("What")}}">Can Not Release - Investigative Reports</option>
+                <option value="{{"Can Not Release - Finances" | explain_action("What")}}">Can Not Release - Finances</option>
+                <option value="{{"Requester Not Interested" | explain_action("What")}}">Requester Not Interested</option>
+              </select>
+              <p class="help-block">You can select multiple reasons by using Ctrl (Win) or ⌘ (Mac).</p>
             </div>
-            <div class="modal-body">
-              <!-- NOTE: need to remove the line breaks in the CODE in textarea in order to remove the funky indentation -->
-              <textarea id="closeTextarea" class="input-block-level" rows="10"></textarea>
-            </div>
-            <div class="modal-footer">
-              <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-              <button id="closeButton" type="submit" class="btn btn-inverse">Close this request</button>
+        </div>
+        <div class="control-group">
+          <div class="controls">
+            <!-- Button to trigger modal -->
+            <a id="closeRequest_button" href="#closeModal" role="button" class="btn btn-inverse" >Close request...</a>
+             
+            <!-- Modal -->
+            <div id="closeModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="closeModalLabel" aria-hidden="true">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="closeModalLabel">Reason for closing</h3>
+              </div>
+              <div class="modal-body">
+                <!-- NOTE: need to remove the line breaks in the CODE in textarea in order to remove the funky indentation -->
+                <textarea id="closeTextarea" class="input-block-level" rows="10"></textarea>
+              </div>
+              <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                <button id="closeButton" type="submit" class="btn btn-inverse">Close this request</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </fieldset>
-</form>
+    </fieldset>
+  </form>
     
 {% endblock actions %}
 
@@ -246,46 +267,94 @@ $(document).ready(function(){
       }
   });
 
-  /* validates close request form */
-  $("#closeRequest_button").click(function() {
-    if($("#closeRequest").valid()) {
-       $('#closeModal').modal('show');
+  /* validates extension form */
+$("#extension").validate({
+  rules: {
+    extend_reasons: {
+      required: true
+         }
+     },
+   highlight: function(element) {
+      $(element).closest('.control-group').removeClass('success').addClass('error');
+    },
+    success: function(element) {
+      element
+      .text('OK!').addClass('valid')
+      .closest('.control-group').removeClass('error').addClass('success');
     }
-    else{
-      $("#closeRequest").valid({
-        rules: {
-          close_reasons: {
-            required: true,
-               }
-           },
-        highlight: function(element) {
-            $(element).closest('.control-group').removeClass('success').addClass('error');
-          },
-        success: function(element) {
-            element
-            .text('OK!').addClass('valid')
-            .closest('.control-group').removeClass('error').addClass('success');
-          }
-      });
-    }
-  });
+});
+// $(".selector").validate({
+//   onclick: false
+// });
 
+// $('#myModal').modal('hide')
 
-    // $("#closeRequest").valid({
+  //   else{
+  //     $("#closeRequest").valid({
+  //       rules: {
+  //         close_reasons: {
+  //           required: true,
+  //              }
+  //          },
+  //       highlight: function(element) {
+  //           $(element).closest('.control-group').removeClass('success').addClass('error');
+  //         },
+  //       success: function(element) {
+  //           element
+  //           .text('OK!').addClass('valid')
+  //           .closest('.control-group').removeClass('error').addClass('success');
+  //         }
+  //     });
+  //   }
+  // });
+
+// if($("a:contains('Level 2 (Admin Only)')").length) {
+//    alert("yup!");
+// }else{
+//    alert("nope!");
+// }
+
+  // $("#closeRequest_button").click(function() {
+  //   $("#closeRequest").valid({
+  //     rules: {
+  //       close_reasons: {
+  //         required: true,
+  //       }
+  //     },
+  //     highlight: function(element) {
+  //       $(element).closest('.control-group').removeClass('success').addClass('error');
+  //     },
+  //     success: function(element) {
+  //       element
+  //         .text('OK!').addClass('valid')
+  //         .closest('.control-group').removeClass('error').addClass('success');
+  //         $('#closeModal').modal('show');
+  //     }
+  //   });
+  // });
+    
+  // if($("#closeRequest").valid()) {
+    // $("#closeRequest").validate({
     //   rules: {
     //     close_reasons: {
     //       required: true,
-    //          }
-    //      },
-    //    highlight: function(element) {
-    //       $(element).closest('.control-group').removeClass('success').addClass('error');
-    //     },
-    //     success: function(element) {
-    //       element
+    //     }
+    //   },
+    //   highlight: function(element) {
+    //     $(element).closest('.control-group').removeClass('success').addClass('error');
+    //   },
+    //   success: function(element) {
+    //     element
     //       .text('OK!').addClass('valid')
     //       .closest('.control-group').removeClass('error').addClass('success');
-    //     }
-    // });
+    //   }
+    // }).form();
+
+    // else{
+    //    $('#closeModal').modal('hide')
+    // }
+
+
 
   /* typeahead for email in reroute form */
    var emails = [];
