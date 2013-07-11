@@ -19,7 +19,7 @@ import urllib
 ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff']
 
 # Set flags:
-upload_to_scribd = True
+upload_to_scribd = False
 send_emails = False
 if app.config['ENVIRONMENT'] != 'LOCAL':
 	upload_to_scribd = True
