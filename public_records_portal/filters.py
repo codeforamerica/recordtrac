@@ -10,19 +10,6 @@ app.jinja_env.filters['is_request_open'] = is_request_open
 app.jinja_env.filters['get_scribd_download_url'] = get_scribd_download_url
 app.jinja_env.filters['last_note'] = last_note
 
-
-@app.template_filter('due_date')
-def due_date(obj, extended = None):
-	days_to_fulfill = 10
-	if extended == True:
-		days_to_fulfill = days_to_fulfill + 14
-	if not obj:
-		return None
-	if type(obj) is not datetime:
-		obj = datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f")
-	due_date = obj + timedelta(days = days_to_fulfill)
-	return format_date(due_date.date())
-
 @app.template_filter('date')
 def date(obj):
 	if not obj:
@@ -35,8 +22,6 @@ def date(obj):
 		except:
 			return format_date(obj) # Just return the thing, maybe it's already a date
 
-def format_date(obj):
-	return obj.strftime('%b %d, %Y')
 
 @app.template_filter('date_granular')
 def date_granular(timestamp):
