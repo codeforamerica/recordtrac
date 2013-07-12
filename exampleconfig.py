@@ -9,5 +9,6 @@ MAIL_USERNAME = "Change this"
 MAIL_PASSWORD = "Change this"
 DEFAULT_MAIL_SENDER = "Change this"
 SECRET_KEY = "Change this"
-SQLALCHEMY_DATABASE_URI = "postgresql://localhost/your_database_name"
+SQLALCHEMY_DATABASE_URI = "postgresql://localhost/publicrecords"
 ADMIN_PASSWORD = 'Change this'
+APPLICATION_URL='http://127.0.0.1:8000'
