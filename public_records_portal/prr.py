@@ -428,9 +428,8 @@ def notify_due_soon():
 			app_url = app.config['APPLICATION_URL']
 			page = "%s/city/request/%s" %(app_url,req['id'])
 			body = "You can view the request and take any necessary action at the following webpage: <a href='%s'>%s</a>" %(page, page)
-			# Need to update body, but am doing it out of the application context so can't use render template
+			# Need to figure out a way to pass in generic email template outside application context. For now, hardcoding the body.
 			send_email(body = body, recipient = email_address, subject = email_subject)
-			break
 		else:
 			print "You've got time. Due %s" %(date_due)
 
