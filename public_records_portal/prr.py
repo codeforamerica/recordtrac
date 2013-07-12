@@ -425,8 +425,12 @@ def notify_due_soon():
 			email_json = open(os.path.join(app.root_path, 'emails.json'))
 			json_data = json.load(email_json)
 			email_subject = "%sPublic Records Request %s: %s" %(test, req['id'], json_data["Request due"])
+			app_url = app.config['APPLICATION_URL']
+			page = "%s/city/request/%s" %(app_url,req['id'])
+			body = "You can view the request and take any necessary action at the following webpage: <a href='%s'>%s</a>" %(page, page)
 			# Need to update body, but am doing it out of the application context so can't use render template
-			send_email(body = req['text'], recipient = "email_address", subject = email_subject)
+			send_email(body = body, recipient = email_address, subject = email_subject)
+			break
 		else:
 			print "You've got time. Due %s" %(date_due)
 
