@@ -121,6 +121,7 @@ def update_resource(resource, request_body):
 		return False
 
 def add_note(request_id, text, user_id):
+	# Need to udpate this so if a requester is adding a note, the e-mail gets sent to city staff instead
 	note = create_resource("note", dict(request_id = request_id, text = text, user_id = user_id))
 	if note:
 		change_request_status(request_id, "A response has been added.")
@@ -410,7 +411,7 @@ def is_due_soon(date_obj, extended = None):
 	current_date = datetime.now().date()
 	due = due_date(date_obj = date_obj, extended = extended, format = False)
 	num_days = 11
-	if (current_date + timedelta(days = num_days)) > due:
+	if (current_date + timedelta(days = num_days)) == due:
 		return True, due
 	return False, due
 

@@ -14,6 +14,7 @@
         <th>Request</th>
         <th>Updated</th>
         <th>Owner</th>
+        <th>Department</th>
       </tr>
     </thead>
     <tbody>
@@ -33,6 +34,7 @@
           {% endif %}
           <td>{{ request.status_updated | date_granular }} </td>
           <td>{{ (request.current_owner | owner_uid) | directory("name")}}</td>
+          <td>{{ (request.current_owner | owner_uid) | directory("dept")}}</td>
         </tr>
       {% else %}
       {% endfor %}
