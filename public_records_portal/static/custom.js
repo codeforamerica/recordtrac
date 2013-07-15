@@ -47,7 +47,10 @@
       }
   });
 
-function directoryPopover(staffName, staffDept, elemID){
+function directoryPopover(staffName, staffDept, staffPhone, elemID){
+        if (!staffPhone) {
+        staffPhone = 'Not available';
+      }
    /* all popovers */
   $(elemID).popover({
       trigger: 'hover', 
@@ -56,7 +59,7 @@ function directoryPopover(staffName, staffDept, elemID){
         return $("Contact information");
       },
       content: function() {
-            var $cont = $("<p class='tight_paragraph'><span class='muted'>Department: </span>"+staffDept+"</p><p class='tight_paragraph'><span class='muted'>Email: </span>"+staffName+"</p><p class='tight_paragraph'><span class='muted'>Phone: </span>[Phone]</p>");
+            var $cont = $("<p class='tight_paragraph'><span class='muted'>Department: </span>"+staffDept+"</p><p class='tight_paragraph'><span class='muted'>Email: </span>"+staffName+"</p><p class='tight_paragraph'><span class='muted'>Phone: </span>"+staffPhone+"</p>");
             return $cont;
       }
   });

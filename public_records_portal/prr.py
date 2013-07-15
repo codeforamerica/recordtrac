@@ -21,10 +21,12 @@ ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'o
 # Set flags:
 upload_to_scribd = False
 send_emails = False
+test = "[TEST] "
 if app.config['ENVIRONMENT'] != 'LOCAL':
 	upload_to_scribd = True
 if app.config['ENVIRONMENT'] == 'PRODUCTION':
 	send_emails = True
+	test = ""
 
 def get_resource(resource, resource_id, app_url = None):
 	if not app_url:
@@ -119,6 +121,7 @@ def update_resource(resource, request_body):
 		return False
 
 def add_note(request_id, text, user_id):
+	# Need to udpate this so if a requester is adding a note, the e-mail gets sent to city staff instead
 	note = create_resource("note", dict(request_id = request_id, text = text, user_id = user_id))
 	if note:
 		change_request_status(request_id, "A response has been added.")
@@ -408,7 +411,7 @@ def is_due_soon(date_obj, extended = None):
 	current_date = datetime.now().date()
 	due = due_date(date_obj = date_obj, extended = extended, format = False)
 	num_days = 11
-	if (current_date + timedelta(days = num_days)) > due:
+	if (current_date + timedelta(days = num_days)) == due:
 		return True, due
 	return False, due
 
@@ -422,9 +425,12 @@ def notify_due_soon():
 			email_address = get_user_email(uid)
 			email_json = open(os.path.join(app.root_path, 'emails.json'))
 			json_data = json.load(email_json)
-			email_subject = "Public Records Request %s: %s" %(req['id'], json_data["Request due"])
-			# Need to update body, but am doing it out of the application context so can't use render template
-			send_email(body = req['text'], recipient = email_address, subject = email_subject)
+			email_subject = "%sPublic Records Request %s: %s" %(test, req['id'], json_data["Request due"])
+			app_url = app.config['APPLICATION_URL']
+			page = "%s/city/request/%s" %(app_url,req['id'])
+			body = "You can view the request and take any necessary action at the following webpage: <a href='%s'>%s</a>" %(page, page)
+			# Need to figure out a way to pass in generic email template outside application context. For now, hardcoding the body.
+			send_email(body = body, recipient = email_address, subject = email_subject)
 		else:
 			print "You've got time. Due %s" %(date_due)
 
