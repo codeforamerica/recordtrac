@@ -11,6 +11,7 @@ class User(db.Model):
 	phone = db.Column(db.String())
 	date_created = db.Column(db.DateTime)
 	password = db.Column(db.String(255))
+	department = db.Column(db.String())
 	def is_authenticated(self):
 		return True
 	def is_active(self):
@@ -19,12 +20,13 @@ class User(db.Model):
 		return False
 	def get_id(self):
 		return unicode(self.id)
-	def __init__(self, email, alias = None, phone=None, password=None):
+	def __init__(self, email, alias = None, phone=None, department = None, password=None):
 		self.email = email
 		self.alias = alias
 		self.phone = phone
 		self.date_created = datetime.now().isoformat()
 		self.password = password
+		self.department = department
 	def __repr__(self):
 		return self.email
 

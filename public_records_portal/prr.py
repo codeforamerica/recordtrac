@@ -1,4 +1,8 @@
-""" Things one can do relating to a public records request. """
+""" 
+.. module:: prr
+	:synopsis: Things one can do relating to a public records request.
+.. modlueauthor:: Richa Agarwal <richa@codeforamerica.org>
+"""
 
 from public_records_portal import app, website_copy, db
 import os
@@ -197,15 +201,17 @@ def answer_a_question(qa_id, answer, subscriber_id = None):
 	req = get_resource("request", qa['request_id'])
 	send_prr_email(request_id = qa['request_id'], notification_type = "Question answered", owner_id = qa['owner_id'])
 
-def create_or_return_user(email, alias = None, phone = None):
+def create_or_return_user(email, alias = None, phone = None, department = None):
 	user = User.query.filter_by(email = email).first()
 	if not user:
-		user = User(email = email, alias = alias, phone = phone, password = app.config['ADMIN_PASSWORD'])
+		user = User(email = email, alias = alias, phone = phone, department = department, password = app.config['ADMIN_PASSWORD'])
 	else:
 		if alias:
 			user.alias = alias
 		if phone:
 			user.phone = phone
+		if department:
+			user.department = department
 	if not user.password:
 		user.password = app.config['ADMIN_PASSWORD']
 	db.session.add(user)
@@ -410,7 +416,7 @@ def due_date(date_obj, extended = None, format = True):
 def is_due_soon(date_obj, extended = None):
 	current_date = datetime.now().date()
 	due = due_date(date_obj = date_obj, extended = extended, format = False)
-	num_days = 11
+	num_days = 2
 	if (current_date + timedelta(days = num_days)) == due:
 		return True, due
 	return False, due
@@ -427,8 +433,8 @@ def notify_due_soon():
 			json_data = json.load(email_json)
 			email_subject = "%sPublic Records Request %s: %s" %(test, req['id'], json_data["Request due"])
 			app_url = app.config['APPLICATION_URL']
-			page = "%s/city/request/%s" %(app_url,req['id'])
-			body = "You can view the request and take any necessary action at the following webpage: <a href='%s'>%s</a>" %(page, page)
+			page = "%scity/request/%s" %(app_url,req['id'])
+			body = "You can view the request and take any necessary action at the following webpage: <a href='%s'>%s</a></br>" %(page, page)
 			# Need to figure out a way to pass in generic email template outside application context. For now, hardcoding the body.
 			send_email(body = body, recipient = email_address, subject = email_subject)
 		else:
@@ -436,3 +442,26 @@ def notify_due_soon():
 
 def format_date(obj):
 	return obj.strftime('%b %d, %Y')
+
+def get_staff_info(uid, info_type):
+	staff = User.query.get(uid)
+	if info_type == "email":
+		return staff.email
+	elif info_type == "phone":
+		return staff.phone
+	elif info_type == "dept":
+		return staff.department
+	elif info_type == "name":
+		return staff.alias
+
+def set_directory_fields():
+	dir_json = open(os.path.join(app.root_path, 'static/directory.json'))
+	json_data = json.load(dir_json)
+	for line in json_data:
+		if line['EMAIL_ADDRESS']:
+			print line['FULL_NAME']
+			try:
+				last, first = line['FULL_NAME'].split(",")
+			except:
+				last, junk, first = line['FULL_NAME'].split(",")
+			user = create_or_return_user(email = line['EMAIL_ADDRESS'], alias = "%s %s" % (first, last), phone = line['PHONE'], department = line['DEPARTMENT'])

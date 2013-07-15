@@ -52,7 +52,7 @@ def new_request():
 			alias = request.form['request_alias']
 		if 'request_phone' in request.form:
 			phone = request.form['request_phone']
-		request_id, is_new = make_request(text = request_text, email = email, assigned_to_name = app.config['DEFAULT_OWNER_NAME'], assigned_to_email = app.config['DEFAULT_OWNER_EMAIL'], assigned_to_reason = app.config['DEFAULT_OWNER_REASON'], user_id = current_user_id, alias = alias, phone = phone)
+		request_id, is_new = make_request(text = request_text, email = email, assigned_to_email = app.config['DEFAULT_OWNER_EMAIL'], assigned_to_reason = app.config['DEFAULT_OWNER_REASON'], user_id = current_user_id, alias = alias, phone = phone)
 		if is_new:
 			# return redirect(url_for('show_request', request_id = request_id, banner_msg = "Thanks! Your request has been uploaded.", template = "requested.html"))
 			return show_request(request_id, banner_msg = "Thanks! Your request has been uploaded.", template = "requested.html")

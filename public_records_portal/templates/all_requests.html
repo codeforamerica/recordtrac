@@ -32,9 +32,10 @@
           {% else %}
           <td><a href="/request/{{request.id}}"><div>{{ request.text }}</div></a></td>
           {% endif %}
+          {% set uid = (request.current_owner | owner_uid) %}
           <td>{{ request.status_updated | date_granular }} </td>
-          <td>{{ (request.current_owner | owner_uid) | directory("name")}}</td>
-          <td>{{ (request.current_owner | owner_uid) | directory("dept")}}</td>
+          <td>{{ uid | get_staff_info("name") }}</td>
+          <td>{{ uid | get_staff_info("dept")}}</td>
         </tr>
       {% else %}
       {% endfor %}

@@ -11,9 +11,9 @@
         </div>
         <div class="span10">
            {% set uid = qa.owner_id %}
-           {% set staffName = (uid | directory("name")) %}
-           {% set staffDept = (uid | directory("dept")) %}
-           {% set staffPhone = (uid | directory("phone")) %}
+           {% set staffName = (uid | get_staff_info("name")) %}
+           {% set staffDept = (uid | get_staff_info("dept")) %}
+           {% set staffPhone = (uid | get_staff_info("phone")) %}
            {% set staffEmail = (uid | user_email) %}
           <p> {{ qa.question }} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}','{{staffPhone}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staffName }}</span></a></em></p>
           

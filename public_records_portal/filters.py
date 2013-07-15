@@ -10,6 +10,7 @@ app.jinja_env.filters['is_request_open'] = is_request_open
 app.jinja_env.filters['get_scribd_download_url'] = get_scribd_download_url
 app.jinja_env.filters['last_note'] = last_note
 app.jinja_env.filters['due_date'] = due_date
+app.jinja_env.filters['get_staff_info'] = get_staff_info
 
 @app.template_filter('date')
 def date(obj):
