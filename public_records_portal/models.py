@@ -20,12 +20,13 @@ class User(db.Model):
 		return False
 	def get_id(self):
 		return unicode(self.id)
-	def __init__(self, email, alias = None, phone=None, password=None):
+	def __init__(self, email, alias = None, phone=None, department = None, password=None):
 		self.email = email
 		self.alias = alias
 		self.phone = phone
 		self.date_created = datetime.now().isoformat()
 		self.password = password
+		self.department = department
 	def __repr__(self):
 		return self.email
 

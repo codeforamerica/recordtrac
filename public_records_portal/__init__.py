@@ -1,3 +1,9 @@
+"""A flask app to handle public records requests and display responses.
+
+.. moduleauthor:: Richa Agarwal <richa@codeforamerica.org>
+
+"""
+
 from os import environ
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -9,7 +15,6 @@ app = Flask(__name__)
 app.debug = True
 app.config['SECRET_KEY'] = "Not really a secret."
 app.config['ENVIRONMENT'] = "LOCAL"
-app.config['DEFAULT_OWNER_NAME'] = "Default owner name"
 app.config['DEFAULT_OWNER_REASON'] = "Default owner reason"
 app.config['DEFAULT_OWNER_EMAIL'] = "Default owner email"
 
@@ -22,7 +27,6 @@ except:
 		app.config['APPLICATION_URL'] = environ['APPLICATION_URL']
 		app.config['SCRIBD_API_KEY'] = environ['SCRIBD_API_KEY']
 		app.config['SCRIBD_API_SECRET'] = environ['SCRIBD_API_SECRET']
-		app.config['DEFAULT_OWNER_NAME'] = environ['DEFAULT_OWNER_NAME']
 		app.config['DEFAULT_OWNER_EMAIL'] = environ['DEFAULT_OWNER_EMAIL']
 		app.config['DEFAULT_OWNER_REASON'] = environ['DEFAULT_OWNER_REASON']
 		app.config['MAIL_USERNAME'] = environ['MAIL_USERNAME']

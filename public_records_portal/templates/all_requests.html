@@ -34,8 +34,8 @@
           {% endif %}
           {% set uid = (request.current_owner | owner_uid) %}
           <td>{{ request.status_updated | date_granular }} </td>
-          <td>{{ uid | directory("name")}}</td>
-          <td>{{ uid | directory("dept")}}</td>
+          <td>{{ uid | get_staff_info("name") }}</td>
+          <td>{{ uid | get_staff_info("dept")}}</td>
         </tr>
       {% else %}
       {% endfor %}

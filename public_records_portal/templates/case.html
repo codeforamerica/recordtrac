@@ -11,9 +11,9 @@
           <div class="text-right">
             {% block routing %}
             {% set uid = (req.current_owner | owner_uid) %}
-            {% set staffName = (uid | directory("name")) %}
-            {% set staffDept = (uid | directory("dept")) %}
-            {% set staffPhone = (uid | directory("phone")) %}
+            {% set staffName = (uid | get_staff_info("name")) %}
+            {% set staffDept = (uid | get_staff_info("dept")) %}
+            {% set staffPhone = (uid | get_staff_info("phone")) %}
             {% set staffEmail = (uid | user_email) %}
               Routed to <a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverRoute" class="hidden-phone hidden-tablet"><span class="label label-info" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '{{staffPhone}}', '#contactinfoPopoverRoute')">{{ staffName }}</span></a>
             {% endblock routing %}
@@ -36,7 +36,7 @@
                       <tr>
                         <td>{{ owner.date_created | date }}</td>
                         <td><i class="icon-circle-arrow-right"></i></td>
-                        <td>{{ owner.user_id | directory("name") }}</td>
+                        <td>{{ owner.user_id | get_staff_info("name") }}</td>
                         <td>{{ owner.reason }}</td>
                       </tr>              
                     {% endfor %}
@@ -61,7 +61,7 @@
         {% block proxyrequester_info %}
           <small>
             {% if req.creator_id %}
-              <span>This request was submitted on behalf of the requester by {{ req.creator_id | directory("name") }}.</span>
+              <span>This request was submitted on behalf of the requester by {{ req.creator_id | get_staff_info("name") }}.</span>
             {% endif %}
           </small>
         {% endblock proxyrequester_info %}
@@ -98,9 +98,9 @@
                 </div>
                 <div class="span10">
                    {% set uid = qa.owner_id %}
-                   {% set staffName = (uid | directory("name")) %}
-                   {% set staffDept = (uid | directory("dept")) %}
-                   {% set staffPhone = (uid | directory("phone")) %}
+                   {% set staffName = (uid | get_staff_info("name")) %}
+                   {% set staffDept = (uid | get_staff_info("dept")) %}
+                   {% set staffPhone = (uid | get_staff_info("phone")) %}
                    {% set staffEmail = (uid | user_email) %}
                   <p> {{ qa.question }} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '{{staffPhone}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staffName }}</span></a></em></p>
                   {% if qa.answer %}
@@ -136,9 +136,9 @@
                 <div class="span10">
                   {% for record in req.records %}
                     {% set uid = record.user_id %}
-                    {% set staffName = (uid | directory("name")) %}
-                    {% set staffDept = (uid | directory("dept")) %}
-                    {% set staffPhone = (uid | directory("phone")) %}
+                    {% set staffName = (uid | get_staff_info("name")) %}
+                    {% set staffDept = (uid | get_staff_info("dept")) %}
+                    {% set staffPhone = (uid | get_staff_info("phone")) %}
                     {% set staffEmail = (uid | user_email) %}
                     {% if record.doc_id %}
                       <div class="row-fluid response">
@@ -186,9 +186,9 @@
                   {% for note in req.notes %}
                   {% if note.user_id %}
                     {% set uid = note.user_id %}
-                    {% set staffName = (uid | directory("name")) %}
-                    {% set staffDept = (uid | directory("dept")) %}
-                    {% set staffPhone = (uid | directory("phone")) %}
+                    {% set staffName = (uid | get_staff_info("name")) %}
+                    {% set staffDept = (uid | get_staff_info("dept")) %}
+                    {% set staffPhone = (uid | get_staff_info("phone")) %}
                     {% set staffEmail = (uid | user_email) %}
                     <div class="row-fluid response">
                       <div class="span2 text-center">
@@ -209,8 +209,8 @@
                   {% for note in req.extension %}
                   {% if extension.user_id %}
                     {% set uid = extension.user_id %}
-                    {% set staffName = (uid | directory("name")) %}
-                    {% set staffDept = (uid | directory("dept")) %}
+                    {% set staffName = (uid | get_staff_info("name")) %}
+                    {% set staffDept = (uid | get_staff_info("dept")) %}
                     {% set staffEmail = (uid | user_email) %}
                     <div class="row-fluid response">
                       <div class="span2 text-center">
