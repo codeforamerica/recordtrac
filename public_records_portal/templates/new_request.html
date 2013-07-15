@@ -56,12 +56,20 @@
         </fieldset>
       </form>
 
+<div id="no_email" class="alert alert-block alert-error fade in">
+  <!-- <button type="button" class="close" data-dismiss="alert">×</button> -->
+  <h4 class="alert-heading">Oops, you forgot to provide an email address.</h4>
+  <p>Your email is how we contact you.  If you choose to leave it blank, you will not receive updates about your request.  Your request may take longer or be dismissed if it is missing important information.</p>
+  <p><a class="btn btn-danger " href="#" class="close" data-dismiss="alert">Enter email</a> <a class="btn disabled" href="#">Submit request anyway</a></p>
+</div>
+
 {% endblock content %}
 {% block bottom_script %}
   <script>
-    /* validates add a record form */
+    /* validates add a request form */
     $(document).ready(function(){
-       $("#submitRequest").validate({
+       
+        $("#submitRequest").validate({
           rules: {
             request_text: {
               required: true,
@@ -71,15 +79,17 @@
               required: true
                  } 
              },
-           highlight: function(element) {
+          highlight: function(element) {
               $(element).closest('.control-group').removeClass('success').addClass('error');
+              $("#no_email").alert()
             },
-            success: function(element) {
-              element
-              .text('OK!').addClass('valid')
-              .closest('.control-group').removeClass('error').addClass('success');
+          success: function(element) {
+            element
+            .text('OK!').addClass('valid')
+            .closest('.control-group').removeClass('error').addClass('success');
             }
-         });
+        });
+
     });
   </script>
 {% endblock bottom_script %}
