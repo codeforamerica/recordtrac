@@ -2,7 +2,6 @@ ENVIRONMENT = "LOCAL"
 HOST_URL = "https://www.scribd.com/doc/" # Document hosting
 SCRIBD_API_KEY = "Change this" # If using Scribd for document hosting
 SCRIBD_API_SECRET = "Change this" # If using Scribd for document hosting
-DEFAULT_OWNER_NAME = "Change this"
 DEFAULT_OWNER_EMAIL = "Change this"
 DEFAULT_OWNER_REASON = "Change this"
 MAIL_USERNAME = "Change this"
