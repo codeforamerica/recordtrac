@@ -1,4 +1,8 @@
 /* table sort */
 $(document).ready(function() {
-  $('#allrequestTable').dataTable();
+  $('#allrequestTable').dataTable({
+    "aoColumns": [
+      { "sType": "num-html" }
+    ]
+  });
 } );
