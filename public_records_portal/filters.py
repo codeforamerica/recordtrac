@@ -146,11 +146,11 @@ def directory(uid, info_type = None):
 					return "%s %s" % (first, last)
 				if info_type == 'dept':
 					return line['DEPARTMENT']
-				if info_type == 'phone':
-					return line['PHONE']
-		if info_type == 'name':
-			local,domain = email.split('@')
-			name = "%s. %s" %(local[0].upper(), local[1:].title())
-			return name
+
+		# if info_type == 'name':
+		# 	local,domain = email.split('@')
+		# 	name = "%s. %s" %(local[0].upper(), local[1:].title())
+		# 	return name
+
 	return None
 
