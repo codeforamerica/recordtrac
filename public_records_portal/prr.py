@@ -444,15 +444,17 @@ def format_date(obj):
 	return obj.strftime('%b %d, %Y')
 
 def get_staff_info(uid, info_type):
-	staff = User.query.get(uid)
-	if info_type == "email":
-		return staff.email
-	elif info_type == "phone":
-		return staff.phone
-	elif info_type == "dept":
-		return staff.department
-	elif info_type == "name":
-		return staff.alias
+	if uid:
+		staff = User.query.get(uid)
+		if info_type == "email" and staff.email:
+			return staff.email
+		elif info_type == "phone" and staff.phone:
+			return staff.phone
+		elif info_type == "dept":
+			return staff.department
+		elif info_type == "name":
+			return staff.alias
+	return None
 
 def set_directory_fields():
 	dir_json = open(os.path.join(app.root_path, 'static/directory.json'))
