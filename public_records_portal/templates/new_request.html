@@ -90,10 +90,18 @@
                 );
             },
           success: function(element) {
+            $('#requestButton').html(
+              "<div id='requestButton' class='control-group'>"+
+                "<div class='controls'>"+
+                  "<button type='submit' class='btn btn-large btn-primary'>Request</button>"+
+                "</div>"+
+              "</div>"
+              );
             element
             .text('OK!').addClass('valid')
             .closest('.control-group').removeClass('error').addClass('success');
             }
+            
 
         });
     });
