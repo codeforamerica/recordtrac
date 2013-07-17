@@ -146,11 +146,12 @@ def requests():
 def your_requests():
 	all_record_requests = []
 	owner_resource = get_resource_filter("owner", [dict(name='user_id', op='eq', val=current_user.id)])
-	for owner in owner_resource['objects']:
-		req_resource = get_resource_filter("request", [dict(name='current_owner', op='eq', val=owner['id'])])
-		if req_resource['objects']:
-			req = req_resource['objects'][0]
-			all_record_requests.append(req)
+	if owner_resource:
+		for owner in owner_resource['objects']:
+			req_resource = get_resource_filter("request", [dict(name='current_owner', op='eq', val=owner['id'])])
+			if req_resource['objects']:
+				req = req_resource['objects'][0]
+				all_record_requests.append(req)
 	return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = current_user.id, title = "Requests assigned to you")
 
 @login_manager.unauthorized_handler
