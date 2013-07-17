@@ -372,7 +372,7 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 		page = "%srequest/%s" %(app_url,request_id)
 		requester = get_resource("subscriber", requester_id)
 		uid = requester['user_id']
-	email_address = get_user_email(uid)
+	email_address = user_email(uid)
 	if email_address:
 		try:
 			if send_emails:
@@ -382,13 +382,12 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 		except:
 			print "E-mail was not sent."
 
-def get_user_email(uid):
+def user_email(uid):
 	if uid:
 		user = User.query.get(uid)
 		if user:
 			return user.email
-	else:
-		return None
+	return None
 
 def send_email(body, recipient, subject):
 	mail = sendgrid.Sendgrid(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'], secure = True)
@@ -428,7 +427,7 @@ def notify_due_soon():
 		if due_soon:
 			owner = get_resource("owner", req['current_owner'])
 			uid = owner['user_id']
-			email_address = get_user_email(uid)
+			email_address = user_email(uid)
 			email_json = open(os.path.join(app.root_path, 'emails.json'))
 			json_data = json.load(email_json)
 			email_subject = "%sPublic Records Request %s: %s" %(test, req['id'], json_data["Request due"])
@@ -439,6 +438,37 @@ def notify_due_soon():
 			send_email(body = body, recipient = email_address, subject = email_subject)
 		else:
 			print "You've got time. Due %s" %(date_due)
+
+
+def get_responses_chronologically(req):
+	responses = []
+	if not req:
+		return responses
+	for note in req['notes']:
+		uid = note['user_id']
+		if uid:
+			icon = "icon-edit icon-2x"
+			if "Extended due to" in note['text']:
+				icon = "icon-calendar icon-2x"
+			responses.append(dict(text = note['text'], uid = uid, date = note['date_created'], icon = icon))
+	for record in req['records']:
+		uid = record['user_id']
+		text = ""
+		if record['doc_id']:
+			download_url = record['download_url']
+			if not download_url:
+				download_url = get_scribd_download_url(doc_id = record['doc_id'], record_id = record['id'])
+			icon = "icon-file-alt icon-2x"
+			text = "%s <a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='right' data-original-title='%s'><i class='icon-external-link'></i></a> Download file <a href = '%s' rel='tooltip' data-toggle='tooltip' dataplacement='right'><i class='icon-external-link'></i></a>" % (record['description'], record['url'], record['url'], download_url) 
+		elif record['access']:
+			text = "%s can be accessed: %s" %(record['description'], record['access'])
+			icon = "icon-file-alt icon-2x"
+		else: 
+			icon = "icon-link icon-2x"
+			text = "%s <a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='right' data-original-title='%s'><i class='icon-external-link'></i></a>" % (record['description'], record['url'], record['url'])
+		responses.append(dict(text = text, uid = uid,  date = record['date_created'], icon = icon))
+	responses.sort(key = lambda x:datetime.strptime(x['date'], '%Y-%m-%dT%H:%M:%S.%f'), reverse = True)
+	return responses
 
 def format_date(obj):
 	return obj.strftime('%b %d, %Y')
@@ -461,9 +491,26 @@ def set_directory_fields():
 	json_data = json.load(dir_json)
 	for line in json_data:
 		if line['EMAIL_ADDRESS']:
-			print line['FULL_NAME']
 			try:
 				last, first = line['FULL_NAME'].split(",")
 			except:
 				last, junk, first = line['FULL_NAME'].split(",")
 			user = create_or_return_user(email = line['EMAIL_ADDRESS'], alias = "%s %s" % (first, last), phone = line['PHONE'], department = line['DEPARTMENT'])
+
+def date_granular(timestamp):
+	if not timestamp:
+		return None
+	if type(timestamp) is not datetime:
+		timestamp = datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%S.%f")
+	delta = datetime.now() - timestamp
+	days, hours, minutes, seconds = delta.days, delta.seconds//3600, delta.seconds//60, delta.seconds
+	if days > 1:
+		return "%s days ago" % days
+	elif hours > 1:
+		return "%s hours ago" % hours
+	elif minutes > 1:
+		return "%s minutes ago" % minutes
+	elif seconds > 1:
+		return "%s seconds ago" % seconds
+	else:
+		return "Just now."

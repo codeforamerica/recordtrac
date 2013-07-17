@@ -120,119 +120,41 @@
         {% block public_note %}
         {% endblock public_note %}
 
-
       {% block clarify_request %}
       {% endblock clarify_request %}
 
       {% block response %}
-
         <!-- response area: need to give this more space between the request area-->
         <div class="row-fluid">
           <h3 class="response">Response</h3>
             <!-- shows all existing responses (links, documents, offline docs, notes) -->
-            {% if req.records or req.notes %} 
-
-              {% if req.records %}
+            {% set responses = ( req | get_responses_chronologically ) %}
+            {% if responses %} 
                 <div class="span10">
-                  {% for record in req.records %}
-                    {% set uid = record.user_id %}
+                  {% for response in responses %}
+                    {% set uid = response.uid %}
                     {% set staffName = (uid | get_staff_info("name")) %}
                     {% set staffDept = (uid | get_staff_info("dept")) %}
                     {% set staffPhone = (uid | get_staff_info("phone")) %}
                     {% set staffEmail = (uid | user_email) %}
-                    {% if record.doc_id %}
                       <div class="row-fluid response">
                         <div class="span2 text-center">
-                          <i class="icon-file-alt icon-2x">  </i></br>
-                          <small> {{ record.date_created | date_granular }} </small> </br>
+                          <i class="{{response.icon}}">  </i></br>
+                          <small> {{ response.date | date_granular }} </small> </br>
                         </div>
                         <div class="span10">
                           <p> 
-                            {% set direct_download_url = record.download_url %}
-                            {% if not direct_download_url %}
-                            {% set direct_download_url = (record.doc_id | get_scribd_download_url(record.id)) %}
-                            {% endif %}
-                              <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} <i class="icon-external-link"></i></a> - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverRecord{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '{{staffPhone}}', '#contactinfoPopoverRecord{{loop.index}}')">{{ staffName }}</span></a></em>. {% if direct_download_url %} <a href = "{{ direct_download_url }}" rel="tooltip" data-toggle="tooltip" dataplacement="right" title="">Direct Download</a> {% endif %}
+                             {{ response.text | safe }} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '{{staffPhone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staffName }}</span></a></em>. 
                           </p>
                         </div>
                       </div>
-                      {% elif record.access %}
-                        <div class="row-fluid response">
-                          <div class="span2 text-center">
-                            <i class="icon-file-alt icon-2x">  </i></br>
-                            <small> {{ record.date_created | date_granular }} </small> </br>
-                          </div>
-                          <div class="span10">
-                            <p>{{record.description}} can be accessed: {{record.access}} </a> - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverRecord{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '{{staffPhone}}', '#contactinfoPopoverRecord{{loop.index}}')">{{ staffName }}</span></a></em></p>
-                          </div>
-                        </div>
-                    {% else %} <!-- treat it as a link -->
-                      <div class="row-fluid response">
-                        <div class="span2 text-center">
-                          <i class="icon-link icon-2x">  </i></br>
-                          <small> {{ record.date_created | date_granular }} </small> </br>
-                        </div>
-                        <div class="span10">
-                          <p> <a href="{{record.url}}" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{record.url}}">  {{record.description}} <i class="icon-external-link"></i></a> - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverRecord{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '{{staffPhone}}', '#contactinfoPopoverRecord{{loop.index}}')">{{ staffName }}</span></a></em></p>
-                        </div>
-                      </div>
-                    {% endif %}
                   {% endfor %}
                 </div>
-              {% endif %}
-
-              {% if req.notes %}
-                <div class="span10">
-                  {% for note in req.notes %}
-                  {% if note.user_id %}
-                    {% set uid = note.user_id %}
-                    {% set staffName = (uid | get_staff_info("name")) %}
-                    {% set staffDept = (uid | get_staff_info("dept")) %}
-                    {% set staffPhone = (uid | get_staff_info("phone")) %}
-                    {% set staffEmail = (uid | user_email) %}
-                    <div class="row-fluid response">
-                      <div class="span2 text-center">
-                        <i class="icon-edit icon-2x">  </i> </br>
-                        <small> {{ note.date_created | date_granular }} </small> </br>
-                      </div>
-                      <div class="span10">
-                        <p> {{ note.text}} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverNote{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '{{staffPhone}}', '#contactinfoPopoverNote{{loop.index}}')">{{ staffName }}</span></a></em></p>
-                      </div>
-                    </div>
-                  {% endif %}
-                  {% endfor %}
-                </div>
-              {% endif %}
-
-              {% if req.extension %}
-                <div class="span10">
-                  {% for note in req.extension %}
-                  {% if extension.user_id %}
-                    {% set uid = extension.user_id %}
-                    {% set staffName = (uid | get_staff_info("name")) %}
-                    {% set staffDept = (uid | get_staff_info("dept")) %}
-                    {% set staffEmail = (uid | user_email) %}
-                    <div class="row-fluid response">
-                      <div class="span2 text-center">
-                        <i class="icon-calendar icon-2x">  </i> </br>
-                        <small> {{ extension.date_created | date_granular }} </small> </br>
-                      </div>
-                      <div class="span10">
-                        <p> {{ extension.text}} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverNote{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '#contactinfoPopoverNote{{loop.index}}')">{{ staffName }}</span></a></em></p>
-                      </div>
-                    </div>
-                  {% endif %}
-                  {% endfor %}
-                </div>
-              {% endif %}
-
             {% else %}<!--added an if then to check to see if any responses exist - if no then show text here for the "if any response exists" above -->
               <div class="span10">
                 <p>There are no records uploaded just yet.  Stay tuned!</p>
               </div>
           {% endif %}
-
-            
 
   <!-- This code will definitely not work.  All it's meant to do is convey that we need to post whatever the "close" reason is for the case in the page itself. --> 
             {% if closed %}
