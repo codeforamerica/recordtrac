@@ -11,6 +11,10 @@ app.jinja_env.filters['get_scribd_download_url'] = get_scribd_download_url
 app.jinja_env.filters['last_note'] = last_note
 app.jinja_env.filters['due_date'] = due_date
 app.jinja_env.filters['get_staff_info'] = get_staff_info
+app.jinja_env.filters['date_granular'] = date_granular
+app.jinja_env.filters['user_email'] = user_email
+app.jinja_env.filters['get_responses_chronologically'] = get_responses_chronologically
+
 
 @app.template_filter('date')
 def date(obj):
@@ -24,25 +28,6 @@ def date(obj):
 		except:
 			return format_date(obj) # Just return the thing, maybe it's already a date
 
-
-@app.template_filter('date_granular')
-def date_granular(timestamp):
-	if not timestamp:
-		return None
-	if type(timestamp) is not datetime:
-		timestamp = datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%S.%f")
-	delta = datetime.now() - timestamp
-	days, hours, minutes, seconds = delta.days, delta.seconds//3600, delta.seconds//60, delta.seconds
-	if days > 1:
-		return "%s days ago" % days
-	elif hours > 1:
-		return "%s hours ago" % hours
-	elif minutes > 1:
-		return "%s minutes ago" % minutes
-	elif seconds > 1:
-		return "%s seconds ago" % seconds
-	else:
-		return "Just now."
 
 @app.template_filter('owner_name')
 def owner_name(oid):
@@ -96,13 +81,6 @@ def user_name(uid):
 
 	return "Requester"
 
-@app.template_filter('user_email')
-def user_email(uid):
-	if uid:
-		user = User.query.get(uid)
-		if user:
-			return user.email
-	return None
 
 def user_alias(uid):
 	if uid:
