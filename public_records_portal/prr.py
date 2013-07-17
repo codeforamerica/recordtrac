@@ -469,6 +469,8 @@ def get_responses_chronologically(req):
 			text = "%s <a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='right' data-original-title='%s'><i class='icon-external-link'></i></a>" % (record['description'], record['url'], record['url'])
 		responses.append(dict(text = text, uid = uid,  date = record['date_created'], icon = icon))
 	responses.sort(key = lambda x:datetime.strptime(x['date'], '%Y-%m-%dT%H:%M:%S.%f'), reverse = True)
+	if "Closed" in req['status']:
+		responses[0]['icon'] = "icon-lock icon-2x" # Set most recent note (closed note)'s icon
 	return responses
 
 def format_date(obj):
