@@ -15,7 +15,7 @@
             {% set staffDept = (uid | get_staff_info("dept")) %}
             {% set staffPhone = (uid | get_staff_info("phone")) %}
             {% set staffEmail = (uid | user_email) %}
-              Routed to <a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverRoute"><span class="label label-info" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '{{staffPhone}}', '#contactinfoPopoverRoute')">{{ staffName }}</span></a>
+              Routed to <a data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverRoute"><span class="label label-info" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '{{staffPhone}}', '#contactinfoPopoverRoute')">{{ staffName }}</span></a>
             {% endblock routing %}
             {% block history %}
               <a data-placement="left" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"> <i class="icon-time" ></i>  </a>
@@ -102,7 +102,7 @@
                    {% set staffDept = (uid | get_staff_info("dept")) %}
                    {% set staffPhone = (uid | get_staff_info("phone")) %}
                    {% set staffEmail = (uid | user_email) %}
-                  <p> {{ qa.question }} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '{{staffPhone}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staffName }}</span></a></em></p>
+                  <p> {{ qa.question }} - <em><a data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '{{staffPhone}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staffName }}</span></a></em></p>
                   {% if qa.answer %}
                     <p>{{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></p>
                   {% else %}
@@ -144,7 +144,7 @@
                         </div>
                         <div class="span10">
                           <p> 
-                             {{ response.text | safe }} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '{{staffPhone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staffName }}</span></a></em>. 
+                             {{ response.text | safe }} - <em><a data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '{{staffPhone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staffName }}</span></a></em>. 
                           </p>
                         </div>
                       </div>

@@ -31,7 +31,8 @@ i[class|="icon-external-link"] {
 	font-size:10px;
 }
 
-
+/* contact info link */
+span[class|="contactinfoPopover"] {color: #666666;}
 
 /* contact info hover link */
 .contactinfoPopover span {color: #3a87ad;}
