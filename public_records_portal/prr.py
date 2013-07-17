@@ -68,6 +68,13 @@ def get_resources(resource, app_url = None, order_by = None):
 
 def add_resource(resource, request_body, current_user_id = None):
 	fields = request_body.form
+	if "extension" in resource:
+		put_resource("request", dict(extended = True),int(fields['request_id'])) # Changes the extended flag
+		extension_reasons = fields.getlist('note_text')
+		text = "Request extended:"
+		for reason in extension_reasons:
+			text = text + reason + "</br>"
+		return add_note(fields['request_id'], text, current_user_id)
 	if "note" in resource:
 		return add_note(fields['request_id'], fields['note_text'], current_user_id)
 	elif "record" in resource:
@@ -118,9 +125,6 @@ def update_resource(resource, request_body):
 	elif "reopen" in resource:
 		change_request_status(fields['request_id'], "Reopened")
 		return fields['request_id']
-	elif "extend" in resource:
-		extend_request(fields['request_id'])
-		return fields['request_id']
 	else:
 		return False
 
@@ -155,10 +159,6 @@ def add_offline_record(request_id, description, access, user_id):
 		send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
 		return record['id']
 	return False
-
-def extend_request(request_id):
-	put_resource("request", dict(extended = True),int(request_id))
-	# Create note etc
 
 def add_link(request_id, url, description, user_id):
 	record = create_resource("record", dict(url = url, request_id = request_id, user_id = user_id, description = description))
@@ -439,18 +439,19 @@ def notify_due_soon():
 		else:
 			print "You've got time. Due %s" %(date_due)
 
-
 def get_responses_chronologically(req):
 	responses = []
 	if not req:
 		return responses
 	for note in req['notes']:
 		uid = note['user_id']
+		text = note['text']
 		if uid:
 			icon = "icon-edit icon-2x"
-			if "Extended due to" in note['text']:
+			if "Request extended" in note['text']:
 				icon = "icon-calendar icon-2x"
-			responses.append(dict(text = note['text'], uid = uid, date = note['date_created'], icon = icon))
+				junk, text = note['text'].split(":")
+			responses.append(dict(text = text, uid = uid, date = note['date_created'], icon = icon))
 	for record in req['records']:
 		uid = record['user_id']
 		text = ""
