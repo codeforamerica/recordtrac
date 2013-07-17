@@ -15,10 +15,10 @@
             {% set staffDept = (uid | get_staff_info("dept")) %}
             {% set staffPhone = (uid | get_staff_info("phone")) %}
             {% set staffEmail = (uid | user_email) %}
-              Routed to <a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverRoute" class="hidden-phone hidden-tablet"><span class="label label-info" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '{{staffPhone}}', '#contactinfoPopoverRoute')">{{ staffName }}</span></a>
+              Routed to <a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverRoute"><span class="label label-info" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '{{staffPhone}}', '#contactinfoPopoverRoute')">{{ staffName }}</span></a>
             {% endblock routing %}
             {% block history %}
-              <a data-placement="left" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"> <i class="icon-time"></i>  </a>
+              <a data-placement="left" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"> <i class="icon-time" ></i>  </a>
               <div id="historyPopover-head" class="hide">Routing history</div>
               <div id="historyPopover-content" class="hide">              
                 <table class="table table-condensed">
