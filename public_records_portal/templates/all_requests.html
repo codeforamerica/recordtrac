@@ -21,7 +21,7 @@
       {% for request in all_record_requests %}
         <tr>
           {% if user_id %}
-          <td><a href="/city/request/{{request.id}}">{{ request.id }}</a></td>
+          <td>{{ request.id }}</a></td>
           {% else %}
           <td><a href="/request/{{request.id}}">{{ request.id }}</a></td>
           {% endif %}
