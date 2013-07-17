@@ -36,14 +36,14 @@ class Request(db.Model):
 	id = db.Column(db.Integer, primary_key =True)
 	date_created = db.Column(db.DateTime)
 	extended = db.Column(db.Boolean, default = False) # Has the due date been extended?
-	qas = relationship("QA", cascade="all,delete") # The list of QA units for this request
+	qas = relationship("QA", cascade="all,delete", order_by = "QA.date_created.desc()") # The list of QA units for this request
 	status_updated = db.Column(db.DateTime)
 	text = db.Column(db.String(), unique=True) # The actual request text.
 	subscribers = relationship("Subscriber", cascade ="all, delete") # The list of subscribers following this request.
 	owners = relationship("Owner", cascade="all,delete") # The list of city staff ever assigned to the request.
 	current_owner = db.Column(db.Integer) # The Owner ID for the city staff that currently 'owns' the request.
-	records = relationship("Record", cascade="all,delete") # The list of records that have been uploaded for this request.
-	notes = relationship("Note", cascade="all,delete") # The list of notes appended to this request.
+	records = relationship("Record", cascade="all,delete", order_by = "Record.date_created.desc()") # The list of records that have been uploaded for this request.
+	notes = relationship("Note", cascade="all,delete", order_by = "Note.date_created.desc()") # The list of notes appended to this request.
 	status = db.Column(db.String(400)) # The status of the request (open, closed, etc.)
 	creator_id = db.Column(db.Integer, db.ForeignKey('user.id')) # If city staff created it on behalf of the public, otherwise the creator is the subscriber with creator = true
 	def __init__(self, text, creator_id = None):
