@@ -460,7 +460,7 @@ def get_responses_chronologically(req):
 			if not download_url:
 				download_url = get_scribd_download_url(doc_id = record['doc_id'], record_id = record['id'])
 			icon = "icon-file-alt icon-2x"
-			text = "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='right' data-original-title='%s'>%s <i class='icon-external-link'></i></a><a href = '%s' rel='tooltip' data-toggle='tooltip' dataplacement='right'> Download file <i class='icon-external-link'></i></a>" % (record['url'], record['url'], record['description'], download_url) 
+			text = "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='right' data-original-title='%s'>%s <i class='icon-external-link'></i></a><a href = '%s' rel='tooltip' data-toggle='tooltip' data-placement='right' data-original-title='%s'> Download file <i class='icon-cloud-download'></i></a>" % (record['url'], record['url'], record['description'], download_url, download_url) 
 		elif record['access']:
 			text = "%s can be accessed: %s" %(record['description'], record['access'])
 			icon = "icon-file-alt icon-2x"
