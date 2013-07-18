@@ -460,13 +460,13 @@ def get_responses_chronologically(req):
 			if not download_url:
 				download_url = get_scribd_download_url(doc_id = record['doc_id'], record_id = record['id'])
 			icon = "icon-file-alt icon-2x"
-			text = "%s <a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='right' data-original-title='%s'><i class='icon-external-link'></i></a> Download file <a href = '%s' rel='tooltip' data-toggle='tooltip' dataplacement='right'><i class='icon-external-link'></i></a>" % (record['description'], record['url'], record['url'], download_url) 
+			text = "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='right' data-original-title='%s'>%s <i class='icon-external-link'></i></a><a href = '%s' rel='tooltip' data-toggle='tooltip' dataplacement='right'> Download file <i class='icon-external-link'></i></a>" % (record['url'], record['url'], record['description'], download_url) 
 		elif record['access']:
 			text = "%s can be accessed: %s" %(record['description'], record['access'])
 			icon = "icon-file-alt icon-2x"
 		else: 
 			icon = "icon-link icon-2x"
-			text = "%s <a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='right' data-original-title='%s'><i class='icon-external-link'></i></a>" % (record['description'], record['url'], record['url'])
+			text = "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='right' data-original-title='%s'>%s <i class='icon-external-link'></i></a>" % (record['url'], record['url'], record['description'])
 		responses.append(dict(text = text, uid = uid,  date = record['date_created'], icon = icon))
 	responses.sort(key = lambda x:datetime.strptime(x['date'], '%Y-%m-%dT%H:%M:%S.%f'), reverse = True)
 	if "Closed" in req['status']:

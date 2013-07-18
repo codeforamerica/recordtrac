@@ -12,6 +12,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 
+
 # Routing
 
 # Let's start with the index page! For now we'll let the users submit a new request.
@@ -66,6 +67,18 @@ def show_request_for_x(audience, request_id):
 	if "city" in audience and current_user.is_anonymous():
 		return render_template('alpha.html')
 	return show_request(request_id = request_id, template = "manage_request_%s.html" %(audience))
+
+
+@app.route('/response/<int:request_id>')
+def show_response(request_id):
+	req = get_resource("request", request_id)
+	if not req:
+		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
+	current_user_id = None
+	if current_user.is_anonymous() == False:
+		current_user_id = current_user.id
+	return render_template("response.html", req = req, user_id = current_user_id)
+
 
 @app.route('/request/<int:request_id>')
 def show_request(request_id, template = None, record_uploaded = None, for_email_notification = False, banner_msg = None):
