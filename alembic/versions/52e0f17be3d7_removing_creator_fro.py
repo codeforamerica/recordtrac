@@ -1,14 +1,14 @@
 """Removing creator from subscriber
 
 Revision ID: 52e0f17be3d7
-Revises: 390851866176
+Revises: None
 Create Date: 2013-05-30 16:09:15.687066
 
 """
 
 # revision identifiers, used by Alembic.
 revision = '52e0f17be3d7'
-down_revision = '390851866176'
+down_revision = None
 
 from alembic import op
 import sqlalchemy as sa
