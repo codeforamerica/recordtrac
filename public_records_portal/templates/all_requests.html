@@ -20,7 +20,7 @@
     <tbody>
       {% for request in all_record_requests %}
         <tr>
-          <td>{{ request.id }}</a></td>
+          <td>{{ request.id }}</td>
           <td>{{ request.status }} </td>
           <td>{{ request.date_created | date }}</td>
           {% if user_id %}
