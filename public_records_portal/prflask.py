@@ -18,9 +18,9 @@ login_manager.init_app(app)
 @app.route('/', methods = ['GET', 'POST'])
 def index():
 	if current_user.is_anonymous() == False:
-		return your_requests()
+		return redirect(url_for('your_requests'))
 	else:
-		return new_request()
+		return redirect(url_for('new_request'))
 
 @app.errorhandler(404)
 def page_not_found(e):
