@@ -6,16 +6,14 @@ from filters import *
 from prr import *
 import json
 import os
-import inspect
 
 # Initialize login
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-# Routing
-routing = 
-{
-	'your_requests':'/your_requests'
+# Routing dictionary. 
+routing = {
+	'your_requests':'/your_requests',
 	'index': '/',
 	'explain_all_actions': '/actions',
 	'new_request': '/new',
@@ -32,61 +30,12 @@ routing =
 	'update_a_resource': '/update_a_<string:resource>',
 	'close': '/close'
 }
-# app.add_url_rule('/your_requests', your_requests)
-# app.add_url_rule('/', 'index', index)
-# app.add_url_rule('/actions', explain_all_actions)
-# app.add_url_rule('/new', new_request)
-# app.add_url_rule('/response/<int:request_id>', show_response)
-# app.add_url_rule('/<string:audience>/request/<int:request_id>', show_request_for_x)
-# app.add_url_rule('/request/<int:request_id>', show_request)
-# app.add_url_rule('/<page>', any_page)
-# app.add_url_rule('/requests', requests)
-# app.add_url_rule('/update_password', update_password)
-# app.add_url_rule('/logout', logout)
 
-# # These are invoked from form submissions
-# app.add_url_rule('/login', login)
-# app.add_url_rule('/add_a_<string:resource>', add_a_resource)
-# app.add_url_rule('/public_add_a_<string:resource>', public_add_a_resource)
-# app.add_url_rule('/update_a_<string:resource>', update_a_resource)
-# app.add_url_rule('/close', close)
 
-#Functions
-# Shows all public records requests that have been made by current owner. This doesn't work currently.
-@login_required
-def your_requests():
-	app.add_url_rule(routing['your_requests'], your_requests)
-	all_record_requests = []
-	owner_resource = get_resource_filter("owner", [dict(name='user_id', op='eq', val=current_user.id)])
-	if owner_resource:
-		for owner in owner_resource['objects']:
-			req_resource = get_resource_filter("request", [dict(name='current_owner', op='eq', val=owner['id'])])
-			if req_resource['objects']:
-				req = req_resource['objects'][0]
-				all_record_requests.append(req)
-	return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = current_user.id, title = "Requests assigned to you")
+def route_url(function_name):
+	app.add_url_rule(routing[function_name], function_name, eval(function_name))
 
-# Let's start with the index page! For now we'll let the users submit a new request.
-def index():
-	if current_user.is_anonymous() == False:
-		return redirect(your_requests())
-	else:
-		return redirect(url_for('new_request'))
-index.methods = ['GET', 'POST']
-
-@app.errorhandler(404)
-def page_not_found(e):
-	return render_template('404.html'), 404
-
-def explain_all_actions():
-	action_json = open(os.path.join(app.root_path, 'actions.json'))
-	json_data = json.load(action_json)
-	actions = []
-	for data in json_data:
-		actions.append("%s: %s" %(data, json_data[data]))
-	return render_template('actions.html', actions = actions)
-
-# They can always submit a new request by navigating here, but the index might change.
+# Submitting a new request
 def new_request():
 	if request.method == 'POST':
 		request_text = request.form['request_text']
@@ -106,6 +55,43 @@ def new_request():
 	else:
 		return render_template('new_request.html', user_id = get_user_id())
 new_request.methods = ['GET', 'POST']
+route_url('new_request')
+
+@login_required
+def your_requests():
+	all_record_requests = []
+	owner_resource = get_resource_filter("owner", [dict(name='user_id', op='eq', val=current_user.id)])
+	if owner_resource:
+		for owner in owner_resource['objects']:
+			req_resource = get_resource_filter("request", [dict(name='current_owner', op='eq', val=owner['id'])])
+			if req_resource['objects']:
+				req = req_resource['objects'][0]
+				all_record_requests.append(req)
+	return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = current_user.id, title = "Requests assigned to you")
+route_url('your_requests')
+
+def index():
+	if current_user.is_anonymous() == False:
+		return redirect(url_for('your_requests'))
+	else:
+		return redirect(url_for('new_request'))
+index.methods = ['GET', 'POST']
+route_url('index')
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+	return render_template('404.html'), 404
+
+def explain_all_actions():
+	action_json = open(os.path.join(app.root_path, 'actions.json'))
+	json_data = json.load(action_json)
+	actions = []
+	for data in json_data:
+		actions.append("%s: %s" %(data, json_data[data]))
+	return render_template('actions.html', actions = actions)
+route_url('explain_all_actions')
+
 
 # Returns a view of the case based on the audience. Currently views exist for city staff or general public.
 def show_request_for_x(audience, request_id):
@@ -113,12 +99,14 @@ def show_request_for_x(audience, request_id):
 		return render_template('alpha.html')
 	return show_request(request_id = request_id, template = "manage_request_%s.html" %(audience))
 show_request_for_x.methods = ['GET', 'POST']
+route_url('show_request_for_x')
 
 def show_response(request_id):
 	req = get_resource("request", request_id)
 	if not req:
 		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
 	return render_template("response.html", req = req, user_id = get_user_id())
+route_url('show_response')
 
 def show_request(request_id, template = None, record_uploaded = None, for_email_notification = False, banner_msg = None):
 	req = get_resource("request", request_id)
@@ -132,6 +120,7 @@ def show_request(request_id, template = None, record_uploaded = None, for_email_
 	if req['status'] and "Closed" in req['status']:
 		template = "closed.html"
 	return render_template(template, req = req, for_email_notification = for_email_notification, record_uploaded = record_uploaded, banner_msg = banner_msg, user_id = get_user_id())
+route_url('show_request')
 
 @login_required
 def add_a_resource(resource):
@@ -145,6 +134,7 @@ def add_a_resource(resource):
 			return render_template('help_with_uploads.html', message = resource_id)
 	return render_template('error.html', message = "You can only update requests from a request page!")
 add_a_resource.methods = ['GET', 'POST']
+route_url('add_a_resource')
 
 def public_add_a_resource(resource):
 	if request.method == 'POST' and "note" in resource:
@@ -153,6 +143,7 @@ def public_add_a_resource(resource):
 			return redirect(url_for('show_request_for_x', audience='public', request_id = request.form['request_id']))
 	return render_template('error.html')
 public_add_a_resource.methods = ['GET', 'POST']
+route_url('public_add_a_resource')
 
 def update_a_resource(resource):
 	if request.method == 'POST':
@@ -163,6 +154,7 @@ def update_a_resource(resource):
 			return redirect(url_for('show_request', request_id = request.form['request_id']))
 	return render_template('error.html', message = "You can only update requests from a request page!")
 update_a_resource.methods = ['GET', 'POST']
+route_url('update_a_resource')
 
 # Closing is specific to a case, so this only gets called from a case (that only city staff have a view of)
 @login_required
@@ -174,6 +166,7 @@ def close(request_id = None):
 		return show_request(request_id, template= template)
 	return render_template('error.html', message = "You can only close from a requests page!")
 close.methods=['GET', 'POST']
+route_url('close')
 
 # Shows all public records requests that have been made.
 def requests():
@@ -182,6 +175,7 @@ def requests():
 		return render_template('all_requests.html', all_record_requests = all_record_requests['objects'], user_id = get_user_id(), title = "All Requests")
 	else:
 		return index()
+route_url('requests')
 
 
 @login_manager.unauthorized_handler
@@ -198,6 +192,7 @@ def any_page(page):
 		return render_template('%s.html' %(page), user_id = current_user_id)
 	except:
 		return render_template('error.html', message = "%s totally doesn't exist." %(page), user_id = get_user_id())
+route_url('any_page')
 
 @login_manager.user_loader
 def load_user(userid):
@@ -216,6 +211,7 @@ def login(email=None, password=None):
 				return index()
 	return render_template('error.html', message = "Oops, your e-mail/ password combo didn't work.") 
 login.methods = ['GET', 'POST']
+route_url('login')
 
 def get_user_id():
 	if current_user.is_anonymous() == False:
@@ -238,29 +234,9 @@ def update_password(password=None):
 	else:
 		return render_template('update_password.html', user_id = current_user_id)
 update_password.methods = ['GET', 'POST']
+route_url('update_password')
 
 def logout():
 	logout_user()
 	return index()
-
-
-
-# Routing
-app.add_url_rule('/your_requests', your_requests)
-app.add_url_rule('/', 'index', index)
-app.add_url_rule('/actions', explain_all_actions)
-app.add_url_rule('/new', new_request)
-app.add_url_rule('/response/<int:request_id>', show_response)
-app.add_url_rule('/<string:audience>/request/<int:request_id>', show_request_for_x)
-app.add_url_rule('/request/<int:request_id>', show_request)
-app.add_url_rule('/<page>', any_page)
-app.add_url_rule('/requests', requests)
-app.add_url_rule('/update_password', update_password)
-app.add_url_rule('/logout', logout)
-
-# These are invoked from form submissions
-app.add_url_rule('/login', login)
-app.add_url_rule('/add_a_<string:resource>', add_a_resource)
-app.add_url_rule('/public_add_a_<string:resource>', public_add_a_resource)
-app.add_url_rule('/update_a_<string:resource>', update_a_resource)
-app.add_url_rule('/close', close)
+route_url('logout')
