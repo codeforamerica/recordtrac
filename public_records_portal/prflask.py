@@ -109,6 +109,7 @@ def show_response(request_id):
 route_url('show_response')
 
 def show_request(request_id, template = None, record_uploaded = None, for_email_notification = False, banner_msg = None):
+	current_user_id = get_user_id()
 	req = get_resource("request", request_id)
 	if not req:
 		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
