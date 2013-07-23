@@ -134,7 +134,11 @@ def add_note(request_id, text, user_id):
 	note = create_resource("note", dict(request_id = request_id, text = text, user_id = user_id))
 	if note:
 		change_request_status(request_id, "A response has been added.")
-		send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
+		if user_id:
+			send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
+		else:
+			req = get_resource("request", request_id)
+			send_prr_email(request_id = request_id, notification_type = "Public note added", owner_id = req['current_owner'] )
 		return note['id']
 	return False
 
