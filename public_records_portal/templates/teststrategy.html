@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+{% block title %}Testing Strategy for Public Records Request Management System{% endblock %}
+{% block content %}
+<h1>Testing Strategy for Public Records Request Management System</h1>
+<p>
+Conducted by Cris Cristina, Richa Agarwal, and Sheila Dugan, Oakland 2013 Code for America fellows
+</p>
+<p>
+Last updated July 16, 2013
+<h2>Background</h2>
+<p>
+In its application to Code for America (CfA), the City of Oakland indicated it would like to utilize technology to better respond to public records requests. Occupy Oakland and other events that attracted scrutiny of the public revealed the system to be broken and strained the relationship between the city and the community.  
+</p>
+City staff found the software used to respond and track requests to be difficult to use.  Many request remained untracked.  The failure to track all requests meant city employees would waste time fulfilling many of the same requests. The City could not even track its progress by identifying the number of requests processed each year, the departments that receive the most requests, and how long it takes to fulfill a requests. 
+</p>
+<p>
+We also learned average citizens do not know how to structure their requests.  This may lead them to submit broad requests the City is unable to fulfill or send them to the wrong department.
+</p>
+<p>
+We are designing a system to help the City manage its public records requests, as well as allow the general public review the requests Oakland receives and its response to those requests.
+</p>
+
+<h2>Goals</h2>
+<ul>
+<li>
+Test the assumptions that informed the creation of our web application to-date.
+</li>
+<li>
+Determine whether the application’s features complement a City employees workflow. 
+</li>
+<li>
+Get public records online and available to the community in a transparent fashion. 
+</li>
+</ul>
+
+<h2>Participants</h2>
+<p>
+The first department that will test the web application is the City Clerk’s office. The City Clerk’s office is targeted because:
+</p>
+<ul>
+<li>
+They receive a large number of public records requests. We would not have to spend a long time “waiting” for requests to be made.
+</li>
+<li>
+Many of their records do not contain a tons of confidential information. It will make it easy for the documents to be made immediately available to public online. 
+</li>
+</ul>
+<p>
+Other City of Oakland departments will be added as quickly as possible. The Oakland Police Department will be added after it is determined how to treat the documents they distribute. 
+</p>
+
+<h2>Methodology</h2>
+<p>
+The web application will not be tested by all departments simultaneously. This is to limit the amount of disruption city-wide. Many of the features remain untested. There is a possibility they will not work correctly or make a simple task more complex and time-consuming. Focusing on one department (and in turn a couple of city employees) will allow us to be able to quickly respond to any questions and/or concerns. 
+</p>
+<p>
+A splash page will be added to the current form for submitting PRRs giving the general public the opportunity to use the new web application if they are asking for records and documents from the City Clerk’s office. 
+</p>
+<p>
+You can view the splash page by visiting <a href="http://www2.oaklandnet.com/Government/o/CityAdministration/PublicRecordsRequest/index.htm">the City of Oakland's website.</a>
+</p>
+<p>
+Individuals submitting public records requests often do not know which departments to contact for their needs. This is why the copy redirects them to the new web application based on the document they desire, rather than asking them to first identify the department they want to contact. 
+</p>
+<p>
+As more departments are added, the CfA fellows and the Online Communications Manager will help route the public records requests to the proper departments. 
+</p>
+<p>
+This strategy may change suddenly depending on the schedules of city staff and the response to the web application. 
+</p>
+<h2>Collecting Feedback</h2>
+<p>
+Feedback on the web application will be collected from city employees in the following ways: </p>
+<ul>
+<li>
+Feedback form: A form will be embedded on the current web application allowing users to provide us with their feedback on the project and which features they need to fulfill a public records request.
+</li>
+<li>
+“Live” recorded sessions: Observe city employees use the system in real-time.
+One-on-one testing sessions with users of the system. 
+</li>
+<li>
+Schedule another session with  Public Records Request (PRR) liaisons to  demo application and hear their thoughts.
+</li>
+</ul>
+<p>
+All feedback will be tracked using GitHub issues. You can visit the following webpage to view all of the bugs and feature requests to date: <a href="https://github.com/codeforamerica/public-records/issues?state=open">https://github.com/codeforamerica/public-records/issues?state=open </a></p>
+<h2>Prioritizing Feature Requests and Bug Fixes</h2>
+<p>
+We will continue to add new features as the web application is being tested in the City of Oakland. At the same time, we are committed to responding to the requests and concerns of city employees while they use the app to respond to live requests. We developed a methodology to prioritize bug fixes and feature requests.  
+</p>
+<table width="800" border="1">
+  <tr>
+    <td width="112"></td>
+    <td width="509"><strong>Definition</strong></td>
+    <td width="157"><strong>Response</strong></td>
+  </tr>
+  <tr>
+    <td><strong>High</strong></td>
+    <td>
+    <ul>
+<li>
+Does this prevent a member of the public from submitting a public records request?
+</li>
+<li>
+Does this compromise or expose sensitive data or information?
+</li>
+<li>
+Does this prevent a city employee from responding to a public records request?
+</li>
+<li>
+Does this prevent a public records request from being received and read by a city employee?
+</li>
+<li>
+The user could inadvertently damage their system or data because of poor design.
+</li>
+<li>
+The user's task will be significantly impeded due to the design. The user is likely to be unable to complete the task, or very likely to make important errors.
+</li>
+<li>
+Is it needed to be compliant with the PRA/ Sunshine Ordinance?
+</li>
+    </ul>
+    </td>
+    <td>Address it immediately</td>
+  </tr>
+  <tr>
+    <td><strong>Medium</strong></td>
+    <td>
+    <ul>
+<li>
+Is critical information not being displayed?
+</li>
+<li>
+Does the user get frustrated? Do they stop using the app because of it?
+</li>
+<li>
+If we didn’t implement it, would someone have to go outside of the system to do it? 
+</li>
+<li>
+If so, is it technically feasible?
+</li>
+<li>
+The user is likely to misunderstand what they need to do at certain points, or to pick the wrong choices/options even when they do know what they should do.
+</li>
+<li>
+Despite this, they will probably still be able to complete the task successfully.
+</li> 
+    </ul>
+    </td>
+    <td>Add it to the first or second development cycle</td>
+  </tr>
+  <tr>
+    <td><strong>Low</strong></td>
+    <td>
+    <ul>
+<li>
+Is the user mildly irritated?
+</li>
+<li>
+Can the user find a workaround to do what they are trying to accomplish? 
+</li>
+<li>
+Confusing, inconsistent, or frustrating: The user is likely to experience confusion or uncertainty due to insufficient clarity or internal/external inconsistency. They will probably have "pause for thought", but will not actually make a slip. They may be frustrated by the steps they have to take or information they are forced to enter.
+</li>
+<li>
+The visual display of items is not ideal (alignment, spacing, etc)
+</li>
+    </ul>
+    </td>
+    <td>These will be brought into the development cycle when time permits.</td>
+  </tr>
+  <tr>
+    <td><strong>Not Addressing</strong></td>
+    <td>
+    <ul>
+    <li>
+    Will introducing a new feature will compromise the stated goals of the application? 
+    </li>
+    </ul>
+    </td>
+    <td>This is out of the scope for this year’s project. We will not address or add the feature. </td>
+  </tr>
+</table>
+<h2>Timeline</h2>
+<table width="800" border="1">
+  <tr>
+    <td>Tuesday, June 18, 2013</td>
+    <td>Testing began in the City Clerk’s Office</td>
+  </tr>
+  <tr>
+    <td>Wednesday, July 17, 2013</td>
+    <td>Preview of the web application with Public Records Request Liaisons and other city staff members</td>
+  </tr>
+  <tr>
+    <td>Wednesday, July 17, 2013</td>
+    <td>Presentation to City of Oakland senior staff</td>
+  </tr>
+  <tr>
+    <td>By Monday, July 22, 2013</td>
+    <td>Email to all city employees explaining the scope of the pilot</td>
+  </tr>
+  <tr>
+    <td>By July 31, 2013</td>
+    <td>All department piloting the application. They will be added in the following order:
+ <ul>
+ <li>
+Wednesday, July 24th: Fire Department, Budget and Revenue, Parks and Recreation
+</li>
+<li>
+Friday, July 26th: City Auditor, Contracts and Compliance, Administrative Services Agency
+</li>
+<li>
+Monday, July 29th: City Attorney, Health and Human Services, Library Services
+</li>
+<li>
+Tuesday, July 31st: City Administrator, Office of the Mayor, Office of Neighborhood Investment, Department of Planning and Building, Council offices 
+</li>
+</ul>
+</td>
+  </tr>
+  <tr>
+    <td>By July 31, 2013</td>
+    <td>Set up a re-redirect so people are not directed to the old website</td>
+  </tr>
+  <tr>
+    <td>Mid-August 2013</td>
+    <td>Begin pilot in the Oakland Police Department</td>
+  </tr>
+  <tr>
+    <td>Thursday, September 12, 2013 <br>
+(Rain date: September 17, 2013)</td>
+    <td>Public launch of web application</td>
+  </tr>
+  <tr>
+    <td>September 12 to October 12, 2013</td>
+    <td>Fix any necessary bugs and prepare for summit.</td>
+  </tr>
+  <tr>
+    <td>October 15-16, 2013</td>
+    <td>Code for America summit: Present the project to past, current, and future Code for America participants. </td>
+  </tr>
+  <tr>
+    <td>October 12 to November 15, 2013</td>
+    <td>Transition: We will work with the City of Oakland to guarantee the City is able to maintain the web application once the fellowship ends. </td>
+  </tr>
+  <tr>
+    <td>November 15, 2013</td>
+    <td>Fellowship ends</td>
+  </tr>
+</table>
+
+</p>
+</body>
+</html>
+
+{% endblock content %}

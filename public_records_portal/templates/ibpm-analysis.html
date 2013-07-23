@@ -1,0 +1,643 @@
+{% extends "base.html" %}
+{% block title %}Analysis of Output from IPBM System{% endblock %}
+{% block content %}
+<h1>Analysis of Output from IPBM System</h1>
+<p>
+On February 20, 2013, Arlette Flores-Medina provided us with the raw data of the public records requests retrieved from the IPBM system. The data only included the requests from three years: the last days of 2011, 2012, and the first two months of 2013 (See Table 1). The fellows only had a complete set of records for one year, 2012.<br>
+</p>
+<strong>Table 1: Public Records Requests Received by Year</strong>
+<br>
+  <table>
+    <tr>
+      <td width="188"><strong>Year </strong></td>
+      <td width="248"> <strong> Number of requests </strong></p></td>
+    </tr>
+    <tr>
+      <td><strong>2011</strong></td>
+      <td> 2 </td>
+    </tr>
+    <tr>
+      <td><strong>2012</strong></td>
+      <td>1149</td>
+    </tr>
+    <tr>
+      <td><strong>2013</strong></td>
+      <td>122</td>
+    </tr>
+    <tr>
+      <td><strong>Total</strong></td>
+      <td>1273</td>
+    </tr>
+  </table>
+<br>
+<p>
+It would be preferable to have complete data sets from more than one year to determine whether the trends that are observed hold across time.
+</p>
+<p>
+In 2012, the months with the highest number of requests were July (137), May (132), March (111), and August (109) (See Table 2). The average number of requests received per month is 97. 
+</p>
+
+<strong>Table 2: Number of Records Requests Received Per Month by Year</strong><br>
+  <table>
+    <tr>
+      <td></td>
+      <td><strong> 2011 </strong></td>
+      <td><strong>2012 </strong></td>
+      <td><strong>2013 </strong></td>
+    </tr>
+    <tr>
+      <td><strong>January</strong></td>
+      <td></td>
+      <td>97</td>
+      <td>91</td>
+    </tr>
+    <tr>
+      <td><strong>February</strong></td>
+      <td></td>
+      <td>83</td>
+      <td>31</td>
+    </tr>
+    <tr>
+      <td><strong> March</strong></td>
+      <td></td>
+      <td> 110</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong>April</strong></td>
+      <td></td>
+      <td>93</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><strong>May</strong></td>
+      <td></td>
+      <td>132</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><strong>June</strong></td>
+      <td></td>
+      <td>80</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><strong>July</strong></td>
+      <td></td>
+      <td>134</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><strong>August</strong></td>
+      <td></td>
+      <td>109</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><strong>September</strong></td>
+      <td></td>
+      <td>98 </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><strong>October</strong></td>
+      <td></td>
+      <td>95</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><strong>November</strong></td>
+      <td></td>
+      <td>64</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><strong>December</strong></td>
+      <td>2 </td>
+      <td>54</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><strong>Total</strong></td>
+      <td>1273 </td>
+      <td></td>
+      <td></td>
+    </tr>
+  </table>
+
+<p>
+The "How_Rcvd" field was used to determine how the requests were filed by the members of the public. The city received most of its requests online (See Table 3). This could mean that most individuals submitted their inquiries through the existing online system managed by the city or the requests received from other avenues are underreported.
+</p>
+<strong>Table 3: Method of Delivery</strong><br>
+  <table>
+    <tr>
+      <td><strong>Method</strong></td>
+      <td><strong>Requests</strong></td>
+    </tr>
+    <tr>
+      <td><strong>E-mail</strong></td>
+      <td>17</td>
+    </tr>
+    <tr>
+      <td><strong>Hand</strong></td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td><strong>Fax</strong></td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td><strong>Internet</strong></td>
+      <td>1240</td>
+    </tr>
+    <tr>
+      <td><strong>Mail</strong></td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <td><strong>Phone</strong></td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td><strong>Total</strong></td>
+      <td>1273</td>
+    </tr>
+  </table>
+<p>
+88.33% of requests came from the state of California. (This is a count of individuals who provided information on where they resided.)
+</p>
+<br>
+<strong>Table 4: Requests by State</strong><br>
+  <table>
+    <tr>
+      <td><strong>Sub_State </strong></td>
+      <td> <strong>Count </strong></td>
+    </tr>
+    <tr>
+      <td> <strong>AL</strong></td>
+      <td><strong>1</strong></td>
+    </tr>
+    <tr>
+      <td> <strong>AZ</strong></td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td><strong>CA</strong></td>
+      <td>893</td>
+    </tr>
+    <tr>
+      <td><strong>CO</strong></td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td><strong>DC</strong></td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td><strong>FL</strong></td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td><strong>GA</strong></td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td><strong>IA</strong></td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td><strong>IL</strong></td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td><strong>KS</strong></td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td><strong>LA</strong></td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td><strong>MA</strong></td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td><strong>MD</strong></td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td><strong>MI</strong></td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td><<strong>MN</strong></td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td><strong>NC</strong></td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td><strong>NH</strong></td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td><strong>NL</strong></td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td><strong>NV</strong></td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td><strong>NY</strong></td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td><strong>OH</strong></td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td><strong>OK</strong></td>
+      <td>17</p></td>
+    </tr>
+    <tr>
+      <td><strong>OR</strong></td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td><strong>PA</strong></td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td><strong>SC</strong></td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td><strong>SS</strong></td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td><strong>TE</strong></td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td><strong>TX</strong></td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <td><strong>US</strong></td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td><strong>VA</strong></td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td><strong>WA</strong></td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td><strong>WI</strong></td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td><strong>Grand Total</strong></td>
+      <td>1011</td>
+    </tr>
+  </table>
+<p>
+Requests are more often routed to the Police e Services or the Office of the City Clerk. A significant chunk of the requests do not have a department label, meaning the requester may not know where the information they are requesting resides.
+</p>
+<strong>Table 5: Requests by Department</strong><br>
+  <table>
+    <tr>
+      <td><strong>Department That Received the Request</strong></td>
+      <td><p dir="ltr"><strong>Requests </strong></td>
+    </tr>
+    <tr>
+      <td><p dir="ltr"> <strong>[None]</strong></td>
+      <td>102</td>
+    </tr>
+    <tr>
+      <td><strong>Budget &amp; Revenue</strong></td>
+      <td> 9</td>
+    </tr>
+    <tr>
+      <td><strong>C At Large</strong></td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td><strong>CD1</strong></td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td> <strong>CD2</strong></td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td><strong>CD4</strong></td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td><strong>CD5</strong></td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td><strong>CD6</strong></td>
+      <td> 3</td>
+    </tr>
+    <tr>
+      <td><strong>CD7</strong></td>
+      <td> 2</td>
+    </tr>
+    <tr>
+      <td> <strong>CDLarge</strong></td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td> <strong>CEDA</strong></td>
+      <td> 118</td>
+    </tr>
+    <tr>
+      <td><strong>City Administrator</strong></td>
+      <td>65</td>
+    </tr>
+    <tr>
+      <td><strong>City Attorney</strong></td>
+      <td>117</td>
+    </tr>
+    <tr>
+      <td><strong>City Attorney's Office</strong></td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td> <strong>City Auditor</strong></td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td><strong>City Clerk</strong></td>
+      <td>255</td>
+    </tr>
+    <tr>
+      <td><strong>Contracting And Purchasing</strong></td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td><strong>Contracts and Compliance Division</strong></td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td><strong>Council Office</strong></td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td><strong>Department of Human Services</strong></td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td><strong>Department of Planning and Building</strong></td>
+      <td>32</td>
+    </tr>
+    <tr>
+      <td><strong>Dept Human Resource</strong></td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td><strong>DHCD</strong></td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <td><strong>DHRM</strong></td>
+      <td>2</strong></td>
+    </tr>
+    <tr>
+      <td><strong>Finance and Management</strong></td>
+      <td>33</td>
+    </tr>
+    <tr>
+      <td><strong>Fire Department Director Office</strong></td>
+      <td>58</td>
+    </tr>
+    <tr>
+      <td><strong>FMA</strong></td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td><strong>Health and Human Services</strong></td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td><strong>HRM</strong></td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td> <strong>Information Technology</strong></td>
+      <td> 12</td>
+    </tr>
+    <tr>
+      <td> <strong>Library Services</strong></td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td><strong>Mayor Office</strong></td>
+      <td>18</td>
+    </tr>
+    <tr>
+      <td> <strong>OCA</strong></td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td><strong>Office of Economic and Workforce Development</strong></td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td> <strong>Other</strong></td>
+      <td> 41</td>
+    </tr>
+    <tr>
+      <td> <strong>Planning</strong></td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td> <strong>Police Services</strong></td>
+      <td>231</td>
+    </tr>
+    <tr>
+      <td><strong>Public Works</strong></td>
+      <td>95</td>
+    </tr>
+    <tr>
+      <td><strong>Total</strong></td>
+      <td>1273</td>
+    </tr>
+  </table>
+<p>
+Equally important as the number of requests is who is submitting the requests. A number of staff members vocalized their concern that attorneys were using the system as free discovery. To test this theory, we looked at the types of organizations requesting public records. The majority of individuals did not identify themselves as a part of a company or organization. Of those that did identify themselves, 118 requests came from lawyers and 97 from members of the media. 
+</p>
+<p>
+A field in the raw data suggest there is a way for the user to flag the City Attorney&rsquo;s office in case a document needs to be reviewed. This has only been done once.
+</p>
+<p>
+It was difficult to neatly categorize the requests in tidy categories. That being said, some of the most popular documents requested are police reports, building records (liens, permits, etc.), and documents about the city's finances. Financial documents include the city's budget, employee salaries, and information about individuals and organizations contracting with the city. 
+</p>
+<p>
+  Certain topics attracted the attention of the public as well. They include the redevelopment of the Oakland Army Base, Occupy Oakland, medical marijuana dispensaries, and all activities taken by the Oakland Police Department. 
+</p>
+<strong>Table 6: Frequent Types of Requests </strong><br>
+
+  <table>
+
+    <tr>
+      <td><strong>Type of Request</strong></td>
+      <td><strong>Examples</strong></td>
+    </tr>
+    <tr>
+      <td><strong>Building Documents</strong></td>
+      <td>
+      <ul>
+      <li>Certificates of Occupancy
+        </li>
+        <li>Liens
+        </li>
+        <li>Building Permits
+        </li>
+        <li>Construction Permits
+        </li>
+        <li>Name of building owners</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Information on the City's Finances</strong></td>
+      <td>
+      <ul>
+      <li>Budget</li>
+      <li>Salary Data</li>
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Police Reports</strong></td>
+      <td>
+        <ul>
+       <li>Copies of police reports by victims
+        </li>
+       <li>Questions about how to amend a police report</strong></p>
+        </li>
+        <li>Proof for insurance companies</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Contracting, Procurement, and Purchasing </strong></td>
+      <td>
+        <ul>
+        <li>Payments to contractors
+        </li>
+        <li>Copies of proposals
+        </li>
+        <li>Copies of Requests for Proposals (RFPs)</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Requests for Information</strong></td>
+      <td>
+        <ul>
+        <li>Does the city own this tree on my block?
+        </li>
+       <li>How do I expunge my criminal record (crime committed as a minor)?
+        </li>
+        <li>What bus stops on 20th street?
+        </li>
+        <li>What is the difference between a resolution and ordinance?
+        </li>
+        <li>Is it illegal to sleep in vehicles?
+        </li>
+       <li>Does city council have the authority to balance the budget?
+        </li>
+        <li>Explanation of short-hand used on a police report.</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Other documents requests</strong></td>
+      <td>
+        <ul>
+        <li>Correspondence of Councilmembers, City Administrator, and Mayor<
+        </li>
+        <li>Campaign documents relating to money raised and statements of economic interests</li>
+        <li>Copies of council agendas and meeting minutes </li>
+        </ul>
+      </td>
+    </tr>
+  </table>
+</p>
+<strong>Table 7: Popular Topics</strong><br>
+  <table>
+    <tr>
+      <td><strong>Type of Request</strong></td>
+      <td> <strong>Examples</strong></td>
+    </tr>
+    <tr>
+      <td><strong>Oakland Police Department</strong></td>
+      <td>
+      <ul>
+      <li>List of officers
+        </li>
+       <li>Number of officers residing in Oakland
+        </li>
+        <li>Information about the Negotiated Settlement Agreement
+        </li>
+        <li>Correspondence
+        </li>
+       <li>Policies and Procedures
+        </li>
+        <li>CAD Purges 
+        </li>
+        <li>Crime statistics</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Oakland Army Base Redevelopment</strong></td>
+      <td>
+        <ul>
+       <li>Payments to contractors
+        </li>
+        <li>Billboards (Contracts)
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Other Topics of Interest </strong></td>
+      <td>
+        <ul>
+        <li>Medical marijuana dispensaries
+        </li>
+       <li>Rainbow Teen Center
+        </li>
+        <li>Occupy Oakland and other protests</li>
+        </ul>
+      </td>
+    </tr>
+  </table>
+
+<p>
+We also observed the residents often use the public records request system as a way to get information from the city or submit complaints. Sample inquiries include how to dissolve domestic partnership and get a record expunged. Residents often ask the city for documents or records it does not keep, like birth certificates.
+</p>
+<p>
+Based on our analysis of the data extracted, we discovered:
+</p>
+<ul>
+<li>
+The current system captures requests made through the city's website.
+</li>
+<li>
+Most public records requests are funnelled to the city clerk or police services. 
+</li>
+<li>
+To reduce the number of requests, the city should actively release documents that would be of interest to the public. This could include information about the budget or payments to contractors.</li>
+</ul>
+{% endblock content %}
