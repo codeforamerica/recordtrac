@@ -19,6 +19,7 @@ from datetime import datetime, timedelta
 from models import User
 from timeout import timeout
 import urllib
+from ResponsePresenter import ResponsePresenter
 
 ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff']
 
@@ -444,33 +445,12 @@ def get_responses_chronologically(req):
 	if not req:
 		return responses
 	for note in req['notes']:
-		uid = note['user_id']
-		text = note['text']
-		if uid:
-			icon = "icon-edit icon-2x"
-			if "Request extended" in note['text']:
-				icon = "icon-calendar icon-2x"
-				junk, text = note['text'].split(":")
-			responses.append(dict(text = text, uid = uid, date = note['date_created'], icon = icon))
+		responses.append(ResponsePresenter(note))
 	for record in req['records']:
-		uid = record['user_id']
-		text = ""
-		if record['doc_id']:
-			download_url = record['download_url']
-			if not download_url:
-				download_url = get_scribd_download_url(doc_id = record['doc_id'], record_id = record['id'])
-			icon = "icon-file-alt icon-2x"
-			text = "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='right' data-original-title='%s'>%s <i class='icon-external-link'></i></a><a href = '%s' rel='tooltip' data-toggle='tooltip' data-placement='right' data-original-title='%s'> Download file <i class='icon-cloud-download'></i></a>" % (record['url'], record['url'], record['description'], download_url, download_url) 
-		elif record['access']:
-			text = "%s can be accessed: %s" %(record['description'], record['access'])
-			icon = "icon-file-alt icon-2x"
-		else: 
-			icon = "icon-link icon-2x"
-			text = "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='right' data-original-title='%s'>%s <i class='icon-external-link'></i></a>" % (record['url'], record['url'], record['description'])
-		responses.append(dict(text = text, uid = uid,  date = record['date_created'], icon = icon))
-	responses.sort(key = lambda x:datetime.strptime(x['date'], '%Y-%m-%dT%H:%M:%S.%f'), reverse = True)
+		responses.append(ResponsePresenter(record))
+	responses.sort(key = lambda x:datetime.strptime(x.date(), '%Y-%m-%dT%H:%M:%S.%f'), reverse = True)
 	if "Closed" in req['status']:
-		responses[0]['icon'] = "icon-lock icon-2x" # Set most recent note (closed note)'s icon
+		responses[0].icon = "icon-lock icon-2x" # Set most recent note (closed note)'s icon
 	return responses
 
 def format_date(obj):

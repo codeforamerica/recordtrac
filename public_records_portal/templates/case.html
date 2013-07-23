@@ -132,19 +132,19 @@
             {% if responses %} 
                 <div class="span10">
                   {% for response in responses %}
-                    {% set uid = response.uid %}
+                    {% set uid = response.uid() %}
                     {% set staffName = (uid | get_staff_info("name")) %}
                     {% set staffDept = (uid | get_staff_info("dept")) %}
                     {% set staffPhone = (uid | get_staff_info("phone")) %}
                     {% set staffEmail = (uid | user_email) %}
                       <div class="row-fluid response">
                         <div class="span2 text-center">
-                          <i class="{{response.icon}}">  </i></br>
-                          <small> {{ response.date | date_granular }} </small> </br>
+                          <i class="{{response.icon()}}">  </i></br>
+                          <small> {{ response.date() | date_granular }} </small> </br>
                         </div>
                         <div class="span10">
                           <p> 
-                             {{ response.text | safe }} - <em><a data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '{{staffPhone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staffName }}</span></a></em>. 
+                             {{ response.display_text() | safe }} - <em><a data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '{{staffPhone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staffName }}</span></a></em>. 
                           </p>
                         </div>
                       </div>
