@@ -1,14 +1,14 @@
 """Added extended flag to Request
 
 Revision ID: 568154e02d86
-Revises: 454d11306d95
+Revises: None
 Create Date: 2013-07-08 12:32:00.177624
 
 """
 
 # revision identifiers, used by Alembic.
 revision = '568154e02d86'
-down_revision = '454d11306d95'
+down_revision = None
 
 from alembic import op
 import sqlalchemy as sa
