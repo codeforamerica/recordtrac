@@ -501,3 +501,4 @@ def date_granular(timestamp):
 		return "%s seconds ago" % seconds
 	else:
 		return "Just now."
+

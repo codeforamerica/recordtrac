@@ -1,4 +1,5 @@
-from public_records_portal import Record, Note
+from public_records_portal import models
+from models import Record, Note
 import prr
 
 class ResponsePresenter:
