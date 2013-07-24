@@ -30,7 +30,7 @@ In a new window:
     cd public-records
     sudo pip install -r requirements.txt
 
-Save exampleconfig.py as local_config.py and update relevant fields. To test e-mail, sign up for a free account with SendGrid and provide the username and password in MAIL_USERNAME and MAIL_PASSWORD.
+Save settings.env.example as settings.env and update relevant fields. To test e-mail, sign up for a free account with SendGrid and provide the username and password in MAIL_USERNAME and MAIL_PASSWORD.
 
 ## Run locally
 
@@ -46,7 +46,7 @@ For database migrations, run:
 
 To use the application locally, run:
 
-    gunicorn -w 3 -t 180 public_records_portal.prflask:app
+    foreman start
 
 
 You should see something similar to:
@@ -57,6 +57,6 @@ You should see something similar to:
     2013-05-06 12:16:53 [1779] [INFO] Booting worker with pid: 1779
     2013-05-06 12:16:53 [1780] [INFO] Booting worker with pid: 1780
 
-Navigate to the url (in this case, http://127.0.0.1:8000) in your browser.
+Navigate to the url (in this case, http://127.0.0.1:5000) in your browser.
 
 <!-- [![Build Status](https://travis-ci.org/codeforamerica/public-records.png?branch=master)](https://travis-ci.org/codeforamerica/public-records) -->
