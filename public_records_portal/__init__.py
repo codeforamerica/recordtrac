@@ -18,9 +18,26 @@ app.config['ENVIRONMENT'] = "LOCAL"
 app.config['DEFAULT_OWNER_REASON'] = "Default owner reason"
 app.config['DEFAULT_OWNER_EMAIL'] = "Default owner email"
 
-app.config.from_object(environ)
-if app.config['ENVIRONMENT'] == 'LOCAL':
+try:
 	app.config.from_object('local_config')
+except:
+	try:
+		app.config['SECRET_KEY'] = environ['SECRET_KEY']
+		app.config['ENVIRONMENT'] = environ['ENVIRONMENT']
+		app.config['APPLICATION_URL'] = environ['APPLICATION_URL']
+		app.config['SCRIBD_API_KEY'] = environ['SCRIBD_API_KEY']
+		app.config['SCRIBD_API_SECRET'] = environ['SCRIBD_API_SECRET']
+		app.config['DEFAULT_OWNER_EMAIL'] = environ['DEFAULT_OWNER_EMAIL']
+		app.config['DEFAULT_OWNER_REASON'] = environ['DEFAULT_OWNER_REASON']
+		app.config['MAIL_USERNAME'] = environ['MAIL_USERNAME']
+		app.config['MAIL_PASSWORD'] = environ['MAIL_PASSWORD']
+		app.config['ADMIN_PASSWORD'] = environ['ADMIN_PASSWORD']
+		app.config['DEFAULT_MAIL_SENDER'] = environ['DEFAULT_MAIL_SENDER']
+		app.config['HOST_URL'] = environ['HOST_URL']
+		app.config['SQLALCHEMY_DATABASE_URI'] = environ['SQLALCHEMY_DATABASE_URI']
+	except:
+		print "Config variables were not set"
+
 
 db = SQLAlchemy(app)
 from public_records_portal import models
