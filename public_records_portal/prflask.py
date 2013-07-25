@@ -163,6 +163,11 @@ def unauthorized():
 def show_test():
 	return render_template('test.html')
 
+# tutorial template:  I clearly don't know what should go here, but need to keep a testbed here.
+@app.route('/tutorial')
+def show_tutorial():
+	return render_template('manage_request_tutorial.html')
+
 @app.route('/<page>')
 def any_page(page):
 	current_user_id = None
