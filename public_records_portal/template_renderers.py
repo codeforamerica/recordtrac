@@ -153,11 +153,6 @@ def load_user(userid):
 def show_test():
 	return render_template('test.html')
 
-# tuturial template
-@app.route('/tutorial')
-def show_tutorial():
-	return render_template('manage_request_tutorial.html')
-
 def any_page(page):
 	try:
 		return render_template('%s.html' %(page), user_id = get_user_id())
