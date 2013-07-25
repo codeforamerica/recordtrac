@@ -25,15 +25,18 @@
 
 
 /* form in reroute popover */
-  $('#reroutePopover').popover({ 
-      html : true,
-      title: function() {
-        return $("#reroutePopover-head").html();
-      },
-      content: function() {
-        return $("#reroutePopover-content").html();
-      }
-  });
+$('#reroutePopover').click(function () {
+  $(this).popover({ 
+        html : true,
+        title: function() {
+          return $("#reroutePopover-head").html();
+        },
+        content: function() {
+          return $("#reroutePopover-content").html();
+        }
+      }).popover('toggle');
+    $("#rerouteEmail").select2();
+});
 
   /* form in history popover */
   $('.historyPopover').popover({
