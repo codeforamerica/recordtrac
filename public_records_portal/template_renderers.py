@@ -152,12 +152,11 @@ def load_user(userid):
 @app.route('/test')
 def show_test():
 	return render_template('test.html')
+	
 
 def any_page(page):
-	try:
-		return render_template('%s.html' %(page), user_id = get_user_id())
-	except:
-		return render_template('error.html', message = "%s totally doesn't exist." %(page), user_id = get_user_id())
+	return render_template('%s.html' %(page), user_id = get_user_id())
+	
 
 def login(email=None, password=None):
 	if request.method == 'POST':
