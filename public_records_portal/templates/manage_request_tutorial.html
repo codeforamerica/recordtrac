@@ -5,7 +5,7 @@
 
 {% block banner %}
   <!-- success banner -->
-  <div class="alert alert-block bootstro" data-bootstro-title="Welcome" data-bootstro-content="{{"Welcome"}}" data-bootstro-step="0">
+  <div class="alert alert-block bootstro" data-bootstro-title="Welcome" data-bootstro-content="{{"Welcome"}}" data-bootstro-step="0" data-bootstro-placement="bottom">
     <div class="span1 text-right"><i class="icon-warning-sign icon-2x"> </i></div>
     <div class="offset1">
       <p> <strong>This website is currently being tested</strong> by the City of Oakland and the 2013 Code for America fellows. You may notice some features may not work or may change over time. All public records requests will be processed in accordance with the California Public Records Act and the Oakland Sunshine Ordinance.</p>
@@ -13,7 +13,6 @@
       <p>You can still submit your request using the City’s <a href="http://www.oaklandcityattorney.org/resources/PubInfoRequest.html">old public records request system</a>.</p>  
     </div>
   </div>
-  <a class="btn" href="#" id="tutorial"><i class="icon-question-sign"></i> Tutorial</a>
 {% endblock banner%}
 
 {% block content %}
@@ -31,7 +30,7 @@
     <div class="row-fluid well"> 
       <div class="row-fluid">
         {% block status %}
-          <div class="pull-right bootstro" data-bootstro-title="Reroute" data-bootstro-content="{{"Reroute"}}" data-bootstro-step="8">
+          <div class="pull-right bootstro" data-bootstro-title="Reroute" data-bootstro-content="{{"Reroute"}}" data-bootstro-step="7" data-bootstro-placement="bottom">
             {% block routing %}
               Routed to  
               <div class="btn-group"  style="font-size:15px">
@@ -181,7 +180,7 @@
 
       {% block response %}
         <!-- response area: need to give this more space between the request area-->
-        <div class="row-fluid bootstro" data-bootstro-title="Response Area" data-bootstro-content="{{"Response Area"}}" data-bootstro-step="7">
+        <div class="row-fluid bootstro" data-bootstro-title="Response Area" data-bootstro-content="{{"Response Area"}}" data-bootstro-step="6">
           <h3 class="response">Response</h3>
             <!-- shows all existing responses (links, documents, offline docs, notes) -->
             {% set responses = ( req | get_responses_chronologically ) %}
@@ -237,12 +236,12 @@
 {% endblock content %}
 
 {% block actions %}
-<div class="bootstro" data-bootstro-title="Response Action Area" data-bootstro-content="{{"Response Action Area"}}" data-bootstro-step="3">
+<!-- <div class="bootstro" data-bootstro-title="Response Action Area" data-bootstro-content="{{"Response Action Area"}}" data-bootstro-step="3"> -->
   <!-- Add a record form -->
   <form name="input_doc" class="form-horizontal" id="submitRecord" autocomplete="on" enctype="multipart/form-data">
   <input type="hidden" name="request_id" value="{{ req.id }}"/>
     <fieldset> 
-      <div class="row-fluid bootstro" data-bootstro-title="Add a Record" data-bootstro-content="{{"Add a Record"}}" data-bootstro-step="4">
+      <div class="row-fluid bootstro" data-bootstro-title="Add a Record" data-bootstro-content="{{"Add a Record"}}" data-bootstro-step="3">
           <h4>Add a record</h4>
           <div class="control-group">
             <label class="control-label" for="recordSummary">Summary</label>
@@ -302,7 +301,7 @@
   <form name="note" class="form-horizontal" id="note" >
     <input type="hidden" name="request_id" value="{{ req.id }}"/>
     <fieldset> 
-      <div class="row-fluid bootstro" data-bootstro-title="Add a Note" data-bootstro-content="{{"Add a Note"}}" data-bootstro-step="5">
+      <div class="row-fluid bootstro" data-bootstro-title="Add a Note" data-bootstro-content="{{"Add a Note"}}" data-bootstro-step="4">
           <h4>Add a note</h4>
           <div class="control-group">
             <label class="control-label">Note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
@@ -324,7 +323,7 @@
   <form name="extend_request" class="form-horizontal" id="extension" >
     <input type="hidden" name="request_id" value="{{ req.id }}"/>
     <fieldset>
-      <div class="row-fluid bootstro" data-bootstro-title="Request Extension" data-bootstro-content="{{"Request Extension"}}" data-bootstro-step="6">
+      <div class="row-fluid bootstro" data-bootstro-title="Request Extension" data-bootstro-content="{{"Request Extension"}}" data-bootstro-step="5">
         <h4>Request an extension</h4>
         <div class="control-group">
           <label class="control-label">Reason <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Request an extension"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
@@ -353,7 +352,7 @@
     <input type="hidden" name="request_id" value="{{ req.id }}"/>
     <input type="hidden" name="close_reason"/>
     <fieldset> 
-      <div class="row-fluid bootstro" data-bootstro-title="Close request" data-bootstro-content="{{"Close request"}}" data-bootstro-step="9">
+      <div class="row-fluid bootstro" data-bootstro-title="Close request" data-bootstro-content="{{"Close request"}}" data-bootstro-step="8">
         <h4>Close this request </h4>
         <div class="control-group">
 
@@ -397,59 +396,46 @@
       </div>
     </fieldset>
   </form>
-</div>
+<!-- </div> -->
 {% endblock actions %}
 
-{% block feedback %}
-  <!-- gforms feedback tab -->
-  <h5 class="text-center bootstro" data-bootstro-title="Feedback" data-bootstro-content="{{"Feedback"}}" data-bootstro-step="10"><a id="floating_link" href="#feedbackModal" data-toggle="modal"> Feedback</a></h5>
-   
-  <!-- Modal for feedback -->
-  <div id="feedbackModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel" aria-hidden="true">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    </div>
-    <div class="modal-body">
-      <iframe src="https://docs.google.com/forms/d/1UYbs_Rk9eeK4OAKFpfSQnxPBTQ8DcG7iO6RnIiB6Qaw/viewform?embedded=true" width="500" height="390" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
-    </div>
-  </div>
-{% endblock feedback %}
+
 
 {% block bottom_script %}
   <script>
   /* calls bootstro (tutorial) plugin */
     $(document).ready(function(){
-        $("#tutorial").click(function(){
+        // $("#tutorial").click(function(){
             bootstro.start(".bootstro", {
                 onComplete : function(params)
                 {
-                    alert("Reached end of introduction with total " + (params.idx + 1)+ " slides");
+                    // alert("Reached end of introduction with total " + (params.idx + 1)+ " slides");
                 },
                 onExit : function(params)
                 {
-                    alert("Introduction stopped at slide #" + (params.idx + 1));
+                    // alert("Introduction stopped at slide #" + (params.idx + 1));
                 },
-            });    
+            // });    
         });
-        $(".demo_stopOn").click(function(){
-            alert('Clicking on the backdrop or Esc will NOT stop the show')
-            bootstro.start('.bootstro', {stopOnBackdropClick : false, stopOnEsc:false});    
-        });
-        $(".demo_size1").click(function(){
-            bootstro.start('.bootstro_size1');    
-        });
-        $(".demo_nonav").click(function(){
-            bootstro.start('.bootstro', {
-                nextButton : '',
-                prevButton : '',
-                finishButton : ''
-            });    
-        });
-        $(".demo_ajax").click(function(){
-            bootstro.start('', {
-                url : './bootstro.json',
-            });    
-        });
+        // $(".demo_stopOn").click(function(){
+        //     alert('Clicking on the backdrop or Esc will NOT stop the show')
+        //     bootstro.start('.bootstro', {stopOnBackdropClick : false, stopOnEsc:false});    
+        // });
+        // $(".demo_size1").click(function(){
+        //     bootstro.start('.bootstro_size1');    
+        // });
+        // $(".demo_nonav").click(function(){
+        //     bootstro.start('.bootstro', {
+        //         nextButton : '',
+        //         prevButton : '',
+        //         finishButton : ''
+        //     });    
+        // });
+        // $(".demo_ajax").click(function(){
+        //     bootstro.start('', {
+        //         url : './bootstro.json',
+        //     });    
+        // });
     });
   </script>
   <script>
