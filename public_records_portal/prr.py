@@ -185,6 +185,7 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 		if email: # If the user provided an e-mail address, add them as a subscriber to the request.
 			user = create_or_return_user(email = email, alias = alias, phone = phone)
 			subscriber = create_resource("subscriber", dict(request_id = req['id'], user_id = user.id))
+			send_prr_email(req['id'], notification_type = "Request made", requester_id = subscriber['id'])
 		open_request(req['id'])
 		return req['id'], True
 	return resource['objects'][0]['id'], False
