@@ -29,7 +29,7 @@ def new_request():
 			phone = request.form['request_phone']
 		request_id, is_new = make_request(text = request_text, email = email, assigned_to_email = app.config['DEFAULT_OWNER_EMAIL'], assigned_to_reason = app.config['DEFAULT_OWNER_REASON'], user_id = get_user_id(), alias = alias, phone = phone)
 		if is_new:
-			return show_request(request_id, banner_msg = "Thanks! Your request has been uploaded.", template = "requested.html")
+			return redirect(url_for('show_request_for_x', request_id = request_id, audience = 'new'))
 		return render_template('error.html', message = "Your request is the same as /request/%s" % request_id)
 	else:
 		return render_template('new_request.html', user_id = get_user_id())
@@ -78,7 +78,7 @@ def show_response(request_id):
 		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
 	return render_template("response.html", req = req, user_id = get_user_id())
 
-def show_request(request_id, template = None, record_uploaded = None, for_email_notification = False, banner_msg = None):
+def show_request(request_id, template = None):
 	current_user_id = get_user_id()
 	req = get_resource("request", request_id)
 	if not req:
@@ -86,11 +86,11 @@ def show_request(request_id, template = None, record_uploaded = None, for_email_
 	if template:
 		if "city" in template and not current_user_id:
 			return render_template('alpha.html')
-	else:
+	else: 
 		template = "manage_request_public.html"
 	if req['status'] and "Closed" in req['status']:
 		template = "closed.html"
-	return render_template(template, req = req, for_email_notification = for_email_notification, record_uploaded = record_uploaded, banner_msg = banner_msg, user_id = get_user_id())
+	return render_template(template, req = req, user_id = get_user_id())
 
 @login_required
 def add_a_resource(resource):
