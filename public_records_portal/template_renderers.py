@@ -172,7 +172,7 @@ def login(email=None, password=None):
 			if user.password == password:
 				user_for_login = models.User.query.get(user.id)
 				login_user(user_for_login)
-				return index()
+				return redirect(url_for('show_request_for_x', request_id = 1, audience = "tutorial"))
 	return render_template('error.html', message = "Oops, your e-mail/ password combo didn't work.") 
 
 @login_required
