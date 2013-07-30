@@ -41,7 +41,6 @@
                     <!-- my form -->
                     <div class="control-group">
                       <div class="controls">
-                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
                         <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
                         <input id="rerouteReason" type="text" name="owner_reason" placeholder="Say why." required />
                         <button id="rerouteButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
@@ -108,47 +107,21 @@
       {% endblock request %}
 
       <div class="bootstro" data-bootstro-title="Ask a Question" data-bootstro-content="{{"Ask a Question" | tutorial}}" data-bootstro-step="2">
-      <!-- shows any existing Q&A or public notes -->
-      {% if req.notes or req.qas %}
-        <!-- shows any existing public notes -->
-        {% if req.notes %}
-          {% for note in req.notes %}
-          {% if not note.user_id %}
-            <div class="row-fluid response">
-              <div class="span2 text-center">
-                <i class="icon-edit icon-2x">  </i> </br>
-                <small> {{ note.date_created | date_granular }}</small> </br>
-              </div>
-              <div class="span10">
-                <p>{{ note.text }} - <em>Requester</em></p>
-              </div>
-            </div>
-          {% endif %}
-          {% endfor %}
-        {% endif %}
         <!-- shows any existing Q&A -->
-        {% if req.qas %}
         {% block qas %}
           <div class="row-fluid">
-            {% for qa in req.qas %}
               <div class="row-fluid response">
                 <div class="span2 text-center">
                   <i class="icon-question icon-2x">  </i> </br>
                   <small>3 days ago</small> </br>
                 </div>
                 <div class="span10">
-                  <p>I found two informational reports.  There is one on park services and one on sewage services.  Are you looking for one of these or both? - <em><a data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('nneditch@oaklandnet.com', 'Office of the City Administrator', '(510) 238-2105', '#contactinfoPopoverQA{{loop.index}}')">Nicole Neditch</span></a></em></p>
-                  <p>Would love both.  Thanks! - <em>Requester</em></p>
+                  <p>I found two informational reports.  There is one on park services and one on sewage services.  Are you looking for one of these or both? - <em><a data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverQA1" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('nneditch@oaklandnet.com', 'Office of the City Administrator', '(510) 238-2105', '#contactinfoPopoverQA1')">Nicole Neditch</span></a></em></p>
+                  <p>Would love both. Thanks! - <em>Requester</em></p>
                 </div>
               </div>
-            {% endfor %}
           </div>
           {% endblock qas %}
-        {% endif %}
-      {% endif %}
-
-        {% block public_note %}
-        {% endblock public_note %}
 
       {% block clarify_request %}
             <!-- ask a question -->
@@ -164,7 +137,6 @@
                   <label class="control-label">Question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
                   <div class="row-fluid">
                     <div class="controls">
-                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
                         <input id="questionTextarea" type="text" name="question_text" rows="3" cols="20" placeholder="Ask the requester a question" required/>
                       <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
                     </div>
@@ -183,16 +155,8 @@
         <div class="row-fluid bootstro" data-bootstro-title="Response Area" data-bootstro-content="{{"Response Area" | tutorial }}" data-bootstro-step="6">
           <h3 class="response">Response</h3>
             <!-- shows all existing responses (links, documents, offline docs, notes) -->
-            {% set responses = ( req | get_responses_chronologically ) %}
-            {% if responses %} 
                 <div class="span10">
-                  {% for response in responses %}
-                    {% set uid = response.uid() %}
-                    {% set staffName = (uid | get_staff_info("name")) %}
-                    {% set staffDept = (uid | get_staff_info("dept")) %}
-                    {% set staffPhone = (uid | get_staff_info("phone")) %}
-                    {% set staffEmail = (uid | user_email) %}
-                        
+
                       <div class="row-fluid response">
                         <div class="span2 text-center">
                           <i class="icon-file-text-alt icon-2x">  </i></br>
@@ -200,7 +164,7 @@
                         </div>
                         <div class="span10">
                           <p> 
-                             <a href="https://www.scribd.com/doc/155600210" rel="tooltip" data-toggle="tooltip" data-placement="right" data-original-title="https://www.scribd.com/doc/155600210">Informational report on park services<i class="icon-external-link"></i></a> <a href="http://documents.scribd.com.s3.amazonaws.com/docs/60ykpey6bk2n2gfg.txt?t=1374626992" rel="tooltip" data-toggle="tooltip" data-placement="right" data-original-title="http://documents.scribd.com.s3.amazonaws.com/docs/60ykpey6bk2n2gfg.txt?t=1374626992">Download file <i class="icon-cloud-download"></i></a> - <em><a data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('nneditch@oaklandnet.com', 'Office of the City Administrator', '(510) 238-2105', '#contactinfoPopoverResponse{{loop.index}}')">Nicole Neditch</span></a></em> 
+                             <a href="https://www.scribd.com/doc/155600210" rel="tooltip" data-toggle="tooltip" data-placement="right" data-original-title="https://www.scribd.com/doc/155600210">Informational report on park services<i class="icon-external-link"></i></a> <a href="http://documents.scribd.com.s3.amazonaws.com/docs/60ykpey6bk2n2gfg.txt?t=1374626992" rel="tooltip" data-toggle="tooltip" data-placement="right" data-original-title="http://documents.scribd.com.s3.amazonaws.com/docs/60ykpey6bk2n2gfg.txt?t=1374626992">Download file <i class="icon-cloud-download"></i></a> - <em><a data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverResponse1" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('nneditch@oaklandnet.com', 'Office of the City Administrator', '(510) 238-2105', '#contactinfoPopoverResponse1')">Nicole Neditch</span></a></em> 
                           </p>
                         </div>
                       </div>
@@ -211,19 +175,12 @@
                         </div>
                         <div class="span10">
                           <p> 
-                             <a href="https://www.scribd.com/doc/155600210" rel="tooltip" data-toggle="tooltip" data-placement="right" data-original-title="https://www.scribd.com/doc/155600210">Informational report on sewage services<i class="icon-external-link"></i></a> <a href="http://documents.scribd.com.s3.amazonaws.com/docs/60ykpey6bk2n2gfg.txt?t=1374626992" rel="tooltip" data-toggle="tooltip" data-placement="right" data-original-title="http://documents.scribd.com.s3.amazonaws.com/docs/60ykpey6bk2n2gfg.txt?t=1374626992">Download file <i class="icon-cloud-download"></i></a> - <em><a data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('nneditch@oaklandnet.com', 'Office of the City Administrator', '(510) 238-2105', '#contactinfoPopoverResponse{{loop.index}}')">Nicole Neditch</span></a></em> 
+                             <a href="https://www.scribd.com/doc/155600210" rel="tooltip" data-toggle="tooltip" data-placement="right" data-original-title="https://www.scribd.com/doc/155600210">Informational report on sewage services<i class="icon-external-link"></i></a> <a href="http://documents.scribd.com.s3.amazonaws.com/docs/60ykpey6bk2n2gfg.txt?t=1374626992" rel="tooltip" data-toggle="tooltip" data-placement="right" data-original-title="http://documents.scribd.com.s3.amazonaws.com/docs/60ykpey6bk2n2gfg.txt?t=1374626992">Download file <i class="icon-cloud-download"></i></a> - <em><a data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverResponse1" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('nneditch@oaklandnet.com', 'Office of the City Administrator', '(510) 238-2105', '#contactinfoPopoverResponse1')">Nicole Neditch</span></a></em> 
                           </p>
                         </div>
                       </div>
 
-                  {% endfor %}
                 </div>
-            {% else %}<!--added an if then to check to see if any responses exist - if no then show text here for the "if any response exists" above -->
-              <div class="span10">
-                <p>There are no records uploaded just yet.  Stay tuned!</p>
-              </div>
-          {% endif %}
-
 
         </div>
       {% endblock response %}
@@ -239,7 +196,6 @@
 <!-- <div class="bootstro" data-bootstro-title="Response Action Area" data-bootstro-content="{{"Response Action Area"}}" data-bootstro-step="3"> -->
   <!-- Add a record form -->
   <form name="input_doc" class="form-horizontal" id="submitRecord" autocomplete="on" enctype="multipart/form-data">
-  <input type="hidden" name="request_id" value="{{ req.id }}"/>
     <fieldset> 
       <div class="row-fluid bootstro" data-bootstro-title="Add a Record" data-bootstro-content="{{"Add a Record" | tutorial }}" data-bootstro-step="3">
           <h4>Add a record</h4>
@@ -299,7 +255,6 @@
 
   <!-- Add a note form -->
   <form name="note" class="form-horizontal" id="note" >
-    <input type="hidden" name="request_id" value="{{ req.id }}"/>
     <fieldset> 
       <div class="row-fluid bootstro" data-bootstro-title="Add a Note" data-bootstro-content="{{"Add a Note" | tutorial }}" data-bootstro-step="4">
           <h4>Add a note</h4>
@@ -321,7 +276,6 @@
 
   <!-- Request an extension form -->
   <form name="extend_request" class="form-horizontal" id="extension" >
-    <input type="hidden" name="request_id" value="{{ req.id }}"/>
     <fieldset>
       <div class="row-fluid bootstro" data-bootstro-title="Request Extension" data-bootstro-content="{{"Request Extension" | tutorial }}" data-bootstro-step="5">
         <h4>Request an extension</h4>
@@ -349,7 +303,6 @@
 
   <!-- Close request form -->
   <form name="close" class="form-horizontal" id="closeRequest" >
-    <input type="hidden" name="request_id" value="{{ req.id }}"/>
     <input type="hidden" name="close_reason"/>
     <fieldset> 
       <div class="row-fluid bootstro" data-bootstro-title="Close request" data-bootstro-content="{{"Close request" | tutorial }}" data-bootstro-step="8">
