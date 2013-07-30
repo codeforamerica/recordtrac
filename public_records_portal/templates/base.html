@@ -54,7 +54,7 @@
                 {% if user_id %}
                 <li><a href="/your_requests">Your requests</a></li>
                 <li><a href="/requests">All requests</a></li>
-                <li class="bootstro" data-bootstro-title="Back to Tutorial" data-bootstro-content="{{"Back to Tutorial"}}" data-bootstro-step="10" data-bootstro-placement="bottom"><a href="/tutorial/request/1">Tutorial</a></li>
+                <li class="bootstro" data-bootstro-title="Back to Tutorial" data-bootstro-content="{{"Back to Tutorial" | tutorial }}" data-bootstro-step="10" data-bootstro-placement="bottom"><a href="/tutorial/request/1">Tutorial</a></li>
                 <li><a href="/about">About</a></li>
                 {% else %}
                 <li><a href="/new">Make a request</a></li>
@@ -135,7 +135,7 @@
     {% block feedback %}
     <!-- gforms feedback tab -->
       <!-- <div class="bootstro" data-bootstro-title="Feedback" data-bootstro-content="{{"Feedback"}}" data-bootstro-step="9" data-bootstro-placement="right"> -->
-        <h5 class="text-center" ><a id="floating_link" href="#feedbackModal" data-toggle="modal" class="bootstro" data-bootstro-title="Feedback" data-bootstro-content="{{"Feedback"}}" data-bootstro-step="9" data-bootstro-placement="right"> Feedback</a></h5>
+        <h5 class="text-center" ><a id="floating_link" href="#feedbackModal" data-toggle="modal" class="bootstro" data-bootstro-title="Feedback" data-bootstro-content="{{"Feedback" | tutorial }}" data-bootstro-step="9" data-bootstro-placement="right"> Feedback</a></h5>
       <!-- </div> -->
        
       <!-- Modal for feedback -->
