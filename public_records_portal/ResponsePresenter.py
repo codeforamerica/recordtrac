@@ -6,8 +6,10 @@ class ResponsePresenter:
 	def __init__(self, record = None, note = None):
 		if record:
 			self.response = record
+			self.update_url = "update_a_record_delete"
 		if note:
 			self.response = note
+			self.update_url = "update_a_note_delete"
 		if 'description' in self.response:
 				if self.response['access']:
 					self.type = "offline"
@@ -19,6 +21,12 @@ class ResponsePresenter:
 			self.type = "note"
 			if "Request extended" in self.response['text']:
 				self.type = "extension"
+	
+	def get_update_url(self):
+		return self.update_url
+
+	def get_id(self):
+		return self.response['id']
 
 	def uid(self):
 		return self.response['user_id']
