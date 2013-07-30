@@ -37,8 +37,8 @@ Save settings.env.example as settings.env and update relevant fields. To test e-
 If creating the database for the first time, run:
 
     python
-    from public_records_portal import db
-    db.create_all()
+    from public_records_portal import models
+    models.db.create_all()
 
 For database migrations, run:
 
