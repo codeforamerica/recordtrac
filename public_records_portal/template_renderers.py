@@ -93,6 +93,11 @@ def show_request(request_id, template = None):
 	return render_template(template, req = req, user_id = get_user_id())
 
 @login_required
+def edit_case(request_id):
+	req = get_resource("request", request_id)
+	return render_template("edit_case.html", req = req, user_id = get_user_id())
+
+@login_required
 def add_a_resource(resource):
 	if request.method == 'POST':
 		resource_id = add_resource(resource = resource, request_body = request, current_user_id = current_user.id)
