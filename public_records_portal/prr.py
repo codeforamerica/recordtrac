@@ -118,7 +118,10 @@ def put_resource(resource, payload, resource_id, app_url = None):
 
 def update_resource(resource, request_body):
 	fields = request_body.form
-	if "qa" in resource:
+	if "QA_delete" in resource:
+		print 'deleting QA'
+		delete_resource("qa", int(fields['qa_id']))
+	elif "qa" in resource:
 		return answer_a_question(fields['qa_id'], fields['answer_text'])
 	elif "owner" in resource:
 		change_request_status(fields['request_id'], "Rerouted")
@@ -126,6 +129,19 @@ def update_resource(resource, request_body):
 	elif "reopen" in resource:
 		change_request_status(fields['request_id'], "Reopened")
 		return fields['request_id']
+	elif "request_text" in resource:
+		put_resource("request", dict(text = fields[request_text]), int(fields[request_id]))
+	elif "note_text" in resource:
+		put_resource("note", dict(text = fields[note_text]), int(fields[request_id]))
+		# Need to store note text somewhere else (or just do delete here as well)
+	elif "note_delete" in resource:
+		print 'Deleting note'
+		# Need to store note somewhere else
+		delete_resource("note", int(fields['response_id']))
+	elif "record_delete" in resource:
+		# Need to store record somewhere else and prompt them to delete from Scribd as well, if they'd like
+		print 'Deleting record'
+		delete_resource("record", int(fields['response_id']))
 	else:
 		return False
 
@@ -450,9 +466,9 @@ def get_responses_chronologically(req):
 	if not req:
 		return responses
 	for note in req['notes']:
-		responses.append(ResponsePresenter(note))
+		responses.append(ResponsePresenter(note = note))
 	for record in req['records']:
-		responses.append(ResponsePresenter(record))
+		responses.append(ResponsePresenter(record = record))
 	responses.sort(key = lambda x:datetime.strptime(x.date(), '%Y-%m-%dT%H:%M:%S.%f'), reverse = True)
 	if "Closed" in req['status']:
 		responses[0].icon = "icon-lock icon-2x" # Set most recent note (closed note)'s icon
