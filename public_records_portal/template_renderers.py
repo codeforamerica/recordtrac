@@ -92,6 +92,7 @@ def show_request(request_id, template = None):
 		template = "closed.html"
 	return render_template(template, req = req, user_id = get_user_id())
 
+
 @login_required
 def edit_case(request_id):
 	req = get_resource("request", request_id)
@@ -162,6 +163,8 @@ def show_test():
 def any_page(page):
 	return render_template('%s.html' %(page), user_id = get_user_id())
 	
+def tutorial():
+	return render_template('tutorial.html', user_id = get_user_id())
 
 def login(email=None, password=None):
 	if request.method == 'POST':
@@ -172,7 +175,7 @@ def login(email=None, password=None):
 			if user.password == password:
 				user_for_login = models.User.query.get(user.id)
 				login_user(user_for_login)
-				return redirect(url_for('show_request_for_x', request_id = 1, audience = "tutorial"))
+				return redirect(url_for('tutorial'))
 	return render_template('error.html', message = "Oops, your e-mail/ password combo didn't work.") 
 
 @login_required

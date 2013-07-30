@@ -20,6 +20,9 @@ routing = {
 	'your_requests':{
 		'url': '/your_requests'
 	},
+	'tutorial':{
+		'url': '/tutorial'
+	},
 	'index':{
 		'url':'/', 
 		'methods':['GET', 'POST']
