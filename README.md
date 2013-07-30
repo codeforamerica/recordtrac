@@ -44,10 +44,13 @@ For database migrations, run:
 
     alembic upgrade head
 
-To use the application locally, run:
+To use the application locally with custom settings, run:
 
+    foreman start -e settings.env
+
+Or to run it with the defaults:
+    
     foreman start
-
 
 You should see something similar to:
 

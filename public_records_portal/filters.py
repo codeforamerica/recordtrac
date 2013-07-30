@@ -109,6 +109,15 @@ def explain_action(action, explanation_type = None):
 		return explanation_str
 
 
+@app.template_filter('tutorial')
+def tutorial(section):
+	# Get filepath for actions.json
+	tutorial_filepath = os.path.join(app.root_path, 'tutorial.json')
+	tutorial_json = open(tutorial_filepath)
+	json_data = json.load(tutorial_json)
+	explanation = json_data[section]
+	return explanation
+
 @app.template_filter('directory')
 def directory(uid, info_type = None):
 	email =  user_email(uid)

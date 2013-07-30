@@ -34,6 +34,9 @@ routing = {
 	'show_response':{
 		'url': '/response/<int:request_id>'
 	},
+	'edit_case':{
+		'url': '/edit/request/<int:request_id>'
+	},
 	'show_request_for_x':{
 		'url': '/<string:audience>/request/<int:request_id>'
 	},

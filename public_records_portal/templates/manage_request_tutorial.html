@@ -1,0 +1,457 @@
+<!-- This template is for the tutorial. -->
+
+{% extends "base.html" %}
+{% block title %}Tutorial{% endblock %}
+
+{% block banner %}
+  <!-- success banner -->
+  <div class="alert alert-block bootstro" data-bootstro-title="Welcome" data-bootstro-content="{{"Welcome" | tutorial }}" data-bootstro-step="0" data-bootstro-placement="bottom">
+    <div class="span1 text-right"><i class="icon-warning-sign icon-2x"> </i></div>
+    <div class="offset1">
+      <p> <strong>This website is currently being tested</strong> by the City of Oakland and the 2013 Code for America fellows. You may notice some features may not work or may change over time. All public records requests will be processed in accordance with the California Public Records Act and the Oakland Sunshine Ordinance.</p>
+
+      <p>You can still submit your request using the City’s <a href="http://www.oaklandcityattorney.org/resources/PubInfoRequest.html">old public records request system</a>.</p>  
+    </div>
+  </div>
+{% endblock banner%}
+
+{% block content %}
+  <div class="span8">
+    <ul class="nav nav-pills hidden-phone hidden-tablet">
+      <li class="disabled"><a href="#">Shortcuts </a></li>
+      <li><a href="#submitRecord">Add a record <i class="icon-arrow-down"></i></a></li>
+      <li><a href="#note">Add a note <i class="icon-arrow-down"></i></a></li>
+      <li><a href="#closeRequest">Close request <i class="icon-arrow-down"></i></a></li>
+    </ul>
+  </div>
+  <p class="text-right">Due: Jul 10, 2013  <span class="muted">(Submitted Jul 1, 2013)</span></p>
+
+  {% block well %}
+    <div class="row-fluid well"> 
+      <div class="row-fluid">
+        {% block status %}
+          <div class="pull-right bootstro" data-bootstro-title="Reroute" data-bootstro-content="{{"Reroute" | tutorial }}" data-bootstro-step="7" data-bootstro-placement="bottom">
+            {% block routing %}
+              Routed to  
+              <div class="btn-group"  style="font-size:15px">
+                <div><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> Nicole Neditch <span class="caret"></span> </a></div>
+                <div id="reroutePopover-head" class="hide">Reassign to:</div>
+                <div id="reroutePopover-content" class="hide">              
+                  <form id="rerouteForm" class="form-inline" >
+                    <!-- my form -->
+                    <div class="control-group">
+                      <div class="controls">
+                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                        <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
+                        <input id="rerouteReason" type="text" name="owner_reason" placeholder="Say why." required />
+                        <button id="rerouteButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            {% endblock routing %}
+            {% block history %}
+              <a data-placement="left" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"> <i class="icon-time" ></i>  </a>
+              <div id="historyPopover-head" class="hide">Routing history</div>
+              <div id="historyPopover-content" class="hide">              
+                <table class="table table-condensed">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th></th>
+                      <th>To</th>
+                      <th>Note</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                        <td>Jul 1, 2013</td>
+                        <td><i class="icon-circle-arrow-right"></i></td>
+                        <td>Arly Flores</td>
+                        <td>Initial routing</td>
+                      </tr>  
+                      <tr>
+                        <td>Jul 1, 2013</td>
+                        <td><i class="icon-circle-arrow-right"></i></td>
+                        <td>Nicole Neditch</td>
+                        <td>Would you check to see if you have these records?</td>
+                      </tr>              
+                  </tbody>
+                </table>
+              </div>
+            {% endblock history %}
+          </div>
+        {% endblock status %}
+      </div>
+    
+      
+
+      {% block request %}
+        <!-- request area -->
+        <div class="row-fluid bootstro" data-bootstro-title="Request Area" data-bootstro-content="{{"Request Area" | tutorial }}" data-bootstro-step="1">
+          <h3 >Request <span class="muted">#1037</span></h3>
+          <div class="span10">
+              <p class="lead">I would like a copy of the informational report identified as file #001915 in the Legistar system. It's from a meeting of the City Council on December 4, 2001. While it's identified in the Legistar system, the report itself is not available.</p>
+          </div>
+        </div>
+        {% block proxyrequester_info %}
+          <small>
+            <span>This request was submitted on behalf of the requester by Deidre Scott.</span>
+          </small>
+        {% endblock proxyrequester_info %}
+        {% block requester_info %}
+          <small>
+            <span> Requester's name: Ben Franklin and phone number: (510) 555-1234</span>
+          </small>
+        {% endblock requester_info %}
+      {% endblock request %}
+
+      <div class="bootstro" data-bootstro-title="Ask a Question" data-bootstro-content="{{"Ask a Question" | tutorial}}" data-bootstro-step="2">
+      <!-- shows any existing Q&A or public notes -->
+      {% if req.notes or req.qas %}
+        <!-- shows any existing public notes -->
+        {% if req.notes %}
+          {% for note in req.notes %}
+          {% if not note.user_id %}
+            <div class="row-fluid response">
+              <div class="span2 text-center">
+                <i class="icon-edit icon-2x">  </i> </br>
+                <small> {{ note.date_created | date_granular }}</small> </br>
+              </div>
+              <div class="span10">
+                <p>{{ note.text }} - <em>Requester</em></p>
+              </div>
+            </div>
+          {% endif %}
+          {% endfor %}
+        {% endif %}
+        <!-- shows any existing Q&A -->
+        {% if req.qas %}
+        {% block qas %}
+          <div class="row-fluid">
+            {% for qa in req.qas %}
+              <div class="row-fluid response">
+                <div class="span2 text-center">
+                  <i class="icon-question icon-2x">  </i> </br>
+                  <small>3 days ago</small> </br>
+                </div>
+                <div class="span10">
+                  <p>I found two informational reports.  There is one on park services and one on sewage services.  Are you looking for one of these or both? - <em><a data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('nneditch@oaklandnet.com', 'Office of the City Administrator', '(510) 238-2105', '#contactinfoPopoverQA{{loop.index}}')">Nicole Neditch</span></a></em></p>
+                  <p>Would love both.  Thanks! - <em>Requester</em></p>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          {% endblock qas %}
+        {% endif %}
+      {% endif %}
+
+        {% block public_note %}
+        {% endblock public_note %}
+
+      {% block clarify_request %}
+            <!-- ask a question -->
+        <form name="ask_question" class="form-horizontal" id="question" autocomplete="on">
+          <fieldset> 
+            <div class="row-fluid">
+              <!-- <div class="span4"> -->
+                <h4>Ask a question about this request</h4>
+              <!-- </div> -->
+              <div>
+
+                <div class="control-group">
+                  <label class="control-label">Question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+                  <div class="row-fluid">
+                    <div class="controls">
+                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                        <input id="questionTextarea" type="text" name="question_text" rows="3" cols="20" placeholder="Ask the requester a question" required/>
+                      <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </fieldset>
+        </form>
+      {% endblock clarify_request %}
+      </div>
+
+      {% block response %}
+        <!-- response area: need to give this more space between the request area-->
+        <div class="row-fluid bootstro" data-bootstro-title="Response Area" data-bootstro-content="{{"Response Area" | tutorial }}" data-bootstro-step="6">
+          <h3 class="response">Response</h3>
+            <!-- shows all existing responses (links, documents, offline docs, notes) -->
+            {% set responses = ( req | get_responses_chronologically ) %}
+            {% if responses %} 
+                <div class="span10">
+                  {% for response in responses %}
+                    {% set uid = response.uid() %}
+                    {% set staffName = (uid | get_staff_info("name")) %}
+                    {% set staffDept = (uid | get_staff_info("dept")) %}
+                    {% set staffPhone = (uid | get_staff_info("phone")) %}
+                    {% set staffEmail = (uid | user_email) %}
+                        
+                      <div class="row-fluid response">
+                        <div class="span2 text-center">
+                          <i class="icon-file-text-alt icon-2x">  </i></br>
+                          <small>2 days ago</small> </br>
+                        </div>
+                        <div class="span10">
+                          <p> 
+                             <a href="https://www.scribd.com/doc/155600210" rel="tooltip" data-toggle="tooltip" data-placement="right" data-original-title="https://www.scribd.com/doc/155600210">Informational report on park services<i class="icon-external-link"></i></a> <a href="http://documents.scribd.com.s3.amazonaws.com/docs/60ykpey6bk2n2gfg.txt?t=1374626992" rel="tooltip" data-toggle="tooltip" data-placement="right" data-original-title="http://documents.scribd.com.s3.amazonaws.com/docs/60ykpey6bk2n2gfg.txt?t=1374626992">Download file <i class="icon-cloud-download"></i></a> - <em><a data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('nneditch@oaklandnet.com', 'Office of the City Administrator', '(510) 238-2105', '#contactinfoPopoverResponse{{loop.index}}')">Nicole Neditch</span></a></em> 
+                          </p>
+                        </div>
+                      </div>
+                      <div class="row-fluid response">
+                        <div class="span2 text-center">
+                          <i class="icon-file-text-alt icon-2x">  </i></br>
+                          <small>2 days ago</small> </br>
+                        </div>
+                        <div class="span10">
+                          <p> 
+                             <a href="https://www.scribd.com/doc/155600210" rel="tooltip" data-toggle="tooltip" data-placement="right" data-original-title="https://www.scribd.com/doc/155600210">Informational report on sewage services<i class="icon-external-link"></i></a> <a href="http://documents.scribd.com.s3.amazonaws.com/docs/60ykpey6bk2n2gfg.txt?t=1374626992" rel="tooltip" data-toggle="tooltip" data-placement="right" data-original-title="http://documents.scribd.com.s3.amazonaws.com/docs/60ykpey6bk2n2gfg.txt?t=1374626992">Download file <i class="icon-cloud-download"></i></a> - <em><a data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('nneditch@oaklandnet.com', 'Office of the City Administrator', '(510) 238-2105', '#contactinfoPopoverResponse{{loop.index}}')">Nicole Neditch</span></a></em> 
+                          </p>
+                        </div>
+                      </div>
+
+                  {% endfor %}
+                </div>
+            {% else %}<!--added an if then to check to see if any responses exist - if no then show text here for the "if any response exists" above -->
+              <div class="span10">
+                <p>There are no records uploaded just yet.  Stay tuned!</p>
+              </div>
+          {% endif %}
+
+
+        </div>
+      {% endblock response %}
+
+
+
+      </div>
+    </div>
+  {% endblock well %}
+{% endblock content %}
+
+{% block actions %}
+<!-- <div class="bootstro" data-bootstro-title="Response Action Area" data-bootstro-content="{{"Response Action Area"}}" data-bootstro-step="3"> -->
+  <!-- Add a record form -->
+  <form name="input_doc" class="form-horizontal" id="submitRecord" autocomplete="on" enctype="multipart/form-data">
+  <input type="hidden" name="request_id" value="{{ req.id }}"/>
+    <fieldset> 
+      <div class="row-fluid bootstro" data-bootstro-title="Add a Record" data-bootstro-content="{{"Add a Record" | tutorial }}" data-bootstro-step="3">
+          <h4>Add a record</h4>
+          <div class="control-group">
+            <label class="control-label" for="recordSummary">Summary</label>
+            <div class="controls">
+              <input class="input-xxlarge" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of the record" required />
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Upload a record <span id="recordTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Upload a document" | explain_action}}" ><small><i class="icon-info-sign"></i></small></span></label>
+            <div class="row-fluid">
+              <div class="controls">
+                <div class="fileupload fileupload-new" data-provides="fileupload">
+                  <div class="input-append">
+                    <div class="uneditable-input span3">
+                      <i class="icon-file fileupload-exists"></i> 
+                      <span class="fileupload-preview" />
+                    </div>
+                    <span class="btn btn-file">
+                      <span class="fileupload-new">Select file</span>
+                      <span class="fileupload-exists">Change</span>
+                      <input type="file" name="record" />
+                    </span>
+                    <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>              
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Or provide a link to a record <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a link" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></label>
+            <div class="row-fluid">
+              <div class="controls">
+                  <input name="link_url" id="inputUrl"/>
+                <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
+              </div>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Or indicate how the record can be accessed offline <span id="offlinedocTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Describe hard copies" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></label>
+            <div class="row-fluid">
+              <div class="controls">
+                <textarea class="input-xxlarge" id="offlineDoc_textarea" name="record_access" rows="3" placeholder="How can the requester get this record?  Ex. 'Sent via mail on a CD', 'Print out awaiting requester at City Clerk desk'" ></textarea>
+              </div>
+            </div>
+          </div>
+        <div class="control-group">
+          <div class="controls">
+            <button type="submit" class="btn btn-primary">Add record</button>
+          </div>
+        </div>
+      </div>
+      
+    </fieldset>
+  </form>
+
+  <!-- Add a note form -->
+  <form name="note" class="form-horizontal" id="note" >
+    <input type="hidden" name="request_id" value="{{ req.id }}"/>
+    <fieldset> 
+      <div class="row-fluid bootstro" data-bootstro-title="Add a Note" data-bootstro-content="{{"Add a Note" | tutorial }}" data-bootstro-step="4">
+          <h4>Add a note</h4>
+          <div class="control-group">
+            <label class="control-label">Note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+            <div class="controls">
+              <input type="text" class="input-xlarge" id="noteTextarea" name="note_text" rows="3" placeholder="Anything else the requester should know."required/>
+            </div>
+          </div>
+          <div class="control-group">
+            <div class="controls">
+              <button type="submit" class="btn btn-primary">Add note</button>
+            </div>
+          </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+  <!-- Request an extension form -->
+  <form name="extend_request" class="form-horizontal" id="extension" >
+    <input type="hidden" name="request_id" value="{{ req.id }}"/>
+    <fieldset>
+      <div class="row-fluid bootstro" data-bootstro-title="Request Extension" data-bootstro-content="{{"Request Extension" | tutorial }}" data-bootstro-step="5">
+        <h4>Request an extension</h4>
+        <div class="control-group">
+          <label class="control-label">Reason <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Request an extension"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+            <div class="controls">
+              <select id="extend_reasons" name="note_text" multiple="multiple" required>
+                <option value="{{"Extension - Large Amount" | explain_action("What")}}">Large amount</option>
+                <option value="{{"Extension - Separate Facility" | explain_action("What")}}">Separate facility</option>
+                <option value="{{"Extension - Another Agency" | explain_action("What")}}">Another agency</option>
+                <option value="{{"Extension - Data" | explain_action("What")}}">Data extraction</option>
+              </select>
+              <p class="help-block">You can select multiple reasons by using Ctrl (Win) or ⌘ (Mac).</p>
+            </div>
+        </div> 
+        <div class="control-group">
+          <div class="controls">
+            <button id="extendRequest" class="btn btn-primary" type="submit">Request an extension</button>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+  <!-- Close request form -->
+  <form name="close" class="form-horizontal" id="closeRequest" >
+    <input type="hidden" name="request_id" value="{{ req.id }}"/>
+    <input type="hidden" name="close_reason"/>
+    <fieldset> 
+      <div class="row-fluid bootstro" data-bootstro-title="Close request" data-bootstro-content="{{"Close request" | tutorial }}" data-bootstro-step="8">
+        <h4>Close this request </h4>
+        <div class="control-group">
+
+          <label class="control-label">Reason <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+            <div class="controls">
+              <select id="close_reasons" name="close_reasons" multiple="multiple" size="8" class="input-xxlarge" required>
+                <option value="{{"Fulfilled" | explain_action("What")}}">Fulfilled</option>
+                <option value="{{"Not a public records request" | explain_action("What")}}">Not a public records request</option>
+                <option value="{{"Record Does Not Exist" | explain_action("What")}}">Do not have this record</option>
+                <option value="{{"Can Not Release - Personal Files" | explain_action("What")}}">Can Not Release - Privacy</option>
+                <option value="{{"Can Not Release - Ongoing Litigation" | explain_action("What")}}">Can Not Release - Ongoing Litigation</option>
+                <option value="{{"Can Not Release - Investigative Reports" | explain_action("What")}}">Can Not Release - Investigative Reports</option>
+                <option value="{{"Can Not Release - Finances" | explain_action("What")}}">Can Not Release - Finances</option>
+                <option value="{{"Requester Not Interested" | explain_action("What")}}">Requester Not Interested</option>
+              </select>
+              <p class="help-block">You can select multiple reasons by using Ctrl (Win) or ⌘ (Mac).</p>
+            </div>
+        </div>
+        <div class="control-group">
+          <div class="controls">
+            <!-- Button to trigger modal -->
+            <a id="closeRequest_button" href="#closeModal" role="button" class="btn btn-inverse" data-toggle="modal" >Close request...</a>
+             
+            <!-- Modal -->
+            <div id="closeModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="closeModalLabel" aria-hidden="true">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="closeModalLabel">Reason for closing</h3>
+              </div>
+              <div class="modal-body">
+                <!-- NOTE: need to remove the line breaks in the CODE in textarea in order to remove the funky indentation -->
+                <textarea id="closeTextarea" class="input-block-level" rows="10"></textarea>
+              </div>
+              <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                <button id="closeButton" type="submit" class="btn btn-inverse">Close this request</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+<!-- </div> -->
+{% endblock actions %}
+
+
+
+{% block bottom_script %}
+  <script>
+  /* calls bootstro (tutorial) plugin */
+    $(document).ready(function(){
+        // $("#tutorial").click(function(){
+            bootstro.start(".bootstro", {
+                onComplete : function(params)
+                {
+                    // alert("Reached end of introduction with total " + (params.idx + 1)+ " slides");
+                },
+                onExit : function(params)
+                {
+                    // alert("Introduction stopped at slide #" + (params.idx + 1));
+                },
+            // });    
+        });
+        // $(".demo_stopOn").click(function(){
+        //     alert('Clicking on the backdrop or Esc will NOT stop the show')
+        //     bootstro.start('.bootstro', {stopOnBackdropClick : false, stopOnEsc:false});    
+        // });
+        // $(".demo_size1").click(function(){
+        //     bootstro.start('.bootstro_size1');    
+        // });
+        // $(".demo_nonav").click(function(){
+        //     bootstro.start('.bootstro', {
+        //         nextButton : '',
+        //         prevButton : '',
+        //         finishButton : ''
+        //     });    
+        // });
+        // $(".demo_ajax").click(function(){
+        //     bootstro.start('', {
+        //         url : './bootstro.json',
+        //     });    
+        // });
+    });
+  </script>
+  <script>
+  /* takes text from json file for each reason and populates the editable textarea in the modal */
+    $("#close_reasons").change(function () {
+      var str = "";
+      $("#close_reasons option:selected").each(function () {
+            str += $(this).val() + " ";
+          });
+      $("#closeTextarea").text(str);
+    });
+
+    /* takes the edited text in the modal as a variable for use in posting to the case */
+    $("#closeButton").click(function () {
+      var estr = $("#closeTextarea").val();
+      $('input[name=close_reason]').val(estr);
+    });
+  </script>
+{% endblock bottom_script %}
