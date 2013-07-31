@@ -159,10 +159,12 @@ def load_user(userid):
 def show_test():
 	return render_template('test.html')
 	
-
 def any_page(page):
-	return render_template('%s.html' %(page), user_id = get_user_id())
-	
+	try:
+		return render_template('%s.html' %(page), user_id = get_user_id())
+	except:
+		return render_template('error.html', message = "%s totally doesn't exist." %(page), user_id = get_user_id())
+
 def tutorial():
 	return render_template('tutorial.html', user_id = get_user_id())
 
