@@ -137,9 +137,10 @@
                     {% set staffDept = (uid | get_staff_info("dept")) %}
                     {% set staffPhone = (uid | get_staff_info("phone")) %}
                     {% set staffEmail = (uid | user_email) %}
+                    {% set icon = response.get_icon() %}
                       <div class="row-fluid response">
                         <div class="span2 text-center">
-                          <i class="{{response.icon()}}">  </i></br>
+                          <i class="{{icon}}">  </i></br>
                           <small> {{ response.date() | date_granular }} </small> </br>
                         </div>
                         <div class="span10">
