@@ -445,21 +445,20 @@ def is_due_soon(date_obj, extended = None):
 def notify_due_soon():
 	requests = get_resources("request")
 	for req in requests['objects']:
-		due_soon, date_due = is_due_soon(req['date_created'], req['extended'])
-		if due_soon:
-			owner = get_resource("owner", req['current_owner'])
-			uid = owner['user_id']
-			email_address = user_email(uid)
-			email_json = open(os.path.join(app.root_path, 'emails.json'))
-			json_data = json.load(email_json)
-			email_subject = "%sPublic Records Request %s: %s" %(test, req['id'], json_data["Request due"])
-			app_url = app.config['APPLICATION_URL']
-			page = "%scity/request/%s" %(app_url,req['id'])
-			body = "You can view the request and take any necessary action at the following webpage: <a href='%s'>%s</a></br>" %(page, page)
-			# Need to figure out a way to pass in generic email template outside application context. For now, hardcoding the body.
-			send_email(body = body, recipient = email_address, subject = email_subject)
-		else:
-			print "You've got time. Due %s" %(date_due)
+		if "Closed" not in req['status']:
+			due_soon, date_due = is_due_soon(req['date_created'], req['extended'])
+			if due_soon:
+				owner = get_resource("owner", req['current_owner'])
+				uid = owner['user_id']
+				email_address = user_email(uid)
+				email_json = open(os.path.join(app.root_path, 'emails.json'))
+				json_data = json.load(email_json)
+				email_subject = "%sPublic Records Request %s: %s" %(test, req['id'], json_data["Request due"])
+				app_url = app.config['APPLICATION_URL']
+				page = "%scity/request/%s" %(app_url,req['id'])
+				body = "You can view the request and take any necessary action at the following webpage: <a href='%s'>%s</a></br>" %(page, page)
+				# Need to figure out a way to pass in generic email template outside application context. For now, hardcoding the body.
+				send_email(body = body, recipient = email_address, subject = email_subject)
 
 def get_responses_chronologically(req):
 	responses = []
