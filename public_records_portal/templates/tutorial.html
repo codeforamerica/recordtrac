@@ -5,7 +5,7 @@
 
 {% block banner %}
   <!-- success banner -->
-  <div class="alert alert-block bootstro" data-bootstro-title="Welcome" data-bootstro-content="{{"Welcome" | tutorial }}" data-bootstro-step="0" data-bootstro-placement="bottom">
+  <div class="alert alert-block bootstro" data-bootstro-title="Welcome" data-bootstro-content="{{"Welcome" | tutorial }}" data-bootstro-step="0" data-bootstro-placement="bottom" data-bootstro-width="50%" data-bootstro-html="true">
     <div class="span1 text-right"><i class="icon-warning-sign icon-2x"> </i></div>
     <div class="offset1">
       <p> <strong>This website is currently being tested</strong> by the City of Oakland and the 2013 Code for America fellows. You may notice some features may not work or may change over time. All public records requests will be processed in accordance with the California Public Records Act and the Oakland Sunshine Ordinance.</p>
@@ -30,7 +30,7 @@
     <div class="row-fluid well"> 
       <div class="row-fluid">
         {% block status %}
-          <div class="pull-right bootstro" data-bootstro-title="Reroute" data-bootstro-content="{{"Reroute" | tutorial }}" data-bootstro-step="7" data-bootstro-placement="bottom">
+          <div class="pull-right bootstro" data-bootstro-title="Reroute" data-bootstro-content="{{"Reroute" | tutorial }}" data-bootstro-step="7" data-bootstro-placement="bottom" data-bootstro-width="25%">
             {% block routing %}
               Routed to  
               <div class="btn-group"  style="font-size:15px">
@@ -85,10 +85,10 @@
       </div>
     
       
-
+      <div class="bootstro" data-bootstro-title="Request Area" data-bootstro-content="{{"Request Area" | tutorial }}" data-bootstro-step="1" data-bootstro-placement="bottom" data-bootstro-width="50%">
       {% block request %}
         <!-- request area -->
-        <div class="row-fluid bootstro" data-bootstro-title="Request Area" data-bootstro-content="{{"Request Area" | tutorial }}" data-bootstro-step="1">
+        <div class="row-fluid">
           <h3 >Request <span class="muted">#1037</span></h3>
           <div class="span10">
               <p class="lead">I would like a copy of the informational report identified as file #001915 in the Legistar system. It's from a meeting of the City Council on December 4, 2001. While it's identified in the Legistar system, the report itself is not available.</p>
@@ -105,8 +105,9 @@
           </small>
         {% endblock requester_info %}
       {% endblock request %}
+      </div>
 
-      <div class="bootstro" data-bootstro-title="Ask a Question" data-bootstro-content="{{"Ask a Question" | tutorial}}" data-bootstro-step="2">
+      <div class="bootstro" data-bootstro-title="Ask a Question" data-bootstro-content="{{"Ask a Question" | tutorial }}" data-bootstro-step="2" data-bootstro-placement="top" data-bootstro-width="50%">
         <!-- shows any existing Q&A -->
         {% block qas %}
           <div class="row-fluid">
@@ -152,7 +153,7 @@
 
       {% block response %}
         <!-- response area: need to give this more space between the request area-->
-        <div class="row-fluid bootstro" data-bootstro-title="Response Area" data-bootstro-content="{{"Response Area" | tutorial }}" data-bootstro-step="6">
+        <div class="row-fluid bootstro" data-bootstro-title="Response Area" data-bootstro-content="{{"Response Area" | tutorial }}" data-bootstro-step="6" data-bootstro-width="50%">
           <h3 class="response">Response</h3>
             <!-- shows all existing responses (links, documents, offline docs, notes) -->
                 <div class="span10">
@@ -193,11 +194,10 @@
 {% endblock content %}
 
 {% block actions %}
-<!-- <div class="bootstro" data-bootstro-title="Response Action Area" data-bootstro-content="{{"Response Action Area"}}" data-bootstro-step="3"> -->
   <!-- Add a record form -->
   <form name="input_doc" class="form-horizontal" id="submitRecord" autocomplete="on" enctype="multipart/form-data">
     <fieldset> 
-      <div class="row-fluid bootstro" data-bootstro-title="Add a Record" data-bootstro-content="{{"Add a Record" | tutorial }}" data-bootstro-step="3">
+      <div class="row-fluid bootstro" data-bootstro-title="Add a Record" data-bootstro-content="{{"Add a Record" | tutorial }}" data-bootstro-step="3" data-bootstro-width="50%">
           <h4>Add a record</h4>
           <div class="control-group">
             <label class="control-label" for="recordSummary">Summary</label>
@@ -256,7 +256,7 @@
   <!-- Add a note form -->
   <form name="note" class="form-horizontal" id="note" >
     <fieldset> 
-      <div class="row-fluid bootstro" data-bootstro-title="Add a Note" data-bootstro-content="{{"Add a Note" | tutorial }}" data-bootstro-step="4">
+      <div class="row-fluid bootstro" data-bootstro-title="Add a Note" data-bootstro-content="{{"Add a Note" | tutorial }}" data-bootstro-step="4" data-bootstro-width="50%">
           <h4>Add a note</h4>
           <div class="control-group">
             <label class="control-label">Note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
@@ -277,7 +277,7 @@
   <!-- Request an extension form -->
   <form name="extend_request" class="form-horizontal" id="extension" >
     <fieldset>
-      <div class="row-fluid bootstro" data-bootstro-title="Request Extension" data-bootstro-content="{{"Request Extension" | tutorial }}" data-bootstro-step="5">
+      <div class="row-fluid bootstro" data-bootstro-title="Request Extension" data-bootstro-content="{{"Request Extension" | tutorial }}" data-bootstro-step="5" data-bootstro-width="50%">
         <h4>Request an extension</h4>
         <div class="control-group">
           <label class="control-label">Reason <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Request an extension"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
@@ -305,7 +305,7 @@
   <form name="close" class="form-horizontal" id="closeRequest" >
     <input type="hidden" name="close_reason"/>
     <fieldset> 
-      <div class="row-fluid bootstro" data-bootstro-title="Close request" data-bootstro-content="{{"Close request" | tutorial }}" data-bootstro-step="8">
+      <div class="row-fluid bootstro" data-bootstro-title="Close request" data-bootstro-content="{{"Close request" | tutorial }}" data-bootstro-step="8" data-bootstro-width="50%">
         <h4>Close this request </h4>
         <div class="control-group">
 
@@ -349,7 +349,6 @@
       </div>
     </fieldset>
   </form>
-<!-- </div> -->
 {% endblock actions %}
 
 
