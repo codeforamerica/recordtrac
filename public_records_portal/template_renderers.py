@@ -17,10 +17,12 @@ login_manager.init_app(app)
 # Submitting a new request
 def new_request():
 	if request.method == 'POST':
+		email = request.form['request_email']
+		if email == "" and 'ignore_email' not in request.form:
+			return render_template('missing_email.html', form = request.form, user_id = get_user_id())
 		request_text = request.form['request_text']
 		if request_text == "":
 			return render_template('error.html', message = "You cannot submit an empty request.")
-		email = request.form['request_email']
 		alias = None
 		phone = None
 		if 'request_alias' in request.form:
