@@ -19,6 +19,7 @@ from datetime import datetime, timedelta
 from models import User
 from timeout import timeout
 import urllib
+from ResponsePresenter import ResponsePresenter
 
 ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff']
 
@@ -117,7 +118,10 @@ def put_resource(resource, payload, resource_id, app_url = None):
 
 def update_resource(resource, request_body):
 	fields = request_body.form
-	if "qa" in resource:
+	if "QA_delete" in resource:
+		print 'deleting QA'
+		delete_resource("qa", int(fields['qa_id']))
+	elif "qa" in resource:
 		return answer_a_question(fields['qa_id'], fields['answer_text'])
 	elif "owner" in resource:
 		change_request_status(fields['request_id'], "Rerouted")
@@ -125,6 +129,19 @@ def update_resource(resource, request_body):
 	elif "reopen" in resource:
 		change_request_status(fields['request_id'], "Reopened")
 		return fields['request_id']
+	elif "request_text" in resource:
+		put_resource("request", dict(text = fields[request_text]), int(fields[request_id]))
+	elif "note_text" in resource:
+		put_resource("note", dict(text = fields[note_text]), int(fields[request_id]))
+		# Need to store note text somewhere else (or just do delete here as well)
+	elif "note_delete" in resource:
+		print 'Deleting note'
+		# Need to store note somewhere else
+		delete_resource("note", int(fields['response_id']))
+	elif "record_delete" in resource:
+		# Need to store record somewhere else and prompt them to delete from Scribd as well, if they'd like
+		print 'Deleting record'
+		delete_resource("record", int(fields['response_id']))
 	else:
 		return False
 
@@ -184,6 +201,7 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 		if email: # If the user provided an e-mail address, add them as a subscriber to the request.
 			user = create_or_return_user(email = email, alias = alias, phone = phone)
 			subscriber = create_resource("subscriber", dict(request_id = req['id'], user_id = user.id))
+			send_prr_email(req['id'], notification_type = "Request made", requester_id = subscriber['id'])
 		open_request(req['id'])
 		return req['id'], True
 	return resource['objects'][0]['id'], False
@@ -448,33 +466,12 @@ def get_responses_chronologically(req):
 	if not req:
 		return responses
 	for note in req['notes']:
-		uid = note['user_id']
-		text = note['text']
-		if uid:
-			icon = "icon-edit icon-2x"
-			if "Request extended" in note['text']:
-				icon = "icon-calendar icon-2x"
-				junk, text = note['text'].split(":")
-			responses.append(dict(text = text, uid = uid, date = note['date_created'], icon = icon))
+		responses.append(ResponsePresenter(note = note))
 	for record in req['records']:
-		uid = record['user_id']
-		text = ""
-		if record['doc_id']:
-			download_url = record['download_url']
-			if not download_url:
-				download_url = get_scribd_download_url(doc_id = record['doc_id'], record_id = record['id'])
-			icon = "icon-file-alt icon-2x"
-			text = "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='right' data-original-title='%s'>%s <i class='icon-external-link'></i></a><a href = '%s' rel='tooltip' data-toggle='tooltip' data-placement='right' data-original-title='%s'> Download file <i class='icon-cloud-download'></i></a>" % (record['url'], record['url'], record['description'], download_url, download_url) 
-		elif record['access']:
-			text = "%s can be accessed: %s" %(record['description'], record['access'])
-			icon = "icon-file-alt icon-2x"
-		else: 
-			icon = "icon-link icon-2x"
-			text = "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='right' data-original-title='%s'>%s <i class='icon-external-link'></i></a>" % (record['url'], record['url'], record['description'])
-		responses.append(dict(text = text, uid = uid,  date = record['date_created'], icon = icon))
-	responses.sort(key = lambda x:datetime.strptime(x['date'], '%Y-%m-%dT%H:%M:%S.%f'), reverse = True)
+		responses.append(ResponsePresenter(record = record))
+	responses.sort(key = lambda x:datetime.strptime(x.date(), '%Y-%m-%dT%H:%M:%S.%f'), reverse = True)
 	if "Closed" in req['status']:
-		responses[0]['icon'] = "icon-lock icon-2x" # Set most recent note (closed note)'s icon
+		responses[0].icon = "icon-lock icon-2x" # Set most recent note (closed note)'s icon
 	return responses
 
 def format_date(obj):
@@ -521,3 +518,4 @@ def date_granular(timestamp):
 		return "%s seconds ago" % seconds
 	else:
 		return "Just now."
+

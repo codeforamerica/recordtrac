@@ -26,14 +26,18 @@
 
 /* form in reroute popover */
   $('#reroutePopover').popover({ 
-      html : true,
-      title: function() {
-        return $("#reroutePopover-head").html();
-      },
-      content: function() {
-        return $("#reroutePopover-content").html();
-      }
-  });
+          html : true,
+          title: function() {
+            return $("#reroutePopover-head").html();
+          },
+          content: function() {
+            return $("#reroutePopover-content").html();
+          }
+      });
+
+$(document).on('shown', "#reroutePopover", function () {
+    $('#rerouteEmail').select2();
+});
 
   /* form in history popover */
   $('.historyPopover').popover({
