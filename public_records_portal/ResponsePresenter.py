@@ -49,7 +49,7 @@ class ResponsePresenter:
 			junk, text = self.response['text'].split(":")
 			return text
 
-	def icon(self):
+	def get_icon(self):
 		if self.type=="offline":
 			return "icon-file-alt icon-2x"
 		elif self.type=="note":
