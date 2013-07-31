@@ -21,6 +21,17 @@ class ResponsePresenter:
 			self.type = "note"
 			if "Request extended" in self.response['text']:
 				self.type = "extension"
+		if self.type=="offline":
+			self.icon = "icon-file-alt icon-2x"
+		elif self.type=="note":
+			self.icon = "icon-edit icon-2x"
+		elif self.type=="link":
+			self.icon = "icon-link icon-2x"
+		elif self.type =="document":
+			self.icon = "icon-file-alt icon-2x"
+		elif self.type=="extension":
+			self.icon = "icon-calendar icon-2x"
+
 	
 	def get_update_url(self):
 		return self.update_url
@@ -50,16 +61,10 @@ class ResponsePresenter:
 			return text
 
 	def get_icon(self):
-		if self.type=="offline":
-			return "icon-file-alt icon-2x"
-		elif self.type=="note":
-			return "icon-edit icon-2x"
-		elif self.type=="link":
-			return "icon-link icon-2x"
-		elif self.type =="document":
-			return "icon-file-alt icon-2x"
-		elif self.type=="extension":
-			return "icon-calendar icon-2x"
+		return self.icon
+
+	def set_icon(self, icon):
+		self.icon = icon
 
 	def date(self):
 		return self.response['date_created']
