@@ -309,6 +309,7 @@ $(document).ready(function(){
 <script>
 
 var map = {};
+var emails = []
 
 $(document).ready(function() {
   /* typeahead for email in reroute form */
@@ -320,6 +321,7 @@ $(document).ready(function() {
               var array = line['FULL_NAME'].split(",");
               var first = array[1];
               var last = array[0];
+              emails.push(line.EMAIL_ADDRESS);
               map[first + " " + last + " " + line.EMAIL_ADDRESS] = line.EMAIL_ADDRESS;
               contacts.push(first + " " + last + " " + line.EMAIL_ADDRESS);
          });
