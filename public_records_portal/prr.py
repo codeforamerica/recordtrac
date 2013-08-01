@@ -468,6 +468,8 @@ def get_responses_chronologically(req):
 		responses.append(ResponsePresenter(note = note))
 	for record in req['records']:
 		responses.append(ResponsePresenter(record = record))
+	if not responses:
+		return responses
 	responses.sort(key = lambda x:datetime.strptime(x.date(), '%Y-%m-%dT%H:%M:%S.%f'), reverse = True)
 	if "Closed" in req['status']:
 		responses[0].set_icon("icon-lock icon-2x") # Set most recent note (closed note)'s icon
