@@ -1,0 +1,23 @@
+{
+	"Office of the Controller and Treasury": 
+	{
+		"Document Types":
+			["Salary Records",
+			"Purchasing Records",
+			"Retirement Records",
+			"Accounting Records",
+			"A/P Records",
+			"Financial records",
+			"City Budget Records"
+			],
+		"Contact": "anemailaddress@oaklandnet.com",
+		"Backup": "anotheremailaddress@oaklandnet.com"
+	},
+	"Fire Department": 
+	{
+		"Document Types":
+			["Fire Inspection Records"],
+		"Contact": "anemailaddress@oaklandnet.com",
+		"Backup": "anotheremailaddress@oaklandnet.com"
+	}
+}
