@@ -322,8 +322,8 @@ $(document).ready(function() {
               var first = array[1];
               var last = array[0];
               emails.push(line.EMAIL_ADDRESS);
-              map[first + " " + last + " " + line.EMAIL_ADDRESS] = line.EMAIL_ADDRESS;
-              contacts.push(first + " " + last + " " + line.EMAIL_ADDRESS);
+              map[first + " " + last + " - " + line.EMAIL_ADDRESS] = line.EMAIL_ADDRESS;
+              contacts.push(first + " " + last + " - " + line.EMAIL_ADDRESS);
          });
          process(contacts);
         });
