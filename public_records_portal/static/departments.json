@@ -82,7 +82,7 @@
 	{
 		"Document Types":
 			["Street Maintenance Records",
-			"Sidewalk Maintenance Records"
+			"Sidewalk Maintenance Records",
 			"Sewer Maintenance Records",
 			"Traffic Signal Maintenance Records",
 			"Park Maintenance Records",
@@ -196,7 +196,7 @@
 		"Document Types":
 			["Oakland Army Base Redevelopment",
 			"Oakland Redevelopment Agency Archives",
-			"Commercial Development Records"
+			"Commercial Development Records",
 			"601 City Center Records",
 			"1100 Broadway and Key System Building Records",
 			"Connell Auto Center Expansion Records",
@@ -359,5 +359,5 @@
 			],
 		"Contact": "joverman@oaklandnet.com",
 		"Backup": "ssanchez@oaklandnet.com"
-	},
+	}
 }
