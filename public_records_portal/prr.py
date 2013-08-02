@@ -520,3 +520,18 @@ def date_granular(timestamp):
 	else:
 		return "Just now."
 
+# Creates a file called doctypes.json from departments.json that is used by typeahead to map document types to the department which can fulfill it
+def create_doctypes():
+	depts = []
+	depts_json = open(os.path.join(app.root_path, 'static/departments.json'))
+	json_data = json.load(depts_json)
+	for department in json_data:
+		document_types = json_data[department]["Document Types"]
+		for document_type in document_types:
+			line = {}
+			line['DEPARTMENT'] = department
+			line['DOC_TYPE'] = document_type
+			depts.append(line)
+	with open(os.path.join(app.root_path, 'static/doctypes.json'), 'w') as outfile:
+  		json.dump(depts, outfile)
+
