@@ -47,11 +47,19 @@
             </div>
           </div>
 
+          <div class="control-group">
+            <label class="control-label" for="inputPhone">Department</label>
+                <div class="controls">
+                  <input id="selectDocType" type="text" name="request_department" placeholder="Who should it go to?" data-provide="typeahead" autocomplete="off" />
+                </div>
+              </div>
+
           <div id="requestButton" class="control-group">
             <div class="controls">
               <button type="submit" class="btn btn-large btn-primary">Request</button>
             </div>
           </div>
+
           
         </fieldset>
       </form>
@@ -103,4 +111,40 @@
 
     });
   </script>
+<script>
+
+$(document).ready(function() {
+  var map = {};
+  var departments = [];
+  var doc_types = [];
+  $.getJSON("{{ url_for('static', filename='doctypes.json') }}", function(data) {
+        $.each(data, function (i, line) {
+          var department = line['DEPARTMENT'];
+          var doc_type = line['DOC_TYPE'];
+          if($.inArray(department, departments) == -1) {
+            departments.push(department);
+           }
+            map[doc_type + " - " + department] = department;
+            doc_types.push(doc_type + " - " + department);
+         });
+      });
+  /* typeahead for email in reroute form */
+  $('#selectDocType').typeahead({
+        source: doc_types
+        , updater: function (item) {
+          department = map[item];
+          return department;
+        }
+        ,matcher: function(item) {
+          if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) != -1){
+          return true;
+         }
+        }
+      , items: 8
+      , menu: '<ul class="typeahead dropdown-menu"></ul>'
+      , item: '<li><a href="#"></a></li>'
+      , minLength: 1
+      })
+  });
+</script>
 {% endblock bottom_script %}
