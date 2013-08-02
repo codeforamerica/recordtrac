@@ -526,7 +526,10 @@ def create_doctypes():
 	depts_json = open(os.path.join(app.root_path, 'static/departments.json'))
 	json_data = json.load(depts_json)
 	for department in json_data:
-		document_types = json_data[department]["Document Types"]
+		if "Council" in department:
+			document_types = ['Council records']
+		else:
+			document_types = json_data[department]["Document Types"]
 		for document_type in document_types:
 			line = {}
 			line['DEPARTMENT'] = department
@@ -534,4 +537,22 @@ def create_doctypes():
 			depts.append(line)
 	with open(os.path.join(app.root_path, 'static/doctypes.json'), 'w') as outfile:
   		json.dump(depts, outfile)
+
+
+def get_prr_liaison(dept):
+	depts_json = open(os.path.join(app.root_path, 'static/departments.json'))
+	json_data = json.load(depts_json)
+	if dept in json_data:
+		return json_data[dept]["Contact"]
+	return None
+
+
+
+
+
+
+
+
+
+
 
