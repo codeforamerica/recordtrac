@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+Let's help you get this routed to the right department!
+
+            <form id="department" class="form-inline" method ="post" action="/">
+              <!-- my form -->
+              <div class="control-group">
+                <div class="controls">
+                  <input id="selectDocType" type="text" name="department" placeholder="What are you looking for?" data-provide="typeahead" autocomplete="off" required />
+                  <button id="selectDocTypeButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
+                </div>
+              </div>
+            </form>
+{% endblock content %}
+
+{% block bottom_script %}
+<script>
+
+$(document).ready(function() {
+  var map = {};
+  var departments = [];
+  var doc_types = [];
+  $.getJSON("{{ url_for('static', filename='doctypes.json') }}", function(data) {
+        $.each(data, function (i, line) {
+          var department = line['DEPARTMENT'];
+          var doc_type = line['DOC_TYPE'];
+          if($.inArray(department, departments) == -1) {
+            departments.push(department);
+           }
+            map[doc_type + " - " + department] = department;
+            doc_types.push(doc_type + " - " + department);
+         });
+      });
+  /* typeahead for email in reroute form */
+  $('#selectDocType').typeahead({
+        source: doc_types
+        , updater: function (item) {
+          department = map[item];
+          return department;
+        }
+        ,matcher: function(item) {
+          if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) != -1){
+          return true;
+         }
+        }
+      , items: 8
+      , menu: '<ul class="typeahead dropdown-menu"></ul>'
+      , item: '<li><a href="#"></a></li>'
+      , minLength: 1
+      })
+  });
+   $('#selectDocTypeButton').click(function() {
+    if($.inArray($('#selectDocType').val(), departments) == -1) {
+      $('#selectDocType').val('');
+    }
+  });
+</script>
+
+{% endblock bottom_script %}
