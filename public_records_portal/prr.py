@@ -386,10 +386,12 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 	email_subject = "Public Records Request %s: %s" %(request_id, json_data[notification_type])
 	page = None
 	uid = None
+	include_unsubscribe_link = True
 	if owner_id:
 		page = "%scity/request/%s" %(app_url,request_id)
 		owner = get_resource("owner", owner_id)
 		uid = owner['user_id']
+		include_unsubscribe_link = False # Only gets excluded for city staff
 	if requester_id:
 		page = "%srequest/%s" %(app_url,request_id)
 		requester = get_resource("subscriber", requester_id)
@@ -398,7 +400,7 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 	if email_address:
 		try:
 			if send_emails:
-				send_email(render_template("generic_email.html", page = page), email_address, email_subject)
+				send_email(render_template("generic_email.html", page = page), email_address, email_subject, include_unsubscribe_link = include_unsubscribe_link)
 			else:
 				print "%s to %s with subject %s" % (render_template("generic_email.html", page = page), email_address, email_subject)
 		except:
@@ -411,12 +413,14 @@ def user_email(uid):
 			return user.email
 	return None
 
-def send_email(body, recipient, subject):
+def send_email(body, recipient, subject, include_unsubscribe_link = True):
 	mail = sendgrid.Sendgrid(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'], secure = True)
 	sender = app.config['DEFAULT_MAIL_SENDER']
 	plaintext = ""
 	html = body
 	message = sendgrid.Message(sender, subject, plaintext, html)
+	if not include_unsubscribe_link:
+		message.add_filter_setting("subscriptiontrack", "enable", 0)
 	message.add_to(recipient)
 	message.add_bcc(sender)
 	mail.web.send(message)
@@ -458,7 +462,7 @@ def notify_due_soon():
 				page = "%scity/request/%s" %(app_url,req['id'])
 				body = "You can view the request and take any necessary action at the following webpage: <a href='%s'>%s</a></br>" %(page, page)
 				# Need to figure out a way to pass in generic email template outside application context. For now, hardcoding the body.
-				send_email(body = body, recipient = email_address, subject = email_subject)
+				send_email(body = body, recipient = email_address, subject = email_subject, include_unsubscribe_link = False)
 
 def get_responses_chronologically(req):
 	responses = []
