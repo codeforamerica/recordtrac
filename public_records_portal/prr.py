@@ -478,6 +478,12 @@ def get_responses_chronologically(req):
 def format_date(obj):
 	return obj.strftime('%b %d, %Y')
 
+def get_staff(uid):
+	if uid:
+		staff = User.query.get(uid)
+		return staff
+	return None
+
 def get_staff_info(uid, info_type):
 	if uid:
 		staff = User.query.get(uid)
