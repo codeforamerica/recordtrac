@@ -130,9 +130,9 @@ def update_resource(resource, request_body):
 		change_request_status(fields['request_id'], "Reopened")
 		return fields['request_id']
 	elif "request_text" in resource:
-		put_resource("request", dict(text = fields[request_text]), int(fields[request_id]))
+		put_resource("request", dict(text = fields['request_text']), int(fields['request_id']))
 	elif "note_text" in resource:
-		put_resource("note", dict(text = fields[note_text]), int(fields[request_id]))
+		put_resource("note", dict(text = fields['note_text']), int(fields['request_id']))
 		# Need to store note text somewhere else (or just do delete here as well)
 	elif "note_delete" in resource:
 		print 'Deleting note'
@@ -465,7 +465,8 @@ def get_responses_chronologically(req):
 	if not req:
 		return responses
 	for note in req['notes']:
-		responses.append(ResponsePresenter(note = note))
+		if note['user_id']:
+			responses.append(ResponsePresenter(note = note))
 	for record in req['records']:
 		responses.append(ResponsePresenter(record = record))
 	if not responses:
