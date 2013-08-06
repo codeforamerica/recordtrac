@@ -11,6 +11,7 @@ app.jinja_env.filters['get_scribd_download_url'] = get_scribd_download_url
 app.jinja_env.filters['last_note'] = last_note
 app.jinja_env.filters['due_date'] = due_date
 app.jinja_env.filters['get_staff_info'] = get_staff_info
+app.jinja_env.filters['get_staff'] = get_staff
 app.jinja_env.filters['date_granular'] = date_granular
 app.jinja_env.filters['user_email'] = user_email
 app.jinja_env.filters['get_responses_chronologically'] = get_responses_chronologically
