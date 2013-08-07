@@ -307,16 +307,36 @@ $(document).ready(function(){
   });
 </script>
 <script>
-var emails = [];
-$.getJSON("{{ url_for('static', filename='directory.json') }}", function(data) {
-  $.each(data, function (i, line) {
-    emails.push(line.EMAIL_ADDRESS);          
-  });
-});
+
+var map = {};
+var emails = []
+
 $(document).ready(function() {
   /* typeahead for email in reroute form */
   $('#rerouteEmail').typeahead.defaults = {
-      source: emails
+      source: function(query, process) {
+        var contacts = [];
+        $.getJSON("{{ url_for('static', filename='directory.json') }}", function(data) {
+            $.each(data, function (i, line) {
+              var array = line['FULL_NAME'].split(",");
+              var first = array[1];
+              var last = array[0];
+              emails.push(line.EMAIL_ADDRESS);
+              map[first + " " + last + " - " + line.EMAIL_ADDRESS] = line.EMAIL_ADDRESS;
+              contacts.push(first + " " + last + " - " + line.EMAIL_ADDRESS);
+         });
+         process(contacts);
+        });
+      }
+      , updater: function (item) {
+        selectedContact = map[item];
+        return selectedContact;
+      }
+      ,matcher: function(item) {
+        if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) != -1){
+        return true;
+       }
+      }
     , items: 8
     , menu: '<ul class="typeahead dropdown-menu"></ul>'
     , item: '<li><a href="#"></a></li>'

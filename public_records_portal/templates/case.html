@@ -52,7 +52,7 @@
         <div class="row-fluid">
           <h3 >Request <span class="muted">#{{req.id}}</span></h3>
           <div class="span10">
-              <p class="lead"> {{ req.text }} </p>
+              <p class="lead"> {{ req.text | new_lines }} </p>
           </div>
         </div>
         {% block proxyrequester_info %}

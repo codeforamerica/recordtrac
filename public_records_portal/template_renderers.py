@@ -17,17 +17,29 @@ login_manager.init_app(app)
 # Submitting a new request
 def new_request():
 	if request.method == 'POST':
+		email = request.form['request_email']
+		if email == "" and 'ignore_email' not in request.form:
+			return render_template('missing_email.html', form = request.form, user_id = get_user_id())
 		request_text = request.form['request_text']
 		if request_text == "":
 			return render_template('error.html', message = "You cannot submit an empty request.")
-		email = request.form['request_email']
 		alias = None
 		phone = None
 		if 'request_alias' in request.form:
 			alias = request.form['request_alias']
 		if 'request_phone' in request.form:
 			phone = request.form['request_phone']
-		request_id, is_new = make_request(text = request_text, email = email, assigned_to_email = app.config['DEFAULT_OWNER_EMAIL'], assigned_to_reason = app.config['DEFAULT_OWNER_REASON'], user_id = get_user_id(), alias = alias, phone = phone)
+		assigned_to_email = app.config['DEFAULT_OWNER_EMAIL']
+		assigned_to_reason = app.config['DEFAULT_OWNER_REASON']
+		department = request.form['request_department']
+		if department:
+			prr_email = get_prr_liaison(department)
+			if prr_email:
+				assigned_to_email = prr_email
+				assigned_to_reason = "PRR Liaison for %s" %(department)
+			else:
+				print "%s is not a valid department" %(department)
+		request_id, is_new = make_request(text = request_text, email = email, assigned_to_email = assigned_to_email, assigned_to_reason = assigned_to_reason, user_id = get_user_id(), alias = alias, phone = phone)
 		if is_new:
 			return redirect(url_for('show_request_for_x', request_id = request_id, audience = 'new'))
 		return render_template('error.html', message = "Your request is the same as /request/%s" % request_id)
