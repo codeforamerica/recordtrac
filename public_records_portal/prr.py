@@ -369,14 +369,9 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 	include_unsubscribe_link = True
 	if owner_id:
 		page = "%scity/request/%s" %(app_url,request_id)
-<<<<<<< HEAD
 		owner = Owner.query.get(owner_id)
 		uid = owner.user_id
-=======
-		owner = get_resource("owner", owner_id)
-		uid = owner['user_id']
 		include_unsubscribe_link = False # Only gets excluded for city staff
->>>>>>> 0583da22eadee80be5baa9bf874bdd5771fe67d5
 	if requester_id:
 		page = "%srequest/%s" %(app_url,request_id)
 		requester = Subscriber.query.get(requester_id)
