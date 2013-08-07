@@ -35,9 +35,6 @@
           }
       });
 
-$(document).on('shown', "#reroutePopover", function () {
-    $('#rerouteEmail').select2();
-});
 
   /* form in history popover */
   $('.historyPopover').popover({

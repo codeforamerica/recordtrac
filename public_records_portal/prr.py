@@ -386,10 +386,12 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 	email_subject = "Public Records Request %s: %s" %(request_id, json_data[notification_type])
 	page = None
 	uid = None
+	include_unsubscribe_link = True
 	if owner_id:
 		page = "%scity/request/%s" %(app_url,request_id)
 		owner = get_resource("owner", owner_id)
 		uid = owner['user_id']
+		include_unsubscribe_link = False # Only gets excluded for city staff
 	if requester_id:
 		page = "%srequest/%s" %(app_url,request_id)
 		requester = get_resource("subscriber", requester_id)
@@ -398,7 +400,7 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 	if email_address:
 		try:
 			if send_emails:
-				send_email(render_template("generic_email.html", page = page), email_address, email_subject)
+				send_email(render_template("generic_email.html", page = page), email_address, email_subject, include_unsubscribe_link = include_unsubscribe_link)
 			else:
 				print "%s to %s with subject %s" % (render_template("generic_email.html", page = page), email_address, email_subject)
 		except:
@@ -411,12 +413,14 @@ def user_email(uid):
 			return user.email
 	return None
 
-def send_email(body, recipient, subject):
+def send_email(body, recipient, subject, include_unsubscribe_link = True):
 	mail = sendgrid.Sendgrid(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'], secure = True)
 	sender = app.config['DEFAULT_MAIL_SENDER']
 	plaintext = ""
 	html = body
 	message = sendgrid.Message(sender, subject, plaintext, html)
+	if not include_unsubscribe_link:
+		message.add_filter_setting("subscriptiontrack", "enable", 0)
 	message.add_to(recipient)
 	message.add_bcc(sender)
 	mail.web.send(message)
@@ -445,21 +449,20 @@ def is_due_soon(date_obj, extended = None):
 def notify_due_soon():
 	requests = get_resources("request")
 	for req in requests['objects']:
-		due_soon, date_due = is_due_soon(req['date_created'], req['extended'])
-		if due_soon:
-			owner = get_resource("owner", req['current_owner'])
-			uid = owner['user_id']
-			email_address = user_email(uid)
-			email_json = open(os.path.join(app.root_path, 'emails.json'))
-			json_data = json.load(email_json)
-			email_subject = "%sPublic Records Request %s: %s" %(test, req['id'], json_data["Request due"])
-			app_url = app.config['APPLICATION_URL']
-			page = "%scity/request/%s" %(app_url,req['id'])
-			body = "You can view the request and take any necessary action at the following webpage: <a href='%s'>%s</a></br>" %(page, page)
-			# Need to figure out a way to pass in generic email template outside application context. For now, hardcoding the body.
-			send_email(body = body, recipient = email_address, subject = email_subject)
-		else:
-			print "You've got time. Due %s" %(date_due)
+		if "Closed" not in req['status']:
+			due_soon, date_due = is_due_soon(req['date_created'], req['extended'])
+			if due_soon:
+				owner = get_resource("owner", req['current_owner'])
+				uid = owner['user_id']
+				email_address = user_email(uid)
+				email_json = open(os.path.join(app.root_path, 'emails.json'))
+				json_data = json.load(email_json)
+				email_subject = "%sPublic Records Request %s: %s" %(test, req['id'], json_data["Request due"])
+				app_url = app.config['APPLICATION_URL']
+				page = "%scity/request/%s" %(app_url,req['id'])
+				body = "You can view the request and take any necessary action at the following webpage: <a href='%s'>%s</a></br>" %(page, page)
+				# Need to figure out a way to pass in generic email template outside application context. For now, hardcoding the body.
+				send_email(body = body, recipient = email_address, subject = email_subject, include_unsubscribe_link = False)
 
 def get_responses_chronologically(req):
 	responses = []
@@ -469,9 +472,11 @@ def get_responses_chronologically(req):
 		responses.append(ResponsePresenter(note = note))
 	for record in req['records']:
 		responses.append(ResponsePresenter(record = record))
+	if not responses:
+		return responses
 	responses.sort(key = lambda x:datetime.strptime(x.date(), '%Y-%m-%dT%H:%M:%S.%f'), reverse = True)
 	if "Closed" in req['status']:
-		responses[0].icon = "icon-lock icon-2x" # Set most recent note (closed note)'s icon
+		responses[0].set_icon("icon-lock icon-2x") # Set most recent note (closed note)'s icon
 	return responses
 
 def format_date(obj):
@@ -518,4 +523,40 @@ def date_granular(timestamp):
 		return "%s seconds ago" % seconds
 	else:
 		return "Just now."
+
+# Creates a file called doctypes.json from departments.json that is used by typeahead to map document types to the department which can fulfill it
+def create_doctypes():
+	depts = []
+	depts_json = open(os.path.join(app.root_path, 'static/departments.json'))
+	json_data = json.load(depts_json)
+	for department in json_data:
+		if "Council" in department:
+			document_types = ['Council records']
+		else:
+			document_types = json_data[department]["Document Types"]
+		for document_type in document_types:
+			line = {}
+			line['DEPARTMENT'] = department
+			line['DOC_TYPE'] = document_type
+			depts.append(line)
+	with open(os.path.join(app.root_path, 'static/doctypes.json'), 'w') as outfile:
+  		json.dump(depts, outfile)
+
+
+def get_prr_liaison(dept):
+	depts_json = open(os.path.join(app.root_path, 'static/departments.json'))
+	json_data = json.load(depts_json)
+	if dept in json_data:
+		return json_data[dept]["Contact"]
+	return None
+
+
+
+
+
+
+
+
+
+
 

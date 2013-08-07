@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from public_records_portal import app
 from prr import *
 import os
+from jinja2 import Markup
 
 # Filters
 
@@ -15,6 +16,13 @@ app.jinja_env.filters['date_granular'] = date_granular
 app.jinja_env.filters['user_email'] = user_email
 app.jinja_env.filters['get_responses_chronologically'] = get_responses_chronologically
 
+
+@app.template_filter('new_lines')
+def new_lines(value): 
+	new_value = value.replace('\n','<br>\n')
+	if value != new_value:
+		return Markup(new_value)
+	return value
 
 @app.template_filter('date')
 def date(obj):
