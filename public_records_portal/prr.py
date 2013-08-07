@@ -435,7 +435,7 @@ def notify_due_soon():
 		if "Closed" not in req.status:
 			due_soon, date_due = is_due_soon(req.date_created, req.extended)
 			if due_soon:
-				owner_email = user_email(owner_uid(oid)) # Get the e-mail address of the owner
+				owner_email = user_email(owner_uid(req.current_owner)) # Get the e-mail address of the owner
 				recipients = [owner_email]
 				backup_email = get_dept_backup(owner_email)
 				if backup_email:
@@ -445,7 +445,7 @@ def notify_due_soon():
 				email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Request due"])
 				app_url = app.config['APPLICATION_URL']
 				page = "%scity/request/%s" %(app_url,req.id)
-				body = "You can view the request and take any necessary action at the following webpage: <a href='%s'>%s</a></br>. This is an automated message. You are receiving it because you are listed as the Public Records Request Liaison, Backup or Supervisor for your department." %(page, page)
+				body = "You can view the request and take any necessary action at the following webpage: <a href='%s'>%s</a>.</br></br> This is an automated message. You are receiving it because you are listed as the Public Records Request Liaison, Backup or Supervisor for your department." %(page, page)
 				# Need to figure out a way to pass in generic email template outside application context. For now, hardcoding the body.
 				send_email(body = body, recipients = recipients, subject = email_subject, include_unsubscribe_link = False)
 
