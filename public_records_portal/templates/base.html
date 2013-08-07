@@ -3,6 +3,7 @@
 <!doctype html>
 <html class="no-js">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock title%}</title>
@@ -21,7 +22,6 @@
 
   <!-- modernizr -->
   <script type="text/javascript" src="{{ url_for('static', filename='modernizr-latest.js') }}"></script>
-
 
   <!-- google analytics -->
     <!-- for later: guide to add event-driven analytics http://www.sitepoint.com/google-analytics-track-javascript-ajax-events/ -->
@@ -147,7 +147,7 @@
       </div>
     {% endblock feedback %}
 
-    <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.10.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.10.1.min.js') }}"></script>    
     <script type="text/javascript" src="{{ url_for('static', filename='jquery.validate.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='custom.js') }}"></script>
@@ -159,16 +159,38 @@
     <script type="text/javascript" src="{{ url_for('static', filename='jquery.ellipsis.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='select2.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='bootstro.js') }}"></script>
+
+    <!--[if IE]>
+    <script type="text/javascript" 
+     src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+
+    <style>
+     .chromeFrameInstallDefaultStyle {
+       width: 100%; /* default is 800px */
+       border: 5px solid blue;
+     }
+    </style>
+
+    <div id="prompt">
+     <!-- if IE without GCF, prompt goes here -->
+    </div>
+ 
+      <script>
+       // The conditional ensures that this code will only execute in IE,
+       // Therefore we can use the IE-specific attachEvent without worry
+       window.attachEvent("onload", function() {
+         CFInstall.check({
+           mode: "inline", // the default
+           node: "prompt"
+         });
+       });
+      </script>
+    <![endif]-->
     
+
+
     {% block bottom_script %}
-<!--       $(document).ready(function(){
-        $("#floating_link").hover(function(){
-          $(this).filter(':not(:animated)').animate({ left: "-50px" });
-        }, 
-        function() {
-          $(this).animate({ left: "-40px" });
-        });
-      }); -->
+
     {% endblock bottom_script %}
 
     
