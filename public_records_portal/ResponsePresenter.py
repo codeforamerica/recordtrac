@@ -44,10 +44,8 @@ class ResponsePresenter:
 		if self.type == "offline":
 			return "%s can be accessed: %s" %(self.response.description, self.response.access)
 		elif self.type == "document":
-			download_url = None
-			if download_url in self.response:
-				download_url = self.response.download_url
-			else:
+			download_url = self.response.download_url
+			if not download_url:
 				download_url = prr.get_scribd_download_url(doc_id = self.response.doc_id, record_id = self.response.id)
 			return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='right' data-original-title='%s'>%s <i class='icon-external-link'></i></a><a href = '%s' rel='tooltip' data-toggle='tooltip' data-placement='right' data-original-title='%s'> Download file <i class='icon-cloud-download'></i></a>" % (self.response.url, self.response.url, self.response.description, download_url, download_url) 
 		elif self.type == "note":
