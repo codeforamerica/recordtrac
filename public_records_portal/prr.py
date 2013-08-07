@@ -102,6 +102,8 @@ def update_resource(resource, request_body):
 
 def add_note(request_id, text, user_id):
 	# Need to udpate this so if a requester is adding a note, the e-mail gets sent to city staff instead
+	if not text or text == "":
+		return False
 	note = Note(request_id = request_id, text = text, user_id = user_id)
 	db.session.add(note)
 	db.session.commit()
@@ -111,7 +113,7 @@ def add_note(request_id, text, user_id):
 			send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
 		else:
 			req = Request.query.get(request_id)
-			send_prr_email(request_id = request_id, notification_type = "Public note added", owner_id = req.cirrent_owner )
+			send_prr_email(request_id = request_id, notification_type = "Public note added", owner_id = req.current_owner)
 		return note.id
 	return False
 
