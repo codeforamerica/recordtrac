@@ -382,7 +382,7 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 	if email_address:
 		try:
 			if send_emails:
-				send_email(render_template("generic_email.html", page = page), email_address, email_subject, include_unsubscribe_link = include_unsubscribe_link)
+				send_email(render_template("generic_email.html", page = page), [email_address], email_subject, include_unsubscribe_link = include_unsubscribe_link)
 			else:
 				print "%s to %s with subject %s" % (render_template("generic_email.html", page = page), email_address, email_subject)
 		except:
@@ -395,7 +395,7 @@ def user_email(uid):
 			return user.email
 	return None
 
-def send_email(body, recipient, subject, include_unsubscribe_link = True):
+def send_email(body, recipients, subject, include_unsubscribe_link = True):
 	mail = sendgrid.Sendgrid(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'], secure = True)
 	sender = app.config['DEFAULT_MAIL_SENDER']
 	plaintext = ""
@@ -403,7 +403,8 @@ def send_email(body, recipient, subject, include_unsubscribe_link = True):
 	message = sendgrid.Message(sender, subject, plaintext, html)
 	if not include_unsubscribe_link:
 		message.add_filter_setting("subscriptiontrack", "enable", 0)
-	message.add_to(recipient)
+	for recipient in recipients:
+		message.add_to(recipient)
 	message.add_bcc(sender)
 	mail.web.send(message)
 
@@ -434,17 +435,19 @@ def notify_due_soon():
 		if "Closed" not in req.status:
 			due_soon, date_due = is_due_soon(req.date_created, req.extended)
 			if due_soon:
-				owner = Owner.query.get(req.current_owner)
-				uid = owner.user_id
-				email_address = user_email(uid)
+				owner_email = user_email(owner_uid(oid)) # Get the e-mail address of the owner
+				recipients = [owner_email]
+				backup_email = get_dept_backup(owner_email)
+				if backup_email:
+					recipients.append(backup_email)
 				email_json = open(os.path.join(app.root_path, 'emails.json'))
 				json_data = json.load(email_json)
 				email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Request due"])
 				app_url = app.config['APPLICATION_URL']
 				page = "%scity/request/%s" %(app_url,req.id)
-				body = "You can view the request and take any necessary action at the following webpage: <a href='%s'>%s</a></br>" %(page, page)
+				body = "You can view the request and take any necessary action at the following webpage: <a href='%s'>%s</a></br>. This is an automated message. You are receiving it because you are listed as the Public Records Request Liaison, Backup or Supervisor for your department." %(page, page)
 				# Need to figure out a way to pass in generic email template outside application context. For now, hardcoding the body.
-				send_email(body = body, recipient = email_address, subject = email_subject, include_unsubscribe_link = False)
+				send_email(body = body, recipients = recipients, subject = email_subject, include_unsubscribe_link = False)
 
 def get_responses_chronologically(req):
 	responses = []
@@ -560,7 +563,6 @@ def user_name(uid):
 				return user.alias
 			else:
 				return user.email
-
 	return "Requester"
 
 
@@ -595,4 +597,12 @@ def get_prr_liaison(dept):
 	json_data = json.load(depts_json)
 	if dept in json_data:
 		return json_data[dept]["Contact"]
+	return None
+
+def get_dept_backup(dept_contact):
+	depts_json = open(os.path.join(app.root_path, 'static/departments.json'))
+	json_data = json.load(depts_json)
+	for line in json_data:
+		if json_data[line]["Contact"].lower() == dept_contact.lower():
+			return json_data[line]["Backup"]
 	return None
