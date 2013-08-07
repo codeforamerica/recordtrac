@@ -12,9 +12,17 @@ app.jinja_env.filters['get_scribd_download_url'] = get_scribd_download_url
 app.jinja_env.filters['last_note'] = last_note
 app.jinja_env.filters['due_date'] = due_date
 app.jinja_env.filters['get_staff_info'] = get_staff_info
+app.jinja_env.filters['get_staff'] = get_staff
 app.jinja_env.filters['date_granular'] = date_granular
 app.jinja_env.filters['user_email'] = user_email
 app.jinja_env.filters['get_responses_chronologically'] = get_responses_chronologically
+app.jinja_env.filters['owner_name'] = owner_name
+app.jinja_env.filters['owner_uid'] = owner_uid
+app.jinja_env.filters['subscriber_name'] = subscriber_name
+app.jinja_env.filters['subscriber_phone'] = subscriber_phone
+app.jinja_env.filters['user_phone'] = user_phone
+app.jinja_env.filters['user_name'] = user_name
+app.jinja_env.filters['user_alias'] = user_alias
 
 
 @app.template_filter('new_lines')
@@ -36,66 +44,6 @@ def date(obj):
 		except:
 			return format_date(obj) # Just return the thing, maybe it's already a date
 
-
-@app.template_filter('owner_name')
-def owner_name(oid):
-	if oid:
-		owner = get_resource("owner", oid)
-		if owner and owner['user_id']:
-			return user_name(owner['user_id'])
-	return "City staff"
-
-@app.template_filter('owner_uid')
-def owner_uid(oid):
-	if oid:
-		owner = get_resource("owner", oid)
-		if owner and owner['user_id']:
-			return owner['user_id']
-	return None
-
-@app.template_filter('subscriber_name')
-def subscriber_name(sid):
-	if sid:
-		subscriber = get_resource("subscriber", sid)
-		if subscriber and subscriber['user_id']:
-			return user_alias(subscriber['user_id'])
-	return "Requester"
-
-@app.template_filter('subscriber_phone')
-def subscriber_phone(sid):
-	if sid:
-		subscriber = get_resource("subscriber", sid)
-		if subscriber and subscriber['user_id']:
-			return user_phone(subscriber['user_id'])
-	return None
-
-@app.template_filter('user_phone')
-def user_phone(uid):
-	if uid:
-		user = User.query.get(uid)
-		if user.phone:
-			return user.phone
-	return "Not given"
-
-@app.template_filter('user_name')
-def user_name(uid):
-	if uid:
-		user = User.query.get(uid)
-		if user:
-			if user.alias:
-				return user.alias
-			else:
-				return user.email
-
-	return "Requester"
-
-
-def user_alias(uid):
-	if uid:
-		user = User.query.get(uid)
-		if user.alias:
-			return user.alias
-	return "Not given"
 
 @app.template_filter('explain_action')
 def explain_action(action, explanation_type = None):

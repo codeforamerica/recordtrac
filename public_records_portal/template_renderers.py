@@ -5,7 +5,7 @@ from flask import render_template, request, redirect, url_for
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from public_records_portal import app, filters, models
-from models import User
+from models import User, Request, Owner
 from filters import *
 import prr
 from prr import *
@@ -56,13 +56,11 @@ def index():
 @login_required
 def your_requests():
 	all_record_requests = []
-	owner_resource = get_resource_filter("owner", [dict(name='user_id', op='eq', val=current_user.id)])
-	if owner_resource:
-		for owner in owner_resource['objects']:
-			req_resource = get_resource_filter("request", [dict(name='current_owner', op='eq', val=owner['id'])])
-			if req_resource['objects']:
-				req = req_resource['objects'][0]
-				all_record_requests.append(req)
+	owners = Owner.query.filter_by(user_id = current_user.id)
+	for owner in owners:
+		req = Request.query.filter_by(current_owner = owner.id).first()
+		if req:
+			all_record_requests.append(req)
 	return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = current_user.id, title = "Requests assigned to you")
 
 @app.errorhandler(404)
@@ -85,14 +83,14 @@ def show_request_for_x(audience, request_id):
 show_request_for_x.methods = ['GET', 'POST']
 
 def show_response(request_id):
-	req = get_resource("request", request_id)
+	req = Request.query.get(request_id)
 	if not req:
 		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
 	return render_template("response.html", req = req, user_id = get_user_id())
 
 def show_request(request_id, template = None):
 	current_user_id = get_user_id()
-	req = get_resource("request", request_id)
+	req = Request.query.get(request_id)
 	if not req:
 		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
 	if template:
@@ -100,21 +98,21 @@ def show_request(request_id, template = None):
 			return render_template('alpha.html')
 	else: 
 		template = "manage_request_public.html"
-	if req['status'] and "Closed" in req['status']:
+	if req.status and "Closed" in req.status:
 		template = "closed.html"
 	return render_template(template, req = req, user_id = get_user_id())
 
 
 @login_required
 def edit_case(request_id):
-	req = get_resource("request", request_id)
+	req = Request.query.get(request_id)
 	return render_template("edit_case.html", req = req, user_id = get_user_id())
 
 @login_required
 def add_a_resource(resource):
 	if request.method == 'POST':
 		resource_id = add_resource(resource = resource, request_body = request, current_user_id = current_user.id)
-		if float(resource_id):
+		if type(resource_id) == int:
 			return redirect(url_for('show_request_for_x', audience='city', request_id = request.form['request_id']))
 		elif resource_id == False:
 			return render_template('error.html')
@@ -125,7 +123,7 @@ def add_a_resource(resource):
 def public_add_a_resource(resource):
 	if request.method == 'POST' and "note" in resource:
 		resource_id = add_resource(resource = resource, request_body = request, current_user_id = None)
-		if float(resource_id):
+		if type(resource_id) == int:
 			return redirect(url_for('show_request_for_x', audience='public', request_id = request.form['request_id']))
 	return render_template('error.html')
 
@@ -150,9 +148,9 @@ def close(request_id = None):
 
 # Shows all public records requests that have been made.
 def requests():
-	all_record_requests = get_resources(resource = "request")
+	all_record_requests = Request.query.all()
 	if all_record_requests:
-		return render_template('all_requests.html', all_record_requests = all_record_requests['objects'], user_id = get_user_id(), title = "All Requests")
+		return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = get_user_id(), title = "All Requests")
 	else:
 		return index()
 
