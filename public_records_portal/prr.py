@@ -198,7 +198,7 @@ def answer_a_question(qa_id, answer, subscriber_id = None):
 	send_prr_email(request_id = qa.request_id, notification_type = "Question answered", owner_id = qa.owner_id)
 
 def create_or_return_user(email, alias = None, phone = None, department = None):
-	user = User.query.filter(func.lower(User.email) == func.lower(email)).first()
+	user = User.query.filter(func.lower(User.email) == func.lower(email)).first() 
 	if not user:
 		user = User(email = email, alias = alias, phone = phone, department = department, password = app.config['ADMIN_PASSWORD'])
 	else:
@@ -365,6 +365,9 @@ def upload_file(file):
 
 def send_prr_email(request_id, notification_type, requester_id = None, owner_id = None):
 	app_url = app.config['APPLICATION_URL']
+	template = "generic_email.html"
+	if notification_type == "Request made":
+		template = "new_request_email.html"
 	email_json = open(os.path.join(app.root_path, 'emails.json'))
 	json_data = json.load(email_json)
 	email_subject = "Public Records Request %s: %s" %(request_id, json_data[notification_type])
@@ -384,7 +387,7 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 	if email_address:
 		try:
 			if send_emails:
-				send_email(render_template("generic_email.html", page = page), [email_address], email_subject, include_unsubscribe_link = include_unsubscribe_link)
+				send_email(render_template(template, page = page), [email_address], email_subject, include_unsubscribe_link = include_unsubscribe_link)
 			else:
 				print "%s to %s with subject %s" % (render_template("generic_email.html", page = page), email_address, email_subject)
 		except:
