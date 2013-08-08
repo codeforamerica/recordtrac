@@ -198,10 +198,15 @@ def answer_a_question(qa_id, answer, subscriber_id = None):
 	send_prr_email(request_id = qa.request_id, notification_type = "Question answered", owner_id = qa.owner_id)
 
 def create_or_return_user(email, alias = None, phone = None, department = None):
-	user = User.query.filter(func.lower(User.email) == func.lower(email)).first()
+	users = User.query.filter(func.lower(User.email) == func.lower(email))
+	user = users.first()
 	if not user:
 		user = User(email = email, alias = alias, phone = phone, department = department, password = app.config['ADMIN_PASSWORD'])
 	else:
+		for u in users: # Need to check if other users with this email address exist since it was case sensitive before
+			if u.alias:
+				user = u
+				break
 		if alias:
 			user.alias = alias
 		if phone:
