@@ -11,11 +11,8 @@
           <div class="text-right">
             {% block routing %}
             {% set uid = (req.current_owner | owner_uid) %}
-            {% set staffName = (uid | get_staff_info("name")) %}
-            {% set staffDept = (uid | get_staff_info("dept")) %}
-            {% set staffPhone = (uid | get_staff_info("phone")) %}
-            {% set staffEmail = (uid | user_email) %}
-              Routed to <a data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverRoute"><span class="label label-info" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '{{staffPhone}}', '#contactinfoPopoverRoute')">{{ staffName }}</span></a>
+            {% set staff = (uid | get_staff) %}
+              Routed to <a data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverRoute"><span class="label label-info" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverRoute')">{{ staff.alias }}</span></a>
             {% endblock routing %}
             {% block history %}
               <a data-placement="left" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"> <i class="icon-time" ></i>  </a>
@@ -98,11 +95,8 @@
                 </div>
                 <div class="span10">
                    {% set uid = qa.owner_id %}
-                   {% set staffName = (uid | get_staff_info("name")) %}
-                   {% set staffDept = (uid | get_staff_info("dept")) %}
-                   {% set staffPhone = (uid | get_staff_info("phone")) %}
-                   {% set staffEmail = (uid | user_email) %}
-                  <p> {{ qa.question }} - <em><a data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '{{staffPhone}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staffName }}</span></a></em></p>
+                   {% set staff = (uid | get_staff) %}
+                  <p> {{ qa.question }} - <em><a data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staff.alias }}</span></a></em></p>
                   {% if qa.answer %}
                     <p>{{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></p>
                   {% else %}
@@ -133,10 +127,7 @@
                 <div class="span10">
                   {% for response in responses %}
                     {% set uid = response.uid() %}
-                    {% set staffName = (uid | get_staff_info("name")) %}
-                    {% set staffDept = (uid | get_staff_info("dept")) %}
-                    {% set staffPhone = (uid | get_staff_info("phone")) %}
-                    {% set staffEmail = (uid | user_email) %}
+                    {% set staff = (uid | get_staff) %}
                     {% set icon = response.get_icon() %}
                       <div class="row-fluid response">
                         <div class="span2 text-center">
@@ -145,7 +136,7 @@
                         </div>
                         <div class="span10">
                           <p> 
-                             {{ response.display_text() | safe }} - <em><a data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '{{staffPhone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staffName }}</span></a></em>. 
+                             {{ response.display_text() | safe }} - <em><a data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias }}</span></a></em>. 
                           </p>
                         </div>
                       </div>

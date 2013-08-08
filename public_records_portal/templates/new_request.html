@@ -24,9 +24,10 @@
           </div>
 
           <div class="control-group">
-            <label class="control-label" for="inputPhone">Department</label>
+            <label class="control-label" for="inputDepartment">Department</label>
                 <div class="controls">
-                  <input id="selectDocType" type="text" name="request_department" placeholder="Who should it go to?" data-provide="typeahead" autocomplete="off" />
+                  <input id="inputDepartment" type="text" name="request_department" placeholder="Who should it go to?" data-provide="typeahead" autocomplete="off" />
+                  <span class="request_field_explanation"><em>{{"Enter department or document type" | explain_action("Who")}}</em> {{"Enter department or document type" | explain_action("Action")}} </span>
                 </div>
           </div>
             
@@ -129,7 +130,7 @@ $(document).ready(function() {
          });
       });
   /* typeahead for email in reroute form */
-  $('#selectDocType').typeahead({
+  $('#inputDepartment').typeahead({
         source: doc_types
         , updater: function (item) {
           department = map[item];

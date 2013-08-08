@@ -42,6 +42,12 @@
             "Who":"Only City of Oakland employees will be able to view your phone number through this website.",
             "Action":"A City employee may use this number to contact you about your records request."
         },
+     "Enter department or document type": 
+        {
+            "What":"Optional",
+            "Who":"Members of the general public will be able to view this category.",
+            "Action":"Select the department you want to request records from or the type of document you need."
+        },
     "Upload a document": 
         {
             "What":"Upload the document(s) that would fulfill this particular public records request.", 
