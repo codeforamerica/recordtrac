@@ -34,6 +34,10 @@
             return $("#reroutePopover-content").html();
           }
       });
+  // to close the popover
+  $('.popover-container').on('click', '.close', function(){
+    $('#reroutePopover').popover('hide');
+  })
 
 
   /* form in history popover */
