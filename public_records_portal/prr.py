@@ -555,6 +555,12 @@ def subscriber_phone(sid):
 			return user_phone(subscriber.user_id)
 	return None
 
+def subscriber_email(sid):
+	if sid:
+		subscriber = Subscriber.query.get(sid)
+		if subscriber and subscriber.user_id:
+			return user_email(subscriber.user_id)
+
 def user_phone(uid):
 	if uid:
 		user = User.query.get(uid)

@@ -20,6 +20,7 @@ app.jinja_env.filters['owner_name'] = owner_name
 app.jinja_env.filters['owner_uid'] = owner_uid
 app.jinja_env.filters['subscriber_name'] = subscriber_name
 app.jinja_env.filters['subscriber_phone'] = subscriber_phone
+app.jinja_env.filters['subscriber_email'] = subscriber_email
 app.jinja_env.filters['user_phone'] = user_phone
 app.jinja_env.filters['user_name'] = user_name
 app.jinja_env.filters['user_alias'] = user_alias
