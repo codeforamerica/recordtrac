@@ -20,6 +20,8 @@ from models import *
 from timeout import timeout
 import urllib
 from ResponsePresenter import ResponsePresenter
+from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
+from sqlalchemy import func
 
 ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff']
 
@@ -196,7 +198,7 @@ def answer_a_question(qa_id, answer, subscriber_id = None):
 	send_prr_email(request_id = qa.request_id, notification_type = "Question answered", owner_id = qa.owner_id)
 
 def create_or_return_user(email, alias = None, phone = None, department = None):
-	user = User.query.filter_by(email = email).first()
+	user = User.query.filter(func.lower(User.email) == func.lower(email)).first()
 	if not user:
 		user = User(email = email, alias = alias, phone = phone, department = department, password = app.config['ADMIN_PASSWORD'])
 	else:
