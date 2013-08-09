@@ -129,7 +129,7 @@ def upload_record(request_id, file, description, user_id):
 			record = Record(doc_id = doc_id, request_id = request_id, user_id = user_id, description = description, filename = filename, url = app.config['HOST_URL'] + doc_id)
 			change_request_status(request_id, "A response has been added.")
 			send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
-			return True
+			return doc_id
 	return "There was an issue with your upload."
 
 def add_offline_record(request_id, description, access, user_id):
