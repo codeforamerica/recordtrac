@@ -112,7 +112,7 @@ def edit_case(request_id):
 def add_a_resource(resource):
 	if request.method == 'POST':
 		resource_id = add_resource(resource = resource, request_body = request, current_user_id = current_user.id)
-		if type(resource_id) == int:
+		if type(resource_id) == int or str(resource_id).isdigit():
 			return redirect(url_for('show_request_for_x', audience='city', request_id = request.form['request_id']))
 		elif resource_id == False:
 			return render_template('error.html')
