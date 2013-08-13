@@ -159,28 +159,6 @@
     <script type="text/javascript" src="{{ url_for('static', filename='jquery.ellipsis.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='bootstro.js') }}"></script>
 
-    <!--[if IE]>
-    <script type="text/javascript" 
-     src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
-    <style>
-     .chromeFrameInstallDefaultStyle {
-       width: 100%; /* default is 800px */
-       border: 5px solid blue;
-     }
-    </style>
-    <![endif]-->
-     <!--[if IE without GCF, prompt goes here]>
-      <script>
-       // The conditional ensures that this code will only execute in IE,
-       // Therefore we can use the IE-specific attachEvent without worry
-       window.attachEvent("onload", function() {
-         CFInstall.check({
-           mode: "inline", // the default
-           node: "prompt"
-         });
-       });
-      </script>
-    <![endif]-->
     
     {% block bottom_script %}
 
