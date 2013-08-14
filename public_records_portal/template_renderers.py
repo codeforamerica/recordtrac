@@ -206,6 +206,9 @@ def update_password(password=None):
 	else:
 		return render_template('update_password.html', user_id = current_user_id)
 
+def staff_card(user_id):
+	return render_template('staff_card.html', uid = user_id)
+
 def logout():
 	logout_user()
 	return index()

@@ -77,6 +77,9 @@ routing = {
 	'close':{
 		'url': '/close', 
 		'methods': ['GET', 'POST']
+	},
+	'staff_card':{
+		'url': '/staff_card/<int:user_id>'
 	}
 }
 

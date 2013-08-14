@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+{% set staff = (uid | get_staff) %}
+Name: {{staff.alias}}</br>
+Department: {{staff.department}}</br>
+<a href="mailto:{{staff.email}}">E-mail</a></br>
+Phone: {{staff.phone}}</br>
+{% endblock content %}
