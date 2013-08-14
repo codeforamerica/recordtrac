@@ -92,3 +92,16 @@ $(document).on('shown', "#reroutePopover", function () {
     }
   });
 });
+
+$(document).ready(function() {
+  (function( $ ){
+    $.fn.sticky = function() {
+      
+        // Do your awesome plugin stuff here
+
+    };
+  })( jQuery );
+
+
+  $('[data-sticky]').sticky();
+})

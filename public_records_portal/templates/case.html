@@ -32,7 +32,7 @@
     {% if req.notes %}
     {% for note in req.notes %}
     {% if not note.user_id %}
-    <div class="row-fluid response">
+    <div class="row-fluid response note">
       <div class="span2 text-center">
         <i class="icon-edit icon-2x">  </i> </br>
         <small> {{ note.date_created | date_granular }}</small> </br>
@@ -49,7 +49,7 @@
     {% block qas %}
     <div class="row-fluid">
       {% for qa in req.qas %}
-      <div class="row-fluid response">
+      <div class="row-fluid response qa">
         <div class="span2 text-center">
           <i class="icon-question icon-2x">  </i> </br>
           <small> {{ qa.date_created | date_granular }}</small> </br>
@@ -57,9 +57,9 @@
         <div class="span10">
          {% set uid = qa.owner_id %}
          {% set staff = (uid | get_staff) %}
-         <p> {{ qa.question }} - <em><a href="/staff_card/{{uid}}" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staff.alias }}</span></a></em></p>
+         <div class="qa-question"> {{ qa.question }} - <em><a href="/staff_card/{{uid}}" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staff.alias }}</span></a></em></div>
          {% if qa.answer %}
-         <p>{{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></p>
+         <iv class="qa-answer"> {{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></div>
          {% else %}
          {% block answer %}
          {% endblock answer %}
@@ -71,6 +71,47 @@
    {% endblock qas %}
    {% endif %}
    {% endif %}
+
+   <div id="routed-to-container" class="span3" data-sticky="true">
+    {% block status %}
+    <div class="text-right">
+      {% block routing %}
+      {% set uid = (req.current_owner | owner_uid) %}
+      {% set staff = (uid | get_staff) %}
+      Routed to <a href="/staff_card/{{uid}}" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverRoute"><span class="label label-info" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverRoute')">{{ staff.alias }}</span></a>
+      {% endblock routing %}
+      {% block history %}
+      <a data-placement="left" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"> <i class="icon-time" ></i>  </a>
+      <div id="historyPopover-head" class="hide">Routing history</div>
+      <div id="historyPopover-content" class="hide">              
+        <table class="table table-condensed">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th></th>
+              <th>To</th>
+              <th>Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- the order of data returned here should be reverse chronological (right now it's shown as oldest first)-->
+            {% for owner in req.owners %}
+            <tr>
+              <td>{{ owner.date_created | date }}</td>
+              <td><i class="icon-circle-arrow-right"></i></td>
+              <td>{{ owner.user_id | get_staff_info("name") }}</td>
+              <td>{{ owner.reason }}</td>
+            </tr>              
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endblock history %}
+    </div>
+    {% endblock status %}
+  </div>
+
+
 
    {% block public_note %}
    {% endblock public_note %}
@@ -84,44 +125,6 @@
 
 
 
- <div id="routed-to-container" class="span3">
-  {% block status %}
-  <div class="text-right">
-    {% block routing %}
-    {% set uid = (req.current_owner | owner_uid) %}
-    {% set staff = (uid | get_staff) %}
-    Routed to <a href="/staff_card/{{uid}}" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverRoute"><span class="label label-info" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverRoute')">{{ staff.alias }}</span></a>
-    {% endblock routing %}
-    {% block history %}
-    <a data-placement="left" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"> <i class="icon-time" ></i>  </a>
-    <div id="historyPopover-head" class="hide">Routing history</div>
-    <div id="historyPopover-content" class="hide">              
-      <table class="table table-condensed">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th></th>
-            <th>To</th>
-            <th>Note</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- the order of data returned here should be reverse chronological (right now it's shown as oldest first)-->
-          {% for owner in req.owners %}
-          <tr>
-            <td>{{ owner.date_created | date }}</td>
-            <td><i class="icon-circle-arrow-right"></i></td>
-            <td>{{ owner.user_id | get_staff_info("name") }}</td>
-            <td>{{ owner.reason }}</td>
-          </tr>              
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-    {% endblock history %}
-  </div>
-  {% endblock status %}
-</div>
 
 
 
@@ -174,7 +177,7 @@
   {% set uid = response.uid() %}
   {% set staff = (uid | get_staff) %}
   {% set icon = response.get_icon() %}
-  <div class="row-fluid response">
+  <div class="row-fluid response-wrapper">
     <div class="span2 text-center">
       <i class="{{icon}}">  </i></br>
       <small> {{ response.date() | date_granular }} </small> </br>
