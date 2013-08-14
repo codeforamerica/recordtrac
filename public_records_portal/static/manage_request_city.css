@@ -5,3 +5,11 @@
 #routed-to-container {
   border: 1px solid green;
 }
+
+#responses-container {
+  border: 1px solid yellow;
+}
+
+#actions-container {
+  border: 1px solid purple;
+}

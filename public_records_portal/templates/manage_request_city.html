@@ -85,6 +85,7 @@
 
     
 {% block actions %}
+<div id="actions-container">
   <!-- Add a record form -->
   <form name="input_doc" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data">
   <input type="hidden" name="request_id" value="{{ req.id }}"/>
@@ -245,7 +246,7 @@
       </div>
     </fieldset>
   </form>
-    
+</div>
 {% endblock actions %}
 
 

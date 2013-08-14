@@ -80,38 +80,11 @@
 
    {% block response %}
    <!-- response area: need to give this more space between the request area-->
-   <div class="row-fluid">
-    <h3 class="response">Response</h3>
-    <!-- shows all existing responses (links, documents, offline docs, notes) -->
-    {% set responses = ( req | get_responses_chronologically ) %}
-    {% if responses %} 
-    <div class="span10">
-      {% for response in responses %}
-      {% set uid = response.uid() %}
-      {% set staff = (uid | get_staff) %}
-      {% set icon = response.get_icon() %}
-      <div class="row-fluid response">
-        <div class="span2 text-center">
-          <i class="{{icon}}">  </i></br>
-          <small> {{ response.date() | date_granular }} </small> </br>
-        </div>
-        <div class="span10">
-          <p> 
-           {{ response.display_text() | safe }} - <em><a href="/staff_card/{{uid}}" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias }}</span></a></em>. 
-         </p>
-       </div>
-     </div>
-     {% endfor %}
-   </div>
-   {% else %}<!--added an if then to check to see if any responses exist - if no then show text here for the "if any response exists" above -->
-   <div class="span10">
-    <p>There are no records uploaded just yet.  Stay tuned!</p>
-  </div>
-  {% endif %}
-</div>
-</div>
+ </div>
 
-<div id="routed-to-container" class="span3">
+
+
+ <div id="routed-to-container" class="span3">
   {% block status %}
   <div class="text-right">
     {% block routing %}
@@ -152,6 +125,8 @@
 
 
 
+
+
 <!-- This code will definitely not work.  All it's meant to do is convey that we need to post whatever the "close" reason is for the case in the page itself. --> 
 {% if closed %}
 <div class="span10">
@@ -184,3 +159,38 @@
 
 {% endblock well %}
 {% endblock content %}
+
+
+
+
+{% block responses_container %}
+<div id="responses-container" class="row-fluid">
+  <div class="span9">
+  <h3 class="response">Response</h3>
+  <!-- shows all existing responses (links, documents, offline docs, notes) -->
+  {% set responses = ( req | get_responses_chronologically ) %}
+  {% if responses %} 
+  {% for response in responses %}
+  {% set uid = response.uid() %}
+  {% set staff = (uid | get_staff) %}
+  {% set icon = response.get_icon() %}
+  <div class="row-fluid response">
+    <div class="span2 text-center">
+      <i class="{{icon}}">  </i></br>
+      <small> {{ response.date() | date_granular }} </small> </br>
+    </div>
+    <div class="span10">
+      <p> 
+       {{ response.display_text() | safe }} - <em><a href="/staff_card/{{uid}}" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias }}</span></a></em>. 
+     </p>
+   </div>
+ </div>
+ {% endfor %}
+ {% else %}<!--added an if then to check to see if any responses exist - if no then show text here for the "if any response exists" above -->
+ <div class="span10">
+  <p>There are no records uploaded just yet.  Stay tuned!</p>
+  </div>
+  {% endif %}
+  </div>
+</div>
+{% endblock responses_container %}
