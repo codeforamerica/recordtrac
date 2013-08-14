@@ -309,7 +309,13 @@ $(document).ready(function(){
 <script>
 
 var map = {};
-var emails = []
+var emails = [];
+var contacts = [];
+var departments;
+$.getJSON("{{ url_for('static', filename='departments.json') }}", function(data)
+  {
+    departments = data;
+  });
 
 $(document).ready(function() {
   /* typeahead for email in reroute form */
@@ -325,7 +331,15 @@ $(document).ready(function() {
               map[first + " " + last + " - " + line.EMAIL_ADDRESS] = line.EMAIL_ADDRESS;
               contacts.push(first + " " + last + " - " + line.EMAIL_ADDRESS);
          });
-         process(contacts);
+        });
+        $.getJSON("{{ url_for('static', filename='list_of_departments.json') }}", function(data) {
+            $.each(data, function (i, department) {
+              email = departments[department]["Contact"];
+              emails.push(email);
+              map[department + " - " + email] = email;
+              contacts.push(department + " - " + email);
+         });
+          process(contacts);
         });
       }
       , updater: function (item) {

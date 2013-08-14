@@ -265,6 +265,15 @@ def assign_owner(request_id, reason, email = None, alias = None, phone = None, n
 		send_prr_email(request_id = request_id, notification_type = "Request assigned", owner_id = new_owner.id)
 	return new_owner.id
 
+def create_owner(request_id, reason, email):
+	""" Adds a staff member to the request without assigning them as current owner. (i.e. "participant")
+	Useful for multidepartmental requests."""
+	user = create_or_return_user(email = email)
+	participant = Owner(request_id = request_id, user_id = user.id, reason = reason)
+	db.session.add(participant)
+	db.session.commit()
+	return participant.id
+
 def change_request_status(request_id, status):
 	req = Request.query.get(request_id)
 	req.status = status
@@ -605,6 +614,14 @@ def create_doctypes():
 	with open(os.path.join(app.root_path, 'static/doctypes.json'), 'w') as outfile:
   		json.dump(depts, outfile)
 
+def create_list_depts():
+	depts = []
+	depts_json = open(os.path.join(app.root_path, 'static/departments.json'))
+	json_data = json.load(depts_json)
+	for department in json_data:
+		depts.append(department)
+  	with open(os.path.join(app.root_path, 'static/list_of_departments.json'), 'w') as outfile:
+  		json.dump(depts, outfile)
 
 def get_prr_liaison(dept):
 	depts_json = open(os.path.join(app.root_path, 'static/departments.json'))
