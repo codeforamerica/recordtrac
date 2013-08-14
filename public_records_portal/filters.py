@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from public_records_portal import app
 from prr import *
+from helper_functions import *
 import os
 from jinja2 import Markup
 
@@ -24,6 +25,7 @@ app.jinja_env.filters['subscriber_email'] = subscriber_email
 app.jinja_env.filters['user_phone'] = user_phone
 app.jinja_env.filters['user_name'] = user_name
 app.jinja_env.filters['user_alias'] = user_alias
+app.jinja_env.filters['tester_function'] = tester_function
 
 
 @app.template_filter('new_lines')

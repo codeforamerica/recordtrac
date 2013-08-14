@@ -620,3 +620,6 @@ def get_dept_backup(dept_contact):
 		if json_data[line]["Contact"].lower() == dept_contact.lower():
 			return json_data[line]["Backup"]
 	return None
+
+def testerrs(string):
+	return 'hi'

@@ -54,7 +54,6 @@ var map = {};
 var emails = []
 
 $(document).ready(function() {
-  alert('hi');
   /* typeahead for email in reroute form */
   $('#rerouteEmail').typeahead.defaults = {
       source: function(query, process) {
