@@ -115,7 +115,6 @@ $(document).ready(function() {
     };
   })( jQuery );
 
-
   $('[data-sticky]').sticky();
   $('[truncateable]').each(function(){
     $this = $(this);

@@ -18,6 +18,7 @@
     </div>
     {% block proxyrequester_info %}
     <small>
+      
       {% if req.creator_id %}
       <span>This request was submitted on behalf of the requester by {{ req.creator_id | get_staff_info("name") }}.</span>
       {% endif %}
