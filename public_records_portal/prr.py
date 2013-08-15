@@ -197,7 +197,7 @@ def answer_a_question(qa_id, answer, subscriber_id = None):
 	db.session.commit()
 	change_request_status(qa.request_id, "Pending")
 	req = Request.query.get(qa.request_id)
-	send_prr_email(request_id = qa.request_id, notification_type = "Question answered", owner_id = qa.owner_id)
+	send_prr_email(request_id = qa.request_id, notification_type = "Question answered", user_id = qa.owner_id)
 
 def create_or_return_user(email, alias = None, phone = None, department = None):
 	user = User.query.filter(func.lower(User.email) == func.lower(email)).first() 
@@ -365,7 +365,7 @@ def upload_file(file):
 			return allowed # Returns false and extension
 	return None, None
 
-def send_prr_email(request_id, notification_type, requester_id = None, owner_id = None):
+def send_prr_email(request_id, notification_type, requester_id = None, owner_id = None, user_id = None):
 	app_url = app.config['APPLICATION_URL']
 	template = "generic_email.html"
 	if notification_type == "Request made":
@@ -376,10 +376,13 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 	page = None
 	uid = None
 	include_unsubscribe_link = True
-	if owner_id:
+	if owner_id or user_id:
 		page = "%scity/request/%s" %(app_url,request_id)
-		owner = Owner.query.get(owner_id)
-		uid = owner.user_id
+		if user_id:
+			uid = user_id
+		else:
+			owner = Owner.query.get(owner_id)
+			uid = owner.user_id
 		include_unsubscribe_link = False # Only gets excluded for city staff
 	if requester_id:
 		page = "%srequest/%s" %(app_url,request_id)
