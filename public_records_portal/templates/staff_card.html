@@ -5,4 +5,6 @@ Name: {{staff.alias}}</br>
 Department: {{staff.department}}</br>
 <a href="mailto:{{staff.email}}">E-mail</a></br>
 Phone: {{staff.phone}}</br>
+{% set gravatar_url = staff.email | get_gravatar_url %}
+<img src= "{{gravatar_url}}" />
 {% endblock content %}

@@ -3,6 +3,7 @@ from public_records_portal import app
 from prr import *
 import os
 from jinja2 import Markup
+from gravatar import get_gravatar_url
 
 # Filters
 
@@ -25,6 +26,7 @@ app.jinja_env.filters['subscriber_email'] = subscriber_email
 app.jinja_env.filters['user_phone'] = user_phone
 app.jinja_env.filters['user_name'] = user_name
 app.jinja_env.filters['user_alias'] = user_alias
+app.jinja_env.filters['get_gravatar_url'] = get_gravatar_url
 
 
 @app.template_filter('new_lines')
