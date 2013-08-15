@@ -31,6 +31,8 @@ class RequestPresenter:
 			else:
 				if self.public:
 					text = text + "<form name='respond_question' class='form-inline' id='answer' method='post' action='/update_a_qa' autocomplete='on'><label class='control-label'>Answer</label><input type='hidden' name='qa_id' value='%s'/><input type='hidden' name='request_id' value='%s'/><textarea id='answerTextarea' name='answer_text' class='input-xxlarge' type='text' rows='1' placeholder='Can you respond to the above question?' required/></textarea><button id='askQuestion' class='btn btn-primary' type='submit'>Respond</button></form>" % (self.response.id, self.request.id)
+				else:
+					text = text + "<p>Requester hasn't answered yet.</p>"
 			return text
 		elif self.type == "note":
 			return "%s - <em>Requester</em>" %(self.response.text)
