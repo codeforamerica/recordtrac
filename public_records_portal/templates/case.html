@@ -29,48 +29,50 @@
 
     <!-- shows any existing Q&A or public notes -->
     {% if req.notes or req.qas %}
-    <!-- shows any existing public notes -->
-    {% if req.notes %}
-    {% for note in req.notes %}
-    {% if not note.user_id %}
-    <div class="row-fluid response note">
-      <div class="span2 text-center">
-        <i class="icon-edit icon-2x">  </i> </br>
-        <small> {{ note.date_created | date_granular }}</small> </br>
-      </div>
-      <div class="span10">
-        <p>{{ note.text }} - <em>Requester</em></p>
-      </div>
-    </div>
-    {% endif %}
-    {% endfor %}
-    {% endif %}
-    <!-- shows any existing Q&A -->
-    {% if req.qas %}
-    {% block qas %}
-    <div class="row-fluid">
-      {% for qa in req.qas %}
-      <div class="row-fluid response qa">
-        <div class="span2 text-center">
-          <i class="icon-question icon-2x">  </i> </br>
-          <small> {{ qa.date_created | date_granular }}</small> </br>
-        </div>
-        <div class="span10">
-         {% set uid = qa.owner_id %}
-         {% set staff = (uid | get_staff) %}
-         <div class="qa-question"> {{ qa.question }} - <em><a href="/staff_card/{{uid}}" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staff.alias }}</span></a></em></div>
-         {% if qa.answer %}
-         <iv class="qa-answer"> {{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></div>
-         {% else %}
-         {% block answer %}
-         {% endblock answer %}
-         {% endif %}
+      <!-- shows any existing public notes -->
+      {% if req.notes %}
+        {% for note in req.notes %}
+          {% if not note.user_id %}
+          <div class="row-fluid response note">
+            <div class="span2 text-center">
+              <i class="icon-edit icon-2x">  </i> </br>
+              <small> {{ note.date_created | date_granular }}</small> </br>
+            </div>
+            <div class="span10">
+              <p>{{ note.text }} - <em>Requester</em></p>
+            </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+      
+      <!-- shows any existing Q&A -->
+      {% if req.qas %}
+        {% block qas %}
+        <div class="row-fluid">
+          {% for qa in req.qas %}
+            <div class="row-fluid response qa">
+              <div class="span2 text-center">
+                <i class="icon-question icon-2x">  </i> </br>
+                <small> {{ qa.date_created | date_granular }}</small> </br>
+              </div>
+              <div class="span10">
+               {% set uid = qa.owner_id %}
+               {% set staff = (uid | get_staff) %}
+               <div class="qa-question"> {{ qa.question }} - <em><a href="/staff_card/{{uid}}" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staff.alias }}</span></a></em></div>
+               {% if qa.answer %}
+                 <div class="qa-answer"> {{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></div>
+                 {% else %}
+                 {% block answer %}
+                 {% endblock answer %}
+               {% endif %}
+             </div>
+           </div>
+         {% endfor %}
        </div>
-     </div>
-     {% endfor %}
-   </div>
-   {% endblock qas %}
-   {% endif %}
+       {% endblock qas %}
+     {% endif %}
+
    {% endif %}
 
    <div id="routed-to-container" class="span3" data-sticky="true">
