@@ -4,6 +4,7 @@ from prr import *
 from helper_functions import *
 import os
 from jinja2 import Markup
+from gravatar import get_gravatar_url
 
 # Filters
 
@@ -17,6 +18,7 @@ app.jinja_env.filters['get_staff'] = get_staff
 app.jinja_env.filters['date_granular'] = date_granular
 app.jinja_env.filters['user_email'] = user_email
 app.jinja_env.filters['get_responses_chronologically'] = get_responses_chronologically
+app.jinja_env.filters['get_request_data_chronologically'] = get_request_data_chronologically
 app.jinja_env.filters['owner_name'] = owner_name
 app.jinja_env.filters['owner_uid'] = owner_uid
 app.jinja_env.filters['subscriber_name'] = subscriber_name
@@ -25,7 +27,11 @@ app.jinja_env.filters['subscriber_email'] = subscriber_email
 app.jinja_env.filters['user_phone'] = user_phone
 app.jinja_env.filters['user_name'] = user_name
 app.jinja_env.filters['user_alias'] = user_alias
+<<<<<<< HEAD
 app.jinja_env.filters['tester_function'] = tester_function
+=======
+app.jinja_env.filters['get_gravatar_url'] = get_gravatar_url
+>>>>>>> 9a421f6e4aec4fa57e0fd194c56dc47ce1f3c37a
 
 
 @app.template_filter('new_lines')
