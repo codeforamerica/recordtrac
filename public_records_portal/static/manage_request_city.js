@@ -100,8 +100,37 @@ $(document).ready(function() {
         // Do your awesome plugin stuff here
 
     };
+    $.fn.truncateable = function() {
+      $self = $(this)
+      var text = $self.text().trim();
+      var current_length = text.length;
+      var max_length = $self.attr('truncateable');
+      if (current_length < max_length)
+        return;
+      var truncated = text.substring(0, max_length);
+
+      $self.html(truncated);
+      $self.append("<div class='more'>..more</div>");
+      $self.attr('full-text', text);
+    };
   })( jQuery );
 
 
   $('[data-sticky]').sticky();
+  $('[truncateable]').each(function(){
+    $this = $(this);
+    $this.truncateable();
+  });
+  $('[truncateable]').on('click','.more', function(e){
+    var $parent = $(e.delegateTarget);
+    var full_text = $parent.attr('full-text');
+    $parent.html(full_text);
+    $parent.append(("<div class='less'>...less</div>"))
+  });
+  $('[truncateable]').on('click','.less', function(e){
+    var $parent = $(e.delegateTarget);
+    $parent.truncateable();
+  })
+
 })
+

@@ -13,7 +13,7 @@
     <div class="row-fluid">
       <h3 >Request <span class="muted">#{{req.id}}</span></h3>
       <div class="span10">
-        <p class="lead"> {{ req.text | new_lines }} </p>
+        <p class="lead" truncateable="150"> {{ req.text | new_lines }} </p>
       </div>
     </div>
     {% block proxyrequester_info %}
@@ -183,7 +183,7 @@
       <small> {{ response.date() | date_granular }} </small> </br>
     </div>
     <div class="span10">
-      <p> 
+      <p truncateable="100"> 
        {{ response.display_text() | safe }} - <em><a href="/staff_card/{{uid}}" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias }}</span></a></em>. 
      </p>
    </div>
