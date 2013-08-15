@@ -20,6 +20,7 @@ from models import *
 from timeout import timeout
 import urllib
 from ResponsePresenter import ResponsePresenter
+from RequestPresenter import RequestPresenter
 from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
 from sqlalchemy import func
 
@@ -197,7 +198,7 @@ def answer_a_question(qa_id, answer, subscriber_id = None):
 	db.session.commit()
 	change_request_status(qa.request_id, "Pending")
 	req = Request.query.get(qa.request_id)
-	send_prr_email(request_id = qa.request_id, notification_type = "Question answered", owner_id = qa.owner_id)
+	send_prr_email(request_id = qa.request_id, notification_type = "Question answered", user_id = qa.owner_id)
 
 def create_or_return_user(email, alias = None, phone = None, department = None):
 	user = User.query.filter(func.lower(User.email) == func.lower(email)).first() 
@@ -374,7 +375,7 @@ def upload_file(file):
 			return allowed # Returns false and extension
 	return None, None
 
-def send_prr_email(request_id, notification_type, requester_id = None, owner_id = None):
+def send_prr_email(request_id, notification_type, requester_id = None, owner_id = None, user_id = None):
 	app_url = app.config['APPLICATION_URL']
 	template = "generic_email.html"
 	if notification_type == "Request made":
@@ -385,10 +386,13 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 	page = None
 	uid = None
 	include_unsubscribe_link = True
-	if owner_id:
+	if owner_id or user_id:
 		page = "%scity/request/%s" %(app_url,request_id)
-		owner = Owner.query.get(owner_id)
-		uid = owner.user_id
+		if user_id:
+			uid = user_id
+		else:
+			owner = Owner.query.get(owner_id)
+			uid = owner.user_id
 		include_unsubscribe_link = False # Only gets excluded for city staff
 	if requester_id:
 		page = "%srequest/%s" %(app_url,request_id)
@@ -445,25 +449,58 @@ def is_due_soon(date_obj, extended = None):
 		return True, due
 	return False, due
 
-def notify_due_soon():
+def is_overdue(date_obj, extended = None):
+	current_date = datetime.now().date()
+	due = due_date(date_obj = date_obj, extended = extended, format = False)
+	if (current_date >= due):
+		return True, due
+	return False, due
+
+def notify_due():
 	requests = Request.query.all()
+	email_json = open(os.path.join(app.root_path, 'emails.json'))
+	json_data = json.load(email_json)
 	for req in requests:
 		if "Closed" not in req.status:
-			due_soon, date_due = is_due_soon(req.date_created, req.extended)
+			# Check if it is due in 2 days
+			due_soon, date_due = is_due_soon(req.date_created, req.extended) 
 			if due_soon:
-				owner_email = user_email(owner_uid(req.current_owner)) # Get the e-mail address of the owner
-				recipients = [owner_email]
-				backup_email = get_dept_backup(owner_email)
-				if backup_email:
-					recipients.append(backup_email)
-				email_json = open(os.path.join(app.root_path, 'emails.json'))
-				json_data = json.load(email_json)
+				change_request_status(req.id, "Due soon")
 				email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Request due"])
-				app_url = app.config['APPLICATION_URL']
-				page = "%scity/request/%s" %(app_url,req.id)
-				body = "You can view the request and take any necessary action at the following webpage: <a href='%s'>%s</a>.</br></br> This is an automated message. You are receiving it because you are listed as the Public Records Request Liaison, Backup or Supervisor for your department." %(page, page)
+			else:
+				# Otherwise, check if it is overdue
+				is_overdue, date_due = is_overdue(req.date_created, req.extended)
+				if is_overdue:
+					change_request_status(req.id, "Overdue")
+					email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Request overdue"])
+				else:
+					continue
+			owner_email = user_email(owner_uid(req.current_owner)) # Get the e-mail address of the owner
+			recipients = [owner_email]
+			backup_email = get_dept_backup(owner_email)
+			if backup_email:
+				recipients.append(backup_email)
+			app_url = app.config['APPLICATION_URL']
+			page = "%scity/request/%s" %(app_url,req.id)
+			body = "You can view the request and take any necessary action at the following webpage: <a href='%s'>%s</a>.</br></br> This is an automated message. You are receiving it because you are listed as the Public Records Request Liaison, Backup or Supervisor for your department." %(page, page)
 				# Need to figure out a way to pass in generic email template outside application context. For now, hardcoding the body.
-				send_email(body = body, recipients = recipients, subject = email_subject, include_unsubscribe_link = False)
+			send_email(body = body, recipients = recipients, subject = email_subject, include_unsubscribe_link = False)
+def get_request_data_chronologically(req):
+	public = False
+	if current_user.is_anonymous():
+		public = True
+	responses = []
+	if not req:
+		return responses
+	for i, note in enumerate(req.notes):
+		if not note.user_id:
+			responses.append(RequestPresenter(note = note, index = i, public = public, request = req))
+	for i, qa in enumerate(req.qas):
+		responses.append(RequestPresenter(qa = qa, index = i, public = public, request = req))
+	if not responses:
+		return responses
+	responses.sort(key = lambda x:x.date(), reverse = True)
+	return responses
 
 def get_responses_chronologically(req):
 	responses = []

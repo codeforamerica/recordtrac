@@ -16,6 +16,7 @@ app.jinja_env.filters['get_staff'] = get_staff
 app.jinja_env.filters['date_granular'] = date_granular
 app.jinja_env.filters['user_email'] = user_email
 app.jinja_env.filters['get_responses_chronologically'] = get_responses_chronologically
+app.jinja_env.filters['get_request_data_chronologically'] = get_request_data_chronologically
 app.jinja_env.filters['owner_name'] = owner_name
 app.jinja_env.filters['owner_uid'] = owner_uid
 app.jinja_env.filters['subscriber_name'] = subscriber_name
