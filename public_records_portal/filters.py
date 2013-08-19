@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 from public_records_portal import app
 from prr import *
-from helper_functions import *
 import os
 from jinja2 import Markup
 from gravatar import get_gravatar_url
@@ -53,7 +52,7 @@ def date(obj):
 @app.template_filter('explain_action')
 def explain_action(action, explanation_type = None):
 	# Get filepath for actions.json
-	actions_filepath = os.path.join(app.root_path, 'actions.json')
+	actions_filepath = os.path.join(app.root_path, 'static/json/actions.json')
 	action_json = open(actions_filepath)
 	json_data = json.load(action_json)
 	explanation = json_data[action]
@@ -73,7 +72,7 @@ def explain_action(action, explanation_type = None):
 @app.template_filter('tutorial')
 def tutorial(section):
 	# Get filepath for actions.json
-	tutorial_filepath = os.path.join(app.root_path, 'tutorial.json')
+	tutorial_filepath = os.path.join(app.root_path, 'static/json/tutorial.json')
 	tutorial_json = open(tutorial_filepath)
 	json_data = json.load(tutorial_json)
 	explanation = json_data[section]

@@ -648,7 +648,7 @@ def create_doctypes():
 			line['DEPARTMENT'] = department
 			line['DOC_TYPE'] = document_type
 			depts.append(line)
-	with open(os.path.join(app.root_path, 'static/doctypes.json'), 'w') as outfile:
+	with open(os.path.join(app.root_path, 'static/json/doctypes.json'), 'w') as outfile:
   		json.dump(depts, outfile)
 
 def create_list_depts():
