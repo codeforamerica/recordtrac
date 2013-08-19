@@ -1,9 +1,12 @@
 <!-- This template is for testing purposes. -->
 
 {% extends "case.html" %}
-{% block title %}Request {{ req.id }}{% endblock %}
+{% block title %}Request {{ req.id }}
+
+{% endblock %}
 {% block head %} {% endblock head %}
 {% block content %}
+
   <div class="span8">
   <ul class="nav nav-pills hidden-phone hidden-tablet">
     <li class="disabled"><a href="#">Shortcuts </a></li>
@@ -14,6 +17,12 @@
 </div>
   <p class="text-right">Due: {{ req.date_created | due_date(req.extended) }} <span class="muted">(Submitted {{ req.date_created | date }})</span></p>
   {{ super() }}
+
+
+{% include '_response_widget.html' %}  
+
+
+
 {% endblock content %}
 {% block status %}
     <div class="pull-right">
@@ -41,7 +50,10 @@
         {{ super() }}
       {% endblock history %}
     </div>
+
   {% endblock status %}
+
+
 
   {% block proxyrequester_info %}
     {{ super() }}
@@ -81,6 +93,7 @@
 
     
 {% block actions %}
+
 <div id="actions-container">
   <!-- Add a record form -->
   <form name="input_doc" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data">
