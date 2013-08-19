@@ -66,6 +66,7 @@
 
   {% block clarify_request %}
             <!-- ask a question -->
+            <!-- TODO-mike remove the display none -->
         <form name="ask_question" class="form-horizontal" id="question" method="post" action="/add_a_qa" autocomplete="on">
           <fieldset> 
             <div class="row-fluid">
@@ -94,7 +95,7 @@
     
 {% block actions %}
 
-<div id="actions-container">
+<div id="actions-container" style="display:none;">
   <!-- Add a record form -->
   <form name="input_doc" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data">
   <input type="hidden" name="request_id" value="{{ req.id }}"/>

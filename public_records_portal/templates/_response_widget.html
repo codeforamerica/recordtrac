@@ -30,6 +30,10 @@
 
 
     <!-- Add a record form -->
+  <div class="default-text" data-target-for="default">
+   <i class="icon-double-angle-up"></i> Take Action Here <i class="icon-double-angle-up"></i>
+  </div>
+
     <div class="target-for" data-target-for="1">
       <form name="input_doc" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data">
         <input type="hidden" name="request_id" value="{{ req.id }}"/>
