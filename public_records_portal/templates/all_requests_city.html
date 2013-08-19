@@ -1,0 +1,48 @@
+<!-- This template is show all cases in the system. -->
+
+{% extends "base.html" %}
+{% block title %}{{title}}{% endblock title %}
+{% block content %}
+<legend>{{title}}</legend>
+<div>
+  <table cellpadding="0" cellspacing="0" border="0" id="allrequestTable" class="data-table table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>#</th>
+        <th>Received</th>
+        <th>Request</th>
+        <th>Department</th>
+        <th>Owner</th>
+        <th>Updated</th>
+        <th>Due</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for request in all_record_requests %}
+        <tr onclick="window.location.href='/city/request/{{request.id}}';">
+          <td>{{ request.status }} </td>
+          <td>{{ request.id }}</td>
+          <td>{{ request.date_created | date }}</td>
+          <td><div>{{ request.text }}</div></td>
+          {% set uid = (request.current_owner | owner_uid) %}
+          <td>{{ uid | get_staff_info("dept")}}</td></a>
+          <td>{{ uid | get_staff_info("name") }}</td>
+          <td>{{ request.status_updated | date_granular }} </td>
+        </tr>
+      {% else %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
+
+{% block bottom_script %}
+<script>
+$('table#allrequestTable tbody tr td div').ellipsis({
+    row: 3
+});
+  
+</script>
+{% endblock bottom_script %}
