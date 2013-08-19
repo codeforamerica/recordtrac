@@ -16,7 +16,7 @@
     $rw_actions_wrap.find('[data-target-for]').each(function(){
       $(this).hide();
     })
-    $rw_actions_wrap.find('[data-target-for="'+target+'"]').show();
+    $rw_actions_wrap.find('[data-target-for="'+target+'"]').show('400');
   });
 
 })($);
