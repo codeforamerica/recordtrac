@@ -1,0 +1,33 @@
+.rw-container {
+  border: 3px dashed green;
+}
+
+.rw-controller-container {
+  text-align: center;
+}
+
+.rw-controller-btns-container {
+  border: 1px solid red;
+  padding: 3px;
+  margin: 5px;
+}
+
+.rw-btn-wrap, .rw-btn, .rw-btn-expand {
+  display: inline-block;
+  margin: 0 5px;
+  padding: 2px;
+}
+
+.rw-btn-wrap.active {
+  background-color: teal;
+}
+
+.rw-btn:hover {
+  background-color: blue;
+  cursor: hand;
+  cursor: pointer;
+}
+
+.target-for {
+  display: none;
+}
