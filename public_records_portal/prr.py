@@ -541,7 +541,7 @@ def get_staff_info(uid, info_type):
 	return None
 
 def set_directory_fields():
-	dir_json = open(os.path.join(app.root_path, 'static/directory.json'))
+	dir_json = open(os.path.join(app.root_path, 'static/json/directory.json'))
 	json_data = json.load(dir_json)
 	for line in json_data:
 		if line['EMAIL_ADDRESS']:

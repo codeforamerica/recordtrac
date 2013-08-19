@@ -84,7 +84,7 @@ def directory(uid, info_type = None):
 	if email:
 		if info_type == "email":
 			return email
-		dir_json = open(os.path.join(app.root_path, 'static/directory.json'))
+		dir_json = open(os.path.join(app.root_path, 'static/json/directory.json'))
 		json_data = json.load(dir_json)
 		for line in json_data:
 			if line['EMAIL_ADDRESS'].lower() == email.lower():
