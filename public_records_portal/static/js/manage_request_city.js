@@ -58,7 +58,7 @@ $(document).ready(function() {
   $('#rerouteEmail').typeahead.defaults = {
       source: function(query, process) {
         var contacts = [];
-        $.getJSON("{{ url_for('static', filename='directory.json') }}", function(data) {
+        $.getJSON("/static/json/directory.json", function(data) {
             $.each(data, function (i, line) {
               var array = line['FULL_NAME'].split(",");
               var first = array[1];

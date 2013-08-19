@@ -288,9 +288,9 @@ $(document).ready(function(){
       }
   });
   /* typeahead for email in reroute form */
-  $.getJSON("{{ url_for('static', filename='/json/directory.json') }}", function(data) {
+  $.getJSON("/static/json/directory.json", function(data) {
+          alert('here!');
           $.each(data, function (i, line) {
-                 console.log('here');
                  $('<option/>').val(line.EMAIL_ADDRESS).html(line.FULL_NAME).appendTo('#rerouteEmail');
             }); 
   });
