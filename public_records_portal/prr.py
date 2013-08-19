@@ -380,7 +380,7 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 	template = "generic_email.html"
 	if notification_type == "Request made":
 		template = "new_request_email.html"
-	email_json = open(os.path.join(app.root_path, 'emails.json'))
+	email_json = open(os.path.join(app.root_path, 'static/json/emails.json'))
 	json_data = json.load(email_json)
 	email_subject = "Public Records Request %s: %s" %(request_id, json_data[notification_type])
 	page = None
@@ -458,7 +458,7 @@ def is_overdue(date_obj, extended = None):
 
 def notify_due():
 	requests = Request.query.all()
-	email_json = open(os.path.join(app.root_path, 'emails.json'))
+	email_json = open(os.path.join(app.root_path, 'static/json/emails.json'))
 	json_data = json.load(email_json)
 	for req in requests:
 		if "Closed" not in req.status:

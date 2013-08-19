@@ -8,7 +8,9 @@
 }
 
 .rw-controller-btns-container {
-  box-shadow: inset 0px 0px 7px -1px #999;
+  box-shadow: inset 0px 0px 7px -1px #9CA9AD;
+  border-radius: 4px;
+  background-color: #EFF9FF;
   padding: 3px;
   margin: 5px;
 }
@@ -19,8 +21,13 @@
   padding: 2px;
 }
 
+.rw-btn-wrap {
+  border-radius: 3px;
+}
+
 .rw-btn-wrap.active {
-  background-color: rgb(208, 240, 240);
+  background-color: #DAF8FD;
+  box-shadow: 0px 0px 2px 0px #777;
 }
 
 .rw-btn:hover {
@@ -36,4 +43,8 @@
 
 .rw-actions-container .target-for {
   display: none;
+}
+
+#bounce {
+  position: relative;
 }
