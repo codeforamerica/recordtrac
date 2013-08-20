@@ -68,7 +68,7 @@ def page_not_found(e):
 	return render_template('404.html'), 404
 
 def explain_all_actions():
-	action_json = open(os.path.join(app.root_path, 'actions.json'))
+	action_json = open(os.path.join(app.root_path, 'static/json/actions.json'))
 	json_data = json.load(action_json)
 	actions = []
 	for data in json_data:

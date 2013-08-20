@@ -11,17 +11,19 @@
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap-responsive.min.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='font-awesome.min.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap-fileupload.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='custom.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='DT_bootstrap.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='select2.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstro.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-responsive.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/font-awesome.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-fileupload.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/custom.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/DT_bootstrap.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery.dataTables.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/select2.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstro.css') }}">
+
 
   <!-- modernizr -->
-  <script type="text/javascript" src="{{ url_for('static', filename='modernizr-latest.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/modernizr-latest.js') }}"></script>
 
   <!-- google analytics -->
     <!-- for later: guide to add event-driven analytics http://www.sitepoint.com/google-analytics-track-javascript-ajax-events/ -->
@@ -36,6 +38,7 @@
   </script>
 
   </head>
+  
   <body>
     <div class="wrapper">
       <div class="navbar">
@@ -117,6 +120,11 @@
         </div>
         <div class="row-fluid">
           <div class="span10 offset1">
+              {% block responses_container %}{% endblock responses_container %}
+          </div>
+        </div>
+        <div class="row-fluid">
+          <div class="span10 offset1">
               {% block actions %}{% endblock actions %}
           </div>
         </div>
@@ -147,44 +155,22 @@
       </div>
     {% endblock feedback %}
 
-    <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.10.1.min.js') }}"></script>    
-    <script type="text/javascript" src="{{ url_for('static', filename='jquery.validate.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='custom.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap-fileupload.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='jquery.placeholderpatch.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='jquery.dataTables.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='custom.dataTables.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='DT_bootstrap.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='jquery.ellipsis.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='bootstro.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.10.1.min.js') }}"></script>    
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.validate.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/custom.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-fileupload.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.placeholderpatch.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/custom.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/DT_bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.ellipsis.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstro.js') }}"></script>
 
-    <!--[if IE]>
-    <script type="text/javascript" 
-     src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
-    <style>
-     .chromeFrameInstallDefaultStyle {
-       width: 100%; /* default is 800px */
-       border: 5px solid blue;
-     }
-    </style>
-    <![endif]-->
-     <!--[if IE without GCF, prompt goes here]>
-      <script>
-       // The conditional ensures that this code will only execute in IE,
-       // Therefore we can use the IE-specific attachEvent without worry
-       window.attachEvent("onload", function() {
-         CFInstall.check({
-           mode: "inline", // the default
-           node: "prompt"
-         });
-       });
-      </script>
-    <![endif]-->
-    
-    {% block bottom_script %}
 
-    {% endblock bottom_script %}
+    {% block custom_script_links %}
+
+    {% endblock custom_script_links %}
 
     
 

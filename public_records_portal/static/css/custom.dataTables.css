@@ -1,0 +1,6 @@
+/* custom.datatables.css */
+
+#allrequestTable tbody tr:hover, #allrequestTable tbody tr.highlighted {
+	background-color: #ECFFB3;
+	cursor: pointer;
+}
