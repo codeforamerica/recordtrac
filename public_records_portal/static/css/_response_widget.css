@@ -30,7 +30,7 @@
   box-shadow: 0px 0px 2px 0px #777;
 }
 
-.rw-btn:hover {
+.rw-btn-wrap:hover {
   /*background-color: blue;*/
   cursor: hand;
   cursor: pointer;
