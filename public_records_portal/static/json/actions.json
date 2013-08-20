@@ -120,13 +120,13 @@
                 "What":"The person who submitted this request determined they no longer need the record.",
                 "Who":"",
                 "Action":""
-            }
+            },
         "Unable to contact the requester": 
             {
                 "What":"We closed this request after we were unable to contact the requester to determine what they needed.",
                 "Who":"",
                 "Action":""
-            }
+            },
     "Request an extension": 
         {
             "What":"Use this feature to indicate you need more time to respond to this request.",
@@ -156,5 +156,5 @@
                     "What":"Additional time is required to answer your public records request. We need to compile data or create a computer report to extract data (Government Code Section 6253(c)(4)). Your request will be answered by",
                     "Who":"",
                     "Action":""
-                },
+                }
     }
