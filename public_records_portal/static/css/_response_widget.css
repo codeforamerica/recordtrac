@@ -1,0 +1,50 @@
+.rw-container {
+  /*border: 3px dashed green;*/
+  margin: 20px 0px;
+}
+
+.rw-controller-container {
+  text-align: center;
+}
+
+.rw-controller-btns-container {
+  box-shadow: inset 0px 0px 7px -1px #9CA9AD;
+  border-radius: 4px;
+  background-color: #EFF9FF;
+  padding: 3px;
+  margin: 5px;
+}
+
+.rw-btn-wrap, .rw-btn, .rw-btn-expand {
+  display: inline-block;
+  margin: 0 5px;
+  padding: 2px;
+}
+
+.rw-btn-wrap {
+  border-radius: 3px;
+}
+
+.rw-btn-wrap.active {
+  background-color: #DAF8FD;
+  box-shadow: 0px 0px 2px 0px #777;
+}
+
+.rw-btn-wrap:hover {
+  /*background-color: blue;*/
+  cursor: hand;
+  cursor: pointer;
+}
+
+.rw-actions-container .default-text {
+  text-align: center;
+  font-size: 20px;
+}
+
+.rw-actions-container .target-for {
+  display: none;
+}
+
+#bounce {
+  position: relative;
+}

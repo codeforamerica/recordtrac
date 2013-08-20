@@ -19,7 +19,7 @@
   {{ super() }}
 
 
-{% include '_response_widget.html' %}  
+  {% include '_response_widget.html' %}  
 
 
 
@@ -65,13 +65,12 @@
   {% endblock requester_info %}
 
   {% block clarify_request %}
-            <!-- ask a question -->
+        <!-- ask a question -->
+        <!-- TODO-mike remove the display none -->
         <form name="ask_question" class="form-horizontal" id="question" method="post" action="/add_a_qa" autocomplete="on">
           <fieldset> 
             <div class="row-fluid">
-              <!-- <div class="span4"> -->
                 <h4>Ask a question about this request</h4>
-              <!-- </div> -->
               <div>
 
                 <div class="control-group">
@@ -94,7 +93,7 @@
     
 {% block actions %}
 
-<div id="actions-container">
+<div id="actions-container" style="display:none;">
   <!-- Add a record form -->
   <form name="input_doc" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data">
   <input type="hidden" name="request_id" value="{{ req.id }}"/>
@@ -262,4 +261,8 @@
 {% block custom_script_links %}
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/manage_request_city.css') }}">
   <script type="text/javascript" src="{{ url_for('static', filename='js/manage_request_city.js') }}"></script>
+
+  <!-- For response_widget partial -->
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/_response_widget.css') }}">
+  <script type="text/javascript" src="{{ url_for('static', filename='js/_response_widget.js') }}"></script>
 {% endblock custom_script_links %}

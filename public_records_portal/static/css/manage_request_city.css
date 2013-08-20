@@ -1,17 +1,18 @@
 #request-container {
-  border: 1px solid red;
+  /*border: 1px solid red;*/
+  
 }
 
 #routed-to-container {
-  border: 1px solid green;
+  /*border: 1px solid green;*/
 }
 
 #responses-container {
-  border: 1px solid yellow;
+  /*border: 1px solid yellow;*/
 }
 
 #actions-container {
-  border: 1px solid purple;
+  /*border: 1px solid purple;*/
 }
 
 
