@@ -380,7 +380,7 @@ def send_prr_email(request_id, notification_type, requester_id = None, owner_id 
 	template = "generic_email.html"
 	if notification_type == "Request made":
 		template = "new_request_email.html"
-	email_json = open(os.path.join(app.root_path, 'emails.json'))
+	email_json = open(os.path.join(app.root_path, 'static/json/emails.json'))
 	json_data = json.load(email_json)
 	email_subject = "Public Records Request %s: %s" %(request_id, json_data[notification_type])
 	page = None
@@ -458,7 +458,7 @@ def is_overdue(date_obj, extended = None):
 
 def notify_due():
 	requests = Request.query.all()
-	email_json = open(os.path.join(app.root_path, 'emails.json'))
+	email_json = open(os.path.join(app.root_path, 'static/json/emails.json'))
 	json_data = json.load(email_json)
 	for req in requests:
 		if "Closed" not in req.status:
@@ -541,7 +541,7 @@ def get_staff_info(uid, info_type):
 	return None
 
 def set_directory_fields():
-	dir_json = open(os.path.join(app.root_path, 'static/directory.json'))
+	dir_json = open(os.path.join(app.root_path, 'static/json/directory.json'))
 	json_data = json.load(dir_json)
 	for line in json_data:
 		if line['EMAIL_ADDRESS']:
@@ -636,7 +636,7 @@ def user_alias(uid):
 # Creates a file called doctypes.json from departments.json that is used by typeahead to map document types to the department which can fulfill it
 def create_doctypes():
 	depts = []
-	depts_json = open(os.path.join(app.root_path, 'static/departments.json'))
+	depts_json = open(os.path.join(app.root_path, 'static/json/departments.json'))
 	json_data = json.load(depts_json)
 	for department in json_data:
 		if "Council" in department:
@@ -648,29 +648,32 @@ def create_doctypes():
 			line['DEPARTMENT'] = department
 			line['DOC_TYPE'] = document_type
 			depts.append(line)
-	with open(os.path.join(app.root_path, 'static/doctypes.json'), 'w') as outfile:
+	with open(os.path.join(app.root_path, 'static/json/doctypes.json'), 'w') as outfile:
   		json.dump(depts, outfile)
 
 def create_list_depts():
 	depts = []
-	depts_json = open(os.path.join(app.root_path, 'static/departments.json'))
+	depts_json = open(os.path.join(app.root_path, 'static/json/departments.json'))
 	json_data = json.load(depts_json)
 	for department in json_data:
 		depts.append(department)
-  	with open(os.path.join(app.root_path, 'static/list_of_departments.json'), 'w') as outfile:
+  	with open(os.path.join(app.root_path, 'static/json/list_of_departments.json'), 'w') as outfile:
   		json.dump(depts, outfile)
 
 def get_prr_liaison(dept):
-	depts_json = open(os.path.join(app.root_path, 'static/departments.json'))
+	depts_json = open(os.path.join(app.root_path, 'static/json/departments.json'))
 	json_data = json.load(depts_json)
 	if dept in json_data:
 		return json_data[dept]["Contact"]
 	return None
 
 def get_dept_backup(dept_contact):
-	depts_json = open(os.path.join(app.root_path, 'static/departments.json'))
+	depts_json = open(os.path.join(app.root_path, 'static/json/departments.json'))
 	json_data = json.load(depts_json)
 	for line in json_data:
 		if json_data[line]["Contact"].lower() == dept_contact.lower():
 			return json_data[line]["Backup"]
 	return None
+
+def testerrs(string):
+	return 'hi'

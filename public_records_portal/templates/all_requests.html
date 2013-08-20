@@ -41,11 +41,6 @@
 
 {% endblock %}
 
-{% block bottom_script %}
-<script>
-$('table#allrequestTable tbody tr td div').ellipsis({
-    row: 3
-});
-  
-</script>
-{% endblock bottom_script %}
+{% block custom_script_links %}
+  <script type="text/javascript" src="{{ url_for('static', filename='js/custom.jquery.ellipsis.js') }}"></script>
+{% endblock custom_script_links %}
