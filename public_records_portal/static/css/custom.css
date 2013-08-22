@@ -74,7 +74,7 @@ span[class|="contactinfoPopover"] {color: #666666;}
 label.valid {
   width: 24px;
   height: 24px;
-  background: url(images/valid.png) center center no-repeat;
+  background: url(../images/valid.png) center center no-repeat;
   display: inline-block;
   text-indent: -9999px;
 }

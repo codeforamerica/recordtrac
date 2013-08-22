@@ -134,13 +134,12 @@
             <div class="control-group">
               <label class="control-label">Reason <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Request an extension"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
               <div class="controls">
-                <select id="extend_reasons" name="note_text" multiple="multiple" required>
+                <select id="extend_reasons" name="note_text" class="selectpicker" multiple required data-selected-text-format="count">
                   <option value="{{"Extension - Large Amount" | explain_action("What")}}">Large amount</option>
                   <option value="{{"Extension - Separate Facility" | explain_action("What")}}">Separate facility</option>
                   <option value="{{"Extension - Another Agency" | explain_action("What")}}">Another agency</option>
                   <option value="{{"Extension - Data" | explain_action("What")}}">Data extraction</option>
                 </select>
-                <p class="help-block">You can select multiple reasons by using Ctrl (Win) or ⌘ (Mac).</p>
               </div>
             </div> 
             <div class="control-group">
@@ -167,14 +166,13 @@
 
               <label class="control-label">Reason <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
               <div class="controls">
-                <select id="close_reasons" name="close_reasons" multiple="multiple" size="8" class="input-xxlarge" required>
+                <select id="close_reasons" name="close_reasons" class="selectpicker" multiple required data-selected-text-format="count" >
                   <option value="{{"Fulfilled" | explain_action("What")}}">Fulfilled</option>
                   <option value="{{"Not a public records request" | explain_action("What")}}">Not a public records request</option>
                   <option value="{{"Record Does Not Exist" | explain_action("What")}}">Do not have this record</option>
                   <option value="{{"Can Not Release" | explain_action("What")}}">Can Not Release</option>
                   <option value="{{"Requester Not Interested" | explain_action("What")}}">Requester Not Interested</option>
                 </select>
-                <p class="help-block">You can select multiple reasons by using Ctrl (Win) or ⌘ (Mac).</p>
               </div>
             </div>
             <div class="control-group">
