@@ -186,7 +186,7 @@
         <div class="control-group">
           <label class="control-label">Reason <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Request an extension"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
             <div class="controls">
-              <select id="extend_reasons" name="note_text" multiple="multiple" required>
+              <select id="extend_reasons" name="note_text" class="selectpicker" multiple required data-selected-text-format="count">
                 <option value="{{"Extension - Large Amount" | explain_action("What")}}">Large amount</option>
                 <option value="{{"Extension - Separate Facility" | explain_action("What")}}">Separate facility</option>
                 <option value="{{"Extension - Another Agency" | explain_action("What")}}">Another agency</option>
@@ -258,8 +258,12 @@
 {% block custom_script_links %}
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/manage_request_city.css') }}">
   <script type="text/javascript" src="{{ url_for('static', filename='js/manage_request_city.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/custom.bootstrap-select.js') }}"></script>
 
   <!-- For response_widget partial -->
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/_response_widget.css') }}">
   <script type="text/javascript" src="{{ url_for('static', filename='js/_response_widget.js') }}"></script>
+
+
+
 {% endblock custom_script_links %}
