@@ -264,7 +264,5 @@
   <!-- For response_widget partial -->
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/_response_widget.css') }}">
   <script type="text/javascript" src="{{ url_for('static', filename='js/_response_widget.js') }}"></script>
-
-
-
+  {{ super() }}
 {% endblock custom_script_links %}

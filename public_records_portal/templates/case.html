@@ -72,6 +72,9 @@
         {% endif %}
 
       {% endif %}
+      <div id="load-more-qa">
+        Load More...
+      </div>
     </div>
   {% endblock well %}
 
@@ -158,3 +161,9 @@
   </div>
 </div>
 {% endblock responses_container %}
+
+{% block custom_script_links %}
+<h1>WTF</h1>
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
+  <script type="text/javascript" src="{{ url_for('static', filename='js/case.js') }}"></script>
+{% endblock custom_script_links %}
