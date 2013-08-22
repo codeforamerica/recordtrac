@@ -4,7 +4,8 @@
 }
 
 .rw-controller-container {
-  text-align: center;
+  /*text-align: center;*/
+  width: 400px;
 }
 
 .rw-controller-btns-container {
@@ -23,17 +24,25 @@
 
 .rw-btn-wrap {
   border-radius: 3px;
+  max-width: 7%;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 0px;
+  -webkit-transition: max-width 1s;
 }
 
 .rw-btn-wrap.active {
   background-color: #DAF8FD;
   box-shadow: 0px 0px 2px 0px #777;
+  max-width: 40%;
 }
 
 .rw-btn-wrap:hover {
   /*background-color: blue;*/
   cursor: hand;
   cursor: pointer;
+  max-width: 40%;
+  -webkit-transition: max-width 1s;
 }
 
 .rw-actions-container .default-text {
