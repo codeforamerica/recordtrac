@@ -1,11 +1,60 @@
 {
-    "Request assigned": "A request has been assigned to you.",
-    "Question asked": "There is a question about your request.",
-    "Question answered": "Your question has been answered.",
-    "Request closed": "The request you submitted has been closed.",
-    "Response added": "A response has been added to your request",
-    "Request due": "A request in your department is due in two days",
-    "Public note added": "A note has been added to a request you are assigned to",
-    "Request made": "Your request has been submitted",
-    "Request overdue": "A request in your department is overdue."
+    "Recipient types":
+    ["Requester", "Subscribers", "Subscriber", "Staff owner", "Departmental backups", "Staff participants"],
+    "Notification types":
+    {
+        "Request assigned":
+        {
+            "Subject": "A request has been assigned to you",
+            "Recipients": ["Staff owner"],
+            "Email body": "We're not using this but we could."
+        },
+        "Question asked": 
+        {
+            "Subject": "There is a question about your request.",
+            "Recipients":["Requester"]
+        },
+        "Question answered":
+        {
+            "Subject": "A question about this request has been answered by the requester.",
+            "Recipients": ["Staff participants"]
+        },
+        "Request closed":
+        {
+            "Subject": "The request has been closed",
+            "Recipients": ["Staff participants", "Subscribers"]
+        },
+        "City response added":
+        {
+            "Subject": "A response has been added to the request.",
+            "Recipients": ["Subscribers"]
+        },
+        "Request due":
+        {
+            "Subject": "A request in your department is due in two days.",
+            "Recipients": ["Staff owner", "Departmental backups"]
+        },
+        "Public note added":
+        {
+            "Subject": "A note has been added to this request by the requester.",
+            "Recipients": ["Staff participants"]
+        },
+        "Request made":
+        {
+            "Subject": "Your request has been submitted.",
+            "Recipients": ["Requester"]
+        },
+        "Request overdue":
+        {
+            "Subject": "A request in your department is overdue.",
+            "Recipients": ["Staff owner", "Departmental backups"]
+        },
+        "Request followed":
+        {
+            "Subject": "You are now subscribed to this request.",
+            "Recipients": ["Subscriber"]
+        }
+
+    }
 }
+

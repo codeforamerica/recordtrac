@@ -24,10 +24,16 @@ from RequestPresenter import RequestPresenter
 from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
 from sqlalchemy import func
 
+# These are the extensions that can be uploaded to Scribd.com:
 ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff']
 
+# These are the different email notification types that currently exist and are mapped to and from who might receive them and the subject line in /static/json/emails.json
+NOTIFICATION_TYPES = ["Request assigned","Question asked",
+"Question answered","Request closed","Response added","Request due","Public note added","Request made","Request overdue","Request followed"]
+
+
 # Set flags:
-upload_to_scribd = False
+upload_to_scribd = False 
 send_emails = False
 test = "[TEST] "
 if app.config['ENVIRONMENT'] != 'LOCAL':
@@ -113,10 +119,9 @@ def add_note(request_id, text, user_id):
 	if note:
 		change_request_status(request_id, "A response has been added.")
 		if user_id:
-			send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
+			generate_prr_emails(request_id = request_id, notification_type = "City response added")
 		else:
-			req = Request.query.get(request_id)
-			send_prr_email(request_id = request_id, notification_type = "Public note added", owner_id = req.current_owner)
+			generate_prr_emails(request_id = request_id, notification_type = "Public note added")
 		return note.id
 	return False
 
@@ -133,7 +138,7 @@ def upload_record(request_id, file, description, user_id):
 			db.session.add(record)
 			db.session.commit()
 			change_request_status(request_id, "A response has been added.")
-			send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
+			generate_prr_emails(request_id = request_id, notification_type = "City response added")
 			return record.id
 	return "There was an issue with your upload."
 
@@ -144,7 +149,7 @@ def add_offline_record(request_id, description, access, user_id):
 	db.session.commit()
 	if record:
 		change_request_status(request_id, "A response has been added.")
-		send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
+		generate_prr_emails(request_id = request_id, notification_type = "City response added")
 		return record.id
 	return False
 
@@ -155,7 +160,7 @@ def add_link(request_id, url, description, user_id):
 	db.session.commit()
 	if record:
 		change_request_status(request_id, "A response has been added.")
-		send_prr_email(request_id = request_id, notification_type = "Response added", requester_id = get_requester(request_id))
+		generate_prr_emails(request_id = request_id, notification_type = "City response added")
 		return record.id
 	return False
 			
@@ -172,10 +177,18 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 			subscriber = Subscriber(request_id = req.id, user_id = user.id)
 			db.session.add(subscriber)
 			db.session.commit()
-			send_prr_email(req.id, notification_type = "Request made", requester_id = subscriber.id)
+			generate_prr_emails(req.id, notification_type = "Request made", user_id = subscriber.id)
 		open_request(req.id)
 		return req.id, True
 	return req.id, False
+
+def add_subscriber(request_id, email):
+	req = Request.query.get(request_id)
+	user = create_or_return_user(email = email)
+	subscriber = Subscriber(request_id = req.id, user_id = user.id)
+	db.session.add(subscriber)
+	db.session.commit()
+	generate_prr_emails(req.id, notification_type = "Request followed", user_id = subscriber.id)
 
 def ask_a_question(request_id, owner_id, question):
 	""" City staff can ask a question about a request they are confused about."""
@@ -185,7 +198,7 @@ def ask_a_question(request_id, owner_id, question):
 	db.session.commit()
 	if qa:
 		change_request_status(request_id, "Pending")
-		send_prr_email(request_id, notification_type = "Question asked", requester_id = get_requester(request_id))
+		generate_prr_emails(request_id, notification_type = "Question asked", user_id = get_requester(request_id))
 		return qa.id
 	return False
 
@@ -197,8 +210,7 @@ def answer_a_question(qa_id, answer, subscriber_id = None):
 	db.session.add(qa)
 	db.session.commit()
 	change_request_status(qa.request_id, "Pending")
-	req = Request.query.get(qa.request_id)
-	send_prr_email(request_id = qa.request_id, notification_type = "Question answered", user_id = qa.owner_id)
+	generate_prr_emails(request_id = qa.request_id, notification_type = "Question answered")
 
 def create_or_return_user(email, alias = None, phone = None, department = None):
 	user = User.query.filter(func.lower(User.email) == func.lower(email)).first() 
@@ -234,16 +246,17 @@ def close_request(request_id, reason = "", current_user_id = None):
 	note = Note(request_id = request_id, text = reason, user_id = current_user_id)
 	db.session.add(note)
 	db.session.commit()
-	send_prr_email(request_id = request_id, notification_type = "Request closed", requester_id = get_requester(request_id))
+	generate_prr_emails(request_id = request_id, notification_type = "Request closed")
 
 def get_subscribers(request_id):
 	req = Request.query.get(request_id)
 	return req.subscribers
 
-def get_requester(request_id):
+def get_requester(request_id): 
+# Returns the first person who subscribed to a request, which is the requester
 	subscribers = get_subscribers(request_id)
-	for subscriber in subscribers:
-		return subscriber.id # Return first one for now
+	subscribers.sort(key = lambda x:x.date_created)
+	return subscribers[0].user_id
 
 def assign_owner(request_id, reason, email = None, alias = None, phone = None, notify = True): 
 	""" Called any time a new owner is assigned. This will overwrite the current owner."""
@@ -263,7 +276,7 @@ def assign_owner(request_id, reason, email = None, alias = None, phone = None, n
 	db.session.add(req)
 	db.session.commit()
 	if notify:
-		send_prr_email(request_id = request_id, notification_type = "Request assigned", owner_id = new_owner.id)
+		generate_prr_emails(request_id = request_id, notification_type = "Request assigned", user_id = user.id)
 	return new_owner.id
 
 def create_owner(request_id, reason, email):
@@ -375,38 +388,59 @@ def upload_file(file):
 			return allowed # Returns false and extension
 	return None, None
 
-def send_prr_email(request_id, notification_type, requester_id = None, owner_id = None, user_id = None):
-	app_url = app.config['APPLICATION_URL']
-	template = "generic_email.html"
-	if notification_type == "Request made":
-		template = "new_request_email.html"
+def get_email_info(notification_type):
 	email_json = open(os.path.join(app.root_path, 'static/json/emails.json'))
 	json_data = json.load(email_json)
-	email_subject = "Public Records Request %s: %s" %(request_id, json_data[notification_type])
-	page = None
-	uid = None
-	include_unsubscribe_link = True
-	if owner_id or user_id:
-		page = "%scity/request/%s" %(app_url,request_id)
-		if user_id:
-			uid = user_id
-		else:
-			owner = Owner.query.get(owner_id)
-			uid = owner.user_id
-		include_unsubscribe_link = False # Only gets excluded for city staff
-	if requester_id:
-		page = "%srequest/%s" %(app_url,request_id)
-		requester = Subscriber.query.get(requester_id)
-		uid = requester.user_id
-	email_address = user_email(uid)
-	if email_address:
-		try:
-			if send_emails:
-				send_email(render_template(template, page = page), [email_address], email_subject, include_unsubscribe_link = include_unsubscribe_link)
+	return json_data["Notification types"][notification_type]
+
+def get_staff_participants(request_id):
+	req = Request.query.get(request_id)
+	return req.owners
+
+def generate_prr_emails(request_id, notification_type, user_id = None):
+	app_url = app.config['APPLICATION_URL'] 
+	# Define the e-mail template:
+	template = "generic_email.html" 
+	if notification_type == "Request made":
+		template = "new_request_email.html"
+	# Get information on who to send the e-mail to and with what subject line based on the notification type:
+	email_info = get_email_info(notification_type=notification_type)
+	email_subject = "Public Records Request %s: %s" %(request_id, email_info["Subject"])
+	recipient_types = email_info["Recipients"]
+	page = "%srequest/%s" %(app_url,request_id) # The request URL
+	include_unsubscribe_link = True 
+	for recipient_type in recipient_types: 
+		if "Staff" in recipient_type:
+			page = "%scity/request/%s" %(app_url,request_id)
+			include_unsubscribe_link = False # Gets excluded for city staff
+		if recipient_type in ["Staff owner","Requester","Subscriber"]:
+			if user_id:
+				send_prr_email(page = page, recipients = [user_email(user_id)], subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link)
 			else:
-				print "%s to %s with subject %s" % (render_template("generic_email.html", page = page), email_address, email_subject)
-		except:
-			print "E-mail was not sent."
+				print "Can't send an e-mail out if no user exists."
+		elif recipient_type == "Subscribers":
+			subscribers = get_subscribers(request_id)
+			for subscriber in subscribers:
+				send_prr_email(page = page, recipients = [user_email(subscriber.user_id)], subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link) # Each subscriber needs to get a separate e-mail.
+		elif recipient_type == "Staff participants":
+			recipients = []
+			participants = get_staff_participants(request_id)
+			for participant in participants:
+				recipients.append(user_email(participant.user_id))
+			send_prr_email(page = page, recipients = recipients, subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = True)
+		else:
+			print recipient_type
+			print "Not a valid recipient type"
+
+def send_prr_email(page, recipients, subject, template, include_unsubscribe_link = True, cc_everyone = False):
+	if recipients:
+		# try:
+			if send_emails:
+				send_email(body = render_template(template, page = page), recipients = recipients, subject = subject, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = cc_everyone)
+			else:
+				print "%s to %s with subject %s" % (render_template(template, page = page), recipients, subject)
+		# except:
+			# print "E-mail was not sent."
 
 def user_email(uid):
 	if uid:
@@ -415,7 +449,7 @@ def user_email(uid):
 			return user.email
 	return None
 
-def send_email(body, recipients, subject, include_unsubscribe_link = True):
+def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_everyone = False):
 	mail = sendgrid.Sendgrid(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'], secure = True)
 	sender = app.config['DEFAULT_MAIL_SENDER']
 	plaintext = ""
@@ -423,8 +457,12 @@ def send_email(body, recipients, subject, include_unsubscribe_link = True):
 	message = sendgrid.Message(sender, subject, plaintext, html)
 	if not include_unsubscribe_link:
 		message.add_filter_setting("subscriptiontrack", "enable", 0)
-	for recipient in recipients:
-		message.add_to(recipient)
+	if cc_everyone:
+		for recipient in recipients:
+			message.add_cc(recipient)
+	else:
+		for recipient in recipients:
+			message.add_to(recipient)
 	message.add_bcc(sender)
 	mail.web.send(message)
 
@@ -570,15 +608,6 @@ def date_granular(timestamp):
 	else:
 		return "Just now."
 
-def owner_name(oid):
-	if oid:
-		owner = Owner.query.get(oid)
-		if owner and owner.user_id:
-			return user_name(owner.user_id)
-	return "City staff"
-
-
-
 def owner_uid(oid):
 	if oid:
 		owner = Owner.query.get(oid)
@@ -674,6 +703,3 @@ def get_dept_backup(dept_contact):
 		if json_data[line]["Contact"].lower() == dept_contact.lower():
 			return json_data[line]["Backup"]
 	return None
-
-def testerrs(string):
-	return 'hi'
