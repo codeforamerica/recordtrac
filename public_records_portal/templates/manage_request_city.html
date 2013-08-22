@@ -7,14 +7,15 @@
 {% block head %} {% endblock head %}
 {% block content %}
 
-  <div class="span8">
+<!-- Shortcuts at top of page -->
+<!--   <div class="span8">
   <ul class="nav nav-pills hidden-phone hidden-tablet">
     <li class="disabled"><a href="#">Shortcuts </a></li>
     <li><a href="#submitRecord">Add a record <i class="icon-arrow-down"></i></a></li>
     <li><a href="#note">Add a note <i class="icon-arrow-down"></i></a></li>
     <li><a href="#closeRequest">Close request <i class="icon-arrow-down"></i></a></li>
   </ul>
-</div>
+</div> -->
   <p class="text-right">Due: {{ req.date_created | due_date(req.extended) }} <span class="muted">(Submitted {{ req.date_created | date }})</span></p>
   {{ super() }}
 
