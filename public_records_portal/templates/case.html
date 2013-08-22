@@ -58,7 +58,7 @@
                 <div class="span10">
                   {% set uid = qa.owner_id %}
                   {% set staff = (uid | get_staff) %}
-                  <div class="qa-question"> {{ qa.question }} - <em><a href="/staff_card/{{uid}}" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staff.alias or staff.email }}</span></a></em></div>
+                  <div class="qa-question" truncateable="250"> {{ qa.question }} - <em><a href="/staff_card/{{uid}}" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staff.alias or staff.email }}</span></a></em></div>
                   {% if qa.answer %}
                     <div class="qa-answer"> {{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></div>
                     {% else %}
