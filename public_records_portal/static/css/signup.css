@@ -1,0 +1,41 @@
+#intro {
+	height: 100% !important;
+	-webkit-box-shadow: 0.1em 0 0.5em #615850;
+	-moz-box-shadow: 0.1em 0 0.5em #615850;
+	-ms-box-shdaow: 0.1em 0 0.5em #615850;
+	-o-box-shadow: 0.1em 0 0.5em #615850;
+	box-shadow: 0.1em 0 0.5em #615850;
+	padding: 5% 5% 10% 5%;
+
+	background-image: -ms-linear-gradient(top, #FFFFFF 0%, #C2E6F2 300%);
+	background-image: -moz-linear-gradient(top, #FFFFFF 0%, #C2E6F2 300%);
+	background-image: -o-linear-gradient(top, #FFFFFF 0%, #C2E6F2 300%);
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #FFFFFF), color-stop(3, #C2E6F2));
+	background-image: -webkit-linear-gradient(top, #FFFFFF 0%, #C2E6F2 300%);
+	background-image: linear-gradient(to bottom, #FFFFFF 0%, #009ce6 50%);
+}
+
+#intro h1, p {
+	color: #615850;
+	font-family: 'asap'; 
+}
+
+
+#maincontainer {
+	padding: 0 0 0 0;
+	min-height: 100% !important;
+}
+
+#intro img {
+	margin-bottom: 3em;
+}
+
+#maincontainer { 
+  overflow: hidden; 
+  .... 
+} 
+
+#intro { 
+  margin-bottom: -5000px; 
+  padding-bottom: 5000px;  
+} 
