@@ -29,20 +29,25 @@
     <body>
     	<div id="maincontainer" class="container-fluid">
 		  <div class="row-fluid">
+
 		    <div id="intro" class="span4">
-		    <!--Sidebar content-->
-		    <img src="{{ url_for('static', filename='images/codeforamericalogo_oakland.png') }}"  alt="Code for America: Oakland"/>
-		    <p class="lead">
-				The Code for America Oakland Fellows are building a new web application that will help cities manage and respond to public records requests.  
-			</p>
-			<p>
-				It will also enable the public to quickly submit public records requests, search through past requests, and better understand how they are fulfilled by making the process itself public.
-			</p>
-			<p>
-				If you are interested in reusing this tool we'd love to connect.  Just fill out the information to the right.
-			</p>
-			<a href="/about">More info...</a>
+			    <!--Sidebar content-->
+			    <img src="{{ url_for('static', filename='images/CfA_logo.png') }}"  alt="Code for America"/>
+			    <p class="lead">
+					The Code for America Oakland Fellows are building a new web application that will help cities manage and respond to public records requests.  
+				</p>
+				<p>
+					It will also enable the public to quickly submit public records requests, search through past requests, and better understand how they are fulfilled by making the process itself public.
+				</p>
+				<p>
+					If you are interested in reusing this tool we'd love to connect.  Just fill out the information to the right.
+				</p>
+				<a href="/about">More info...</a>
+				<div>
+					<img id="flag_tag_red" src="{{ url_for('static', filename='images/flag_tag_red.png') }}"  class="text-center" width="200" alt="Code for America"/>
+				</div>
 		    </div>
+
 		    <div id="form" class="span8">
 		      <!--Body content-->
 		      <iframe src="https://docs.google.com/forms/d/1vb1_5zTd91ltVpVYlIX7MT9sh3qbLyTStmLCcUlTvNM/viewform?embedded=true" width="850" height="1500" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>

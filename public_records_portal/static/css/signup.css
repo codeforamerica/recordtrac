@@ -7,11 +7,11 @@
 	box-shadow: 0.1em 0 0.5em #615850;
 	padding: 5% 5% 10% 5%;
 
-	background-image: -ms-linear-gradient(top, #FFFFFF 0%, #C2E6F2 300%);
-	background-image: -moz-linear-gradient(top, #FFFFFF 0%, #C2E6F2 300%);
-	background-image: -o-linear-gradient(top, #FFFFFF 0%, #C2E6F2 300%);
-	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #FFFFFF), color-stop(3, #C2E6F2));
-	background-image: -webkit-linear-gradient(top, #FFFFFF 0%, #C2E6F2 300%);
+	background-image: -ms-linear-gradient(top, #FFFFFF 0%, #009ce6 50%);
+	background-image: -moz-linear-gradient(top, #FFFFFF 0%, #009ce6 50%);
+	background-image: -o-linear-gradient(top, #FFFFFF 0%, #009ce6 50%);
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #FFFFFF), color-stop(3, #009ce6));
+	background-image: -webkit-linear-gradient(top, #FFFFFF 0%, #009ce6 50%);
 	background-image: linear-gradient(to bottom, #FFFFFF 0%, #009ce6 50%);
 }
 
@@ -28,6 +28,9 @@
 
 #intro img {
 	margin-bottom: 3em;
+	display: block;
+    margin-left: auto;
+    margin-right: auto
 }
 
 #maincontainer { 
