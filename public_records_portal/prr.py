@@ -152,7 +152,7 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 	request_id = find_request(text)
 	if not request_id:
 		request_id = create_request(text = text, user_id = user_id)
-		new_owner_id = assign_owner(request_id = req.id, reason = assigned_to_reason, email = assigned_to_email, alias = assigned_to_name)
+		new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email, alias = assigned_to_name)
 		if email: # If the user provided an e-mail address, add them as a subscriber to the request.
 			user_id = create_or_return_user(email = email, alias = alias, phone = phone)
 			subscriber_id = create_subscriber(request_id = req.id, user_id = user_id)
