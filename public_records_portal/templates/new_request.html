@@ -16,9 +16,10 @@
               <h3>Create a new request</h3>
 
               <p class="lead">What are you trying to find?</p>
+              <p>Use this site to request copies of specific documents, photos, emails, texts, audio recordings, electronic information and data in the City’s databases. If you need general information on City services, try <a href="http://answers.oaklandnet.com">Oakland Answers</a>.</p>
 
               <div class="control-group">
-                <!-- <label class="control-label" for="requestTextarea">What are you trying to find?</label> -->
+                <label for="requestTextarea"><strong><i class="icon-exclamation-sign"></i> Everything in the request box will be displayed publicly.</strong></label>
                 <div >
                   <textarea id="requestTextarea" autofocus  name="request_text" rows="3" class="input-block-level" placeholder="Describe your request. Be as specific as possible." ></textarea>
                   <!-- <span class="request_field_explanation"><p>{{"Enter records request" | explain_action("What")}}</p><p><em>{{"Enter records request" | explain_action("Who")}}</em> {{"Enter records request" | explain_action("Action")}}</p></span> -->
@@ -81,7 +82,7 @@
               <li>Don’t reveal personal information, like your social security number, driver’s license number, or home address.</li>
             </ul>
           <h4>Example</h4>
-            <p><em>I need a copy of the all of Mayor Jean Quan’s emails sent between July 30, 2013-August 8, 2013.</p> <p>The emails should contain the words “Art+Soul festival” or  “Art + Soul Oakland.”</em></p>
+            <blockquote><p>I need a copy of the all of Mayor Jean Quan’s emails sent between July 30, 2013-August 8, 2013.</p><p>The emails should contain the words “Art+Soul festival” or  “Art + Soul Oakland.”</p></blockquote>
         </div>
       {% endblock sidebar %}
     </div>
