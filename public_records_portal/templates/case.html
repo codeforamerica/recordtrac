@@ -19,7 +19,7 @@
         {% block proxyrequester_info %}
           <small>
             {% if req.creator_id %}
-              <span>This request was submitted on behalf of the requester by {{ req.creator_id | get_staff_info("name") }}.</span>
+              <span>This request was submitted on behalf of the requester by {{ "alias"| get_attribute(req.creator_id, "User") }}.</span>
             {% endif %}
           </small>
         {% endblock proxyrequester_info %}
@@ -27,60 +27,29 @@
       {% endblock request %}
 
       <!-- shows any existing Q&A or public notes -->
-      {% if req.notes or req.qas %}
-        <!-- shows any existing public notes -->
-        {% if req.notes %}
-          {% for note in req.notes %}
-            {% if not note.user_id %}
-              <div class="row-fluid response note">
-                <div class="span2 text-center">
-                  <i class="icon-edit icon-2x">  </i> </br>
-                  <small> {{ note.date_created | date_granular }}</small> </br>
-                </div>
-                <div class="span10">
-                  <p>{{ note.text }} - <em>Requester</em></p>
-                </div>
+      {% set request_data = ( req | get_request_data_chronologically ) %}
+        {% for response in request_data %}
+          {% set icon = response.get_icon() %}
+            <div class="row-fluid response">
+              <div class="span2 text-center">
+                <i class="{{icon}}">  </i></br>
+                <small> {{ response.date() | date_granular }} </small> </br>
               </div>
-            {% endif %}
-          {% endfor %}
-        {% endif %}
-        
-        <!-- shows any existing Q&A -->
-        {% if req.qas %}
-          {% block qas %}
-          <div class="row-fluid">
-            {% for qa in req.qas %}
-              <div class="row-fluid response qa">
-                <div class="span2 text-center">
-                  <i class="icon-question icon-2x">  </i> </br>
-                  <small> {{ qa.date_created | date_granular }}</small> </br>
-                </div>
-                <div class="span10">
-                  {% set uid = qa.owner_id %}
-                  {% set staff = (uid | get_staff) %}
-                  <div class="qa-question"> {{ qa.question }} - <em><a href="/staff_card/{{uid}}" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staff.alias or staff.email }}</span></a></em></div>
-                  {% if qa.answer %}
-                    <div class="qa-answer"> {{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></div>
-                    {% else %}
-                    {% block answer %}{% endblock answer %}
-                  {% endif %}
-                </div>
+              <div class="span10">
+                <p>
+                   {{ response.display_text() | safe }}
+                </p>
               </div>
-            {% endfor %}
-          </div>
-          {% endblock qas %}
-        {% endif %}
+            </div>
+        {% endfor %}
 
-      {% endif %}
-    </div>
-  {% endblock well %}
-
+      {% endblock well %}
   <div id="routed-to-container" class="span3" data-sticky="true">
     {% block status %}
     <div class="text-right">
       {% block routing %}
-      {% set uid = (req.current_owner | owner_uid) %}
-      {% set staff = (uid | get_staff) %}
+      {% set uid = "user_id" | get_attribute(req.current_owner, "Owner") %}
+      {% set staff = "User" | get_obj(uid) %}
       Routed to <a href="/staff_card/{{uid}}" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverRoute"><span class="label label-info" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverRoute')">{{ staff.alias or staff.email }}</span></a>
       {% endblock routing %}
       {% block history %}
@@ -102,7 +71,7 @@
             <tr>
               <td>{{ owner.date_created | date }}</td>
               <td><i class="icon-circle-arrow-right"></i></td>
-              <td>{{ owner.user_id | get_staff_info("name") }}</td>
+              <td>{{ "alias" | get_attribute(owner.user_id, "User") }}</td>
               <td>{{ owner.reason }}</td>
             </tr>              
             {% endfor %}
@@ -136,7 +105,7 @@
   {% if responses %} 
     {% for response in responses %}
       {% set uid = response.uid() %}
-      {% set staff = (uid | get_staff) %}
+      {% set staff = ("User" | get_obj(uid)) %}
       {% set icon = response.get_icon() %}
       <div class="row-fluid response-wrapper">
         <div class="span2 text-center">
