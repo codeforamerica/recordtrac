@@ -155,7 +155,7 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 		new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email, alias = assigned_to_name)
 		if email: # If the user provided an e-mail address, add them as a subscriber to the request.
 			user_id = create_or_return_user(email = email, alias = alias, phone = phone)
-			subscriber_id = create_subscriber(request_id = req.id, user_id = user_id)
+			subscriber_id = create_subscriber(request_id = request_id, user_id = user_id)
 			generate_prr_emails(request_id, notification_type = "Request made", user_id = subscriber_id)
 		open_request(request_id)
 		return request_id, True
