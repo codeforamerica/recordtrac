@@ -1,0 +1,30 @@
+<!-- This template is show all cases in the system. -->
+
+{% extends "all_requests.html" %}
+{% block title %}{{title}}{% endblock title %}
+
+{% block sidebar %}
+  <div class="well r_sidebar r_sidebar-fixed hidden-phone hidden-tablet">
+    <h4>View</h4>
+    <label class="checkbox">
+      <input type="checkbox" value="" checked>
+      My requests only
+    </label>
+    <label class="checkbox">
+      <input type="checkbox" value="" checked>
+      Open requests only
+    </label>
+    <label class="checkbox">
+      <input type="checkbox" value="">
+      Due requests only
+    </label>
+    <select>
+      <option value="">All departments</option>
+      <option value="">Dept 1</option>
+      <option value="">Dept 2</option>
+      <option value="">Dept 3</option>
+      <option value="">Dept 4</option>
+      <option value="">Dept 5</option>
+    </select>
+  </div>
+{% endblock sidebar %}
