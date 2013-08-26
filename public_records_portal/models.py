@@ -28,7 +28,7 @@ class User(db.Model):
 		self.password = password
 		self.department = department
 	def __repr__(self):
-		return self.email
+		return '<User %r>' % self.email
 
 class Request(db.Model): 
 # The public records request
@@ -51,7 +51,7 @@ class Request(db.Model):
 		self.date_created = datetime.now().isoformat()
 		self.creator_id = creator_id
 	def __repr__(self):
-		return self.text
+		return '<Request %r>' % self.text
 
 class QA(db.Model):
 # A Q & A block for a request 
@@ -69,7 +69,7 @@ class QA(db.Model):
 		self.date_created = datetime.now().isoformat()
 		self.owner_id = owner_id
 	def __repr__(self):
-		return "Q: %s A: %s" %(question, answer)
+		return "<QA Q: %r A: %r>" %(self.question, self.answer)
 
 class Owner(db.Model): 
 # A member of city staff assigned to a particular request, that may or may not upload records towards that request.
@@ -85,7 +85,7 @@ class Owner(db.Model):
 		self.request_id = request_id
 		self.date_created = datetime.now().isoformat()
 	def __repr__(self):
-		return self.user_id
+		return '<Owner %r>' %self.user_id
 
 
 class Subscriber(db.Model): 
@@ -101,7 +101,7 @@ class Subscriber(db.Model):
 		self.request_id = request_id
 		self.date_created = datetime.now().isoformat()
 	def __repr__(self):
-		return self.user_id
+		return '<Subscriber %r>' %self.user_id
 
 
 class Record(db.Model):
@@ -127,7 +127,7 @@ class Record(db.Model):
 		self.filename = filename
 		self.access = access
 	def __repr__(self):
-		return self.records
+		return '<Record %r>' % self.description
 
 class Note(db.Model):
 # A note on a request.
@@ -143,5 +143,5 @@ class Note(db.Model):
 		self.user_id = user_id
 		self.date_created = datetime.now().isoformat()
 	def __repr__(self):
-		return self.text
+		return '<Note %r>' % self.text
 
