@@ -1,14 +1,14 @@
 /* CHOOSE EITHER NORMAL OR FIXED SIDEBAR, NOT BOTH */
 
 /* normal sidebar */
-/*.r_sidebar {
+.r_sidebar {
 	margin-top: 4.25em;
 	margin-right: 1em;
-}*/
+}
 
 
 /* fixed right sidebar */
-.r_sidebar-fixed {
+/*.r_sidebar-fixed {
     position:fixed;
     top:17.25%;
     width:19%;
@@ -25,4 +25,4 @@
         position:static;
         width: auto;
      }
- }
+ }*/

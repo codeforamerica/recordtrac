@@ -91,13 +91,13 @@ label.error {
 }
 
 /* new request form field explanations */
-.request_field_explanation {
+/*.request_field_explanation {
 	margin-left: 5%;
 	vertical-align: top;
 	display: inline-block;
 	max-width: 600px;
 	color: #606060  ;
-}
+}*/
 
 /* give the logout button more space */
 #logout_form {
@@ -133,6 +133,11 @@ label.error {
 /* gives the close button a bit of breathing room */
 #closeRequest {
 	margin-bottom: 10%;
+}
+
+/* gives the create request button a bit of breathing room */
+#requestButton {
+	margin-bottom: 20%;
 }
 
 /* ----- Sticky Footer ----- by Ryan Fait http://ryanfait.com/sticky-footer/ ----- */
