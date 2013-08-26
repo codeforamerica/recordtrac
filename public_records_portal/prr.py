@@ -162,10 +162,9 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 	return request_id, False
 
 def add_subscriber(request_id, email):
-	req = get_obj("Request", request_id)
 	user_id = create_or_return_user(email = email)
-	subscriber_id = create_subscriber(request_id = req.id, user_id = user_id)
-	generate_prr_emails(req.id, notification_type = "Request followed", user_id = subscriber_id)
+	subscriber_id = create_subscriber(request_id = request_id, user_id = user_id)
+	generate_prr_emails(request_id, notification_type = "Request followed", user_id = subscriber_id)
 
 def ask_a_question(request_id, owner_id, question):
 	""" City staff can ask a question about a request they are confused about."""

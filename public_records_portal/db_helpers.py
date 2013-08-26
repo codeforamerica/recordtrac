@@ -83,7 +83,7 @@ def create_request(text, user_id):
 	return req.id
 
 def create_subscriber(request_id, user_id):
-	subscriber = Subscriber(request_id = req.id, user_id = user_id)
+	subscriber = Subscriber(request_id = request_id, user_id = user_id)
 	db.session.add(subscriber)
 	db.session.commit()
 	return subscriber.id
