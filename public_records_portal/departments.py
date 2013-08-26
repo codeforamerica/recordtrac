@@ -1,3 +1,7 @@
+import os
+import json
+from public_records_portal import app
+
 """ 
 .. module:: prr
 	:synopsis: Public records functionality as related to a municipality's different departments.

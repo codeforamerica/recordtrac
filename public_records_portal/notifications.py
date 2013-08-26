@@ -3,7 +3,7 @@ from helpers import format_date
 from public_records_portal import app
 import os
 import json
-from db_helpers import get_attribute
+from db_helpers import get_attribute, get_objs
 
 
 def generate_prr_emails(request_id, notification_type, user_id = None):
@@ -106,7 +106,7 @@ def get_email_info(notification_type):
 
 
 def notify_due():
-	requests = Request.query.all()
+	requests = get_objs("Request")
 	email_json = open(os.path.join(app.root_path, 'static/json/emails.json'))
 	json_data = json.load(email_json)
 	for req in requests:

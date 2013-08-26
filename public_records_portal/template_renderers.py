@@ -5,8 +5,8 @@ from flask import render_template, request, redirect, url_for
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
 from public_records_portal import app, filters, models
 from filters import *
-from prr import add_resource, update_resource, make_request
-from db_helpers import create_or_return_user, get_obj, get_objs, update_obj, get_owners_by_user_id, get_request_by_owner
+from prr import add_resource, update_resource, make_request, close_request
+from db_helpers import *
 import departments
 
 # Initialize login
@@ -141,7 +141,7 @@ def close(request_id = None):
 	if request.method == 'POST':
 		template = 'closed.html'
 		request_id = request.form['request_id']
-		close_request(request_id = request_id, reason = request.form['close_reason'], current_user_id = current_user.id)
+		close_request(request_id = request_id, reason = request.form['close_reason'], user_id = current_user.id)
 		return show_request(request_id, template= template)
 	return render_template('error.html', message = "You can only close from a requests page!")
 
@@ -181,12 +181,10 @@ def login(email=None, password=None):
 	if request.method == 'POST':
 		email = request.form['email']
 		password = request.form['password']
-		if email:
-			user = create_or_return_user(email=email)
-			if user.password == password:
-				user_for_login = get_obj("User", user.id)
-				login_user(user_for_login)
-				return redirect(url_for('tutorial'))
+		user_to_login = authenticate_login(email, password)
+		if user_to_login:
+			login_user(user_to_login)
+			return redirect(url_for('tutorial'))
 	return render_template('error.html', message = "Oops, your e-mail/ password combo didn't work.") 
 
 @login_required

@@ -23,7 +23,7 @@ from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
 from sqlalchemy import func
 from notifications import generate_prr_emails
 import scribd_helpers
-from db_helpers import get_obj, get_attribute, change_request_status, remove_obj, update_obj, create_note, create_or_return_user
+from db_helpers import *
 
 # These are the extensions that can be uploaded to Scribd.com:
 ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff']
@@ -112,13 +112,6 @@ def add_note(request_id, text, user_id):
 		return note_id
 	return False
 
-def add_staff_participant(request_id, user_id):
-	participant = Owner.query.filter_by(request_id = request_id, user_id = user_id)
-	if not participant:
-		participant = Owner(request_id = request_id, user_id = user_id, reason = "Participant")
-		return True
-	else:
-		return False
 
 def upload_record(request_id, file, description, user_id):
 	try:
@@ -156,53 +149,39 @@ def add_link(request_id, url, description, user_id):
 			
 def make_request(text, email = None, assigned_to_name = None, assigned_to_email = None, assigned_to_reason = None, user_id = None, phone = None, alias = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
-	req = Request.query.filter_by(text = text).first()
-	if not req:
-		req = Request(text = text, creator_id = user_id)
-		db.session.add(req)
-		db.session.commit()
+	request_id = find_request(text)
+	if not request_id:
+		request_id = create_request(text = text, user_id = user_id)
 		new_owner_id = assign_owner(request_id = req.id, reason = assigned_to_reason, email = assigned_to_email, alias = assigned_to_name)
 		if email: # If the user provided an e-mail address, add them as a subscriber to the request.
-			user = create_or_return_user(email = email, alias = alias, phone = phone)
-			subscriber = Subscriber(request_id = req.id, user_id = user.id)
-			db.session.add(subscriber)
-			db.session.commit()
-			generate_prr_emails(req.id, notification_type = "Request made", user_id = subscriber.id)
-		open_request(req.id)
-		return req.id, True
-	return req.id, False
+			user_id = create_or_return_user(email = email, alias = alias, phone = phone)
+			subscriber_id = create_subscriber(request_id = req.id, user_id = user_id)
+			generate_prr_emails(request_id, notification_type = "Request made", user_id = subscriber_id)
+		open_request(request_id)
+		return request_id, True
+	return request_id, False
 
 def add_subscriber(request_id, email):
-	req = Request.query.get(request_id)
-	user = create_or_return_user(email = email)
-	subscriber = Subscriber(request_id = req.id, user_id = user.id)
-	db.session.add(subscriber)
-	db.session.commit()
-	generate_prr_emails(req.id, notification_type = "Request followed", user_id = subscriber.id)
+	req = get_obj("Request", request_id)
+	user_id = create_or_return_user(email = email)
+	subscriber_id = create_subscriber(request_id = req.id, user_id = user_id)
+	generate_prr_emails(req.id, notification_type = "Request followed", user_id = subscriber_id)
 
 def ask_a_question(request_id, owner_id, question):
 	""" City staff can ask a question about a request they are confused about."""
-	# qa = create_resource("qa", dict(request_id = request_id, question = question, owner_id = owner_id))
-	qa = QA(request_id = request_id, question = question, owner_id = owner_id)
-	db.session.add(qa)
-	db.session.commit()
-	if qa:
+	qa_id = create_QA(request_id = request_id, question = question, owner_id = owner_id)
+	if qa_id:
 		change_request_status(request_id, "Pending")
 		generate_prr_emails(request_id, notification_type = "Question asked", user_id = get_requester(request_id))
 		add_staff_participant(request_id = request_id, user_id = get_attribute(attribute = "user_id", obj_id = owner_id, obj_type = "Owner"))
-		return qa.id
+		return qa_id
 	return False
 
 def answer_a_question(qa_id, answer, subscriber_id = None):
 	""" A requester can answer a question city staff asked them about their request."""
-	qa = get_obj("QA", qa_id)
-	qa.subscriber_id = subscriber_id
-	qa.answer = answer
-	db.session.add(qa)
-	db.session.commit()
-	change_request_status(qa.request_id, "Pending")
-	generate_prr_emails(request_id = qa.request_id, notification_type = "Question answered")
-
+	request_id = create_answer(qa_id, subscriber_id, answer)
+	change_request_status(request_id, "Pending")
+	generate_prr_emails(request_id = request_id, notification_type = "Question answered")
 
 def open_request(request_id):
 	change_request_status(request_id, "Open")
@@ -210,24 +189,20 @@ def open_request(request_id):
 
 def assign_owner(request_id, reason, email = None, alias = None, phone = None, notify = True): 
 	""" Called any time a new owner is assigned. This will overwrite the current owner."""
-	user = create_or_return_user(email = email, alias = alias, phone = phone)
-	req = Request.query.get(request_id)
+	user_id = create_or_return_user(email = email, alias = alias, phone = phone)
+	req = get_obj("Request", request_id)
 	current_owner_id = None
 	if not req.current_owner:
 		current_owner_id = req.current_owner
-	owner = Owner.query.filter_by(request_id = int(request_id), user_id = int(user.id)).first() 
-	if current_owner_id and owner:
-		if current_owner_id == owner.id: # This would happen if someone is trying to reassign to the existing owner
+	owner_id = find_owner(request_id = int(request_id), user_id = user_id)
+	if current_owner_id and owner_id:
+		if current_owner_id == owner_id: # This would happen if someone is trying to reassign to the existing owner
 			return None 
-	new_owner = Owner(request_id = request_id, user_id = user.id, reason = reason)
-	db.session.add(new_owner)
-	db.session.commit()
-	req.current_owner = new_owner.id
-	db.session.add(req)
-	db.session.commit()
+	new_owner_id = create_owner(request_id = request_id, reason = reason, user_id = user_id)
+	update_obj(attribute = "current_owner", val = new_owner_id, obj = req)
 	if notify:
-		generate_prr_emails(request_id = request_id, notification_type = "Request assigned", user_id = user.id)
-	return new_owner.id
+		generate_prr_emails(request_id = request_id, notification_type = "Request assigned", user_id = user_id)
+	return new_owner_id
 
 
 def allowed_file(filename):
@@ -313,12 +288,11 @@ def last_note(request_id):
 	return None
 
 
-def close_request(request_id, reason = "", current_user_id = None):
+def close_request(request_id, reason = "", user_id = None):
 	req = get_obj("Request", request_id)
-	current_owner = get_obj("Owner", req.current_owner)
 	change_request_status(request_id, "Closed")
 	# Create a note to capture closed information:
-	create_note(request_id, reason, current_user_id)
+	create_note(request_id, reason, user_id)
 	generate_prr_emails(request_id = request_id, notification_type = "Request closed")
 	add_staff_participant(request_id = request_id, user_id = user_id)
 
