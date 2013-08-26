@@ -46,7 +46,7 @@
 .less, .more {
   color: rgb(82, 127, 223);
 }
-.less:hover, .more:hover {
+/*.less:hover, .more:hover {
   cursor: hand;
   cursor: pointer;
-}
+}*/
