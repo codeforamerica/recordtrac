@@ -57,7 +57,8 @@
       {% block routing %}
         Routed to  
         <div class="btn-group"  style="font-size:15px">
-          <div class="popover-container"><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{(req.current_owner | owner_uid)| get_staff_info("name")}} <span class="caret"></span> </a></div>
+          {% set uid = "user_id" | get_attribute(req.current_owner, "Owner") %}
+          <div class="popover-container"><a class="btn btn-info" data-placement="bottom" href="#" id="reroutePopover"> {{ "alias" | get_attribute(uid, "User") }} <span class="caret"></span> </a></div>
           <div id="reroutePopover-head" class="hide">Reassign to: <a class="close" href="#">&times;</a> </div>
           <div id="reroutePopover-content" class="hide">              
             <form id="rerouteForm" class="form-inline" method ="post" action="/update_a_owner">
@@ -88,7 +89,8 @@
   {% endblock proxyrequester_info %}
   {% block requester_info %}
     <small>
-      <span> Requester's name: {{ (req.id | get_requester) | subscriber_name }} and phone number: {{ (req.id | get_requester) | subscriber_phone }}</span>
+      {% set sid = req.id | get_requester %}
+      <span> Requester's name: {{ "alias" | get_subscriber_attribute(sid) }} and phone number: {{ "phone" | get_subscriber_attribute(sid) }}</span>
     </small>
   {% endblock requester_info %}
 

@@ -3,12 +3,11 @@
 
 from flask import render_template, request, redirect, url_for
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
-from sqlalchemy.exc import IntegrityError, InvalidRequestError
-from public_records_portal import app, filters, models
-from models import User, Request, Owner
+from public_records_portal import app
 from filters import *
-import prr
-from prr import *
+from prr import add_resource, update_resource, make_request, close_request
+from db_helpers import *
+import departments
 
 # Initialize login
 login_manager = LoginManager()
@@ -33,7 +32,7 @@ def new_request():
 		assigned_to_reason = app.config['DEFAULT_OWNER_REASON']
 		department = request.form['request_department']
 		if department:
-			prr_email = get_prr_liaison(department)
+			prr_email = departments.get_prr_liaison(department)
 			if prr_email:
 				assigned_to_email = prr_email
 				assigned_to_reason = "PRR Liaison for %s" %(department)
@@ -56,9 +55,9 @@ def index():
 @login_required
 def your_requests():
 	all_record_requests = []
-	owners = Owner.query.filter_by(user_id = current_user.id)
+	owners = get_owners_by_user_id(current_user.id)
 	for owner in owners:
-		req = Request.query.filter_by(current_owner = owner.id).first()
+		req = get_request_by_owner(owner.id)
 		if req:
 			all_record_requests.append(req)
 	return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = current_user.id, title = "Requests assigned to you")
@@ -83,14 +82,14 @@ def show_request_for_x(audience, request_id):
 show_request_for_x.methods = ['GET', 'POST']
 
 def show_response(request_id):
-	req = Request.query.get(request_id)
+	req = get_obj("Request", request_id)
 	if not req:
 		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
 	return render_template("response.html", req = req, user_id = get_user_id())
 
 def show_request(request_id, template = None):
 	current_user_id = get_user_id()
-	req = Request.query.get(request_id)
+	req = get_obj("Request", request_id)
 	if not req:
 		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
 	if template:
@@ -105,7 +104,7 @@ def show_request(request_id, template = None):
 
 @login_required
 def edit_case(request_id):
-	req = Request.query.get(request_id)
+	req = get_obj("Request", request_id)
 	return render_template("edit_case.html", req = req, user_id = get_user_id())
 
 @login_required
@@ -142,13 +141,13 @@ def close(request_id = None):
 	if request.method == 'POST':
 		template = 'closed.html'
 		request_id = request.form['request_id']
-		close_request(request_id = request_id, reason = request.form['close_reason'], current_user_id = current_user.id)
+		close_request(request_id = request_id, reason = request.form['close_reason'], user_id = current_user.id)
 		return show_request(request_id, template= template)
 	return render_template('error.html', message = "You can only close from a requests page!")
 
 # Shows all public records requests that have been made.
 def requests():
-	all_record_requests = Request.query.all()
+	all_record_requests = get_objs("Request")
 	if all_record_requests:
 		return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = get_user_id(), title = "All Requests")
 	else:
@@ -160,7 +159,7 @@ def unauthorized():
 
 @login_manager.user_loader
 def load_user(userid):
-	user = models.User.query.get(userid)
+	user = get_obj("User", userid)
 	return user
 
 
@@ -182,12 +181,10 @@ def login(email=None, password=None):
 	if request.method == 'POST':
 		email = request.form['email']
 		password = request.form['password']
-		if email_validation(email):
-			user = create_or_return_user(email=email)
-			if user.password == password:
-				user_for_login = models.User.query.get(user.id)
-				login_user(user_for_login)
-				return redirect(url_for('tutorial'))
+		user_to_login = authenticate_login(email, password)
+		if user_to_login:
+			login_user(user_to_login)
+			return redirect(url_for('tutorial'))
 	return render_template('error.html', message = "Oops, your e-mail/ password combo didn't work.") 
 
 @login_required
@@ -196,10 +193,7 @@ def update_password(password=None):
 	if request.method == 'POST':
 		try:
 			password = request.form['password']
-			user = models.User.query.get(current_user_id)
-			user.password = password
-			db.session.add(user)
-			db.session.commit()
+			update_obj("password", password, "User", current_user_id)
 			return index()
 		except:
 			return render_template('error.html', message = "Something went wrong updating your password.")

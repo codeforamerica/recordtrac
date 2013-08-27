@@ -43,7 +43,7 @@
         },
     "Enter department or document type": 
         {
-            "Action":"Tell us where to send your request or the type of document you need.",
+            "Action":"Tell us where to send your request or the type of document you need. Leave this space blank if you don't know where it should go. We'll get it to the right person.",
             "What":"",
             "Who":""
         },

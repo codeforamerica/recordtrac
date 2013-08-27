@@ -22,11 +22,6 @@
             {% if responses %} 
                 <div class="span10">
                   {% for response in responses %}
-                    {% set uid = response.uid %}
-                    {% set staffName = (uid | get_staff_info("name")) %}
-                    {% set staffDept = (uid | get_staff_info("dept")) %}
-                    {% set staffPhone = (uid | get_staff_info("phone")) %}
-                    {% set staffEmail = (uid | user_email) %}
                       <div class="row-fluid response">
                         <div class="span2 text-center">
                           <i class="{{response.icon}}">  </i></br>
@@ -34,7 +29,7 @@
                         </div>
                         <div class="span10">
                           <p> 
-                             {{ response.text | safe }} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}', '{{staffPhone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staffName }}</span></a></em>. 
+                             {{ response.text | safe }} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{response.staff_email}}', '{{response.staff_dept}}', '{{response.staff_phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ response.staff_alias or response.staff_email }}</span></a></em>. 
                           </p>
                         </div>
                       </div>

@@ -1,6 +1,6 @@
 from public_records_portal import models
 from models import Note, QA
-import prr
+from db_helpers import get_obj
 
 class RequestPresenter:
 	def __init__(self, request, qa = None, note = None, index = None, public = False):
@@ -11,7 +11,7 @@ class RequestPresenter:
 			self.response = qa
 			self.type = "qa"
 			self.uid = self.response.owner_id
-			self.staff = prr.get_staff(self.uid)
+			self.staff = get_obj("User", self.uid)
 			directory_popover = "directoryPopover('%s', '%s', '%s', '#contactinfoPopoverQA%s')" %(self.staff.email, self.staff.department, self.staff.phone, index)
 			self.owner_link = '<a href="/staff_card/%s" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverQA%s" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="%s">%s</span></a>' % (self.response.owner_id, index, directory_popover, self.staff.alias or self.staff.name)
 			self.icon = "icon-question icon-2x"

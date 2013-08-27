@@ -79,7 +79,7 @@
     
             <ul  class="nav pull-right">
               <li>
-                <p class="navbar-text"> {{ user_id | get_staff_info("name") }} </p>
+                <p class="navbar-text"> {{ "alias" | get_attribute(user_id, "User") }} </p>
               </li>
             
               <li>

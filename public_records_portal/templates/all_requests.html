@@ -5,7 +5,7 @@
     
 {% block container %}
   <div class="row-fluid">
-
+    
     <div class="span8 offset1">
       <h3>Explore requests</h3>
       <div>
@@ -33,9 +33,9 @@
                   <td>{{ request.id }}</td>
                   <td>{{ request.date_created | date }}</td>
                   <td><div>{{ request.text }}</div></td>
-                  <td>{{ uid | get_staff_info("dept")}}</td>
-                  <td>{{ uid | get_staff_info("name") }}</td>
-                  {% set uid = (request.current_owner | owner_uid) %}
+                  {% set uid = ("user_id" | get_attribute(request.current_owner, "Owner")) %}
+                  <td>{{ "department" | get_attribute(uid, "User") }}</td>
+                  <td>{{ "alias" | get_attribute(uid, "User") }}</td>
                   <td>{{ request.status_updated | date_granular }} </td> 
                   </a> 
                 </tr>
