@@ -15,14 +15,14 @@
           <h4 class="text-center">Status</h4>
         </div>
 
-        <div class="well b_sidebar r_sidebar-fixed hidden-phone hidden-tablet">
+        <div class="well well-small b_sidebar r_sidebar-fixed hidden-phone hidden-tablet">
           <div class="row-fluid">
             <div class="span10">
               <h4>Point of Contact</h4>
-              {% include '_routing.html' %}
+              {% include '_contact_popover.html' %}
             </div>
             <div class="span2">
-              <h4 class="text-right"><i class="icon-arrow-right"></i><i class="icon-user"></i></h4>
+              <!-- <h4 class="text-right"><i class="icon-arrow-right"></i><i class="icon-user"></i></h4> -->
             </div>
           </div>
           <div class="row-fluid">
@@ -31,14 +31,11 @@
               <p>list of people</p>
             </div>
             <div class="span2">
-              <h4 class="text-right"><i class="icon-plus"></i><i class="icon-user"></i></h4>
+              <!-- <h4 class="text-right"><i class="icon-plus"></i><i class="icon-user"></i></h4> -->
             </div>
           </div>
           <div class="row-fluid">
-            <div class="span10">
-            </div>
-            <div class="span2">
-              <a data-placement="left" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"> <h4 class="text-right"><i class="icon-time" ></i></h4></a>
+            <div>
               {% include '_history.html' %}
             </div>
           </div>

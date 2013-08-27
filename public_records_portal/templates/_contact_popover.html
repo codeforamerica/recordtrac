@@ -1,0 +1,5 @@
+<!-- routing name -->
+
+{% set uid = (req.current_owner | owner_uid) %}
+{% set staff = (uid | get_staff) %}
+<a href="/staff_card/{{uid}}" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverRoute"><span  onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverRoute')">{{ staff.alias or staff.email }}</span></a>
