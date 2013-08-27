@@ -3,7 +3,18 @@ from helpers import format_date
 from public_records_portal import app
 import os
 import json
-from db_helpers import get_attribute, get_objs
+from db_helpers import *
+from departments import *
+import sendgrid
+
+
+# Set flags:
+
+send_emails = False
+test = "[TEST] "
+if app.config['ENVIRONMENT'] == 'PRODUCTION':
+	send_emails = True
+	test = ""
 
 
 def generate_prr_emails(request_id, notification_type, user_id = None):
@@ -118,10 +129,10 @@ def notify_due():
 				email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Request due"])
 			else:
 				# Otherwise, check if it is overdue
-				is_overdue, date_due = is_overdue(req.date_created, req.extended)
-				if is_overdue:
+				overdue, date_due = is_overdue(req.date_created, req.extended)
+				if overdue:
 					change_request_status(req.id, "Overdue")
-					email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Request overdue"])
+					email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Notification types"]["Request overdue"]["Subject"])
 				else:
 					continue
 			owner_uid = get_attribute(attribute = "user_id", obj_id = req.current_owner, obj_type = "Owner")	
@@ -135,3 +146,6 @@ def notify_due():
 			body = "You can view the request and take any necessary action at the following webpage: <a href='%s'>%s</a>.</br></br> This is an automated message. You are receiving it because you are listed as the Public Records Request Liaison, Backup or Supervisor for your department." %(page, page)
 				# Need to figure out a way to pass in generic email template outside application context. For now, hardcoding the body.
 			send_email(body = body, recipients = recipients, subject = email_subject, include_unsubscribe_link = False)
+
+
+
