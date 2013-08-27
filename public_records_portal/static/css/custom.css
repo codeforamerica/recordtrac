@@ -21,10 +21,14 @@
 }
 
 
-/* request text format */
-/*#request_text {
-	white-space: pre;
-}*/
+/* request table # of records left margin adjustment */
+#allrequestTable_length label {
+margin: 0 0 0 1.25em;
+}
+
+#allrequestTable_info {
+margin: 0 0 0 1.75em;
+}
 
 i[class|="icon-external-link"] {
 	vertical-align: super;
