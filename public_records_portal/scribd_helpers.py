@@ -2,6 +2,13 @@ import scribd
 from public_records_portal import app
 from timeout import timeout
 
+
+# Set flags:
+upload_to_scribd = False 
+if app.config['ENVIRONMENT'] != 'LOCAL':
+    upload_to_scribd = True
+
+
 def progress(bytes_sent, bytes_total):
     print("%s of %s (%s%%)" % (bytes_sent, bytes_total, bytes_sent*100/bytes_total))
 

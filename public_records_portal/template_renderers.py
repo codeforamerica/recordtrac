@@ -3,7 +3,7 @@
 
 from flask import render_template, request, redirect, url_for
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
-from public_records_portal import app, filters, models
+from public_records_portal import app
 from filters import *
 from prr import add_resource, update_resource, make_request, close_request
 from db_helpers import *

@@ -4,23 +4,16 @@
 .. modlueauthor:: Richa Agarwal <richa@codeforamerica.org>
 """
 
-from public_records_portal import app, website_copy, db
+from public_records_portal import app
 import os
-import tempfile
 import time
-import requests as seaturtle # HTTP requests library, renaming because it's confusing otherwise
 import json
 from flask import Flask, render_template, request
 from flask.ext.login import current_user
-from werkzeug import secure_filename
-import sendgrid
 from datetime import datetime, timedelta
 from models import *
-import urllib
 from ResponsePresenter import ResponsePresenter
 from RequestPresenter import RequestPresenter
-from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
-from sqlalchemy import func
 from notifications import generate_prr_emails
 import scribd_helpers
 from db_helpers import *
@@ -31,17 +24,6 @@ ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'o
 # These are the different email notification types that currently exist and are mapped to and from who might receive them and the subject line in /static/json/emails.json
 NOTIFICATION_TYPES = ["Request assigned","Question asked",
 "Question answered","Request closed","Response added","Request due","Public note added","Request made","Request overdue","Request followed"]
-
-
-# Set flags:
-upload_to_scribd = False 
-send_emails = False
-test = "[TEST] "
-if app.config['ENVIRONMENT'] != 'LOCAL':
-	upload_to_scribd = True
-if app.config['ENVIRONMENT'] == 'PRODUCTION':
-	send_emails = True
-	test = ""
 
 
 def add_resource(resource, request_body, current_user_id = None):
