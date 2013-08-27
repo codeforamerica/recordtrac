@@ -15,5 +15,4 @@ app.jinja_env.filters['get_gravatar_url'] = gravatar.get_gravatar_url
 app.jinja_env.filters['date'] = helpers.date
 app.jinja_env.filters['explain_action'] = helpers.explain_action
 app.jinja_env.filters['tutorial'] = helpers.tutorial
-app.jinja_env.filters['directory'] = helpers.directory
 app.jinja_env.filters['new_lines'] = helpers.new_lines

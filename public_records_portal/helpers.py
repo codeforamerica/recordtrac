@@ -59,22 +59,6 @@ def explain_action(action, explanation_type = None):
 			explanation_str = explanation_str + " " + explanation['Action']
 		return explanation_str
 
-def directory(uid, info_type = None):
-	email = get_attribute(attribute = "email", obj_id = uid, obj_type = "User")
-	if email:
-		if info_type == "email":
-			return email
-		dir_json = open(os.path.join(app.root_path, 'static/json/directory.json'))
-		json_data = json.load(dir_json)
-		for line in json_data:
-			if line['EMAIL_ADDRESS'].lower() == email.lower():
-				if info_type == 'name':
-					last, first = line['FULL_NAME'].split(",")
-					return "%s %s" % (first, last)
-				if info_type == 'dept':
-					return line['DEPARTMENT']
-	return None
-
 # We don't use this anymore since we validate against the city directory, but this could be one way of doing it.
 def email_validation(email):
 	if email:
