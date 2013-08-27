@@ -3,6 +3,59 @@
 {% extends "base.html" %}
 {% block title %}Request{% endblock %}
 
+
+{% block container %}
+  <div class="row-fluid">
+    <div class="span8 offset1">
+    </div>
+    
+      <div class="span3">
+        {% block sidebar %}
+        <div class="well well-small r_sidebar r_sidebar-fixed hidden-phone hidden-tablet">
+          <h4 class="text-center">Status</h4>
+        </div>
+
+        <div class="well b_sidebar r_sidebar-fixed hidden-phone hidden-tablet">
+          <div class="row-fluid">
+            <div class="span10">
+              <h4>Point of Contact</h4>
+              {% include '_routing.html' %}
+            </div>
+            <div class="span2">
+              <h4 class="text-right"><i class="icon-arrow-right"></i><i class="icon-user"></i></h4>
+            </div>
+          </div>
+          <div class="row-fluid">
+            <div class="span10">
+              <h4>Helpers</h4>
+              <p>list of people</p>
+            </div>
+            <div class="span2">
+              <h4 class="text-right"><i class="icon-plus"></i><i class="icon-user"></i></h4>
+            </div>
+          </div>
+          <div class="row-fluid">
+            <div class="span10">
+            </div>
+            <div class="span2">
+              <a data-placement="left" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"> <h4 class="text-right"><i class="icon-time" ></i></h4></a>
+              {% include '_history.html' %}
+            </div>
+          </div>
+        </div>
+
+        {% endblock sidebar %}
+      </div>
+    
+  </div>
+
+
+<!-- move me to custom link -->
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bottom_sidebar.css') }}">
+{% endblock container %}
+
+
 {% block content %}
   {% block well %}
   <div id="request-container" class="row-fluid"> 
@@ -158,3 +211,7 @@
   </div>
 </div>
 {% endblock responses_container %}
+
+{% block custom_script_links %}
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
+{% endblock custom_script_links %}
