@@ -39,6 +39,21 @@
     $('#reroutePopover').popover('hide');
   })
 
+  /* form in notify popover */
+  $('#notifyPopover').popover({ 
+          html : true,
+          title: function() {
+            return $("#notifyPopover-head").html();
+          },
+          content: function() {
+            return $("#notifyPopover-content").html();
+          }
+      });
+  // to close the popover
+  $('.popover-container').on('click', '.close', function(){
+    $('#notifyPopover').popover('hide');
+  })
+
 
   /* form in history popover */
   $('.historyPopover').popover({
