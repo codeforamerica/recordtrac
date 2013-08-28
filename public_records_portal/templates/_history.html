@@ -19,7 +19,7 @@
       <tr>
         <td>{{ owner.date_created | date }}</td>
         <td><i class="icon-circle-arrow-right"></i></td>
-        <td>{{ owner.user_id | get_staff_info("name") }}</td>
+        <td>{{ "alias" | get_attribute(owner.user_id, "User") }}</td>
         <td>{{ owner.reason }}</td>
       </tr>              
       {% endfor %}
