@@ -11,10 +11,13 @@
       <div class="rw-btn-wrap" data-target="2">
         <div class="rw-btn" ><i class="icon-edit"></i></div><div class="rw-btn-expand">Add Note</div>
       </div>
-
+      
+{% if req.extended %}
+{% else %}
       <div class="rw-btn-wrap" data-target="3">
         <div class="rw-btn" ><i class="icon-calendar"></i></div><div class="rw-btn-expand">Request Extension</div>
       </div>
+{% endif %}
 
       <div class="rw-btn-wrap" data-target="4">
         <div class="rw-btn" ><i class="icon-archive"></i></div><div class="rw-btn-expand">Close Request</div>

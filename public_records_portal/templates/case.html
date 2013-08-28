@@ -98,10 +98,11 @@
     
     <div class="span3">
       {% block sidebar %}
+        {% block status %}
         <div class="well well-small r_sidebar_banner r_sidebar-fixed hidden-phone hidden-tablet">
           <h4 class="text-center">Status</h4>
         </div>
-
+        {% endblock status %}
         <div class="well well-small b_sidebar r_sidebar-fixed hidden-phone hidden-tablet">
           <div class="row-fluid">
               <h4>Point of Contact</h4>
