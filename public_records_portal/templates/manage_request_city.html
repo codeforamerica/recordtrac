@@ -11,8 +11,6 @@
 
   <div class="well b_sidebar r_sidebar-fixed hidden-phone hidden-tablet">
     <div class="row-fluid">
-      
-         
       <div class="span10">
         <h4>Point of Contact</h4>
         {% include '_contact_popover.html' %}
@@ -22,6 +20,7 @@
         {% include '_reroute.html' %}
       </div>      
     </div>
+
     <div class="row-fluid">
       <div class="span10">
         <h4>Helpers</h4>
@@ -40,6 +39,10 @@
   </div>
 {% endblock sidebar %}
 
+{% block request_dates %}
+{{super()}}
+<div class="text-center">Due: <span class="label">{{ req.date_created | due_date(req.extended) }}</span></div>
+{% endblock request_dates %}
 
 {% block content %}
 

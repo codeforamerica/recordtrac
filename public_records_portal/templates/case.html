@@ -123,6 +123,10 @@
           </div>
         </div>
       {% endblock sidebar %}
+
+      {% block request_dates %}
+        <div class="muted text-center">Created: {{ req.date_created | date }}</div>
+      {% endblock request_dates %}
     </div>
     
   </div>
