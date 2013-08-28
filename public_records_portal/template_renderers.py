@@ -8,6 +8,7 @@ from filters import *
 from prr import add_resource, update_resource, make_request, close_request
 from db_helpers import *
 import departments
+import os, json
 
 # Initialize login
 login_manager = LoginManager()
@@ -71,7 +72,7 @@ def explain_all_actions():
 	json_data = json.load(action_json)
 	actions = []
 	for data in json_data:
-		actions.append("%s: %s" %(data, json_data[data]))
+		actions.append("%s: %s" %(data, json_data[data]["What"]))
 	return render_template('actions.html', actions = actions)
 
 # Returns a view of the case based on the audience. Currently views exist for city staff or general public.
