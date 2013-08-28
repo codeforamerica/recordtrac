@@ -28,7 +28,7 @@
         <p>list of people</p>
       </div>
       <div class="span2">
-        <div class="popover-container"><a data-placement="left" href="#" id="notifyPopover"> <h4 class="text-right"><small><i class="icon-plus"></i></small><i class="icon-user"></i></h4></a></div>
+        <div class="popover-container"><a data-placement="top" href="#" id="notifyPopover"> <h4 class="text-right"><small><i class="icon-plus"></i></small><i class="icon-user"></i></h4></a></div>
         {% include '_add_person.html' %}
       </div>
     </div>
@@ -286,7 +286,18 @@
 
 
 {% block custom_script_links %}
-  {{super()}}
+  <!-- Listed in case instead of manage_request_city for truncation -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/manage_request_city.js') }}"></script>
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/manage_request_city.css') }}">
+
+  <!-- For response_widget partial -->
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/_response_widget.css') }}">
+  <script type="text/javascript" src="{{ url_for('static', filename='js/_response_widget.js') }}"></script>
+
+  <!-- For sidebar styling -->
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bottom_sidebar.css') }}">
+  
+  <!-- For bootstrap select -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/custom.bootstrap-select.js') }}"></script>
 {% endblock custom_script_links %}

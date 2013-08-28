@@ -15,6 +15,14 @@
   /*border: 1px solid purple;*/
 }
 
+.more:hover {
+  cursor: pointer;
+}
+
+.less:hover {
+  cursor: pointer;
+}
+
 
 .response.qa, .response.note {
   padding: 7px 5px;
