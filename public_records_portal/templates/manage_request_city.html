@@ -5,7 +5,7 @@
 {% block head %} {% endblock head %}
 
 {% block sidebar %}
-  <div class="well well-small r_sidebar r_sidebar-fixed hidden-phone hidden-tablet">
+  <div class="well well-small r_sidebar_banner r_sidebar-fixed hidden-phone hidden-tablet">
     <h4 class="text-center">Status</h4>
   </div>
 
@@ -82,7 +82,7 @@
 
   {% endblock status %}
 
-
+  {% block response_actions %}{% include '_response_widget.html' %}{% endblock response_actions %}
 
   {% block proxyrequester_info %}
     {{ super() }}
@@ -90,7 +90,7 @@
   {% block requester_info %}
     <small>
       {% set sid = req.id | get_requester %}
-      <span> Requester's name: {{ "alias" | get_subscriber_attribute(sid) }} and phone number: {{ "phone" | get_subscriber_attribute(sid) }}</span>
+      Requester's name: <span class="label">{{ "alias" | get_subscriber_attribute(sid) }}</span> and phone number: <span class="label"> {{ "phone" | get_subscriber_attribute(sid) }}</span>
     </small>
   {% endblock requester_info %}
 

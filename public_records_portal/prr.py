@@ -222,7 +222,7 @@ def get_responses_chronologically(req):
 		return responses
 	responses.sort(key = lambda x:x.date(), reverse = True)
 	if "Closed" in req.status:
-		responses[0].set_icon("icon-lock icon-2x") # Set most recent note (closed note)'s icon
+		responses[0].set_icon("icon-archive") # Set most recent note (closed note)'s icon
 	return responses
 
 def get_stuff_chrono(stuff, key):

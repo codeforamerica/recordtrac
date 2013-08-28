@@ -24,6 +24,17 @@
   });
 
 
+/* help text popover */
+  // to open the popover
+  // $('.popover-container').on('focus', '.open', function(){
+  //   $('.helpPopover').popover('show');
+  // })
+
+  // to close the popover
+  // $('.popover-container').on('click', '.close', function(){
+  //   $('.helpPopover').popover('hide');
+  // })
+
 /* form in reroute popover */
   $('#reroutePopover').popover({ 
           html : true,

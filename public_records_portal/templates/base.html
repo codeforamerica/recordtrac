@@ -108,32 +108,17 @@
           <div class="row-fluid">
             <div class="span10">
               {% block banner %}
-              <!-- beta banner -->
-              <div class="alert alert-block">
-                <div class="span1 text-right"><i class="icon-warning-sign icon-2x"> </i></div>
-                <div class="offset1">
-                  <p> <strong>This website is being tested. Some features may not work or will change over time.</strong></p>  
+                <!-- beta banner -->
+                <div class="alert alert-block">
+                  <div class="span1 text-right"><i class="icon-warning-sign icon-2x"> </i></div>
+                  <div class="offset1">
+                    <p> <strong>This website is being tested. Some features may not work or will change over time.</strong></p>  
+                  </div>
                 </div>
-              </div>
-
               {% endblock banner%}
             </div>
           </div>
-          <div class="row-fluid">
-            <div class="span10 offset1">
-                {% block content %}{% endblock content %}
-            </div>
-          </div>
-          <div class="row-fluid">
-            <div class="span10 offset1">
-                {% block responses_container %}{% endblock responses_container %}
-            </div>
-          </div>
-          <div class="row-fluid">
-            <div class="span10 offset1">
-                {% block actions %}{% endblock actions %}
-            </div>
-          </div>
+          
         {% endblock container %}
       </div>
 
