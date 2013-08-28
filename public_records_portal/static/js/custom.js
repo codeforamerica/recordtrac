@@ -23,6 +23,14 @@
     });
   });
 
+/* timestamp popover */
+  $('.timestampPopover').popover({
+      trigger: 'hover', 
+      html : true,
+      content: function() {
+        return $("#timestampPopover-content").html();
+      }
+  });
 
 /* help text popover */
   // to open the popover
