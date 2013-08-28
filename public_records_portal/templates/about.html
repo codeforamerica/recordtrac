@@ -1,32 +1,48 @@
 {% extends "base.html" %}
+
+{% block head %}
+	{{super()}}
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/image_sidebar.css') }}">
+{% endblock head %}
+
 {% block content %}
-<html>
-<h3>What Can I Do On This Website?</h3>
-<p>
-This website is a quick, simple way for you to submit a public records request to the City of Oakland.   Once we get your request, we use this web app to:
-</p>
-<ul>
-<li>Ask you a question about your request</li>
-<li>Upload a document or post a link to answer your request</li>
-<li> Explain where you can pick up hard copies of your records</li>
-<li>Update you when we need additional time to locate your records</li>
-<li>Notify you when your request is fulfilled</li> 
-</ul>
-<p>
-<b>Every message or record uploaded on this site is completely public.</b> 
-</p>
-This makes easier for you to understand what happens to every request. You can also search through past records requests and view documents previously released by Oakland. 
-</p>
-<h3>Why Can You Show Everyone My Request?</h3>
-<p>
-We can display your request because the California Public Records Act gives everyone access to documents, photos, emails, texts, audio recordings, and data about the City and its business. To make you feel comfortable, we don't allow the public to view your name or contact information. 
-</p>
-<p>
-For more information on the Public Records Act and the Oakland's Sunshine Ordinance, check out these resources:
-</p>
-<ul>
-<li><a href="http://www2.oaklandnet.com/Government/o/CityAdministration/d/PublicEthics/s/OpenGovernment/OAK040723">Public Ethics Commission's website</a></li>
-<li><a href="http://www.oaklandcityattorney.org/resources/PubInfoRequest.html">City Attorney's website</a></li>
-</ul>
-</html>
+<div class="row-fluid">
+	<div id="about_image" class="span10">
+		<img src="{{ url_for('static', filename='images/CfA_logo.png') }}" width="40%" alt="Code for America"/>
+		<i class="icon-plus icon-4x text-center"></i>
+		<img src="{{ url_for('static', filename='images/CityTree_logo_green.jpg') }}" width="20%" alt="City of Oakland"/>
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span10">
+		<h3>What Can I Do On This Website?</h3>
+		<p>
+			This website is a quick, simple way for you to submit a public records request to the City of Oakland.   Once we get your request, we use this web app to:
+		</p>
+		<ul>
+			<li>Ask you a question about your request</li>
+			<li>Upload a document or post a link to answer your request</li>
+			<li> Explain where you can pick up hard copies of your records</li>
+			<li>Update you when we need additional time to locate your records</li>
+			<li>Notify you when your request is fulfilled</li> 
+		</ul>
+		<p>
+			<b>Every message or record uploaded on this site is completely public.</b> 
+		</p>
+		<p>
+			This makes easier for you to understand what happens to every request. You can also search through past records requests and view documents previously released by Oakland. 
+		</p>
+		<h3>Why Can You Show Everyone My Request?</h3>
+		<p>
+			We can display your request because the California Public Records Act gives everyone access to documents, photos, emails, texts, audio recordings, and data about the City and its business. To make you feel comfortable, we don't allow the public to view your name or contact information.
+		</p>
+		<p>
+			For more information on the Public Records Act and the Oakland's Sunshine Ordinance, check out these resources:
+		</p>
+		<ul>
+			<li><a href="http://www2.oaklandnet.com/Government/o/CityAdministration/d/PublicEthics/s/OpenGovernment/OAK040723">Public Ethics Commission's website</a></li>
+			<li><a href="http://www.oaklandcityattorney.org/resources/PubInfoRequest.html">City Attorney's website</a></li>
+		</ul>
+	</div>
+</div>
 {% endblock content %}
