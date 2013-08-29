@@ -24,7 +24,6 @@
     <div class="row-fluid">
       <div class="span10">
         <h4>Helpers</h4>
-        <p>list of people</p>
         {% for owner in req.owners %}
         {% set staff = ( "User" | get_obj(owner.user_id)) %}
          {{ staff.alias }} </br>
