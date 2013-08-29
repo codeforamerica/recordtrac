@@ -19,6 +19,7 @@
             <!-- request area -->
             <div class="row-fluid">
               <h3 >Request <span class="muted">#{{req.id}}</span></h3>
+               {% block clarify_request %}{% endblock clarify_request %}
               <p class="lead" truncateable="250"> {{ req.text | new_lines }} </p>
             </div>
             <div class="row-fluid">
@@ -144,17 +145,7 @@
 {% endblock container %}
 
 
-{% block content %}
 
-
-
-  {% block clarify_request %}{% endblock clarify_request %}
-
-  {% block response %}
-    <!-- response area: need to give this more space between the request area-->
-  {% endblock response %}
-
-{% endblock content %}
 
 
 
