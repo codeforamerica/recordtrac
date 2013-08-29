@@ -93,7 +93,7 @@
   {% block requester_info %}
     <small>
       {% set sid = req.id | get_requester %}
-      Requester's name: <span class="label">{{ "alias" | get_subscriber_attribute(sid) }}</span> and phone number: <span class="label"> {{ "phone" | get_subscriber_attribute(sid) }}</span>
+      Requester's name: <span class="label">{{ "alias" | get_subscriber_attribute(sid) or "Not provided"}}</span> and phone number: <span class="label"> {{ "phone" | get_subscriber_attribute(sid) or "Not provided" }}</span>
     </small>
   {% endblock requester_info %}
 
