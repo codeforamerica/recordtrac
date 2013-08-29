@@ -1,10 +1,12 @@
 {% extends "base.html" %}
-{% block content %}
-{% set staff = ("User"| get_obj(uid)) %}
-Name: {{staff.alias}}</br>
-Department: {{staff.department}}</br>
-<a href="mailto:{{staff.email}}">E-mail</a></br>
-Phone: {{staff.phone}}</br>
-{% set gravatar_url = staff.email | get_gravatar_url %}
-<img src= "{{gravatar_url}}" />
-{% endblock content %}
+{% block container %}
+	<div class="offset1">
+		{% set staff = ("User"| get_obj(uid)) %}
+		Name: {{staff.alias}}</br>
+		Department: {{staff.department}}</br>
+		<a href="mailto:{{staff.email}}">E-mail</a></br>
+		Phone: {{staff.phone}}</br>
+		{% set gravatar_url = staff.email | get_gravatar_url %}
+		<img src= "{{gravatar_url}}" />
+	</div>
+{% endblock container %}

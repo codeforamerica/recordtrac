@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% block content %}
+{% block container %}
+<div class="offset1">
 Let's help you get this routed to the right department!
 
             <form id="department" class="form-inline" method ="post" action="/">
@@ -11,7 +12,8 @@ Let's help you get this routed to the right department!
                 </div>
               </div>
             </form>
-{% endblock content %}
+</div>
+{% endblock container %}
 
 {% block custom_script_links %}
 <script>
