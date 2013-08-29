@@ -1,7 +1,6 @@
 from public_records_portal import app, models, db, template_renderers
 from template_renderers import * # Import all the functions that render templates
 from flask.ext.restless import APIManager
-from helpers import is_public_record
 
 # Create API
 manager = APIManager(app, flask_sqlalchemy_db=db)
