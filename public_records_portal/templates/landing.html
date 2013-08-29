@@ -1,0 +1,56 @@
+<!-- This template is for the landing page. -->
+
+{% extends "base.html" %}
+{% block title %}Request{% endblock title %}
+
+
+
+{% block container %}
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/landing.css') }}">
+
+<div class="row-fluid">
+	<div class="span10 offset1 text-center">
+		<h2 id="tagline">A quick, simple way to send public records requests.</h2>
+		<p id="overview_text" class="lead">Use this web application to tell the City of Oakland the type of documents you need. By displaying every message or record uploaded here, we make it easy for you to understand exactly what happens to your request.  <a href="/about">Find out more…</a></p>
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span10 offset1">
+		<div class="row-fluid">
+			<div class="span4">
+				<div class="row-fluid">
+					<a href="/new" class="btn btn-link round_link">
+						<img src="{{ url_for('static', filename='images/create.png') }}" width="100px" class="center-image">
+						<h3>Create</h3>
+						<p>Create a new public records request.</p>
+						<button class="btn btn-info btn-mini">Go <i class="icon-arrow-right"></i></button>
+					</a>
+				</div>
+			</div>
+			<div class="span4">
+				<div class="row-fluid">
+					<div class="text-center">
+						<img src="{{ url_for('static', filename='images/track.png') }}" width="150px" class="center-image">
+						<h3>Track</h3>
+						<p>We automatically send real-time updates as we process your request.</p>
+					</div>
+				</div>
+			</div>
+			<div class="span4">
+				<div class="row-fluid">
+					<a href="/requests" class="btn btn-link round_link">
+						<img src="{{ url_for('static', filename='images/explore.png') }}" width="75px" class="center-image">
+						<h3>Explore</h3>
+						<p>View past records requests and released documents.</p>
+						<button class="btn btn-info btn-mini">Go <i class="icon-arrow-right"></i></button>
+					</a>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</div>
+{% endblock container %}
+
+{% block custom_script_links %}
+{% endblock custom_script_links %}
