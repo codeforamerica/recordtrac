@@ -24,10 +24,7 @@
     <div class="row-fluid">
       <div class="span10">
         <h4>Helpers</h4>
-        {% for owner in req.owners %}
-        {% set staff = ( "User" | get_obj(owner.user_id)) %}
-         {{ staff.alias }} </br>
-        {% endfor %}
+        {% include '_staff_participants.html' %}
       </div>
       <div class="span2">
         <div class="popover-container"><a data-placement="left" href="#" id="notifyPopover"> <h4 class="text-right"><small><i class="icon-plus"></i></small><i class="icon-user"></i></h4></a></div>

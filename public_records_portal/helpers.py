@@ -3,6 +3,7 @@ import os
 from public_records_portal import app
 import json
 from jinja2 import Markup
+from db_helpers import *
 
 def date_granular(timestamp):
 	if not timestamp:
@@ -88,11 +89,11 @@ def new_lines(value):
 	return value
 
 def display_staff_participant(owner, request):
-	print owner.id
-	print request.current_owner
 	if owner.id == request.current_owner:
 		return None
-	staff = get_obj(owner.user_id, "User")
+	staff = get_obj("User",owner.user_id)
+	if not staff:
+		return None
 	if staff.alias:
 		return staff.alias
 	else:
