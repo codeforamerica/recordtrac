@@ -26,7 +26,7 @@
                  <!--  </a> -->
                   {% include '_help_text_request.html' %}
                 </div>
-                <div id="not_public_record">
+                <div id="not_public_record" class="alert alert-error">
 
                 </div>
               </div>
@@ -100,6 +100,7 @@
 
 {% block custom_script_links %}
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/new_request.css') }}">
   <script type="text/javascript" src="{{ url_for('static', filename='js/new_request.js') }}"></script>
 
 
