@@ -79,11 +79,14 @@ $('#inputDepartment').typeahead({
       }
     });
     request.done( function(data) {
+      $div = $('#not_public_record');
       if (data != '') {
-        $('#not_public_record').html(data);
-        $('#not_public_record').prepend("<i class='icon-exclamation-sign'></i>");
+        $div.addClass('alert').addClass('alert-error');
+        $div.html(data);
+        $div.prepend("<i class='icon-exclamation-sign'></i>");
       } else {
-        $('#not_public_record').empty();
+        $div.empty();
+        $div.removeClass('alert').removeClass('alert-error');
       }
     });
   })
