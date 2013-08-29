@@ -96,7 +96,7 @@ def show_request(request_id, template = None):
 	if template:
 		if "city" in template and not current_user_id:
 			return render_template('alpha.html')
-	else: 
+	else:
 		template = "manage_request_public.html"
 	if req.status and "Closed" in req.status:
 		template = "closed.html"
@@ -170,7 +170,7 @@ def load_user(userid):
 @app.route('/test')
 def show_test():
 	return render_template('test.html')
-	
+
 def any_page(page):
 	try:
 		return render_template('%s.html' %(page), user_id = get_user_id())
@@ -188,7 +188,7 @@ def login(email=None, password=None):
 		if user_to_login:
 			login_user(user_to_login)
 			return redirect(url_for('tutorial'))
-	return render_template('error.html', message = "Oops, your e-mail/ password combo didn't work.") 
+	return render_template('error.html', message = "Oops, your e-mail/ password combo didn't work.")
 
 @login_required
 def update_password(password=None):
@@ -214,3 +214,20 @@ def get_user_id():
 	if current_user.is_anonymous() == False:
 		return current_user.id
 	return None
+
+# Used as AJAX POST endpoint to check if new request text contains certain keyword
+# See new_requests.(html/js)
+def is_public_record():
+	request_text = request.form['request_text']
+
+	not_records_filepath = os.path.join(app.root_path, 'static/json/notcityrecords.json')
+	not_records_json = open(not_records_filepath)
+	json_data = json.load(not_records_json)
+	request_text = request_text.lower()
+	if "birth" in request_text or "death" in request_text or "marriage" in request_text:
+		return json_data["Certificate"]
+	if "divorce" in request_text:
+		return json_data["Divorce"]
+	return ''
+
+

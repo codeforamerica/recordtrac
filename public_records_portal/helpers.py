@@ -60,17 +60,6 @@ def explain_action(action, explanation_type = None):
 			explanation_str = explanation_str + " " + explanation['Action']
 		return explanation_str
 
-def not_a_public_record(request_text):
-	not_records_filepath = os.path.join(app.root_path, 'static/json/notcityrecords.json')
-	not_records_json = open(not_records_filepath)
-	json_data = json.load(not_records_json)
-	request_text = request_text.lower()
-	if "birth" in request_text or "death" in request_text or "marriage" in request_text:
-		return json_data["Certificate"]
-	if "divorce" in request_text:
-		return json_data["Divorce"]
-	return None
-
 # We don't use this anymore since we validate against the city directory, but this could be one way of doing it.
 def email_validation(email):
 	if email:
@@ -82,7 +71,7 @@ def email_validation(email):
 def format_date(obj):
 	return obj.strftime('%b %d, %Y')
 
-def new_lines(value): 
+def new_lines(value):
 	new_value = value.replace('\n','<br>\n')
 	if value != new_value:
 		return Markup(new_value)
@@ -98,3 +87,4 @@ def display_staff_participant(owner, request):
 		return staff.alias
 	else:
 		return staff.email
+
