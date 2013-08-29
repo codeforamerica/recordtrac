@@ -87,4 +87,13 @@ def new_lines(value):
 		return Markup(new_value)
 	return value
 
-
+def display_staff_participant(owner, request):
+	print owner.id
+	print request.current_owner
+	if owner.id == request.current_owner:
+		return None
+	staff = get_obj(owner.user_id, "User")
+	if staff.alias:
+		return staff.alias
+	else:
+		return staff.email

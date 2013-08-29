@@ -16,3 +16,4 @@ app.jinja_env.filters['date'] = helpers.date
 app.jinja_env.filters['explain_action'] = helpers.explain_action
 app.jinja_env.filters['tutorial'] = helpers.tutorial
 app.jinja_env.filters['new_lines'] = helpers.new_lines
+app.jinja_env.filters['display_staff_participant'] = helpers.display_staff_participant

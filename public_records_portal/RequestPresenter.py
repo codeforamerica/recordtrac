@@ -13,7 +13,7 @@ class RequestPresenter:
 			self.uid = self.response.owner_id
 			self.staff = get_obj("User", self.uid)
 			directory_popover = "directoryPopover('%s', '%s', '%s', '#contactinfoPopoverQA%s')" %(self.staff.email, self.staff.department, self.staff.phone, index)
-			self.owner_link = '<a href="/staff_card/%s" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverQA%s" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="%s">%s</span></a>' % (self.response.owner_id, index, directory_popover, self.staff.alias or self.staff.name)
+			self.owner_link = '<a href="/staff_card/%s" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverQA%s" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="%s">%s</span></a>' % (self.response.owner_id, index, directory_popover, self.staff.alias or self.staff.email)
 			self.icon = "icon-question"
 		if note:
 			self.response = note

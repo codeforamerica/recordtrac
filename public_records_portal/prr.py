@@ -43,6 +43,8 @@ def add_resource(resource, request_body, current_user_id = None):
 			return upload_record(int(fields['request_id']), request.files['record'], fields['record_description'], current_user_id)
 	elif "qa" in resource:
 		return ask_a_question(int(fields['request_id']), current_user_id, fields['question_text'])
+	elif "owner" in resource:
+		return add_staff_participant(request_id = fields['request_id'], user_id = current_user_id)
 	else:
 		return False
 
