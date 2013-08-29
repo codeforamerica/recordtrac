@@ -1,0 +1,68 @@
+<!-- This template is show all cases in the system. -->
+
+{% extends "all_requests.html" %}
+{% block title %}{{title}}{% endblock title %}
+
+{% block datatable %}
+  <table cellpadding="0" cellspacing="0" border="0" id="allrequestTable" class="data-table table">
+    <thead>
+      <tr>
+        <th class="placeholder"></th>
+        <th>#</th>
+        <th>Received</th>
+        <th>Request</th>
+        <th>Department</th>
+        <th>Owner</th>
+        <th>Updated</th>
+        <th>Due</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for request in all_record_requests %}
+      {% if user_id %}
+        <tr onclick="window.location.href='/city/request/{{request.id}}';">
+        {% else %}
+        <tr onclick="window.location.href='/request/{{request.id}}';">
+        {% endif %}
+          <td class="placeholder"><small><i class="icon-archive icon-light"></i></small></td>
+          <td>{{ request.id }}</td>
+          <td>{{ request.date_created | date }}</td>
+          <td><div>{{ request.text }}</div></td>
+          <td>{{ uid | get_staff_info("dept")}}</td>
+          <td>{{ uid | get_staff_info("name") }}</td>
+          {% set uid = (request.current_owner | owner_uid) %}
+          <td>{{ request.status_updated | date_granular }} </td> 
+          <td>due date (absolute)</td>
+          </a> 
+        </tr>
+      {% else %}
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock datatable %}
+
+{% block sidebar %}
+  <div class="well r_sidebar r_sidebar-fixed hidden-phone hidden-tablet">
+    <h4>View</h4>
+    <label class="checkbox">
+      <input type="checkbox" value="" checked>
+      My requests only
+    </label>
+    <label class="checkbox">
+      <input type="checkbox" value="" checked>
+      Open requests only
+    </label>
+    <label class="checkbox">
+      <input type="checkbox" value="">
+      Due requests only
+    </label>
+    <select class="input-block-level">
+      <option value="">All departments</option>
+      <option value="">Dept 1</option>
+      <option value="">Dept 2</option>
+      <option value="">Dept 3</option>
+      <option value="">Dept 4</option>
+      <option value="">Dept 5</option>
+    </select>
+  </div>
+{% endblock sidebar %}

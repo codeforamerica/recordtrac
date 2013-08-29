@@ -21,10 +21,16 @@
 }
 
 
-/* request text format */
-/*#request_text {
-	white-space: pre;
-}*/
+/* request table # of records left margin adjustment */
+#allrequestTable_length label {
+margin: 0 0 0 1.25em;
+}
+
+#allrequestTable_info {
+margin: 0 0 0 1.75em;
+}
+
+/* */
 
 i[class|="icon-external-link"] {
 	vertical-align: super;
@@ -33,9 +39,11 @@ i[class|="icon-external-link"] {
 
 /* contact info link */
 span[class|="contactinfoPopover"] {color: #666666;}
+span[class|="timestampPopover"] {color: #666666;}
 
-/* contact info hover link */
+/* info hover link */
 .contactinfoPopover span {color: #3a87ad;}
+.timestampPopover span {color: #3a87ad;}
 
 /* public note section indent */
 #public_note {margin-left: 5%;}
@@ -91,13 +99,13 @@ label.error {
 }
 
 /* new request form field explanations */
-.request_field_explanation {
+/*.request_field_explanation {
 	margin-left: 5%;
 	vertical-align: top;
 	display: inline-block;
 	max-width: 600px;
 	color: #606060  ;
-}
+}*/
 
 /* give the logout button more space */
 #logout_form {
@@ -115,9 +123,8 @@ label.error {
 }
 
 /* all popovers fit size to content */
-.popover {
-	max-width: 1200px !important;
-	width: auto;
+.helpPopover {
+	width: 200px !important;
 }
 
 /* pull history popover back into view */
@@ -133,6 +140,11 @@ label.error {
 /* gives the close button a bit of breathing room */
 #closeRequest {
 	margin-bottom: 10%;
+}
+
+/* gives the create request button a bit of breathing room */
+#requestButton {
+	margin-bottom: 20%;
 }
 
 /* ----- Sticky Footer ----- by Ryan Fait http://ryanfait.com/sticky-footer/ ----- */

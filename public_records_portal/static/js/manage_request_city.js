@@ -93,6 +93,14 @@ $(document).on('shown', "#reroutePopover", function () {
   });
 });
 
+$(document).on('shown', "#notifyPopover", function () {
+   $('#notifyButton').click(function() {
+    if($.inArray($('#notifyEmail').val(), emails) == -1) {
+      $('#notifyEmail').val('');
+    }
+  });
+});
+
 $(document).ready(function() {
   (function( $ ){
     $.fn.sticky = function() {

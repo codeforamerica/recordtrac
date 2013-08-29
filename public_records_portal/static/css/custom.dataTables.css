@@ -4,3 +4,18 @@
 	background-color: #ECFFB3;
 	cursor: pointer;
 }
+
+table.dataTable thead th.placeholder {
+	padding-left: 1px !important;
+	padding-right: 1px !important;
+	width: 2% !important;
+}
+
+table.dataTable tbody td.placeholder {
+	padding-left: 1px !important;
+	padding-right: 1px !important;
+	width: 2% !important;
+	background-color: #464646;
+	text-align: center;
+	vertical-align: middle;
+}

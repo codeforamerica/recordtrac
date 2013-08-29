@@ -1,2 +1,2 @@
-from public_records_portal.prr import notify_due
+from public_records_portal.notifications import notify_due
 notify_due()

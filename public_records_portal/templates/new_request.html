@@ -4,75 +4,102 @@
 
 {% block title %}Public records{% endblock title%}
 
+{% block container %}
+  <div class="row-fluid">
 
+    <div class="span8 offset1">
+      <div class="row-fluid">
+        <div class="span8">
+          <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="on"novalidate="novalidate">
+            <fieldset>
 
-{% block content %}
+              <h3>Create a new request</h3>
 
-<!-- validation jQuery only working for request_text:required and request_email:email only http://docs.jquery.com/Plugins/Validation 
-      try this validation as well https://github.com/jzaefferer/jquery-validation -->
-      <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="on"novalidate="novalidate">
-        <fieldset>
+              <p class="lead">What are you trying to find?</p>
+              <p>Use this site to request copies of specific documents, photos, emails, texts, audio recordings, electronic information and data in the City’s databases. If you need general information on City services, try <a href="http://answers.oaklandnet.com">Oakland Answers</a>.</p>
 
-          <legend>Create a new request</legend>
-
-          <div class="control-group">
-            <label class="control-label" for="requestTextarea">What are you trying to find?</label>
-            <div class="controls">
-              <textarea id="requestTextarea" autofocus  name="request_text" rows="3" cols="20" placeholder="Describe your request. Be as specific as possible." ></textarea>
-              <span class="request_field_explanation"><p>{{"Enter records request" | explain_action("What")}}</p><p><em>{{"Enter records request" | explain_action("Who")}}</em> {{"Enter records request" | explain_action("Action")}}</p></span>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="inputDepartment">Department</label>
-                <div class="controls">
-                  <input id="inputDepartment" type="text" name="request_department" placeholder="Who should it go to?" data-provide="typeahead" autocomplete="off" />
-                  <span class="request_field_explanation"><em>{{"Enter department or document type" | explain_action("Who")}}</em> {{"Enter department or document type" | explain_action("Action")}} </span>
+              <div class="control-group">
+                <label for="requestTextarea"><strong><i class="icon-exclamation-sign"></i> Everything in this request box will be displayed publicly.</strong></label>
+                <div >
+                  <!-- <a data-placement="right" data-toggle="popover" href="#" id="requestPopover" class="hidden-phone hidden-tablet"> -->
+                  <textarea id="requestTextarea" name="request_text" rows="3" class="input-block-level" placeholder="Describe your request. Be as specific as possible."></textarea>
+                 <!--  </a> -->
+                  {% include '_help_text_request.html' %}
                 </div>
-          </div>
+                <div>
+                  not_city_records text goes here
+                </div>
+              </div>
+
+
+              <p class="lead">Select a department</p>
+              <div class="control-group">
+                <div>
+                  <input id="inputDepartment" class="input-block-level" type="text" name="request_department" placeholder="Who should it go to?" data-provide="typeahead" autocomplete="off" />
+                  {% include '_help_text_department.html' %}
+                </div>
+              </div>
+               
+              <p class="lead">Contact information</p>  
+              <div class="control-group">
+                <label for="inputEmail">Your email</label>
+                <div>
+                  <input class="input-block-level" name="request_email" type="email" id="inputEmail" placeholder="yourname@email.com" />
+                  {% include '_help_text_email.html' %}
+                </div>
+              </div>
+              
+              <div class="control-group">
+                <label for="inputName">Your name</label>
+                <div >
+                  <input class="input-block-level" name="request_alias" type="text" id="inputName" placeholder="Your Name" />
+                  {% include '_help_text_name.html' %}
+                </div>
+              </div>
             
-          <div class="control-group">
-            <label class="control-label" for="inputEmail">Your email</label>
-            <div class="controls">
-              <input name="request_email" type="email" id="inputEmail" placeholder="yourname@email.com" />
-              <span class="request_field_explanation"><em>{{"Enter email address" | explain_action("Who")}}</em> {{"Enter email address" | explain_action("Action")}} </span>
-            </div>
-          </div>
-          
-          <div class="control-group">
-            <label class="control-label" for="inputName">Your name</label>
-            <div class="controls">
-              <input name="request_alias" type="text" id="inputName" placeholder="Your Name" />
-              <span class="request_field_explanation"><em>{{"Enter name" | explain_action("Who")}}</em>{{"Enter name" | explain_action("Action")}}</span>
-            </div>
-          </div>
-        
-          <div class="control-group">
-            <label class="control-label" for="inputPhone">Your phone number</label>
-            <div class="controls">
-              <input name="request_phone" type="tel" id="inputPhone" placeholder="(510) 555-1234" maxlength="14" />
-              <span class="request_field_explanation"><em>{{"Enter phone number" | explain_action("Who")}}</em>  {{"Enter phone number" | explain_action("Action")}}</span>
-            </div>
-          </div>
+              <div class="control-group">
+                <label for="inputPhone">Your phone number</label>
+                <div>
+                  <input class="input-block-level" name="request_phone" type="tel" id="inputPhone" placeholder="(510) 555-1234" maxlength="14" />
+                  {% include '_help_text_phone.html' %}
+                </div>
+              </div>
 
-          <div id="requestButton" class="control-group">
-            <div class="controls">
-              <button type="submit" class="btn btn-large btn-primary">Submit my request</button>
-            </div>
-          </div>
+              <div id="requestButton" class="control-group">
+                <div>
+                  <button type="submit" class="btn input-block-level btn-primary">Submit my request</button>
+                </div>
+              </div>
+              
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
 
-          
-        </fieldset>
-      </form>
+    <div class="span3">
+      {% block sidebar %}
+        <div class="well r_sidebar r_sidebar-fixed hidden-phone hidden-tablet">
+          <h4>Tips</h4>
+            <ul>
+              <li>Don't reveal personal information, like your social security number or home address.</li>
+              <li>Limit your request by a date range.</li>
+              <li>Provide the name of the record or take a guess.</li>
+              <li>If you don't know the name of the record, describe the information you believe is contained in it.</li>
+            </ul>
+          <h4>Example</h4>
+            <blockquote><p>I need a copy of the all of Mayor Jean Quan’s emails sent to City Administrator Santana between July 30, 2013-August 8, 2013.</p><p>The emails should contain the words “Art+Soul festival” or  “Art + Soul Oakland.”</p></blockquote>
+        </div>
+      {% endblock sidebar %}
+    </div>
 
-<!-- <div id="no_email" class="alert alert-block alert-error fade in">
-  <h4 class="alert-heading">Oops! You forgot to provide an email address.</h4>
-  <p>If you leave this space blank, you will not receive updates about your request. Your request may take longer to answer or be dismissed if it is missing important information and the City is unable to contact you.</p>
-  <p><a class="btn btn-danger " href="#" class="close" data-dismiss="alert">Enter email address</a> <a class="btn disabled" href="#">Submit request anyway</a></p>
-</div> -->
+  </div>
+{% endblock container %}
 
-{% endblock content %}
+
+
 {% block custom_script_links %}
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
   <script>
     /* validates add a request form */
     $(document).ready(function(){

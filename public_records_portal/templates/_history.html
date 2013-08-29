@@ -1,0 +1,28 @@
+<!-- history -->
+<div class="text-center">
+  <a data-placement="left" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"><i class="icon-time" ></i> History</a>
+</div>
+<div id="historyPopover-head" class="hide">Routing history</div>
+<div id="historyPopover-content" class="hide">              
+  <table class="table table-condensed">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th></th>
+        <th>To</th>
+        <th>Note</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- the order of data returned here should be reverse chronological (right now it's shown as oldest first)-->
+      {% for owner in req.owners %}
+      <tr>
+        <td>{{ owner.date_created | date }}</td>
+        <td><i class="icon-circle-arrow-right"></i></td>
+        <td>{{ "alias" | get_attribute(owner.user_id, "User") }}</td>
+        <td>{{ owner.reason }}</td>
+      </tr>              
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
