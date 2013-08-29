@@ -38,18 +38,18 @@
 
 .rw-btn-wrap {
   /*border-radius: 3px;*/
-  max-width: 20px;
-  white-space: nowrap;
-  overflow: hidden;
+  /*max-width: 20px;*/
+  /*white-space: nowrap;*/
+  /*overflow: hidden;*/
   padding: 0px;
-  -webkit-transition: max-width 1s;
+  /*-webkit-transition: max-width 1s;*/
   opacity: .7;
 }
 
 .rw-btn-wrap.active {
   /*box-shadow: inset 0px 0px 2px 1px #888;*/
   /*background-color: rgb(234, 234, 255);*/
-  max-width: 100%;
+  /*max-width: 100%;*/
   font-size: 1.2em;
   opacity: 1;
   border-bottom: 3px solid #08c;
@@ -59,8 +59,9 @@
   /*background-color: blue;*/
   cursor: hand;
   cursor: pointer;
-  max-width: 40%;
-  -webkit-transition: max-width 1s;
+  opacity: .9;
+  /*max-width: 40%;*/
+  /*-webkit-transition: max-width 1s;*/
 }
 
 .rw-actions-container {
