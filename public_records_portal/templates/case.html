@@ -123,8 +123,7 @@
           <div class="row-fluid">
               <h4>Helpers</h4>
               {% for owner in req.owners %}
-              {% set staff = ( "User" | get_obj(owner.user_id)) %}
-               {{ staff.alias }} </br>
+              {{ owner | display_staff_participant(req) }} </br>
               {% endfor %}
           </div>
           <div class="row-fluid">
