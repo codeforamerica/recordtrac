@@ -1,15 +1,11 @@
 {% extends "base.html" %}
 
-{% block head %}
-	{{super()}}
-	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/image_sidebar.css') }}">
-{% endblock head %}
-
 {% block content %}
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/about.css') }}">
 <div class="row-fluid">
 	<div id="about_image" class="span10">
-		<img src="{{ url_for('static', filename='images/CfA_logo.png') }}" width="40%" alt="Code for America"/>
-		<i class="icon-plus icon-4x text-center"></i>
+		<img src="{{ url_for('static', filename='images/CfA_logo.png') }}" width="35%" alt="Code for America"/>
+		<i class="icon-plus icon-4x text-center muted"></i>
 		<img src="{{ url_for('static', filename='images/CityTree_logo_green.jpg') }}" width="20%" alt="City of Oakland"/>
 	</div>
 </div>
@@ -46,3 +42,4 @@
 	</div>
 </div>
 {% endblock content %}
+
