@@ -5,7 +5,7 @@
 
 {% block content %}
   {% block well %}
-  <div id="request-container" class="row-fluid"> 
+  <div id="request-container" class="row-fluid">
     <div class="span9 well">
 
       {% block request %}
@@ -44,7 +44,7 @@
             {% endif %}
           {% endfor %}
         {% endif %}
-        
+
         <!-- shows any existing Q&A -->
         {% if req.qas %}
           {% block qas %}
@@ -73,7 +73,7 @@
 
       {% endif %}
       <div id="load-more-qa">
-        Load More...
+        Load More... (WORK IN PROGRESS)
       </div>
     </div>
   {% endblock well %}
@@ -89,7 +89,7 @@
       {% block history %}
       <a data-placement="left" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"> <i class="icon-time" ></i>  </a>
       <div id="historyPopover-head" class="hide">Routing history</div>
-      <div id="historyPopover-content" class="hide">              
+      <div id="historyPopover-content" class="hide">
         <table class="table table-condensed">
           <thead>
             <tr>
@@ -107,7 +107,7 @@
               <td><i class="icon-circle-arrow-right"></i></td>
               <td>{{ owner.user_id | get_staff_info("name") }}</td>
               <td>{{ owner.reason }}</td>
-            </tr>              
+            </tr>
             {% endfor %}
           </tbody>
         </table>
@@ -136,7 +136,7 @@
   <h3 class="response">Response</h3>
   <!-- shows all existing responses (links, documents, offline docs, notes) -->
   {% set responses = ( req | get_responses_chronologically ) %}
-  {% if responses %} 
+  {% if responses %}
     {% for response in responses %}
       {% set uid = response.uid() %}
       {% set staff = (uid | get_staff) %}
@@ -147,8 +147,8 @@
           <small> {{ response.date() | date_granular }} </small> </br>
         </div>
         <div class="span10">
-          <p truncateable="100"> 
-           {{ response.display_text() | safe }} - <em><a href="/staff_card/{{uid}}" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias or staff.email }}</span></a></em>. 
+          <p truncateable="100">
+           {{ response.display_text() | safe }} - <em><a href="/staff_card/{{uid}}" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias or staff.email }}</span></a></em>.
          </p>
         </div>
       </div>
@@ -163,7 +163,6 @@
 {% endblock responses_container %}
 
 {% block custom_script_links %}
-<h1>WTF</h1>
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
   <script type="text/javascript" src="{{ url_for('static', filename='js/case.js') }}"></script>
 {% endblock custom_script_links %}

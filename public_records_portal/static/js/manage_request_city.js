@@ -96,20 +96,21 @@ $(document).on('shown', "#reroutePopover", function () {
 $(document).ready(function() {
   (function( $ ){
     $.fn.sticky = function() {
-      
+
         // Do your awesome plugin stuff here
 
     };
     $.fn.truncateable = function() {
       $self = $(this)
       var text = $self.text().trim();
+      console.log(text);
       var current_length = text.length;
       var max_length = $self.attr('truncateable');
       if (current_length < max_length)
         return;
       var truncated = text.substring(0, max_length);
 
-      $self.html(truncated);
+      $self.html("<div class='truncated-text' truncated='"+truncated+"'>"+truncated+"</div>");
       $self.append("<div class='more'>..more</div>");
       $self.attr('full-text', text);
     };
@@ -123,12 +124,16 @@ $(document).ready(function() {
   $('[truncateable]').on('click','.more', function(e){
     var $parent = $(e.delegateTarget);
     var full_text = $parent.attr('full-text');
-    $parent.html(full_text);
+    $parent.find('.truncated-text').html(full_text);
+    $(this).remove();
     $parent.append(("<div class='less'>...less</div>"))
   });
   $('[truncateable]').on('click','.less', function(e){
     var $parent = $(e.delegateTarget);
-    $parent.truncateable();
+    $truncated_div = $parent.find('.truncated-text');
+    $truncated_div.html($truncated_div.attr('truncated'));
+    $(this).remove();
+    $parent.append("<div class='more'>..more</div>");
   })
 
 })
