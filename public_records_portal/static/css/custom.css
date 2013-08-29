@@ -56,10 +56,11 @@ span[class|="timestampPopover"] {color: #666666;}
      /*display: block;*/
      width: 100px;
      height: 50px;
-     background-color: purple;
+     background-color: #ea7048;
      overflow: hidden;
      border-radius: 5px;
      color: white;
+     text-align: center;
      writing-mode: bt-lr; 
 	-webkit-transform: rotate(270deg);	
 	-moz-transform: rotate(270deg);
@@ -79,13 +80,13 @@ span[class|="timestampPopover"] {color: #666666;}
 #floating_link i {color:white;}
 
 /* validation style */
-label.valid {
+/*label.valid {
   width: 24px;
   height: 24px;
   background: url(../images/valid.png) center center no-repeat;
   display: inline-block;
   text-indent: -9999px;
-}
+}*/
 label.error {
   font-weight: bold;
   color: red;
