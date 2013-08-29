@@ -21,8 +21,10 @@
               <div class="control-group">
                 <label for="requestTextarea"><strong><i class="icon-exclamation-sign"></i> Everything in this request box will be displayed publicly.</strong></label>
                 <div >
-                  <textarea id="requestTextarea" autofocus  name="request_text" rows="3" class="input-block-level" placeholder="Describe your request. Be as specific as possible." ></textarea>
-                  <!-- <span class="request_field_explanation"><p>{{"Enter records request" | explain_action("What")}}</p><p><em>{{"Enter records request" | explain_action("Who")}}</em> {{"Enter records request" | explain_action("Action")}}</p></span> -->
+                  <!-- <a data-placement="right" data-toggle="popover" href="#" id="requestPopover" class="hidden-phone hidden-tablet"> -->
+                  <textarea id="requestTextarea" name="request_text" rows="3" class="input-block-level" placeholder="Describe your request. Be as specific as possible."></textarea>
+                 <!--  </a> -->
+                  {% include '_help_text_request.html' %}
                 </div>
                 <div>
                   not_city_records text goes here
@@ -34,7 +36,7 @@
               <div class="control-group">
                 <div>
                   <input id="inputDepartment" class="input-block-level" type="text" name="request_department" placeholder="Who should it go to?" data-provide="typeahead" autocomplete="off" />
-                  <!-- <span class="request_field_explanation"><em>{{"Enter department or document type" | explain_action("Who")}}</em> {{"Enter department or document type" | explain_action("Action")}} </span> -->
+                  {% include '_help_text_department.html' %}
                 </div>
               </div>
                
@@ -43,7 +45,7 @@
                 <label for="inputEmail">Your email</label>
                 <div>
                   <input class="input-block-level" name="request_email" type="email" id="inputEmail" placeholder="yourname@email.com" />
-                  <!-- <span class="request_field_explanation"><em>{{"Enter email address" | explain_action("Who")}}</em> {{"Enter email address" | explain_action("Action")}} </span> -->
+                  {% include '_help_text_email.html' %}
                 </div>
               </div>
               
@@ -51,7 +53,7 @@
                 <label for="inputName">Your name</label>
                 <div >
                   <input class="input-block-level" name="request_alias" type="text" id="inputName" placeholder="Your Name" />
-                  <!-- <span class="request_field_explanation"><em>{{"Enter name" | explain_action("Who")}}</em>{{"Enter name" | explain_action("Action")}}</span> -->
+                  {% include '_help_text_name.html' %}
                 </div>
               </div>
             
@@ -59,7 +61,7 @@
                 <label for="inputPhone">Your phone number</label>
                 <div>
                   <input class="input-block-level" name="request_phone" type="tel" id="inputPhone" placeholder="(510) 555-1234" maxlength="14" />
-                  <!-- <span class="request_field_explanation"><em>{{"Enter phone number" | explain_action("Who")}}</em>  {{"Enter phone number" | explain_action("Action")}}</span> -->
+                  {% include '_help_text_phone.html' %}
                 </div>
               </div>
 

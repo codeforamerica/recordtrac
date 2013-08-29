@@ -123,9 +123,8 @@ label.error {
 }
 
 /* all popovers fit size to content */
-.popover {
-	max-width: 1200px !important;
-	width: auto;
+.helpPopover {
+	width: 200px !important;
 }
 
 /* pull history popover back into view */
