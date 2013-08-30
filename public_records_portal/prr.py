@@ -160,6 +160,8 @@ def add_link(request_id, url, description, user_id):
 			
 def make_request(text, email = None, assigned_to_name = None, assigned_to_email = None, assigned_to_reason = None, user_id = None, phone = None, alias = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
+	if not email:
+		return None, False
 	req = Request.query.filter_by(text = text).first()
 	if not req:
 		req = Request(text = text, creator_id = user_id)

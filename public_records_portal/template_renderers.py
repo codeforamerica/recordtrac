@@ -42,6 +42,8 @@ def new_request():
 		request_id, is_new = make_request(text = request_text, email = email, assigned_to_email = assigned_to_email, assigned_to_reason = assigned_to_reason, user_id = get_user_id(), alias = alias, phone = phone)
 		if is_new:
 			return redirect(url_for('show_request_for_x', request_id = request_id, audience = 'new'))
+		if not request_id:
+			return render_template('error.html', message = "You need to provide an e-mail address to submit a request.")
 		return render_template('error.html', message = "Your request is the same as /request/%s" % request_id)
 	else:
 		return render_template('new_request.html', user_id = get_user_id())
