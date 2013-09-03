@@ -23,6 +23,58 @@
     });
   });
 
+/* move to new request page */
+/* timestamp popover */
+  $('.timestampPopover').popover({
+      trigger: 'hover', 
+      html : true,
+      content: function() {
+        return $("#timestampPopover-content").html();
+      }
+  });
+
+/* help text popover */
+  $('#requestTextarea').popover({
+      trigger: 'focus',
+      html : true,
+      content: function() {
+        return $("#requestPopover-content").html();
+      }
+  });
+
+  $('#inputDepartment').popover({
+      trigger: 'focus',
+      html : true,
+      content: function() {
+        return $("#deptPopover-content").html();
+      }
+  });
+
+  $('#inputEmail').popover({
+      trigger: 'focus',
+      html : true,
+      content: function() {
+        return $("#emailPopover-content").html();
+      }
+  });
+
+  $('#inputName').popover({
+      trigger: 'focus',
+      html : true,
+      content: function() {
+        return $("#namePopover-content").html();
+      }
+  });
+
+  $('#inputPhone').popover({
+      trigger: 'focus',
+      html : true,
+      content: function() {
+        return $("#phonePopover-content").html();
+      }
+  });
+
+
 
 /* form in reroute popover */
   $('#reroutePopover').popover({ 
@@ -37,6 +89,21 @@
   // to close the popover
   $('.popover-container').on('click', '.close', function(){
     $('#reroutePopover').popover('hide');
+  })
+
+  /* form in notify popover */
+  $('#notifyPopover').popover({ 
+          html : true,
+          title: function() {
+            return $("#notifyPopover-head").html();
+          },
+          content: function() {
+            return $("#notifyPopover-content").html();
+          }
+      });
+  // to close the popover
+  $('.popover-container').on('click', '.close', function(){
+    $('#notifyPopover').popover('hide');
   })
 
 

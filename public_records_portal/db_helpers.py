@@ -1,10 +1,12 @@
 from public_records_portal import db, app
-from models import User, Request, Owner, Note, QA, Subscriber
+from models import *
 from datetime import datetime, timedelta
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from sqlalchemy import func
 
 def get_obj(obj_type, obj_id):
+	if not obj_id:
+		return None
 	# There has to be a better way of doing this
 	if obj_type == "User":
 		return User.query.get(obj_id)
@@ -37,14 +39,21 @@ def get_objs(obj_type):
 	return None
 
 def get_request_by_owner(owner_id):
+	if not owner_id:
+		return None
 	return Request.query.filter_by(current_owner = owner_id).first()
 
 def get_owners_by_user_id(user_id):
+	if not user_id:
+		return None
 	return Owner.query.filter_by(user_id = user_id)
 
 def put_obj(obj):
-	db.session.add(obj)
-	db.session.commit()
+	if obj:
+		db.session.add(obj)
+		db.session.commit()
+		return True
+	return False
 
 def get_attribute(attribute, obj_id = None, obj_type = None, obj = None):
 	if obj_id and obj_type:
@@ -96,13 +105,13 @@ def create_note(request_id, text, user_id):
 	except:
 		return None
 
-def create_record(doc_id, request_id, user_id, description, filename, url):
-	try:
-		record = Record(doc_id = doc_id, request_id = request_id, user_id = user_id, descrption = description, filename = filename, url = url)
+def create_record(request_id, user_id, description, doc_id = None, filename = None, access = None, url = None):
+	# try:
+		record = Record(doc_id = doc_id, request_id = request_id, user_id = user_id, description = description, filename = filename, url = url, access = access)
 		put_obj(record)
 		return record.id
-	except:
-		return None
+	# except:
+		# return None
 
 def remove_obj(obj_type, obj_id):
 	obj = get_obj(obj_type, obj_id)

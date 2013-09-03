@@ -1,0 +1,34 @@
+.center-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#tagline {
+	margin-bottom: 2%;
+}
+
+#overview_text {
+	margin-bottom: 5% !important;
+}
+
+.round_link {
+	border-radius: 20px;
+	margin-bottom: 10%;
+	padding-top: 5%;
+	padding-bottom: 5%;
+}
+
+.round_link:hover {
+	background-color: #ECFFB3;
+}
+
+.non_link {
+	margin-bottom: 10%;
+	padding-top: 5%;
+	padding-bottom: 5%;
+}
+
+button.btn-mini {
+	border-radius: 100%;
+}

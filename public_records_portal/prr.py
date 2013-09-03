@@ -43,6 +43,8 @@ def add_resource(resource, request_body, current_user_id = None):
 			return upload_record(int(fields['request_id']), request.files['record'], fields['record_description'], current_user_id)
 	elif "qa" in resource:
 		return ask_a_question(int(fields['request_id']), current_user_id, fields['question_text'])
+	elif "owner" in resource:
+		return add_staff_participant(request_id = fields['request_id'], user_id = current_user_id)
 	else:
 		return False
 
@@ -222,7 +224,7 @@ def get_responses_chronologically(req):
 		return responses
 	responses.sort(key = lambda x:x.date(), reverse = True)
 	if "Closed" in req.status:
-		responses[0].set_icon("icon-lock icon-2x") # Set most recent note (closed note)'s icon
+		responses[0].set_icon("icon-archive") # Set most recent note (closed note)'s icon
 	return responses
 
 def get_stuff_chrono(stuff, key):

@@ -1,0 +1,14 @@
+  <div id="reroutePopover-head" class="hide">Reassign to: <a class="close" href="#">&times;</a> </div>
+  <div id="reroutePopover-content" class="hide">              
+    <form id="rerouteForm" class="form-inline" method ="post" action="/update_a_owner">
+      <!-- my form -->
+      <div class="control-group">
+        <div class="controls">
+          <input type="hidden" name="request_id" value="{{ req.id }}"/>
+          <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
+          <input id="rerouteReason" type="text" name="owner_reason" placeholder="Say why." required />
+          <button id="rerouteButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
+        </div>
+      </div>
+    </form>
+  </div>

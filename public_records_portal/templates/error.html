@@ -1,20 +1,22 @@
 {% extends "base.html" %}
-{% block content %}
-{% block error_generic %}
-	Something went wrong...
-{% endblock error_generic %}
- {% block error_specific %}
-	<p>
-  <strong>
-  {{ message }}
-  </strong>
-</p>
- {% endblock error_specific %}
- {% block contact %}
-</br>
-</br>
- <p>
-  If you're still confused, please reach out to <a href="mailto:oakland@codeforamerica.org?">our team</a>.
-</p>
- {% endblock contact %}
-{% endblock content %}
+{% block container %}
+	<div class="span10 offset1">
+
+		{% block error_generic %}
+			Something went wrong...
+		{% endblock error_generic %}
+
+		{% block error_specific %}
+			<p><strong>{{ message }}</strong></p>
+		{% endblock error_specific %}
+
+		{% block contact %}
+			</br>
+			</br>
+			 <p>
+			  If you're still confused, please reach out to <a href="mailto:oakland@codeforamerica.org?">our team</a>.
+			</p>
+		{% endblock contact %}
+		
+	</div>
+{% endblock container %}

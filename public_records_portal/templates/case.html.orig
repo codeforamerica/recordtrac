@@ -1,6 +1,22 @@
 <!-- This template houses the baseline case information (request, documents, status, etc.) only. -->
 
 {% extends "base.html" %}
+<<<<<<< HEAD
+{% block title %}Request{% endblock %}
+
+{% block content %}
+  {% block well %}
+  <div id="request-container" class="row-fluid">
+    <div class="span9 well">
+
+      {% block request %}
+        <!-- request area -->
+        <div class="row-fluid">
+          <h3 >Request <span class="muted">#{{req.id}}</span></h3>
+          <div class="span10">
+            <p class="lead" truncateable="150"> {{ req.text | new_lines }} </p>
+          </div>
+=======
 {% block title %}Request{% endblock title %}
 
 
@@ -18,7 +34,7 @@
           {% block request %}
             <!-- request area -->
             <div class="row-fluid">
-              <h3 >Request <span class="muted">#{{req.id}}</span></h3>{% block request_actions %}{% endblock request_actions %}
+              <h3 >Request <span class="muted">#{{req.id}}</span></h3>
                {% block clarify_request %}{% endblock clarify_request %}
               <p class="lead" truncateable="250"> {{ req.text | new_lines }} </p>
             </div>
@@ -62,6 +78,7 @@
               </div>
             
           {% endblock request %}
+>>>>>>> 8ce037daba1a98982998fca89c20e5f60377921c
         </div>
       {% endblock well %}
       <div class="row-fluid">
@@ -86,6 +103,32 @@
                    {{ response.display_text() | safe }} 
                  </p>
                 </div>
+<<<<<<< HEAD
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        <!-- shows any existing Q&A -->
+        {% if req.qas %}
+          {% block qas %}
+          <div class="row-fluid">
+            {% for qa in req.qas %}
+              <div class="row-fluid response qa">
+                <div class="span2 text-center">
+                  <i class="icon-question icon-2x">  </i> </br>
+                  <small> {{ qa.date_created | date_granular }}</small> </br>
+                </div>
+                <div class="span10">
+                  {% set uid = qa.owner_id %}
+                  {% set staff = (uid | get_staff) %}
+                  <div class="qa-question" truncateable="250"> {{ qa.question }} - <em><a href="/staff_card/{{uid}}" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staff.alias or staff.email }}</span></a></em></div>
+                  {% if qa.answer %}
+                    <div class="qa-answer"> {{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></div>
+                    {% else %}
+                    {% block answer %}{% endblock answer %}
+                  {% endif %}
+=======
                 <div class="span2 text-right">
                   <div class="row-fluid">
                     <a href="/staff_card/{{uid}}" data-placement="right" data-toggle="popover" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias or staff.email }}</span></a>
@@ -96,6 +139,7 @@
                     <!-- </a> -->
                     {% include '_timestamp.html' %}
                   </div>
+>>>>>>> 8ce037daba1a98982998fca89c20e5f60377921c
                 </div>
               </div>
             {% endfor %}
@@ -122,7 +166,10 @@
           </div>
           <div class="row-fluid">
               <h4>Helpers</h4>
-              {% include '_staff_participants.html' %}
+              {% for owner in req.owners %}
+              {% set staff = ( "User" | get_obj(owner.user_id)) %}
+               {{ staff.alias }} </br>
+              {% endfor %}
           </div>
           <div class="row-fluid">
             <div>
@@ -132,11 +179,58 @@
         </div>
       {% endblock sidebar %}
 
+<<<<<<< HEAD
+      {% endif %}
+      <div id="load-more-qa">
+        Load More... (WORK IN PROGRESS)
+      </div>
+    </div>
+  {% endblock well %}
+
+  <div id="routed-to-container" class="span3" data-sticky="true">
+    {% block status %}
+    <div class="text-right">
+      {% block routing %}
+      {% set uid = (req.current_owner | owner_uid) %}
+      {% set staff = (uid | get_staff) %}
+      Routed to <a href="/staff_card/{{uid}}" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverRoute"><span class="label label-info" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverRoute')">{{ staff.alias or staff.email }}</span></a>
+      {% endblock routing %}
+      {% block history %}
+      <a data-placement="left" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"> <i class="icon-time" ></i>  </a>
+      <div id="historyPopover-head" class="hide">Routing history</div>
+      <div id="historyPopover-content" class="hide">
+        <table class="table table-condensed">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th></th>
+              <th>To</th>
+              <th>Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- the order of data returned here should be reverse chronological (right now it's shown as oldest first)-->
+            {% for owner in req.owners %}
+            <tr>
+              <td>{{ owner.date_created | date }}</td>
+              <td><i class="icon-circle-arrow-right"></i></td>
+              <td>{{ owner.user_id | get_staff_info("name") }}</td>
+              <td>{{ owner.reason }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endblock history %}
+    </div>
+    {% endblock status %}
+=======
       {% block request_dates %}
         <div class="muted text-center">Created: {{ req.date_created | date }}</div>
       {% endblock request_dates %}
     </div>
     
+>>>>>>> 8ce037daba1a98982998fca89c20e5f60377921c
   </div>
 
 {% endblock container %}
@@ -147,6 +241,43 @@
 
 
 
+<<<<<<< HEAD
+{% block responses_container %}
+<div id="responses-container" class="row-fluid">
+  <div class="span9">
+  <h3 class="response">Response</h3>
+  <!-- shows all existing responses (links, documents, offline docs, notes) -->
+  {% set responses = ( req | get_responses_chronologically ) %}
+  {% if responses %}
+    {% for response in responses %}
+      {% set uid = response.uid() %}
+      {% set staff = (uid | get_staff) %}
+      {% set icon = response.get_icon() %}
+      <div class="row-fluid response-wrapper">
+        <div class="span2 text-center">
+          <i class="{{icon}}">  </i></br>
+          <small> {{ response.date() | date_granular }} </small> </br>
+        </div>
+        <div class="span10">
+          <p truncateable="100">
+           {{ response.display_text() | safe }} - <em><a href="/staff_card/{{uid}}" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias or staff.email }}</span></a></em>.
+         </p>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}<!--added an if then to check to see if any responses exist - if no then show text here for the "if any response exists" above -->
+ <div class="span10">
+  <p>There are no records uploaded just yet.  Stay tuned!</p>
+  </div>
+  {% endif %}
+  </div>
+</div>
+{% endblock responses_container %}
+
+{% block custom_script_links %}
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
+  <script type="text/javascript" src="{{ url_for('static', filename='js/case.js') }}"></script>
+=======
 
 
 {% block custom_script_links %}
@@ -161,4 +292,5 @@
   <!-- For sidebar styling -->
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bottom_sidebar.css') }}">
+>>>>>>> 8ce037daba1a98982998fca89c20e5f60377921c
 {% endblock custom_script_links %}
