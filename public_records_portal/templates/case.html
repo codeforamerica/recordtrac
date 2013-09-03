@@ -18,7 +18,7 @@
           {% block request %}
             <!-- request area -->
             <div class="row-fluid">
-              <h3 >Request <span class="muted">#{{req.id}}</span></h3>
+              <h3 >Request <span class="muted">#{{req.id}}</span></h3>{% block request_actions %}{% endblock request_actions %}
                {% block clarify_request %}{% endblock clarify_request %}
               <p class="lead" truncateable="250"> {{ req.text | new_lines }} </p>
             </div>

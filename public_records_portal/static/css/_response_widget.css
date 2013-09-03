@@ -6,6 +6,7 @@
 .rw-controller-container {
   /*text-align: center;*/
   /*width: 500px;*/
+  display: inline;
 }
 
 .rw-controller-container .title {

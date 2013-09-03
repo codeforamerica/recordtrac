@@ -4,6 +4,10 @@
 {% block title %}Request {{ req.id }}{% endblock %}
 {% block head %} {% endblock head %}
 
+{% block response_actions %}
+  {% include '_response_widget.html' %}
+{% endblock response_actions %}
+
 {% block sidebar %}
   <div class="well well-small r_sidebar_banner r_sidebar-fixed hidden-phone hidden-tablet">
     <h4 class="text-center">Status</h4>
@@ -40,8 +44,8 @@
 {% endblock sidebar %}
 
 {% block request_dates %}
-{{super()}}
-<div class="text-center">Due: <span class="label">{{ req.date_created | due_date(req.extended) }}</span></div>
+  {{super()}}
+  <div class="text-center">Due: <span class="label">{{ req.date_created | due_date(req.extended) }}</span></div>
 {% endblock request_dates %}
 
 
