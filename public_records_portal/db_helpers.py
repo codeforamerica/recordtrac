@@ -1,5 +1,5 @@
 from public_records_portal import db, app
-from models import User, Request, Owner, Note, QA, Subscriber
+from models import *
 from datetime import datetime, timedelta
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from sqlalchemy import func
@@ -105,13 +105,13 @@ def create_note(request_id, text, user_id):
 	except:
 		return None
 
-def create_record(doc_id, request_id, user_id, description, filename, url):
-	try:
-		record = Record(doc_id = doc_id, request_id = request_id, user_id = user_id, descrption = description, filename = filename, url = url)
+def create_record(request_id, user_id, description, doc_id = None, filename = None, access = None, url = None):
+	# try:
+		record = Record(doc_id = doc_id, request_id = request_id, user_id = user_id, description = description, filename = filename, url = url, access = access)
 		put_obj(record)
 		return record.id
-	except:
-		return None
+	# except:
+		# return None
 
 def remove_obj(obj_type, obj_id):
 	obj = get_obj(obj_type, obj_id)
