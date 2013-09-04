@@ -1,0 +1,2 @@
+dexydocs/*.html|jinja|easyhtml:
+    - .py|idio
