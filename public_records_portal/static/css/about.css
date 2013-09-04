@@ -3,7 +3,7 @@
 	margin-bottom: 2%;
 }
 
-img/*[alt="Code for America"]*/ {
+img[alt="City of Oakland"] {
 	margin-left: 5%;
 }
 
@@ -11,4 +11,8 @@ img/*[alt="Code for America"]*/ {
 	margin-left: 5%;
 	margin-top: 20%;
 	line-height: 0.2em;
+}
+
+.bottombreathe {
+	padding-bottom: 5%;
 }
