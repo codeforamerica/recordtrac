@@ -44,8 +44,8 @@
                     <i class="{{icon}}"></i>
                   </div>
                   <div class="span9">
-                    <p truncateable="175"> 
-                     {{ response.display_text() | safe }} 
+                    <p truncateable="175">
+                     {{ response.display_text() | safe }}
                    </p>
                   </div>
                   <div class="span2 text-right">
@@ -59,8 +59,11 @@
                   </div>
                 </div>
               {% endfor %}
+              <!-- SHOW/HIDE button; js is in case.js -->
+                <div class="case-show-all show">See all..</div>
+
               </div>
-            
+
           {% endblock request %}
         </div>
       {% endblock well %}
@@ -72,7 +75,7 @@
           <h3 class="response">Response</h3>{% block response_actions %}{% endblock response_actions %}
           <!-- shows all existing responses (links, documents, offline docs, notes) -->
           {% set responses = ( req | get_responses_chronologically ) %}
-          {% if responses %} 
+          {% if responses %}
             {% for response in responses %}
               {% set uid = response.uid() %}
               {% set staff = ("User" | get_obj(uid)) %}
@@ -82,8 +85,8 @@
                   <i class="{{icon}}"></i>
                 </div>
                 <div class="span9">
-                  <p truncateable="175"> 
-                   {{ response.display_text() | safe }} 
+                  <p truncateable="175">
+                   {{ response.display_text() | safe }}
                  </p>
                 </div>
                 <div class="span2 text-right">
@@ -107,7 +110,7 @@
         </div>
       {% endblock responses_container %}
     </div>
-    
+
     <div class="span3">
       {% block sidebar %}
         {% block status %}
@@ -136,7 +139,7 @@
         <div class="muted text-center">Created: {{ req.date_created | date }}</div>
       {% endblock request_dates %}
     </div>
-    
+
   </div>
 
 {% endblock container %}
@@ -144,13 +147,9 @@
 
 
 
-
-
-
-
-
 {% block custom_script_links %}
-  <!-- Listed in case instead of manage_request_city for truncation -->
+
+  <!-- Listed in case instead of manage_request_city for truncation!!! -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/manage_request_city.js') }}"></script>
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/manage_request_city.css') }}">
 

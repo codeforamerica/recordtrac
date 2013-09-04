@@ -1,11 +1,13 @@
-#load-more-qa {
-  background-color: #aaa;
+.case-show-all {
+  background-color: #bdbdbd;
   text-align: center;
+  margin: 0 -19px -19px -19px;
+  padding: 3px 0;
+  border-radius: 0 0 3px 3px;
 }
 
-#load-more-qa:hover {
-  background-color: #bbb;
+.case-show-all:hover {
+  background-color: #cdcdcd;
   cursor: hand;
   cursor: pointer;
 }
-
