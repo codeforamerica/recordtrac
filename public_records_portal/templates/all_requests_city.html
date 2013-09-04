@@ -24,13 +24,15 @@
         {% else %}
         <tr onclick="window.location.href='/request/{{request.id}}';">
         {% endif %}
-          <td class="placeholder"><small><i class="icon-archive icon-light"></i></small></td>
+          {% set status = request.status | get_status %}
+          {% set status_icon = status | get_status_icon %}
+           <td class="status {{status}}"><small><i class="{{status_icon}}"></i></small></td>
           <td>{{ request.id }}</td>
           <td>{{ request.date_created | date }}</td>
           <td><div>{{ request.text }}</div></td>
-          <td>{{ uid | get_staff_info("dept")}}</td>
-          <td>{{ uid | get_staff_info("name") }}</td>
-          {% set uid = (request.current_owner | owner_uid) %}
+          {% set uid = ("user_id" | get_attribute(request.current_owner, "Owner")) %}
+          <td>{{ "department" | get_attribute(uid, "User") }}</td>
+          <td>{{ "alias" | get_attribute(uid, "User") }}</td>
           <td>{{ request.status_updated | date_granular }} </td> 
           <td>due date (absolute)</td>
           </a> 
@@ -41,7 +43,7 @@
   </table>
 {% endblock datatable %}
 
-{% block sidebar %}
+<!-- {% block sidebar %}
   <div class="well r_sidebar r_sidebar-fixed hidden-phone hidden-tablet">
     <h4>View</h4>
     <label class="checkbox">
@@ -65,4 +67,4 @@
       <option value="">Dept 5</option>
     </select>
   </div>
-{% endblock sidebar %}
+{% endblock sidebar %} -->
