@@ -69,12 +69,11 @@
           {% endblock request %}
         </div>
       {% endblock well %}
-      <div class="row-fluid">
-        {% block requester_info %}{% endblock requester_info %}
-      </div>
+
       {% block responses_container %}
         <div id="responses-container" class="row-fluid">
-          <h3 class="response">Response</h3>{% block response_actions %}{% endblock response_actions %}
+          <h3>Response</h3>
+          {% block response_actions %}{% endblock response_actions %}
           <!-- shows all existing responses (links, documents, offline docs, notes) -->
           {% set responses = ( req | get_responses_chronologically ) %}
           {% if responses %}
