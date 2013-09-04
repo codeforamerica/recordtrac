@@ -97,6 +97,8 @@ def add_note(request_id, text, user_id):
 	return False
 
 
+
+### @export "upload_record"
 def upload_record(request_id, file, description, user_id):
 	try:
 		doc_id, filename = scribd_helpers.upload_file(file)
@@ -113,8 +115,9 @@ def upload_record(request_id, file, description, user_id):
 			return record_id
 	return "There was an issue with your upload."
 
+### @export "add_offline_record"
 def add_offline_record(request_id, description, access, user_id):
-	record_id = create_record(request_id = request_id, user_id = user_id, access = access, description = description)
+	record_id = create_record(request_id = request_id, user_id = user_id, access = access, description = description) # To create an offline record, we need to know the request ID to which it will be added, the user ID for the person adding the record, how it can be accessed, and a description/title of the record.
 	if record_id:
 		change_request_status(request_id, "A response has been added.")
 		generate_prr_emails(request_id = request_id, notification_type = "City response added")
@@ -122,6 +125,7 @@ def add_offline_record(request_id, description, access, user_id):
 		return record_id
 	return False
 
+### @export "add_link"
 def add_link(request_id, url, description, user_id):
 	record_id = create_record(url = url, request_id = request_id, user_id = user_id, description = description)
 	if record_id:
@@ -130,7 +134,8 @@ def add_link(request_id, url, description, user_id):
 		add_staff_participant(request_id = request_id, user_id = user_id)
 		return record_id
 	return False
-			
+
+### @export "make_request"			
 def make_request(text, email = None, assigned_to_name = None, assigned_to_email = None, assigned_to_reason = None, user_id = None, phone = None, alias = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
 	request_id = find_request(text)
@@ -145,11 +150,13 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 		return request_id, True
 	return request_id, False
 
+### @export "add_subscriber"	
 def add_subscriber(request_id, email):
 	user_id = create_or_return_user(email = email)
 	subscriber_id = create_subscriber(request_id = request_id, user_id = user_id)
 	generate_prr_emails(request_id, notification_type = "Request followed", user_id = subscriber_id)
 
+### @export "ask_a_question"	
 def ask_a_question(request_id, owner_id, question):
 	""" City staff can ask a question about a request they are confused about."""
 	qa_id = create_QA(request_id = request_id, question = question, owner_id = owner_id)
@@ -160,16 +167,18 @@ def ask_a_question(request_id, owner_id, question):
 		return qa_id
 	return False
 
+### @export "answer_a_question""	
 def answer_a_question(qa_id, answer, subscriber_id = None):
 	""" A requester can answer a question city staff asked them about their request."""
 	request_id = create_answer(qa_id, subscriber_id, answer)
 	change_request_status(request_id, "Pending")
 	generate_prr_emails(request_id = request_id, notification_type = "Question answered")
 
+### @export "open_request"	
 def open_request(request_id):
 	change_request_status(request_id, "Open")
 
-
+### @export "assign_owner"	
 def assign_owner(request_id, reason, email = None, alias = None, phone = None, notify = True): 
 	""" Called any time a new owner is assigned. This will overwrite the current owner."""
 	user_id = create_or_return_user(email = email, alias = alias, phone = phone)
