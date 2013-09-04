@@ -5,17 +5,33 @@
 	cursor: pointer;
 }
 
-table.dataTable thead th.placeholder {
+table.dataTable thead th.status {
 	padding-left: 1px !important;
 	padding-right: 1px !important;
 	width: 2% !important;
 }
 
-table.dataTable tbody td.placeholder {
+table.dataTable tbody td.status {
 	padding-left: 1px !important;
 	padding-right: 1px !important;
 	width: 2% !important;
-	background-color: #464646;
+	
 	text-align: center;
 	vertical-align: middle;
+}
+
+table.dataTable tbody td.closed {
+	background-color: #464646;
+}
+
+table.dataTable tbody td.open {
+	background-color: blue;
+}
+
+table.dataTable tbody td.duesoon {
+	background-color: orange;
+}
+
+table.dataTable tbody td.overdue {
+	background-color: red;
 }

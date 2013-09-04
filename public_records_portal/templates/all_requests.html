@@ -13,7 +13,7 @@
           <table cellpadding="0" cellspacing="0" border="0" id="allrequestTable" class="data-table table">
             <thead>
               <tr>
-                <th class="placeholder"></th>
+                <th class="status"></th>
                 <th>#</th>
                 <th>Received</th>
                 <th>Request</th>
@@ -29,7 +29,7 @@
                 {% else %}
                 <tr onclick="window.location.href='/request/{{request.id}}';">
                 {% endif %}
-                  <td class="placeholder"><small><i class="icon-archive icon-light"></i></small></td>
+                  <td class="status closed"><small><i class="icon-archive icon-light"></i></small></td>
                   <td>{{ request.id }}</td>
                   <td>{{ request.date_created | date }}</td>
                   <td><div>{{ request.text }}</div></td>
