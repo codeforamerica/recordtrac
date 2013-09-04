@@ -29,7 +29,8 @@
                 {% else %}
                 <tr onclick="window.location.href='/request/{{request.id}}';">
                 {% endif %}
-                  <td class="placeholder"><small><i class="icon-archive icon-light"></i></small></td>
+                {% set status_icon = request.status | get_status_icon %}
+                  <td class="placeholder"><small><i class="{{status_icon}}"></i></small></td>
                   <td>{{ request.id }}</td>
                   <td>{{ request.date_created | date }}</td>
                   <td><div>{{ request.text }}</div></td>
@@ -48,7 +49,7 @@
     </div>
     
     <div class="span3">
-      {% block sidebar %}
+<!--       {% block sidebar %}
         <div class="well r_sidebar r_sidebar-fixed hidden-phone hidden-tablet">
           <h4>View</h4>
           <label class="checkbox">
@@ -64,7 +65,7 @@
             <option value="">Dept 5</option>
           </select>
         </div>
-      {% endblock sidebar %}
+      {% endblock sidebar %} -->
     </div>
 
   </div>
