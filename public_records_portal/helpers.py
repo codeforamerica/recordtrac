@@ -88,3 +88,16 @@ def display_staff_participant(owner, request):
 	else:
 		return staff.email
 
+def get_status(request_status):
+	if request_status:
+		if "open" in request_status.lower():
+			return "open"
+		else:
+			return "closed"
+	return None
+
+def get_status_icon(status):
+	if status and status == "closed":
+		return "icon-archive icon-light"
+	return ""
+
