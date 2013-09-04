@@ -7,12 +7,12 @@ from flask.ext.restless import APIManager
 # Create API
 manager = APIManager(app, flask_sqlalchemy_db=db)
 # The endpoints created are /api/object, e.g. publicrecordsareawesome.com/api/request/
-manager.create_api(models.Request, methods=['GET', 'POST', 'PUT', 'DELETE'], results_per_page=None)
-manager.create_api(models.Owner, methods=['GET', 'POST', 'PUT', 'DELETE'], results_per_page = None)
-manager.create_api(models.Note, methods=['GET', 'POST', 'PUT', 'DELETE'], results_per_page = None)
-manager.create_api(models.Record, methods=['GET', 'POST', 'PUT', 'DELETE'], results_per_page = None)
-manager.create_api(models.QA, methods=['GET', 'POST', 'PUT', 'DELETE'], results_per_page =None)
-manager.create_api(models.Subscriber, methods=['GET', 'POST', 'PUT', 'DELETE'], results_per_page = None)
+manager.create_api(models.Request, methods=['GET'], results_per_page=None)
+manager.create_api(models.Owner, methods=['GET'], results_per_page = None)
+manager.create_api(models.Note, methods=['GET'], results_per_page = None)
+manager.create_api(models.Record, methods=['GET'], results_per_page = None)
+manager.create_api(models.QA, methods=['GET'], results_per_page =None)
+manager.create_api(models.Subscriber, methods=['GET'], results_per_page = None)
 
 # Routing dictionary. 
 routing = {
