@@ -167,7 +167,7 @@ def ask_a_question(request_id, owner_id, question):
 		return qa_id
 	return False
 
-### @export "answer_a_question""	
+### @export "answer_a_question"
 def answer_a_question(qa_id, answer, subscriber_id = None):
 	""" A requester can answer a question city staff asked them about their request."""
 	request_id = create_answer(qa_id, subscriber_id, answer)
