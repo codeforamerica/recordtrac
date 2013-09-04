@@ -22,7 +22,7 @@
       <div class="span2">
         <div class="popover-container"><a data-placement="left" href="#" id="reroutePopover"> <h4 class="text-right"><small><i class="icon-arrow-right"></i></small><i class="icon-user"></i></h4></a></div>
         {% include '_reroute.html' %}
-      </div>      
+      </div>
     </div>
 
     <div class="row-fluid">
@@ -52,6 +52,10 @@
 
 
 {% block custom_script_links %}
+  <script type="text/javascript" src="{{ url_for('static', filename='js/case.js') }}"></script>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
+
+
   <!-- Listed in case instead of manage_request_city for truncation -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/manage_request_city.js') }}"></script>
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/manage_request_city.css') }}">
@@ -63,7 +67,7 @@
   <!-- For sidebar styling -->
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bottom_sidebar.css') }}">
-  
+
   <!-- For bootstrap select -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/custom.bootstrap-select.js') }}"></script>
 {% endblock custom_script_links %}

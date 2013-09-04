@@ -111,7 +111,6 @@ $(document).ready(function() {
     $.fn.truncateable = function() {
       $self = $(this)
       var text = $self.text().trim();
-      console.log(text);
       var current_length = text.length;
       var max_length = $self.attr('truncateable');
       if (current_length < max_length)
