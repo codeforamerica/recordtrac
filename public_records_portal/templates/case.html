@@ -14,8 +14,8 @@
     <div class="span8 offset1">
       {% block well %}
         <div class="well">
-
           {% block request %}
+          <div id = "request-container">
             <!-- request area -->
             <div class="row-fluid">
               <h3 >Request <span class="muted">#{{req.id}}</span></h3>{% block request_actions %}{% endblock request_actions %}
@@ -63,7 +63,7 @@
                 <div class="case-show-all show">See all..</div>
 
               </div>
-
+          </div>
           {% endblock request %}
         </div>
       {% endblock well %}

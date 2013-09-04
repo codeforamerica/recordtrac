@@ -1,2 +1,24 @@
 docs/*.html|jinja|easyhtml:
     - .py|idio
+    - .js|idio|h
+    - .js|idio|l
+
+### "run-casper"
+script:run-casper:
+    - scripts/run-server.sh|shint:
+        - shint: { 'use-wd' : False }
+    - docs/screenshots.js|casperjs
+
+### "screenshots-source"
+screenshots-source:
+    - docs/screenshots.js|pyg:
+        - output: True
+
+### "rst"
+.rst|jinja|rstbody|easyhtml:
+    - sourcecode
+    - screenshots-source
+    - script:run-casper
+    - easyhtml: {
+        css: "img { border: thin solid grey; }"
+        }
