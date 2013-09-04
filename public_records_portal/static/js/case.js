@@ -36,7 +36,7 @@
     var $this = $(this);
     if ($(this).hasClass('show')) {
       $this.toggleClass('show');
-      $responses.show();
+      $responses.show(200);
       $this.html('See less..')
     } else {
       $this.toggleClass('show');
