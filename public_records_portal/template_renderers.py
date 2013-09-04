@@ -215,4 +215,19 @@ def get_user_id():
 		return current_user.id
 	return None
 
+# Used as AJAX POST endpoint to check if new request text contains certain keyword
+# See new_requests.(html/js)
+def is_public_record():
+	request_text = request.form['request_text']
+
+	not_records_filepath = os.path.join(app.root_path, 'static/json/notcityrecords.json')
+	not_records_json = open(not_records_filepath)
+	json_data = json.load(not_records_json)
+	request_text = request_text.lower()
+	if "birth" in request_text or "death" in request_text or "marriage" in request_text:
+		return json_data["Certificate"]
+	if "divorce" in request_text:
+		return json_data["Divorce"]
+	return ''
+
 

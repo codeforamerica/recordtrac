@@ -1,6 +1,7 @@
 <!-- This template is to initiate a new request. -->
 
 {% extends "base.html" %}
+{% from 'help_text.html' import help %}
 
 {% block title %}Public records{% endblock title%}
 
@@ -24,19 +25,17 @@
                   <!-- <a data-placement="right" data-toggle="popover" href="#" id="requestPopover" class="hidden-phone hidden-tablet"> -->
                   <textarea id="requestTextarea" name="request_text" rows="3" class="input-block-level" placeholder="Describe your request. Be as specific as possible."></textarea>
                  <!--  </a> -->
-                  {% include '_help_text_request.html' %}
+                  {{ help("requestPopover-content", "Enter records request") }}
                 </div>
                 <div id="not_public_record">
 
                 </div>
               </div>
-
-
               <p class="lead">Select a department</p>
               <div class="control-group">
                 <div>
                   <input id="inputDepartment" class="input-block-level" type="text" name="request_department" placeholder="Who should it go to?" data-provide="typeahead" autocomplete="off" />
-                  {% include '_help_text_department.html' %}
+                  {{ help("deptPopover-content", "Enter department or document type") }}
                 </div>
               </div>
 
@@ -45,7 +44,7 @@
                 <label for="inputEmail">Your email</label>
                 <div>
                   <input class="input-block-level" name="request_email" type="email" id="inputEmail" placeholder="yourname@email.com" />
-                  {% include '_help_text_email.html' %}
+                  {{ help("emailPopover-content", "Enter email address") }}
                 </div>
               </div>
 
@@ -53,7 +52,7 @@
                 <label for="inputName">Your name</label>
                 <div >
                   <input class="input-block-level" name="request_alias" type="text" id="inputName" placeholder="Your Name" />
-                  {% include '_help_text_name.html' %}
+                  {{ help("namePopover-content", "Enter name") }}
                 </div>
               </div>
 
@@ -61,7 +60,7 @@
                 <label for="inputPhone">Your phone number</label>
                 <div>
                   <input class="input-block-level" name="request_phone" type="tel" id="inputPhone" placeholder="(510) 555-1234" maxlength="14" />
-                  {% include '_help_text_phone.html' %}
+                  {{ help("phonePopover-content", "Enter phone number") }}
                 </div>
               </div>
 

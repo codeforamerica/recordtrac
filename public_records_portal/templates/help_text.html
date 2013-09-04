@@ -1,0 +1,7 @@
+{% macro help(name, type) -%}
+<div id={{name}} class="hide">   
+	<div class="row-fluid helpPopover">           
+	  {{ type | explain_action }} 
+	</div>
+</div>
+{%- endmacro %}
