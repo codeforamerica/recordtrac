@@ -1,0 +1,11 @@
+#load-more-qa {
+  background-color: #aaa;
+  text-align: center;
+}
+
+#load-more-qa:hover {
+  background-color: #bbb;
+  cursor: hand;
+  cursor: pointer;
+}
+

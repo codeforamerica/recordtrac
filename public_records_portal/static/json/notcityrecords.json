@@ -1,4 +1,6 @@
 {
-"The City of Oakland does not have copies of birth, death, or marriage certificates. Contact the County of Alameda's Clerk-Recorder's Office for these records by calling (510) 272-6362 or visiting <a href="http://www.acgov.org/auditor/clerk/">acgov.org/auditor/clerk</a>.": ["Birth", "Death", "Marriage"],
-"The City of Oakland does not have copies of divorce decrees or judgements. Contact the County of Alameda's Family Law Court for these records by calling (510) 263-4311 or visiting <a href="http://www.alameda.courts.ca.gov/pages.aspx/Divorce-Separation-Annulment#6">alameda.courts.ca.gov</a>.": ["Divorce"]
+	"Certificate":
+"The City of Oakland does not have copies of <strong>birth</strong>, <strong>death</strong>, or marriage <strong>certificates</strong>. Contact the County of Alameda's Clerk-Recorder's Office for these records by calling (510) 272-6362 or visiting <a href='http://www.acgov.org/auditor/clerk/'>acgov.org/auditor/clerk'</a>.",
+	"Divorce":
+"The City of Oakland does not have copies of <strong>divorce</strong> decrees or judgements. Contact the County of Alameda's Family Law Court for these records by calling (510) 263-4311 or visiting <a href='http://www.alameda.courts.ca.gov/pages.aspx/Divorce-Separation-Annulment#6'>alameda.courts.ca.gov'</a>."
 }

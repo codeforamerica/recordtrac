@@ -1,6 +1,10 @@
 <div class="rw-container">
 
   <div class="rw-controller-container">
+      <div class="title">Response</div>
+      <div class="plus-icon">
+        <i class="icon-plus-sign"></i>
+      </div>
 
     <div class="rw-controller-btns-container">
 
@@ -11,10 +15,13 @@
       <div class="rw-btn-wrap" data-target="2">
         <div class="rw-btn" ><i class="icon-edit"></i></div><div class="rw-btn-expand">Add Note</div>
       </div>
-
+      
+{% if req.extended %}
+{% else %}
       <div class="rw-btn-wrap" data-target="3">
         <div class="rw-btn" ><i class="icon-calendar"></i></div><div class="rw-btn-expand">Request Extension</div>
       </div>
+{% endif %}
 
       <div class="rw-btn-wrap" data-target="4">
         <div class="rw-btn" ><i class="icon-archive"></i></div><div class="rw-btn-expand">Close Request</div>
@@ -30,18 +37,18 @@
 
 
     <!-- Add a record form -->
-  <div  class="default-text" data-target-for="default">
+<!--   <div class="default-text" data-target-for="default">
     <div id="bounce">
    <i class="icon-double-angle-up"></i> Take Action Here <i class="icon-double-angle-up"></i>
     </div>
-  </div>
+  </div> -->
 
     <div class="target-for" data-target-for="1">
       <form name="input_doc" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data">
         <input type="hidden" name="request_id" value="{{ req.id }}"/>
         <fieldset> 
           <div class="row-fluid">
-            <h4>Add a record</h4>
+            <!-- <h4>Add a record</h4> -->
             <div class="control-group">
               <label class="control-label" for="recordSummary">Summary</label>
               <div class="controls">
@@ -104,7 +111,7 @@
         <input type="hidden" name="request_id" value="{{ req.id }}"/>
         <fieldset> 
           <div class="row-fluid">
-            <h4>Add a note</h4>
+            <!-- <h4>Add a note</h4> -->
             <div class="control-group">
               <label class="control-label">Note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
               <div class="controls">
@@ -130,7 +137,7 @@
         <input type="hidden" name="request_id" value="{{ req.id }}"/>
         <fieldset>
           <div class="row-fluid">
-            <h4>Request an extension</h4>
+            <!-- <h4>Request an extension</h4> -->
             <div class="control-group">
               <label class="control-label">Reason <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Request an extension"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
               <div class="controls">
@@ -161,7 +168,7 @@
         <input type="hidden" name="close_reason"/>
         <fieldset> 
           <div class="row-fluid">
-            <h4>Close this request </h4>
+            <!-- <h4>Close this request </h4> -->
             <div class="control-group">
 
               <label class="control-label">Reason <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>

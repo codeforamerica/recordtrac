@@ -1,6 +1,7 @@
 from public_records_portal import app, models, db, template_renderers
 from template_renderers import * # Import all the functions that render templates
 from flask.ext.restless import APIManager
+from helpers import is_public_record
 
 # Create API
 manager = APIManager(app, flask_sqlalchemy_db=db)
@@ -12,7 +13,7 @@ manager.create_api(models.Record, methods=['GET', 'POST', 'PUT', 'DELETE'], resu
 manager.create_api(models.QA, methods=['GET', 'POST', 'PUT', 'DELETE'], results_per_page =None)
 manager.create_api(models.Subscriber, methods=['GET', 'POST', 'PUT', 'DELETE'], results_per_page = None)
 
-# Routing dictionary. 
+# Routing dictionary.
 routing = {
 #   function_name: url
 	'your_requests':{
@@ -22,14 +23,14 @@ routing = {
 		'url': '/tutorial'
 	},
 	'index':{
-		'url':'/', 
+		'url':'/',
 		'methods':['GET', 'POST']
 	},
 	'explain_all_actions':{
 		'url': '/actions'
 	},
 	'new_request': {
-		'url': '/new', 
+		'url': '/new',
 		'methods': ['GET', 'POST']
 	},
 	'show_response':{
@@ -51,7 +52,7 @@ routing = {
 		'url': '/requests'
 	},
 	'update_password':{
-		'url': '/update_password', 
+		'url': '/update_password',
 		'methods': ['GET', 'POST']
 	},
 	'logout':{
@@ -61,23 +62,27 @@ routing = {
 		'url': '/login', 'methods': ['GET', 'POST']
 	},
 	'add_a_resource':{
-		'url': '/add_a_<string:resource>', 
+		'url': '/add_a_<string:resource>',
 		'methods': ['GET', 'POST']
 	},
 	'public_add_a_resource':{
-		'url': '/public_add_a_<string:resource>', 
+		'url': '/public_add_a_<string:resource>',
 		'methods': ['GET', 'POST']
 	},
 	'update_a_resource':{
-		'url': '/update_a_<string:resource>', 
+		'url': '/update_a_<string:resource>',
 		'methods': ['GET', 'POST']
 	},
 	'close':{
-		'url': '/close', 
+		'url': '/close',
 		'methods': ['GET', 'POST']
 	},
 	'staff_card':{
 		'url': '/staff_card/<int:user_id>'
+	},
+	'is_public_record':{
+		'url': '/is_public_record',
+		'methods': ['POST']
 	}
 }
 

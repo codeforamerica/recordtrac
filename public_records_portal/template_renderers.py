@@ -8,6 +8,7 @@ from filters import *
 from prr import add_resource, update_resource, make_request, close_request
 from db_helpers import *
 import departments
+import os, json
 
 # Initialize login
 login_manager = LoginManager()
@@ -71,7 +72,7 @@ def explain_all_actions():
 	json_data = json.load(action_json)
 	actions = []
 	for data in json_data:
-		actions.append("%s: %s" %(data, json_data[data]))
+		actions.append("%s: %s" %(data, json_data[data]["What"]))
 	return render_template('actions.html', actions = actions)
 
 # Returns a view of the case based on the audience. Currently views exist for city staff or general public.
@@ -95,7 +96,7 @@ def show_request(request_id, template = None):
 	if template:
 		if "city" in template and not current_user_id:
 			return render_template('alpha.html')
-	else: 
+	else:
 		template = "manage_request_public.html"
 	if req.status and "Closed" in req.status:
 		template = "closed.html"
@@ -147,6 +148,8 @@ def close(request_id = None):
 
 # Shows all public records requests that have been made.
 def requests():
+	# Return first 100, ? limit = 100
+	# departments = request.get.args('department')
 	all_record_requests = get_objs("Request")
 	if all_record_requests:
 		return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = get_user_id(), title = "All Requests")
@@ -167,7 +170,7 @@ def load_user(userid):
 @app.route('/test')
 def show_test():
 	return render_template('test.html')
-	
+
 def any_page(page):
 	try:
 		return render_template('%s.html' %(page), user_id = get_user_id())
@@ -185,7 +188,7 @@ def login(email=None, password=None):
 		if user_to_login:
 			login_user(user_to_login)
 			return redirect(url_for('tutorial'))
-	return render_template('error.html', message = "Oops, your e-mail/ password combo didn't work.") 
+	return render_template('error.html', message = "Oops, your e-mail/ password combo didn't work.")
 
 @login_required
 def update_password(password=None):
@@ -211,3 +214,5 @@ def get_user_id():
 	if current_user.is_anonymous() == False:
 		return current_user.id
 	return None
+
+

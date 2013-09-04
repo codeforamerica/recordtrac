@@ -2,49 +2,75 @@
 
 {% extends "base.html" %}
 {% block title %}{{title}}{% endblock title %}
-{% block content %}
-<legend>{{title}}</legend>
-<div>
-  <table cellpadding="0" cellspacing="0" border="0" id="allrequestTable" class="data-table table">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Received</th>
-        <th>Request</th>
-        <th>Department</th>
-        <th>Owner</th>
-        <th>Updated</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for request in all_record_requests %}
-      {% if user_id %}
-        <tr onclick="window.location.href='/city/request/{{request.id}}';">
-        {% else %}
-        <tr onclick="window.location.href='/request/{{request.id}}';">
-        {% endif %}
-          <td>{{ request.id }}</td>
-          <td>{{ request.date_created | date }}</td>
-          <td><div>{{ request.text }}</div></td>
-          <!-- {% if user_id %}
-          <td><a href="/city/request/{{request.id}}"><div>{{ request.text }}</div></a></td>
-          {% else %}
-          <td><a href="/request/{{request.id}}"><div>{{ request.text }}</div></a></td>
-          {% endif %} -->
-          {% set uid = ("user_id" | get_attribute(request.current_owner, "Owner")) %}
-          <td>{{ "department" | get_attribute(uid, "User") }}</td>
-          <td>{{ "alias" | get_attribute(uid, "User") }}</td>
-          <td>{{ request.status_updated | date_granular }} </td> 
-          </a> 
-        </tr>
-      {% else %}
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+    
+{% block container %}
+  <div class="row-fluid">
+    
+    <div class="span8 offset1">
+      <h3>Explore requests</h3>
+      <div>
+        {% block datatable %}
+          <table cellpadding="0" cellspacing="0" border="0" id="allrequestTable" class="data-table table">
+            <thead>
+              <tr>
+                <th class="placeholder"></th>
+                <th>#</th>
+                <th>Received</th>
+                <th>Request</th>
+                <th>Department</th>
+                <th>Owner</th>
+                <th>Updated</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for request in all_record_requests %}
+              {% if user_id %}
+                <tr onclick="window.location.href='/city/request/{{request.id}}';">
+                {% else %}
+                <tr onclick="window.location.href='/request/{{request.id}}';">
+                {% endif %}
+                  <td class="placeholder"><small><i class="icon-archive icon-light"></i></small></td>
+                  <td>{{ request.id }}</td>
+                  <td>{{ request.date_created | date }}</td>
+                  <td><div>{{ request.text }}</div></td>
+                  {% set uid = ("user_id" | get_attribute(request.current_owner, "Owner")) %}
+                  <td>{{ "department" | get_attribute(uid, "User") }}</td>
+                  <td>{{ "alias" | get_attribute(uid, "User") }}</td>
+                  <td>{{ request.status_updated | date_granular }} </td> 
+                  </a> 
+                </tr>
+              {% else %}
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endblock datatable %}
+      </div>
+    </div>
+    
+    <div class="span3">
+      {% block sidebar %}
+        <div class="well r_sidebar r_sidebar-fixed hidden-phone hidden-tablet">
+          <h4>View</h4>
+          <label class="checkbox">
+            <input type="checkbox" value="" checked>
+            Open requests only
+          </label>
+          <select class="input-block-level">
+            <option value="">All departments</option>
+            <option value="">Dept 1</option>
+            <option value="">Dept 2</option>
+            <option value="">Dept 3</option>
+            <option value="">Dept 4</option>
+            <option value="">Dept 5</option>
+          </select>
+        </div>
+      {% endblock sidebar %}
+    </div>
 
-{% endblock %}
+  </div>
+{% endblock container%}
 
 {% block custom_script_links %}
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
   <script type="text/javascript" src="{{ url_for('static', filename='js/custom.jquery.ellipsis.js') }}"></script>
 {% endblock custom_script_links %}
