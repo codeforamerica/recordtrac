@@ -37,6 +37,7 @@
             <div>
             <!-- shows any existing Q&A or public notes -->
             {% set request_data = ( req | get_request_data_chronologically ) %}
+
               {% for response in request_data %}
                 {% set icon = response.get_icon() %}
                 <div class="row-fluid response">
@@ -59,10 +60,12 @@
                   </div>
                 </div>
               {% endfor %}
-              <!-- SHOW/HIDE button; js is in case.js -->
-                <div class="case-show-all show">See all..</div>
-
+                {% if request_data | length > 1 %}
+                  <!-- SHOW/HIDE button; js is in case.js -->
+                  <div class="case-show-all show">See all..</div>
+                {% endif %}
               </div>
+
 
           {% endblock request %}
         </div>
