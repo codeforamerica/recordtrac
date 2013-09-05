@@ -4,6 +4,7 @@ from public_records_portal import app
 import json
 from jinja2 import Markup
 from db_helpers import *
+import notifications
 
 def date_granular(timestamp):
 	if not timestamp:
@@ -33,6 +34,10 @@ def date(obj):
 			return format_date(datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f").date())
 		except:
 			return format_date(obj) # Just return the thing, maybe it's already a date
+
+def timestamp(obj):
+	return obj.strftime('%H:%M:%S')
+
 
 def tutorial(section):
 	# Get filepath for actions.json
@@ -88,12 +93,25 @@ def display_staff_participant(owner, request):
 	else:
 		return staff.email
 
-def get_status(request_status):
-	if request_status:
-		if "open" in request_status.lower():
-			return "open"
-		else:
+def get_status(request, audience = "public"):
+	if not request.status:
+		return None
+	status = request.status.lower()
+	if audience == "public":
+		if "closed" in status:
 			return "closed"
+		return "open"
+	if "closed" in status:
+		return "closed"
+	else:
+		due_soon, due_date = notifications.is_due_soon(request.date_created, request.extended) 
+		if due_soon:
+			return "due soon"
+		else:
+			overdue, due_date = notifications.is_overdue(request.date_created, request.extended)
+			if overdue:
+				return "overdue"
+		return "open"
 	return None
 
 def get_status_icon(status):
