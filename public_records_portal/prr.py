@@ -103,6 +103,7 @@ def add_note(request_id, text, user_id):
 
 ### @export "upload_record"
 def upload_record(request_id, file, description, user_id):
+	""" Creates a record with upload/download attributes """
 	try:
 		doc_id, filename = scribd_helpers.upload_file(file)
 	except:
@@ -120,6 +121,7 @@ def upload_record(request_id, file, description, user_id):
 
 ### @export "add_offline_record"
 def add_offline_record(request_id, description, access, user_id):
+	""" Creates a record with offline attributes """
 	record_id = create_record(request_id = request_id, user_id = user_id, access = access, description = description) # To create an offline record, we need to know the request ID to which it will be added, the user ID for the person adding the record, how it can be accessed, and a description/title of the record.
 	if record_id:
 		change_request_status(request_id, "A response has been added.")
@@ -130,6 +132,7 @@ def add_offline_record(request_id, description, access, user_id):
 
 ### @export "add_link"
 def add_link(request_id, url, description, user_id):
+	""" Creates a record with link attributes """
 	record_id = create_record(url = url, request_id = request_id, user_id = user_id, description = description)
 	if record_id:
 		change_request_status(request_id, "A response has been added.")
