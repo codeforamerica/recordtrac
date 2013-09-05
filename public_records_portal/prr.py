@@ -25,7 +25,7 @@ ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'o
 NOTIFICATION_TYPES = ["Request assigned","Question asked",
 "Question answered","Request closed","Response added","Request due","Public note added","Request made","Request overdue","Request followed"]
 
-
+### @export "add_resource"
 def add_resource(resource, request_body, current_user_id = None):
 	fields = request_body.form
 	if "extension" in resource:
@@ -48,6 +48,7 @@ def add_resource(resource, request_body, current_user_id = None):
 	else:
 		return False
 
+### @export "update_resource"
 def update_resource(resource, request_body):
 	fields = request_body.form
 	if "QA_delete" in resource:
@@ -198,13 +199,13 @@ def assign_owner(request_id, reason, email = None, alias = None, phone = None, n
 		generate_prr_emails(request_id = request_id, notification_type = "Request assigned", user_id = user_id)
 	return new_owner_id
 
-
+### @export "allowed_file"
 def allowed_file(filename):
 	ext = filename.rsplit('.', 1)[1]
 	return ext in ALLOWED_EXTENSIONS, ext
 
 
-
+### @export "get_request_data_chronologically"
 def get_request_data_chronologically(req):
 	public = False
 	if current_user.is_anonymous():
@@ -222,6 +223,7 @@ def get_request_data_chronologically(req):
 	responses.sort(key = lambda x:x.date(), reverse = True)
 	return responses
 
+### @export "get_responses_chronologically"
 def get_responses_chronologically(req):
 	responses = []
 	if not req:
@@ -238,10 +240,7 @@ def get_responses_chronologically(req):
 		responses[0].set_icon("icon-archive") # Set most recent note (closed note)'s icon
 	return responses
 
-def get_stuff_chrono(stuff, key):
-	stuff.sort(key = key)
-
-
+### @export "set_directory_fields"
 def set_directory_fields():
 	dir_json = open(os.path.join(app.root_path, 'static/json/directory.json'))
 	json_data = json.load(dir_json)
@@ -254,13 +253,14 @@ def set_directory_fields():
 			email = line['EMAIL_ADDRESS'].lower()
 			user = create_or_return_user(email = email, alias = "%s %s" % (first, last), phone = line['PHONE'], department = line['DEPARTMENT'])
 
+### @export "get_subscriber_attribute"
 def get_subscriber_attribute(attribute, sid):
 	subscriber_user_id = get_attribute(attribute = "user_id", obj_id = sid, obj_type = "Subscriber")
 	if subscriber_user_id:
 		return get_attribute(attribute = attribute, obj_id = subscriber_user_id, obj_type = "User")
 	return None # Requester
 
-
+### @export "get_requester"
 def get_requester(request_id): 
 # Returns the first person who subscribed to a request, which is the requester
 	subscribers = get_attribute(attribute = "subscribers", obj_id = request_id, obj_type = "Request")
@@ -269,12 +269,14 @@ def get_requester(request_id):
 		return get_attribute(attribute = "user_id", obj = subscribers[0])
 	return None
 
+### @export "is_request_open"
 def is_request_open(request_id):
 	status = get_attribute(attribute = "status", obj_id = request_id, obj_type = "Request")
 	if status and 'Closed' in status:
 		return False
 	return True
 
+### @export "last_note"
 def last_note(request_id):
 	notes = get_attribute(attribute = "notes", obj_id = request_id, obj_type = "Request")
 	if notes:
