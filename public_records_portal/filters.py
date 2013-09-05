@@ -19,3 +19,4 @@ app.jinja_env.filters['new_lines'] = helpers.new_lines
 app.jinja_env.filters['display_staff_participant'] = helpers.display_staff_participant
 app.jinja_env.filters['get_status_icon'] = helpers.get_status_icon
 app.jinja_env.filters['get_status'] = helpers.get_status
+app.jinja_env.filters['timestamp'] = helpers.timestamp

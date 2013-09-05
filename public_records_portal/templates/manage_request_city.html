@@ -4,6 +4,31 @@
 {% block title %}Request {{ req.id }}{% endblock %}
 {% block head %} {% endblock head %}
 
+{% block clarify_request %}
+  <!-- ask a question -->
+  <form name="ask_question" class="form-horizontal" id="question" method="post" action="/add_a_qa" autocomplete="on">
+    <fieldset> 
+      <div class="row-fluid">
+          <h4>Ask a question about this request</h4>
+        <div>
+
+          <div class="control-group">
+            <label class="control-label">Question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+            <div class="row-fluid">
+              <div class="controls">
+                  <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                  <input id="questionTextarea" type="text" name="question_text" rows="3" cols="20" placeholder="Ask the requester a question" required/>
+                <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </fieldset>
+  </form>
+  {% endblock clarify_request %}
+
 {% block response_actions %}
   {% include '_response_widget.html' %}
 {% endblock response_actions %}
