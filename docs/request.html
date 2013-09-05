@@ -1,0 +1,64 @@
+<html>
+    <head>
+
+        <style type="text/css">
+            {{ pygments['pastie.css'] }}
+        </style>
+
+    </head>
+    <body>
+        <h3>About the Request Page</h3>
+        <p>Each request is assigned a unique number. The number assigned is based on the order it's entered into the system.</p>
+
+        <p>This is the message submitted by the requester. Members of the public will be able to view this message.</p>
+
+        <p>Below the request, you will always find the name and phone number of the requester. Only city employees are able to view this information. The email address is not included because the requester is notified via email through this system. It is not necessary for city employees to know the requester's email address.</p>
+
+        <p>Any questions about this particular request and answers provided by the requester will be posted here. Members of the public will be able to view these questions and answers.</p>
+
+        <p>All of your responses will automatically be posted here. Members of the public will be able to view these responses. A response can include the documents or links posted and any message sent to the requester.</p> 
+
+        <p>This box displays the status of the records request. There are four possible states: Open, Due Soon, Overdue, and Closed. Members of the public will only be able to see two different statuses: Open and Closed.</p>
+
+        <p>Use this section to understand exactly who has worked on this records request. The point of contact is the person responsible for fulfilling the records request. The helpers are those who may have some documents or messages to contribute to this request.</p>
+
+        <p>This displays a history of everyone who ever helped fulfill request. It includes the date it was sent to a particular city employee and the reasons why it was re-routed.</p>
+
+        <p>You can find the date the request was submitted and the due date. The due date is 10 calendar days after the request was submitted (per California Public Records Act.)</p>
+
+        <h3>Actions You Can Take to Respond to a Request</h3>
+        <p>Send the request to another city employee if your department is unable to fulfill it. The city employee will be alerted and you will no longer be the point of contact for this request.</p>
+
+        {{ d['/public_records_portal/prr.py|idio']['assign_owner'] }}
+
+        <p>More than one person may be needed to answer this records request. By adding city employees as "helpers," they will be notified and have the ability to respond to the request. You will continue to be listed as point of contact for this records request.</p>
+
+        <p>Use this field to ask questions about this paricular records request. The requester will be notified via email of this question. The question will be posted online for everyone to view.</p>
+
+        {{ d['/public_records_portal/prr.py|idio']['ask_a_question'] }}
+
+        <p>Upload documents stored on your computer. The requester will be notified via email everytime a record is uploaded. The documents will be posted online for everyone to view.</p>
+
+		{{ d['/public_records_portal/prr.py|idio']['upload_record'] }}
+        
+        <p>If you are unable to upload the records online, use this space to describe how the record can be viewed. The requester will be notified via email about this message. This message will be posted online for everyone to view.</p>
+
+		{{ d['/public_records_portal/prr.py|idio']['add_offline_record'] }}
+
+		 <p>Provide a link to where the document can be found online. The requester will be notified via email about this link. This web address will be posted online for everyone to view.</p>
+
+		{{ d['/public_records_portal/prr.py|idio']['add_link'] }}
+
+        <p>You can provide updates to the requester using the "Add a Note" feature. The requester will be notified via email. The message will be posted online for everyone to view.<p>
+
+        {{ d['/public_records_portal/prr.py|idio']['add_note'] }}
+
+        <p>If you need more time to respond to a public records request, select a reason why you can't immediately deliver a record. The message will be posted online for everyone to read.</p>
+
+        {{ d['/public_records_portal/prr.py|idio']['request_extension'] }}
+
+        <p>Close out a public reords request by selecting one of the reasons provided. You're then able to edit the message provided for you. The requester will be notified via email and the message will be posted online for everyone to read.</p>
+
+        {{ d['/public_records_portal/prr.py|idio']['close_request'] }}
+    </body>
+</html>

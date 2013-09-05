@@ -74,6 +74,7 @@ def update_resource(resource, request_body):
 	else:
 		return False
 
+### @export "request_extension"
 def request_extension(request_id, extension_reasons, user_id):
 	update_obj(attribute = "extended", val = True, obj_type = "Request", obj_id = request_id)
 	text = "Request extended:"
@@ -82,6 +83,7 @@ def request_extension(request_id, extension_reasons, user_id):
 	add_staff_participant(request_id = request_id, user_id = user_id)
 	return add_note(request_id = request_id, text = text, user_id = user_id)
 
+### @export "add_note"
 def add_note(request_id, text, user_id):
 	if not text or text == "":
 		return False
@@ -279,7 +281,7 @@ def last_note(request_id):
 		return notes[0]
 	return None
 
-
+### @export "close_request"
 def close_request(request_id, reason = "", user_id = None):
 	req = get_obj("Request", request_id)
 	change_request_status(request_id, "Closed")
