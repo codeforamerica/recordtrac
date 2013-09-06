@@ -10,6 +10,8 @@
 
 #overview_text {
 	margin-bottom: 5% !important;
+	font-size: 1.25em;
+	line-height: 1.4em;
 }
 
 .round_link {
@@ -31,4 +33,9 @@
 
 button.btn-mini {
 	border-radius: 100%;
+}
+
+a.btn {
+	margin-top: 2%;
+	margin-bottom: 5%;
 }

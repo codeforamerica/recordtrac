@@ -7,7 +7,13 @@
   <div class="row-fluid">
     
     <div class="span8 offset1">
-      <h3>Explore requests</h3>
+      <div class="row-fluid">
+        <h3>Explore requests</h3>
+        <p class="span8">Explore all requests past and present.  Search past requests for the information you are looking for.  It might already be here and you don't even have to wait for it!</p>
+        <div class="span3">
+          <a href="/new" class="btn btn-block btn-primary">Request new record</a>
+        </div>
+      </div>
       <div>
         {% block datatable %}
           <table cellpadding="0" cellspacing="0" border="0" id="allrequestTable" class="data-table table">
