@@ -3,7 +3,6 @@
 {% extends "base.html" %}
 {% block title %}Request{% endblock title %}
 
-
 {% block container %}
   <div class="row-fluid">
     <div class="span9">
@@ -53,9 +52,13 @@
                     <div class="row-fluid">
                       <p>Requester</p>
                     </div>
+                    <div class = "timestampPopoverContainer">
                     <div class="row-fluid">
-                      <span class="timestampPopover" onmouseover="timestampPopover('{{ response.date() | date_granular }}')">{{ response.date() | date_granular }}</span>
-                      {% include '_timestamp.html' %}
+                      <span class="timestampPopover" onmouseover="">{{ response.date() | date_granular }}
+                      </span>
+                      <div class = "hide">
+                       {% include '_timestamp.html' %}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -94,14 +97,15 @@
                   <div class="row-fluid">
                     <a href="/staff_card/{{uid}}" data-placement="right" data-toggle="popover" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias or staff.email }}</span></a>
                   </div>
+                  <div class = "timestampPopoverContainer"
                   <div class="row-fluid">
-                    <!-- <a data-placement="right" data-toggle="popover" href="#" id="timestampPopover" class="hidden-phone hidden-tablet"> -->
-                      <span class="timestampPopover" onmouseover="timestampPopover('{{ response.date() | date_granular }}')">{{ response.date() | date_granular }}</span>
-                    <!-- </a> -->
-                    {% include '_timestamp.html' %}
+                <span class="timestampPopover" onmouseover="">{{ response.date() | date_granular }}</span>
+                <div class = "hide">
+                {% include '_timestamp.html' %}
+              </div>
                   </div>
                 </div>
-              </div>
+                </div>
             {% endfor %}
           {% else %}<!--added an if then to check to see if any responses exist - if no then show text here for the "if any response exists" above -->
             <div class="row-fluid">

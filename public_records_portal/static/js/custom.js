@@ -29,7 +29,7 @@
       trigger: 'hover', 
       html : true,
       content: function() {
-        return $("#timestampPopover-content").html();
+        return $(this).parent().find('.timestampPopover-content').html()
       }
   });
 
