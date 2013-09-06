@@ -9,10 +9,7 @@
     <div class="span8 offset1">
       <div class="row-fluid">
         <h3>Explore requests</h3>
-        <p class="span8">Explore all requests past and present.  Search past requests for the information you are looking for.  It might already be here and you don't even have to wait for it!</p>
-        <div class="span3">
-          <a href="/new" class="btn btn-block btn-primary">Request new record</a>
-        </div>
+        <p class="intro_text">Explore all requests past and present.  Search past requests for the information you are looking for.  It might already be here and you don't even have to wait for it!</p>
       </div>
       <div>
         {% block datatable %}
@@ -56,6 +53,9 @@
     </div>
     
     <div class="span3">
+      <div class="r_sidebar">
+        <a href="/new" class="btn btn-block btn-primary ">Request new record</a>
+      </div>
 <!--       {% block sidebar %}
         <div class="well r_sidebar r_sidebar-fixed hidden-phone hidden-tablet">
           <h4>View</h4>

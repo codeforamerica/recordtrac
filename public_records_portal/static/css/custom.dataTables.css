@@ -35,3 +35,7 @@ table.dataTable tbody td.duesoon {
 table.dataTable tbody td.overdue {
 	background-color: red;
 }
+
+.intro_text {
+	margin-bottom: 2%;
+}
