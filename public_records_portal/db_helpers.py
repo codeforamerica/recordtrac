@@ -14,7 +14,7 @@ from sqlalchemy import func
 
 ### @export "get_obj"
 def get_obj(obj_type, obj_id):
-	""" A wrapper to query the database for an object via its class/type (defined in models.py) and ID. """
+	""" Query the database for an object via its class/type (defined in models.py) and ID and return the object. """
 	if not obj_id:
 		return None
 	# There has to be a better way of doing this
@@ -34,7 +34,7 @@ def get_obj(obj_type, obj_id):
 
 ### @export "get_objs"
 def get_objs(obj_type):
-	""" A wrapper to query the database for all objects of a certain class/type (defined in models.py) """
+	""" Query the database for all objects of a certain class/type (defined in models.py) and return queryset. """
 	# There has to be a better way of doing this
 	if obj_type == "User":
 		return User.query.all()
