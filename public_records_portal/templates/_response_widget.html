@@ -19,7 +19,7 @@
 {% if req.extended %}
 {% else %}
       <div class="rw-btn-wrap" data-target="3">
-        <div class="rw-btn" ><i class="icon-calendar"></i></div><div class="rw-btn-expand">Request Extension</div>
+        <div class="rw-btn" ><i class="icon-calendar"></i></div><div class="rw-btn-expand">Extend Request</div>
       </div>
 {% endif %}
 
@@ -135,6 +135,7 @@
       {% else %}
       <form name="extend_request" class="form-horizontal" id="extension" method="post" action="/add_a_extension">
         <input type="hidden" name="request_id" value="{{ req.id }}"/>
+        <input type="hidden" name="extend_reason"/>
         <fieldset>
           <div class="row-fluid">
             <!-- <h4>Request an extension</h4> -->
@@ -151,7 +152,25 @@
             </div> 
             <div class="control-group">
               <div class="controls">
-                <button id="extendRequest" class="btn btn-primary" type="submit">Request an extension</button>
+                <!-- <button id="extendRequest" class="btn btn-primary" type="submit">Request an extension</button> -->
+                <!-- Button to trigger modal -->
+                <a id="extendRequest_button" href="#extendModal" role="button" class="btn btn-primary" data-toggle="modal" >Extend request...</a>
+
+                <!-- Modal -->
+                <div id="extendModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="extendModalLabel" aria-hidden="true">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="extendModalLabel">Reason for extension</h3>
+                  </div>
+                  <div class="modal-body">
+                    <!-- NOTE: need to remove the line breaks in the CODE in textarea in order to remove the funky indentation -->
+                    <textarea id="extendTextarea" class="input-block-level" rows="10"></textarea>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    <button id="extendButton" type="submit" class="btn btn-primary">Extend this request</button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

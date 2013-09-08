@@ -35,6 +35,7 @@ $(document).ready(function(){
   });
 });
 
+//Close request
   /* takes text from json file for each reason and populates the editable textarea in the modal */
   $("#close_reasons").change(function () {
     var str = "";
@@ -48,6 +49,22 @@ $(document).ready(function(){
   $("#closeButton").click(function () {
     var estr = $("#closeTextarea").val();
     $('input[name=close_reason]').val(estr);
+  });
+
+//Extend request
+   /* takes text from json file for each reason and populates the editable textarea in the modal */
+  $("#extend_reasons").change(function () {
+    var str = "";
+    $("#extend_reasons option:selected").each(function () {
+          str += $(this).val() + " ";
+        });
+    $("#extendTextarea").text(str);
+  });
+
+  /* takes the edited text in the modal as a variable for use in posting to the case */
+  $("#extendButton").click(function () {
+    var estr = $("#extendTextarea").val();
+    $('input[name=extend_reason]').val(estr);
   });
 
 var map = {};
