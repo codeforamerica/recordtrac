@@ -34,7 +34,7 @@
           <td>{{ "department" | get_attribute(uid, "User") }}</td>
           <td>{{ "alias" | get_attribute(uid, "User") }}</td>
           <td>{{ request.status_updated | date_granular }} </td> 
-          <td>due date (absolute)</td>
+          <td>{{ request.date_created | due_date(request.extended) }}</td>
           </a> 
         </tr>
       {% else %}
