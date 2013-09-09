@@ -31,3 +31,27 @@
   cursor: hand;
   cursor: pointer;
 }
+
+/* Request status*/
+
+.request-status-well {
+  text-align: center;
+  color: #fff;
+}
+
+.request-status-well.open {
+  background-color: blue;
+}
+
+.request-status-well.soon {
+  background-color: orange;
+}
+
+.request-status-well.overdue {
+  background-color: red;
+}
+
+.request-status-well.closed {
+  background-color: black;
+}
+

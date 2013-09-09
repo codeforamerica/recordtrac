@@ -2,10 +2,10 @@
 
 {% extends "base.html" %}
 {% block title %}{{title}}{% endblock title %}
-    
+
 {% block container %}
   <div class="row-fluid">
-    
+
     <div class="span8 offset1">
       <div class="row-fluid">
         <h3>Explore requests</h3>
@@ -13,6 +13,7 @@
       </div>
       <div>
         {% block datatable %}
+        <h1>Here</h1>
           <table cellpadding="0" cellspacing="0" border="0" id="allrequestTable" class="data-table table">
             <thead>
               <tr>
@@ -43,10 +44,10 @@
                   {% set uid = ("user_id" | get_attribute(request.current_owner, "Owner")) %}
                   <td>{{ "department" | get_attribute(uid, "User") }}</td>
                   <td>{{ "alias" | get_attribute(uid, "User") }}</td>
-                  <td>{{ request.status_updated | date_granular }} </td> 
+                  <td>{{ request.status_updated | date_granular }} </td>
                   {% block city_tabledata %}{% endblock city_tabledata %}
 
-                  </a> 
+                  </a>
                 </tr>
               {% else %}
               {% endfor %}
@@ -55,7 +56,7 @@
         {% endblock datatable %}
       </div>
     </div>
-    
+
     <div class="span3">
       <div class="r_sidebar">
         <a href="/new" class="btn btn-block btn-primary ">Request new record</a>
