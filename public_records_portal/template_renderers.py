@@ -236,16 +236,16 @@ def is_public_record():
 	return ''
 
 def get_redirect_target():
-""" Taken from http://flask.pocoo.org/snippets/62/ """
-    for target in request.values.get('next'), request.referrer:
-        if not target:
-            continue
-        if is_safe_url(target):
-            return target
+	""" Taken from http://flask.pocoo.org/snippets/62/ """
+	for target in request.values.get('next'), request.referrer:
+		if not target:
+			continue
+		if is_safe_url(target):
+			return target
 
 def is_safe_url(target):
-""" Taken from http://flask.pocoo.org/snippets/62/ """
-    ref_url = urlparse(request.host_url)
-    test_url = urlparse(urljoin(request.host_url, target))
-    return test_url.scheme in ('http', 'https') and \
-           ref_url.netloc == test_url.netloc
+	""" Taken from http://flask.pocoo.org/snippets/62/ """
+	ref_url = urlparse(request.host_url)
+	test_url = urlparse(urljoin(request.host_url, target))
+	return test_url.scheme in ('http', 'https') and \
+		ref_url.netloc == test_url.netloc
