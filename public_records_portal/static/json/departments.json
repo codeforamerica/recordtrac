@@ -360,4 +360,24 @@
 		"Contact": "joverman@oaklandnet.com",
 		"Backup": "sasanchez@oaklandnet.com"
 	}
-}
+},
+	"Oakland Police Department": 
+	{
+		"Document Types":
+			["Offense Report",
+			"Crime Report",
+			"Police Department Publications",
+			"Police Video Recording",
+			"Police Audio Recording",
+			"In-Car Video Recording",
+			"CAD Purge",
+			"Traffic Accident",
+			"Traffic Enforcement Incident",
+			"Police Training Record",
+			"Complaints to Police Department",
+			"Police Department Employment Contract (MOU)",
+			"Dog Attack Report"
+			],
+		"Contact": "rsonnier@oaklandnet.com",
+		"Backup": "afuller@oaklandnet.com"
+	}
