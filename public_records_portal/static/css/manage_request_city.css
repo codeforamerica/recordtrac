@@ -37,21 +37,22 @@
 .request-status-well {
   text-align: center;
   color: #fff;
+  padding: 0;
 }
 
 .request-status-well.open {
-  background-color: blue;
+  background-color: rgba(0,0,255,0.7);
 }
 
 .request-status-well.soon {
-  background-color: orange;
+  background-color: rgba(255, 173, 0, 0.7);
 }
 
 .request-status-well.overdue {
-  background-color: red;
+  background-color: rgba(255,0,0,0.7);
 }
 
 .request-status-well.closed {
-  background-color: black;
+  background-color: rgba(0,0,0,0.7);
 }
 
