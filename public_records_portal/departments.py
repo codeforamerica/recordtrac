@@ -1,6 +1,7 @@
 import os
 import json
 from public_records_portal import app
+from db_helpers import *
 
 """ 
 .. module:: prr
@@ -49,3 +50,29 @@ def get_dept_backup(dept_contact):
 		if json_data[line]["Contact"].lower() == dept_contact.lower():
 			return json_data[line]["Backup"]
 	return None
+
+def get_dept(user):
+	depts_json = open(os.path.join(app.root_path, 'static/json/departments.json'))
+	json_data = json.load(depts_json)
+	for line in json_data:
+		if json_data[line]["Contact"].lower() == user.email.lower():
+			return line
+	
+	return None
+
+### @export "populate_departments"
+def populate_users_with_departments():
+	users = get_objs("User")
+	for u in users:
+		if not u.department:
+			dept = get_dept(u)
+			if dept:
+				update_obj(attribute = "department", val = dept, obj = u)
+
+
+
+
+
+
+
+
