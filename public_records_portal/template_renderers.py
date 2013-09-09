@@ -9,6 +9,7 @@ from prr import add_resource, update_resource, make_request, close_request
 from db_helpers import *
 import departments
 import os, json
+from urlparse import urlparse, urljoin
 
 # Initialize login
 login_manager = LoginManager()
@@ -191,7 +192,7 @@ def login(email=None, password=None):
 		user_to_login = authenticate_login(email, password)
 		if user_to_login:
 			login_user(user_to_login)
-			return redirect(url_for('tutorial'))
+			return redirect(get_redirect_target())
 	return render_template('error.html', message = "Oops, your e-mail/ password combo didn't work.")
 
 @login_required
@@ -234,4 +235,17 @@ def is_public_record():
 		return json_data["Divorce"]
 	return ''
 
+def get_redirect_target():
+""" Taken from http://flask.pocoo.org/snippets/62/ """
+    for target in request.values.get('next'), request.referrer:
+        if not target:
+            continue
+        if is_safe_url(target):
+            return target
 
+def is_safe_url(target):
+""" Taken from http://flask.pocoo.org/snippets/62/ """
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ('http', 'https') and \
+           ref_url.netloc == test_url.netloc
