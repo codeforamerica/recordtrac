@@ -46,7 +46,7 @@
   ga('create', 'UA-41730935-1', 'herokuapp.com');
   ga('send', 'pageview');
   </script>
-
+  
   </head>
   
   <body>
@@ -168,9 +168,19 @@
     <!-- used for the extension and close request multi-select boxes in city view -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-select.min.js') }}"></script>
 
+    <!-- Facebook SDK -->
+    <div id="fb-root"></div>
+      <script>(function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));</script>
+
 
     {% block custom_script_links %}
-
+      
     {% endblock custom_script_links %}
 
     
