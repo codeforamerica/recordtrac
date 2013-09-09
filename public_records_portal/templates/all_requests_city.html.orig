@@ -35,9 +35,15 @@
           {% set uid = ("user_id" | get_attribute(request.current_owner, "Owner")) %}
           <td>{{ "department" | get_attribute(uid, "User") }}</td>
           <td>{{ "alias" | get_attribute(uid, "User") }}</td>
+<<<<<<< HEAD
+          <td>{{ request.status_updated | date_granular }} </td>
+          <td>due date (absolute)</td>
+          </a>
+=======
           <td>{{ request.status_updated | date_granular }} </td> 
           <td>{{ request.date_created | due_date(request.extended) }}</td>
           </a> 
+>>>>>>> aa6f096ade9cc6d5fd3041c4febee56071ff19b4
         </tr>
       {% else %}
       {% endfor %}
