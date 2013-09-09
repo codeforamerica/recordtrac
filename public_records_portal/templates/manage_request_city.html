@@ -7,7 +7,7 @@
 {% block clarify_request %}
   <!-- ask a question -->
   <form name="ask_question" class="form-horizontal" id="question" method="post" action="/add_a_qa" autocomplete="on">
-    <fieldset> 
+    <fieldset>
       <div class="row-fluid">
           <h4>Ask a question about this request</h4>
         <div>
@@ -34,9 +34,13 @@
 {% endblock response_actions %}
 
 {% block sidebar %}
-  <div class="well well-small r_sidebar_banner r_sidebar-fixed hidden-phone hidden-tablet">
-    <h4 class="text-center">Status</h4>
-  </div>
+
+{% block status %}
+  {% set status = ( req | get_status('city') ) %}
+  {% include '_manage_requests_status.html' %}
+{% endblock status %}
+
+
 
   <div class="well b_sidebar r_sidebar-fixed hidden-phone hidden-tablet">
     <div class="row-fluid">

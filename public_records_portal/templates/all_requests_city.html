@@ -29,7 +29,9 @@
            <td class="status {{status}}"><small><i class="{{status_icon}}"></i></small></td>
           <td>{{ request.id }}</td>
           <td>{{ request.date_created | date }}</td>
+
           <td><div>{{ request.text }}</div></td>
+
           {% set uid = ("user_id" | get_attribute(request.current_owner, "Owner")) %}
           <td>{{ "department" | get_attribute(uid, "User") }}</td>
           <td>{{ "alias" | get_attribute(uid, "User") }}</td>
