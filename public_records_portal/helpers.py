@@ -25,6 +25,7 @@ def date_granular(timestamp):
 		return "Just now."
 
 def date(obj):
+	""" Take a datetime or datetime-like object and return a formatted date. """
 	if not obj:
 		return None
 	try:
@@ -74,6 +75,7 @@ def email_validation(email):
 	return False
 
 def format_date(obj):
+	""" Take a datetime object and return it in format Jun 12, 2013 """
 	return obj.strftime('%b %d, %Y')
 
 def new_lines(value):
