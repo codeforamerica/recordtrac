@@ -155,7 +155,13 @@ def should_notify(user_email):
 	""" Looks up the user in do_not_email.json and returns False if found. """
 	do_not_email = open(os.path.join(app.root_path, 'static/json/do_not_email.json'))
 	json_data = json.load(do_not_email)
-	for email in json_data:
-		if email.lower() == user_email.lower():
-			return False
+	for department in json_data:
+		emails = json_data[department]['Emails']
+		for email in emails:
+			if email.lower() == user_email.lower():
+				return False
 	return True
+
+
+
+
