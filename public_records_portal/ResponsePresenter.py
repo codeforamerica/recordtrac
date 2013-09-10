@@ -54,7 +54,7 @@ class ResponsePresenter:
 
 	def display_text(self):
 		if self.type == "offline":
-			return "%s can be accessed: %s" %(self.response.description, self.response.access)
+			return "Name of Record: %s<br> How to Access Record: %s" %(self.response.description, self.response.access)
 		elif self.type == "document":
 			download_url = self.response.download_url
 			if not download_url:
