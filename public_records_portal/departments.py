@@ -57,17 +57,15 @@ def get_dept(user):
 	for line in json_data:
 		if json_data[line]["Contact"].lower() == user.email.lower():
 			return line
-	
 	return None
 
 ### @export "populate_departments"
 def populate_users_with_departments():
 	users = get_objs("User")
 	for u in users:
-		if not u.department:
-			dept = get_dept(u)
-			if dept:
-				update_obj(attribute = "department", val = dept, obj = u)
+		dept = get_dept(u)
+		if dept:
+			update_obj(attribute = "department", val = dept, obj = u)
 
 
 

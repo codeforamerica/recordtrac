@@ -8,7 +8,7 @@ from public_records_portal import app
 import os
 import time
 import json
-from flask import Flask, render_template, request
+from flask import Flask, request
 from flask.ext.login import current_user
 from datetime import datetime, timedelta
 from models import *
@@ -44,7 +44,10 @@ def add_resource(resource, request_body, current_user_id = None):
 	elif "qa" in resource:
 		return ask_a_question(int(fields['request_id']), current_user_id, fields['question_text'])
 	elif "owner" in resource:
-		return add_staff_participant(request_id = fields['request_id'], user_id = current_user_id)
+		participant_id, new = add_staff_participant(request_id = fields['request_id'], email = fields['owner_email'], reason = fields['owner_reason'])
+		if new:
+			generate_prr_emails(request_id = fields['request_id'], notification_type = "Staff participant added", user_id = get_attribute("user_id", obj_id = participant_id, obj_type = "Owner"))
+		return participant_id
 	else:
 		return False
 

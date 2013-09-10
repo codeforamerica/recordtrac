@@ -359,8 +359,7 @@
 			],
 		"Contact": "joverman@oaklandnet.com",
 		"Backup": "sasanchez@oaklandnet.com"
-	}
-},
+	},
 	"Oakland Police Department": 
 	{
 		"Document Types":
@@ -381,3 +380,4 @@
 		"Contact": "rsonnier@oaklandnet.com",
 		"Backup": "afuller@oaklandnet.com"
 	}
+}

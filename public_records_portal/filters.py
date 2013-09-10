@@ -6,6 +6,7 @@ app.jinja_env.filters['get_scribd_download_url'] = scribd_helpers.get_scribd_dow
 app.jinja_env.filters['last_note'] = prr.last_note
 app.jinja_env.filters['due_date'] = notifications.due_date
 app.jinja_env.filters['get_obj'] = db_helpers.get_obj
+app.jinja_env.filters['get_objs'] = db_helpers.get_objs
 app.jinja_env.filters['date_granular'] = helpers.date_granular
 app.jinja_env.filters['get_attribute'] = db_helpers.get_attribute
 app.jinja_env.filters['get_responses_chronologically'] = prr.get_responses_chronologically
