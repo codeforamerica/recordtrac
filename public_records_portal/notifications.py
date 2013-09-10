@@ -6,7 +6,7 @@ import json
 from db_helpers import *
 from departments import *
 import sendgrid
-
+from flask import render_template
 
 # Set flags:
 
@@ -57,13 +57,13 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 
 def send_prr_email(page, recipients, subject, template, include_unsubscribe_link = True, cc_everyone = False):
 	if recipients:
-		try:
-			if send_emails:
+		if send_emails:
+			try:
 				send_email(body = render_template(template, page = page), recipients = recipients, subject = subject, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = cc_everyone)
-			else:
-				print "%s to %s with subject %s" % (render_template(template, page = page), recipients, subject)
-		except:
-			print "E-mail was not sent."
+			except:
+				print "E-mail was not sent."
+		else:
+			print "%s to %s with subject %s" % (render_template(template, page = page), recipients, subject)
 
 def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_everyone = False):
 	mail = sendgrid.Sendgrid(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'], secure = True)
@@ -75,10 +75,12 @@ def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_ev
 		message.add_filter_setting("subscriptiontrack", "enable", 0)
 	if cc_everyone:
 		for recipient in recipients:
-			message.add_cc(recipient)
+			if should_notify(recipient):
+				message.add_cc(recipient)
 	else:
 		for recipient in recipients:
-			message.add_to(recipient)
+			if should_notify(recipient):
+				message.add_to(recipient)
 	message.add_bcc(sender)
 	mail.web.send(message)
 
@@ -148,4 +150,12 @@ def notify_due():
 			send_email(body = body, recipients = recipients, subject = email_subject, include_unsubscribe_link = False)
 
 
-
+### @export "should_notify"
+def should_notify(user_email):
+	""" Looks up the user in do_not_email.json and returns False if found. """
+	do_not_email = open(os.path.join(app.root_path, 'static/json/do_not_email.json'))
+	json_data = json.load(do_not_email)
+	for email in json_data:
+		if email.lower() == user_email.lower():
+			return False
+	return True

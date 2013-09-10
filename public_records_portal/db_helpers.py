@@ -198,13 +198,17 @@ def find_owner(request_id, user_id):
 		return owner.id
 	return None
 
-def add_staff_participant(request_id, user_id):
+def add_staff_participant(request_id, email = None, user_id = None, reason = None):
+	""" Creates an owner for the request if it doesn't exist, and returns the owner ID and True if a new one was created. Returns the owner ID and False if existing."""
+	if not user_id:
+		user_id = create_or_return_user(email = email)
 	participant = Owner.query.filter_by(request_id = request_id, user_id = user_id).first()
 	if not participant:
-		participant = Owner(request_id = request_id, user_id = user_id, reason = "Participant")
+		participant = Owner(request_id = request_id, user_id = user_id, reason = reason)
 		db.session.add(participant)
 		db.session.commit()
-	return participant.id
+		return participant.id, True
+	return participant.id, False
 
 def authenticate_login(email, password):
 	if email:
