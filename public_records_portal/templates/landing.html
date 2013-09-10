@@ -54,7 +54,8 @@ a2a_config.linkname = "Please share me!";
 						<img src="{{ url_for('static', filename='images/explore2.png') }}" width="100px" class="center-image">
 						<h3>Explore</h3>
 						<div class="row-fluid">
-							<p class="span8 offset2">View <span class="badge badge-info">124</span> past requests and counting.</p>
+							{% set all_record_requests = "Request" | get_objs %}
+							<p class="span8 offset2">View <span class="badge badge-info">{{ all_record_requests | count }}</span> past requests and counting.</p>
 						</div>
 						<!-- <div class="row-fluid">
 							<button class="btn btn-info btn-mini">Go <i class="icon-arrow-right"></i></button>
