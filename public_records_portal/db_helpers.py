@@ -199,14 +199,12 @@ def find_owner(request_id, user_id):
 	return None
 
 def add_staff_participant(request_id, user_id):
-	participant = Owner.query.filter_by(request_id = request_id, user_id = user_id)
+	participant = Owner.query.filter_by(request_id = request_id, user_id = user_id).first()
 	if not participant:
 		participant = Owner(request_id = request_id, user_id = user_id, reason = "Participant")
 		db.session.add(participant)
 		db.session.commit()
-		return participant.id
-	else:
-		return None
+	return participant.id
 
 def authenticate_login(email, password):
 	if email:
