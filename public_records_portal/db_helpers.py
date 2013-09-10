@@ -153,21 +153,31 @@ def create_answer(qa_id, subscriber_id, answer):
 def create_or_return_user(email, alias = None, phone = None, department = None, not_id = False):
 	user = User.query.filter(func.lower(User.email) == func.lower(email)).first() 
 	if not user:
-		user = User(email = email, alias = alias, phone = phone, department = department, password = app.config['ADMIN_PASSWORD'])
+		user = create_user(email = email, alias = alias, phone = phone, department = department, password = app.config['ADMIN_PASSWORD'])
 	else:
-		if alias:
-			user.alias = alias
-		if phone:
-			user.phone = phone
-		if department:
-			user.department = department
+		user = update_user(user, alias, phone, department)
+	if not_id:
+		return user
+	return user.id
+
+def create_user(email, alias = None, phone = None, department = None):
+	user = User(email = email, alias = alias, phone = phone, department = department, password = app.config['ADMIN_PASSWORD'])
+	db.session.add(user)
+	db.session.commit()
+	return user
+
+def update_user(user, alias = None, phone = None, department = None):
+	if alias:
+		user.alias = alias
+	if phone:
+		user.phone = phone
+	if department:
+		user.department = department
 	if not user.password:
 		user.password = app.config['ADMIN_PASSWORD']
 	db.session.add(user)
 	db.session.commit()
-	if not_id:
-		return user
-	return user.id
+	return user
 
 def create_owner(request_id, reason, email = None, user_id = None):
 	""" Adds a staff member to the request without assigning them as current owner. (i.e. "participant")

@@ -150,7 +150,7 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 	request_id = find_request(text)
 	if not request_id:
 		request_id = create_request(text = text, user_id = user_id)
-		new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email, alias = assigned_to_name)
+		new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email)
 		if email: # If the user provided an e-mail address, add them as a subscriber to the request.
 			user_id = create_or_return_user(email = email, alias = alias, phone = phone)
 			subscriber_id = create_subscriber(request_id = request_id, user_id = user_id)
@@ -188,22 +188,17 @@ def open_request(request_id):
 	change_request_status(request_id, "Open")
 
 ### @export "assign_owner"	
-def assign_owner(request_id, reason, email = None, alias = None, phone = None, notify = True): 
+def assign_owner(request_id, reason, email = None): 
 	""" Called any time a new owner is assigned. This will overwrite the current owner."""
-	user_id = create_or_return_user(email = email, alias = alias, phone = phone)
+	owner_id, is_new_owner = add_staff_participant(request_id = request_id, reason = reason, email = email)
 	req = get_obj("Request", request_id)
-	current_owner_id = None
-	if not req.current_owner:
-		current_owner_id = req.current_owner
-	owner_id = find_owner(request_id = int(request_id), user_id = user_id)
-	if current_owner_id and owner_id:
-		if current_owner_id == owner_id: # This would happen if someone is trying to reassign to the existing owner
-			return None 
-	new_owner_id = create_owner(request_id = request_id, reason = reason, user_id = user_id)
-	update_obj(attribute = "current_owner", val = new_owner_id, obj = req)
-	if notify:
+	if req.current_owner == owner_id: # Already the current owner
+		return owner_id
+	update_obj(attribute = "current_owner", val = owner_id, obj = req)
+	user_id = get_attribute(attribute = "user_id", obj_id = owner_id, obj_type = "Owner")
+	if is_new_owner:
 		generate_prr_emails(request_id = request_id, notification_type = "Request assigned", user_id = user_id)
-	return new_owner_id
+	return owner_id
 
 ### @export "allowed_file"
 def allowed_file(filename):
