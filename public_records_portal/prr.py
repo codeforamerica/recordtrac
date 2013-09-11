@@ -147,21 +147,10 @@ def add_link(request_id, url, description, user_id):
 ### @export "make_request"			
 def make_request(text, email = None, assigned_to_name = None, assigned_to_email = None, assigned_to_reason = None, user_id = None, phone = None, alias = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
-<<<<<<< HEAD
-	if not email:
-		return None, False
-	req = Request.query.filter_by(text = text).first()
-	if not req:
-		req = Request(text = text, creator_id = user_id)
-		db.session.add(req)
-		db.session.commit()
-		new_owner_id = assign_owner(request_id = req.id, reason = assigned_to_reason, email = assigned_to_email, alias = assigned_to_name)
-=======
 	request_id = find_request(text)
 	if not request_id:
 		request_id = create_request(text = text, user_id = user_id)
 		new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email)
->>>>>>> f4acb5d8d6d9a31e9739bb86a608f0a6812f3df6
 		if email: # If the user provided an e-mail address, add them as a subscriber to the request.
 			user_id = create_or_return_user(email = email, alias = alias, phone = phone)
 			subscriber_id = create_subscriber(request_id = request_id, user_id = user_id)
