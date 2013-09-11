@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 {% block container %}
+	<div class="alert alert-block alert-error span8">
+	    <div class="span1 text-right"><i class="icon-exclamation icon-2x"> </i></div>
+	    <div class="offset1">
+			<h4 class='alert-heading'>Oops, you forgot to provide an email address.</h4>
+			<p> We're experiencing higher spam traffic than usual, so at this time you'll have to provide an e-mail address. Thanks! </p>
+			<!-- <p>Enter an email if you have one.  We need it to let you know when your record is ready.</p> -->
+<!-- 			<div id='include_email'>
 	<div id="missing-email" class="alert alert-block alert-error span8 offset1">
     <div class="span1 text-right"><i class="icon-exclamation icon-2x"> </i></div>
     <div class="offset1">
@@ -15,7 +22,7 @@
 					<input type = "hidden"name = "ignore_email"/>
 			   	<button id='submit' class='btn btn-primary' type='submit'>Submit my request</button>
 			   </form>
-			</div>
+			</div> -->
 		</div>
   </div>
 {% endblock container %}

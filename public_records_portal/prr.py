@@ -205,7 +205,6 @@ def allowed_file(filename):
 	ext = filename.rsplit('.', 1)[1]
 	return ext in ALLOWED_EXTENSIONS, ext
 
-
 ### @export "get_request_data_chronologically"
 def get_request_data_chronologically(req):
 	public = False

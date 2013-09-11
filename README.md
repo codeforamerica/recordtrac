@@ -40,10 +40,6 @@ If creating the database for the first time, run:
     from public_records_portal import models
     models.db.create_all()
 
-For database migrations, run:
-
-    alembic upgrade head
-
 To use the application locally with custom settings, run:
 
     foreman start -e settings.env
