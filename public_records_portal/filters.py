@@ -11,7 +11,6 @@ app.jinja_env.filters['date_granular'] = helpers.date_granular
 app.jinja_env.filters['get_attribute'] = db_helpers.get_attribute
 app.jinja_env.filters['get_responses_chronologically'] = prr.get_responses_chronologically
 app.jinja_env.filters['get_request_data_chronologically'] = prr.get_request_data_chronologically
-app.jinja_env.filters['get_subscriber_attribute'] = prr.get_subscriber_attribute
 app.jinja_env.filters['get_gravatar_url'] = gravatar.get_gravatar_url
 app.jinja_env.filters['date'] = helpers.date
 app.jinja_env.filters['explain_action'] = helpers.explain_action

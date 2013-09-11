@@ -255,13 +255,6 @@ def set_directory_fields():
 			email = line['EMAIL_ADDRESS'].lower()
 			user = create_or_return_user(email = email, alias = "%s %s" % (first, last), phone = line['PHONE'], department = line['DEPARTMENT'])
 
-### @export "get_subscriber_attribute"
-def get_subscriber_attribute(attribute, sid):
-	subscriber_user_id = get_attribute(attribute = "user_id", obj_id = sid, obj_type = "Subscriber")
-	if subscriber_user_id:
-		return get_attribute(attribute = attribute, obj_id = subscriber_user_id, obj_type = "User")
-	return None # Requester
-
 ### @export "get_requester"
 def get_requester(request_id): 
 # Returns the first person who subscribed to a request, which is the requester
