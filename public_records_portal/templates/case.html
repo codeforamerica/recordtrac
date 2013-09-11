@@ -21,7 +21,7 @@
                {% block clarify_request %}{% endblock clarify_request %}
               <p class="lead" truncateable="250"> {{ req.text | new_lines }} </p>
             </div>
-            <div class="row-fluid">
+            <div id="proxyrequester_info" class="row-fluid">
               {% block proxyrequester_info %}
                 <small>
                   {% if req.creator_id %}
@@ -72,6 +72,7 @@
           {% endblock request %}
         </div>
       {% endblock well %}
+      {% block requester_info %}{% endblock requester_info %}
 
       {% block responses_container %}
         <div id="responses-container" class="row-fluid">
