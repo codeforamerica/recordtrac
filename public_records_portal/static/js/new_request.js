@@ -65,7 +65,7 @@ $('#inputDepartment').typeahead({
       if (data != '') {
         $div.addClass('alert').addClass('alert-error');
         $div.html(data);
-        $div.prepend("<i class='icon-exclamation-sign'></i> ");
+        $div.prepend("<i class='icon-exclamation-sign'></i>");
       } else {
         $div.empty();
         $div.removeClass('alert').removeClass('alert-error');
