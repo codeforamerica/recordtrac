@@ -147,6 +147,8 @@ def add_link(request_id, url, description, user_id):
 ### @export "make_request"			
 def make_request(text, email = None, assigned_to_name = None, assigned_to_email = None, assigned_to_reason = None, user_id = None, phone = None, alias = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
+	if not email:
+		return None, False
 	request_id = find_request(text)
 	if not request_id:
 		request_id = create_request(text = text, user_id = user_id)
