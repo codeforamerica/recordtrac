@@ -4,7 +4,8 @@ from public_records_portal import app
 import json
 from jinja2 import Markup
 from db_helpers import *
-import notifications
+from notifications import *
+import akismet
 
 def date_granular(timestamp):
 	if not timestamp:
@@ -74,9 +75,6 @@ def email_validation(email):
 			return True
 	return False
 
-def format_date(obj):
-	""" Take a datetime object and return it in format Jun 12, 2013 """
-	return obj.strftime('%b %d, %Y')
 
 def new_lines(value):
 	new_value = value.replace('\n','<br>\n')
@@ -106,11 +104,11 @@ def get_status(request, audience = "public"):
 	if "closed" in status:
 		return "closed"
 	else:
-		due_soon, due_date = notifications.is_due_soon(request.date_created, request.extended) 
+		due_soon, due_date = is_due_soon(request.date_created, request.extended) 
 		if due_soon:
 			return "due soon"
 		else:
-			overdue, due_date = notifications.is_overdue(request.date_created, request.extended)
+			overdue, due_date = is_overdue(request.date_created, request.extended)
 			if overdue:
 				return "overdue"
 		return "open"
