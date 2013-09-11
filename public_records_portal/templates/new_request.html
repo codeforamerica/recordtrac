@@ -20,7 +20,7 @@
               <p class="lead">What are you trying to find?</p>
 
               <div class="control-group">
-                <label for="requestTextarea"><strong><i class="icon-exclamation-sign"></i> Everything in this request box will be displayed publicly. </strong><a class="muted" href="/about#why"> Why?</a></label>
+                <label for="requestTextarea"><strong><i class="icon-exclamation-sign"></i> Everything in this request box will be displayed publicly. </strong><a class="muted" href="/about#why" target="_blank"> Why?</a></label>
                 <div >
                   <!-- <a data-placement="right" data-toggle="popover" href="#" id="requestPopover" class="hidden-phone hidden-tablet"> -->
                   <textarea id="requestTextarea" name="request_text" rows="3" class="input-block-level" placeholder="Describe your request. Be as specific as possible."></textarea>
@@ -42,23 +42,17 @@
               <p class="lead">Contact information</p>
               <div class="control-group">
                 <label for="inputEmail">Your email</label>
-                <div>
+                <div class="spacer">
                   <input class="input-block-level" name="request_email" type="email" id="inputEmail" placeholder="yourname@email.com" />
                   {{ help("emailPopover-content", "Enter email address") }}
                 </div>
-              </div>
-
-              <div class="control-group">
-                <label for="inputName">Your name</label>
-                <div >
+                <label for="inputName">Your name <small>(optional)</small></label>
+                <div class="spacer">
                   <input class="input-block-level" name="request_alias" type="text" id="inputName" placeholder="Your Name" />
                   {{ help("namePopover-content", "Enter name") }}
                 </div>
-              </div>
-
-              <div class="control-group">
-                <label for="inputPhone">Your phone number</label>
-                <div>
+                <label for="inputPhone">Your phone number <small>(optional)</small></label>
+                <div class="spacer spacer_phone">
                   <input class="input-block-level" name="request_phone" type="tel" id="inputPhone" placeholder="(510) 555-1234" maxlength="14" />
                   {{ help("phonePopover-content", "Enter phone number") }}
                 </div>
@@ -66,7 +60,7 @@
 
               <div id="requestButton" class="control-group">
                 <div>
-                  <button type="submit" class="btn input-block-level btn-primary">Submit my request</button>
+                  <button type="submit" class="btn btn-primary">Submit my request</button>
                 </div>
               </div>
 
