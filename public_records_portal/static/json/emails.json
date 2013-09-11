@@ -1,6 +1,6 @@
 {
     "Recipient types":
-    ["Requester", "Subscribers", "Subscriber", "Staff owner", "Departmental backups", "Staff participants"],
+    ["Requester", "Subscribers", "Subscriber", "Staff owner", "Departmental backups", "Staff participants", "Staff participant"],
     "Notification types":
     {
         "Request assigned":
@@ -8,6 +8,10 @@
             "Subject": "A request has been assigned to you",
             "Recipients": ["Staff owner"],
             "Email body": "We're not using this but we could."
+        },
+         "Staff participant added":
+        {   "Subject": "A request has been assigned to you",
+            "Recipients": ["Staff participant"]
         },
         "Question asked": 
         {
