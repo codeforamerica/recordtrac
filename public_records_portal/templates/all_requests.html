@@ -36,8 +36,7 @@
                 {% set status = request | get_status %}
                 {% block status_view %}{{ status }}{% endblock status_view %}
                 {% set status_icon = status | get_status_icon %}
-                  <td>{{ status }} </td>
-                  <!-- <td class="status {{status}}"><small><i class="{{status_icon}}"></i></small></td> -->
+                  <td class="status {{status}}">{{status}}<small><i class="{{status_icon}}"></i></small></td>
                   <td>{{ request.id }}</td>
                   <td>{{ request.date_created | date }}</td>
                   <td><div>{{ request.text }}</div></td>
