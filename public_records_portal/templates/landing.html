@@ -1,0 +1,101 @@
+<!-- This template is for the landing page. -->
+
+{% extends "base.html" %}
+{% block title %}Request{% endblock title %}
+
+
+
+{% block container %}
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/landing.css') }}">
+
+<!-- AddToAny BEGIN -->
+<div class="a2a_kit a2a_default_style">
+<!-- <a class="a2a_dd" href="http://www.addtoany.com/share_save">Share</a> -->
+
+<a class="a2a_button_facebook"></a>
+<a class="a2a_button_twitter"></a>
+<a class="a2a_button_google_plus"></a>
+<span class="a2a_divider"></span>
+<a class="a2a_button_google_gmail"></a>
+<a class="a2a_button_outlook_com"></a>
+<a class="a2a_button_yahoo_mail"></a>
+</div>
+<script type="text/javascript">
+var a2a_config = a2a_config || {};
+a2a_config.linkname = "Please share me!";
+</script>
+<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
+<!-- AddToAny END -->
+
+
+<!-- <a href="https://twitter.com/intent/tweet?text=Release%20the%20records%20that%20YOU%20want%20to%20see.%20%40criscristina%20http%3A%2F%2Fgoo.gl%2FuVK8rH&amp;lang=en"><i class="icon-twitter icon-2x"></i>
+</a> -->
+
+<!-- Google share -->
+<!-- <div class="g-plus" data-action="share" data-annotation="none"></div> -->
+
+
+<!-- Facebook share -->
+<!-- <div class="fb-send" data-href="http://example.com"></div> -->
+
+<div class="row-fluid">
+	<div class="span10 offset1 text-center">
+		<h3 id="tagline">A quick, simple way to send public records requests.</h3>
+		<p id="overview_text" class="lead">Use this web application to tell the City of Oakland the type of documents you need. By displaying every message or record uploaded here, we make it easy to understand what happens to your request.  <a href="/about">Find out more…</a></p>
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span10 offset1">
+		<div class="row-fluid">
+			<div class="span4">
+				<div class="row-fluid">
+					<!-- <a href="/requests" class="btn btn-link round_link"> -->
+					<div class="text-center">
+						<img src="{{ url_for('static', filename='images/explore2.png') }}" width="100px" class="center-image">
+						<h3>Explore</h3>
+						<div class="row-fluid">
+							{% set all_record_requests = "Request" | get_objs %}
+							<p class="span8 offset2">View <span class="badge badge-info">{{ all_record_requests | count }}</span> past requests and counting.</p>
+						</div>
+						<!-- <div class="row-fluid">
+							<button class="btn btn-info btn-mini">Go <i class="icon-arrow-right"></i></button>
+						</div> -->
+					<!-- </a> -->
+					</div>
+				</div>
+			</div>
+			<div class="span4">
+				<div class="row-fluid">
+					<!-- <a href="/new" class="btn btn-link round_link"> -->
+					<div class="text-center">
+						<img src="{{ url_for('static', filename='images/create.png') }}" width="100px" class="center-image">
+						<h3>Request</h3>
+						<div class="row-fluid">
+							<p class="span8 offset2">Create a new public records request.</p>
+						</div>
+						<!-- <div class="row-fluid">
+							<button class="btn btn-info btn-mini">Go <i class="icon-arrow-right"></i></button>
+						</div> -->
+					<!-- </a> -->
+					</div>
+				</div>
+			</div>
+			<div class="span4">
+				<div class="row-fluid ">
+					<div class="text-center">
+						<img src="{{ url_for('static', filename='images/track.png') }}" width="150px" class="center-image">
+						<h3>Track</h3>
+						<p class="span8 offset2">Get real-time updates as we process your request.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="span8 offset2">
+			<a href="/requests" class="btn btn-large btn-block btn-primary">Start exploring now...</a>
+		</div>
+	</div>
+</div>
+{% endblock container %}
+
+{% block custom_script_links %}
+{% endblock custom_script_links %}

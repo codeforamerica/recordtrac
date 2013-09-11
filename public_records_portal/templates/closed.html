@@ -5,22 +5,16 @@
 {% block title %}Request {{ req.id }}{% endblock %}
 
 {% block status %}
-  {% if user_id %}
-    <div class="span6">
-      <form name="reopen_request" class="form-inline" id="question" method="post" action="/update_a_request_reopen">
-        <input type="hidden" name="request_id" value="{{ req.id }}"/>
-        <button id="reopenRequest" class="btn btn-primary" type="submit">Reopen request</button>
-      </form>
-    </div>
-  {% endif %}
-
-  <div class="text-right">
-    {% block routing %}
-    {% set note = req.id | last_note %}
-      <span class="label label-info">{{req.status}} {{note.date_created | date }} by {{ note.user_id | get_staff_info("name")}} </span>   
-    {% endblock routing %}
-    {% block history %}
-      {{ super() }}
-    {% endblock history %}
-  </div>
+    {% set status = ( req | get_status('city') ) %}
+    {% include '_manage_requests_status.html' %}
 {% endblock status %}
+
+<div class="text-right">
+  {% block routing %}
+  {% set note = req.id | last_note %}
+    <span class="label label-info">{{req.status}} {{note.date_created | date }} by {{ "alias" | get_attribute(note.user_id, "User")}} </span>
+  {% endblock routing %}
+  {% block history %}
+    {{ super() }}
+  {% endblock history %}
+</div>

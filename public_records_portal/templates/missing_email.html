@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block content %}
+{% block container %}
 	<div class="alert alert-block alert-error span8">
 	    <div class="span1 text-right"><i class="icon-exclamation icon-2x"> </i></div>
 	    <div class="offset1">
@@ -7,6 +7,12 @@
 			<p> We're experiencing higher spam traffic than usual, so at this time you'll have to provide an e-mail address. Thanks! </p>
 			<!-- <p>Enter an email if you have one.  We need it to let you know when your record is ready.</p> -->
 <!-- 			<div id='include_email'>
+	<div id="missing-email" class="alert alert-block alert-error span8 offset1">
+    <div class="span1 text-right"><i class="icon-exclamation icon-2x"> </i></div>
+    <div class="offset1">
+			<h4 class='alert-heading'>Oops, looks like the email address is missing.</h4>
+			<p>Enter an email if you have one.  We need it to let you know when your record is ready.</p>
+			<div id='include_email'>
 				<form class="form-inline" name ="input" method="post" action="/new">
 					<input type = "hidden" name = "request_text" value = "{{form.request_text}}"/>
 					<input type="hidden"name = "request_alias" value = "{{form.request_alias}}"/>
@@ -18,6 +24,9 @@
 			   </form>
 			</div> -->
 		</div>
-    </div>
-{% endblock content %}
+  </div>
+{% endblock container %}
 
+{% block custom_script_links %}
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/missing_email.css') }}">
+{% endblock custom_script_links %}

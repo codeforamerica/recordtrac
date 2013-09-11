@@ -1,24 +1,49 @@
 {% extends "base.html" %}
-{% block content %}
-<html>
-<p>
-The City of Oakland and Code for America are testing a new web application that will help the city better manage its public records requests. The public will also have the ability to quickly submit public records requests, search through past requests, and better understand how they are fulfilled. All requests submitted by a member of the public will be sent to the Open Government Coordinator in the City Attorney's office and be treated as a normal public records requests.
-</p>
-<p>
-Currently city employees have the ability to do the following through the web application: 
-<ul>
-<li>Upload a document or post a link to fulfill a public records request</li>
-<li>Explain the records requester if they need to pick up hard copies of a document and provide them with details about where and when they need to pick up the record</li>
-<li>Ask a question to the requester to better understand what he or she needs</li>
-<li>Provide reasons about why it may take additional time to answer a request</li>
-<li>Indicate a records request has been fulfilled</li>
-</ul>
-</p>
-<p>
-When a city employee sends a message or uploads a document, the information can immediately be viewed by members of the public. An email will also automatically be sent to the individual who submitted the request with a status update. 
-</p>
-<p>
-In the next couple of months, the web application will be improved as features are added and changed. Your feedback is valuable. Please send any questions and/or concerns to oakland@codeforamerica.org. 
-</p>
-</html>
-{% endblock content %}
+
+{% block container %}
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/about.css') }}">
+<div class="row-fluid">
+	<div class="span10 offset1">
+		<div class="row-fluid">
+			<div id="about_image" class="span10">
+				<img src="{{ url_for('static', filename='images/CfA_logo.png') }}" width="20%" alt="Code for America"/>
+				<i class="icon-plus icon-3x text-center muted"></i>
+				<img src="{{ url_for('static', filename='images/CityTree_logo_green.jpg') }}" width="10%" alt="City of Oakland"/>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="bottombreathe">
+				<h3>What Can I Do On This Website?</h3>
+				<p>
+					This website is a quick, simple way for you to submit a public records request to the City of Oakland.   Once we get your request, we use this web app to:
+				</p>
+				<ul>
+					<li>Ask you a question about your request</li>
+					<li>Upload a document or post a link to answer your request</li>
+					<li> Explain where you can pick up hard copies of your records</li>
+					<li>Update you when we need additional time to locate your records</li>
+					<li>Notify you when your request is fulfilled</li> 
+				</ul>
+				<p>
+					<b>Every message or record uploaded on this site is completely public.</b> 
+				</p>
+				<p>
+					This makes easier for you to understand what happens to every request. You can also search through past records requests and view documents previously released by Oakland. 
+				</p>
+				<h3 id="why">Why Can You Show Everyone My Request?</h3>
+				<p>
+					We can display your request because the California Public Records Act gives everyone access to documents, photos, emails, texts, audio recordings, and data about the City and its business. To make you feel comfortable, we don't allow the public to view your name or contact information.
+				</p>
+				<p>
+					For more information on the Public Records Act and the Oakland's Sunshine Ordinance, check out these resources:
+				</p>
+				<ul>
+					<li><a href="http://www2.oaklandnet.com/Government/o/CityAdministration/d/PublicEthics/s/OpenGovernment/OAK040723">Public Ethics Commission's website</a></li>
+					<li><a href="http://www.oaklandcityattorney.org/resources/PubInfoRequest.html">City Attorney's website</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock container %}
+

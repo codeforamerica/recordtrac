@@ -1,0 +1,12 @@
+{
+	"Tips":
+	{
+		"<ul><li>Don't reveal personal information, like your social security number or home address.</li><li>Provide as many details as possible.</li><li>Limit your request by date range.</li><li>If you don't know the type of document you need, describe the information you believe is in it.</li></ul>",
+	},
+	"Examples":
+	{
+		"<p>I need a copy of the all of Mayor Jean Quan’s emails sent between July 30, 2013-August 8, 2013. The emails should contain the words “Art+Soul festival” or  “Art + Soul Oakland.”</p>",
+		"<p>I want the salary data or Fiscal Year 2011-2012 of all individuals currently working in the City of Oakland’s Public Works Agency. This includes their:</p><ul><li>base salaries</li><li>any overtime pay</li><li>payouts for vacation, sick leave, or bonuses</li><li>employer contributions: medical, dental, or vision plans and pensions</li></ul>", 
+		"<p>I am requesting records with information about the City of Oakland’s contract with R3 Consulting group.</p><p>This includes:</p><ul><li>Any requests for proposals (RFPs) written by the City of Oakland pertaining to this contract</li><li>A copy of the bid or proposal submitted by R3 Consulting Group</li><li>Final contract with R3 Consulting Group</li></ul>"
+	},
+}

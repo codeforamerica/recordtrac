@@ -3,12 +3,13 @@
 
 from flask import render_template, request, redirect, url_for
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
-from sqlalchemy.exc import IntegrityError, InvalidRequestError
-from public_records_portal import app, filters, models
-from models import User, Request, Owner
+from public_records_portal import app
 from filters import *
-import prr
-from prr import *
+from prr import add_resource, update_resource, make_request, close_request
+from db_helpers import *
+import departments
+import os, json
+from urlparse import urlparse, urljoin
 
 # Initialize login
 login_manager = LoginManager()
@@ -33,7 +34,7 @@ def new_request():
 		assigned_to_reason = app.config['DEFAULT_OWNER_REASON']
 		department = request.form['request_department']
 		if department:
-			prr_email = get_prr_liaison(department)
+			prr_email = departments.get_prr_liaison(department)
 			if prr_email:
 				assigned_to_email = prr_email
 				assigned_to_reason = "PRR Liaison for %s" %(department)
@@ -58,9 +59,9 @@ def index():
 @login_required
 def your_requests():
 	all_record_requests = []
-	owners = Owner.query.filter_by(user_id = current_user.id)
+	owners = get_owners_by_user_id(current_user.id)
 	for owner in owners:
-		req = Request.query.filter_by(current_owner = owner.id).first()
+		req = get_request_by_owner(owner.id)
 		if req:
 			all_record_requests.append(req)
 	return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = current_user.id, title = "Requests assigned to you")
@@ -70,11 +71,11 @@ def page_not_found(e):
 	return render_template('404.html'), 404
 
 def explain_all_actions():
-	action_json = open(os.path.join(app.root_path, 'actions.json'))
+	action_json = open(os.path.join(app.root_path, 'static/json/actions.json'))
 	json_data = json.load(action_json)
 	actions = []
 	for data in json_data:
-		actions.append("%s: %s" %(data, json_data[data]))
+		actions.append("%s: %s" %(data, json_data[data]["What"]))
 	return render_template('actions.html', actions = actions)
 
 # Returns a view of the case based on the audience. Currently views exist for city staff or general public.
@@ -85,20 +86,20 @@ def show_request_for_x(audience, request_id):
 show_request_for_x.methods = ['GET', 'POST']
 
 def show_response(request_id):
-	req = Request.query.get(request_id)
+	req = get_obj("Request", request_id)
 	if not req:
 		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
 	return render_template("response.html", req = req, user_id = get_user_id())
 
 def show_request(request_id, template = None):
 	current_user_id = get_user_id()
-	req = Request.query.get(request_id)
+	req = get_obj("Request", request_id)
 	if not req:
 		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
 	if template:
 		if "city" in template and not current_user_id:
 			return render_template('alpha.html')
-	else: 
+	else:
 		template = "manage_request_public.html"
 	if req.status and "Closed" in req.status:
 		template = "closed.html"
@@ -107,7 +108,7 @@ def show_request(request_id, template = None):
 
 @login_required
 def edit_case(request_id):
-	req = Request.query.get(request_id)
+	req = get_obj("Request", request_id)
 	return render_template("edit_case.html", req = req, user_id = get_user_id())
 
 @login_required
@@ -144,15 +145,21 @@ def close(request_id = None):
 	if request.method == 'POST':
 		template = 'closed.html'
 		request_id = request.form['request_id']
-		close_request(request_id = request_id, reason = request.form['close_reason'], current_user_id = current_user.id)
+		close_request(request_id = request_id, reason = request.form['close_reason'], user_id = current_user.id)
 		return show_request(request_id, template= template)
 	return render_template('error.html', message = "You can only close from a requests page!")
 
 # Shows all public records requests that have been made.
 def requests():
-	all_record_requests = Request.query.all()
+	# Return first 100, ? limit = 100
+	# departments = request.get.args('department')
+	user_id = get_user_id()
+	all_record_requests = get_objs("Request")
 	if all_record_requests:
-		return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = get_user_id(), title = "All Requests")
+		if user_id:
+			return render_template('all_requests_city.html', all_record_requests = all_record_requests, user_id = user_id, title = "All Requests")
+		else:
+			return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = user_id, title = "All Requests")
 	else:
 		return index()
 
@@ -162,7 +169,7 @@ def unauthorized():
 
 @login_manager.user_loader
 def load_user(userid):
-	user = models.User.query.get(userid)
+	user = get_obj("User", userid)
 	return user
 
 
@@ -170,7 +177,7 @@ def load_user(userid):
 @app.route('/test')
 def show_test():
 	return render_template('test.html')
-	
+
 def any_page(page):
 	try:
 		return render_template('%s.html' %(page), user_id = get_user_id())
@@ -184,13 +191,11 @@ def login(email=None, password=None):
 	if request.method == 'POST':
 		email = request.form['email']
 		password = request.form['password']
-		if email_validation(email):
-			user = create_or_return_user(email=email)
-			if user.password == password:
-				user_for_login = models.User.query.get(user.id)
-				login_user(user_for_login)
-				return redirect(url_for('tutorial'))
-	return render_template('error.html', message = "Oops, your e-mail/ password combo didn't work.") 
+		user_to_login = authenticate_login(email, password)
+		if user_to_login:
+			login_user(user_to_login)
+			return redirect(get_redirect_target())
+	return render_template('error.html', message = "Oops, your e-mail/ password combo didn't work.")
 
 @login_required
 def update_password(password=None):
@@ -198,15 +203,15 @@ def update_password(password=None):
 	if request.method == 'POST':
 		try:
 			password = request.form['password']
-			user = models.User.query.get(current_user_id)
-			user.password = password
-			db.session.add(user)
-			db.session.commit()
+			update_obj("password", password, "User", current_user_id)
 			return index()
 		except:
 			return render_template('error.html', message = "Something went wrong updating your password.")
 	else:
 		return render_template('update_password.html', user_id = current_user_id)
+
+def staff_card(user_id):
+	return render_template('staff_card.html', uid = user_id)
 
 def logout():
 	logout_user()
@@ -216,3 +221,33 @@ def get_user_id():
 	if current_user.is_anonymous() == False:
 		return current_user.id
 	return None
+
+# Used as AJAX POST endpoint to check if new request text contains certain keyword
+# See new_requests.(html/js)
+def is_public_record():
+	request_text = request.form['request_text']
+
+	not_records_filepath = os.path.join(app.root_path, 'static/json/notcityrecords.json')
+	not_records_json = open(not_records_filepath)
+	json_data = json.load(not_records_json)
+	request_text = request_text.lower()
+	if "birth" in request_text or "death" in request_text or "marriage" in request_text:
+		return json_data["Certificate"]
+	if "divorce" in request_text:
+		return json_data["Divorce"]
+	return ''
+
+def get_redirect_target():
+	""" Taken from http://flask.pocoo.org/snippets/62/ """
+	for target in request.values.get('next'), request.referrer:
+		if not target:
+			continue
+		if is_safe_url(target):
+			return target
+
+def is_safe_url(target):
+	""" Taken from http://flask.pocoo.org/snippets/62/ """
+	ref_url = urlparse(request.host_url)
+	test_url = urlparse(urljoin(request.host_url, target))
+	return test_url.scheme in ('http', 'https') and \
+		ref_url.netloc == test_url.netloc

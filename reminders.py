@@ -1,2 +1,2 @@
-from public_records_portal.prr import notify_due_soon
-notify_due_soon()
+from public_records_portal.notifications import notify_due
+notify_due()

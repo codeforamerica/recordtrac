@@ -1,0 +1,87 @@
+.rw-container {
+  /*border: 3px dashed green;*/
+  margin: 20px 0px;
+}
+
+.rw-controller-container {
+  /*text-align: center;*/
+  /*width: 500px;*/
+  display: inline;
+}
+
+.rw-controller-container .title {
+  display: inline;
+  margin-right: 5px;
+  font-size: 26px;
+}
+
+.rw-controller-btns-container {
+  /*box-shadow: inset 0px 0px 7px -1px #9CA9AD;*/
+  display: inline;
+  border-radius: 4px;
+  background-color: #fff;
+  /*border: 2px solid #08c;*/
+  color: #08c;
+  padding: 4px;
+  margin: 5px;
+}
+
+.plus-icon {
+  display: inline;
+  font-size: 1.4em;
+}
+
+.rw-btn-wrap, .rw-btn, .rw-btn-expand {
+  display: inline-block;
+  margin: 0 5px;
+  padding: 2px;
+}
+
+.rw-btn-wrap {
+  /*border-radius: 3px;*/
+  /*max-width: 20px;*/
+  /*white-space: nowrap;*/
+  /*overflow: hidden;*/
+  padding: 0px;
+  /*-webkit-transition: max-width 1s;*/
+  opacity: .7;
+}
+
+.rw-btn-wrap.active {
+  /*box-shadow: inset 0px 0px 2px 1px #888;*/
+  /*background-color: rgb(234, 234, 255);*/
+  /*max-width: 100%;*/
+  font-size: 1.2em;
+  opacity: 1;
+  border-bottom: 3px solid #08c;
+}
+
+.rw-btn-wrap:hover {
+  /*background-color: blue;*/
+  cursor: hand;
+  cursor: pointer;
+  opacity: .9;
+  /*max-width: 40%;*/
+  /*-webkit-transition: max-width 1s;*/
+}
+
+.rw-actions-container {
+  padding-top: 15px;
+}
+
+.rw-actions-container .default-text {
+  text-align: center;
+  font-size: 20px;
+}
+
+.rw-actions-container .target-for {
+  display: inline-block;
+  display: none;
+  padding: 5px;
+  /*background-color: rgb(234, 234, 255);*/
+  /*border: 1px dashed #ccc;*/
+}
+
+#bounce {
+  position: relative;
+}

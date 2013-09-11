@@ -1,51 +1,14 @@
 <!-- This template houses the baseline case information (request, documents, status, etc.) only. -->
 
 {% extends "case.html" %}
-{% block qas %}
-  <div class="row-fluid">
-    {% for qa in req.qas %}
-      <div class="row-fluid response">
-        <div class="span2 text-center">
-          <i class="icon-question icon-2x">  </i> </br>
-          <small> {{ qa.date_created | date_granular }}</small> </br>
-        </div>
-        <div class="span10">
-           {% set uid = qa.owner_id %}
-           {% set staffName = (uid | get_staff_info("name")) %}
-           {% set staffDept = (uid | get_staff_info("dept")) %}
-           {% set staffPhone = (uid | get_staff_info("phone")) %}
-           {% set staffEmail = (uid | user_email) %}
-          <p> {{ qa.question }} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverQA{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staffEmail}}', '{{staffDept}}','{{staffPhone}}', '#contactinfoPopoverQA{{loop.index}}')">{{ staffName }}</span></a></em></p>
-          
-          {% if qa.answer %}
-            <p>{{ qa.answer }} - <em>{{qa.subscriber_id | user_name }}</em></p>
-          {% else %}
-            {% if (req.id | is_request_open) %}
-              <!-- respond to a question -->
-              <form name="respond_question" class="form-inline" id="answer" method="post" action="/update_a_qa" autocomplete="on">
-                <label class="control-label">Answer</label>
-                <input type="hidden" name="qa_id" value="{{ qa.id }}"/>
-                <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                <textarea id="answerTextarea" name="answer_text" class="input-xxlarge" type="text" rows="1" placeholder="Can you respond to the above question?" required/></textarea>
-                <button id="askQuestion" class="btn btn-primary" type="submit">Respond</button>
-              </form>
-            {% endif %}
-          {% endif %}
-        </div>
-
-      </div>
-    {% endfor %}
-  </div>
-{% endblock qas %}
 
 {% block public_note %}
-  <form name="public_note" class="form-inline response" id="public_note" method="post" action="/public_add_a_note">
-    <div class="row-fluid">
-      <input type="hidden" name="request_id" value="{{ req.id }}"/>
-      <label class="control-label">Add a note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a public note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
-      <textarea id="public_noteTextarea" name="note_text" class="input-xlarge" type="text" rows="3" placeholder="Use this field to note anything else the city should know about your request." required/></textarea>
-      <button type="submit" class="btn btn-primary">Add note</button>
-    </div>
-  </form>
+  {% include '_public_note.html' %}
 {% endblock public_note %}
+
+{% block status %}
+  {% set status = ( req | get_status('public') ) %}
+  {% include '_manage_requests_status.html' %}
+{% endblock status %}
+
 

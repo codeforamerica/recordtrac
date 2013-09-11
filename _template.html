@@ -1,0 +1,49 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1024" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>{{ page_title }}</title>
+    <link href="impress-demo.css" rel="stylesheet" />
+    <link href="pastie.css" rel="stylesheet" />
+    <link rel="shortcut icon" href="favicon.png" />
+</head>
+
+<body class="impress-not-supported">
+
+<div class="fallback-message">
+    <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
+</div>
+
+<div id="impress">
+    {{ content }}
+</div>
+
+<div class="hint">
+    <p>Use a spacebar or arrow keys to navigate</p>
+</div>
+<script>
+if ("ontouchstart" in document.documentElement) { 
+    document.querySelector(".hint").innerHTML = "<p>Tap on the left or right to navigate</p>";
+}
+</script>
+
+<script src="impress.js"></script>
+<script src="jquery.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.step').map(function (i, x) {
+            var rand = Math.round(Math.random() * 10) + 1;
+            $(x).attr('data-y', rand * 7000);
+            $(x).attr('data-x', 10000 * i);
+            $(x).attr('data-scale', rand);
+        });
+
+        impress().init();
+    });
+</script>
+
+</body>
+</html>

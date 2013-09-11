@@ -1,151 +1,106 @@
 <!-- This template is to initiate a new request. -->
 
 {% extends "base.html" %}
+{% from 'help_text.html' import help %}
 
 {% block title %}Public records{% endblock title%}
 
+{% block container %}
+  <div class="row-fluid">
 
+    <div class="span8 offset1">
+      <div class="row-fluid">
+        <div class="span8">
+          <h3>Request a new record</h3>
+          <p>Use this site to request copies of specific documents, photos, emails, texts, audio recordings, electronic information and data in the City’s databases. If you need general information on City services, try <a href="http://answers.oaklandnet.com">Oakland Answers</a>.</p>
 
-{% block content %}
+          <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="on"novalidate="novalidate">
+            <fieldset>
 
-<!-- validation jQuery only working for request_text:required and request_email:email only http://docs.jquery.com/Plugins/Validation 
-      try this validation as well https://github.com/jzaefferer/jquery-validation -->
-      <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="on"novalidate="novalidate">
-        <fieldset>
+              <p class="lead">What are you trying to find?</p>
 
-          <legend>New Request</legend>
-
-          <div class="control-group">
-            <label class="control-label" for="requestTextarea">What are you trying to find?</label>
-            <div class="controls">
-              <textarea id="requestTextarea" autofocus  name="request_text" rows="3" cols="20" placeholder="Describe your request. Be as specific as possible." ></textarea>
-              <span class="request_field_explanation"><p>{{"Enter records request" | explain_action("What")}}</p><p><em>{{"Enter records request" | explain_action("Who")}}</em> {{"Enter records request" | explain_action("Action")}}</p></span>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="inputDepartment">Department</label>
-                <div class="controls">
-                  <input id="inputDepartment" type="text" name="request_department" placeholder="Who should it go to?" data-provide="typeahead" autocomplete="off" />
-                  <span class="request_field_explanation"><em>{{"Enter department or document type" | explain_action("Who")}}</em> {{"Enter department or document type" | explain_action("Action")}} </span>
+              <div class="control-group">
+                <label for="requestTextarea"><strong><i class="icon-exclamation-sign"></i> Everything in this request box will be displayed publicly. </strong><a class="muted" href="/about#why"> Why?</a></label>
+                <div >
+                  <!-- <a data-placement="right" data-toggle="popover" href="#" id="requestPopover" class="hidden-phone hidden-tablet"> -->
+                  <textarea id="requestTextarea" name="request_text" rows="3" class="input-block-level" placeholder="Describe your request. Be as specific as possible."></textarea>
+                 <!--  </a> -->
+                  {{ help("requestPopover-content", "Enter records request") }}
                 </div>
-          </div>
-            
-          <div class="control-group">
-            <label class="control-label" for="inputEmail">Your email</label>
-            <div class="controls">
-              <input name="request_email" type="email" id="inputEmail" placeholder="yourname@email.com" />
-              <span class="request_field_explanation"><em>{{"Enter email address" | explain_action("Who")}}</em> {{"Enter email address" | explain_action("Action")}} </span>
-            </div>
-          </div>
-          
-          <div class="control-group">
-            <label class="control-label" for="inputName">Your name</label>
-            <div class="controls">
-              <input name="request_alias" type="text" id="inputName" placeholder="Your Name" />
-              <span class="request_field_explanation"><em>{{"Enter name" | explain_action("Who")}}</em>{{"Enter name" | explain_action("Action")}}</span>
-            </div>
-          </div>
-        
-          <div class="control-group">
-            <label class="control-label" for="inputPhone">Your phone number</label>
-            <div class="controls">
-              <input name="request_phone" type="tel" id="inputPhone" placeholder="(510) 555-1234" maxlength="14" />
-              <span class="request_field_explanation"><em>{{"Enter phone number" | explain_action("Who")}}</em>  {{"Enter phone number" | explain_action("Action")}}</span>
-            </div>
-          </div>
+                <div id="not_public_record">
 
-          <div id="requestButton" class="control-group">
-            <div class="controls">
-              <button type="submit" class="btn btn-large btn-primary">Submit my request</button>
-            </div>
-          </div>
+                </div>
+              </div>
+              <p class="lead">Select a department</p>
+              <div class="control-group">
+                <div>
+                  <input id="inputDepartment" class="input-block-level" type="text" name="request_department" placeholder="Who should it go to?" data-provide="typeahead" autocomplete="off" />
+                  {{ help("deptPopover-content", "Enter department or document type") }}
+                </div>
+              </div>
 
-          
-        </fieldset>
-      </form>
+              <p class="lead">Contact information</p>
+              <div class="control-group">
+                <label for="inputEmail">Your email</label>
+                <div>
+                  <input class="input-block-level" name="request_email" type="email" id="inputEmail" placeholder="yourname@email.com" />
+                  {{ help("emailPopover-content", "Enter email address") }}
+                </div>
+              </div>
 
-<!-- <div id="no_email" class="alert alert-block alert-error fade in">
-  <h4 class="alert-heading">Oops! You forgot to provide an email address.</h4>
-  <p>If you leave this space blank, you will not receive updates about your request. Your request may take longer to answer or be dismissed if it is missing important information and the City is unable to contact you.</p>
-  <p><a class="btn btn-danger " href="#" class="close" data-dismiss="alert">Enter email address</a> <a class="btn disabled" href="#">Submit request anyway</a></p>
-</div> -->
+              <div class="control-group">
+                <label for="inputName">Your name</label>
+                <div >
+                  <input class="input-block-level" name="request_alias" type="text" id="inputName" placeholder="Your Name" />
+                  {{ help("namePopover-content", "Enter name") }}
+                </div>
+              </div>
 
-{% endblock content %}
-{% block bottom_script %}
-  <script>
-    /* validates add a request form */
-    $(document).ready(function(){
-     
-      $("#submitRequest").validate({
-        // ignore: ".ignore",
-        rules: {
-          request_text: {
-            required: true,
-            minlength: 2
-               }
-           },
-        highlight: function(element) {
-            // $('#inputEmail').addClass('ignore');
-            // $('#requestButton').html(
-            //   "<div id='no_email' class='alert alert-block alert-error fade in'>"+
-            //     "<h4 class='alert-heading'>Oops, you forgot to provide an email address.</h4>"+
-            //       "<p>Your email is how we contact you.  If you choose to leave it blank, you will not receive updates about your request.  Your request may take longer or be dismissed if it is missing important information. You can still enter your e-mail address at this time, and continue with submission.</p>"+
-            //       "<button id='submit_anyway' class='btn btn-danger' type='submit'>Got it, submit my request!</button>"+
-            //     "</div>"
-            //   );
-          $(element).closest('.control-group').removeClass('success').addClass('error');
-          },
-        success: function(element) {
-          // $('#requestButton').html(
-          //   "<div id='requestButton' class='control-group'>"+
-          //     "<div class='controls'>"+
-          //       "<button type='submit' class='btn btn-large btn-primary'>Request</button>"+
-          //     "</div>"+
-          //   "</div>"
-          //   );
-          element
-          .text('OK!').addClass('valid')
-          .closest('.control-group').removeClass('error').addClass('success');
-          }  
-      });
+              <div class="control-group">
+                <label for="inputPhone">Your phone number</label>
+                <div>
+                  <input class="input-block-level" name="request_phone" type="tel" id="inputPhone" placeholder="(510) 555-1234" maxlength="14" />
+                  {{ help("phonePopover-content", "Enter phone number") }}
+                </div>
+              </div>
 
-    });
-  </script>
-<script>
+              <div id="requestButton" class="control-group">
+                <div>
+                  <button type="submit" class="btn input-block-level btn-primary">Submit my request</button>
+                </div>
+              </div>
 
-$(document).ready(function() {
-  var map = {};
-  var departments = [];
-  var doc_types = [];
-  $.getJSON("{{ url_for('static', filename='doctypes.json') }}", function(data) {
-        $.each(data, function (i, line) {
-          var department = line['DEPARTMENT'];
-          var doc_type = line['DOC_TYPE'];
-          if($.inArray(department, departments) == -1) {
-            departments.push(department);
-           }
-            map[doc_type + " - " + department] = department;
-            doc_types.push(doc_type + " - " + department);
-         });
-      });
-  /* typeahead for email in reroute form */
-  $('#inputDepartment').typeahead({
-        source: doc_types
-        , updater: function (item) {
-          department = map[item];
-          return department;
-        }
-        ,matcher: function(item) {
-          if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) != -1){
-          return true;
-         }
-        }
-      , items: 8
-      , menu: '<ul class="typeahead dropdown-menu"></ul>'
-      , item: '<li><a href="#"></a></li>'
-      , minLength: 1
-      })
-  });
-</script>
-{% endblock bottom_script %}
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="span3">
+      {% block sidebar %}
+        <div class="well r_sidebar r_sidebar-fixed hidden-phone hidden-tablet">
+          <h4>Example</h4>
+            <blockquote><p>I need a copy of the all of Mayor Jean Quan’s emails sent to City Administrator Santana between July 30, 2013-August 8, 2013.</p><p>The emails should contain the words “Art+Soul festival” or  “Art + Soul Oakland.”</p></blockquote>
+          <h4>Tips</h4>
+            <ul>
+              <li>Don't reveal personal information, like your social security number or home address.</li>
+              <li>Limit your request by a date range.</li>
+              <li>Provide the name of the record or take a guess.</li>
+              <li>If you don't know the name of the record, describe the information you believe is contained in it.</li>
+            </ul>
+        </div>
+      {% endblock sidebar %}
+    </div>
+
+  </div>
+{% endblock container %}
+
+
+
+{% block custom_script_links %}
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/new_request.css') }}">
+  <script type="text/javascript" src="{{ url_for('static', filename='js/new_request.js') }}"></script>
+
+
+{% endblock custom_script_links %}

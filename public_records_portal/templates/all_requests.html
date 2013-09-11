@@ -2,50 +2,87 @@
 
 {% extends "base.html" %}
 {% block title %}{{title}}{% endblock title %}
-{% block content %}
-<legend>{{title}}</legend>
-<div>
-  <table cellpadding="0" cellspacing="0" border="0" id="allrequestTable" class="data-table table table-bordered table-striped">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Status</th>
-        <th>Received</th>
-        <th>Request</th>
-        <th>Updated</th>
-        <th>Owner</th>
-        <th>Department</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for request in all_record_requests %}
-        <tr>
-          <td>{{ request.id }}</td>
-          <td>{{ request.status }} </td>
-          <td>{{ request.date_created | date }}</td>
-          {% if user_id %}
-          <td><a href="/city/request/{{request.id}}"><div>{{ request.text }}</div></a></td>
-          {% else %}
-          <td><a href="/request/{{request.id}}"><div>{{ request.text }}</div></a></td>
-          {% endif %}
-          {% set uid = (request.current_owner | owner_uid) %}
-          <td>{{ request.status_updated | date_granular }} </td>
-          <td>{{ uid | get_staff_info("name") }}</td>
-          <td>{{ uid | get_staff_info("dept")}}</td>
-        </tr>
-      {% else %}
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
 
-{% endblock %}
+{% block container %}
+  <div class="row-fluid">
 
-{% block bottom_script %}
-<script>
-$('table#allrequestTable tbody tr td div').ellipsis({
-    row: 3
-});
-  
-</script>
-{% endblock bottom_script %}
+    <div class="span8 offset1">
+      <div class="row-fluid">
+        <h3>Explore <span class="badge badge-info">{{ all_record_requests | count }}</span> requests and counting</h3>
+        <p class="intro_text">Explore all requests past and present.  Search past requests for the information you are looking for.  It might already be here and you don't even have to wait for it!</p>
+      </div>
+      <div>
+        {% block datatable %}
+          <table cellpadding="0" cellspacing="0" border="0" id="allrequestTable" class="data-table table">
+            <thead>
+              <tr>
+                <th class="status"></th>
+                <th>#</th>
+                <th>Received</th>
+                <th>Request</th>
+                <th>Department</th>
+                <th>Owner</th>
+                <th>Updated</th>
+                {% block city_tableheader %}{% endblock city_tableheader %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for request in all_record_requests %}
+              {% if user_id %}
+                <tr onclick="window.location.href='/city/request/{{request.id}}';">
+                {% else %}
+                <tr onclick="window.location.href='/request/{{request.id}}';">
+                {% endif %}
+                {% set status = request | get_status %}
+                {% block status_view %}{{ status }}{% endblock status_view %}
+                {% set status_icon = status | get_status_icon %}
+                  <td class="status {{status}}"><small><i class="{{status_icon}}"></i></small></td>
+                  <td>{{ request.id }}</td>
+                  <td>{{ request.date_created | date }}</td>
+                  <td><div>{{ request.text }}</div></td>
+                  {% set uid = ("user_id" | get_attribute(request.current_owner, "Owner")) %}
+                  <td>{{ "department" | get_attribute(uid, "User") }}</td>
+                  <td>{{ "alias" | get_attribute(uid, "User") }}</td>
+                  <td>{{ request.status_updated | date_granular }} </td>
+                  {% block city_tabledata %}{% endblock city_tabledata %}
+
+                  </a>
+                </tr>
+              {% else %}
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endblock datatable %}
+      </div>
+    </div>
+
+    <div class="span3">
+      <div class="r_sidebar">
+        <a href="/new" class="btn btn-block btn-primary ">Request new record</a>
+      </div>
+<!--       {% block sidebar %}
+        <div class="well r_sidebar r_sidebar-fixed hidden-phone hidden-tablet">
+          <h4>View</h4>
+          <label class="checkbox">
+            <input type="checkbox" value="" checked>
+            Open requests only
+          </label>
+          <select class="input-block-level">
+            <option value="">All departments</option>
+            <option value="">Dept 1</option>
+            <option value="">Dept 2</option>
+            <option value="">Dept 3</option>
+            <option value="">Dept 4</option>
+            <option value="">Dept 5</option>
+          </select>
+        </div>
+      {% endblock sidebar %} -->
+    </div>
+
+  </div>
+{% endblock container%}
+
+{% block custom_script_links %}
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
+  <script type="text/javascript" src="{{ url_for('static', filename='js/custom.jquery.ellipsis.js') }}"></script>
+{% endblock custom_script_links %}

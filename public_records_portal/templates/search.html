@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% block content %}
+{% block container %}
+<div class="offset1">
 Let's help you get this routed to the right department!
 
             <form id="department" class="form-inline" method ="post" action="/">
@@ -11,16 +12,17 @@ Let's help you get this routed to the right department!
                 </div>
               </div>
             </form>
-{% endblock content %}
+</div>
+{% endblock container %}
 
-{% block bottom_script %}
+{% block custom_script_links %}
 <script>
 
 $(document).ready(function() {
   var map = {};
   var departments = [];
   var doc_types = [];
-  $.getJSON("{{ url_for('static', filename='doctypes.json') }}", function(data) {
+  $.getJSON("{{ url_for('static', filename='json/doctypes.json') }}", function(data) {
         $.each(data, function (i, line) {
           var department = line['DEPARTMENT'];
           var doc_type = line['DOC_TYPE'];
@@ -56,4 +58,4 @@ $(document).ready(function() {
   });
 </script>
 
-{% endblock bottom_script %}
+{% endblock custom_script_links %}
