@@ -1,6 +1,11 @@
+h3.control-widget {
+  display: inline !important;
+}
+
 .rw-container {
   /*border: 3px dashed green;*/
   margin: 20px 0px;
+  display: inline !important;
 }
 
 .rw-controller-container {
