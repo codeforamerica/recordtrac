@@ -17,8 +17,8 @@
           <div id = "request-container">
             <!-- request area -->
             <div class="row-fluid">
-              <h3 >Request <span class="muted">#{{req.id}}</span></h3>{% block request_actions %}{% endblock request_actions %}
-               {% block clarify_request %}{% endblock clarify_request %}
+              <h3 >Request <span class="muted">#{{req.id}}</span>{% block clarify_request %}{% endblock clarify_request %}</h3>
+               
               <p class="lead" truncateable="250"> {{ req.text | new_lines }} </p>
             </div>
             <div id="proxyrequester_info" class="row-fluid">
