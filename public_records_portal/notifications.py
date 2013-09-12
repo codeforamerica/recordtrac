@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from helpers import format_date
 from public_records_portal import app
 import os
 import json
@@ -162,6 +161,9 @@ def should_notify(user_email):
 				return False
 	return True
 
-
+### @export "format_date"
+def format_date(obj):
+	""" Take a datetime object and return it in format Jun 12, 2013 """
+	return obj.strftime('%b %d, %Y')
 
 
