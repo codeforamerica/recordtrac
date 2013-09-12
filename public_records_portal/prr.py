@@ -18,13 +18,6 @@ from notifications import generate_prr_emails
 import scribd_helpers
 from db_helpers import *
 
-# These are the extensions that can be uploaded to Scribd.com:
-ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff']
-
-# These are the different email notification types that currently exist and are mapped to and from who might receive them and the subject line in /static/json/emails.json
-NOTIFICATION_TYPES = ["Request assigned","Question asked",
-"Question answered","Request closed","Response added","Request due","Public note added","Request made","Request overdue","Request followed"]
-
 ### @export "add_resource"
 def add_resource(resource, request_body, current_user_id = None):
 	fields = request_body.form
@@ -201,11 +194,6 @@ def assign_owner(request_id, reason, email = None):
 	if is_new_owner:
 		generate_prr_emails(request_id = request_id, notification_type = "Request assigned", user_id = user_id)
 	return owner_id
-
-### @export "allowed_file"
-def allowed_file(filename):
-	ext = filename.rsplit('.', 1)[1]
-	return ext in ALLOWED_EXTENSIONS, ext
 
 ### @export "get_request_data_chronologically"
 def get_request_data_chronologically(req):
