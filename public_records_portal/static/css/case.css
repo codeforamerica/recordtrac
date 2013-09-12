@@ -11,3 +11,11 @@
   cursor: hand;
   cursor: pointer;
 }
+
+h3 {
+	line-height: 20px !important;
+}
+
+div.request-status-well {
+	margin-bottom: 10px;
+}

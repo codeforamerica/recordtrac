@@ -1,9 +1,9 @@
 
   <div class="request-status-well well well-small r_sidebar_banner r_sidebar-fixed hidden-phone hidden-tablet {{ status }}">
-    <h2>
+    <h3>
       {% if status == 'closed' %}<i class="icon-archive"></i>{% endif%}
       {{ status }}
-    </h2>
+    </h3>
   </div>
 
   {% if (user_id and status == 'closed') %}

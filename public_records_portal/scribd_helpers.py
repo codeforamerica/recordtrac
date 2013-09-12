@@ -1,12 +1,16 @@
 import scribd
 from public_records_portal import app
 from timeout import timeout
-
+from werkzeug import secure_filename
+import tempfile
 
 # Set flags:
-upload_to_scribd = False 
+upload_to_scribd = False
 if app.config['ENVIRONMENT'] != 'LOCAL':
     upload_to_scribd = True
+
+# These are the extensions that can be uploaded to Scribd.com:
+ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff']
 
 
 def progress(bytes_sent, bytes_total):
@@ -84,3 +88,8 @@ def upload_file(file):
         else:
             return allowed # Returns false and extension
     return None, None
+
+### @export "allowed_file"
+def allowed_file(filename):
+    ext = filename.rsplit('.', 1)[1]
+    return ext in ALLOWED_EXTENSIONS, ext
