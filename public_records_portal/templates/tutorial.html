@@ -2,7 +2,9 @@
 
 {% extends "base.html" %}
 {% block title %}Tutorial{% endblock %}
-
+{% block custom_css_links %}
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstro.css') }}">
+{% endblock custom_css_links %}
 {% block banner %}
   <!-- success banner -->
   <div class="alert alert-block bootstro" data-bootstro-title="Welcome" data-bootstro-content="{{"Welcome" | tutorial }}" data-bootstro-step="0" data-bootstro-placement="bottom" data-bootstro-width="50%" data-bootstro-html="true">
@@ -351,6 +353,8 @@
 
 
 {% block custom_script_links %}
+    <!-- used for the tutorial -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstro.js') }}"></script>
   <script>
   /* calls bootstro (tutorial) plugin */
     $(document).ready(function(){
