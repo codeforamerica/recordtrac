@@ -19,3 +19,11 @@ h3 {
 div.request-status-well {
 	margin-bottom: 10px;
 }
+
+#responses-container {
+  margin-top: 3em;
+}
+
+div.well {
+  margin-bottom: 1em;
+}
