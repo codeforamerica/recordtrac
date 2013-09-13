@@ -17,7 +17,7 @@
           <div id = "request-container">
             <!-- request area -->
             <div class="row-fluid">
-              <h3 >Request <span class="muted">#{{req.id}}</span>{% block clarify_request %}{% endblock clarify_request %}</h3>
+              <h3 class="control-widget">Request <span class="muted">#{{req.id}}</span></h3>{% block clarify_request %}{% endblock clarify_request %}{% block public_note %}{% endblock public_note %}
                
               <p class="lead" truncateable="250"> {{ req.text | new_lines }} </p>
             </div>
@@ -29,9 +29,6 @@
                   {% endif %}
                 </small>
               {% endblock proxyrequester_info %}
-            </div>
-            <div class="row-fluid">
-              {% block public_note %}{% endblock public_note %}
             </div>
             <div>
             <!-- shows any existing Q&A or public notes -->
@@ -76,7 +73,7 @@
 
       {% block responses_container %}
         <div id="responses-container" class="row-fluid">
-          <h3>Response</h3>
+          <h3 class="control-widget">Response</h3>
           {% block response_actions %}{% endblock response_actions %}
           <!-- shows all existing responses (links, documents, offline docs, notes) -->
           {% set responses = ( req | get_responses_chronologically ) %}
