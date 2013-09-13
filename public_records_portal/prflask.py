@@ -14,6 +14,9 @@ manager.create_api(models.Record, methods=['GET'], results_per_page = None)
 manager.create_api(models.QA, methods=['GET'], results_per_page =None)
 manager.create_api(models.Subscriber, methods=['GET'], results_per_page = None)
 
+# Create Admin
+admin = Admin(app, name='Oakland Public Records Admin', url='/admin')
+
 class AdminView(ModelView):
     def is_accessible(self):
     	if current_user.is_authenticated():
@@ -21,9 +24,11 @@ class AdminView(ModelView):
     			return True
         return False
 
-# Create Admin
-admin = Admin(app, name='Oakland Public Records Admin', url='/admin')
-admin.add_view(AdminView(Request, db.session))
+class RequestView(AdminView):
+	column_searchable_list = ('status', 'text')
+
+
+admin.add_view(RequestView(Request, db.session))
 admin.add_view(AdminView(Record, db.session))
 admin.add_view(AdminView(Note, db.session))
 
