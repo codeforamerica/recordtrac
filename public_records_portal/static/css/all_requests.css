@@ -1,4 +1,3 @@
-/* custom.datatables.css */
 
 #allrequestTable tbody tr:hover, #allrequestTable tbody tr.highlighted {
 	background-color: #ECFFB3;
@@ -38,4 +37,9 @@ table.dataTable tbody td.overdue {
 
 .intro_text {
 	margin-bottom: 2%;
+}
+
+/* allows the "Request new record" button appear inline with Explore header */
+h3 {
+	display: inline;
 }
