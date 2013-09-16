@@ -140,25 +140,27 @@ def add_link(request_id, url, description, user_id):
 ### @export "make_request"			
 def make_request(text, email = None, assigned_to_name = None, assigned_to_email = None, assigned_to_reason = None, user_id = None, phone = None, alias = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
-	if not email:
+	if not email: # Requiring an e-mail until spam filter is implemented
 		return None, False
 	request_id = find_request(text)
-	if not request_id:
-		request_id = create_request(text = text, user_id = user_id)
-		new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email)
-		if email: # If the user provided an e-mail address, add them as a subscriber to the request.
-			user_id = create_or_return_user(email = email, alias = alias, phone = phone)
-			subscriber_id = create_subscriber(request_id = request_id, user_id = user_id)
-			generate_prr_emails(request_id, notification_type = "Request made", user_id = subscriber_id)
-		open_request(request_id)
-		return request_id, True
-	return request_id, False
+	if request_id: # Same request already exists
+		return request_id, False
+	request_id = create_request(text = text, user_id = user_id) # Actually create the Request object
+	new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email) # Assign someone to the request
+	if email: # If the user provided an e-mail address, add them as a subscriber to the request.
+		subscriber_user_id = create_or_return_user(email = email, alias = alias, phone = phone)
+		subscriber_id = create_subscriber(request_id = request_id, user_id = subscriber_user_id)
+		if subscriber_id:
+			generate_prr_emails(request_id, notification_type = "Request made", user_id = subscriber_user_id) # Send them an e-mail notification
+	open_request(request_id) # Set the status of the incoming request to "Open"
+	return request_id, True
 
 ### @export "add_subscriber"	
 def add_subscriber(request_id, email):
 	user_id = create_or_return_user(email = email)
 	subscriber_id = create_subscriber(request_id = request_id, user_id = user_id)
-	generate_prr_emails(request_id, notification_type = "Request followed", user_id = subscriber_id)
+	if subscriber_id:
+		generate_prr_emails(request_id, notification_type = "Request followed", user_id = user_id)
 
 ### @export "ask_a_question"	
 def ask_a_question(request_id, owner_id, question):

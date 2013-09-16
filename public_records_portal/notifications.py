@@ -26,9 +26,9 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 	email_info = get_email_info(notification_type=notification_type)
 	email_subject = "Public Records Request %s: %s" %(request_id, email_info["Subject"])
 	recipient_types = email_info["Recipients"]
-	page = "%srequest/%s" %(app_url,request_id) # The request URL
 	include_unsubscribe_link = True 
-	for recipient_type in recipient_types: 
+	for recipient_type in recipient_types:
+		page = "%srequest/%s" %(app_url,request_id) # The request URL 
 		if "Staff" in recipient_type:
 			page = "%scity/request/%s" %(app_url,request_id)
 			include_unsubscribe_link = False # Gets excluded for city staff
