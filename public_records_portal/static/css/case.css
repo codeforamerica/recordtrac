@@ -16,6 +16,11 @@ h3 {
 	line-height: 20px !important;
 }
 
+#status-text {
+  margin-top: 5px;
+  margin-bottom: 8px;
+}
+
 div.request-status-well {
 	margin-bottom: 10px;
 }
@@ -26,4 +31,13 @@ div.request-status-well {
 
 div.well {
   margin-bottom: 1em;
+}
+
+form {
+  margin-bottom: 0;
+}
+
+#no-records {
+  margin-bottom: 5em;
+  margin-top: 0.5em;
 }
