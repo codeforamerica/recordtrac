@@ -21,10 +21,7 @@ $(document).ready(function(){
   typeahead for department that is now a dropdown as well using combobox:
   https://github.com/danielfarrell/bootstrap-combobox/
   */
-  var map = {};
-  var departments = [];
-  var doc_types = [];
-  var output = [];
+
   /* First entry is an empty one */
  $('#inputDepartment').append($("<option/>", {
               value: '',
@@ -35,22 +32,52 @@ $(document).ready(function(){
       $.each(data, function (i, line) {
         var department = line['DEPARTMENT'];
         var doc_type = line['DOC_TYPE'];
-        if($.inArray(department, departments) == -1) {
-          departments.push(department);
-         }
-          map[doc_type + " - " + department] = department;
           $('#inputDepartment').append($("<option/>", {
               value: department,
-              text: doc_type + " - " + department
+              text: department + " - " + doc_type
           }));
-          doc_types.push(doc_type + " - " + department);
 
   });
   /* Initialize the combobox */
   $('.combobox').combobox(); 
 
+
+/* help text popover */
+  $('#requestTextarea').popover({
+      trigger: 'focus',
+      html : true,
+      content: function() {
+        return $("#requestPopover-content").html();
+      }
+  });
+
+  $('#inputEmail').popover({
+      trigger: 'focus',
+      html : true,
+      content: function() {
+        return $("#emailPopover-content").html();
+      }
+  });
+
+  $('#inputName').popover({
+      trigger: 'focus',
+      html : true,
+      content: function() {
+        return $("#namePopover-content").html();
+      }
+  });
+
+  $('#inputPhone').popover({
+      trigger: 'focus',
+      html : true,
+      content: function() {
+        return $("#phonePopover-content").html();
+      }
+  });
+
+
 });
-/* End of .ready funcitonality */
+/* End of .ready functionality */
 
 
 $('#requestTextarea').on('blur', function() {

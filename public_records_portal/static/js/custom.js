@@ -23,7 +23,6 @@
     });
   });
 
-/* move to new request page */
 /* timestamp popover */
   $('.timestampPopover').popover({
       trigger: 'hover', 
@@ -32,48 +31,6 @@
         return $(this).parent().find('.timestampPopover-content').html()
       }
   });
-
-/* help text popover */
-  $('#requestTextarea').popover({
-      trigger: 'focus',
-      html : true,
-      content: function() {
-        return $("#requestPopover-content").html();
-      }
-  });
-
-  $('#inputDepartment').popover({
-      trigger: 'focus',
-      html : true,
-      content: function() {
-        return $("#deptPopover-content").html();
-      }
-  });
-
-  $('#inputEmail').popover({
-      trigger: 'focus',
-      html : true,
-      content: function() {
-        return $("#emailPopover-content").html();
-      }
-  });
-
-  $('#inputName').popover({
-      trigger: 'focus',
-      html : true,
-      content: function() {
-        return $("#namePopover-content").html();
-      }
-  });
-
-  $('#inputPhone').popover({
-      trigger: 'focus',
-      html : true,
-      content: function() {
-        return $("#phonePopover-content").html();
-      }
-  });
-
 
 
 /* form in reroute popover */

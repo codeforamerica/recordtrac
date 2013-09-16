@@ -29,20 +29,18 @@
               <div class="control-group">
                 <label for="requestTextarea"><strong><i class="icon-exclamation-sign"></i> Everything in this request box will be displayed publicly. </strong><a class="muted" href="/about#why" target="_blank"> Why?</a></label>
                 <div >
-                  <!-- <a data-placement="right" data-toggle="popover" href="#" id="requestPopover" class="hidden-phone hidden-tablet"> -->
                   <textarea id="requestTextarea" name="request_text" rows="3" class="input-block-level" placeholder="Describe your request. Be as specific as possible."></textarea>
-                 <!--  </a> -->
                   {{ help("requestPopover-content", "Enter records request") }}
                 </div>
                 <div id="not_public_record">
 
                 </div>
               </div>
-              <p class="lead">Select a department</p>
+              <p class="lead">Select a department or document type (optional)</p>
+              <strong><i class="icon-exclamation-sign"></i> Leave this space blank if you don't know where it should go. </strong>
               <div class="control-group">
-                  <select class ="combobox" id="inputDepartment" type="text" name="request_department" placeholder="Who should it go to?" autocomplete="off">
-                  </select>
-                  {{ help("deptPopover-content", "Enter department or document type") }}
+                  <select class ="combobox" id="inputDepartment" type="text"></select>
+                {{ help("deptPopover-content", "Enter department or document type") }}
               </div>
 
               <p class="lead">Contact information</p>
