@@ -1,0 +1,10 @@
+#floating_media {
+     position: fixed;
+     left: 5px;
+     top: 200px;
+     display: block;
+ }
+
+ #floating_media:hover {
+     text-decoration:none;
+}

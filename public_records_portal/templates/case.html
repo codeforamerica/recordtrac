@@ -4,6 +4,9 @@
 {% block title %}Request{% endblock title %}
 
 {% block container %}
+
+<a id="floating_media" href="#"> <i class="icon-twitter icon-large"> </i></a>
+
   <div class="row-fluid">
     <div class="span9">
       {% block banner %}{{super()}}{% endblock banner %}
@@ -148,6 +151,8 @@
 
   </div>
 
+
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/social_media.css') }}">
 {% endblock container %}
 
 
@@ -168,4 +173,7 @@
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bottom_sidebar.css') }}">
 
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
+
 {% endblock custom_script_links %}
+
+

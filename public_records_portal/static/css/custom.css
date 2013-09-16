@@ -48,36 +48,7 @@ span[class|="timestampPopover"] {color: #666666;}
 /* public note section indent */
 #public_note {margin-left: -5%;}
 
-/* feedback form */
-#floating_link {
-     position: fixed;
-     left: -50px;
-     top: 200px;
-     /*display: block;*/
-     width: 100px;
-     height: 50px;
-     background-color: #507192;
-     overflow: hidden;
-     border-radius: 5px;
-     color: white;
-     text-align: center;
-     writing-mode: bt-lr; 
-	-webkit-transform: rotate(270deg);	
-	-moz-transform: rotate(270deg);
-	-ms-transform: rotate(270deg);
-	-o-transform: rotate(270deg);
-	transform: rotate(270deg);
-	line-height : 70px;
-	transition: left 0.25s;
-	-webkit-transition: left 0.2s;
-}
 
-#floating_link:hover {
-	text-decoration:none;
-	left: -45px;
-}
-
-#floating_link i {color:white;}
 
 /* validation style */
 /*label.valid {
@@ -159,9 +130,9 @@ html, body {
 	min-height: 100%;
 	height: auto !important;
 	height: 100%;
-	margin: 0 auto -80px; /* the bottom margin is the negative value of the footer's height */
+	margin: 0 auto -50px; /* the bottom margin is the negative value of the footer's height */
 }
 .footer, .push {
-	height: 80px; /* .push must be the same height as .footer */
+	height: 50px; /* .push must be the same height as .footer */
 }
 

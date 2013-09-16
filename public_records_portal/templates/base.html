@@ -19,6 +19,7 @@
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/BootSwatchr2.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/font-awesome.min.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/custom.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/feedback.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/DT_bootstrap.css') }}">
     
 <!--     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/select2.css') }}"> -->
@@ -104,7 +105,7 @@
               {% block banner %}
                 <!-- beta banner -->
                 <div class="alert alert-block">
-                  <div class="span1 text-right"><i class="icon-warning-sign icon-2x"> </i></div>
+                  <div class="span1 text-right"><i class="icon-warning-sign icon-large"> </i></div>
                   <div class="offset1">
                     <p> <strong>This website is being tested. </strong> Some features may not work.  Please send us <a href="#feedbackModal" data-toggle="modal">feedback</a>.  We are constantly improving this site.</p>  
                   </div>
@@ -147,15 +148,6 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/custom.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.ellipsis.js') }}"></script>
 
-    <!-- Facebook SDK -->
-    <div id="fb-root"></div>
-      <script>(function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));</script>
 
     {% block custom_script_links %}
       
