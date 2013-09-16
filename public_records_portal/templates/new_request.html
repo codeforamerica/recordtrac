@@ -4,7 +4,14 @@
 {% from 'help_text.html' import help %}
 
 {% block title %}Public records{% endblock title%}
-
+{% block custom_css_links %}
+    <!-- used for the extension and close request multi-select boxes in city view -->
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.min.css') }}">
+    <!-- used for file uploads -->
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-fileupload.css') }}">
+    <!-- used for department dropdown -->
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-combobox.css') }}"media="screen">
+{% endblock custom_css_links %}
 {% block container %}
   <div class="row-fluid">
 
@@ -33,10 +40,9 @@
               </div>
               <p class="lead">Select a department</p>
               <div class="control-group">
-                <div>
-                  <input id="inputDepartment" class="input-block-level" type="text" name="request_department" placeholder="Who should it go to?" data-provide="typeahead" autocomplete="off" />
+                  <select class ="combobox" id="inputDepartment" type="text" name="request_department" placeholder="Who should it go to?" autocomplete="off">
+                  </select>
                   {{ help("deptPopover-content", "Enter department or document type") }}
-                </div>
               </div>
 
               <p class="lead">Contact information</p>
@@ -95,7 +101,10 @@
 {% block custom_script_links %}
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/new_request.css') }}">
+    <!-- used for department dropdown -->
+  <script type="text/javascript" src="{{ url_for('static', filename = 'js/plugins/bootstrap-combobox.js') }}"></script>  
   <script type="text/javascript" src="{{ url_for('static', filename='js/new_request.js') }}"></script>
+
 
 
 {% endblock custom_script_links %}
