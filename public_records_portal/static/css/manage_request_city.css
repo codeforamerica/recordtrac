@@ -1,60 +1,73 @@
 /* custom css for manage_request_city.html and child templates */
 
-.response.qa, .response.note {
-  padding: 7px 5px;
-  background-color: #fff;
-  margin-bottom: 7px;
-  border-radius: 3px;
-  box-shadow: inset 0px 0px 5px #ccc;
-}
 
-.qa .qa-question {
-  padding: 2px;
-  background-color: rgba(176, 233, 255, 0.61);
-}
+/* PoC and Helper area */
+     h4.partcipantRow-title {
+          display: inline;
+     }
+     div.participantRow:hover {
+          text-decoration: none;
+          background-color: #ECFFB3;
+     }
+     #reroutePopover:hover, #notifyPopover:hover{
+          text-decoration: none;
+     }
+     h4.
 
-.qa .qa-answer {
-  padding: 2px;
-}
+
+/* Top Reponses (request area) */
+     .response.qa, .response.note {
+       padding: 7px 5px;
+       background-color: #fff;
+       margin-bottom: 7px;
+       border-radius: 3px;
+       box-shadow: inset 0px 0px 5px #ccc;
+     }
+     .qa .qa-question {
+       padding: 2px;
+       background-color: rgba(176, 233, 255, 0.61);
+     }
+     .qa .qa-answer {
+       padding: 2px;
+     }
 
 /* Bottom Responses*/
-.response-wrapper {
-  border-bottom: 1px solid #ccc;
-  margin-bottom: 10px;
-  padding-top: 10px;
-}
-.response-wrapper:last-child {
-  border-bottom: none;
-}
-.less, .more {
-  color: rgb(82, 127, 223);
-}
-.less:hover, .more:hover {
-  cursor: hand;
-  cursor: pointer;
-}
+     .response-wrapper {
+       border-bottom: 1px solid #ccc;
+       margin-bottom: 10px;
+       padding-top: 10px;
+     }
+     .response-wrapper:last-child {
+       border-bottom: none;
+     }
+     .less, .more {
+       color: rgb(82, 127, 223);
+     }
+     .less:hover, .more:hover {
+       cursor: hand;
+       cursor: pointer;
+     }
 
 /* Request status*/
+     .request-status-well {
+       text-align: center;
+       color: #fff;
+       padding: 0;
+     }
 
-.request-status-well {
-  text-align: center;
-  color: #fff;
-  padding: 0;
-}
+     .request-status-well.open {
+       background-color: rgba(0,0,255,0.7);
+     }
 
-.request-status-well.open {
-  background-color: rgba(0,0,255,0.7);
-}
+     .request-status-well.soon {
+       background-color: rgba(255, 173, 0, 0.7);
+     }
 
-.request-status-well.soon {
-  background-color: rgba(255, 173, 0, 0.7);
-}
+     .request-status-well.overdue {
+       background-color: rgba(255,0,0,0.7);
+     }
 
-.request-status-well.overdue {
-  background-color: rgba(255,0,0,0.7);
-}
-
-.request-status-well.closed {
-  background-color: rgba(0,0,0,0.7);
-}
+     .request-status-well.closed {
+       background-color: rgba(0,0,0,0.7);
+     }
 
