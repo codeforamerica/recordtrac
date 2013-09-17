@@ -1,3 +1,4 @@
+/* custom css for all_requests.html and child templates */
 
 #allrequestTable tbody tr:hover, #allrequestTable tbody tr.highlighted {
 	background-color: #ECFFB3;
