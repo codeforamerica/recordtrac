@@ -1,0 +1,30 @@
+/* feedback form */
+#floating_link {
+     position: fixed;
+     left: -50px;
+     top: 16em;
+     display: block;
+     width: 100px;
+     height: 50px;
+     background-color: #507192;
+     overflow: hidden;
+     border-radius: 5px;
+     color: white;
+     text-align: center;
+     writing-mode: bt-lr; 
+	-webkit-transform: rotate(270deg);	
+	-moz-transform: rotate(270deg);
+	-ms-transform: rotate(270deg);
+	-o-transform: rotate(270deg);
+	transform: rotate(270deg);
+	line-height : 70px;
+	transition: left 0.25s;
+	-webkit-transition: left 0.2s;
+}
+
+#floating_link:hover {
+     text-decoration:none;
+     left: -45px;
+}
+
+#floating_link i {color:white;}

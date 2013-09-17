@@ -1,8 +1,10 @@
 #floating_media {
      position: fixed;
      left: 5px;
-     top: 200px;
+     top: 10em;
      display: block;
+     width: 15px;
+     line-height: 2em;
  }
 
  #floating_media:hover {

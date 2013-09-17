@@ -5,8 +5,25 @@
 
 {% block container %}
 
-<a id="floating_media" href="#"> <i class="icon-twitter icon-large"> </i></a>
+<!-- social media section -->
+  <div id="floating_media" class="text-center">
 
+    <!-- share on twitter -->
+    <a href="#" onclick="window.open('http://twitter.com/intent/tweet?text={{ req.text | new_lines }}&amp;via=criscristina&amp;url=http://records.oaklandnet.com/{{req.id}}','','width=550,height=350,scrollbars=no');return false;"><div class="tool twitter"></div><span class="action hideText"><i class="icon-twitter icon-large"> </i></span></a>
+
+    <!-- share on facebook -->
+    <a href="#" 
+      onclick="
+        window.open(
+          'https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Frecords.oaklandnet.com%2F{{req.id}}', 
+          'facebook-share-dialog', 
+          'width=626,height=436'); 
+        return false;">
+      <i class="icon-facebook icon-large"> </i>
+    </a>
+  </div>
+
+<!-- main content -->
   <div class="row-fluid">
     <div class="span9">
       {% block banner %}{{super()}}{% endblock banner %}
@@ -90,14 +107,14 @@
                   <i class="{{icon}}"></i>
                 </div>
                 <div class="span9">
-                  <p truncateable="175">
-                   {{ response.display_text() | safe }}
+                  <p class="expandable" truncateable="200">
+                   {{ response.display_text() | safe }} - <a href="/staff_card/{{uid}}" data-placement="right" data-toggle="popover" id="contactinfoPopoverResponse{{loop.index}}"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias or staff.email }}</span></a>
                  </p>
                 </div>
                 <div class="span2 text-right">
-                  <div class="row-fluid">
+                  <!-- <div class="row-fluid">
                     <a href="/staff_card/{{uid}}" data-placement="right" data-toggle="popover" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias or staff.email }}</span></a>
-                  </div>
+                  </div> -->
                   <div class = "timestampPopoverContainer">
                     <div class="row-fluid">
                      <span class="timestampPopover" onmouseover="">{{ response.date() | date_granular }}</span>
@@ -153,9 +170,9 @@
 
 
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/social_media.css') }}">
+
+
 {% endblock container %}
-
-
 
 
 {% block custom_script_links %}
@@ -173,6 +190,11 @@
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bottom_sidebar.css') }}">
 
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
+
+  <!-- Text truncation -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.10.1.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.expander.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/custom.jquery.expander.js') }}"></script>
 
 {% endblock custom_script_links %}
 
