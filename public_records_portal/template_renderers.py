@@ -199,7 +199,18 @@ def login(email=None, password=None):
 				return redirect(url_for('index'))
 			else:
 				return redirect(get_redirect_target())
-	return render_template('error.html', message = "The e-mail/ password combo didn't work.")
+	return render_template('reset_password.html', message = "Hmm, the e-mail/ password combo didn't work. Want to reset your password?")
+
+def reset_password():
+	if request.method == 'POST':
+		email = request.form['email']
+		reset = new_password(email)
+		if reset:
+			message = "Thanks! You should receive an e-mail shortly with instructions on how to login and update your password."
+		else:
+			message = "Looks like you're not a user already. Currently, this system requires logins only for city employees. "
+	return render_template('reset_password.html', message = message)
+
 
 @login_required
 def update_password(password=None):
