@@ -1,4 +1,5 @@
-/* feedback form */
+//* custom css for feedback form in base.html */
+
 #floating_link {
      position: fixed;
      left: -50px;
