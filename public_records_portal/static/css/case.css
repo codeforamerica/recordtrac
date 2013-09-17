@@ -41,3 +41,8 @@ form {
   margin-bottom: 5em;
   margin-top: 0.5em;
 }
+
+/* move the response text closer to the response icon */
+div.span9 {
+  margin-left: 0px !important;
+}

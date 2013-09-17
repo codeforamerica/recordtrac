@@ -65,7 +65,7 @@
                      {{ response.display_text() | safe }}
                    </p>
                   </div>
-                  <div class="span2 text-right">
+                  <div class="span2 text-right request-date">
                     <div class = "timestampPopoverContainer">
                       <div class="row-fluid">
                         <span class="timestampPopover" onmouseover="">{{ response.date() | date_granular }}</span>
@@ -108,7 +108,7 @@
                    {{ response.display_text() | safe }} - <a href="/staff_card/{{uid}}" data-placement="right" data-toggle="popover" id="contactinfoPopoverResponse{{loop.index}}"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias or staff.email }}</span></a>
                  </p>
                 </div>
-                <div class="span2 text-right">
+                <div class="span2 text-right response-date">
                   <!-- <div class="row-fluid">
                     <a href="/staff_card/{{uid}}" data-placement="right" data-toggle="popover" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias or staff.email }}</span></a>
                   </div> -->

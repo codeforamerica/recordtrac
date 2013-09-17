@@ -20,15 +20,15 @@ class ResponsePresenter:
 			if "Request extended" in self.response.text:
 				self.type = "extension"
 		if self.type=="offline":
-			self.icon = "icon-file-alt"
+			self.icon = "icon-file-alt icon-large"
 		elif self.type=="note":
-			self.icon = "icon-edit"
+			self.icon = "icon-edit icon-large"
 		elif self.type=="link":
-			self.icon = "icon-link"
+			self.icon = "icon-link icon-large"
 		elif self.type =="document":
-			self.icon = "icon-file-alt"
+			self.icon = "icon-file-alt icon-large"
 		elif self.type=="extension":
-			self.icon = "icon-calendar"
+			self.icon = "icon-calendar icon-large"
 
 	
 	def get_update_url(self):
