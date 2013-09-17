@@ -194,7 +194,11 @@ def login(email=None, password=None):
 		user_to_login = authenticate_login(email, password)
 		if user_to_login:
 			login_user(user_to_login)
-			return redirect(get_redirect_target())
+			redirect_url = get_redirect_target()
+			if 'login' in redirect_url:
+				return redirect(url_for('index'))
+			else:
+				return redirect(get_redirect_target())
 	return render_template('error.html', message = "The e-mail/ password combo didn't work.")
 
 @login_required
