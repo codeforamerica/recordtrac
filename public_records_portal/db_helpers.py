@@ -30,7 +30,7 @@ def get_obj(obj_type, obj_id):
 		return QA.query.get(obj_id)
 	elif obj_type == "Subscriber":
 		return Subscriber.query.get(obj_id)
-	elif obj_type == "Record"
+	elif obj_type == "Record":
 		return Record.query.get(obj_id)
 	return None
 
