@@ -3,6 +3,7 @@ from public_records_portal import app
 from timeout import timeout
 from werkzeug import secure_filename
 import tempfile
+from db_helpers import *
 
 # Set flags:
 upload_to_scribd = False
@@ -44,16 +45,13 @@ def get_scribd_download_url(doc_id, record_id = None, API_KEY = None, API_SECRET
 		doc = scribd.api_user.get(doc_id)
 		doc_url = doc.get_download_url()
 		if record_id:
-			set_scribd_download_url(doc_url, record_id)
+			set_scribd_download_url(download_url = doc_url, record_id = record_id)
 		return doc_url
 	except:
 		return None
 
 def set_scribd_download_url(download_url, record_id):
-	record = Record.query.get(record_id)
-	record.download_url = download_url
-	db.session.add(record)
-	db.session.commit()
+    update_obj('download_url', download_url, obj_type = 'Record', obj_id = record_id)
 
 def scribd_batch_download(): 
 	req = Request.query.all()
