@@ -30,6 +30,19 @@ margin: 0 0 0 1.25em;
 margin: 0 0 0 1.75em;
 }
 
+/* logout button */
+input.btn-link {
+	text-shadow: none;
+	color: #72a2d2;
+	font-size: small;
+}
+
+input.btn-link:hover {
+	color: #ea874d;
+	text-decoration: none;
+}
+
+
 /* */
 
 i[class|="icon-external-link"] {
