@@ -225,7 +225,12 @@ def add_staff_participant(request_id, email = None, user_id = None, reason = Non
 def authenticate_login(email, password):
 	if email:
 		user = create_or_return_user(email=email, not_id = True)
-		if user.password == password:
+		if user.check_password(password):
+			return user
+		if user.password == password: # Hash it
+			user.set_password(password)
+			db.session.add(user)
+			db.session.commit()
 			return user
 	return None
 
