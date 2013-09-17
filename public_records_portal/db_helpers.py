@@ -230,6 +230,16 @@ def authenticate_login(email, password):
 	return None
 
 
+def new_password(email):
+	user = User.query.filter(func.lower(User.email) == func.lower(email)).first() 
+	if not user:
+		return False # This is only for existing users, not a way to create a user, which we're not allowing yet.
+	# user.password == randomly_generate_password()
+	# Send e-mail
+	db.session.add(user)
+	db.session.commit()
+	return True
+
 
 
 

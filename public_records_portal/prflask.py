@@ -103,6 +103,10 @@ routing = {
 	'is_public_record':{
 		'url': '/is_public_record',
 		'methods': ['POST']
+	},
+	'reset_password':{
+		'url': '/reset_password',
+		'methods': ['POST']
 	}
 }
 
