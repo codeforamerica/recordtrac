@@ -10,6 +10,7 @@ from db_helpers import *
 import departments
 import os, json
 from urlparse import urlparse, urljoin
+from notifications import send_prr_email
 
 # Initialize login
 login_manager = LoginManager()
@@ -201,11 +202,12 @@ def login(email=None, password=None):
 				return redirect(get_redirect_target())
 	return render_template('reset_password.html', message = "Hmm, the e-mail/ password combo didn't work. Want to reset your password?")
 
-def reset_password():
+def reset_password(email=None):
 	if request.method == 'POST':
 		email = request.form['email']
-		reset = new_password(email)
-		if reset:
+		password = set_random_password(email)
+		if password:
+			send_prr_email(page = app.config['APPLICATION_URL'], recipients = [email], subject = "Your temporary password", template = "password_email.html", include_unsubscribe_link = False, password = password)
 			message = "Thanks! You should receive an e-mail shortly with instructions on how to login and update your password."
 		else:
 			message = "Looks like you're not a user already. Currently, this system requires logins only for city employees. "
@@ -214,16 +216,12 @@ def reset_password():
 
 @login_required
 def update_password(password=None):
-	current_user_id = current_user.id
 	if request.method == 'POST':
-		try:
-			password = request.form['password']
-			update_obj("password", password, "User", current_user_id)
+		if set_password(current_user, request.form['password']):
 			return index()
-		except:
-			return render_template('error.html', message = "Something went wrong updating your password.")
+		return render_template('error.html', message = "Something went wrong updating your password.")
 	else:
-		return render_template('update_password.html', user_id = current_user_id)
+		return render_template('update_password.html', user_id = current_user.id)
 
 def staff_card(user_id):
 	return render_template('staff_card.html', uid = user_id)

@@ -10,7 +10,7 @@ from models import *
 from datetime import datetime, timedelta
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from sqlalchemy import func
-
+import uuid
 
 ### @export "get_obj"
 def get_obj(obj_type, obj_id):
@@ -75,6 +75,7 @@ def put_obj(obj):
 		return True
 	return False
 
+### @export "get_attribute"
 def get_attribute(attribute, obj_id = None, obj_type = None, obj = None):
 	""" Obtain the object by obj_id and obj_type if obj is not provided, and return the specified attribute for that object. """
 	if obj_id and obj_type:
@@ -86,7 +87,7 @@ def get_attribute(attribute, obj_id = None, obj_type = None, obj = None):
 			return None
 	return None
 
-
+### @export "update_obj"
 def update_obj(attribute, val, obj_type = None, obj_id = None, obj = None):
 	""" Obtain the object by obj_id and obj_type if obj is not provided, and update the specified attribute for that object. Return true if successful. """
 	if obj_id and obj_type:
@@ -234,20 +235,21 @@ def authenticate_login(email, password):
 			return user
 	return None
 
-
-def new_password(email):
+def set_random_password(email):
 	user = User.query.filter(func.lower(User.email) == func.lower(email)).first() 
 	if not user:
-		return False # This is only for existing users, not a way to create a user, which we're not allowing yet.
-	# user.password == randomly_generate_password()
-	# Send e-mail
+		return None # This is only for existing users, not a way to create a user, which we're not allowing yet.
+	password = uuid.uuid4().hex
+	user.set_password(password)
 	db.session.add(user)
 	db.session.commit()
-	return True
+	return password
 
-
-
-
-
-
-
+def set_password(user, password):
+	try:
+		user.set_password(password)
+		db.session.add(user)
+		db.session.commit()
+		return True
+	except:
+		return False

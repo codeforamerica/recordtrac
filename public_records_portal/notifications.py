@@ -15,7 +15,6 @@ if app.config['ENVIRONMENT'] == 'PRODUCTION':
 	send_emails = True
 	test = ""
 
-
 def generate_prr_emails(request_id, notification_type, user_id = None):
 	app_url = app.config['APPLICATION_URL'] 
 	# Define the e-mail template:
@@ -54,11 +53,11 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 			print recipient_type
 			print "Not a valid recipient type"
 
-def send_prr_email(page, recipients, subject, template, include_unsubscribe_link = True, cc_everyone = False):
+def send_prr_email(page, recipients, subject, template, include_unsubscribe_link = True, cc_everyone = False, password = None):
 	if recipients:
 		if send_emails:
 			try:
-				send_email(body = render_template(template, page = page), recipients = recipients, subject = subject, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = cc_everyone)
+				send_email(body = render_template(template, page = page, password = password), recipients = recipients, subject = subject, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = cc_everyone)
 			except:
 				print "E-mail was not sent."
 		else:
