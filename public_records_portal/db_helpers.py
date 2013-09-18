@@ -9,7 +9,7 @@ from public_records_portal import db, app
 from models import *
 from datetime import datetime, timedelta
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
-from sqlalchemy import func
+from sqlalchemy import func, not_
 import uuid
 
 ### @export "get_obj"
@@ -65,6 +65,16 @@ def get_owners_by_user_id(user_id):
 	if not user_id:
 		return None
 	return Owner.query.filter_by(user_id = user_id)
+
+def get_requests_by_filters(filters_dict):
+	""" Return the queryset of requests for the filters provided. """
+	q = db.session.query(Request)
+	for attr, value in filters_dict.items():
+		if attr == 'status' and value == 'Open':
+			q = q.filter(not_(getattr(Request, 'status').like("%%%s%%" % 'Closed')))
+		else:
+			q = q.filter(getattr(Request, attr).like("%%%s%%" % value))
+	return q.all()
 
 ### @export "put_obj"
 def put_obj(obj):

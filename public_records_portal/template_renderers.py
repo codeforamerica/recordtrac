@@ -153,9 +153,8 @@ def close(request_id = None):
 # Shows all public records requests that have been made.
 def requests():
 	# Return first 100, ? limit = 100
-	# departments = request.get.args('department')
+	all_record_requests = get_requests_by_filters(request.args)
 	user_id = get_user_id()
-	all_record_requests = get_objs("Request")
 	if all_record_requests:
 		if user_id:
 			return render_template('all_requests_city.html', all_record_requests = all_record_requests, user_id = user_id, title = "All Requests")
