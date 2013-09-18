@@ -70,7 +70,11 @@ def get_requests_by_filters(filters_dict):
 	""" Return the queryset of requests for the filters provided. """
 	q = db.session.query(Request)
 	for attr, value in filters_dict.items():
-		if attr == 'status' and value == 'Open':
+		attr = attr.lower()
+		value = value.lower()
+		if attr == 'department':
+			q = db.session.query(Request).join(Owner, Request.current_owner == Owner.id).join(User).filter(func.lower(User.department).like("%%%s%%" % value))
+		elif attr == 'status' and value == 'open':
 			q = q.filter(not_(getattr(Request, 'status').like("%%%s%%" % 'Closed')))
 		else:
 			q = q.filter(getattr(Request, attr).like("%%%s%%" % value))
