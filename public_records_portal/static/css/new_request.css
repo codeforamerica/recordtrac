@@ -1,5 +1,9 @@
 /* custom css for new_request.html and child templates */
 
+.department_optional{
+	font-size: 12px;
+}
+
 #not_public_record{
   /*border: 1px solid red;*/
 }
