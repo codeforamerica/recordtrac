@@ -133,10 +133,11 @@ $(document).ready(function() {
       if (current_length < max_length)
         return;
       var truncated = text.substring(0, max_length);
+      var fullhtml = $self.html();
 
       $self.html("<div class='truncated-text' truncated='"+truncated+"'>"+truncated+"</div>");
       $self.append("<div class='more'>..more</div>");
-      $self.attr('full-text', text);
+      $self.attr('full-text', fullhtml);
     };
   })( jQuery );
 
