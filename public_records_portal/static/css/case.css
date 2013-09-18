@@ -55,6 +55,11 @@
        margin-top: 0.5em;
      }
 
+/* _public_note.html */
+     div.button-margin {
+        margin-bottom: 0.5em !important;
+     }
+
 /* online document link icon */
      i[class|="icon-external-link"] {
           vertical-align: super;

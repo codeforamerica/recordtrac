@@ -1,5 +1,9 @@
 /* custom css for manage_request_city.html and child templates */
 
+/* _ask_question.html */
+     #control-question {
+          margin-bottom: 0.5em;
+     }
 
 /* PoC and Helper area */
      h4.partcipantRow-title {
