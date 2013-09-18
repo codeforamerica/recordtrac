@@ -1,5 +1,9 @@
 /* custom css for _response_widget.html */
 
+form#closeRequest.form-horizontal {
+  margin-bottom: 1px;
+}
+
 h3.control-widget {
   display: inline !important;
 }
