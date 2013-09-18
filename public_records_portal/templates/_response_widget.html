@@ -38,7 +38,7 @@
             <div class="control-group">
               <label class="control-label" for="recordSummary">Name of record</label>
               <div class="controls">
-                <input class="input-xxlarge" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of the record" required />
+                <textarea class="input-xxlarge" rows="1" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of the record" required /></textarea>
               </div>
             </div>
             <div class="control-group">
@@ -66,7 +66,7 @@
               <label class="control-label">Or provide a link to a record <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a link" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></label>
               <div class="row-fluid">
                 <div class="controls">
-                  <input name="link_url" id="inputUrl"/>
+                  <input name="link_url" id="inputUrl" class="input-xxlarge"/>
                   <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
                 </div>
               </div>
