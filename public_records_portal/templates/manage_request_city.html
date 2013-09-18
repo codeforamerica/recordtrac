@@ -41,7 +41,7 @@
   <div class="b_sidebar r_sidebar-fixed ">
     <div class="row-fluid participantRow">
 
-        <a data-placement="left" href="#" id="reroutePopover"><div class="popover-container"><h4>Point of Contact <span class="pull-right"><small><i class="icon-arrow-right"></i></small><i class="icon-user"></i></span></h4>
+        <a data-placement="left" href="#" id="reroutePopover"><div class="popover-container"><h4 class="partcipantRow-title">Point of Contact <span class="pull-right"><small><i class="icon-arrow-right"></i></small><i class="icon-user"></i></span></h4>
         </div></a>
         {% include '_reroute.html' %}
     </div>
@@ -50,14 +50,14 @@
     </div>
 
     <div class="row-fluid participantRow">   
-      <a data-placement="left" href="#" id="notifyPopover"><div class="popover-container"><h4>Helpers<span class="pull-right"><small><i class="icon-plus"></i></small><i class="icon-user"></i></span></h4></div></a>
+      <a data-placement="left" href="#" id="notifyPopover"><div class="popover-container participantRow-helpers"><h4 class="partcipantRow-title">Helpers<span class="pull-right"><small><i class="icon-plus"></i></small><i class="icon-user"></i></span></h4></div></a>
       {% include '_add_person.html' %}
       
     </div>
     <div class="row-fluid">
       {% include '_staff_participants.html' %}
     </div>
-    <div class="row-fluid">
+    <div class="row-fluid participantRow-history">
       {% include '_history.html' %}
     </div>
 

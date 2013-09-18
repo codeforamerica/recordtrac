@@ -4,15 +4,23 @@
 /* PoC and Helper area */
      h4.partcipantRow-title {
           display: inline;
+          color: #666666;
      }
      div.participantRow:hover {
           text-decoration: none;
-          background-color: #ECFFB3;
+     }
+     h4.partcipantRow-title:hover {
+          color: #00bb94;
      }
      #reroutePopover:hover, #notifyPopover:hover{
           text-decoration: none;
      }
-     h4.
+     div.participantRow-helpers {
+          margin-top: 0.5em;
+     }
+     div.participantRow-history {
+          margin-top: 0.5em;
+     }
 
 
 /* Top Reponses (request area) */

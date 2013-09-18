@@ -1,48 +1,59 @@
 /* custom css for case.html and child templates */
 
-.case-show-all {
-  background-color: #bdbdbd;
-  text-align: center;
-  margin: 0 -19px -19px -19px;
-  padding: 3px 0;
-  border-radius: 0 0 3px 3px;
-}
+/* change hover cursor for history popover */
+     a.historyPopover:hover {
+          cursor: text;
+     }
 
-.case-show-all:hover {
-  background-color: #cdcdcd;
-  cursor: hand;
-  cursor: pointer;
-}
+/* deemphasize text and carets for request area truncation */
+     div.case-show-all {
+          color: #888888;
+     }
 
-h3 {
-	line-height: 20px !important;
-}
+/* truncation bar for request area */
+     .case-show-all {
+       background-color: #bdbdbd;
+       text-align: center;
+       margin: 0 -19px -19px -19px;
+       padding: 3px 0;
+       border-radius: 0 0 3px 3px;
+     }
+     .case-show-all:hover {
+       background-color: #cdcdcd;
+       cursor: hand;
+       cursor: pointer;
+     }
 
-#status-text {
-  margin-top: 5px;
-  margin-bottom: 8px;
-}
+/* general case page layout tweaks*/
+     h3 {
+       line-height: 20px !important;
+     }
 
-div.request-status-well {
-	margin-bottom: 10px;
-}
+     #status-text {
+       margin-top: 5px;
+       margin-bottom: 8px;
+     }
 
-#responses-container {
-  margin-top: 3em;
-}
+     div.request-status-well {
+     	margin-bottom: 10px;
+     }
 
-div.well {
-  margin-bottom: 1em;
-}
+     #responses-container {
+       margin-top: 3em;
+     }
 
-form {
-  margin-bottom: 0;
-}
+     div.well {
+       margin-bottom: 1em;
+     }
 
-#no-records {
-  margin-bottom: 5em;
-  margin-top: 0.5em;
-}
+     form {
+       margin-bottom: 0;
+     }
+
+     #no-records {
+       margin-bottom: 5em;
+       margin-top: 0.5em;
+     }
 
 /* online document link icon */
      i[class|="icon-external-link"] {
@@ -54,9 +65,9 @@ form {
      div.span9 {margin-left: 0px !important;}
 
 /* make history popover wider */
-     .historyPopover {
+     /*.historyPopover {
 
-     }
+     }*/
 
 /* contact info link */
      span[class|="contactinfoPopover"] {color: #666666;}
