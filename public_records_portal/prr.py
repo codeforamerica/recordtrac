@@ -276,4 +276,3 @@ def close_request(request_id, reason = "", user_id = None):
 	create_note(request_id, reason, user_id)
 	generate_prr_emails(request_id = request_id, notification_type = "Request closed")
 	add_staff_participant(request_id = request_id, user_id = user_id)
-

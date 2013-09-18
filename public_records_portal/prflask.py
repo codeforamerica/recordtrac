@@ -69,7 +69,8 @@ routing = {
 		'url': '/<page>'
 	},
 	'requests':{
-		'url': '/requests'
+		'url': '/requests',
+		'methods': ['GET']
 	},
 	'update_password':{
 		'url': '/update_password',
