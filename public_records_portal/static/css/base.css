@@ -1,20 +1,26 @@
 /* custom css for base.html and child templates */
 
-.container {
-	margin-left: 0;
-}
+/* placeholder title green */
+	a.brand {
+		color: #17B292 !important;
+	}
 
-.navbar-inner {	
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-}
+/* some bootstrap stuff to create responsive container */
+	.container {
+		margin-left: 0;
+	}
 
-.footer {
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-}
+	.navbar-inner {	
+	  -webkit-border-radius: 0;
+	  -moz-border-radius: 0;
+	  border-radius: 0;
+	}
+
+	.footer {
+	  -webkit-border-radius: 0;
+	  -moz-border-radius: 0;
+	  border-radius: 0;
+	}
 
 #rerouteForm {
 	margin: 0 0 0px;
@@ -22,27 +28,30 @@
 
 
 /* request table # of records left margin adjustment */
-#allrequestTable_length label {
-margin: 0 0 0 1.25em;
-}
+	#allrequestTable_length label {
+	margin: 0 0 0 1.25em;
+	}
 
-#allrequestTable_info {
-margin: 0 0 0 1.75em;
-}
+	#allrequestTable_info {
+	margin: 0 0 0 1.75em;
+	}
 
 /* logout button */
 	input.btn-link {
 		text-shadow: none;
-		color: #72a2d2;
+		color: #999;
 		font-size: small;
 	}
 
 	input.btn-link:hover {
-		color: #ea874d;
+		color: #17B292;
 		text-decoration: none;
 	}
 
-
+/* name in navbar */
+	p.navbar-text {
+		color: #eee !important;
+	}
 
 
 

@@ -15,6 +15,7 @@
      }
      h4.partcipantRow-title:hover {
           color: #00bb94;
+          /*background-color: rgba(23,178,146, .3);*/
      }
      #reroutePopover:hover, #notifyPopover:hover{
           text-decoration: none;
@@ -24,7 +25,9 @@
      }
      div.participantRow-history {
           margin-top: 0.5em;
+          margin-bottom: 1em;
      }
+
 
 
 /* Top Reponses (request area) */
@@ -53,7 +56,7 @@
        border-bottom: none;
      }
      .less, .more {
-       color: rgb(82, 127, 223);
+       color: #17B292;
      }
      .less:hover, .more:hover {
        cursor: hand;
@@ -68,18 +71,18 @@
      }
 
      .request-status-well.open {
-       background-color: rgba(0,0,255,0.7);
+       background-color: #2688AD;
      }
 
      .request-status-well.soon {
-       background-color: rgba(255, 173, 0, 0.7);
+       background-color: #FB991B;
      }
 
      .request-status-well.overdue {
-       background-color: rgba(255,0,0,0.7);
+       background-color: #CA1A1A;
      }
 
      .request-status-well.closed {
-       background-color: rgba(0,0,0,0.7);
+       background-color: #2a2b2b;
      }
 

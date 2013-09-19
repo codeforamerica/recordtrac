@@ -32,7 +32,7 @@ h3.control-widget {
   border-radius: 4px;
   /*background-color: #fff;*/
   /*border: 2px solid #08c;*/
-  color: #08c;
+  color: #17B292;
   padding: 4px;
   margin: 5px;
   margin-left: 2em;
@@ -66,7 +66,7 @@ h3.control-widget {
   /*max-width: 100%;*/
   font-size: 1.2em;
   opacity: 1;
-  border-bottom: 3px solid #08c;
+  border-bottom: 3px solid #17B292;
 }
 
 .rw-btn-wrap:hover {
