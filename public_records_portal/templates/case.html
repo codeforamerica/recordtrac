@@ -139,15 +139,15 @@
 
         <div class="b_sidebar r_sidebar-fixed ">
           <div class="row-fluid">
-              <h4>Point of Contact</h4>
+              <h4 class="case_participantRow">Point of Contact</h4>
               {% include '_contact_popover.html' %}
           </div>
           <div class="row-fluid">
-              <h4>Helpers</h4>
+              <h4 class="case_participantRow">Helpers</h4>
               {% include '_staff_participants.html' %}
           </div>
           <div class="row-fluid">
-            <div>
+            <div class="participantRow-history">
               {% include '_history.html' %}
             </div>
           </div>
@@ -172,6 +172,7 @@
 
   <!-- Listed in case instead of manage_request_city for truncation!!! -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/manage_request_city.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/case.js') }}"></script>
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/manage_request_city.css') }}">
 
   <!-- For response_widget partial -->

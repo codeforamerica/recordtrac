@@ -1,5 +1,15 @@
 /* custom css for case.html and child templates */
 
+/* PoC and Helper area */
+     h4.case_participantRow {
+          margin-bottom: 0;
+     }
+
+     div.participantRow-history {
+          margin-top: 0.5em;
+          margin-bottom: 1em;
+     }
+
 /* change hover cursor for history popover */
      a.historyPopover:hover {
           cursor: text;
