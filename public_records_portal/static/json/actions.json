@@ -135,25 +135,25 @@
         },
             "Extension - Large Amount": 
                 {
-                    "What":"Additional time is required to answer your public records request. We need to search for, collect, or examine a large number of records (Government Code Section 6253(c)(2)). Your request will be answered by.",
+                    "What":"Additional time is required to answer your public records request. We need to search for, collect, or examine a large number of records (Government Code Section 6253(c)(2)).",
                     "Who":"",
                     "Action":""
                 },
             "Extension - Separate Facility": 
                 {
-                    "What":"Additional time is required to answer your public records request. We need to search for and collect the requested records from a separate facility or set of facilities (Government Code Section 6253(c)(1)). Your request will be answered by",
+                    "What":"Additional time is required to answer your public records request. We need to search for and collect the requested records from a separate facility or set of facilities (Government Code Section 6253(c)(1)).",
                     "Who":"",
                     "Action":""
                 },
             "Extension - Another Agency": 
                 {
-                    "What":"Additional time is required to answer your public records request. We need to consult with another agency before we are able to deliver your record (Government Code Section 6253(c)(3)). Your request will be answered by.",
+                    "What":"Additional time is required to answer your public records request. We need to consult with another agency before we are able to deliver your record (Government Code Section 6253(c)(3)).",
                     "Who":"",
                     "Action":""
                 },
             "Extension - Data": 
                 {
-                    "What":"Additional time is required to answer your public records request. We need to compile data or create a computer report to extract data (Government Code Section 6253(c)(4)). Your request will be answered by",
+                    "What":"Additional time is required to answer your public records request. We need to compile data or create a computer report to extract data (Government Code Section 6253(c)(4)).",
                     "Who":"",
                     "Action":""
                 }
