@@ -22,7 +22,7 @@ from db_helpers import *
 def add_resource(resource, request_body, current_user_id = None):
 	fields = request_body.form
 	if "extension" in resource:
-		return request_extension(int(fields['request_id']), fields.getlist('note_text'), current_user_id)
+		return request_extension(int(fields['request_id']), fields.getlist('extend_reason'), current_user_id)
 	if "note" in resource:
 		return add_note(int(fields['request_id']), fields['note_text'], current_user_id)
 	elif "record" in resource:
