@@ -150,7 +150,17 @@
             <div class="participantRow-history">
               {% include '_history.html' %}
             </div>
+
           </div>
+          {% block follow %}
+          <div class="row-fluid follow">
+            <div class="input-append">
+              <input id="followRequest" class="span6" placeholder="yourname@email.com" type="text">
+              <button id="followRequest-button" class="btn" type="submit">Follow</button>
+            </div>
+            <div id="whatisfollow"><span id="recordTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="Enter your email here and we will send you  updates for this request." ><small><i class="icon-question icon-large"></i></i></small></span></div>
+          </div>
+          {% endblock follow %}
         </div>
       {% endblock sidebar %}
 

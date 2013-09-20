@@ -12,7 +12,25 @@ $(document).ready(function(){
       },
       success: function(element) {
         element
-        .text('OK!').addClass('valid')
+        // .text('OK!').addClass('valid')
+        .closest('.control-group').removeClass('error').addClass('success');
+      }
+  });
+
+  /* validates add a note form */
+  $("#note").validate({
+    rules: {
+      record_description: {
+        required: true,
+        minlength: 2
+           }
+       },
+     highlight: function(element) {
+        $(element).closest('.control-group').removeClass('success').addClass('error');
+      },
+      success: function(element) {
+        element
+        // .text('OK!').addClass('valid')
         .closest('.control-group').removeClass('error').addClass('success');
       }
   });

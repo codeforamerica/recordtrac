@@ -1,5 +1,21 @@
 /* custom css for case.html and child templates */
 
+
+/* follow button area */
+     #whatisfollow {
+          display: inline;
+          margin-left: 1em;
+     }
+     div.input-append {
+          display: inline;
+     }
+     div.follow {
+          margin-bottom: 1em;
+     }
+     i.icon-question {
+          color: #666;
+     }
+
 /* PoC and Helper area */
      h4.case_participantRow {
           margin-bottom: 0;
