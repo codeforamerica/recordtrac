@@ -1,43 +1,34 @@
 /* custom css for landing.html and child templates */
 
+h1 {
+	color: #17b292;
+	margin-top: 1em;
+}
+
+img[alt="request,track,explore"] {
+	margin-top: 1em;
+}
+
+div.span4 {
+	margin-top: 1em;
+}
+
+p.text-title {
+	margin-bottom: 0px;
+}
+
+#startemup {
+	margin-top: 1em;
+	margin-bottom: 3em;
+}
+
 .center-image {
     display: block;
     margin-left: auto;
     margin-right: auto;
 }
 
-#tagline {
-	margin-bottom: 2%;
+#request-count {
+	background-color: #17b292;
 }
 
-#overview_text {
-	margin-bottom: 5% !important;
-	font-size: 1.25em;
-	line-height: 1.4em;
-}
-
-.round_link {
-	border-radius: 20px;
-	margin-bottom: 10%;
-	padding-top: 5%;
-	padding-bottom: 5%;
-}
-
-.round_link:hover {
-	background-color: #ECFFB3;
-}
-
-.non_link {
-	margin-bottom: 10%;
-	padding-top: 5%;
-	padding-bottom: 5%;
-}
-
-button.btn-mini {
-	border-radius: 100%;
-}
-
-a.btn {
-	margin-top: 2%;
-	margin-bottom: 5%;
-}
