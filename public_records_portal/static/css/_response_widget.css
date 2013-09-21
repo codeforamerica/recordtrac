@@ -56,8 +56,11 @@ h3.control-widget {
   /*overflow: hidden;*/
   padding: 0px;
   /*-webkit-transition: max-width 1s;*/
-  opacity: .7;
+  /*opacity: .7;*/
   margin-right: 1em;
+  border-radius: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 .rw-btn-wrap.active {
@@ -66,7 +69,9 @@ h3.control-widget {
   /*max-width: 100%;*/
   font-size: 1.2em;
   opacity: 1;
-  border-bottom: 3px solid #17B292;
+  /*border-bottom: 2px solid #17B292;*/
+  /*color: #17B292;*/
+  color: #333;
 }
 
 .rw-btn-wrap:hover {
@@ -76,6 +81,8 @@ h3.control-widget {
   opacity: .9;
   /*max-width: 40%;*/
   /*-webkit-transition: max-width 1s;*/
+  color: #333;
+  background-color:  rgba(23,178,146, .3);
 }
 
 .rw-actions-container {
