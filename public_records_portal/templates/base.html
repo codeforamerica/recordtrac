@@ -54,9 +54,9 @@
               <span class="icon-bar"></span>
             </a>
             <!-- Be sure to leave the brand out there if you want it shown -->
-            <a class="brand" href="/landing">Public Records Request Portal<small class="text-warning"><em> alpha</em></small></a>
+            <a class="brand" href="/landing"><img src="{{ url_for('static', filename='images/CityTree_logo_white_treeonly.png') }}" alt="City of Oakland tree"/> <strong>Oakland Brightswitch</strong><small id="beta" class="text-warning"><em> beta</em></small></a>
             <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
-              <ul class="nav">
+              <ul class="nav tabs">
                 {% if user_id %}
                 <li><a href="/your_requests">Your requests</a></li>
                 <li><a href="/requests">All requests</a></li>
@@ -72,7 +72,7 @@
             <!-- Login area -->
             {% if user_id %}
     
-            <ul  class="nav pull-right">
+            <ul class="nav pull-right">
               <li>
                 <p class="navbar-text"> {{ "alias" | get_attribute(user_id, "User") }} </p>
               </li>

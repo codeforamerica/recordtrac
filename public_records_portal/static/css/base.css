@@ -1,5 +1,31 @@
 /* custom css for base.html and child templates */
 
+
+/* scoot navbar start to the right */
+	a.brand {
+		margin-left: 10% !important;
+	}
+
+/* navbar layout tweaks due to insertion of Oakland tree logo */
+	/* tree logo */
+	img[alt="City of Oakland tree"] {
+		margin-top: -5px;
+		margin-right: 5px;
+	}
+	/* tabs */
+	ul.nav.tabs {
+		margin-top: 5px;
+	}
+	/* login/logout area */
+	ul.nav.pull-right {
+		margin-top: 5px;
+	}
+
+/* brand orange beta tag in navbar */
+	#beta {
+		color: #FB991B;
+	}
+
 /* placeholder title green */
 	a.brand {
 		color: #17B292 !important;
