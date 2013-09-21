@@ -6,11 +6,12 @@
 }
 
 img[alt="City of Oakland"] {
-	margin-left: 5%;
+	/*margin-left: 5%;*/
 }
 
 #about_image i {
 	margin-left: 5%;
+	margin-right: 5%;
 	margin-top: 20%;
 	line-height: 0.2em;
 }
