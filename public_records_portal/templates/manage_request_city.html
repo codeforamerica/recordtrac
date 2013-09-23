@@ -5,8 +5,7 @@
 {% block custom_css_links %}
     <!-- used for the extension and close request multi-select boxes in city view -->
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.min.css') }}">
-    <!-- used for file uploads -->
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-fileupload.css') }}">
+
 {% endblock custom_css_links %}
 
 {% block requester_info %}
@@ -77,6 +76,7 @@
 {% block custom_script_links %}
   <!-- used for the extension and close request multi-select boxes in city view -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-select.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/custom.bootstrap-select.js') }}"></script>
   
   <script type="text/javascript" src="{{ url_for('static', filename='js/case.js') }}"></script>
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
@@ -88,9 +88,7 @@
   <script type="text/javascript" src="{{ url_for('static', filename='js/_response_widget.js') }}"></script>
   <!-- For sidebar styling -->
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bottom_sidebar.css') }}">
-  <!-- For bootstrap select -->
-  <script type="text/javascript" src="{{ url_for('static', filename='js/custom.bootstrap-select.js') }}"></script>
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bottom_sidebar.css') }}">  
   <!-- For file uploads -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-fileupload.js') }}"></script>
 {% endblock custom_script_links %}
