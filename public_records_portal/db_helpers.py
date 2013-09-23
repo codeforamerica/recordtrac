@@ -132,10 +132,13 @@ def create_request(text, user_id):
 
 def create_subscriber(request_id, user_id):
 	""" Create a Subscriber object and return the ID. """
-	subscriber = Subscriber(request_id = request_id, user_id = user_id)
-	db.session.add(subscriber)
-	db.session.commit()
-	return subscriber.id
+	subscriber = Subscriber.query.filter_by(request_id = request_id, user_id = user_id).first()
+	if not subscriber:
+		subscriber = Subscriber(request_id = request_id, user_id = user_id)
+		db.session.add(subscriber)
+		db.session.commit()
+		return subscriber.id, True
+	return subscriber.id, False
 
 def create_note(request_id, text, user_id):
 	""" Create a Note object and return the ID. """

@@ -151,7 +151,7 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 	new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email) # Assign someone to the request
 	if email: # If the user provided an e-mail address, add them as a subscriber to the request.
 		subscriber_user_id = create_or_return_user(email = email, alias = alias, phone = phone)
-		subscriber_id = create_subscriber(request_id = request_id, user_id = subscriber_user_id)
+		subscriber_id, is_new_subscriber = create_subscriber(request_id = request_id, user_id = subscriber_user_id)
 		if subscriber_id:
 			generate_prr_emails(request_id, notification_type = "Request made", user_id = subscriber_user_id) # Send them an e-mail notification
 	open_request(request_id) # Set the status of the incoming request to "Open"
@@ -160,7 +160,7 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 ### @export "add_subscriber"	
 def add_subscriber(request_id, email):
 	user_id = create_or_return_user(email = email)
-	subscriber_id = create_subscriber(request_id = request_id, user_id = user_id)
+	subscriber_id, is_new_subscriber = create_subscriber(request_id = request_id, user_id = user_id)
 	if subscriber_id:
 		generate_prr_emails(request_id, notification_type = "Request followed", user_id = user_id)
 		return subscriber_id
