@@ -3,10 +3,10 @@
 #floating_media {
      position: fixed;
      left: 5px;
-     top: 10em;
+     top: 12.5em;
      display: block;
      width: 15px;
-     line-height: 2em;
+     line-height: 2.5em;
  }
 
 
