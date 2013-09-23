@@ -1,5 +1,10 @@
 /* custom css for new_request.html and child templates */
 
+/* tweaking the appearance of the frankenbox for dept dropdown */
+input.combobox.input-block-level {
+	margin-right: -2em;
+}
+
 .department_optional{
 	font-size: 12px;
 }
