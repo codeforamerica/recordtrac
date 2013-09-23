@@ -204,7 +204,7 @@ def login(email=None, password=None):
 				return redirect(url_for('index'))
 			else:
 				return redirect(get_redirect_target())
-	return render_template('reset_password.html', message = "Hmm, the e-mail/ password combo didn't work. Want to reset your password?")
+	return render_template('error.html', message = "Your e-mail/ password combo didn't work. You can always <a href='/reset_password'>reset your password</a>.")
 
 def reset_password(email=None):
 	if request.method == 'POST':

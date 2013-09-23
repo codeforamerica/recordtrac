@@ -66,6 +66,7 @@ def get_owners_by_user_id(user_id):
 		return None
 	return Owner.query.filter_by(user_id = user_id)
 
+### @export "get_requests_by_filters"
 def get_requests_by_filters(filters_dict):
 	""" Return the queryset of requests for the filters provided. """
 	q = db.session.query(Request)
@@ -116,6 +117,7 @@ def update_obj(attribute, val, obj_type = None, obj_id = None, obj = None):
 			return False
 	return False
 
+### @export "create_QA"
 def create_QA(request_id, question, owner_id):
 	""" Create a QA object and return the ID. """
 	qa = QA(request_id = request_id, question = question, owner_id = owner_id)
@@ -123,6 +125,7 @@ def create_QA(request_id, question, owner_id):
 	db.session.commit()
 	return qa.id
 
+### @export "create_request"
 def create_request(text, user_id):
 	""" Create a Request object and return the ID. """
 	req = Request(text = text, creator_id = user_id)
@@ -130,6 +133,7 @@ def create_request(text, user_id):
 	db.session.commit()
 	return req.id
 
+### @export "create_subscriber"
 def create_subscriber(request_id, user_id):
 	""" Create a Subscriber object and return the ID. """
 	subscriber = Subscriber.query.filter_by(request_id = request_id, user_id = user_id).first()
@@ -140,6 +144,7 @@ def create_subscriber(request_id, user_id):
 		return subscriber.id, True
 	return subscriber.id, False
 
+### @export "create_note"
 def create_note(request_id, text, user_id):
 	""" Create a Note object and return the ID. """
 	try:
@@ -149,6 +154,7 @@ def create_note(request_id, text, user_id):
 	except:
 		return None
 
+### @export "create_record"
 def create_record(request_id, user_id, description, doc_id = None, filename = None, access = None, url = None):
 	# try:
 		record = Record(doc_id = doc_id, request_id = request_id, user_id = user_id, description = description, filename = filename, url = url, access = access)
@@ -162,6 +168,7 @@ def remove_obj(obj_type, obj_id):
 	db.session.delete(obj)
 	db.session.commit()
 
+### @export "create_answer"
 def create_answer(qa_id, subscriber_id, answer):
 	qa = get_obj("QA", qa_id)
 	qa.subscriber_id = subscriber_id
@@ -170,6 +177,7 @@ def create_answer(qa_id, subscriber_id, answer):
 	db.session.commit()
 	return qa.request_id
 
+### @export "create_or_return_user"
 def create_or_return_user(email, alias = None, phone = None, department = None, not_id = False):
 	user = User.query.filter(func.lower(User.email) == func.lower(email)).first() 
 	if not user:
@@ -180,12 +188,14 @@ def create_or_return_user(email, alias = None, phone = None, department = None, 
 		return user
 	return user.id
 
+### @export "create_user"
 def create_user(email, alias = None, phone = None, department = None):
 	user = User(email = email, alias = alias, phone = phone, department = department, password = app.config['ADMIN_PASSWORD'])
 	db.session.add(user)
 	db.session.commit()
 	return user
 
+### @export "update_user"
 def update_user(user, alias = None, phone = None, department = None):
 	if alias:
 		user.alias = alias
@@ -199,6 +209,7 @@ def update_user(user, alias = None, phone = None, department = None):
 	db.session.commit()
 	return user
 
+### @export "create_owner"
 def create_owner(request_id, reason, email = None, user_id = None):
 	""" Adds a staff member to the request without assigning them as current owner. (i.e. "participant")
 	Useful for multidepartmental requests."""
@@ -209,6 +220,7 @@ def create_owner(request_id, reason, email = None, user_id = None):
 	db.session.commit()
 	return participant.id
 
+### @export "change_request_status"
 def change_request_status(request_id, status):
 	req = get_obj("Request", request_id)
 	req.status = status
@@ -216,18 +228,21 @@ def change_request_status(request_id, status):
 	db.session.add(req)
 	db.session.commit()
 
+### @export "find_request"
 def find_request(text):
 	req = Request.query.filter_by(text = text).first()
 	if req:
 		return req.id
 	return None
 
+### @export "find_owner"
 def find_owner(request_id, user_id):
 	owner = Owner.query.filter_by(request_id = request_id, user_id = user_id).first() 
 	if owner:
 		return owner.id
 	return None
 
+### @export "add_staff_participant"
 def add_staff_participant(request_id, email = None, user_id = None, reason = None):
 	""" Creates an owner for the request if it doesn't exist, and returns the owner ID and True if a new one was created. Returns the owner ID and False if existing."""
 	if not user_id:
@@ -240,6 +255,7 @@ def add_staff_participant(request_id, email = None, user_id = None, reason = Non
 		return participant.id, True
 	return participant.id, False
 
+### @export "authenticate_login"
 def authenticate_login(email, password):
 	if email:
 		user = create_or_return_user(email=email, not_id = True)
@@ -252,6 +268,7 @@ def authenticate_login(email, password):
 			return user
 	return None
 
+### @export "set_random_password"
 def set_random_password(email):
 	user = User.query.filter(func.lower(User.email) == func.lower(email)).first() 
 	if not user:
@@ -262,6 +279,7 @@ def set_random_password(email):
 	db.session.commit()
 	return password
 
+### @export "set_password"
 def set_password(user, password):
 	try:
 		user.set_password(password)
