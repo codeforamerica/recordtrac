@@ -20,11 +20,14 @@
      div.participantRow-participants, div.participantRow-poc, div.participantRow-history {
           padding-left: 5px;
           padding-right: 5px;
+     }    
+     i.icon-arrow-right, i.icon-plus {
+          padding-right: 3px;
+          } 
+     i.icon-user {
+          padding-right: 3px;
      }
-     /*i.icon-arrow-right {
-          color: #17B292;
-     }
-     i.icon-arrow-right:hover {
+     /*i.icon-arrow-right:hover {
           color: #888;
      }
      h4.partcipantRow-title {
