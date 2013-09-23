@@ -153,13 +153,20 @@
 
           </div>
           {% block follow %}
+
+
+      <form name="folow" id="follow" method="post" action="/public_add_a_subscriber">
+        <input type="hidden" name="request_id" value= "{{req.id}}"/>
+        <fieldset>
           <div class="row-fluid follow">
             <div class="input-append">
-              <input id="followRequest" class="span6" placeholder="yourname@email.com" type="text">
+              <input id="followRequest"  name = "follow_email" class="span6" placeholder="yourname@email.com" type="email">
               <button id="followRequest-button" class="btn" type="submit">Follow</button>
             </div>
-            <div id="whatisfollow"><span id="recordTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="Enter your email here and we will send you  updates for this request." ><small><i class="icon-question icon-large"></i></i></small></span></div>
+            <div id="whatisfollow"><span id="recordTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="Enter your email here and we will send you updates for this request." ><small><i class="icon-question icon-large"></i></i></small></span></div>
           </div>
+        </fieldset>
+      </form>
           {% endblock follow %}
         </div>
       {% endblock sidebar %}

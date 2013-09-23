@@ -125,10 +125,15 @@ def add_a_resource(resource):
 	return render_template('error.html', message = "You can only update requests from a request page!")
 
 def public_add_a_resource(resource):
-	if request.method == 'POST' and "note" in resource:
-		resource_id = add_resource(resource = resource, request_body = request, current_user_id = None)
-		if type(resource_id) == int:
-			return redirect(url_for('show_request_for_x', audience='public', request_id = request.form['request_id']))
+	if request.method == 'POST':
+		if 'note' in resource or 'subscriber' in resource: 
+			resource_id = add_resource(resource = resource, request_body = request, current_user_id = None)
+			if type(resource_id) == int:
+				request_id = request.form['request_id']
+				audience = 'public'
+				if 'subscriber' in resource:
+					audience = 'follower'
+				return redirect(url_for('show_request_for_x', audience=audience, request_id = request_id))
 	return render_template('error.html')
 
 def update_a_resource(resource):

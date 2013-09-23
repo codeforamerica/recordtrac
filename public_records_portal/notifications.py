@@ -57,7 +57,7 @@ def send_prr_email(page, recipients, subject, template, include_unsubscribe_link
 	if recipients:
 		if send_emails:
 			try:
-				send_email(body = render_template(template, page = page, password = password), recipients = recipients, subject = subject, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = cc_everyone)
+				send_email(body = render_template(template, logo_url = "%sstatic/images/CityTree_logo_green.jpg" %(app.config['APPLICATION_URL'] ), page = page, password = password), recipients = recipients, subject = subject, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = cc_everyone)
 			except:
 				print "E-mail was not sent."
 		else:

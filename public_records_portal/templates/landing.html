@@ -19,7 +19,9 @@
 		<div class="row-fluid">
 			<div class="span4">
 				<p class="text-center text-title">EXPLORE</p>
-				<p class="text-center text-bodyr">View <span id="request-count" class="badge badge-info">{{ all_record_requests | count }}</span> past requests and counting.</p>
+				<p class="text-center text-bodyr">View <span id="request-count" class="badge badge-info">
+					{% set all_record_requests = "Request" | get_objs %}
+					{{ all_record_requests | count }}</span> past requests and counting.</p>
 			</div>
 			<div class="span4">
 				<p class="text-center text-title">REQUEST</p>
