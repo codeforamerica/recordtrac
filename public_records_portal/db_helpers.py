@@ -235,14 +235,14 @@ def find_request(text):
 		return req.id
 	return None
 
-## @export "find_owner"
+### @export "find_owner"
 def find_owner(request_id, user_id):
 	owner = Owner.query.filter_by(request_id = request_id, user_id = user_id).first() 
 	if owner:
 		return owner.id
 	return None
 
-## @export "add_staff_participant"
+### @export "add_staff_participant"
 def add_staff_participant(request_id, email = None, user_id = None, reason = None):
 	""" Creates an owner for the request if it doesn't exist, and returns the owner ID and True if a new one was created. Returns the owner ID and False if existing."""
 	if not user_id:
@@ -255,7 +255,7 @@ def add_staff_participant(request_id, email = None, user_id = None, reason = Non
 		return participant.id, True
 	return participant.id, False
 
-## @export "authenticate_login"
+### @export "authenticate_login"
 def authenticate_login(email, password):
 	if email:
 		user = create_or_return_user(email=email, not_id = True)
@@ -268,7 +268,7 @@ def authenticate_login(email, password):
 			return user
 	return None
 
-## @export "set_random_password"
+### @export "set_random_password"
 def set_random_password(email):
 	user = User.query.filter(func.lower(User.email) == func.lower(email)).first() 
 	if not user:
@@ -279,7 +279,7 @@ def set_random_password(email):
 	db.session.commit()
 	return password
 
-## @export "set_password"
+### @export "set_password"
 def set_password(user, password):
 	try:
 		user.set_password(password)
