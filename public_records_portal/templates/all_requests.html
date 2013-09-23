@@ -2,14 +2,22 @@
 
 {% extends "base.html" %}
 {% block title %}{{title}}{% endblock title %}
+{% block custom_css_links %}
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/all_requests.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery.dataTables.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
 
+{% endblock custom_css_links %}
 {% block container %}
   <div class="row-fluid">
 
     <div class="span8 offset1">
       <div class="row-fluid">
         <h3>Explore <span class="badge badge-info">{{ all_record_requests | count }}</span> requests and counting</h3>
-        <p class="intro_text">Explore all requests past and present.  Search past requests for the information you are looking for.  It might already be here and you don't even have to wait for it!</p>
+        <a href="/new" class="btn btn-primary pull-right">Request new record</a>
+      </div>
+      <div class="row-fluid">
+        <p class="intro_text">We make every public records request available to the public, including messages or documents uploaded by city staff. Search through current and past requests. You may find what you need!</p>
       </div>
       <div>
         {% block datatable %}
@@ -36,7 +44,7 @@
                 {% set status = request | get_status %}
                 {% block status_view %}{{ status }}{% endblock status_view %}
                 {% set status_icon = status | get_status_icon %}
-                  <td class="status {{status}}">{{status}}<small><i class="{{status_icon}}"></i></small></td>
+                  <td class="status {{status}}"><small><i class="{{status_icon}}"></i></small>{{status}}</td>
                   <td>{{ request.id }}</td>
                   <td>{{ request.date_created | date }}</td>
                   <td><div>{{ request.text }}</div></td>
@@ -56,33 +64,29 @@
       </div>
     </div>
 
-    <div class="span3">
-      <div class="r_sidebar">
-        <a href="/new" class="btn btn-block btn-primary ">Request new record</a>
-      </div>
-<!--       {% block sidebar %}
+<!--     <div class="span3">
+      {% block sidebar %}
         <div class="well r_sidebar r_sidebar-fixed hidden-phone hidden-tablet">
           <h4>View</h4>
-          <label class="checkbox">
-            <input type="checkbox" value="" checked>
-            Open requests only
-          </label>
-          <select class="input-block-level">
+            <a href = '/requests?status=open'>Open requests only</a></br>
+            <a href = '/requests?department=police'> OPD</a> -->
+<!--           <select class="input-block-level">
             <option value="">All departments</option>
             <option value="">Dept 1</option>
             <option value="">Dept 2</option>
             <option value="">Dept 3</option>
             <option value="">Dept 4</option>
             <option value="">Dept 5</option>
-          </select>
-        </div>
-      {% endblock sidebar %} -->
-    </div>
+          </select> -->
+<!--         </div>
+      {% endblock sidebar %}
+    </div> -->
 
   </div>
 {% endblock container%}
 
 {% block custom_script_links %}
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.dataTables.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/custom.jquery.ellipsis.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/DT_bootstrap.js') }}"></script>
 {% endblock custom_script_links %}

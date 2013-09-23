@@ -8,7 +8,7 @@ from db_helpers import *
 	:synopsis: Public records functionality as related to a municipality's different departments.
 .. modlueauthor:: Richa Agarwal <richa@codeforamerica.org>
 """
-
+### @export "create_doctypes"
 # Creates a file called doctypes.json from departments.json that is used by typeahead to map document types to the department which can fulfill it
 ### @export "create_doctypes"
 def create_doctypes():
@@ -64,7 +64,7 @@ def get_dept(user):
 			return line
 	return None
 
-### @export "populate_departments"
+### @export "populate_users_with_departments"
 def populate_users_with_departments():
 	users = get_objs("User")
 	for u in users:

@@ -15,23 +15,23 @@
     <div class="target-for" data-target-for="1">
 
       <form name="ask_question" class="form-horizontal" id="question" method="post" action="/add_a_qa" autocomplete="on">
+        <input type="hidden" name="request_id" value="{{ req.id }}"/>
           <fieldset>
             <div class="row-fluid">
-                <h4>Ask a question about this request</h4>
-              <div>
 
-                <div class="control-group">
-                  <label class="control-label">Question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
-                  <div class="row-fluid">
-                    <div class="controls">
-                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                        <input id="questionTextarea" type="text" name="question_text" rows="3" cols="20" placeholder="Ask the requester a question" required/>
-                      <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
-                    </div>
-                  </div>
+              <div class="control-group button-margin">
+                <label class="control-label">Question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+                <div class="controls">
+                  <textarea id="questionTextarea"  name="question_text" rows="2" class="input-xlarge" placeholder="Ask the requester a question" required/></textarea>
                 </div>
-
               </div>
+
+              <div class="control-group button-margin">
+                <div class="controls">
+                  <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
+                </div>
+              </div>
+
             </div>
           </fieldset>
         </form>

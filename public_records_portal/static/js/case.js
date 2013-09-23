@@ -37,11 +37,11 @@
     if ($(this).hasClass('show')) {
       $this.toggleClass('show');
       $responses.show(200);
-      $this.html('See less..')
+      $this.html('<i class="icon-chevron-up"></i> See less <i class="icon-chevron-up"></i>')
     } else {
       $this.toggleClass('show');
       hideExcept([0], $responses);
-      $this.html('See all..')
+      $this.html('<i class="icon-chevron-down"></i> See all <i class="icon-chevron-down"></i>')
     }
   });
 

@@ -4,20 +4,40 @@
 {% block title %}Request{% endblock title %}
 
 {% block container %}
+
+<!-- social media section -->
+<!--   <div id="floating_media" class="text-center"> -->
+
+    <!-- share on twitter -->
+<!--     <a href="#" onclick="window.open('http://twitter.com/intent/tweet?text={{ req.text | new_lines }}&amp;via=criscristina&amp;url=http://records.oaklandnet.com/{{req.id}}','','width=550,height=350,scrollbars=no');return false;"><div class="tool twitter"></div><span class="action hideText"><i class="icon-twitter icon-large"> </i></span></a> -->
+
+    <!-- share on facebook -->
+<!--     <a href="#" 
+      onclick="
+        window.open(
+          'https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Frecords.oaklandnet.com%2F{{req.id}}', 
+          'facebook-share-dialog', 
+          'width=626,height=436'); 
+        return false;">
+      <i class="icon-facebook icon-large"> </i>
+    </a>
+  </div> -->
+
+<!-- main content -->
   <div class="row-fluid">
-    <div class="span9">
+    <div class="span8">
       {% block banner %}{{super()}}{% endblock banner %}
     </div>
   </div>
   <div class="row-fluid">
-    <div class="span8 offset1">
+    <div class="span7 offset1">
       {% block well %}
         <div class="well">
           {% block request %}
           <div id = "request-container">
             <!-- request area -->
             <div class="row-fluid">
-              <h3 >Request <span class="muted">#{{req.id}}</span>{% block clarify_request %}{% endblock clarify_request %}</h3>
+              <h3 class="control-widget">Request <span class="muted">#{{req.id}}</span></h3>{% block clarify_request %}{% endblock clarify_request %}{% block public_note %}{% endblock public_note %}
                
               <p class="lead" truncateable="250"> {{ req.text | new_lines }} </p>
             </div>
@@ -29,9 +49,6 @@
                   {% endif %}
                 </small>
               {% endblock proxyrequester_info %}
-            </div>
-            <div class="row-fluid">
-              {% block public_note %}{% endblock public_note %}
             </div>
             <div>
             <!-- shows any existing Q&A or public notes -->
@@ -48,10 +65,7 @@
                      {{ response.display_text() | safe }}
                    </p>
                   </div>
-                  <div class="span2 text-right">
-                    <div class="row-fluid">
-                      <p>Requester</p>
-                    </div>
+                  <div class="span2 text-right request-date">
                     <div class = "timestampPopoverContainer">
                       <div class="row-fluid">
                         <span class="timestampPopover" onmouseover="">{{ response.date() | date_granular }}</span>
@@ -65,7 +79,7 @@
               {% endfor %}
                 {% if request_data | length > 1 %}
                   <!-- SHOW/HIDE button; js is in case.js -->
-                  <div class="case-show-all show">See all..</div>
+                  <div class="case-show-all show"><i class="icon-chevron-down"></i> See all <i class="icon-chevron-down"></i></div>
                 {% endif %}
               </div>
           </div>
@@ -76,7 +90,7 @@
 
       {% block responses_container %}
         <div id="responses-container" class="row-fluid">
-          <h3>Response</h3>
+          <h3 class="control-widget">Response</h3>
           {% block response_actions %}{% endblock response_actions %}
           <!-- shows all existing responses (links, documents, offline docs, notes) -->
           {% set responses = ( req | get_responses_chronologically ) %}
@@ -90,14 +104,14 @@
                   <i class="{{icon}}"></i>
                 </div>
                 <div class="span9">
-                  <p truncateable="175">
-                   {{ response.display_text() | safe }}
+                  <p class="expandable" truncateable="200">
+                   {{ response.display_text() | safe }} - <a href="/staff_card/{{uid}}" data-placement="right" data-toggle="popover" id="contactinfoPopoverResponse{{loop.index}}"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias or staff.email }}</span></a>
                  </p>
                 </div>
-                <div class="span2 text-right">
-                  <div class="row-fluid">
+                <div class="span2 text-right response-date">
+                  <!-- <div class="row-fluid">
                     <a href="/staff_card/{{uid}}" data-placement="right" data-toggle="popover" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias or staff.email }}</span></a>
-                  </div>
+                  </div> -->
                   <div class = "timestampPopoverContainer">
                     <div class="row-fluid">
                      <span class="timestampPopover" onmouseover="">{{ response.date() | date_granular }}</span>
@@ -111,7 +125,7 @@
             {% endfor %}
           {% else %}<!--added an if then to check to see if any responses exist - if no then show text here for the "if any response exists" above -->
             <div class="row-fluid">
-              <p>There are no records uploaded just yet.  Stay tuned!</p>
+              <p id="no-records"><br><i>No records uploaded yet.</i></p>
             </div>
           {% endif %}
         </div>
@@ -121,26 +135,39 @@
     <div class="span3">
       {% block sidebar %}
 
-        {% block status %}
+        {% block status %}{% endblock status %}
 
-        {% endblock status %}
-
-
-
-        <div class="well well-small b_sidebar r_sidebar-fixed hidden-phone hidden-tablet">
-          <div class="row-fluid">
-              <h4>Point of Contact</h4>
+        <div class="b_sidebar r_sidebar-fixed ">
+          <div class="row-fluid participantRow">
+              <h4 class="case_participantRow">Point of Contact</h4>
               {% include '_contact_popover.html' %}
           </div>
-          <div class="row-fluid">
-              <h4>Helpers</h4>
+          <div class="row-fluid participantRow">
+              <h4 class="case_participantRow">Helpers</h4>
               {% include '_staff_participants.html' %}
           </div>
           <div class="row-fluid">
-            <div>
+            <div class="participantRow-history">
               {% include '_history.html' %}
             </div>
+
           </div>
+          {% block follow %}
+
+
+      <form name="folow" id="follow" method="post" action="/public_add_a_subscriber">
+        <input type="hidden" name="request_id" value= "{{req.id}}"/>
+        <fieldset>
+          <div class="row-fluid follow">
+            <div class="input-append">
+              <input id="followRequest"  name = "follow_email" class="span6" placeholder="yourname@email.com" type="email">
+              <button id="followRequest-button" class="btn" type="submit">Follow</button>
+            </div>
+            <div id="whatisfollow"><span id="recordTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="Enter your email here and we will send you updates for this request." ><small><i class="icon-question icon-large"></i></i></small></span></div>
+          </div>
+        </fieldset>
+      </form>
+          {% endblock follow %}
         </div>
       {% endblock sidebar %}
 
@@ -151,15 +178,18 @@
 
   </div>
 
+
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/social_media.css') }}">
+
+
 {% endblock container %}
-
-
 
 
 {% block custom_script_links %}
 
   <!-- Listed in case instead of manage_request_city for truncation!!! -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/manage_request_city.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/case.js') }}"></script>
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/manage_request_city.css') }}">
 
   <!-- For response_widget partial -->
@@ -171,4 +201,12 @@
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bottom_sidebar.css') }}">
 
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
+
+  <!-- Text truncation -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.10.1.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.expander.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/custom.jquery.expander.js') }}"></script>
+
 {% endblock custom_script_links %}
+
+

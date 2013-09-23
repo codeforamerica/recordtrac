@@ -11,26 +11,18 @@
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    {% block custom_css_links %}
+
+    {% endblock custom_css_links %}
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap.min.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-responsive.min.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/BootSwatchr2.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/BootSwatchr6.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/font-awesome.min.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-fileupload.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/custom.css') }}">
-
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery.dataTables.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/feedback.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/DT_bootstrap.css') }}">
     
-
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/select2.css') }}">
-
-    <!-- used for the tutorial -->
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstro.css') }}">
-
-    <!-- used for the extension and close request multi-select boxes in city view -->
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.min.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/custom.dataTables.css') }}">
-
+<!--     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/select2.css') }}"> -->
 
   <!-- modernizr -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/modernizr-latest.js') }}"></script>
@@ -62,13 +54,13 @@
               <span class="icon-bar"></span>
             </a>
             <!-- Be sure to leave the brand out there if you want it shown -->
-            <a class="brand" href="/landing">Public Records Request Portal<small class="text-warning"><em> alpha</em></small></a>
+            <a class="brand" href="/landing"><img src="{{ url_for('static', filename='images/CityTree_logo_white_treeonly.png') }}" alt="City of Oakland tree"/> <strong>Oakland Public Records</strong><small id="beta" class="text-warning"><em> beta</em></small></a>
             <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
-              <ul class="nav">
+              <ul class="nav tabs">
                 {% if user_id %}
                 <li><a href="/your_requests">Your requests</a></li>
                 <li><a href="/requests">All requests</a></li>
-                <li class="bootstro" data-bootstro-title="Back to Tutorial" data-bootstro-content="{{"Back to Tutorial" | tutorial }}" data-bootstro-step="10" data-bootstro-placement="bottom" data-bootstro-width="75%"><a href="/tutorial">Tutorial</a></li>
+<!--                 <li><a href="/admin">Admin</a></li> -->
                 <li><a href="/about">About</a></li>
                 {% else %}
                 <li><a href="/new">Make a request</a></li>
@@ -80,14 +72,14 @@
             <!-- Login area -->
             {% if user_id %}
     
-            <ul  class="nav pull-right">
+            <ul class="nav pull-right">
               <li>
                 <p class="navbar-text"> {{ "alias" | get_attribute(user_id, "User") }} </p>
               </li>
             
               <li>
                 <form class="navbar-form" id="logoutForm" action="/logout">
-                  <input id="logout_form" type="submit" value="Logout" class="btn"/>
+                  <input id="logout_form" type="submit" value="(logout)" class="btn btn-link"/>
                 </form>
               </li>
             </ul>
@@ -113,7 +105,7 @@
               {% block banner %}
                 <!-- beta banner -->
                 <div class="alert alert-block">
-                  <div class="span1 text-right"><i class="icon-warning-sign icon-2x"> </i></div>
+                  <div class="span1 text-right"><i class="icon-warning-sign icon-large"> </i></div>
                   <div class="offset1">
                     <p> <strong>This website is being tested. </strong> Some features may not work.  Please send us <a href="#feedbackModal" data-toggle="modal">feedback</a>.  We are constantly improving this site.</p>  
                   </div>
@@ -150,40 +142,17 @@
       </div>
     {% endblock feedback %}
 
-
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.10.1.min.js') }}"></script>    
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.10.1.min.js') }}"></script> 
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.validate.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/custom.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-fileupload.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.dataTables.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/custom.dataTables.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/DT_bootstrap.js') }}"></script>
-
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.ellipsis.js') }}"></script>
-
-    <!-- used for the tutorial -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstro.js') }}"></script>
-
-    <!-- used for the extension and close request multi-select boxes in city view -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-select.min.js') }}"></script>
-
-    <!-- Facebook SDK -->
-    <div id="fb-root"></div>
-      <script>(function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));</script>
 
 
     {% block custom_script_links %}
       
     {% endblock custom_script_links %}
 
-    
-
+  
   </body>
 </html>

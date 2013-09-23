@@ -1,58 +1,108 @@
-.response.qa, .response.note {
-  padding: 7px 5px;
-  background-color: #fff;
-  margin-bottom: 7px;
-  border-radius: 3px;
-  box-shadow: inset 0px 0px 5px #ccc;
-}
+/* custom css for manage_request_city.html and child templates */
 
-.qa .qa-question {
-  padding: 2px;
-  background-color: rgba(176, 233, 255, 0.61);
-}
+/* _ask_question.html */
+     #control-question {
+          margin-bottom: 0.5em;
+     }
 
-.qa .qa-answer {
-  padding: 2px;
-}
+/* PoC and Helper area */
+     h4.participantRow-title {
+          color: #17B292;
+          border-radius: 10px;
+          padding: 5px;
+          margin-bottom: 0px;
+     }
+     h4.participantRow-title:hover {
+          background-color: rgba(23,178,146, .3);
+          color: #555;
+          /*color: #1CDBB4;*/
+     }
+     div.participantRow-participants, div.participantRow-poc, div.participantRow-history {
+          padding-left: 5px;
+          padding-right: 5px;
+     }    
+     i.icon-arrow-right, i.icon-plus {
+          padding-right: 3px;
+          } 
+     i.icon-user {
+          padding-right: 3px;
+     }
+     /*i.icon-arrow-right:hover {
+          color: #888;
+     }
+     h4.partcipantRow-title {
+          display: inline;
+     }*/
+     /*h4.partcipantRow-title:hover {
+          color: #00bb94;
+          background-color: rgba(23,178,146, .3);
+     }*/
+     #reroutePopover:hover, #notifyPopover:hover{
+          text-decoration: none;
+     }
+     /*div.participantRow-helpers {
+          margin-top: 0.5em;
+     }
+     div.participantRow-history {
+          margin-top: 0.5em;
+          margin-bottom: 1em;
+     }*/
+
+
+
+/* Top Reponses (request area) */
+     .response.qa, .response.note {
+       padding: 7px 5px;
+       background-color: #fff;
+       margin-bottom: 7px;
+       border-radius: 3px;
+       box-shadow: inset 0px 0px 5px #ccc;
+     }
+     .qa .qa-question {
+       padding: 2px;
+       background-color: rgba(176, 233, 255, 0.61);
+     }
+     .qa .qa-answer {
+       padding: 2px;
+     }
 
 /* Bottom Responses*/
-.response-wrapper {
-  border-bottom: 1px solid #ccc;
-  margin-bottom: 10px;
-  padding-top: 10px;
-}
-.response-wrapper:last-child {
-  border-bottom: none;
-}
-.less, .more {
-  color: rgb(82, 127, 223);
-}
-.less:hover, .more:hover {
-  cursor: hand;
-  cursor: pointer;
-}
+     .response-wrapper {
+       border-bottom: 1px solid #ccc;
+       margin-bottom: 10px;
+       padding-top: 10px;
+     }
+     .response-wrapper:last-child {
+       border-bottom: none;
+     }
+     .less, .more {
+       color: #17B292;
+     }
+     .less:hover, .more:hover {
+       cursor: hand;
+       cursor: pointer;
+     }
 
 /* Request status*/
+     .request-status-well {
+       text-align: center;
+       color: #fff;
+       padding: 0;
+     }
 
-.request-status-well {
-  text-align: center;
-  color: #fff;
-  padding: 0;
-}
+     .request-status-well.open {
+       background-color: #2688AD;
+     }
 
-.request-status-well.open {
-  background-color: rgba(0,0,255,0.7);
-}
+     .request-status-well.soon {
+       background-color: #FB991B;
+     }
 
-.request-status-well.soon {
-  background-color: rgba(255, 173, 0, 0.7);
-}
+     .request-status-well.overdue {
+       background-color: #CA1A1A;
+     }
 
-.request-status-well.overdue {
-  background-color: rgba(255,0,0,0.7);
-}
-
-.request-status-well.closed {
-  background-color: rgba(0,0,0,0.7);
-}
+     .request-status-well.closed {
+       background-color: #2a2b2b;
+     }
 

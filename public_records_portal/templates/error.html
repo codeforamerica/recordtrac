@@ -7,7 +7,7 @@
 		{% endblock error_generic %}
 
 		{% block error_specific %}
-			<p><strong>{{ message }}</strong></p>
+			<p><strong>{{ message | safe }}</strong></p>
 		{% endblock error_specific %}
 
 		{% block contact %}

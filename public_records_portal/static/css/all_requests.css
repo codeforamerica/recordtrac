@@ -1,7 +1,11 @@
-/* custom.datatables.css */
+/* custom css for all_requests.html and child templates */
+
+td.status {
+	color: white;
+}
 
 #allrequestTable tbody tr:hover, #allrequestTable tbody tr.highlighted {
-	background-color: #ECFFB3;
+	background-color: rgba(23,178,146, .3);
 	cursor: pointer;
 }
 
@@ -21,21 +25,26 @@ table.dataTable tbody td.status {
 }
 
 table.dataTable tbody td.closed {
-	background-color: rgba(0,0,0,0.6);
+	background-color: #2a2b2b;
 }
 
 table.dataTable tbody td.open {
-	background-color: rgba(0,0,255,0.6);
+	background-color: #2688AD;
 }
 
 table.dataTable tbody td.soon {
-	background-color: rgba(255, 173, 0, 0.6);
+	background-color: #FB991B;
 }
 
 table.dataTable tbody td.overdue {
-	background-color: rgba(255,0,0,0.6);
+	background-color: #CA1A1A;
 }
 
 .intro_text {
 	margin-bottom: 2%;
+}
+
+/* allows the "Request new record" button appear inline with Explore header */
+h3 {
+	display: inline;
 }
