@@ -41,6 +41,8 @@ def add_resource(resource, request_body, current_user_id = None):
 		if new:
 			generate_prr_emails(request_id = fields['request_id'], notification_type = "Staff participant added", user_id = get_attribute("user_id", obj_id = participant_id, obj_type = "Owner"))
 		return participant_id
+	elif "subscriber" in resource:
+		return add_subscriber(request_id=fields['request_id'], email = fields['follow_email'])
 	else:
 		return False
 
@@ -161,6 +163,8 @@ def add_subscriber(request_id, email):
 	subscriber_id = create_subscriber(request_id = request_id, user_id = user_id)
 	if subscriber_id:
 		generate_prr_emails(request_id, notification_type = "Request followed", user_id = user_id)
+		return subscriber_id
+	return False
 
 ### @export "ask_a_question"	
 def ask_a_question(request_id, owner_id, question):
