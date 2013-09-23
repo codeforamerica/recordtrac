@@ -1,0 +1,92 @@
+<html>
+    <head>
+
+        <style type="text/css">
+            {{ pygments['pastie.css'] }}
+        </style>
+    </head>
+    <body>
+<h2>All Request Table</h2>
+
+<p>The funcationality of the database can be found in the "db_helpers.py" file.</p>
+
+<p> This searches the database for an object via its class/type (defined in the "models.py" file) and ID and returns the object.<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['get_obj'] }}</p>
+
+<p>This searches the database for all objects of a certain class/type (defined in the "models.py" file) and returns a queryset.<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['get_objs'] }}</p>
+
+<p>Retrieves a request associated with a particular owner:<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['get_request_by_owner'] }}</p>
+
+<p>A user can be associated with multiple owners. Gets owner by their user ID:<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['get_owners_by_user_id'] }}</p>
+
+<p>Retrieves requests based on filters provided:<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['get_requests_by_filters'] }}</p>
+
+<p>Retrieves requests based on filters provided:<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['get_requests_by_filters'] }}</p>
+
+<p>Adds a particular object to the database:<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['get_requests_by_filters'] }}</p>
+
+<p>Adds a particular object to the database:<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['get_requests_by_filters'] }}</p>
+ 
+<p>Gets an object by its ID and type to return the specified attribute for that object, if the object is not provided.<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['get_attribute'] }}</p>
+
+<p>Creates a question object and return its ID.<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['create_QA'] }}</p>
+
+<p>Creates an object for a request and returns its ID.<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['create_request'] }}</p>
+
+ <p>Creates an object for the subscriber and returns its ID.<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['create_subscriber'] }}</p>
+
+ <p>Creates an object for a note and returns its ID.<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['create_note'] }}</p>
+
+ <p>Creates an object for an uploaded record and returns its ID.<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['create_record'] }}</p>
+
+<p>Creates an object for the public's response to a particular question and returns its ID.<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['create_answer'] }}</p>
+
+<p>Creates an object for a user and retruns its ID.<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['create_or_return_user'] }}</p>
+
+<p>Creates an object for a user and retruns its ID.<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['create_user'] }}</p>
+
+<p>Update a city employee's phone number, department, and password.<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['update_user'] }}</p>
+
+<p>This important for multi-departmental requests. It adds a city employee to a request as a "helper," but does not change the point of contact for a request.<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['update_user'] }}</p>
+
+<p>This changes the status of a particular request. City employees see three different statuses: open, overdue, and closed. The only statuses members of the public see are open and closed. <br>
+{{ d['/public_records_portal/db_helpers.py|idio']['change_request_status'] }}</p>
+
+<p>Allows users to search through requests by entering a word or phrase.<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['find_request'] }}</p>
+
+<p>Allows users to search through requests by owner, or city employee who is responsible for fulfilling a particular request.<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['find_owner'] }}</p>
+
+<p> Creates an owner for the request if it doesn't exist. The owner ID is returned as True if a new one is created, and false if it already exists.<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['add_staff_participant'] }}</p>
+
+<p>City employees are required to enter a username and password to upload records and send messages to requesters. The username is currently a city employee's official email address.<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['authenticate_login'] }}</p>
+
+<p>If users forget their password, a new random password is assigned to them so they are able to log into the system. This funcationality is limited to existing users. Currently users of the system are limited to offical city of Oakland employees. <br>
+{{ d['/public_records_portal/db_helpers.py|idio']['set_random_password'] }}</p>
+
+<p>Allows city employees to change their passwords:<br>
+{{ d['/public_records_portal/db_helpers.py|idio']['set_password'] }}</p>
+
+    </body>
+</html>

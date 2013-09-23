@@ -8,7 +8,7 @@ from db_helpers import *
 	:synopsis: Public records functionality as related to a municipality's different departments.
 .. modlueauthor:: Richa Agarwal <richa@codeforamerica.org>
 """
-
+### @export "create_doctypes"
 # Creates a file called doctypes.json from departments.json that is used by typeahead to map document types to the department which can fulfill it
 def create_doctypes():
 	depts = []
@@ -27,6 +27,7 @@ def create_doctypes():
 	with open(os.path.join(app.root_path, 'static/json/doctypes.json'), 'w') as outfile:
   		json.dump(depts, outfile)
 
+### @export "create_list_depts"
 def create_list_depts():
 	depts = []
 	depts_json = open(os.path.join(app.root_path, 'static/json/departments.json'))
@@ -36,6 +37,7 @@ def create_list_depts():
   	with open(os.path.join(app.root_path, 'static/json/list_of_departments.json'), 'w') as outfile:
   		json.dump(depts, outfile)
 
+### @export "get_prr_liaison"
 def get_prr_liaison(dept):
 	depts_json = open(os.path.join(app.root_path, 'static/json/departments.json'))
 	json_data = json.load(depts_json)
@@ -43,6 +45,7 @@ def get_prr_liaison(dept):
 		return json_data[dept]["Contact"]
 	return None
 
+### @export "get_dept_backup"
 def get_dept_backup(dept_contact):
 	depts_json = open(os.path.join(app.root_path, 'static/json/departments.json'))
 	json_data = json.load(depts_json)
@@ -51,6 +54,7 @@ def get_dept_backup(dept_contact):
 			return json_data[line]["Backup"]
 	return None
 
+### @export "get_dept"
 def get_dept(user):
 	depts_json = open(os.path.join(app.root_path, 'static/json/departments.json'))
 	json_data = json.load(depts_json)
@@ -59,7 +63,7 @@ def get_dept(user):
 			return line
 	return None
 
-### @export "populate_departments"
+### @export "populate_users_with_departments"
 def populate_users_with_departments():
 	users = get_objs("User")
 	for u in users:
