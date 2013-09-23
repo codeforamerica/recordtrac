@@ -1,6 +1,8 @@
 from public_records_portal import app, models, db, template_renderers
 from template_renderers import * # Import all the functions that render templates
 from flask.ext.restless import APIManager
+from flask.ext.admin import Admin
+from flask.ext.admin.contrib.sqlamodel import ModelView
 
 # Create API
 manager = APIManager(app, flask_sqlalchemy_db=db)
@@ -11,6 +13,25 @@ manager.create_api(models.Note, methods=['GET'], results_per_page = None)
 manager.create_api(models.Record, methods=['GET'], results_per_page = None)
 manager.create_api(models.QA, methods=['GET'], results_per_page =None)
 manager.create_api(models.Subscriber, methods=['GET'], results_per_page = None)
+
+# Create Admin
+admin = Admin(app, name='Oakland Public Records Admin', url='/admin')
+
+class AdminView(ModelView):
+    def is_accessible(self):
+    	if current_user.is_authenticated():
+    		if 'codeforamerica.org' in current_user.email:
+    			return True
+        return False
+
+class RequestView(AdminView):
+	column_searchable_list = ('status', 'text')
+
+
+admin.add_view(RequestView(Request, db.session))
+admin.add_view(AdminView(Record, db.session))
+admin.add_view(AdminView(Note, db.session))
+
 
 # Routing dictionary.
 routing = {
@@ -48,7 +69,8 @@ routing = {
 		'url': '/<page>'
 	},
 	'requests':{
-		'url': '/requests'
+		'url': '/requests',
+		'methods': ['GET']
 	},
 	'update_password':{
 		'url': '/update_password',
@@ -81,6 +103,10 @@ routing = {
 	},
 	'is_public_record':{
 		'url': '/is_public_record',
+		'methods': ['POST']
+	},
+	'reset_password':{
+		'url': '/reset_password',
 		'methods': ['POST']
 	}
 }

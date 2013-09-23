@@ -10,6 +10,7 @@ from db_helpers import *
 import departments
 import os, json
 from urlparse import urlparse, urljoin
+from notifications import send_prr_email
 
 # Initialize login
 login_manager = LoginManager()
@@ -124,10 +125,15 @@ def add_a_resource(resource):
 	return render_template('error.html', message = "You can only update requests from a request page!")
 
 def public_add_a_resource(resource):
-	if request.method == 'POST' and "note" in resource:
-		resource_id = add_resource(resource = resource, request_body = request, current_user_id = None)
-		if type(resource_id) == int:
-			return redirect(url_for('show_request_for_x', audience='public', request_id = request.form['request_id']))
+	if request.method == 'POST':
+		if 'note' in resource or 'subscriber' in resource: 
+			resource_id = add_resource(resource = resource, request_body = request, current_user_id = None)
+			if type(resource_id) == int:
+				request_id = request.form['request_id']
+				audience = 'public'
+				if 'subscriber' in resource:
+					audience = 'follower'
+				return redirect(url_for('show_request_for_x', audience=audience, request_id = request_id))
 	return render_template('error.html')
 
 def update_a_resource(resource):
@@ -152,9 +158,8 @@ def close(request_id = None):
 # Shows all public records requests that have been made.
 def requests():
 	# Return first 100, ? limit = 100
-	# departments = request.get.args('department')
+	all_record_requests = get_requests_by_filters(request.args)
 	user_id = get_user_id()
-	all_record_requests = get_objs("Request")
 	if all_record_requests:
 		if user_id:
 			return render_template('all_requests_city.html', all_record_requests = all_record_requests, user_id = user_id, title = "All Requests")
@@ -199,20 +204,28 @@ def login(email=None, password=None):
 				return redirect(url_for('index'))
 			else:
 				return redirect(get_redirect_target())
-	return render_template('error.html', message = "The e-mail/ password combo didn't work.")
+	return render_template('error.html', message = "Your e-mail/ password combo didn't work. You can always <a href='/reset_password'>reset your password</a>.")
+
+def reset_password(email=None):
+	if request.method == 'POST':
+		email = request.form['email']
+		password = set_random_password(email)
+		if password:
+			send_prr_email(page = app.config['APPLICATION_URL'], recipients = [email], subject = "Your temporary password", template = "password_email.html", include_unsubscribe_link = False, password = password)
+			message = "Thanks! You should receive an e-mail shortly with instructions on how to login and update your password."
+		else:
+			message = "Looks like you're not a user already. Currently, this system requires logins only for city employees. "
+	return render_template('reset_password.html', message = message)
+
 
 @login_required
 def update_password(password=None):
-	current_user_id = current_user.id
 	if request.method == 'POST':
-		try:
-			password = request.form['password']
-			update_obj("password", password, "User", current_user_id)
+		if set_password(current_user, request.form['password']):
 			return index()
-		except:
-			return render_template('error.html', message = "Something went wrong updating your password.")
+		return render_template('error.html', message = "Something went wrong updating your password.")
 	else:
-		return render_template('update_password.html', user_id = current_user_id)
+		return render_template('update_password.html', user_id = current_user.id)
 
 def staff_card(user_id):
 	return render_template('staff_card.html', uid = user_id)

@@ -22,7 +22,7 @@ from db_helpers import *
 def add_resource(resource, request_body, current_user_id = None):
 	fields = request_body.form
 	if "extension" in resource:
-		return request_extension(int(fields['request_id']), fields.getlist('note_text'), current_user_id)
+		return request_extension(int(fields['request_id']), fields.getlist('extend_reason'), current_user_id)
 	if "note" in resource:
 		return add_note(int(fields['request_id']), fields['note_text'], current_user_id)
 	elif "record" in resource:
@@ -41,6 +41,8 @@ def add_resource(resource, request_body, current_user_id = None):
 		if new:
 			generate_prr_emails(request_id = fields['request_id'], notification_type = "Staff participant added", user_id = get_attribute("user_id", obj_id = participant_id, obj_type = "Owner"))
 		return participant_id
+	elif "subscriber" in resource:
+		return add_subscriber(request_id=fields['request_id'], email = fields['follow_email'])
 	else:
 		return False
 
@@ -149,7 +151,7 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 	new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email) # Assign someone to the request
 	if email: # If the user provided an e-mail address, add them as a subscriber to the request.
 		subscriber_user_id = create_or_return_user(email = email, alias = alias, phone = phone)
-		subscriber_id = create_subscriber(request_id = request_id, user_id = subscriber_user_id)
+		subscriber_id, is_new_subscriber = create_subscriber(request_id = request_id, user_id = subscriber_user_id)
 		if subscriber_id:
 			generate_prr_emails(request_id, notification_type = "Request made", user_id = subscriber_user_id) # Send them an e-mail notification
 	open_request(request_id) # Set the status of the incoming request to "Open"
@@ -158,9 +160,11 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 ### @export "add_subscriber"	
 def add_subscriber(request_id, email):
 	user_id = create_or_return_user(email = email)
-	subscriber_id = create_subscriber(request_id = request_id, user_id = user_id)
+	subscriber_id, is_new_subscriber = create_subscriber(request_id = request_id, user_id = user_id)
 	if subscriber_id:
 		generate_prr_emails(request_id, notification_type = "Request followed", user_id = user_id)
+		return subscriber_id
+	return False
 
 ### @export "ask_a_question"	
 def ask_a_question(request_id, owner_id, question):
@@ -276,4 +280,3 @@ def close_request(request_id, reason = "", user_id = None):
 	create_note(request_id, reason, user_id)
 	generate_prr_emails(request_id = request_id, notification_type = "Request closed")
 	add_staff_participant(request_id = request_id, user_id = user_id)
-

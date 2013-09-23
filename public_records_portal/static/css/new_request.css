@@ -1,3 +1,14 @@
+/* custom css for new_request.html and child templates */
+
+/* tweaking the appearance of the frankenbox for dept dropdown */
+input.combobox.input-block-level {
+	margin-right: -2em;
+}
+
+.department_optional{
+	font-size: 12px;
+}
+
 #not_public_record{
   /*border: 1px solid red;*/
 }
@@ -20,4 +31,29 @@ p.example {
 font-size: 17.5px;
 font-weight: 300;
 line-height: 1.25;
+}
+
+.popover {
+	background-color: #dffbf5;
+}
+
+.popover.top .arrow:after {
+	border-top-color: #dffbf5;
+}
+
+.popover.right .arrow:after {
+	border-right-color: #dffbf5;
+}
+
+.popover.bottom .arrow:after {
+	border-bottom-color: #dffbf5;
+}
+
+.popover.left .arrow:after {
+	border-left-color: #dffbf5;
+}
+
+.r_sidebar {
+	margin-top: 4.25em;
+	/*margin-right: 3em;*/
 }

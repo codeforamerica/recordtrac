@@ -1,20 +1,52 @@
-/*custom.css*/
+/* custom css for base.html and child templates */
 
-.container {
-	margin-left: 0;
-}
 
-.navbar-inner {	
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-}
+/* scoot navbar start to the right */
+	a.brand {
+		margin-left: 5% !important;
+	}
 
-.footer {
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-}
+/* navbar layout tweaks due to insertion of Oakland tree logo */
+	/* tree logo */
+	img[alt="City of Oakland tree"] {
+		margin-top: -5px;
+		margin-right: 5px;
+	}
+	/* tabs */
+	ul.nav.tabs {
+		margin-top: 5px;
+	}
+	/* login/logout area */
+	ul.nav.pull-right {
+		margin-top: 5px;
+	}
+
+/* brand orange beta tag in navbar */
+	#beta {
+		color: #FB991B;
+	}
+
+/* placeholder title green */
+	a.brand {
+		color: #17B292 !important;
+	}
+
+/* some bootstrap stuff to create responsive container */
+	.container {
+		margin-left: 0;
+	}
+
+	.navbar-inner {	
+	  -webkit-border-radius: 0;
+	  -moz-border-radius: 0;
+	  border-radius: 0;
+	}
+
+	.footer {
+	  -webkit-border-radius: 0;
+	  -moz-border-radius: 0;
+	  border-radius: 0;
+	}
 
 #rerouteForm {
 	margin: 0 0 0px;
@@ -22,62 +54,35 @@
 
 
 /* request table # of records left margin adjustment */
-#allrequestTable_length label {
-margin: 0 0 0 1.25em;
-}
+	#allrequestTable_length label {
+	margin: 0 0 0 1.25em;
+	}
 
-#allrequestTable_info {
-margin: 0 0 0 1.75em;
-}
+	#allrequestTable_info {
+	margin: 0 0 0 1.75em;
+	}
 
-/* */
+/* logout button */
+	input.btn-link {
+		text-shadow: none;
+		color: #999;
+		font-size: small;
+	}
 
-i[class|="icon-external-link"] {
-	vertical-align: super;
-	font-size:10px;
-}
+	input.btn-link:hover {
+		color: #17B292;
+		text-decoration: none;
+	}
 
-/* contact info link */
-span[class|="contactinfoPopover"] {color: #666666;}
-span[class|="timestampPopover"] {color: #666666;}
+/* name in navbar */
+	p.navbar-text {
+		color: #eee !important;
+	}
 
-/* info hover link */
-.contactinfoPopover span {color: #3a87ad;}
-.timestampPopover span {color: #3a87ad;}
 
-/* public note section indent */
-#public_note {margin-left: 5%;}
 
-/* feedback form */
-#floating_link {
-     position: fixed;
-     left: -50px;
-     top: 200px;
-     /*display: block;*/
-     width: 100px;
-     height: 50px;
-     background-color: #507192;
-     overflow: hidden;
-     border-radius: 5px;
-     color: white;
-     text-align: center;
-     writing-mode: bt-lr; 
-	-webkit-transform: rotate(270deg);	
-	-moz-transform: rotate(270deg);
-	-ms-transform: rotate(270deg);
-	-o-transform: rotate(270deg);
-	transform: rotate(270deg);
-	line-height : 70px;
-	transition: left 0.25s;
-	-webkit-transition: left 0.2s;
-}
 
-#floating_link:hover {
-	text-decoration:none;
-	left: -45px;
-}
 
-#floating_link i {color:white;}
 
 /* validation style */
 /*label.valid {
@@ -159,9 +164,9 @@ html, body {
 	min-height: 100%;
 	height: auto !important;
 	height: 100%;
-	margin: 0 auto -80px; /* the bottom margin is the negative value of the footer's height */
+	margin: 0 auto -50px; /* the bottom margin is the negative value of the footer's height */
 }
 .footer, .push {
-	height: 80px; /* .push must be the same height as .footer */
+	height: 50px; /* .push must be the same height as .footer */
 }
 
