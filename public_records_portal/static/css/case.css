@@ -4,7 +4,7 @@
 /* follow button area */
      #whatisfollow {
           display: inline;
-          margin-left: 1em;
+          margin-left: 0.25em;
      }
      div.input-append {
           display: inline;
@@ -15,6 +15,9 @@
      i.icon-question.icon-large {
           color: #666;
      }
+     div.row-fluid.follow {
+      margin-top: 1em;
+     }
 
 /* PoC and Helper area */
      h4.case_participantRow {
@@ -24,6 +27,9 @@
      div.participantRow-history {
           margin-top: 0.5em;
           margin-bottom: 1em;
+     }
+     div.participantRow {
+          padding: 5px;
      }
 
 /* change hover cursor for history popover */
