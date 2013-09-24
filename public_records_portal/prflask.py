@@ -70,7 +70,7 @@ routing = {
 	},
 	'requests':{
 		'url': '/requests',
-		'methods': ['GET']
+		'methods': ['GET', 'POST']
 	},
 	'update_password':{
 		'url': '/update_password',
