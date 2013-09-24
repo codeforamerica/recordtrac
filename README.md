@@ -22,7 +22,7 @@ Install Postgres, Python, and other required packages.
 
 If you are using a standard Postgres installation or from [Homebrew](http://mxcl.github.com/homebrew/) you can also use:
 
-        createdb publicrecords
+    createdb publicrecords
 
 In a new window:
 

@@ -3,3 +3,4 @@ settings.cfg
 websiteconfig.py
 settings.env
 notes/
+.DS_Store

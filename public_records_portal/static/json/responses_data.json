@@ -1,0 +1,22 @@
+[
+    {
+        "department": 	"Public Water",
+        "freq": 		10
+    },
+    {
+        "department": 	"Housing Department",
+        "freq": 		8
+    },
+    {
+        "department": 	"Budget Committee",
+        "freq": 		2
+    },
+    {
+        "department": 	"Mayor",
+        "freq": 		15
+    },
+    {
+        "department": 	"Parks & Recreation",
+        "freq": 		5
+    }
+]
