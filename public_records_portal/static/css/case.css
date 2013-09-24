@@ -39,7 +39,7 @@
 
 /* deemphasize text and carets for request area truncation */
      div.case-show-all {
-          color: #888888;
+          color: #666;
      }
 
 /* truncation bar for request area */
