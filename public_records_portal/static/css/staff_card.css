@@ -1,0 +1,11 @@
+span.title, span.entry {
+	font-size: 16px;
+}
+
+span.entry {
+	font-weight: bold;
+}
+
+img {
+	margin-bottom: 1em;
+}
