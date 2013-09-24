@@ -1,19 +1,29 @@
 /* custom css for all_requests.html and child templates */
 
+/* change counter to green background */
+	span.badge {
+		background-color: #17b292;
+	}
+
+/* increase size of intro text */
+	p.intro_text {
+		font-size: 16px;
+	}
+
 /* bottom margin under title area */
-#exploreTitle {
-	margin-bottom: 1em;
-}
+	#exploreTitle {
+		margin-bottom: 1em;
+	}
 
 /* adds breathing room for filter form submit button */
-#viewSubmit {
-	margin-top: 2em;
-}
+	#viewSubmit {
+		margin-top: 2em;
+	}
 
 /* removes bottom margin for filter form */
-#filterPublic {
-	margin-bottom: 0px;
-}
+	#filterPublic {
+		margin-bottom: 0px;
+	}
 
 td.status {
 	color: white;
