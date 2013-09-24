@@ -3,12 +3,20 @@
 
 /* request table # of records left margin adjustment */
 	#allrequestTable_length label {
-	margin: 0 0 0 1.75em;
+	/*margin: 0 0 0 1.75em;*/
+		margin-left: 1.75em;
+		margin-bottom: 1em;
+		margin-top: 1em;
 	}
-
-	#allrequestTable_info {
-	margin: 0 0 0 1.75em;
+	#allrequestTable_filter label {
+		margin-bottom: 1em;
+		margin-top: 0.5em;
+		font-weight: bold;
+		font-size: 17.5px;
 	}
+	/*#allrequestTable_info {
+	margin: 0 0 0 1.75em;
+	}*/
 
 /* indent table length dropdown */
 	select[name="allrequestTable_length"] {
