@@ -1,5 +1,14 @@
 /* custom css for landing.html and child templates */
 
+/* expore, request, track content */
+	p.text-center.text-title {
+		font-size: 18px;
+		margin-bottom: 0.25em;
+	}
+	p.text-center.text-body {
+		font-size: 16px;
+	}
+
 h1 {
 	color: #17b292;
 	margin-top: 1em;
@@ -7,6 +16,8 @@ h1 {
 
 img[alt="request,track,explore"] {
 	margin-top: 1em;
+	/* aligns image with content */
+	padding-left: 35px;
 }
 
 div.span4 {
