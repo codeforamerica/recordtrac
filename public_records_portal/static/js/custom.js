@@ -1,4 +1,24 @@
 
+// $(document).ready(function(){
+  /* validates public add a note form */
+  $("#public_note").validate({
+    rules: {
+      note_text: {
+        required: true,
+        minlength: 2
+           }
+       },
+     highlight: function(element) {
+        $(element).closest('.control-group').removeClass('success').addClass('error');
+      },
+      success: function(element) {
+        element
+        // .text('OK!').addClass('valid')
+        .closest('.control-group').removeClass('error').addClass('success');
+      }
+  });
+// });
+
 /* banner dismissal */
   $(function(){$(".alert").alert()})
 
