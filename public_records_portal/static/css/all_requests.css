@@ -14,9 +14,9 @@
 		font-weight: bold;
 		font-size: 17.5px;
 	}
-	/*#allrequestTable_info {
-	margin: 0 0 0 1.75em;
-	}*/
+	#allrequestTable_info {
+	margin-left: 1.75em;
+	}
 
 /* indent table length dropdown */
 	select[name="allrequestTable_length"] {
