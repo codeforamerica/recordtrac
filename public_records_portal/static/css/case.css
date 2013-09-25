@@ -28,9 +28,9 @@
           margin-top: 0.5em;
           margin-bottom: 1em;
      }
-     div.participantRow {
+     /*div.participantRow {
           padding: 5px;
-     }
+     }*/
 
 /* change hover cursor for history popover */
      a.historyPopover:hover {
