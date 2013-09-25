@@ -5,6 +5,8 @@ from public_records_portal import db
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
 
+
+### @export "User"
 class User(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
 	alias = db.Column(db.String(100))
@@ -35,6 +37,7 @@ class User(db.Model):
 	def __repr__(self):
 		return '<User %r>' % self.email
 
+### @export "Request"
 class Request(db.Model): 
 # The public records request
 	__tablename__ = 'request'
@@ -58,6 +61,7 @@ class Request(db.Model):
 	def __repr__(self):
 		return '<Request %r>' % self.text
 
+### @export "QA"
 class QA(db.Model):
 # A Q & A block for a request 
 	__tablename__ = 'qa'
@@ -76,6 +80,7 @@ class QA(db.Model):
 	def __repr__(self):
 		return "<QA Q: %r A: %r>" %(self.question, self.answer)
 
+### @export "Owner"
 class Owner(db.Model): 
 # A member of city staff assigned to a particular request, that may or may not upload records towards that request.
 	__tablename__ = 'owner'
@@ -92,7 +97,7 @@ class Owner(db.Model):
 	def __repr__(self):
 		return '<Owner %r>' %self.user_id
 
-
+### @export "Subscriber"
 class Subscriber(db.Model): 
 # A person subscribed to a request, who may or may not have created the request, and may or may not own a part of the request.
 	__tablename__ = 'subscriber'
@@ -108,7 +113,7 @@ class Subscriber(db.Model):
 	def __repr__(self):
 		return '<Subscriber %r>' %self.user_id
 
-
+### @export "Record"
 class Record(db.Model):
 # A record that is attached to a particular request. A record can be online (uploaded document, link) or offline.
 	__tablename__ = 'record'
