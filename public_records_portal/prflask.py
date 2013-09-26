@@ -36,9 +36,6 @@ admin.add_view(AdminView(Note, db.session))
 # Routing dictionary.
 routing = {
 #   function_name: url
-	'your_requests':{
-		'url': '/your_requests'
-	},
 	'tutorial':{
 		'url': '/tutorial'
 	},

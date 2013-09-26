@@ -11,7 +11,7 @@
         <th>Received</th>
         <th>Request</th>
         <th>Department</th>
-        <th>Owner</th>
+        <th>Point of Contact</th>
         <th>Updated</th>
         <th>Due</th>
       </tr>
@@ -49,27 +49,35 @@
   <div class="well r_sidebar r_sidebar-fixed">
     <h4>View</h4>
 
-    <form name="filterPublic" class="form-horizontal" id="filterPublic" method="post" action="/filterPublic">
+    <form name="filterPublic" class="form-horizontal" id="filterPublic" method="post" action="/requests">
       <fieldset>
         <label class="checkbox">
-          <input type="checkbox" value="" checked>
-            My requests
+          <input name = "owner_requests" id = "owner_requests" type="checkbox" value=""
+          {% if my_requests %} checked {% endif %}>
+              My requests
           </label>
         <label class="checkbox">
-          <input type="checkbox" value="" checked>
-          Open requests
+          <input type="checkbox" value="open" name="status_filter" id= "status_filter" 
+                {% if open_requests %} checked {% endif %}>
+                Open requests
         </label>
-        <label class="checkbox">
+<!--         <label class="checkbox">
           <input type="checkbox" value="">
           Due requests
-        </label>
+        </label> -->
         <div class="row-fluid">
-          <select class="span12 selectpicker">
-            <option >All departments</option>
-<!--              {% for blank in blank %}
-            <option>{{"department"}}</option>
-            {% endfor %} -->
-          </select>
+            <select class="span12 selectpicker" id = "department_filter" name = "department_filter">
+                  <!-- <option selected="{{dept_selected}}"> -->
+                  <option >All departments</option>
+                  {% for department in departments %}
+                    {% if dept_selected == department %}
+                    <option selected = "selected">{{department}}</option>
+                    {% else %}
+                    <option>{{department}}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
         </div>
         <div class="row-fluid">
           <div id="viewSubmit" class="span6 offset3">
