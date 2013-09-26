@@ -83,13 +83,8 @@ def get_requests_by_filters(filters_dict):
 		attr = attr.lower()
 		if type(value) is str:
 			value = value.lower()
-		# if attr == 'department':
-		# 	q = q.join(Owner, Request.current_owner == Owner.id).join(User).filter(func.lower(User.department).like("%%%s%%" % value))
-		elif attr == 'status' and value == 'open':
+		if attr == 'status' and value == 'open':
 			q = q.filter(not_(getattr(Request, 'status').like("%%%s%%" % 'Closed')))
-		# elif attr == 'owner':
-		# 	# This would return any owner involved in the request
-		# 	q = q.join(Owner, Request.id == Owner.request_id).filter(Owner.user_id == value) 
 		else:
 			q = q.filter(getattr(Request, attr).like("%%%s%%" % value))
 	return q.all()

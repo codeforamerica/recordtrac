@@ -183,9 +183,9 @@ def requests():
 		template = 'all_requests.html'
 		if user_id: 
 			template = 'all_requests_city.html'
-		return render_template(template, all_record_requests = all_record_requests, user_id = user_id, title = "All Requests", open_requests = open_requests, departments = departments, dept_selected = dept_selected, my_requests = my_requests)
 	else:
-		return index()
+		template = "all_requests_noresults.html"
+	return render_template(template, all_record_requests = all_record_requests, user_id = user_id, title = "All Requests", open_requests = open_requests, departments = departments, dept_selected = dept_selected, my_requests = my_requests)
 
 @login_manager.unauthorized_handler
 def unauthorized():
