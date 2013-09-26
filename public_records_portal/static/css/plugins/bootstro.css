@@ -9,7 +9,9 @@
         color: black;
         font-weight: bold;
     }
-
+    span.contactinfo {
+        color:#666;
+    }
 /* original */
 
 .bootstro-next-btn
