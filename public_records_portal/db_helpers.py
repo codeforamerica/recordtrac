@@ -71,7 +71,7 @@ def get_requests_by_filters(filters_dict):
 	""" Return the queryset of requests for the filters provided. """
 	q = db.session.query(Request)
 	if 'department' in filters_dict:
-		q = q.join(Owner, Request.current_owner == Owner.id).join(User).filter(func.lower(User.department).like("%%%s%%" % filters_dict['department']))
+		q = q.join(Owner, Request.current_owner == Owner.id).join(User).filter(func.lower(User.department).like("%%%s%%" % filters_dict['department'].lower()))
 		if 'owner' in filters_dict:
 			q = q.filter(Request.id == Owner.request_id).filter(Owner.user_id == filters_dict['owner']) 
 	else:
