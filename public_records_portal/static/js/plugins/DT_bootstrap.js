@@ -1,3 +1,6 @@
+/* adds placeholder text for search box */
+$('.dataTables_filter label input').attr("placeholder", "enter seach terms here");
+
 /* Set the defaults for DataTables initialisation */
 $.extend( true, $.fn.dataTable.defaults, {
 	"sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
@@ -160,4 +163,9 @@ $(document).ready(function() {
 			"sLengthMenu": "_MENU_ records per page"
 		}
 	} );
+	/* adds placeholder text for search box */
+	$('.dataTables_filter label input').attr( {
+		"placeholder": "I'd like to find...",
+		// "class": "text-right",
+		});
 } );

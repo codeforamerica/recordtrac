@@ -1,0 +1,58 @@
+<html>
+    <head>
+
+        <style type="text/css">
+            {{ pygments['pastie.css'] }}
+        </style>
+    </head>
+    <body>
+<p>All database tables are being defined in the 'Models.py' file.</p>
+
+<p>User is a table in the public records database.<br> 
+{{ d['/public_records_portal/models.py|idio']['User'] }}</p>
+
+<p>This is the actual public records request submitted by a member of the public. The table collects:
+<ul>
+<li>Date the request was submitted </li>
+<li>Has the due date been extended?</li>
+<li>List of question and answer units for a particular request</li>
+<li>When the status of a request is updated</li>
+<li>The actual request text</li>
+<li>The list of 'subscribers' following a request text. 'Subscribers' are members of the public who didn't initially submit the request, but is interested in the results.</li>
+<li>All city staff members who ever were assigned to a request</li> 
+<li>The Owner ID for the city staff who is listed as the point of contact for a request and is responsible for fulfilling the request.</li> 
+<li>The list of records associated with a particular request.</li>
+<li>The list of notes associated with a particular request.</li>
+<li>The status of the request</li>
+<li>The creator of the request. City staff sometimes enter messages in the system on the requesters behalf. </li>
+</ul> 
+{{ d['/public_records_portal/models.py|idio']['Request'] }}</p>
+
+<p>Creates a table of information on the Question and Answer block for a particular request: <br>
+ {{ d['/public_records_portal/models.py|idio']['QA'] }}</p>   
+
+ <p>Creates a table of information about the city employee assigned to a particular request. This is the 'owner' of the request or the 'point of contact.' City staff may or may not upload records.<br>
+ {{ d['/public_records_portal/models.py|idio']['Owner'] }}</p>  
+
+ <p>Creates a table of information about an individual subscribed to the request. The subscriber may have not been the one to create the request. It could be someone simply interested in the outcome of particular request. The subscriber could potentially be a city employee.<br>
+{{ d['/public_records_portal/models.py|idio']['Subscriber'] }}</p>
+
+<p>Information about records are stored in a table. Records can be uploaded documents, links to another website, or instructions on how a requester can view or pick up copies of a document. The following information is collected in this table:
+<ul>
+<li>Date create</li>
+<li>The user who uploaded the record. Now only city staff members are allowed to upload records.</li>
+<li>The document ID. Currently using Scribd API to upload documents. In the future, the city's content management system may be used.</li>
+<li>The request the record is associated with.</li>
+<li>A short description of the record.</li>
+<li>The original name of the file being uploaded.</li>
+<li>Where the records exists online</li>
+<li>Where the record can be downloaded online</li>
+<li>Instructions on where to access offline documents.</li>
+</ul>
+{{ d['/public_records_portal/models.py|idio']['Record'] }}</p>
+
+<p>Creates a table of information on the notes posted by city staff and members of the public. <br>
+{{ d['/public_records_portal/models.py|idio']['Note'] }}
+
+    </body>
+</html>

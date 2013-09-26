@@ -4,7 +4,7 @@
 /* follow button area */
      #whatisfollow {
           display: inline;
-          margin-left: 1em;
+          margin-left: 0.25em;
      }
      div.input-append {
           display: inline;
@@ -14,6 +14,9 @@
      }
      i.icon-question.icon-large {
           color: #666;
+     }
+     div.row-fluid.follow {
+      margin-top: 1em;
      }
 
 /* PoC and Helper area */
@@ -25,6 +28,9 @@
           margin-top: 0.5em;
           margin-bottom: 1em;
      }
+     /*div.participantRow {
+          padding: 5px;
+     }*/
 
 /* change hover cursor for history popover */
      a.historyPopover:hover {
@@ -33,7 +39,7 @@
 
 /* deemphasize text and carets for request area truncation */
      div.case-show-all {
-          color: #888888;
+          color: #666;
      }
 
 /* truncation bar for request area */

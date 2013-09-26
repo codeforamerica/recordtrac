@@ -15,6 +15,7 @@ if app.config['ENVIRONMENT'] == 'PRODUCTION':
 	send_emails = True
 	test = ""
 
+### @export "generate_prr_emails"
 def generate_prr_emails(request_id, notification_type, user_id = None):
 	app_url = app.config['APPLICATION_URL'] 
 	# Define the e-mail template:
@@ -53,6 +54,7 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 			print recipient_type
 			print "Not a valid recipient type"
 
+### @export "send_prr_email"
 def send_prr_email(page, recipients, subject, template, include_unsubscribe_link = True, cc_everyone = False, password = None):
 	if recipients:
 		if send_emails:
@@ -63,6 +65,7 @@ def send_prr_email(page, recipients, subject, template, include_unsubscribe_link
 		else:
 			print "%s to %s with subject %s" % (render_template(template, page = page), recipients, subject)
 
+### @export "send_email"
 def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_everyone = False):
 	mail = sendgrid.Sendgrid(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'], secure = True)
 	sender = app.config['DEFAULT_MAIL_SENDER']
@@ -82,6 +85,7 @@ def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_ev
 	message.add_bcc(sender)
 	mail.web.send(message)
 
+### @export "due_date"
 def due_date(date_obj, extended = None, format = True):
 	days_to_fulfill = 10
 	if extended == True:
@@ -95,6 +99,7 @@ def due_date(date_obj, extended = None, format = True):
 		return format_date(due_date.date())
 	return due_date.date()
 
+### @export "is_due_soon"
 def is_due_soon(date_obj, extended = None):
 	current_date = datetime.now().date()
 	due = due_date(date_obj = date_obj, extended = extended, format = False)
@@ -103,6 +108,7 @@ def is_due_soon(date_obj, extended = None):
 		return True, due
 	return False, due
 
+### @export "is_overdue"
 def is_overdue(date_obj, extended = None):
 	current_date = datetime.now().date()
 	due = due_date(date_obj = date_obj, extended = extended, format = False)
@@ -110,12 +116,13 @@ def is_overdue(date_obj, extended = None):
 		return True, due
 	return False, due
 
+### @export "get_email_info"
 def get_email_info(notification_type):
 	email_json = open(os.path.join(app.root_path, 'static/json/emails.json'))
 	json_data = json.load(email_json)
 	return json_data["Notification types"][notification_type]
 
-
+### @export "notify_due"
 def notify_due():
 	requests = get_objs("Request")
 	email_json = open(os.path.join(app.root_path, 'static/json/emails.json'))

@@ -105,7 +105,7 @@
                 </div>
                 <div class="span9">
                   <p class="expandable" truncateable="200">
-                   {{ response.display_text() | safe }} - <a href="/staff_card/{{uid}}" data-placement="right" data-toggle="popover" id="contactinfoPopoverResponse{{loop.index}}"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias or staff.email }}</span></a>
+                   {{ response.display_text() | safe }} - <a href="/staff_card/{{uid}}"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias or staff.email }}</span></a>
                  </p>
                 </div>
                 <div class="span2 text-right response-date">
@@ -152,28 +152,32 @@
             </div>
 
           </div>
-          {% block follow %}
 
 
-      <form name="folow" id="follow" method="post" action="/public_add_a_subscriber">
-        <input type="hidden" name="request_id" value= "{{req.id}}"/>
-        <fieldset>
-          <div class="row-fluid follow">
-            <div class="input-append">
-              <input id="followRequest"  name = "follow_email" class="span6" placeholder="yourname@email.com" type="email">
-              <button id="followRequest-button" class="btn" type="submit">Follow</button>
-            </div>
-            <div id="whatisfollow"><span id="recordTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="Enter your email here and we will send you updates for this request." ><small><i class="icon-question icon-large"></i></i></small></span></div>
-          </div>
-        </fieldset>
-      </form>
-          {% endblock follow %}
+
         </div>
       {% endblock sidebar %}
 
       {% block request_dates %}
         <div class="muted text-center">Created: {{ req.date_created | date }}</div>
       {% endblock request_dates %}
+
+      {% block follow %}
+        <form name="folow" id="follow" method="post" action="/public_add_a_subscriber">
+          <input type="hidden" name="request_id" value= "{{req.id}}"/>
+          <!-- <fieldset> -->
+            <div class="row-fluid follow">
+              <div class="span10 offset2">
+                <div class="input-append">
+                  <input id="followRequest" name="follow_email" class="span6" placeholder="yourname@email.com" type="email">
+                  <button id="followRequest-button" class="btn" type="submit">Follow</button>
+                </div>
+                <div id="whatisfollow"><span id="recordTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="Enter your email here and we will send you updates for this request." ><small><i class="icon-question-sign"></i></i></small></span></div>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+      {% endblock follow %}
     </div>
 
   </div>
