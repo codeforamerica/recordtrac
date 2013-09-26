@@ -271,7 +271,8 @@ def authenticate_login(email, password):
 
 ### @export "set_random_password"
 def set_random_password(email):
-	user = User.query.filter(func.lower(User.email) == func.lower(email)).first() 
+	email = email.lower()
+	user = User.query.filter_by(email = email).first()
 	if not user:
 		return None # This is only for existing users, not a way to create a user, which we're not allowing yet.
 	password = uuid.uuid4().hex
