@@ -70,13 +70,26 @@ def get_owners_by_user_id(user_id):
 def get_requests_by_filters(filters_dict):
 	""" Return the queryset of requests for the filters provided. """
 	q = db.session.query(Request)
+	if 'department' in filters_dict:
+		q = q.join(Owner, Request.current_owner == Owner.id).join(User).filter(func.lower(User.department).like("%%%s%%" % filters_dict['department']))
+		if 'owner' in filters_dict:
+			q = q.filter(Request.id == Owner.request_id).filter(Owner.user_id == filters_dict['owner']) 
+	else:
+		if 'owner' in filters_dict:
+			q = q.join(Owner, Request.id == Owner.request_id).filter(Owner.user_id == filters_dict['owner']) 
 	for attr, value in filters_dict.items():
+		if attr == 'department' or attr == 'owner':
+			continue
 		attr = attr.lower()
-		value = value.lower()
-		if attr == 'department':
-			q = db.session.query(Request).join(Owner, Request.current_owner == Owner.id).join(User).filter(func.lower(User.department).like("%%%s%%" % value))
+		if type(value) is str:
+			value = value.lower()
+		# if attr == 'department':
+		# 	q = q.join(Owner, Request.current_owner == Owner.id).join(User).filter(func.lower(User.department).like("%%%s%%" % value))
 		elif attr == 'status' and value == 'open':
 			q = q.filter(not_(getattr(Request, 'status').like("%%%s%%" % 'Closed')))
+		# elif attr == 'owner':
+		# 	# This would return any owner involved in the request
+		# 	q = q.join(Owner, Request.id == Owner.request_id).filter(Owner.user_id == value) 
 		else:
 			q = q.filter(getattr(Request, attr).like("%%%s%%" % value))
 	return q.all()
