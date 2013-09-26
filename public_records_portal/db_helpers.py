@@ -205,6 +205,8 @@ def update_user(user, alias = None, phone = None, department = None):
 		user.department = department
 	if not user.password:
 		user.password = app.config['ADMIN_PASSWORD']
+	if user.email:
+		user.email = user.email.lower()
 	db.session.add(user)
 	db.session.commit()
 	return user
