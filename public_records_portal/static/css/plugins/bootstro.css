@@ -1,3 +1,17 @@
+/* custom */
+    h5 {
+        color: black !important;
+    }
+    span.label.label-success {
+        background-color: #2688AD;
+    }
+    h3.popover-title {
+        color: black;
+        font-weight: bold;
+    }
+
+/* original */
+
 .bootstro-next-btn
 {
     float:right;
