@@ -54,7 +54,7 @@ def index():
 	if current_user.is_anonymous() == False:
 		return redirect(url_for('your_requests'))
 	else:
-		return redirect(url_for('new_request'))
+		return render_template('landing.html')
 
 
 @login_required
