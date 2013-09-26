@@ -139,6 +139,7 @@ class Record(db.Model):
 	def __repr__(self):
 		return '<Record %r>' % self.description
 
+### @export "Note"
 class Note(db.Model):
 # A note on a request.
 	__tablename__ = 'note'
