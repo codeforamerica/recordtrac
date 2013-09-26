@@ -1,5 +1,12 @@
 /* custom css for all_requests.html and child templates */
 
+/* bottom margin for table */
+	#allrequestTable_wrapper {
+		margin-bottom: 5em;
+	}
+	#viewSubmit {
+		margin-bottom: 5em;
+	}
 
 /* request table # of records left margin adjustment */
 	#allrequestTable_length label {

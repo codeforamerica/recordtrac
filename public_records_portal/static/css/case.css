@@ -1,5 +1,9 @@
 /* custom css for case.html and child templates */
 
+/* bottom margin for page */
+     #responses-container, #participant-container {
+          margin-bottom: 5em;
+     }
 
 /* follow button area */
      #whatisfollow {
