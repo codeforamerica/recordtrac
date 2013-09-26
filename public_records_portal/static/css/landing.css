@@ -1,5 +1,15 @@
 /* custom css for landing.html and child templates */
 
+/* brand area */
+	img[alt="City of Oakland"] {
+		display: inline-block;
+		margin-top: -1.5em;
+		margin-right: 1em;
+	}
+	h3 {
+		margin-top: 1em;
+	}
+
 /* expore, request, track content */
 	p.text-center.text-title {
 		font-size: 18px;
@@ -12,6 +22,7 @@
 h1 {
 	color: #17b292;
 	margin-top: 1em;
+	display: inline-block;
 }
 
 img[alt="request,track,explore"] {
