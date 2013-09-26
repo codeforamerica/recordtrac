@@ -179,7 +179,8 @@ def create_answer(qa_id, subscriber_id, answer):
 
 ### @export "create_or_return_user"
 def create_or_return_user(email, alias = None, phone = None, department = None, not_id = False):
-	user = User.query.filter(func.lower(User.email) == func.lower(email)).first() 
+	email = email.lower()
+	user = User.query.filter_by(email = email).first()
 	if not user:
 		user = create_user(email = email, alias = alias, phone = phone, department = department)
 	else:
@@ -205,8 +206,6 @@ def update_user(user, alias = None, phone = None, department = None):
 		user.department = department
 	if not user.password:
 		user.password = app.config['ADMIN_PASSWORD']
-	if user.email:
-		user.email = user.email.lower()
 	db.session.add(user)
 	db.session.commit()
 	return user
