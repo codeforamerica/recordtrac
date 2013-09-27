@@ -1,5 +1,10 @@
 /* custom css for case.html and child templates */
 
+/* "requester" gray */
+     /*span.requester {
+          font-style: italic;
+     }*/
+
 /* bottom margin for page */
      #responses-container, #participant-container {
           margin-bottom: 5em;
@@ -39,6 +44,7 @@
 /* change hover cursor for history popover */
      a.historyPopover:hover {
           cursor: text;
+          text-decoration: none;
      }
 
 /* deemphasize text and carets for request area truncation */
