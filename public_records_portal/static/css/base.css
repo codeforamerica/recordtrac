@@ -10,7 +10,7 @@
 	/* tree logo */
 	img[alt="City of Oakland tree"] {
 		margin-top: -5px;
-		margin-right: 5px;
+		margin-right: 10px;
 	}
 	/* tabs */
 	ul.nav.tabs {
@@ -53,14 +53,6 @@
 }
 
 
-/* request table # of records left margin adjustment */
-	#allrequestTable_length label {
-	margin: 0 0 0 1.25em;
-	}
-
-	#allrequestTable_info {
-	margin: 0 0 0 1.75em;
-	}
 
 /* logout button */
 	input.btn-link {
@@ -113,25 +105,25 @@ label.error {
 	color: #606060  ;
 }*/
 
-/* give the logout button more space */
-#logout_form {
-	margin-left: 10%;
-}
+/* make login form appear inline */
+	form#loginForm.navbar-form.pull-right {
+		margin-top: 0.5em;
+	}
 
 /* all infotips appear as superscript */
-.icon-info-sign {
-	vertical-align: super;
-}
+	.icon-info-sign {
+		vertical-align: super;
+	}
 
 /* tooltip text, left-aligned */
- .tooltip-inner {
-	text-align: left ;
-}
+	.tooltip-inner {
+		text-align: left ;
+	}
 
 /* all popovers fit size to content */
-.helpPopover {
-	width: 200px !important;
-}
+	.helpPopover {
+		width: 200px !important;
+	}
 
 /* pull history popover back into view */
 /*#historyPopover {

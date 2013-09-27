@@ -25,9 +25,9 @@ class RequestPresenter:
 
 	def display_text(self):
 		if self.type == "qa":
-			text = "%s - <em>%s</em>" %(self.response.question, self.owner_link)
+			text = "%s - %s" %(self.response.question, self.owner_link)
 			if self.response.answer:
-				text = text + "<p>%s - <em>Requester</em></p>" %(self.response.answer)
+				text = text + "<p>%s - <span class='requester'>Requester</span></p>" %(self.response.answer)
 			else:
 				if self.public:
 					text = text + """
@@ -41,7 +41,7 @@ class RequestPresenter:
 					text = text + "<p>Requester hasn't answered yet.</p>"
 			return text
 		elif self.type == "note":
-			return "%s - <em>Requester</em>" %(self.response.text)
+			return "%s - Requester" %(self.response.text)
 		
 	def get_icon(self):
 		return self.icon

@@ -1,5 +1,9 @@
 /* custom css for _response_widget.html */
 
+div.input-append {
+  width: 530px;
+}
+
 form#closeRequest.form-horizontal {
   margin-bottom: 1px;
 }
