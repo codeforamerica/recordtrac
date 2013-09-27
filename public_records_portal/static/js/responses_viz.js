@@ -1,4 +1,3 @@
-$('div#responses-viz').append("<p>This is appended to </p>");
 
 
 
@@ -6,7 +5,7 @@ var margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = 400 - margin.left - margin.right,
     height = 200 - margin.top - margin.bottom;
 
-var formatPercent = d3.format(".0%");
+var formatYAxis = d3.format("f");
 
 var x = d3.scale.ordinal()
     .rangeRoundBands([0, width], .1);
@@ -21,13 +20,22 @@ var xAxis = d3.svg.axis()
 var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left")
-    .tickFormat(formatPercent);
+    .tickFormat(formatYAxis);
+
+var tip = d3.tip()
+  .attr('class', 'd3-tip')
+  .offset([-10, 0])
+  .html(function(d) {
+    return "Frequency: <span style='color:red'>" + d.freq + "</span>";
+  });
 
 var svg = d3.select("#responses-viz").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+svg.call(tip);
 
 d3.json("static/json/responses_data.json", function(error, json) {
   if (error) return console.warn("Didn't load responses_data.json properly.");
@@ -43,12 +51,12 @@ d3.json("static/json/responses_data.json", function(error, json) {
   svg.append("g")
       .attr("class", "y axis")
       .call(yAxis)
-    .append("text")
+      .append("text")
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Frequency");
+      .text("");
 
   svg.selectAll(".bar")
       .data(data)
@@ -57,11 +65,8 @@ d3.json("static/json/responses_data.json", function(error, json) {
       .attr("x", function(d) { return x(d.department); })
       .attr("width", x.rangeBand())
       .attr("y", function(d) { return y(d.freq); })
-      .attr("height", function(d) { return height - y(d.freq); });
+      .attr("height", function(d) { return height - y(d.freq); })
+      .on('mouseover', tip.show)
+      .on('mouseout', tip.hide);
 
 });
-
-function type(d) {
-  d.freq = +d.freq;
-  return d;
-}

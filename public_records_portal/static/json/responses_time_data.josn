@@ -1,22 +1,22 @@
 [
     {
         "department": 	"Water",
-        "freq": 		10
+        "time": 		10
     },
     {
         "department": 	"Housing",
-        "freq": 		8
+        "time": 		8
     },
     {
         "department": 	"Mayor",
-        "freq": 		2
+        "time": 		2
     },
     {
         "department": 	"Police",
-        "freq": 		16
+        "time": 		16
     },
     {
         "department": 	"Schools",
-        "freq": 		5
+        "time": 		5
     }
 ]
