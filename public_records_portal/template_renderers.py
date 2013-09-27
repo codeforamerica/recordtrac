@@ -11,6 +11,7 @@ import departments
 import os, json
 from urlparse import urlparse, urljoin
 from notifications import send_prr_email
+from spam import is_spam
 
 # Initialize login
 login_manager = LoginManager()
@@ -20,9 +21,12 @@ login_manager.init_app(app)
 def new_request():
 	if request.method == 'POST':
 		email = request.form['request_email']
+		request_text = request.form['request_text']
+		if is_spam(request_text):
+			return render_template('error.html', message = "Your request looks a lot like spam. If you believe you're seeing this message in error, let us know through the feedback tab.")
+				# <img src = 'http://31.media.tumblr.com/tumblr_lijp30si761qc9z7yo1_500.gif'>")
 		if email == "" and 'ignore_email' not in request.form:
 			return render_template('missing_email.html', form = request.form, user_id = get_user_id())
-		request_text = request.form['request_text']
 		if request_text == "":
 			return render_template('error.html', message = "You cannot submit an empty request.")
 		alias = None
@@ -45,7 +49,7 @@ def new_request():
 		if is_new:
 			return redirect(url_for('show_request_for_x', request_id = request_id, audience = 'new'))
 		if not request_id:
-			return render_template('error.html', message = "You need to provide an e-mail address to submit a request.")
+			return render_template('error.html', message = "Your request looks a lot like spam.")
 		return render_template('error.html', message = "Your request is the same as /request/%s" % request_id)
 	else:
 		return render_template('new_request.html', user_id = get_user_id())
