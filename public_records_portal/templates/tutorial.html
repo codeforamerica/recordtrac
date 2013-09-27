@@ -145,7 +145,7 @@
   <div class="rw-actions-container">
     <div class="target-for" data-target-for="1">
 
-      <form name="ask_question" class="form-horizontal" id="question" method="post" action="/add_a_qa" autocomplete="on">
+      <form name="ask_question" class="form-horizontal" id="question"  autocomplete="on">
         <input type="hidden" name="request_id" value="49"/>
           <fieldset>
             <div class="row-fluid">
@@ -272,7 +272,7 @@
   <div class="rw-actions-container">
 
     <div class="target-for" data-target-for="1">
-      <form name="input_doc" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data">
+      <form name="input_doc" class="form-horizontal" id="submitRecord"  autocomplete="on" enctype="multipart/form-data">
         <input type="hidden" name="request_id" value="49"/>
         <fieldset>
           <div class="row-fluid">
@@ -335,7 +335,7 @@
 
     <!-- Add a note form -->
     <div class="target-for" data-target-for="2">
-      <form name="note" class="form-horizontal" id="note" method="post" action="/add_a_note">
+      <form name="note" class="form-horizontal" id="note" >
         <input type="hidden" name="request_id" value="49"/>
         <fieldset>
           <div class="row-fluid">
@@ -360,7 +360,7 @@
     <!-- Request an extension form -->
     <div class="target-for" data-target-for="3">
       
-      <form name="extend_request" class="form-horizontal" id="extension" method="post" action="/add_a_extension">
+      <form name="extend_request" class="form-horizontal" id="extension">
         <input type="hidden" name="request_id" value="49"/>
         <input type="hidden" name="extend_reason"/>
         <fieldset>
@@ -409,7 +409,7 @@
 
     <!-- Close request form -->
     <div class="target-for" data-target-for="4">
-      <form name="close" class="form-horizontal" id="closeRequest" method="post" action="/close">
+      <form name="close" class="form-horizontal" id="closeRequest">
         <input type="hidden" name="request_id" value="49"/>
         <input type="hidden" name="close_reason"/>
         <fieldset>
@@ -572,7 +572,7 @@
 
           <div id="reroutePopover-head" class="hide">Reassign to: <a class="close" href="#">&times;</a> </div>
   <div id="reroutePopover-content" class="hide">              
-    <form id="rerouteForm" class="form-inline" method ="post" action="/update_a_owner">
+    <form id="rerouteForm" class="form-inline">
       <!-- my form -->
       <div class="control-group">
         <div class="controls">
@@ -598,7 +598,7 @@
       <a data-placement="left" href="#" id="notifyPopover"><div class="popover-container participantRow-helpers"><h4 class="participantRow-title">Helpers<span class="pull-right"><small><i class="icon-plus"></i></small><i class="icon-group"></i></span></h4></div></a>
         <div id="notifyPopover-head" class="hide">Notify: <a class="close" href="#">&times;</a> </div>
   <div id="notifyPopover-content" class="hide">              
-    <form id="notifyForm" class="form-inline" method ="post" action="/add_a_owner">
+    <form id="notifyForm" class="form-inline">
       <!-- my form -->
       <div class="control-group">
         <div class="controls">
