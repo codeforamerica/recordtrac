@@ -4,15 +4,15 @@
 {% block title %}Request{% endblock title %}
 
 {% block container %}
-
+<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
 <!-- social media section -->
-<!--   <div id="floating_media" class="text-center"> -->
+  <div id="floating_media" class="text-center">
 
     <!-- share on twitter -->
-<!--     <a href="#" onclick="window.open('http://twitter.com/intent/tweet?text={{ req.text | new_lines }}&amp;via=criscristina&amp;url=http://records.oaklandnet.com/{{req.id}}','','width=550,height=350,scrollbars=no');return false;"><div class="tool twitter"></div><span class="action hideText"><i class="icon-twitter icon-large"> </i></span></a> -->
+    <a href="#" onclick="window.open('http://twitter.com/intent/tweet?text=Requested from the City of Oakland:&amp;via=RecordTrac&amp;url=http://records.oaklandnet.com/{{req.id}}','width=550,height=350,scrollbars=no');return false;"><div class="tool twitter"></div><span class="action hideText"><i class="icon-twitter icon-large"> </i></span></a>
 
     <!-- share on facebook -->
-<!--     <a href="#" 
+    <a href="#" 
       onclick="
         window.open(
           'https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Frecords.oaklandnet.com%2F{{req.id}}', 
@@ -21,7 +21,7 @@
         return false;">
       <i class="icon-facebook icon-large"> </i>
     </a>
-  </div> -->
+  </div>
 
 <!-- main content -->
   <div class="row-fluid">
