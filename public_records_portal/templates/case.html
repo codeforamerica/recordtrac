@@ -9,7 +9,15 @@
   <div id="floating_media" class="text-center">
 
     <!-- share on twitter -->
-    <a href="#" onclick="window.open('http://twitter.com/intent/tweet?text=Requested from the City of Oakland:&amp;via=RecordTrac&amp;url=http://records.oaklandnet.com/{{req.id}}','width=550,height=350,scrollbars=no');return false;"><div class="tool twitter"></div><span class="action hideText"><i class="icon-twitter icon-large"> </i></span></a>
+    <a href="#" 
+      onclick="
+        window.open(
+          'http://twitter.com/intent/tweet?text=Requested from the City of Oakland:&amp;via=RecordTrac&amp;url=http://records.oaklandnet.com/{{req.id}}', 
+          'facebook-share-dialog', 
+          'width=550,height=350'); 
+        return false;">
+      <i class="icon-twitter icon-large"> </i>
+    </a>
 
     <!-- share on facebook -->
     <a href="#" 
