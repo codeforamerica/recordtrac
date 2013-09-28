@@ -756,56 +756,5 @@
 {% block custom_script_links %}
     <!-- used for the tutorial -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstro.js') }}"></script>
-  <script>
-  /* calls bootstro (tutorial) plugin */
-    $(document).ready(function(){
-        // $("#tutorial").click(function(){
-            bootstro.start(".bootstro", {
-                onComplete : function(params)
-                {
-                    // alert("Reached end of introduction with total " + (params.idx + 1)+ " slides");
-                },
-                onExit : function(params)
-                {
-                    // alert("Introduction stopped at slide #" + (params.idx + 1));
-                },
-            // });    
-        });
-        // $(".demo_stopOn").click(function(){
-        //     alert('Clicking on the backdrop or Esc will NOT stop the show')
-        //     bootstro.start('.bootstro', {stopOnBackdropClick : false, stopOnEsc:false});    
-        // });
-        // $(".demo_size1").click(function(){
-        //     bootstro.start('.bootstro_size1');    
-        // });
-        // $(".demo_nonav").click(function(){
-        //     bootstro.start('.bootstro', {
-        //         nextButton : '',
-        //         prevButton : '',
-        //         finishButton : ''
-        //     });    
-        // });
-        // $(".demo_ajax").click(function(){
-        //     bootstro.start('', {
-        //         url : './bootstro.json',
-        //     });    
-        // });
-    });
-  </script>
-  <script>
-  /* takes text from json file for each reason and populates the editable textarea in the modal */
-    $("#close_reasons").change(function () {
-      var str = "";
-      $("#close_reasons option:selected").each(function () {
-            str += $(this).val() + " ";
-          });
-      $("#closeTextarea").text(str);
-    });
-
-    /* takes the edited text in the modal as a variable for use in posting to the case */
-    $("#closeButton").click(function () {
-      var estr = $("#closeTextarea").val();
-      $('input[name=close_reason]').val(estr);
-    });
-  </script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/custom.bootstro.js') }}"></script>
 {% endblock custom_script_links %}

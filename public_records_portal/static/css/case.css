@@ -30,7 +30,7 @@
 
 /* PoC and Helper area */
      h4.case_participantRow {
-          margin-bottom: 0;
+          margin-bottom: 0.25em;
      }
 
      div.participantRow-history {
@@ -78,6 +78,7 @@
 
      div.request-status-well {
      	margin-bottom: 10px;
+      padding: 0;
      }
 
      #responses-container {
