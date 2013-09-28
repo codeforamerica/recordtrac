@@ -22,7 +22,8 @@ $(document).ready(function(){
     rules: {
       record_description: {
         required: true,
-        minlength: 2
+        minlength: 2,
+        maxlength: 40
            }
        },
      highlight: function(element) {
