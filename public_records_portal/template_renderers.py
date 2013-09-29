@@ -181,15 +181,16 @@ def requests():
 			filters['owner'] = current_user.id
 	else:
 		filters = request.args
-	all_record_requests = get_requests_by_filters(filters)
+	record_requests = get_requests_by_filters(filters)
 	user_id = get_user_id()
-	if all_record_requests:
+	if record_requests:
 		template = 'all_requests.html'
 		if user_id: 
 			template = 'all_requests_city.html'
 	else:
 		template = "all_requests_noresults.html"
-	return render_template(template, all_record_requests = all_record_requests, user_id = user_id, title = "All Requests", open_requests = open_requests, departments = departments, dept_selected = dept_selected, my_requests = my_requests)
+	total_requests_count = get_count("Request")
+	return render_template(template, record_requests = record_requests, user_id = user_id, title = "All Requests", open_requests = open_requests, departments = departments, dept_selected = dept_selected, my_requests = my_requests, total_requests_count = total_requests_count)
 
 @login_manager.unauthorized_handler
 def unauthorized():

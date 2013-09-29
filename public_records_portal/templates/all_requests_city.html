@@ -17,7 +17,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for request in all_record_requests %}
+      {% for request in record_requests %}
       {% if user_id %}
         <tr onclick="window.location.href='/city/request/{{request.id}}';">
         {% else %}
