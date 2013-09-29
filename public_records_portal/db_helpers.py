@@ -12,6 +12,10 @@ from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from sqlalchemy import func, not_
 import uuid
 
+### @export "get_count"
+def get_count(obj_type):
+	return db.session.query(func.count(eval(obj_type).id)).scalar()
+
 ### @export "get_obj"
 def get_obj(obj_type, obj_id):
 	""" Query the database for an object via its class/type (defined in models.py) and ID and return the object. """
@@ -50,6 +54,8 @@ def get_objs(obj_type):
 		return QA.query.all()
 	elif obj_type == "Subscriber":
 		return Subscriber.query.all()
+	elif obj_type == "Record":
+		return Record.query.all()
 	return None
 
 ### @export "get_request_by_owner"
