@@ -47,7 +47,7 @@
 
 {% block sidebar %}
   <div class="well r_sidebar r_sidebar-fixed">
-    <h4>View</h4>
+    <h4>View <small class="count"> {{ record_requests | count }} of {{total_requests_count}} shown</small></h4>
 
     <form name="filterPublic" class="form-horizontal" id="filterPublic" method="post" action="/requests">
       <fieldset>

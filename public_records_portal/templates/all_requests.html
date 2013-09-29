@@ -14,7 +14,7 @@
 
     <div class="span8 offset1">
       <div id="exploreTitle" class="row-fluid">
-        <h3>Explore <span class="badge">{{ record_requests | count }}</span> of <span class="badge"> {{total_requests_count}}</span> requests and counting</h3>
+        <h3>Explore <span class="badge"> {{total_requests_count}}</span> requests and counting</h3>
         <a href="/new" class="btn btn-primary btn-large pull-right">Request new record</a>
       </div>
       <div class="row-fluid">
@@ -68,7 +68,7 @@
     <div class="span3">
       {% block sidebar %}
         <div class="well r_sidebar r_sidebar-fixed">
-          <h4>View</h4>
+          <h4>View <small class="count"> {{ record_requests | count }} of {{total_requests_count}} shown</small></h4>
 
           <form name="filterPublic" class="form-horizontal" id="filterPublic" method="post" action="/requests">
             <fieldset>
