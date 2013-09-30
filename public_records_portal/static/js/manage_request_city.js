@@ -1,4 +1,22 @@
 $(document).ready(function(){
+  /* validates ask a question form */
+  $("#question").validate({
+    rules: {
+      question_text: {
+        required: true,
+        minlength: 2
+           }
+       },
+     highlight: function(element) {
+        $(element).closest('.control-group').removeClass('success').addClass('error');
+      },
+      success: function(element) {
+        element
+        // .text('OK!').addClass('valid')
+        .closest('.control-group').removeClass('error').addClass('success');
+      }
+  });
+
   /* validates add a record form */
   $("#submitRecord").validate({
     rules: {

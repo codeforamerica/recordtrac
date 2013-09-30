@@ -18,5 +18,25 @@
     {
         "department": 	"Schools",
         "freq": 		5
+    },
+    {
+        "department":   "A",
+        "freq":         10
+    },
+    {
+        "department":   "B",
+        "freq":         8
+    },
+    {
+        "department":   "C",
+        "freq":         2
+    },
+    {
+        "department":   "D",
+        "freq":         16
+    },
+    {
+        "department":   "E",
+        "freq":         5
     }
 ]

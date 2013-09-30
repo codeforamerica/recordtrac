@@ -92,8 +92,8 @@
 			"Transportation Plans",
 			"Traffic Studies"
 			],
-		"Contact": "denright@oaklandnet.com",
-		"Backup": "JWMitchell@oaklandnet.com"
+		"Contact": "pacarter@oaklandnet.com",
+		"Backup": "tmorgan@oaklandnet.com"
 	},
 	"Department of Planning and Building": 
 	{
@@ -148,8 +148,8 @@
 			"Financial Records",
 			"City Budget Records"
 			],
-		"Contact": "ato@oaklandnet.com",
-		"Backup": "wwoo@oaklandnet.com"
+		"Contact": "rmedalla@oaklandnet.com",
+		"Backup": "osolitei@oaklandnet.com"
 	},
 	"Contracts and Compliance": 
 	{
@@ -188,8 +188,8 @@
 		"Document Types":
 			["Cable Franchise Records"
 			],
-		"Contact": "vchak@oaklandnet.com",
-		"Backup": "jreese@oaklandnet.com"
+		"Contact": "ato@oaklandnet.com",
+		"Backup": "rbuenaflor@oaklandnet.com"
 	},
 	"Office of Neighborhood Investment": 
 	{
@@ -253,7 +253,7 @@
 			"Civil Service Board Records"
 			],
 		"Contact": "vchak@oaklandnet.com",
-		"Backup": "jreese@oaklandnet.com"
+		"Backup": "kkasaine@oaklandnet.com"
 	},
 	"Budget and Revenue - Revenue Division": 
 	{
@@ -261,8 +261,8 @@
 			["Business Tax Records",
 			"Revenue Records"
 			],
-		"Contact": "ato@oaklandnet.com",
-		"Backup": "wwoo@oaklandnet.com"
+		"Contact": "sazimi@oaklandnet.com",
+		"Backup": "dmcpherson@oaklandnet.com"
 	},
 	"Council District 1 - Dan Kalb": 
 	{
@@ -377,7 +377,7 @@
 			"Police Department Employment Contract (MOU)",
 			"Dog Attack Report"
 			],
-		"Contact": "rsonnier@oaklandnet.com",
-		"Backup": "afuller@oaklandnet.com"
+		"Contact": "afuller@oaklandnet.com",
+		"Backup": "rsonnier@oaklandnet.com"
 	}
 }

@@ -66,7 +66,7 @@ class ResponsePresenter:
 		elif self.type == "note":
 			return self.response.text
 		elif self.type == "link":
-			return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='right' data-original-title='%s'>%s <i class='icon-external-link'></i></a>" % (self.response.url, self.response.url, self.response.description)
+			return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s'>%s <i class='icon-external-link'></i></a>" % (self.response.url, self.response.url, self.response.description)
 		elif self.type == "extension":
 			junk, text = self.response.text.split(":")
 			return text

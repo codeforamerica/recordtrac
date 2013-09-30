@@ -52,20 +52,20 @@ def new_request():
 
 def index():
 	if current_user.is_anonymous() == False:
-		return redirect(url_for('your_requests'))
+		return redirect(url_for('requests'))
 	else:
 		return redirect(url_for('new_request'))
 
-
-@login_required
-def your_requests():
-	all_record_requests = []
-	owners = get_owners_by_user_id(current_user.id)
-	for owner in owners:
-		req = get_request_by_owner(owner.id)
-		if req:
-			all_record_requests.append(req)
-	return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = current_user.id, title = "Requests assigned to you")
+# @login_required
+# def your_requests():
+# 	all_record_requests = []
+# 	owners = get_owners_by_user_id(current_user.id)
+# 	for owner in owners:
+# 		req = get_request_by_owner(owner.id)
+# 		if req:
+# 			all_record_requests.append(req)
+# 	return all_record_requests
+	# return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = current_user.id, title = "Requests assigned to you")
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -158,15 +158,34 @@ def close(request_id = None):
 # Shows all public records requests that have been made.
 def requests():
 	# Return first 100, ? limit = 100
-	all_record_requests = get_requests_by_filters(request.args)
+	# Taken from list_of_departments.json:
+	departments = sorted(["Human Resources", "Council District 7 - Larry Reid", "Department of Planning and Building", "Council District 5 - Noel Gallo", "Council District 3 - Lynette Gibson McElhaney", "City Clerk", "Council District 6 - Desley Brooks", "Health and Human Services", "Fire Department", "Budget and Revenue - Revenue Division", "Office of Controller and Treasury", "Information Technology (IT)", "City Attorney", "Council District 2 - Pat Kernighan", "Parks and Recreation", "City Auditor", "Council District 1 - Dan Kalb", "Office of the Mayor", "Council District 4 - Libby Schaaf", "Council At Large - Rebecca Kaplan", "Library Services", "Public Works Agency", "Contracts and Compliance", "City Administrator", "Office of Neighborhood Investment"], key=str.lower)
+	filters = {}
+	open_requests = False
+	my_requests = False
+	dept_selected = "All departments"
+	if request.method == 'POST':
+		if 'status_filter' in request.form:
+			filters['status'] = 'open'
+			open_requests = True
+		if 'department_filter' in request.form and request.form['department_filter'] != '&nbsp':
+			dept_selected = request.form['department_filter']
+			if dept_selected != "All departments":
+				filters['department'] = request.form['department_filter']
+		if 'owner_requests' in request.form and current_user.is_anonymous() == False:
+			my_requests = True
+			filters['owner'] = current_user.id
+	else:
+		filters = request.args
+	all_record_requests = get_requests_by_filters(filters)
 	user_id = get_user_id()
 	if all_record_requests:
-		if user_id:
-			return render_template('all_requests_city.html', all_record_requests = all_record_requests, user_id = user_id, title = "All Requests")
-		else:
-			return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = user_id, title = "All Requests")
+		template = 'all_requests.html'
+		if user_id: 
+			template = 'all_requests_city.html'
 	else:
-		return index()
+		template = "all_requests_noresults.html"
+	return render_template(template, all_record_requests = all_record_requests, user_id = user_id, title = "All Requests", open_requests = open_requests, departments = departments, dept_selected = dept_selected, my_requests = my_requests)
 
 @login_manager.unauthorized_handler
 def unauthorized():

@@ -25,20 +25,31 @@ class AdminView(ModelView):
         return False
 
 class RequestView(AdminView):
-	column_searchable_list = ('status', 'text')
+	column_list = ('id', 'text', 'date_created', 'status') # The fields the admin can view
+	column_searchable_list = ('status', 'text') # The fields the admin can search a request by
+	form_excluded_columns = ('date_created', 'current_owner', 'extended', 'status', 'status_updated') # The fields the admin cannot edit.
 
+class RecordView(AdminView):
+	column_list = ('request_id', 'description', 'filename', 'url', 'download_url', 'access')
+	can_edit = False
+
+class QAView(AdminView):
+	column_list = ('request_id', 'question', 'answer', 'date_created')
+	form_excluded_columns = ('date_created')
+
+class NoteView(AdminView):
+	column_list = ('request_id', 'text', 'date_created')
+	form_excluded_columns = ('date_created')
 
 admin.add_view(RequestView(Request, db.session))
-admin.add_view(AdminView(Record, db.session))
-admin.add_view(AdminView(Note, db.session))
+admin.add_view(RecordView(Record, db.session))
+admin.add_view(NoteView(Note, db.session))
+admin.add_view(QAView(QA, db.session))
 
 
 # Routing dictionary.
 routing = {
 #   function_name: url
-	'your_requests':{
-		'url': '/your_requests'
-	},
 	'tutorial':{
 		'url': '/tutorial'
 	},
@@ -70,7 +81,7 @@ routing = {
 	},
 	'requests':{
 		'url': '/requests',
-		'methods': ['GET']
+		'methods': ['GET', 'POST']
 	},
 	'update_password':{
 		'url': '/update_password',

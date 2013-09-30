@@ -6,6 +6,9 @@
      }
 
 /* PoC and Helper area */
+     a#contactinfoPopoverRoute {
+          color: #666;
+     }
      h4.participantRow-title {
           color: #17B292;
           border-radius: 10px;

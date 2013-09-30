@@ -1,0 +1,16 @@
+<!-- This template is show all cases in the system for the city. -->
+{% if user_id %}
+{% extends "all_requests_city.html" %}
+{% else %}
+{% extends "all_requests.html" %}
+{% endif %}
+{% block title %}{{title}}{% endblock title %}
+
+
+{% block datatable %}
+	{{ super () }}
+	<div class="row-fluid">
+		<p class="text-center explanation1">The search restrictions are too narrow.</p>  
+		<p class="text-center explanation2">You can change the View options on the right or <a href="/requests"> reset your search here</a>.</p>
+	</div>
+{% endblock datatable %}

@@ -8,15 +8,13 @@
 
 {% block banner %}
   <!-- success banner -->
-  <div class="alert alert-success">
-    <button type="button" class="close" data-dismiss="alert">x</button>
-    <div class="span1 text-right"><i class="icon-ok-sign icon-2x"> </i></div>
-    <div class="offset1">
-      <p><strong> You are now subscribed to this request!</strong></p>
-       You will be contacted via e-mail with any updates.
-      <p>All messages from the City and/or the information and documents requested will be posted to this page. You can access <a href ="{{request.path}}">this page</a> at any time.</p>
+    <div class="alert alert-success">
+      <button type="button" class="close" data-dismiss="alert">x</button>
+      <div class="span1 text-right"><i class="icon-ok-sign icon-2x"> </i></div>
+      <div class="offset1">
+        <p> <strong>You are now subscribed! </strong> You will be contacted via e-mail at with any updates to this request. 
+      </div>
     </div>
-  </div>
 {% endblock banner %}
 
 
