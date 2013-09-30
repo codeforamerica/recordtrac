@@ -1,11 +1,16 @@
 /* custom css for all_requests.html and child templates */
 
+/* breathing room for filter count */
+	small.count {
+		margin-left: 1em;
+	}
+
 /* bottom margin for table */
 	#allrequestTable_wrapper {
 		margin-bottom: 5em;
 	}
 	#viewSubmit {
-		margin-bottom: 5em;
+		/*margin-bottom: 5em;*/
 	}
 
 /* request table # of records left margin adjustment */

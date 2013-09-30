@@ -12,6 +12,10 @@ from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from sqlalchemy import func, not_
 import uuid
 
+### @export "get_count"
+def get_count(obj_type):
+	return db.session.query(func.count(eval(obj_type).id)).scalar()
+
 ### @export "get_obj"
 def get_obj(obj_type, obj_id):
 	""" Query the database for an object via its class/type (defined in models.py) and ID and return the object. """
@@ -50,6 +54,8 @@ def get_objs(obj_type):
 		return QA.query.all()
 	elif obj_type == "Subscriber":
 		return Subscriber.query.all()
+	elif obj_type == "Record":
+		return Record.query.all()
 	return None
 
 ### @export "get_request_by_owner"
@@ -81,12 +87,19 @@ def get_requests_by_filters(filters_dict):
 		if attr == 'department' or attr == 'owner':
 			continue
 		attr = attr.lower()
-		if type(value) is str:
+		if type(value) is str or type(value) is unicode:
 			value = value.lower()
 		if attr == 'status' and value == 'open':
 			q = q.filter(not_(getattr(Request, 'status').like("%%%s%%" % 'Closed')))
+		elif attr == 'requester': 
+			q = q.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % value))
 		else:
-			q = q.filter(getattr(Request, attr).like("%%%s%%" % value))
+			try:
+				request_attr = getattr(Request, attr)
+			except AttributeError:
+				continue
+			else:
+				q = q.filter(request_attr).like("%%%s%%" % value)
 	return q.all()
 
 ### @export "put_obj"
@@ -187,7 +200,8 @@ def create_answer(qa_id, subscriber_id, answer):
 
 ### @export "create_or_return_user"
 def create_or_return_user(email, alias = None, phone = None, department = None, not_id = False):
-	user = User.query.filter(func.lower(User.email) == func.lower(email)).first() 
+	email = email.lower()
+	user = User.query.filter_by(email = email).first()
 	if not user:
 		user = create_user(email = email, alias = alias, phone = phone, department = department)
 	else:
@@ -278,7 +292,8 @@ def authenticate_login(email, password):
 
 ### @export "set_random_password"
 def set_random_password(email):
-	user = User.query.filter(func.lower(User.email) == func.lower(email)).first() 
+	email = email.lower()
+	user = User.query.filter_by(email = email).first()
 	if not user:
 		return None # This is only for existing users, not a way to create a user, which we're not allowing yet.
 	password = uuid.uuid4().hex

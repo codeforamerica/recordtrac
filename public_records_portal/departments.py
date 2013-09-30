@@ -57,11 +57,12 @@ def get_dept_backup(dept_contact):
 
 ### @export "get_dept"
 def get_dept(user):
-	depts_json = open(os.path.join(app.root_path, 'static/json/departments.json'))
-	json_data = json.load(depts_json)
-	for line in json_data:
-		if json_data[line]["Contact"].lower() == user.email.lower():
-			return line
+	if user.email:
+		depts_json = open(os.path.join(app.root_path, 'static/json/departments.json'))
+		json_data = json.load(depts_json)
+		for line in json_data:
+			if json_data[line]["Contact"].lower() == user.email.lower():
+				return line
 	return None
 
 ### @export "populate_users_with_departments"

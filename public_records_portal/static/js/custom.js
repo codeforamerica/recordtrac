@@ -65,6 +65,7 @@
       });
   // to close the popover
   $('.popover-container').on('click', '.close', function(){
+    // alert('close me');
     $('#reroutePopover').popover('hide');
   })
 

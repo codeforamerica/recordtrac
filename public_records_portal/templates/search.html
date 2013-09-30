@@ -16,46 +16,5 @@ Let's help you get this routed to the right department!
 {% endblock container %}
 
 {% block custom_script_links %}
-<script>
-
-$(document).ready(function() {
-  var map = {};
-  var departments = [];
-  var doc_types = [];
-  $.getJSON("{{ url_for('static', filename='json/doctypes.json') }}", function(data) {
-        $.each(data, function (i, line) {
-          var department = line['DEPARTMENT'];
-          var doc_type = line['DOC_TYPE'];
-          if($.inArray(department, departments) == -1) {
-            departments.push(department);
-           }
-            map[doc_type + " - " + department] = department;
-            doc_types.push(doc_type + " - " + department);
-         });
-      });
-  /* typeahead for email in reroute form */
-  $('#selectDocType').typeahead({
-        source: doc_types
-        , updater: function (item) {
-          department = map[item];
-          return department;
-        }
-        ,matcher: function(item) {
-          if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) != -1){
-          return true;
-         }
-        }
-      , items: 8
-      , menu: '<ul class="typeahead dropdown-menu"></ul>'
-      , item: '<li><a href="#"></a></li>'
-      , minLength: 1
-      })
-  });
-   $('#selectDocTypeButton').click(function() {
-    if($.inArray($('#selectDocType').val(), departments) == -1) {
-      $('#selectDocType').val('');
-    }
-  });
-</script>
-
+<script type="text/javascript" src="{{ url_for('static', filename='js/search.js') }}"></script>
 {% endblock custom_script_links %}

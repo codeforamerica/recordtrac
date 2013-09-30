@@ -3,25 +3,41 @@
 {% extends "base.html" %}
 {% block title %}Request{% endblock title %}
 
-{% block container %}
+{% block custom_css_links %}
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/manage_request_city.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/_response_widget.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bottom_sidebar.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
+{% endblock custom_css_links %}
 
+{% block container %}
+<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
 <!-- social media section -->
-<!--   <div id="floating_media" class="text-center"> -->
+  <div id="floating_media" class="text-center">
 
     <!-- share on twitter -->
-<!--     <a href="#" onclick="window.open('http://twitter.com/intent/tweet?text={{ req.text | new_lines }}&amp;via=criscristina&amp;url=http://records.oaklandnet.com/{{req.id}}','','width=550,height=350,scrollbars=no');return false;"><div class="tool twitter"></div><span class="action hideText"><i class="icon-twitter icon-large"> </i></span></a> -->
-
-    <!-- share on facebook -->
-<!--     <a href="#" 
+    <a href="#" 
       onclick="
         window.open(
-          'https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Frecords.oaklandnet.com%2F{{req.id}}', 
+          'http://twitter.com/intent/tweet?text=Requested from the City of Oakland:&amp;via=RecordTrac&amp;url=http://records.oaklandnet.com/request/{{req.id}}', 
+          'facebook-share-dialog', 
+          'width=550,height=350'); 
+        return false;">
+      <i class="icon-twitter icon-large"> </i>
+    </a>
+
+    <!-- share on facebook -->
+    <a href="#" 
+      onclick="
+        window.open(
+          'https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Frecords.oaklandnet.com%2Frequest%2F{{req.id}}', 
           'facebook-share-dialog', 
           'width=626,height=436'); 
         return false;">
       <i class="icon-facebook icon-large"> </i>
     </a>
-  </div> -->
+  </div>
 
 <!-- main content -->
   <div class="row-fluid">
@@ -190,27 +206,14 @@
 
 
 {% block custom_script_links %}
-
   <!-- Listed in case instead of manage_request_city for truncation!!! -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/manage_request_city.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/case.js') }}"></script>
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/manage_request_city.css') }}">
 
   <!-- For response_widget partial -->
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/_response_widget.css') }}">
   <script type="text/javascript" src="{{ url_for('static', filename='js/_response_widget.js') }}"></script>
 
-  <!-- For sidebar styling -->
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bottom_sidebar.css') }}">
-
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
-
-  <!-- Text truncation -->
-<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.10.1.min.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.expander.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/custom.jquery.expander.js') }}"></script>
-
+  <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.ellipsis.js') }}"></script>
 {% endblock custom_script_links %}
 
 

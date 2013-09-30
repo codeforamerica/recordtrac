@@ -1,12 +1,13 @@
 <!-- This template is for the landing page. -->
 
 {% extends "base.html" %}
-{% block title %}Request{% endblock title %}
+{% block title %}Landing{% endblock title %}
 
-
+{% block custom_css_links %}
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/landing.css') }}">
+{% endblock custom_css_links %}
 
 {% block container %}
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/landing.css') }}">
 
 <div class="row-fluid">
 	<div class="span8 offset2">

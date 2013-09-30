@@ -2,16 +2,18 @@
 
 {% block container %}
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/staff_card.css') }}">
-
-	<div class="offset1">
-		{% set staff = ("User"| get_obj(uid)) %}
-		<h3>{{staff.alias}}</h3>
-		{% set gravatar_url = staff.email | get_gravatar_url %}
-		<div><img src= "{{gravatar_url}}" /></div>
-		<div><span class="title">Department: </span> <span class="entry">{{staff.department}}</span></div>
-		<div><span class="title">Email:  </span><span class="entry"><a href="mailto:{{staff.email}}">{{staff.email}}</a></span></div>
-		<div><span class="title">Phone:  </span><span class="entry">{{staff.phone}}</span></div>
-		
-		
+	{% set staff = ("User"| get_obj(uid)) %}
+	<div class="row-fluid">
+		<div class="span1 offset1">
+			{% set gravatar_url = staff.email | get_gravatar_url %}
+			<div><img class="staffpic" src= "{{gravatar_url}}" /></div>
+		</div>
+		<div class="span3">
+			<h3>{{staff.alias}}</h3>
+			<div><span class="title">Department: </span> <span class="entry">{{staff.department}}</span></div>
+			<div><span class="title">Email:  </span><span class="entry"><a href="mailto:{{staff.email}}">{{staff.email}}</a></span></div>
+			<div><span class="title">Phone:  </span><span class="entry">{{staff.phone}}</span></div>
+		</div>
 	</div>
+
 {% endblock container %}

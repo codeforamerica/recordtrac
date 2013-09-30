@@ -11,9 +11,6 @@
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    {% block custom_css_links %}
-
-    {% endblock custom_css_links %}
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap.min.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-responsive.min.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/BootSwatchr6.css') }}">
@@ -21,6 +18,10 @@
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/base.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/feedback.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/DT_bootstrap.css') }}">
+    {% block custom_css_links %}
+
+    {% endblock custom_css_links %}
+    
     
 <!--     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/select2.css') }}"> -->
 
@@ -58,11 +59,13 @@
             <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
               <ul class="nav tabs">
                 {% if user_id %}
+                <li><a href="/new">New request</a></li>
                 <li><a href="/requests">All requests</a></li>
+                <li><a href="/tutorial">Tutorial</a></li>
 <!--                 <li><a href="/admin">Admin</a></li> -->
                 <li><a href="/about">About</a></li>
                 {% else %}
-                <li><a href="/new">Make a request</a></li>
+                <li><a href="/new">New request</a></li>
                 <li><a href="/requests">Explore requests</a></li>
                 <li><a href="/about">About</a></li>
                 {% endif %}
@@ -122,7 +125,7 @@
     </div>
       
     <div id="footer" class="well well-small footer">
-      <p class="text-center">Made by <a href="http://codeforamerica.org/2013-partners/oakland/">Code for America 2013 Fellows</a></p>
+      <p class="text-center">Made by <a href="/signup">Code for America 2013 Fellows</a></p>
       <p class="text-center"><a href="https://github.com/codeforamerica/public-records"> <i class="icon-github"></i> Project info</a></p>
     </div>
 
@@ -145,8 +148,6 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.validate.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/custom.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.ellipsis.js') }}"></script>
-
 
     {% block custom_script_links %}
       
