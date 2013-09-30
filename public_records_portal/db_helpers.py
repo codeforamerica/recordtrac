@@ -91,10 +91,15 @@ def get_requests_by_filters(filters_dict):
 			value = value.lower()
 		if attr == 'status' and value == 'open':
 			q = q.filter(not_(getattr(Request, 'status').like("%%%s%%" % 'Closed')))
-		elif attr == 'requester': # make sure only logged in users can do this
+		elif attr == 'requester': 
 			q = q.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % value))
 		else:
-			q = q.filter(getattr(Request, attr).like("%%%s%%" % value))
+			try:
+				request_attr = getattr(Request, attr)
+			except AttributeError:
+				continue
+			else:
+				q = q.filter(request_attr).like("%%%s%%" % value)
 	return q.all()
 
 ### @export "put_obj"
