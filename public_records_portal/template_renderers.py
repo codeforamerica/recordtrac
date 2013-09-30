@@ -11,6 +11,7 @@ import departments
 import os, json
 from urlparse import urlparse, urljoin
 from notifications import send_prr_email
+from spam import is_spam
 
 # Initialize login
 login_manager = LoginManager()
@@ -20,9 +21,12 @@ login_manager.init_app(app)
 def new_request():
 	if request.method == 'POST':
 		email = request.form['request_email']
+		request_text = request.form['request_text']
+		if is_spam(request_text):
+			return render_template('error.html', message = "Your request looks a lot like spam. If you believe you're seeing this message in error, let us know through the feedback tab.")
+				# <img src = 'http://31.media.tumblr.com/tumblr_lijp30si761qc9z7yo1_500.gif'>")
 		if email == "" and 'ignore_email' not in request.form:
 			return render_template('missing_email.html', form = request.form, user_id = get_user_id())
-		request_text = request.form['request_text']
 		if request_text == "":
 			return render_template('error.html', message = "You cannot submit an empty request.")
 		alias = None
@@ -45,7 +49,7 @@ def new_request():
 		if is_new:
 			return redirect(url_for('show_request_for_x', request_id = request_id, audience = 'new'))
 		if not request_id:
-			return render_template('error.html', message = "You need to provide an e-mail address to submit a request.")
+			return render_template('error.html', message = "Your request looks a lot like spam.")
 		return render_template('error.html', message = "Your request is the same as /request/%s" % request_id)
 	else:
 		return render_template('new_request.html', user_id = get_user_id())
@@ -54,7 +58,7 @@ def index():
 	if current_user.is_anonymous() == False:
 		return redirect(url_for('requests'))
 	else:
-		return redirect(url_for('new_request'))
+		return render_template('landing.html')
 
 # @login_required
 # def your_requests():
@@ -163,6 +167,7 @@ def requests():
 	filters = {}
 	open_requests = False
 	my_requests = False
+	requester_name = ""
 	dept_selected = "All departments"
 	if request.method == 'POST':
 		if 'status_filter' in request.form:
@@ -175,17 +180,22 @@ def requests():
 		if 'owner_requests' in request.form and current_user.is_anonymous() == False:
 			my_requests = True
 			filters['owner'] = current_user.id
+		if 'requester' in request.form and current_user.is_anonymous() == False:
+			requester_name = request.form['requester']
+			filters['requester'] = requester_name
 	else:
-		filters = request.args
-	all_record_requests = get_requests_by_filters(filters)
+		if 'requester' not in request.args:
+			filters = request.args
+	record_requests = get_requests_by_filters(filters)
 	user_id = get_user_id()
-	if all_record_requests:
+	if record_requests:
 		template = 'all_requests.html'
 		if user_id: 
 			template = 'all_requests_city.html'
 	else:
 		template = "all_requests_noresults.html"
-	return render_template(template, all_record_requests = all_record_requests, user_id = user_id, title = "All Requests", open_requests = open_requests, departments = departments, dept_selected = dept_selected, my_requests = my_requests)
+	total_requests_count = get_count("Request")
+	return render_template(template, record_requests = record_requests, user_id = user_id, title = "All Requests", open_requests = open_requests, departments = departments, dept_selected = dept_selected, my_requests = my_requests, total_requests_count = total_requests_count, requester_name = requester_name)
 
 @login_manager.unauthorized_handler
 def unauthorized():

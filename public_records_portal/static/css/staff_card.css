@@ -6,6 +6,16 @@ span.entry {
 	font-weight: bold;
 }
 
-img {
+img.staffpic {
 	margin-bottom: 1em;
+	margin-top: 1.5em;
+}
+
+div.span3 {
+	padding-left: 0;
+	margin-left: 0;
+}
+
+div.row-fluid {
+	margin-top: 3em;
 }

@@ -22,8 +22,13 @@ $(document).ready(function(){
     rules: {
       record_description: {
         required: true,
-        minlength: 2
-           }
+        minlength: 2,
+        maxlength: 40
+           },
+      // link_url: {
+      //     required: true,
+      //     url: true
+      //        }
        },
      highlight: function(element) {
         $(element).closest('.control-group').removeClass('success').addClass('error');
