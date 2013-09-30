@@ -87,10 +87,12 @@ def get_requests_by_filters(filters_dict):
 		if attr == 'department' or attr == 'owner':
 			continue
 		attr = attr.lower()
-		if type(value) is str:
+		if type(value) is str or type(value) is unicode:
 			value = value.lower()
 		if attr == 'status' and value == 'open':
 			q = q.filter(not_(getattr(Request, 'status').like("%%%s%%" % 'Closed')))
+		elif attr == 'requester': # make sure only logged in users can do this
+			q = q.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % value))
 		else:
 			q = q.filter(getattr(Request, attr).like("%%%s%%" % value))
 	return q.all()

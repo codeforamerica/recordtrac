@@ -51,6 +51,8 @@
 
     <form name="filterPublic" class="form-horizontal" id="filterPublic" method="post" action="/requests">
       <fieldset>
+        Requester's name
+         <input name = "requester" id = "requester" type="text" value="{{requester_name}}">
         <label class="checkbox">
           <input name = "owner_requests" id = "owner_requests" type="checkbox" value=""
           {% if my_requests %} checked {% endif %}>

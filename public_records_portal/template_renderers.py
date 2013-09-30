@@ -167,6 +167,7 @@ def requests():
 	filters = {}
 	open_requests = False
 	my_requests = False
+	requester_name = ""
 	dept_selected = "All departments"
 	if request.method == 'POST':
 		if 'status_filter' in request.form:
@@ -179,8 +180,12 @@ def requests():
 		if 'owner_requests' in request.form and current_user.is_anonymous() == False:
 			my_requests = True
 			filters['owner'] = current_user.id
+		if 'requester' in request.form and current_user.is_anonymous() == False:
+			requester_name = request.form['requester']
+			filters['requester'] = requester_name
 	else:
-		filters = request.args
+		if 'requester' not in request.args:
+			filters = request.args
 	record_requests = get_requests_by_filters(filters)
 	user_id = get_user_id()
 	if record_requests:
@@ -190,7 +195,7 @@ def requests():
 	else:
 		template = "all_requests_noresults.html"
 	total_requests_count = get_count("Request")
-	return render_template(template, record_requests = record_requests, user_id = user_id, title = "All Requests", open_requests = open_requests, departments = departments, dept_selected = dept_selected, my_requests = my_requests, total_requests_count = total_requests_count)
+	return render_template(template, record_requests = record_requests, user_id = user_id, title = "All Requests", open_requests = open_requests, departments = departments, dept_selected = dept_selected, my_requests = my_requests, total_requests_count = total_requests_count, requester_name = requester_name)
 
 @login_manager.unauthorized_handler
 def unauthorized():
