@@ -44,3 +44,11 @@
   margin-bottom: -5000px; 
   padding-bottom: 5000px;  
 } 
+
+#flagtag_white {
+  margin-top: 2em;
+}
+
+a.text-center {
+	font-weight: bold;
+}
