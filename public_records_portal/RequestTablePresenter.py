@@ -8,6 +8,7 @@ from filters import *
 class RequestTablePresenter:
 	def __init__(self, request, public):
 		self.request = request
+		self.id = request.id
 		self.due_date = None
 		if public:
 			self.status = get_status(request, "public")
