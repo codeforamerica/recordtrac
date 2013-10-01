@@ -93,10 +93,11 @@ def display_staff_participant(owner, request):
 	else:
 		return staff.email
 
-def get_status(request, audience = "public", due_date = False):
+def get_status(request, audience = "public", include_due_date = False):
 	if not request.status:
 		return None
 	status = request.status.lower()
+	due_date = None
 	display_status = "open"
 	if "closed" in status:
 		display_status = "closed"
@@ -109,7 +110,8 @@ def get_status(request, audience = "public", due_date = False):
 				overdue, due_date = is_overdue(request.date_created, request.extended)
 				if overdue:
 					display_status = "overdue"
-	if due_date:
+	if include_due_date:
+		print "DUE DATE %s" % due_date
 		return display_status, due_date
 	return display_status
 

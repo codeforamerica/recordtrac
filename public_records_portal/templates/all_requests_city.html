@@ -23,9 +23,7 @@
         {% else %}
         <tr onclick="window.location.href='/request/{{request.id}}';">
         {% endif %}
-          <!-- <td>{{ status }} </td> -->
           {{ request.display_text | safe }}
-          </a> 
         </tr>
       {% else %}
       {% endfor %}

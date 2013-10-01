@@ -206,7 +206,7 @@ def assign_owner(request_id, reason, email = None):
 ### @export "get_request_table_data"
 def get_request_table_data(requests):
 	public = False
-	if current_user.is_anonymous:
+	if current_user.is_anonymous():
 		public = True
 	request_table_data = []
 	if not requests:
