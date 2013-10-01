@@ -23,20 +23,8 @@
         {% else %}
         <tr onclick="window.location.href='/request/{{request.id}}';">
         {% endif %}
-          {% set status = request | get_status("city") %}
-          {% set status_icon = status | get_status_icon %}
           <!-- <td>{{ status }} </td> -->
-           <td class="status {{status}}"><small><i class="{{status_icon}}"></i></small>{{status}}</td>
-          <td>{{ request.id }}</td>
-          <td>{{ request.date_created | date }}</td>
-
-          <td><div>{{ request.text }}</div></td>
-
-          {% set uid = ("user_id" | get_attribute(request.current_owner, "Owner")) %}
-          <td>{{ "department" | get_attribute(uid, "User") }}</td>
-          <td>{{ "alias" | get_attribute(uid, "User") }}</td>
-          <td>{{ request.status_updated | date_granular }} </td> 
-          <td>{{ request.date_created | due_date(request.extended) }}</td>
+          {{ request.display_text | safe }}
           </a> 
         </tr>
       {% else %}

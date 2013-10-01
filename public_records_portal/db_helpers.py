@@ -72,6 +72,20 @@ def get_owners_by_user_id(user_id):
 		return None
 	return Owner.query.filter_by(user_id = user_id)
 
+### @export "get_owner_data"
+def get_owner_data(request_id, attributes = ["department", "alias"]):
+	""" Return the alias of the current owner for a particular request. """
+	owner_data = []
+	if not request_id:
+		return owner_data
+	q = db.session.query(User).join(Owner, User.id == Owner.user_id).join(Request, Owner.id == Request.current_owner).filter(Request.id == request_id).all()
+	for attribute in attributes:
+		if len(q) > 0:
+			owner_data.append(getattr(q[0], attribute))
+		else:
+			owner_data.append(None)
+	return owner_data
+
 ### @export "get_requests_by_filters"
 def get_requests_by_filters(filters_dict):
 	""" Return the queryset of requests for the filters provided. """

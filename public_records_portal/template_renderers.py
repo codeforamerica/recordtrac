@@ -5,7 +5,7 @@ from flask import render_template, request, redirect, url_for
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
 from public_records_portal import app
 from filters import *
-from prr import add_resource, update_resource, make_request, close_request
+from prr import add_resource, update_resource, make_request, close_request, get_request_table_data
 from db_helpers import *
 import departments
 import os, json
@@ -186,7 +186,7 @@ def requests():
 	else:
 		if 'requester' not in request.args:
 			filters = request.args
-	record_requests = get_requests_by_filters(filters)
+	record_requests = get_request_table_data(get_requests_by_filters(filters))
 	user_id = get_user_id()
 	if record_requests:
 		template = 'all_requests.html'

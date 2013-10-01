@@ -14,6 +14,7 @@ from datetime import datetime, timedelta
 from models import *
 from ResponsePresenter import ResponsePresenter
 from RequestPresenter import RequestPresenter
+from RequestTablePresenter import RequestTablePresenter
 from notifications import generate_prr_emails
 import scribd_helpers
 from db_helpers import *
@@ -201,6 +202,21 @@ def assign_owner(request_id, reason, email = None):
 	if is_new_owner:
 		generate_prr_emails(request_id = request_id, notification_type = "Request assigned", user_id = user_id)
 	return owner_id
+
+### @export "get_request_table_data"
+def get_request_table_data(requests):
+	public = False
+	if current_user.is_anonymous:
+		public = True
+	request_table_data = []
+	if not requests:
+		return request_table_data
+	for req in requests:
+		request_table_data.append(RequestTablePresenter(request = req, public = public))
+	if not request_table_data:
+		return request_table_data
+	# request_table_data.sort(key = lambda x:x.date(), reverse = True)
+	return request_table_data
 
 ### @export "get_request_data_chronologically"
 def get_request_data_chronologically(req):
