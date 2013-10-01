@@ -2,13 +2,16 @@
 
 /* brand area */
 	img[alt="City of Oakland"] {
-		display: inline-block;
+		/*display: inline-block;
 		margin-top: -1.5em;
-		margin-right: 1em;
+		margin-right: 1em;*/
+		float: right;
+		margin-top: 2.25em;
+		margin-bottom: 1em;
 	}
-	h3 {
+	/*h3 {
 		margin-top: 1em;
-	}
+	}*/
 
 /* expore, request, track content */
 	p.text-center.text-title {
@@ -22,7 +25,7 @@
 h1 {
 	color: #17b292;
 	margin-top: 1em;
-	display: inline-block;
+	/*display: inline-block;*/
 }
 
 img[alt="request,track,explore"] {
@@ -31,9 +34,9 @@ img[alt="request,track,explore"] {
 	padding-left: 35px;
 }
 
-div.span4 {
+/*div.span4 {
 	margin-top: 1em;
-}
+}*/
 
 p.text-title {
 	margin-bottom: 0px;
