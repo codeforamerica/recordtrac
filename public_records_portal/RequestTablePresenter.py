@@ -18,19 +18,19 @@ class RequestTablePresenter:
 			else:
 				self.status, self.due_date = None, None
 		if self.status == "open":
-			self.color = "#2688AD;"
+			self.color = "#2688AD"
 		if self.status == "closed":
-			self.color = "#2a2b2b;"
+			self.color = "#2a2b2b"
 		elif self.status == "due soon":
-			self.color = "#FB991B;"
+			self.color = "#FB991B"
 		else:
-			self.color = "#CA1A1A;"
+			self.color = "#CA1A1A"
 
 		self.status_icon = get_status_icon(self.status)
 		self.department, self.point_of_contact = get_owner_data(request.id)
 		if public:
-			self.display_text = "<td bgcolor='%s'><small><i class='%s'></i></small>%s</td><td>%s</td><td>%s</td><td><div>%s</div></td><td>%s</td><td>%s</td><td>%s</td>" %(self.color,self.status_icon,self.status,request.id, date(request.date_created), request.text, self.department, self.point_of_contact, date_granular(request.status_updated))
+			self.display_text = "<td class='status' bgcolor='%s'><small><i class='%s'></i></small>%s</td><td>%s</td><td>%s</td><td><div>%s</div></td><td>%s</td><td>%s</td><td>%s</td>" %(self.color,self.status_icon,self.status,request.id, date(request.date_created), request.text, self.department, self.point_of_contact, date_granular(request.status_updated))
 		else:
-			self.display_text = "<td bgcolor='%s'><small><i class='%s'></i></small>%s</td><td>%s</td><td>%s</td><td><div>%s</div></td><td>%s</td><td>%s</td><td>%s</td><td>%s</td>" %(self.color,self.status_icon,self.status,request.id, date(request.date_created), request.text, self.department, self.point_of_contact, date_granular(request.status_updated), self.due_date)
+			self.display_text = "<td class='status' bgcolor='%s'><small><i class='%s'></i></small>%s</td><td>%s</td><td>%s</td><td><div>%s</div></td><td>%s</td><td>%s</td><td>%s</td><td>%s</td>" %(self.color,self.status_icon,self.status,request.id, date(request.date_created), request.text, self.department, self.point_of_contact, date_granular(request.status_updated), self.due_date)
 			
 

@@ -111,7 +111,6 @@ def get_status(request, audience = "public", include_due_date = False):
 				if overdue:
 					display_status = "overdue"
 	if include_due_date:
-		print "DUE DATE %s" % due_date
 		return display_status, due_date
 	return display_status
 

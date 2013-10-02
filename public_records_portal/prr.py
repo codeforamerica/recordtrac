@@ -215,7 +215,7 @@ def get_request_table_data(requests):
 		request_table_data.append(RequestTablePresenter(request = req, public = public))
 	if not request_table_data:
 		return request_table_data
-	# request_table_data.sort(key = lambda x:x.date(), reverse = True)
+	request_table_data.sort(key = lambda x:x.request.date_created, reverse = True)
 	return request_table_data
 
 ### @export "get_request_data_chronologically"
