@@ -19,7 +19,7 @@ class RequestTablePresenter:
 				self.status, self.due_date = None, None
 		if self.status == "open":
 			self.color = "#2688AD"
-		if self.status == "closed":
+		elif self.status == "closed":
 			self.color = "#2a2b2b"
 		elif self.status == "due soon":
 			self.color = "#FB991B"
