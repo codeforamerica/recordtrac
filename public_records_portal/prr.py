@@ -150,7 +150,7 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 		return request_id, False
 	request_id = create_request(text = text, user_id = user_id) # Actually create the Request object
 	new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email) # Assign someone to the request
-	if email: # If the user provided an e-mail address, add them as a subscriber to the request.
+	if email or phone or alias: # If the user provided an e-mail address, add them as a subscriber to the request.
 		subscriber_user_id = create_or_return_user(email = email, alias = alias, phone = phone)
 		subscriber_id, is_new_subscriber = create_subscriber(request_id = request_id, user_id = subscriber_user_id)
 		if subscriber_id:

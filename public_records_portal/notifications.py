@@ -35,20 +35,23 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 		if recipient_type in ["Staff owner","Requester","Subscriber","Staff participant"]:
 			if user_id:
 				recipient = get_attribute(attribute = "email", obj_id = user_id, obj_type = "User")
-				send_prr_email(page = page, recipients = [recipient], subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link)
+				if recipient:
+					send_prr_email(page = page, recipients = [recipient], subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link)
 			else:
 				print "Can't send an e-mail out if no user exists."
 		elif recipient_type == "Subscribers":
 			subscribers = get_attribute(attribute = "subscribers", obj_id = request_id, obj_type = "Request")
 			for subscriber in subscribers:
 				recipient = get_attribute(attribute = "email", obj_id = subscriber.user_id, obj_type = "User")
-				send_prr_email(page = page, recipients = [recipient], subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link) # Each subscriber needs to get a separate e-mail.
+				if recipient:
+					send_prr_email(page = page, recipients = [recipient], subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link) # Each subscriber needs to get a separate e-mail.
 		elif recipient_type == "Staff participants":
 			recipients = []
 			participants = get_attribute(attribute = "owners", obj_id = request_id, obj_type = "Request")
 			for participant in participants:
 				recipient = get_attribute(attribute = "email", obj_id = participant.user_id, obj_type = "User")
-				recipients.append(recipient)
+				if recipient:
+					recipients.append(recipient)
 			send_prr_email(page = page, recipients = recipients, subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = True)
 		else:
 			print recipient_type
