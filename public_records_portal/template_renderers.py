@@ -296,7 +296,7 @@ def well_known_status():
     response = {
         'status': 'ok',
         'updated': int(time()),
-        'dependecies': ['Akismet', 'Scribd', 'Sendgrid', 'Postgres'],
+        'dependencies': ['Akismet', 'Scribd', 'Sendgrid', 'Postgres'],
         'resources': {}
         }
     
