@@ -34,11 +34,11 @@ Save settings.env.example as settings.env and update relevant fields. To test e-
 
 ## Run locally
 
-If creating the database for the first time, run:
+If creating the database for the first time, first look up your `SQLALCHEMY_DATABASE_URI` value from settings.env; it will contain a database connection string such as “postgresql://user:password@hostname/dbname”, then run:
 
-    python
-    from public_records_portal import models
-    models.db.create_all()
+    env SQLALCHEMY_DATABASE_URI=<value from settings.env> python
+    >>> from public_records_portal import models
+    >>> models.db.create_all()
 
 To use the application locally with custom settings, run:
 
