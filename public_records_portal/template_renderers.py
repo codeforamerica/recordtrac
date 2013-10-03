@@ -221,7 +221,7 @@ def login(email=None, password=None):
 		if user_to_login:
 			login_user(user_to_login)
 			redirect_url = get_redirect_target()
-			if 'login' in redirect_url:
+			if 'login' in redirect_url or 'logout' in redirect_url:
 				return redirect(url_for('index'))
 			else:
 				return redirect(get_redirect_target())
