@@ -72,6 +72,20 @@ def get_owners_by_user_id(user_id):
 		return None
 	return Owner.query.filter_by(user_id = user_id)
 
+### @export "get_owner_data"
+def get_owner_data(request_id, attributes = ["department", "alias"]):
+	""" Return the alias of the current owner for a particular request. """
+	owner_data = []
+	if not request_id:
+		return owner_data
+	q = db.session.query(User).join(Owner, User.id == Owner.user_id).join(Request, Owner.id == Request.current_owner).filter(Request.id == request_id).all()
+	for attribute in attributes:
+		if len(q) > 0:
+			owner_data.append(getattr(q[0], attribute))
+		else:
+			owner_data.append(None)
+	return owner_data
+
 ### @export "get_requests_by_filters"
 def get_requests_by_filters(filters_dict):
 	""" Return the queryset of requests for the filters provided. """
@@ -199,19 +213,23 @@ def create_answer(qa_id, subscriber_id, answer):
 	return qa.request_id
 
 ### @export "create_or_return_user"
-def create_or_return_user(email, alias = None, phone = None, department = None, not_id = False):
-	email = email.lower()
-	user = User.query.filter_by(email = email).first()
-	if not user:
-		user = create_user(email = email, alias = alias, phone = phone, department = department)
+def create_or_return_user(email=None, alias = None, phone = None, department = None, not_id = False):
+	if email:
+		email = email.lower()
+		user = User.query.filter_by(email = email).first()
+		if not user:
+			user = create_user(email = email, alias = alias, phone = phone, department = department)
+		else:
+			user = update_user(user, alias, phone, department)
+		if not_id:
+			return user
+		return user.id
 	else:
-		user = update_user(user, alias, phone, department)
-	if not_id:
-		return user
-	return user.id
+		user = create_user(alias = alias, phone = phone)
+		return user.id
 
 ### @export "create_user"
-def create_user(email, alias = None, phone = None, department = None):
+def create_user(email=None, alias = None, phone = None, department = None):
 	user = User(email = email, alias = alias, phone = phone, department = department, password = app.config['ADMIN_PASSWORD'])
 	db.session.add(user)
 	db.session.commit()

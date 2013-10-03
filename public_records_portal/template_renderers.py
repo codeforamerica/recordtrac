@@ -5,7 +5,7 @@ from flask import render_template, request, redirect, url_for
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
 from public_records_portal import app
 from filters import *
-from prr import add_resource, update_resource, make_request, close_request
+from prr import add_resource, update_resource, make_request, close_request, get_request_table_data
 from db_helpers import *
 import departments
 import os, json
@@ -60,16 +60,6 @@ def index():
 	else:
 		return render_template('landing.html')
 
-# @login_required
-# def your_requests():
-# 	all_record_requests = []
-# 	owners = get_owners_by_user_id(current_user.id)
-# 	for owner in owners:
-# 		req = get_request_by_owner(owner.id)
-# 		if req:
-# 			all_record_requests.append(req)
-# 	return all_record_requests
-	# return render_template('all_requests.html', all_record_requests = all_record_requests, user_id = current_user.id, title = "Requests assigned to you")
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -186,7 +176,7 @@ def requests():
 	else:
 		if 'requester' not in request.args:
 			filters = request.args
-	record_requests = get_requests_by_filters(filters)
+	record_requests = get_request_table_data(get_requests_by_filters(filters))
 	user_id = get_user_id()
 	if record_requests:
 		template = 'all_requests.html'

@@ -14,6 +14,7 @@ from datetime import datetime, timedelta
 from models import *
 from ResponsePresenter import ResponsePresenter
 from RequestPresenter import RequestPresenter
+from RequestTablePresenter import RequestTablePresenter
 from notifications import generate_prr_emails
 import scribd_helpers
 from db_helpers import *
@@ -150,7 +151,7 @@ def make_request(text, email = None, assigned_to_name = None, assigned_to_email 
 		return request_id, False
 	request_id = create_request(text = text, user_id = user_id) # Actually create the Request object
 	new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email) # Assign someone to the request
-	if email: # If the user provided an e-mail address, add them as a subscriber to the request.
+	if email or phone or alias: # If the user provided an e-mail address, add them as a subscriber to the request.
 		subscriber_user_id = create_or_return_user(email = email, alias = alias, phone = phone)
 		subscriber_id, is_new_subscriber = create_subscriber(request_id = request_id, user_id = subscriber_user_id)
 		if subscriber_id:
@@ -201,6 +202,21 @@ def assign_owner(request_id, reason, email = None):
 	if is_new_owner:
 		generate_prr_emails(request_id = request_id, notification_type = "Request assigned", user_id = user_id)
 	return owner_id
+
+### @export "get_request_table_data"
+def get_request_table_data(requests):
+	public = False
+	if current_user.is_anonymous():
+		public = True
+	request_table_data = []
+	if not requests:
+		return request_table_data
+	for req in requests:
+		request_table_data.append(RequestTablePresenter(request = req, public = public))
+	if not request_table_data:
+		return request_table_data
+	request_table_data.sort(key = lambda x:x.request.date_created, reverse = True)
+	return request_table_data
 
 ### @export "get_request_data_chronologically"
 def get_request_data_chronologically(req):

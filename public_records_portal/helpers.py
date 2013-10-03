@@ -93,26 +93,26 @@ def display_staff_participant(owner, request):
 	else:
 		return staff.email
 
-def get_status(request, audience = "public"):
+def get_status(request, audience = "public", include_due_date = False):
 	if not request.status:
 		return None
 	status = request.status.lower()
-	if audience == "public":
-		if "closed" in status:
-			return "closed"
-		return "open"
+	due_date = None
+	display_status = "open"
 	if "closed" in status:
-		return "closed"
+		display_status = "closed"
 	else:
-		due_soon, due_date = is_due_soon(request.date_created, request.extended) 
-		if due_soon:
-			return "due soon"
-		else:
-			overdue, due_date = is_overdue(request.date_created, request.extended)
-			if overdue:
-				return "overdue"
-		return "open"
-	return None
+		if audience != "public":
+			due_soon, due_date = is_due_soon(request.date_created, request.extended) 
+			if due_soon:
+				display_status = "due soon"
+			else:
+				overdue, due_date = is_overdue(request.date_created, request.extended)
+				if overdue:
+					display_status = "overdue"
+	if include_due_date:
+		return display_status, due_date
+	return display_status
 
 def get_status_icon(status):
 	if status and status == "closed":

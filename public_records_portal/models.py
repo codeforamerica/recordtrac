@@ -27,7 +27,7 @@ class User(db.Model):
 		self.password = generate_password_hash(password)
 	def check_password(self, password):
 		return check_password_hash(self.password, password)
-	def __init__(self, email, alias = None, phone=None, department = None, password=None):
+	def __init__(self, email=None, alias = None, phone=None, department = None, password=None):
 		self.email = email
 		self.alias = alias
 		self.phone = phone
