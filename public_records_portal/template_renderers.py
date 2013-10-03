@@ -11,7 +11,7 @@ import departments
 import os, json
 from urlparse import urlparse, urljoin
 from notifications import send_prr_email
-from spam import is_spam
+from spam import is_spam, is_working_akismet_key
 from time import time
 
 # Initialize login
@@ -295,7 +295,7 @@ def well_known_status():
     response = {
         'status': 'ok',
         'updated': int(time()),
-        'dependecies': [],
+        'dependecies': ['Akismet', 'Scribd', 'SendGrid'],
         'resources': {}
         }
     
@@ -307,7 +307,18 @@ def well_known_status():
             raise Exception('Failed to get the first user')
         
     except Exception, e:
-        response['status'] = 'Fail: %s' % e
+        response['status'] = 'Database fail: %s' % e
+        return jsonify(response)
+    
+    #
+    # Try to connect to Akismet and see if the key is valid.
+    #
+    try:
+        if not is_working_akismet_key():
+            raise Exception('Akismet reported a non-working key')
+        
+    except Exception, e:
+        response['status'] = 'Akismet fail: %s' % e
         return jsonify(response)
     
     return jsonify(response)

@@ -10,3 +10,8 @@ def is_spam(comment):
 	if is_spam:
 		return True
 	return False
+
+def is_working_akismet_key():
+	key = app.config['AKISMET_KEY']
+	blog = app.config['APPLICATION_URL']
+	return akismet.verify_key(key=key, blog=blog)

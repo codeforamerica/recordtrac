@@ -30,7 +30,13 @@ In a new window:
     cd public-records
     sudo pip install -r requirements.txt
 
-Save settings.env.example as settings.env and update relevant fields. To test e-mail, sign up for a free account with SendGrid and provide the username and password in MAIL_USERNAME and MAIL_PASSWORD.
+Save settings.env.example as settings.env and update relevant fields.
+
+### Other Accounts
+
+To use e-mail, sign up for a free account with SendGrid and provide the username and password in `MAIL_USERNAME` and `MAIL_PASSWORD`.
+
+To be able to catch spammy input, sign up for a free account with [Akismet](http://akismet.com/plans/) and provide the application URL and Akismet key in `APPLICATION_URL` and `AKISMET_KEY`.
 
 ## Run locally
 
