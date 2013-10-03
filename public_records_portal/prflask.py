@@ -123,6 +123,10 @@ routing = {
 	'reset_password':{
 		'url': '/reset_password',
 		'methods': ['POST']
+	},
+	'well_known_status': {
+	    'url': '/.well-known/status',
+	    'methods': ['GET']
 	}
 }
 

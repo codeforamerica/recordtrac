@@ -1,7 +1,7 @@
 """Contains all functions that render templates/html for the app.
 """
 
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, jsonify
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
 from public_records_portal import app
 from filters import *
@@ -12,6 +12,7 @@ import os, json
 from urlparse import urlparse, urljoin
 from notifications import send_prr_email
 from spam import is_spam
+from time import time
 
 # Initialize login
 login_manager = LoginManager()
@@ -287,3 +288,26 @@ def is_safe_url(target):
 	test_url = urlparse(urljoin(request.host_url, target))
 	return test_url.scheme in ('http', 'https') and \
 		ref_url.netloc == test_url.netloc
+
+def well_known_status():
+    '''
+    '''
+    response = {
+        'status': 'ok',
+        'updated': int(time()),
+        'dependecies': [],
+        'resources': {}
+        }
+    
+    #
+    # Try to connect to the database and get the first user.
+    #
+    try:
+        if not get_obj('User', 1):
+            raise Exception('Failed to get the first user')
+        
+    except Exception, e:
+        response['status'] = 'Fail: %s' % e
+        return jsonify(response)
+    
+    return jsonify(response)
