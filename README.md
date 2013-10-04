@@ -30,15 +30,21 @@ In a new window:
     cd public-records
     sudo pip install -r requirements.txt
 
-Save settings.env.example as settings.env and update relevant fields. To test e-mail, sign up for a free account with SendGrid and provide the username and password in MAIL_USERNAME and MAIL_PASSWORD.
+Save settings.env.example as settings.env and update relevant fields.
+
+### Other Accounts
+
+To use e-mail, sign up for a free account with SendGrid and provide the username and password in `MAIL_USERNAME` and `MAIL_PASSWORD`. We assume your monthly email limit is 40,000 sends (Sendgrid's Bronze account level), but you can change this by setting a `SENDGRID_MONTHLY_LIMIT` int value in settings.env.
+
+To be able to catch spammy input, sign up for a free account with [Akismet](http://akismet.com/plans/) and provide the application URL and Akismet key in `APPLICATION_URL` and `AKISMET_KEY`.
 
 ## Run locally
 
-If creating the database for the first time, run:
+If creating the database for the first time, first look up your `SQLALCHEMY_DATABASE_URI` value from settings.env; it will contain a database connection string such as “postgresql://user:password@hostname/dbname”, then run:
 
-    python
-    from public_records_portal import models
-    models.db.create_all()
+    env SQLALCHEMY_DATABASE_URI=<value from settings.env> python
+    >>> from public_records_portal import models
+    >>> models.db.create_all()
 
 To use the application locally with custom settings, run:
 

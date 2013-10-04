@@ -2,7 +2,6 @@ from public_records_portal import models
 from models import Note, QA
 from db_helpers import get_obj, get_owner_data
 from helpers import *
-from filters import *
 
 
 class RequestTablePresenter:

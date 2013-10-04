@@ -1,7 +1,7 @@
 """Contains all functions that render templates/html for the app.
 """
 
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, jsonify
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
 from public_records_portal import app
 from filters import *
@@ -11,7 +11,9 @@ import departments
 import os, json
 from urlparse import urlparse, urljoin
 from notifications import send_prr_email
-from spam import is_spam
+from spam import is_spam, is_working_akismet_key
+from requests import get
+from time import time
 
 # Initialize login
 login_manager = LoginManager()
@@ -219,7 +221,7 @@ def login(email=None, password=None):
 		if user_to_login:
 			login_user(user_to_login)
 			redirect_url = get_redirect_target()
-			if 'login' in redirect_url:
+			if 'login' in redirect_url or 'logout' in redirect_url:
 				return redirect(url_for('index'))
 			else:
 				return redirect(get_redirect_target())
@@ -287,3 +289,54 @@ def is_safe_url(target):
 	test_url = urlparse(urljoin(request.host_url, target))
 	return test_url.scheme in ('http', 'https') and \
 		ref_url.netloc == test_url.netloc
+
+def well_known_status():
+    '''
+    '''
+    response = {
+        'status': 'ok',
+        'updated': int(time()),
+        'dependencies': ['Akismet', 'Scribd', 'Sendgrid', 'Postgres'],
+        'resources': {}
+        }
+    
+    #
+    # Try to connect to the database and get the first user.
+    #
+    try:
+        if not get_obj('User', 1):
+            raise Exception('Failed to get the first user')
+        
+    except Exception, e:
+        response['status'] = 'Database fail: %s' % e
+        return jsonify(response)
+    
+    #
+    # Try to connect to Akismet and see if the key is valid.
+    #
+    try:
+        if not is_working_akismet_key():
+            raise Exception('Akismet reported a non-working key')
+        
+    except Exception, e:
+        response['status'] = 'Akismet fail: %s' % e
+        return jsonify(response)
+    
+    #
+    # Try to ask Sendgrid how many emails we have sent in the past month.
+    #
+    try:
+        url = 'https://sendgrid.com/api/stats.get.json?api_user=%(MAIL_USERNAME)s&api_key=%(MAIL_PASSWORD)s&days=30' % app.config
+        got = get(url)
+        
+        if got.status_code != 200:
+            raise Exception('HTTP status %s from Sendgrid /api/stats.get' % got.status_code)
+        
+        mails = sum([m['delivered'] + m['repeat_bounces'] for m in got.json()])
+        response['resources']['Sendgrid'] = 100 * float(mails) / int(app.config.get('SENDGRID_MONTHLY_LIMIT') or 40000)
+        
+    except Exception, e:
+        response['status'] = 'Sendgrid fail: %s' % e
+        return jsonify(response)
+    
+    return jsonify(response)
