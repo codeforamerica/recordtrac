@@ -54,7 +54,8 @@ def new_request():
 			return render_template('error.html', message = "Your request looks a lot like spam.")
 		return render_template('error.html', message = "Your request is the same as /request/%s" % request_id)
 	else:
-		return render_template('new_request.html', user_id = get_user_id())
+		doc_types = os.path.exists(os.path.join(app.root_path, 'static/json/doctypes.json'))
+		return render_template('new_request.html', doc_types = doc_types, user_id = get_user_id())
 
 def index():
 	if current_user.is_anonymous() == False:
