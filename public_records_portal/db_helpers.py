@@ -329,3 +329,13 @@ def set_password(user, password):
 		return True
 	except:
 		return False
+
+### @export "update_subscriber"
+def update_subscriber(request_id, alias, phone):
+	""" Update a subscriber for a given request with the name and phone number provided. """
+	user_id = create_or_return_user(alias = alias, phone = phone)
+	r = Request.query.get(request_id)
+	sub = r.subscribers[0]
+	sub.user_id = user_id
+	db.session.add(sub)
+	db.session.commit()
