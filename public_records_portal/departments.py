@@ -28,6 +28,21 @@ def create_doctypes():
 	with open(os.path.join(app.root_path, 'static/json/doctypes.json'), 'w') as outfile:
   		json.dump(depts, outfile)
 
+def create_viz_data():
+	depts_freq = []
+	depts_json = open(os.path.join(app.root_path, 'static/json/list_of_departments.json'))
+	json_data = json.load(depts_json)
+	for department in json_data:
+		line = {}
+		line['department'] = department
+		line['freq'] = len(get_requests_by_filters(line))
+		depts_freq.append(line)
+	# Only display top 5 departments:
+	depts_freq.sort(key = lambda x:x['freq'], reverse = True)
+	del depts_freq[5:]
+	with open(os.path.join(app.root_path, 'static/json/responses_data.json'), 'w') as outfile:
+  		json.dump(depts_freq, outfile)
+
 ### @export "create_list_depts"
 def create_list_depts():
 	depts = []

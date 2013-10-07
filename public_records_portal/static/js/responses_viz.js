@@ -110,7 +110,7 @@ $(function() {
   svgNext.call(tipNext);
 
   d3.json("static/json/responses_time_data.json", function(error, json) {
-    if (error) return console.warn("Didn't load responses_data.json properly.");
+    if (error) return console.warn("Didn't load responses_time_data.json properly.");
     data = json;
     x.domain(data.map(function(d) { return d.department; }));
     y.domain([0, d3.max(data, function(d) { return d.time; })]);
