@@ -24,14 +24,16 @@ class RequestTablePresenter:
 			self.color = "#FB991B"
 		else:
 			self.color = "#CA1A1A"
-
+		self.text = request.text
+		if len(self.text) > 140:
+			self.text = '%s...' % self.text[:140]
 		self.status_icon = get_status_icon(self.status)
 		self.department, self.point_of_contact = get_owner_data(request.id)
 		if request.department:
 			self.department = request.department
 		if public:
-			self.display_text = "<td class='status' bgcolor='%s'><small><i class='%s'></i></small>%s</td><td>%s</td><td>%s</td><td><div>%s</div></td><td>%s</td><td>%s</td><td>%s</td>" %(self.color,self.status_icon,self.status,request.id, date(request.date_created), request.text, self.department, self.point_of_contact, date_granular(request.status_updated))
+			self.display_text = "<td class='status' bgcolor='%s'><small><i class='%s'></i></small>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td style='display:none;'>%s</td>" %(self.color,self.status_icon,self.status,request.id, date(request.date_created), self.text, self.department, self.point_of_contact, date_granular(request.status_updated), request.text)
 		else:
-			self.display_text = "<td class='status' bgcolor='%s'><small><i class='%s'></i></small>%s</td><td>%s</td><td>%s</td><td><div>%s</div></td><td>%s</td><td>%s</td><td>%s</td><td>%s</td>" %(self.color,self.status_icon,self.status,request.id, date(request.date_created), request.text, self.department, self.point_of_contact, date_granular(request.status_updated), self.due_date or "N/A")
+			self.display_text = "<td class='status' bgcolor='%s'><small><i class='%s'></i></small>%s</td><td>%s</td><td>%s</td><td><div>%s</div></td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td style='display:none;'>%s</td>" %(self.color,self.status_icon,self.status,request.id, date(request.date_created), self.text, self.department, self.point_of_contact, date_granular(request.status_updated), (self.due_date or "N/A"), request.text)
 			
 

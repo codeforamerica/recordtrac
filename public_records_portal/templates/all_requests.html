@@ -63,7 +63,7 @@
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.min.css') }}">
 {% endblock custom_css_links %}
 {% block container %}
-  <div class="row-fluid">type
+  <div class="row-fluid">
 
     <div class="span8 offset1">
       <div id="exploreTitle" class="row-fluid">
@@ -72,14 +72,6 @@
       </div>
       <div class="row-fluid">
         <p class="intro_text">RecordTrac makes every public records request available to the public, including messages or documents uploaded by city staff. Search through current and past requests. You may find what you need!</p>
-      </div>
-      <div class="row-fluid">
-        <div class="span6">
-          <div id="responses-viz"></div>
-        </div>
-        <div class="span6">
-          <div id="responses-time-viz"></div>
-        </div>
       </div>
       <div>
         {% block datatable %}
@@ -93,6 +85,7 @@
                 <th>Department</th>
                 <th>Point of Contact</th>
                 <th>Updated</th>
+                <th style='display:none;'></th>
                 {% block city_tableheader %}{% endblock city_tableheader %}
               </tr>
             </thead>
@@ -158,8 +151,6 @@
 
 {% block custom_script_links %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.dataTables.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/custom.jquery.ellipsis.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.ellipsis.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/DT_bootstrap.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/d3.v3.min.js') }}"></script>
     <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.min.js"></script>
