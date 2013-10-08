@@ -30,6 +30,6 @@ class RequestTablePresenter:
 		if public:
 			self.display_text = "<td class='status' bgcolor='%s'><small><i class='%s'></i></small>%s</td><td>%s</td><td>%s</td><td><div>%s</div></td><td>%s</td><td>%s</td><td>%s</td>" %(self.color,self.status_icon,self.status,request.id, date(request.date_created), request.text, self.department, self.point_of_contact, date_granular(request.status_updated))
 		else:
-			self.display_text = "<td class='status' bgcolor='%s'><small><i class='%s'></i></small>%s</td><td>%s</td><td>%s</td><td><div>%s</div></td><td>%s</td><td>%s</td><td>%s</td><td>%s</td>" %(self.color,self.status_icon,self.status,request.id, date(request.date_created), request.text, self.department, self.point_of_contact, date_granular(request.status_updated), self.due_date)
+			self.display_text = "<td class='status' bgcolor='%s'><small><i class='%s'></i></small>%s</td><td>%s</td><td>%s</td><td><div>%s</div></td><td>%s</td><td>%s</td><td>%s</td><td>%s</td>" %(self.color,self.status_icon,self.status,request.id, date(request.date_created), request.text, self.department, self.point_of_contact, date_granular(request.status_updated), self.due_date or "N/A")
 			
 
