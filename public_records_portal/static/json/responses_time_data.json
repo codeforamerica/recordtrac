@@ -1,0 +1,22 @@
+[
+    {
+        "department": 	"Water",
+        "time": 		100
+    },
+    {
+        "department": 	"Housing",
+        "time": 		800
+    },
+    {
+        "department": 	"Mayor",
+        "time": 		2200
+    },
+    {
+        "department": 	"Police",
+        "time": 		2000
+    },
+    {
+        "department": 	"Schools",
+        "time": 		200
+    }
+]
