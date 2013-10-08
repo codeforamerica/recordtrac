@@ -32,6 +32,7 @@ class RequestView(AdminView):
 
 class RecordView(AdminView):
 	can_create = False
+	column_searchable_list = ('description', 'filename', 'url', 'download_url', 'access')
 	column_list = ('request_id', 'description', 'filename', 'url', 'download_url', 'access')
 	can_edit = False
 
