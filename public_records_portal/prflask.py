@@ -46,11 +46,17 @@ class NoteView(AdminView):
 	column_list = ('request_id', 'text', 'date_created')
 	form_excluded_columns = ('date_created')
 
+class UserView(AdminView):
+	can_create = False
+	column_list = ('id', 'contact_for', 'backup_for', 'alias')
+	column_searchable_list = ('contact_for', 'alias')
+	form_excluded_columns = ('date_created', 'department', 'password')
+
 admin.add_view(RequestView(Request, db.session))
 admin.add_view(RecordView(Record, db.session))
 admin.add_view(NoteView(Note, db.session))
 admin.add_view(QAView(QA, db.session))
-
+admin.add_view(UserView(User, db.session))
 
 # Routing dictionary.
 routing = {

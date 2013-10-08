@@ -15,6 +15,8 @@ class User(db.Model):
 	date_created = db.Column(db.DateTime)
 	password = db.Column(db.String(255))
 	department = db.Column(db.String())
+	contact_for = db.Column(db.String()) # comma separated list
+	backup_for = db.Column(db.String()) # comma separated list
 	def is_authenticated(self):
 		return True
 	def is_active(self):
@@ -54,10 +56,12 @@ class Request(db.Model):
 	notes = relationship("Note", cascade="all,delete", order_by = "Note.date_created.desc()") # The list of notes appended to this request.
 	status = db.Column(db.String(400)) # The status of the request (open, closed, etc.)
 	creator_id = db.Column(db.Integer, db.ForeignKey('user.id')) # If city staff created it on behalf of the public, otherwise the creator is the subscriber with creator = true
-	def __init__(self, text, creator_id = None):
+	department = db.Column(db.String())
+	def __init__(self, text, creator_id = None, department = None):
 		self.text = text
 		self.date_created = datetime.now().isoformat()
 		self.creator_id = creator_id
+		self.department = department
 	def __repr__(self):
 		return '<Request %r>' % self.text
 

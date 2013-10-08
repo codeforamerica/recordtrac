@@ -27,6 +27,8 @@ class RequestTablePresenter:
 
 		self.status_icon = get_status_icon(self.status)
 		self.department, self.point_of_contact = get_owner_data(request.id)
+		if request.department:
+			self.department = request.department
 		if public:
 			self.display_text = "<td class='status' bgcolor='%s'><small><i class='%s'></i></small>%s</td><td>%s</td><td>%s</td><td><div>%s</div></td><td>%s</td><td>%s</td><td>%s</td>" %(self.color,self.status_icon,self.status,request.id, date(request.date_created), request.text, self.department, self.point_of_contact, date_granular(request.status_updated))
 		else:

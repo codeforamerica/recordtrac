@@ -142,14 +142,14 @@ def add_link(request_id, url, description, user_id):
 	return False
 
 ### @export "make_request"			
-def make_request(text, email = None, assigned_to_name = None, assigned_to_email = None, assigned_to_reason = None, user_id = None, phone = None, alias = None):
+def make_request(text, email = None, assigned_to_name = None, assigned_to_email = None, assigned_to_reason = None, user_id = None, phone = None, alias = None, department = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
 	if is_spam(text): 
 		return None, False
 	request_id = find_request(text)
 	if request_id: # Same request already exists
 		return request_id, False
-	request_id = create_request(text = text, user_id = user_id) # Actually create the Request object
+	request_id = create_request(text = text, user_id = user_id, department = department) # Actually create the Request object
 	new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email) # Assign someone to the request
 	if email or phone or alias: # If the user provided an e-mail address, add them as a subscriber to the request.
 		subscriber_user_id = create_or_return_user(email = email, alias = alias, phone = phone)

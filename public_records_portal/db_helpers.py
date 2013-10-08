@@ -161,9 +161,9 @@ def create_QA(request_id, question, owner_id):
 	return qa.id
 
 ### @export "create_request"
-def create_request(text, user_id):
+def create_request(text, user_id, department = None):
 	""" Create a Request object and return the ID. """
-	req = Request(text = text, creator_id = user_id)
+	req = Request(text = text, creator_id = user_id, department = department)
 	db.session.add(req)
 	db.session.commit()
 	return req.id
