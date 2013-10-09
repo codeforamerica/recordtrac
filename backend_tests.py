@@ -12,7 +12,9 @@ class BackEndTests(unittest.TestCase):
     def testGetObjectWrongParams(self):
     	self.failIf(db_helpers.get_obj("fake object", "not an ID"))
     def testGetObject(self):
-    	self.failUnless(db_helpers.get_obj("Request", 1))
+    	self.failUnless(db_helpers.get_obj("Request", 10))
+    def testGetStaffRecipients(self):
+        self.failUnless(notifications.get_staff_recipients(db_helpers.get_obj("Request", 10)))
 
 
 def main():
