@@ -29,7 +29,7 @@ class RequestTablePresenter:
 			self.text = '%s...' % self.text[:140]
 		self.status_icon = get_status_icon(self.status)
 		self.department = get_dept_by_request(request)
-		self.point_of_contact = get_owner_data(request.id, attributes = "alias")[0]
+		self.point_of_contact = get_owner_data(request.id, attributes = ["alias"])[0]
 		if public:
 			self.display_text = "<td class='status' bgcolor='%s'><small><i class='%s'></i></small>%s</td><td>%s</td><td>%s</td><td><div>%s</div></td><td>%s</td><td>%s</td><td style='display:none;'>%s</td>" %(self.color,self.status_icon,self.status,request.id, date(request.date_created), self.text, self.department, self.point_of_contact, request.text)
 		else:

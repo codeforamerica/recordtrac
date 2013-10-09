@@ -69,8 +69,11 @@ def get_request_by_owner(owner_id):
 def get_dept_by_request(request):
 	""" Return the department that a particular request belongs to """
 	if not request.department: # If it wasn't specified at time of request, we guess using the current point of contact:
-		point_of_contact = User.query.get(Owner.query.get(request.current_owner).user_id)
-		return point_of_contact.department
+		try:
+			point_of_contact = User.query.get(Owner.query.get(request.current_owner).user_id)
+			return point_of_contact.department
+		except:
+			return None
 	return request.department
 
 ### @export "get_owners_by_user_id"
