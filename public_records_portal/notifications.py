@@ -107,8 +107,9 @@ def is_due_soon(date_obj, extended = None):
 	current_date = datetime.now().date()
 	due = due_date(date_obj = date_obj, extended = extended, format = False)
 	num_days = 2
-	if (current_date + timedelta(days = num_days)) == due:
-		return True, due
+	if not (current_date >= due): # if not overdue
+		if (current_date + timedelta(days = num_days)) >= due:
+			return True, due
 	return False, due
 
 ### @export "is_overdue"

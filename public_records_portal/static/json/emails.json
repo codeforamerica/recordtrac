@@ -35,7 +35,7 @@
         },
         "Request due":
         {
-            "Subject": "A request in your department is due in 2 days.",
+            "Subject": "A request in your department is due in 2 days or less.",
             "Recipients": ["Staff owner", "Departmental backups"]
         },
         "Public note added":
