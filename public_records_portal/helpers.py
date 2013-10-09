@@ -101,14 +101,13 @@ def get_status(request, audience = "public", include_due_date = False):
 	display_status = "open"
 	if "closed" in status:
 		display_status = "closed"
-	else:
-		if audience != "public":
-			due_soon, due_date = is_due_soon(request.date_created, request.extended) 
-			if due_soon:
-				display_status = "due soon"
-			else:
-				overdue, due_date = is_overdue(request.date_created, request.extended)
-				if overdue:
+	if audience != "public":
+		due_soon, due_date = is_due_soon(request.date_created, request.extended) 
+		if due_soon:
+			display_status = "due soon"
+		else:
+			overdue, due_date = is_overdue(request.date_created, request.extended)
+			if overdue:
 					display_status = "overdue"
 	if include_due_date:
 		return display_status, due_date
