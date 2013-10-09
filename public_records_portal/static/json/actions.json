@@ -80,7 +80,7 @@
 
         "Fulfilled": 
             {
-                "What":"We released all of the requested documents.",
+                "What":"<p>We released all of the requested documents.</p><p>The documents were not uploaded to the site because it contains sensitive information only the requester can view.</p><p>Personal information, such as home addresses, telephone numbers, and credit card numbers, were removed to protect the privacy or identity of another individual (Government Code Section 6254(c)).</p><p>We removed information identifying private citizens who made complaints to government (City of San Jose v. Superior Court (1999) 74 Cal.App.4th 1008, 1020.)).</p>",
                 "Who":"",
                 "Action":""
             },
@@ -111,7 +111,7 @@
             },
         "Can Not Release": 
             {
-                "What":"We cannot give you the documents you requested. The California Public Records Act prohibits the City from releasing an individual’s employment, medical, or similar files to protect their privacy (Government Code Section 6254(c)). The California Public Records Act prohibits the City from releasing records related to an on-going litigation (Government Code Section 6254(b)). The California Public Records Act prohibits the City from releasing investigative records for crimes committed or police incident reports, rap sheets, and arrest records (Government Code Section 6254(f)). The California Public Records Act prohibits the City from releasing communications between an attorney and his or her clients (Government Code Section 6254(k).",
+                "What":"<p>We cannot give you the documents you requested. The California Public Records Act prohibits the City from releasing an individual’s employment, medical, or similar files to protect their privacy (Government Code Section 6254(c)).</p><p>We cannot give you the documents you requested. The California Public Records Act prohibits the City from releasing records related to an on-going litigation (Government Code Section 6254(b)).</p> <p>We cannot give you the documents you requested. The California Public Records Act prohibits the City from releasing investigative records for crimes committed or police incident reports, rap sheets, and arrest records (Government Code Section 6254(f)).</p><p>We cannot give you the documents you requested. The California Public Records Act prohibits the City from releasing communications between an attorney and his or her clients (Government Code Section 6254(k).</p>",
                 "Who":"",
                 "Action":""
             },
