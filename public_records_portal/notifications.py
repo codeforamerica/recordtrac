@@ -145,18 +145,27 @@ def notify_due():
 					email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Notification types"]["Request overdue"]["Subject"])
 				else:
 					continue
-			owner_uid = get_attribute(attribute = "user_id", obj_id = req.current_owner, obj_type = "Owner")	
-			owner_email = get_attribute(attribute = "email", obj_id = owner_uid, obj_type = "User")
-			recipients = [owner_email]
-			backup_email = get_dept_backup(owner_email)
-			if backup_email:
-				recipients.append(backup_email)
+			recipients = get_staff_recipients(req)
 			app_url = app.config['APPLICATION_URL']
 			page = "%scity/request/%s" %(app_url,req.id)
 			body = "You can view the request and take any necessary action at the following webpage: <a href='%s'>%s</a>.</br></br> This is an automated message. You are receiving it because you are listed as the Public Records Request Liaison, Backup or Supervisor for your department." %(page, page)
 				# Need to figure out a way to pass in generic email template outside application context. For now, hardcoding the body.
 			send_email(body = body, recipients = recipients, subject = email_subject, include_unsubscribe_link = False)
 
+### @export "get_staff_recipients"
+def get_staff_recipients(request):
+	recipients = []
+	owner_email = get_owner_data(request.id, attributes=["email"])[0]
+	recipients.append(owner_email)
+	# Look up the department for the request, and get the contacts and backup:
+	dept = get_dept_by_request(request)
+	contact_email = get_contact_by_dept(dept)
+	if contact_email and contact_email not in recipients:
+		recipients.append(contact_email)
+	backup_email = get_backup_by_dept(dept)
+	if backup_email and backup_email not in recipients:
+		recipients.append(backup_email)
+	return recipients
 
 ### @export "should_notify"
 def should_notify(user_email):

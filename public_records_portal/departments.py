@@ -9,9 +9,8 @@ from db_helpers import *
 .. modlueauthor:: Richa Agarwal <richa@codeforamerica.org>
 """
 ### @export "create_doctypes"
-# Creates a file called doctypes.json from departments.json that is used by typeahead to map document types to the department which can fulfill it
-### @export "create_doctypes"
 def create_doctypes():
+	""" # Creates a file called doctypes.json from departments.json that is used by typeahead to map document types to the department which can fulfill it. """
 	depts = []
 	depts_json = open(os.path.join(app.root_path, 'static/json/departments.json'))
 	json_data = json.load(depts_json)
@@ -52,14 +51,6 @@ def create_list_depts():
 		depts.append(department)
   	with open(os.path.join(app.root_path, 'static/json/list_of_departments.json'), 'w') as outfile:
   		json.dump(depts, outfile)
-
-### @export "get_prr_liaison"
-def get_prr_liaison(dept):
-	depts_json = open(os.path.join(app.root_path, 'static/json/departments.json'))
-	json_data = json.load(depts_json)
-	if dept in json_data:
-		return json_data[dept]["Contact"]
-	return None
 
 ### @export "get_dept_backup"
 def get_dept_backup(dept_contact):
