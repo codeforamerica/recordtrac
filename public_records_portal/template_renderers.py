@@ -41,7 +41,7 @@ def new_request():
 		assigned_to_reason = app.config['DEFAULT_OWNER_REASON']
 		department = request.form['request_department']
 		if department:
-			prr_email = departments.get_prr_liaison(department)
+			prr_email = db_helpers.get_contact_by_dept(department)
 			if prr_email:
 				assigned_to_email = prr_email
 				assigned_to_reason = "PRR Liaison for %s" %(department)
