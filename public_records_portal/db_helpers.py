@@ -65,6 +65,17 @@ def get_request_by_owner(owner_id):
 		return None
 	return Request.query.filter_by(current_owner = owner_id).first()
 
+### @export "get_dept_by_request"
+def get_dept_by_request(request):
+	""" Return the department that a particular request belongs to """
+	if not request.department: # If it wasn't specified at time of request, we guess using the current point of contact:
+		try:
+			point_of_contact = User.query.get(Owner.query.get(request.current_owner).user_id)
+			return point_of_contact.department
+		except:
+			return None
+	return request.department
+
 ### @export "get_owners_by_user_id"
 def get_owners_by_user_id(user_id):
 	""" Return the queryset of owners for a particular user. (A user can be associated with multiple owners)."""
@@ -73,7 +84,7 @@ def get_owners_by_user_id(user_id):
 	return Owner.query.filter_by(user_id = user_id)
 
 ### @export "get_owner_data"
-def get_owner_data(request_id, attributes = ["department", "alias"]):
+def get_owner_data(request_id, attributes = ["alias"]):
 	""" Return the alias of the current owner for a particular request. """
 	owner_data = []
 	if not request_id:
@@ -85,6 +96,19 @@ def get_owner_data(request_id, attributes = ["department", "alias"]):
 		else:
 			owner_data.append(None)
 	return owner_data
+
+### @export "get_prr_liaison_by_dept"
+def get_contact_by_dept(dept):
+	""" Return the contact for a given department. """
+	q = db.session.query(User).filter(func.lower(User.contact_for).like("%%%s%%" % dept.lower()))
+	return q[0].email
+
+### @export "get_backup_by_dept"
+def get_backup_by_dept(dept):
+	""" Return the contact for a given department. """
+	q = db.session.query(User).filter(func.lower(User.backup_for).like("%%%s%%" % dept.lower()))
+	return q[0].email
+
 
 ### @export "get_requests_by_filters"
 def get_requests_by_filters(filters_dict):
@@ -161,9 +185,9 @@ def create_QA(request_id, question, owner_id):
 	return qa.id
 
 ### @export "create_request"
-def create_request(text, user_id):
+def create_request(text, user_id, department = None):
 	""" Create a Request object and return the ID. """
-	req = Request(text = text, creator_id = user_id)
+	req = Request(text = text, creator_id = user_id, department = department)
 	db.session.add(req)
 	db.session.commit()
 	return req.id
@@ -329,3 +353,13 @@ def set_password(user, password):
 		return True
 	except:
 		return False
+
+### @export "update_subscriber"
+def update_subscriber(request_id, alias, phone):
+	""" Update a subscriber for a given request with the name and phone number provided. """
+	user_id = create_or_return_user(alias = alias, phone = phone)
+	r = Request.query.get(request_id)
+	sub = r.subscribers[0]
+	sub.user_id = user_id
+	db.session.add(sub)
+	db.session.commit()

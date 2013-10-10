@@ -36,11 +36,13 @@
 
                 </div>
               </div>
+              {% if doc_types %}
               <p class="lead">Select a department or document type <small class="department_optional">(optional)</small></p>
               <div class="control-group">
                   <select class ="combobox input-block-level" id="inputDepartment" name="request_department" type="text"></select>
                 {{ help("deptPopover-content", "Enter department or document type") }}
               </div>
+              {% endif %}
 
               <p class="lead">Contact information</p>
               <div class="control-group">

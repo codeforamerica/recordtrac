@@ -41,20 +41,22 @@ def new_request():
 		assigned_to_reason = app.config['DEFAULT_OWNER_REASON']
 		department = request.form['request_department']
 		if department:
-			prr_email = departments.get_prr_liaison(department)
+			prr_email = db_helpers.get_contact_by_dept(department)
 			if prr_email:
 				assigned_to_email = prr_email
 				assigned_to_reason = "PRR Liaison for %s" %(department)
 			else:
 				print "%s is not a valid department" %(department)
-		request_id, is_new = make_request(text = request_text, email = email, assigned_to_email = assigned_to_email, assigned_to_reason = assigned_to_reason, user_id = get_user_id(), alias = alias, phone = phone)
+				department = None
+		request_id, is_new = make_request(text = request_text, email = email, assigned_to_email = assigned_to_email, assigned_to_reason = assigned_to_reason, user_id = get_user_id(), alias = alias, phone = phone, department = department)
 		if is_new:
 			return redirect(url_for('show_request_for_x', request_id = request_id, audience = 'new'))
 		if not request_id:
 			return render_template('error.html', message = "Your request looks a lot like spam.")
 		return render_template('error.html', message = "Your request is the same as /request/%s" % request_id)
 	else:
-		return render_template('new_request.html', user_id = get_user_id())
+		doc_types = os.path.exists(os.path.join(app.root_path, 'static/json/doctypes.json'))
+		return render_template('new_request.html', doc_types = doc_types, user_id = get_user_id())
 
 def index():
 	if current_user.is_anonymous() == False:
