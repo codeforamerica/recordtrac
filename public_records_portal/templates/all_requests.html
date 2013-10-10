@@ -10,70 +10,10 @@
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/all_requests_noresults.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery.dataTables.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
-
-  <style>
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-.bar {
-  fill: steelblue;
-}
-
-.bar:hover {
-  fill: #FB991B ;
-}
-
-.x.axis path {
-  display: none;
-}
-
-.axis text {
-  font-size: 12px;
-  text-anchor: left;
-}
-
-.x.axis {
-  width: 50px;
-  overflow: hidden;
-}
-
-.d3-tip {
-  line-height: 1;
-  font-weight: bold;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  border-radius: 2px;
-}
-
-/* Creates a small triangle extender for the tooltip */
-.d3-tip:after {
-  box-sizing: border-box;
-  display: inline;
-  font-size: 10px;
-  width: 100%;
-  line-height: 1;
-  color: rgba(0, 0, 0, 0.8);
-  content: "\25BC";
-  position: absolute;
-  text-align: center;
-}
-
-/* Style northward tooltips differently */
-.d3-tip.n:after {
-  margin: -1px 0 0 0;
-  top: 100%;
-  left: 0;
-}
-  </style>
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.min.css') }}">
 {% endblock custom_css_links %}
 {% block container %}
-  <div class="row-fluid">type
+  <div class="row-fluid">
 
     <div class="span8 offset1">
       <div id="exploreTitle" class="row-fluid">
@@ -82,14 +22,6 @@
       </div>
       <div class="row-fluid">
         <p class="intro_text">RecordTrac makes every public records request available to the public, including messages or documents uploaded by city staff. Search through current and past requests. You may find what you need!</p>
-      </div>
-      <div class="row-fluid">
-        <div class="span6">
-          <div id="responses-viz"></div>
-        </div>
-        <div class="span6">
-          <div id="responses-time-viz"></div>
-        </div>
       </div>
       <div>
         {% block datatable %}
@@ -171,9 +103,6 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/custom.jquery.ellipsis.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.ellipsis.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/DT_bootstrap.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/d3.v3.min.js') }}"></script>
-    <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.min.js"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/responses_viz.js') }}"></script>
 
   <!-- filter select -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-select.min.js') }}"></script>
