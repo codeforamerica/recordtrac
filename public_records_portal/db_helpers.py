@@ -312,7 +312,7 @@ def authenticate_login(email, password):
 def set_random_password(email):
 	email = email.lower()
 	user = User.query.filter_by(email = email).first()
-	if not user and not user.department:
+	if not user or not user.department:
 		return None # This is only for existing staff users, not a way to create a user, which we're not allowing yet.
 	password = uuid.uuid4().hex
 	user.set_password(password)
