@@ -1,8 +1,7 @@
 from public_records_portal import models
 from models import Note, QA
-from db_helpers import get_obj, get_owner_data
+from db_helpers import get_obj, get_owner_data, get_requester, get_attribute
 from helpers import *
-
 
 class RequestTablePresenter:
 	def __init__(self, request, public):
@@ -11,6 +10,7 @@ class RequestTablePresenter:
 		if public:
 			self.status = get_status(request, "public")
 		else:
+			self.requester = get_attribute("alias", obj_id = get_requester(request.id), obj_type = "User")
 			status_arr = get_status(request = request, audience = "city", include_due_date = True)
 			if status_arr:
 				self.status, self.due_date = status_arr[0], date(status_arr[1])
@@ -37,6 +37,6 @@ class RequestTablePresenter:
 		if public:
 			self.display_text = "<td class='status' bgcolor='%s'><small><i class='%s'></i></small></td><td>%s</td><td>%s</td><td><div>%s</div></td><td>%s</td><td>%s</td><td style='display:none;'>%s</td>" %(self.color,self.status_icon,request.id, date(request.date_created), self.text, self.department, self.point_of_contact, request.text)
 		else:
-			self.display_text = "<td class='status' bgcolor='%s'><small><i class='%s'></i></small></td><td>%s</td><td>%s</td><td><div>%s</div></td><td>%s</td><td>%s</td><td>%s</td><td style='display:none;'>%s</td>" %(self.color,self.status_icon,request.id, date(request.date_created), self.text, self.department, self.point_of_contact, (self.due_date or "N/A"), request.text)
+			self.display_text = "<td class='status' bgcolor='%s'><small><i class='%s'></i></small></td><td>%s</td><td>%s</td><td><div>%s</div></td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td style='display:none;'>%s</td>" %(self.color,self.status_icon,request.id, date(request.date_created), self.text, self.department, self.point_of_contact, (self.due_date or "N/A"), self.requester or "Not given", request.text)
 			
 

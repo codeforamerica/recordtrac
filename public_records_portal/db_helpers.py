@@ -12,6 +12,16 @@ from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from sqlalchemy import func, not_
 import uuid
 
+### @export "get_requester"
+def get_requester(request_id): 
+# Returns the first person who subscribed to a request, which is the requester
+	subscribers = get_attribute(attribute = "subscribers", obj_id = request_id, obj_type = "Request")
+	if subscribers:
+		subscribers.sort(key = lambda x:x.date_created)
+		return get_attribute(attribute = "user_id", obj = subscribers[0])
+	return None
+
+
 ### @export "get_count"
 def get_count(obj_type):
 	return db.session.query(func.count(eval(obj_type).id)).scalar()
