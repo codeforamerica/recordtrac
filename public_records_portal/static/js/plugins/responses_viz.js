@@ -56,7 +56,8 @@ d3.tsv("data.tsv", type, function(error, data) {
 
   svg.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
+      .attr("x", 1)
+      .attr("transform", "translate(0," + width + ")")
       .call(xAxis);
 
   svg.append("g")

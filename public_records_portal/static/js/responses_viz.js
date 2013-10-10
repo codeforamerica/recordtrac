@@ -1,4 +1,4 @@
-var margin = {top: 20, right: 20, bottom: 30, left: 40},
+var margin = {top: 20, right: 20, bottom: 50, left: 40},
     height = 200 - margin.top - margin.bottom,
     width = $('#responses-viz').parent().width() - margin.left - margin.right;
 
@@ -12,7 +12,6 @@ var y = d3.scale.linear()
 
 var xAxis = d3.svg.axis()
     .scale(x)
-    .ticks(0)
     .orient("bottom");
 
 var yAxis = d3.svg.axis()
@@ -26,20 +25,11 @@ var yAxis = d3.svg.axis()
 // Create Frequency Graph for department requests volume
 $(function(){
 
-  // var retreived_json = JSON.parse('static/json/responses_data.json');
-
-  // var top3, bot3 = [], []
-
-  // for (i=0; i<retreived_json.length; i++) {
-  //   if retreived_json[i] > top3
-
-  // }
-
   var tip = d3.tip()
     .attr('class', 'd3-tip')
     .offset([-10, 0])
     .html(function(d) {
-      return "Frequency: <span style='color:red'>" + d.freq + "</span>";
+      return d.department + "<br /><center><div style='font-weight: normal; font-size: 12px; margin-top:5px'>Frequency: <span style='color:red'>" + d.freq + "</span></div></center>";
     });
 
   var svg = d3.select("#responses-viz").append("svg")
@@ -56,21 +46,36 @@ $(function(){
     x.domain(data.map(function(d) { return d.department; }));
     y.domain([0, d3.max(data, function(d) { return d.freq; })]);
 
+    // X-Axis
     svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
+        .call(xAxis)
+        .style("width", "50px")
+        .attr("text-anchor", "end")
+        .attr("textLength", "10");
 
+    svg.selectAll("text")
+        .attr("transform", "rotate(30) translate(10, 10)")
+
+    // Y-Axis
     svg.append("g")
         .attr("class", "y axis")
         .call(yAxis)
         .append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 6)
-        .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text("");
+        .attr("dy", ".71em");
 
+    // Heading Text
+    svg.append("text")
+        .attr("x", (width/2))
+        .attr("y", 0)
+        .style("font-size", "14px")
+        .style("font-weight", "bold")
+        .text("Requests by Department");
+
+    // draw bars vectors
     svg.selectAll(".bar")
         .data(data)
       .enter().append("rect")
