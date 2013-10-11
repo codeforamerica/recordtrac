@@ -64,6 +64,8 @@ def index():
 	else:
 		return render_template('landing.html')
 
+def viz():
+	return render_template('viz.html', viz_data = json.dumps(get_viz_data()))
 
 @app.errorhandler(404)
 def page_not_found(e):

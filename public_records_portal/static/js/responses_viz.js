@@ -70,8 +70,8 @@ $(function(){
   svg.call(tip);
 
   d3.json(viz_data, function(error, json) {
-    if (error) return console.warn("Didn't load responses_data.json properly.");
-    data = json;
+    // if (error) return console.warn("Didn't load responses_data.json properly.");
+    data = viz_data;
     x.domain(data.map(function(d) { return shortDeptNames[d.department]; }));
     y.domain([0, d3.max(data, function(d) { return d.freq; })]);
 

@@ -87,6 +87,9 @@ routing = {
 	'show_request':{
 		'url': '/request/<int:request_id>'
 	},
+	'viz': {
+		'url': '/viz'
+	},
 	'any_page':{
 		'url': '/<page>'
 	},

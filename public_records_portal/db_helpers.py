@@ -11,6 +11,8 @@ from datetime import datetime, timedelta
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from sqlalchemy import func, not_
 import uuid
+import json
+import os
 
 ### @export "get_count"
 def get_count(obj_type):
@@ -371,3 +373,33 @@ def update_subscriber(request_id, alias, phone):
 	sub.user_id = user_id
 	db.session.add(sub)
 	db.session.commit()
+
+### @export "get_viz_data"
+def get_viz_data():
+	viz_data = Visualization.query.get(3).content
+	return json.loads(viz_data)
+
+def create_viz_data():
+	depts_freq = []
+	# depts_response_time = []
+	depts_json = open(os.path.join(app.root_path, 'static/json/list_of_departments.json'))
+	json_data = json.load(depts_json)
+	for department in json_data:
+		line = {}
+		line['department'] = department
+		# response_line = line
+		line['freq'] = len(get_requests_by_filters(line))
+		# response['time'] = get_avg_response_time(department)
+		# depts_response_time.append(response_line)
+		depts_freq.append(line)
+	# Only display top 5 departments:
+	depts_freq.sort(key = lambda x:x['freq'], reverse = True)
+	del depts_freq[5:]
+	viz = Visualization.query.get(4)
+	if viz:
+		viz.content = json.dumps(depts_freq)
+	else:
+		viz = Visualization(type_viz = 'freq', content = json.dumps(depts_freq))
+	db.session.add(viz)
+	db.session.commit()
+	
