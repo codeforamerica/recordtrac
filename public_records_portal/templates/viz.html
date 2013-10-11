@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block container %}
+
+
+<div class="row-fluid">
+    <div class="span6 offset1	">
+      <div id="responses-viz"></div>
+    </div>
+
+</div>
+
+{% endblock container %}
+
+
+{% block custom_script_links %}
+	<script type="text/javascript">var viz_data = {{viz_data}}</script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/d3.v3.min.js') }}"></script>
+    <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/responses_viz.js') }}"></script>
+
+{% endblock custom_script_links %}

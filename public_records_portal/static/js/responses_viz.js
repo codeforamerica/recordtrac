@@ -50,7 +50,7 @@ $(function(){
 
   svg.call(tip);
 
-  d3.json("static/json/responses_data.json", function(error, json) {
+  d3.json(viz_data, function(error, json) {
     if (error) return console.warn("Didn't load responses_data.json properly.");
     data = json;
     x.domain(data.map(function(d) { return d.department; }));

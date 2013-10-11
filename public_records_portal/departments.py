@@ -29,18 +29,25 @@ def create_doctypes():
 
 def create_viz_data():
 	depts_freq = []
+	depts_response_time = []
 	depts_json = open(os.path.join(app.root_path, 'static/json/list_of_departments.json'))
 	json_data = json.load(depts_json)
 	for department in json_data:
 		line = {}
 		line['department'] = department
+		response_line = line
 		line['freq'] = len(get_requests_by_filters(line))
+		response['time'] = get_avg_response_time(department)
+		depts_response_time.append(response_line)
 		depts_freq.append(line)
 	# Only display top 5 departments:
 	depts_freq.sort(key = lambda x:x['freq'], reverse = True)
 	del depts_freq[5:]
 	with open(os.path.join(app.root_path, 'static/json/responses_data.json'), 'w') as outfile:
   		json.dump(depts_freq, outfile)
+  	with open(os.path.join(app.root_path, 'static/json/responses_time_data.json'), 'w') as outfile:
+  		json.dump(depts_freq, outfile)
+  	# write to db
 
 ### @export "create_list_depts"
 def create_list_depts():

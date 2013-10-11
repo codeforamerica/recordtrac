@@ -58,6 +58,14 @@ def get_objs(obj_type):
 		return Record.query.all()
 	return None
 
+### @export "get_avg_response_time"
+# def get_avg_response_time(department):
+# 	q = q.join(Owner, Request.current_owner == Owner.id).join(User).filter(func.lower(User.department).like("%%%s%%" % filters_dict['department'].lower())).all()
+# 	thing = q(func.avg(Request.date_created - R))
+# 	session.query(func.avg(Rating.field2).label('average')).filter(Rating.url==url_string.netloc)
+# 	for req in q:
+
+
 ### @export "get_request_by_owner"
 def get_request_by_owner(owner_id):
 	""" Return the request that a particular owner belongs to """
