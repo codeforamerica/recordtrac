@@ -376,7 +376,7 @@ def update_subscriber(request_id, alias, phone):
 
 ### @export "get_viz_data"
 def get_viz_data():
-	viz_data = Visualization.query.get(3).content
+	viz_data = Visualization.query.get(1).content
 	return json.loads(viz_data)
 
 def create_viz_data():
@@ -395,7 +395,7 @@ def create_viz_data():
 	# Only display top 5 departments:
 	depts_freq.sort(key = lambda x:x['freq'], reverse = True)
 	del depts_freq[5:]
-	viz = Visualization.query.get(4)
+	viz = Visualization.query.get(1)
 	if viz:
 		viz.content = json.dumps(depts_freq)
 	else:
