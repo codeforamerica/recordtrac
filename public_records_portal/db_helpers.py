@@ -14,6 +14,16 @@ import uuid
 import json
 import os
 
+### @export "get_requester"
+def get_requester(request_id): 
+# Returns the first person who subscribed to a request, which is the requester
+	subscribers = get_attribute(attribute = "subscribers", obj_id = request_id, obj_type = "Request")
+	if subscribers:
+		subscribers.sort(key = lambda x:x.date_created)
+		return get_attribute(attribute = "user_id", obj = subscribers[0])
+	return None
+
+
 ### @export "get_count"
 def get_count(obj_type):
 	return db.session.query(func.count(eval(obj_type).id)).scalar()
@@ -346,8 +356,8 @@ def authenticate_login(email, password):
 def set_random_password(email):
 	email = email.lower()
 	user = User.query.filter_by(email = email).first()
-	if not user:
-		return None # This is only for existing users, not a way to create a user, which we're not allowing yet.
+	if not user or not user.department:
+		return None # This is only for existing staff users, not a way to create a user, which we're not allowing yet.
 	password = uuid.uuid4().hex
 	user.set_password(password)
 	db.session.add(user)

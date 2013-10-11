@@ -266,14 +266,6 @@ def set_directory_fields():
 			email = line['EMAIL_ADDRESS'].lower()
 			user = create_or_return_user(email = email, alias = "%s %s" % (first, last), phone = line['PHONE'], department = line['DEPARTMENT'])
 
-### @export "get_requester"
-def get_requester(request_id): 
-# Returns the first person who subscribed to a request, which is the requester
-	subscribers = get_attribute(attribute = "subscribers", obj_id = request_id, obj_type = "Request")
-	if subscribers:
-		subscribers.sort(key = lambda x:x.date_created)
-		return get_attribute(attribute = "user_id", obj = subscribers[0])
-	return None
 
 ### @export "is_request_open"
 def is_request_open(request_id):
