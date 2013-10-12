@@ -70,13 +70,22 @@ def get_objs(obj_type):
 		return Record.query.all()
 	return None
 
-### @export "get_avg_response_time"
-# def get_avg_response_time(department):
-# 	q = q.join(Owner, Request.current_owner == Owner.id).join(User).filter(func.lower(User.department).like("%%%s%%" % filters_dict['department'].lower())).all()
-# 	thing = q(func.avg(Request.date_created - R))
-# 	session.query(func.avg(Rating.field2).label('average')).filter(Rating.url==url_string.netloc)
-# 	for req in q:
-
+## @export "get_avg_response_time"
+def get_avg_response_time(department):
+	q = db.session.query(Request).join(Owner, Request.current_owner == Owner.id).join(User).filter(func.lower(User.department).like("%%%s%%" % department.lower())).all()
+	response_time = None
+	num_closed = 0
+	for request in q:
+		if request.status and 'Closed' in request.status:
+			if response_time:
+				response_time = response_time + (request.status_updated - request.date_created)
+			else:
+				response_time = request.status_updated - request.date_created
+			num_closed = num_closed + 1
+	if num_closed > 0:
+		avg = response_time.seconds / num_closed
+		return avg
+	return None
 
 ### @export "get_request_by_owner"
 def get_request_by_owner(owner_id):
@@ -387,29 +396,38 @@ def update_subscriber(request_id, alias, phone):
 ### @export "get_viz_data"
 def get_viz_data():
 	viz_data = Visualization.query.get(1).content
-	return json.loads(viz_data)
+	viz_time_data = Visualization.query.get(2).content
+	return json.loads(viz_data), json.loads(viz_time_data)
 
 def create_viz_data():
 	depts_freq = []
-	# depts_response_time = []
+	depts_response_time = []
 	depts_json = open(os.path.join(app.root_path, 'static/json/list_of_departments.json'))
 	json_data = json.load(depts_json)
 	for department in json_data:
 		line = {}
 		line['department'] = department
-		# response_line = line
+		response_line = line
 		line['freq'] = len(get_requests_by_filters(line))
-		# response['time'] = get_avg_response_time(department)
-		# depts_response_time.append(response_line)
+		response_line['time'] = get_avg_response_time(department)
+		depts_response_time.append(response_line)
 		depts_freq.append(line)
 	# Only display top 5 departments:
 	depts_freq.sort(key = lambda x:x['freq'], reverse = True)
+	depts_response_time.sort(key = lambda x:x['time'], reverse = True)
 	del depts_freq[5:]
+	del depts_response_time[5:]
 	viz = Visualization.query.get(1)
+	viz2 = Visualization.query.get(2)
 	if viz:
 		viz.content = json.dumps(depts_freq)
 	else:
 		viz = Visualization(type_viz = 'freq', content = json.dumps(depts_freq))
+	if viz2:
+		viz2.content = json.dumps(depts_response_time)
+		viz2.type_viz = 'time'
+	else:
+		viz = Visualiation(type_viz = 'time', content = json.dumps(depts_response_time))
 	db.session.add(viz)
 	db.session.commit()
 	
