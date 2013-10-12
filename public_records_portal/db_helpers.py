@@ -406,8 +406,9 @@ def create_viz_data():
 	json_data = json.load(depts_json)
 	for department in json_data:
 		line = {}
+		response_line = {}
 		line['department'] = department
-		response_line = line
+		response_line['department'] = department
 		line['freq'] = len(get_requests_by_filters(line))
 		response_line['time'] = get_avg_response_time(department)
 		depts_response_time.append(response_line)
