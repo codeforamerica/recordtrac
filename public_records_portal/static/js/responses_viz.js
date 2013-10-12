@@ -69,9 +69,9 @@ $(function(){
 
   svg.call(tip);
 
-  d3.json(viz_data, function(error, json) {
+  d3.json(viz_data_freq, function(error, json) {
     // if (error) return console.warn("Didn't load responses_data.json properly.");
-    data = viz_data;
+    data = viz_data_freq;
     x.domain(data.map(function(d) { return shortDeptNames[d.department]; }));
     y.domain([0, d3.max(data, function(d) { return d.freq; })]);
 
@@ -117,65 +117,59 @@ $(function(){
         .on('mouseout', tip.hide);
 
   });
-
 });
 
+$(function() {
+
+  var svgNext = d3.select("#responses-time-viz").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  var tipNext = d3.tip()
+    .attr('class', 'd3-tip')
+    .offset([-10, 0])
+    .html(function(d) {
+      return "Frequency: <span style='color:red'>" + d.time + "</span>";
+    });
+
+  svgNext.call(tipNext);
 
 
+  d3.json(viz_data_time, function(error, json) {
+    // if (error) return console.warn("Didn't load responses_time_data.json properly.");
+    data = viz_data_time;
+    x.domain(data.map(function(d) { return d.department; }));
+    y.domain([0, d3.max(data, function(d) { return d.time; })]);
 
+    svgNext.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
 
+    svgNext.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("");
 
-// Create Average Response Time Graph 
-// $(function() {
+    svgNext.selectAll(".bar")
+        .data(data)
+      .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", function(d) { return x(d.department); })
+        .attr("width", x.rangeBand())
+        .attr("y", function(d) { return y(d.time); })
+        .attr("height", function(d) { return height - y(d.time); })
+        .on('mouseover', tipNext.show)
+        .on('mouseout', tipNext.hide);
 
-//   var svgNext = d3.select("#responses-time-viz").append("svg")
-//     .attr("width", width + margin.left + margin.right)
-//     .attr("height", height + margin.top + margin.bottom)
-//     .append("g")
-//     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  });
 
-//   var tipNext = d3.tip()
-//     .attr('class', 'd3-tip')
-//     .offset([-10, 0])
-//     .html(function(d) {
-//       return "Frequency: <span style='color:red'>" + d.time + "</span>";
-//     });
-
-//   svgNext.call(tipNext);
-
-//   d3.json("static/json/responses_time_data.json", function(error, json) {
-//     if (error) return console.warn("Didn't load responses_time_data.json properly.");
-//     data = json;
-//     x.domain(data.map(function(d) { return d.department; }));
-//     y.domain([0, d3.max(data, function(d) { return d.time; })]);
-
-//     svgNext.append("g")
-//         .attr("class", "x axis")
-//         .attr("transform", "translate(0," + height + ")")
-//         .call(xAxis);
-
-//     svgNext.append("g")
-//         .attr("class", "y axis")
-//         .call(yAxis)
-//         .append("text")
-//         .attr("transform", "rotate(-90)")
-//         .attr("y", 6)
-//         .attr("dy", ".71em")
-//         .style("text-anchor", "end")
-//         .text("");
-
-//     svgNext.selectAll(".bar")
-//         .data(data)
-//       .enter().append("rect")
-//         .attr("class", "bar")
-//         .attr("x", function(d) { return x(d.department); })
-//         .attr("width", x.rangeBand())
-//         .attr("y", function(d) { return y(d.time); })
-//         .attr("height", function(d) { return height - y(d.time); })
-//         .on('mouseover', tipNext.show)
-//         .on('mouseout', tipNext.hide);
-
-//   });
-
-// });
+});
 

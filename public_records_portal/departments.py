@@ -27,7 +27,6 @@ def create_doctypes():
 	with open(os.path.join(app.root_path, 'static/json/doctypes.json'), 'w') as outfile:
   		json.dump(depts, outfile)
 
-
 ### @export "create_list_depts"
 def create_list_depts():
 	depts = []
