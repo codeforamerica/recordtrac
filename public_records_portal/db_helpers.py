@@ -427,7 +427,7 @@ def create_viz_data():
 		viz2.content = json.dumps(depts_response_time)
 		viz2.type_viz = 'time'
 	else:
-		viz = Visualiation(type_viz = 'time', content = json.dumps(depts_response_time))
+		viz = Visualization(type_viz = 'time', content = json.dumps(depts_response_time))
 	db.session.add(viz)
 	db.session.commit()
 	
