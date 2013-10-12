@@ -1,6 +1,6 @@
 var margin = {top: 30, right: 20, bottom: 30, left: 40},
-    height = 200 - margin.top - margin.bottom,
-    width = $('#responses-viz').parent().width() - margin.left - margin.right;
+    height = 250 - margin.top - margin.bottom,
+    width = $('#responses-freq-viz').parent().width() - margin.left - margin.right;
 
 var formatYAxis = d3.format("f");
 
@@ -61,7 +61,7 @@ $(function(){
       return d.department + "<br /><center><div style='font-weight: normal; font-size: 12px; margin-top:5px'>Requests: <span style='color:#FB991B'>" + d.freq + "</span></div></center>";
     });
 
-  var svg = d3.select("#responses-viz").append("svg")
+  var svg = d3.select("#responses-freq-viz").append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
@@ -117,7 +117,6 @@ $(function(){
         .on('mouseout', tip.hide);
 
   });
-
 });
 
 
@@ -125,57 +124,85 @@ $(function(){
 
 
 
+// ----- Graph 2 ----- 
+// ===================
+
+var margin = {top: 30, right: 20, bottom: 30, left: 40},
+    height = 250 - margin.top - margin.bottom,
+    width = $('#responses-time-viz').parent().width() - margin.left - margin.right;
+
+var xResponseTime = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+
+var yDepartments = d3.scale.linear()
+    .range([height, 0]);
+
+var xResponseTimeAxis = d3.svg.axis()
+    .scale(xResponseTime)
+    .orient("bottom");
+
+var yDepartmentsAxis = d3.svg.axis()
+    .scale(yDepartments)
+    .orient("left")
+
+
+
 // Create Average Response Time Graph 
-// $(function() {
+$(function() {
 
-//   var svgNext = d3.select("#responses-time-viz").append("svg")
-//     .attr("width", width + margin.left + margin.right)
-//     .attr("height", height + margin.top + margin.bottom)
-//     .append("g")
-//     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  var svgNext = d3.select("#responses-time-viz").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-//   var tipNext = d3.tip()
-//     .attr('class', 'd3-tip')
-//     .offset([-10, 0])
-//     .html(function(d) {
-//       return "Frequency: <span style='color:red'>" + d.time + "</span>";
-//     });
+  var tipNext = d3.tip()
+    .attr('class', 'd3-tip')
+    .offset([-10, 0])
+    .html(function(d) {
+      return "Frequency: <span style='color:red'>" + d.time + "</span>";
+    });
 
-//   svgNext.call(tipNext);
+  svgNext.call(tipNext);
 
-//   d3.json("static/json/responses_time_data.json", function(error, json) {
-//     if (error) return console.warn("Didn't load responses_time_data.json properly.");
-//     data = json;
-//     x.domain(data.map(function(d) { return d.department; }));
-//     y.domain([0, d3.max(data, function(d) { return d.time; })]);
+  d3.json("static/json/responses_time_data.json", function(error, json) {
+    if (error) return console.warn("Didn't load responses_time_data.json properly.");
+    data = json;
+    xResponseTime.domain(data.map(function(d) { return d.time; }));
+    yDepartments.domain([0, d3.max(data, function(d) { return d.department; })]);
 
-//     svgNext.append("g")
-//         .attr("class", "x axis")
-//         .attr("transform", "translate(0," + height + ")")
-//         .call(xAxis);
 
-//     svgNext.append("g")
-//         .attr("class", "y axis")
-//         .call(yAxis)
-//         .append("text")
-//         .attr("transform", "rotate(-90)")
-//         .attr("y", 6)
-//         .attr("dy", ".71em")
-//         .style("text-anchor", "end")
-//         .text("");
+    // xAxis -- Time responses graph
+    svgNext.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "rotate(-90)")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xResponseTimeAxis);
 
-//     svgNext.selectAll(".bar")
-//         .data(data)
-//       .enter().append("rect")
-//         .attr("class", "bar")
-//         .attr("x", function(d) { return x(d.department); })
-//         .attr("width", x.rangeBand())
-//         .attr("y", function(d) { return y(d.time); })
-//         .attr("height", function(d) { return height - y(d.time); })
-//         .on('mouseover', tipNext.show)
-//         .on('mouseout', tipNext.hide);
 
-//   });
+    // yAxis -- Depatments listings
+    svgNext.append("g")
+        .attr("class", "y axis")
+        .call(yDepartmentsAxis)
+        .append("text")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("");
 
-// });
+
+    // Heading Text
+    // svgNext.selectAll(".bar")
+    //     .data(data)
+    //     .enter().append("rect")
+    //     .attr("class", "bar")
+    //     .attr("x", function(d) { return xResponseTime(d.time); })
+    //     .attr("width", function(d) { return xResponseTime(d.time); })
+    //     .attr("y", function(d) { return yDepartments(d.time); })
+    //     .attr("height", yDepartments.rangeBand())
+    //     .on('mouseover', tipNext.show)
+    //     .on('mouseout', tipNext.hide);
+
+  });
+});
 
