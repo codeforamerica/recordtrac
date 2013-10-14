@@ -87,6 +87,10 @@ routing = {
 	'show_request':{
 		'url': '/request/<int:request_id>'
 	},
+	'track':{
+		'url': '/track',
+		'methods':['POST']
+	},
 	'viz': {
 		'url': '/viz'
 	},
