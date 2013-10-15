@@ -107,7 +107,7 @@ $(function(){
     // draw bars vectors
     svg.selectAll(".bar")
         .data(data)
-      .enter().append("rect")
+        .enter().append("rect")
         .attr("class", "bar")
         .attr("x", function(d) { return x(shortDeptNames[d.department]); })
         .attr("width", x.rangeBand())
@@ -119,22 +119,6 @@ $(function(){
   });
 });
 
-$(function() {
-
-  var svgNext = d3.select("#responses-time-viz").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-  var tipNext = d3.tip()
-    .attr('class', 'd3-tip')
-    .offset([-10, 0])
-    .html(function(d) {
-      return "Frequency: <span style='color:red'>" + d.time + "</span>";
-    });
-
-  svgNext.call(tipNext);
 
 
 // ----- Graph 2 ----- 
@@ -144,11 +128,11 @@ var margin = {top: 30, right: 20, bottom: 30, left: 40},
     height = 250 - margin.top - margin.bottom,
     width = $('#responses-time-viz').parent().width() - margin.left - margin.right;
 
-var xResponseTime = d3.scale.ordinal()
+var xResponseTime = d3.scale.linear()
     .rangeRoundBands([0, width], .1);
 
-var yDepartments = d3.scale.linear()
-    .range([height, 0]);
+var yDepartments = d3.scale.ordinal()
+    .range([0, height]);
 
 var xResponseTimeAxis = d3.svg.axis()
     .scale(xResponseTime)
@@ -157,6 +141,8 @@ var xResponseTimeAxis = d3.svg.axis()
 var yDepartmentsAxis = d3.svg.axis()
     .scale(yDepartments)
     .orient("left")
+    .tickFormat(formatYAxis)
+    .ticks(5);
 
 
 
@@ -181,8 +167,8 @@ $(function() {
   d3.json("static/json/responses_time_data.json", function(error, json) {
     if (error) return console.warn("Didn't load responses_time_data.json properly.");
     data = json;
-    xResponseTime.domain(data.map(function(d) { return d.time; }));
-    yDepartments.domain([0, d3.max(data, function(d) { return d.department; })]);
+    xResponseTime.domain([0, d3.max(data, function(d) { return d.time; })]);
+    yDepartments.domain(data.map(function(d) { return d.department; }));
 
 
     // xAxis -- Time responses graph
@@ -196,24 +182,28 @@ $(function() {
     // yAxis -- Depatments listings
     svgNext.append("g")
         .attr("class", "y axis")
-        .call(yDepartmentsAxis)
         .append("text")
         .attr("y", 6)
         .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text("");
+        .style("text-anchor", "end");
 
-    // Heading Text
-    // svgNext.selectAll(".bar")
-    //     .data(data)
-    //     .enter().append("rect")
-    //     .attr("class", "bar")
-    //     .attr("x", function(d) { return xResponseTime(d.time); })
-    //     .attr("width", function(d) { return xResponseTime(d.time); })
-    //     .attr("y", function(d) { return yDepartments(d.time); })
-    //     .attr("height", yDepartments.rangeBand())
-    //     .on('mouseover', tipNext.show)
-    //     .on('mouseout', tipNext.hide);
+    svgNext.selectAll(".bar")
+        .data(data)
+        .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", function(d) { return xResponseTime(d.time); })
+        .attr("width", function(d) { return width - xResponseTime(d.time); })
+        .attr("y", function(d) { return yDepartments(shortDeptNames[d.department]); })
+        .attr("height", yDepartments.rangeBand())
+        .on('mouseover', tipNext.show)
+        .on('mouseout', tipNext.hide);
+
+
+
+        // .attr("x", function(d) { return x(shortDeptNames[d.department]); })
+        // .attr("width", x.rangeBand())
+        // .attr("y", function(d) { return y(d.freq); })
+        // .attr("height", function(d) { return height - y(d.freq); })
 
   });
 });
