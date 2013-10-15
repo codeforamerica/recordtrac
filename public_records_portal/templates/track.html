@@ -16,14 +16,14 @@
           <h3>Track a request</h3>
           <p class="intro_text">Use RecordTrac to request copies of specific documents, photos, emails, texts, audio recordings, electronic information and data in the City’s databases. If you need general information on City services, try <a href="http://answers.oaklandnet.com">Oakland Answers</a>.</p>
 
-          <form name="input" class="form-horizontal" id="submitTrack" method="post" action="/track" autocomplete="on" novalidate="novalidate">
+          <form name="input" class="form-horizontal" id="submitTrack" method="post" action="/track" autocomplete="on" >
             <fieldset>
 
               <p class="lead">Enter your tracking number</p>
 
               <div class="control-group">
                 <div >
-                  <input class="" name="request_id" type="number" id="request_id" placeholder="12345" />
+                  <input class="" name="request_id" type="number" id="request_id" placeholder="12345" required/>
                 </div>
               </div>
 
@@ -45,3 +45,7 @@
   </div>
 
 {% endblock container %}
+
+{% block custom_script_links %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/track.js') }}"></script>
+{% endblock custom_script_links %}
