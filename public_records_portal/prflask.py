@@ -1,7 +1,7 @@
 from public_records_portal import app, models, db, template_renderers
 from template_renderers import * # Import all the functions that render templates
 from flask.ext.restless import APIManager
-from flask.ext.admin import Admin
+from flask.ext.admin import Admin, expose, BaseView
 from flask.ext.admin.contrib.sqlamodel import ModelView
 
 # Create API
@@ -23,6 +23,11 @@ class AdminView(ModelView):
     		if 'codeforamerica.org' in current_user.email:
     			return True
         return False
+
+class IndexView(BaseView):
+    @expose('/')
+    def index(self):
+        return self.render('admin.html')
 
 class RequestView(AdminView):
 	can_create = False
@@ -57,6 +62,7 @@ admin.add_view(RecordView(Record, db.session))
 admin.add_view(NoteView(Note, db.session))
 admin.add_view(QAView(QA, db.session))
 admin.add_view(UserView(User, db.session))
+admin.add_view(IndexView())
 
 # Routing dictionary.
 routing = {
