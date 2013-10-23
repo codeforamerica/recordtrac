@@ -189,8 +189,15 @@ def requests():
 			requester_name = request.form['requester']
 			filters['requester'] = requester_name
 	else:
-		if 'requester' not in request.args:
-			filters = request.args
+		# Set defaults for logged in user:
+		if current_user.is_anonymous() == False:
+			my_requests = True
+			open_requests = True
+			filters['owner'] = current_user.id
+			filters['status'] = 'open'
+		else:
+			if 'requester' not in request.args:
+				filters = request.args
 	record_requests = get_request_table_data(get_requests_by_filters(filters))
 	user_id = get_user_id()
 	if record_requests:
