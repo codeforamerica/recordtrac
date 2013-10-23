@@ -189,6 +189,8 @@ def requests():
 			requester_name = request.form['requester']
 			filters['requester'] = requester_name
 	else:
+		if current_user.is_anonymous() == False:
+			my_requests = True
 		if 'requester' not in request.args:
 			filters = request.args
 	record_requests = get_request_table_data(get_requests_by_filters(filters))
