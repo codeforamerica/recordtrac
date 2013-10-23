@@ -26,15 +26,16 @@
       <div>
         {% block datatable %}
           <table cellpadding="0" cellspacing="0" border="0" id="allrequestTable" class="data-table table">
+            <caption>All request table</caption>
             <thead>
               <tr>
-                <th class="status"></th>
-                <th>#</th>
-                <th>Received</th>
-                <th>Request</th>
-                <th>Department</th>
-                <th>Point of Contact</th>
-                <th style='display:none;'></th>
+                <th class="status" scope="col"></th>
+                <th scope="col">#</th>
+                <th scope="col">Received</th>
+                <th scope="col">Request</th>
+                <th scope="col">Department</th>
+                <th scope="col">Point of Contact</th>
+                <th style='display:none;' scope="col"></th>
                 {% block city_tableheader %}{% endblock city_tableheader %}
               </tr>
             </thead>
@@ -67,12 +68,12 @@
           <form name="filterPublic" class="form-horizontal" id="filterPublic" method="post" action="/requests">
             <fieldset>
               <label class="checkbox">
-                <input type="checkbox" value="open" name="status_filter" id= "status_filter" 
+                <input type="checkbox" title="open_requests_checkbox" value="open" name="status_filter" id= "status_filter" 
                 {% if open_requests %} checked {% endif %}>
                 Open requests
               </label>
               <div class="row-fluid">
-                <select class="span12 selectpicker" id = "department_filter" name = "department_filter">
+                <select class="span12 selectpicker" title="select_department" id = "department_filter" name = "department_filter">
                   <!-- <option selected="{{dept_selected}}"> -->
                   <option >All departments</option>
                   {% for department in departments %}
@@ -86,7 +87,7 @@
               </div>
               <div class="row-fluid">
                 <div id="viewSubmit" class="span6 offset3">
-                  <button type="submit" class="btn btn-primary input-block-level">Update table</button>
+                  <button type="submit" title="update_table_button" class="btn btn-primary input-block-level">Update table</button>
                 </div>
               </div>
             </fieldset>
