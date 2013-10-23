@@ -93,6 +93,14 @@ def show_response(request_id):
 		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
 	return render_template("response.html", req = req, user_id = get_user_id())
 
+def track(request_id = None):
+	if request.method == 'POST':
+		if not request_id:
+			request_id = request.form['request_id']
+		return redirect(url_for('show_request', request_id = request_id))
+	else:
+		return render_template("track.html")
+
 def show_request(request_id, template = None):
 	current_user_id = get_user_id()
 	req = get_obj("Request", request_id)

@@ -1,5 +1,20 @@
 /* custom css for landing.html and child templates */
 
+/*hover states for images */
+	.round_link {
+	border-radius: 20px;
+	margin-bottom: 10%;
+	padding-top: 5%;
+	padding-bottom: 5%;
+	}
+
+	.round_link:hover {
+		background-color: rgba(23,178,146, .3);
+		color: #555;
+		text-decoration: none;
+	}
+
+
 /* brand area */
 	img[alt="City of Oakland"] {
 		/*display: inline-block;
@@ -14,12 +29,15 @@
 	}*/
 
 /* expore, request, track content */
-	p.text-center.text-title {
+	h4.text-center.text-title {
 		font-size: 18px;
 		margin-bottom: 0.25em;
+		margin-top: 1em;
+		color: #333;
 	}
 	p.text-center.text-body {
 		font-size: 16px;
+		color: #333;
 	}
 
 h1 {
@@ -57,8 +75,8 @@ p.text-title {
 	background-color: #17b292;
 }
 
-i.icon-arrow-right {
+/*i.icon-arrow-right {
 	padding-left: 2px;
 	font-size: 12pt;
-}
+}*/
 

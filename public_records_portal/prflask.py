@@ -1,7 +1,7 @@
 from public_records_portal import app, models, db, template_renderers
 from template_renderers import * # Import all the functions that render templates
 from flask.ext.restless import APIManager
-from flask.ext.admin import Admin
+from flask.ext.admin import Admin, expose, BaseView, AdminIndexView
 from flask.ext.admin.contrib.sqlamodel import ModelView
 
 # Create API
@@ -14,8 +14,14 @@ manager.create_api(models.Record, methods=['GET'], results_per_page = None)
 manager.create_api(models.QA, methods=['GET'], results_per_page =None)
 manager.create_api(models.Subscriber, methods=['GET'], results_per_page = None)
 
+
+class HomeView(AdminIndexView):
+    @expose('/')
+    def home(self):
+        return self.render('admin.html')
+
 # Create Admin
-admin = Admin(app, name='Oakland Public Records Admin', url='/admin')
+admin = Admin(app, name='Oakland Public Records Admin', url='/admin', index_view = HomeView(name='Home'))
 
 class AdminView(ModelView):
     def is_accessible(self):
@@ -86,6 +92,10 @@ routing = {
 	},
 	'show_request':{
 		'url': '/request/<int:request_id>'
+	},
+	'track':{
+		'url': '/track',
+		'methods':['POST']
 	},
 	'viz': {
 		'url': '/viz'
