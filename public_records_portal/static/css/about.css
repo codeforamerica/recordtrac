@@ -1,5 +1,11 @@
 /* custom css for about.html */
 
+/* bigger font for FAQ */
+ul {
+	font-size: 18px;
+	margin-left: 0px;
+}
+
 /* bold for table legend */
 p.table-legend {
 	font-weight: bold;
