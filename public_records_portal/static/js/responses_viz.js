@@ -1,25 +1,3 @@
-var margin = {top: 30, right: 20, bottom: 30, left: 40},
-    height = 250 - margin.top - margin.bottom,
-    width = $('#responses-freq-viz').parent().width() - margin.left - margin.right;
-
-var formatYAxis = d3.format("f");
-
-var x = d3.scale.ordinal()
-    .rangeRoundBands([0, width], .1);
-
-var y = d3.scale.linear()
-    .range([height, 0]);
-
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
-
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left")
-    .tickFormat(formatYAxis)
-    .ticks(5);
-
 var shortDeptNames = {
     "Office of the Mayor":                  'Mayor',
     "City Administrator":                   'City Admin',
@@ -48,6 +26,29 @@ var shortDeptNames = {
     "Council At Large - Rebecca Kaplan":    'Council',
     "Oakland Police Department":            'Police'
 }
+
+
+var margin = {top: 30, right: 20, bottom: 30, left: 40},
+    height = 250 - margin.top - margin.bottom,
+    width = $('#responses-freq-viz').parent().width() - margin.left - margin.right;
+
+var formatYAxis = d3.format("f");
+
+var x = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .tickFormat(formatYAxis)
+    .ticks(5);
 
 
 
@@ -121,6 +122,7 @@ $(function(){
 
 
 
+
 // ----- Graph 2 ----- 
 // ===================
 
@@ -129,11 +131,10 @@ var margin = {top: 30, right: 20, bottom: 30, left: 60},
     width = $('#responses-time-viz').parent().width() - margin.left - margin.right;
 
 var xResponseTime = d3.scale.linear()
-    .domain([0, d3.max(data)])
     .range([0, width]);
 
 var yDepartments = d3.scale.ordinal()
-    .rangeRoundBands([height, 0]);
+    .rangeRoundBands([height, 0], .1);
 
 var xResponseTimeAxis = d3.svg.axis()
     .scale(xResponseTime)
@@ -168,7 +169,7 @@ $(function() {
     if (error) return console.warn("Didn't load responses_time_data.json properly.");
     data = json;
     xResponseTime.domain([0, d3.max(data, function(d) { return d.time; })]);
-    yDepartments.domain(data.map(function(d) { return d.department; }));
+    yDepartments.domain(data.map(function(d) { return shortDeptNames[d.department]; }));
 
 
     // xAxis -- Time responses graph
@@ -190,21 +191,11 @@ $(function() {
         .data(data)
         .enter().append("rect")
         .attr("class", "bar")
-        .attr("x", function(d) { return xResponseTime(d.time); })
         .attr("width", function(d) { return xResponseTime(d.time); })
-        // .attr("y", function(d) { return yDepartments(shortDeptNames[d.department]); })
-        // .attr("height", function(d) { return height - yDepartments(d.department); })
-        .attr("height", 20)
+        .attr("y", function(d) { return yDepartments(shortDeptNames[d.department]); })
+        .attr("height", yDepartments.rangeBand())
         .on('mouseover', tipNext.show)
         .on('mouseout', tipNext.hide);
 
-
-
-        // .attr("x", function(d) { return x(shortDeptNames[d.department]); })
-        // .attr("width", x.rangeBand())
-        // .attr("y", function(d) { return y(d.freq); })
-        // .attr("height", function(d) { return height - y(d.freq); })
-
   });
 });
-
