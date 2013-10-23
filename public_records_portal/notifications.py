@@ -52,7 +52,7 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 				recipient = get_attribute(attribute = "email", obj_id = participant.user_id, obj_type = "User")
 				if recipient:
 					recipients.append(recipient)
-			send_prr_email(page = page, recipients = recipients, subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = True)
+			send_prr_email(page = page, recipients = recipients, subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = False)
 		else:
 			print recipient_type
 			print "Not a valid recipient type"
@@ -77,7 +77,8 @@ def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_ev
 	message = sendgrid.Message(sender, subject, plaintext, html)
 	if not include_unsubscribe_link:
 		message.add_filter_setting("subscriptiontrack", "enable", 0)
-	if cc_everyone:
+	if cc_everyone: # Not being used for now
+		message.add_to(recipients[0])
 		for recipient in recipients:
 			if should_notify(recipient):
 				message.add_cc(recipient)
