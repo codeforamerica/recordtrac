@@ -1,4 +1,16 @@
 {% extends 'admin/master.html' %}
 {% block body %}
-    Hello World from MyView!
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/admin.css') }}">
+
+    <h3>Administration</h3>
+    <p class="intro_text">In the administration section for RecordTrac, you can edit or delete individual content blocks or entire request.</p>  
+    <p class="intro_text">You can also add, remove, or change user permissions.</p>
+
+    <h5>Manage content</h5>
+	    <p class="manage-hotlinks"><a href="/admin/requestview/">Requests</a></p>
+	    <p class="manage-hotlinks"><a href="/admin/recordview/">Records</a></p>
+        <p class="manage-hotlinks"><a href="/admin/noteview/">Notes</a></p>
+        <p class="manage-hotlinks"><a href="/admin/qaview/">Questions and Answers</a></p>
+    <h5>Manage users</h5>
+    	<p class="manage-hotlinks"><a href="/admin/userview/">User permissions and asssociations</a></p>
 {% endblock %}
