@@ -124,15 +124,16 @@ $(function(){
 // ----- Graph 2 ----- 
 // ===================
 
-var margin = {top: 30, right: 20, bottom: 30, left: 40},
+var margin = {top: 30, right: 20, bottom: 30, left: 60},
     height = 250 - margin.top - margin.bottom,
     width = $('#responses-time-viz').parent().width() - margin.left - margin.right;
 
 var xResponseTime = d3.scale.linear()
-    .rangeRoundBands([0, width], .1);
+    .domain([0, d3.max(data)])
+    .range([0, width]);
 
 var yDepartments = d3.scale.ordinal()
-    .range([0, height]);
+    .rangeRoundBands([height, 0]);
 
 var xResponseTimeAxis = d3.svg.axis()
     .scale(xResponseTime)
@@ -141,7 +142,6 @@ var xResponseTimeAxis = d3.svg.axis()
 var yDepartmentsAxis = d3.svg.axis()
     .scale(yDepartments)
     .orient("left")
-    .tickFormat(formatYAxis)
     .ticks(5);
 
 
@@ -159,7 +159,7 @@ $(function() {
     .attr('class', 'd3-tip')
     .offset([-10, 0])
     .html(function(d) {
-      return "Frequency: <span style='color:red'>" + d.time + "</span>";
+      return d.department + "<br /><center><div style='font-weight: normal; font-size: 12px; margin-top:5px'>Requests: <span style='color:#FB991B'>" + d.time + "</span></div></center>";
     });
 
   svgNext.call(tipNext);
@@ -182,8 +182,7 @@ $(function() {
     // yAxis -- Depatments listings
     svgNext.append("g")
         .attr("class", "y axis")
-        .append("text")
-        .attr("y", 6)
+        .call(yDepartmentsAxis)
         .attr("dy", ".71em")
         .style("text-anchor", "end");
 
@@ -192,9 +191,10 @@ $(function() {
         .enter().append("rect")
         .attr("class", "bar")
         .attr("x", function(d) { return xResponseTime(d.time); })
-        .attr("width", function(d) { return width - xResponseTime(d.time); })
-        .attr("y", function(d) { return yDepartments(shortDeptNames[d.department]); })
-        .attr("height", yDepartments.rangeBand())
+        .attr("width", function(d) { return xResponseTime(d.time); })
+        // .attr("y", function(d) { return yDepartments(shortDeptNames[d.department]); })
+        // .attr("height", function(d) { return height - yDepartments(d.department); })
+        .attr("height", 20)
         .on('mouseover', tipNext.show)
         .on('mouseout', tipNext.hide);
 
