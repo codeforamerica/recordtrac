@@ -1,7 +1,7 @@
 <!-- This template provides the header, footer, and envelope info for all pages except signup. -->
 
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta charset="UTF-8">
@@ -80,7 +80,7 @@
             
                   <!-- Logout form here -->
                   <form class="form-horizontal" id="logoutForm" action="/logout">
-                    <input id="logout_form" type="submit" value="Logout" class="pull-right btn btn-link"/>
+                    <input id="logout_form" type="submit" value="Logout" title="logout_button" class="pull-right btn btn-link"/>
                   </form>
 
                 </div>
@@ -98,18 +98,18 @@
                     <!-- <div class="control-group"> -->
                       <label>Email</label>
                       <!-- <div class="controls"> -->
-                        <input type="text" class="input-medium" name="email" placeholder="you@oaklandnet.com">
+                        <input type="text" class="input-medium" name="email" title="input_email" placeholder="you@oaklandnet.com">
                       <!-- </div> -->
                     <!-- </div> -->
                     <!-- <div class="control-group"> -->
                       <label>Password</label>
                       <!-- <div class="controls"> -->
-                        <input type="password" class="input-small" name="password" placeholder="password">
+                        <input type="password" class="input-small" name="password" title="input_password" placeholder="password">
                       <!-- </div> -->
                     <!-- </div> -->
                     <!-- <div class="control-group"> -->
                       <!-- <div class="controls"> -->
-                        <input type="submit" value="City login" class="btn"/>
+                        <input type="submit" value="City login" title="login_button" class="btn"/>
                       <!-- </div> -->
                    <!--  </div> -->
                   </form>
@@ -164,7 +164,7 @@
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         </div>
         <div class="modal-body">
-          <iframe src="https://docs.google.com/forms/d/1UYbs_Rk9eeK4OAKFpfSQnxPBTQ8DcG7iO6RnIiB6Qaw/viewform?embedded=true" width="500" height="390" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+          <iframe title="feedback_form" src="https://docs.google.com/forms/d/1UYbs_Rk9eeK4OAKFpfSQnxPBTQ8DcG7iO6RnIiB6Qaw/viewform?embedded=true" width="500" height="390" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
         </div>
       </div>
     {% endblock feedback %}
