@@ -73,25 +73,50 @@
             </div>
             <!-- Login area -->
             {% if user_id %}
-    
             <ul class="nav pull-right">
-              <li>
-                <p class="navbar-text"> {{ "alias" | get_attribute(user_id, "User") }} </p>
-              </li>
+              <li class="dropdown">
+                <a class="dropdown-toggle" href="#" data-toggle="dropdown">{{ "alias" | get_attribute(user_id, "User") }} <strong class="caret"></strong></a>
+                <div id="logout-dropdown" class="dropdown-menu" >
             
-              <li>
-                <form class="navbar-form" id="logoutForm" action="/logout">
-                  <input id="logout_form" type="submit" value="(logout)" class="btn btn-link"/>
-                </form>
+                  <!-- Logout form here -->
+                  <form class="form-horizontal" id="logoutForm" action="/logout">
+                    <input id="logout_form" type="submit" value="Logout" class="pull-right btn btn-link"/>
+                  </form>
+
+                </div>
               </li>
             </ul>
 
             {% else %}
-            <form class="navbar-form pull-right" method="post" id="loginForm" action="/login">
-              <input type="text" class="input-medium" name="email" placeholder="you@oaklandnet.com">
-              <input type="password" class="input-small" name="password" placeholder="password">
-              <input type="submit" value="City login" class="btn"/>
-            </form>
+            <ul class="nav pull-right">
+              <li class="dropdown">
+                <a class="dropdown-toggle" href="#" data-toggle="dropdown">City login <strong class="caret"></strong></a>
+                <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
+               
+                <!-- Login form here -->
+                  <form class="form-horizontal" method="post" id="loginForm" action="/login">
+                    <!-- <div class="control-group"> -->
+                      <label>Email</label>
+                      <!-- <div class="controls"> -->
+                        <input type="text" class="input-medium" name="email" placeholder="you@oaklandnet.com">
+                      <!-- </div> -->
+                    <!-- </div> -->
+                    <!-- <div class="control-group"> -->
+                      <label>Password</label>
+                      <!-- <div class="controls"> -->
+                        <input type="password" class="input-small" name="password" placeholder="password">
+                      <!-- </div> -->
+                    <!-- </div> -->
+                    <!-- <div class="control-group"> -->
+                      <!-- <div class="controls"> -->
+                        <input type="submit" value="City login" class="btn"/>
+                      <!-- </div> -->
+                   <!--  </div> -->
+                  </form>
+
+                </div>
+              </li>
+            </ul>
             {% endif %}
             <!-- Everything you want hidden at 940px or less, place within here -->
             <div class="nav-collapse collapse">
