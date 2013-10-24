@@ -19,5 +19,6 @@ docs/index.adoc|jinja|asciidoctor:
             'clargs' : '-a icons=font'
             }
         - except: 'index'
+        - .json # this is just here for json printing demo, feel free to remove
         - .py|idio|asciisyn:
             - idio: { ext : '.txt' }
