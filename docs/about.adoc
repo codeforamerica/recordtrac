@@ -32,14 +32,19 @@ RecordTrac is not designed to be a document management system or a tool to help 
 == Research and references
 
 The 2013 Code for America fellows conducted research on the way the City of Oakland managed and fulfilled public records requests. This influenced the web app's development. Links to the research can be found below:
+
 * http://codeforamerica.github.io/public-records/research.html[How the City of Oakland Handles Public Records Requests]
-* http://codeforamerica.github.io/public-records/ibpm-analysis.html [Analysis of Past Public Records Requests]
+
+* http://codeforamerica.github.io/public-records/ibpm-analysis.html[Analysis of Past Public Records Requests]
 
 The Code for America fellows piloted RecordTrac in the City of Oakland before it was released to the public on October 1, 2013. To learn about the testing strategy, visit the following web page:
-* http://codeforamerica.github.io/public-records/teststrategy.html [Testing Strategy for Public Records Request Management System]
+
+* http://codeforamerica.github.io/public-records/teststrategy.html[Testing Strategy for Public Records Request Management System]
 
 
 If you want to know more about the California Public Records Act and Oakland's Sunshine Ordinance, check out these resources:
+
 * http://www2.oaklandnet.com/Government/o/CityAdministration/d/PublicEthics/s/OpenGovernment/OAK040723[City of Oakland's Public Ethics Commission]
+
 * http://www.oaklandcityattorney.org/resources/PubInfoRequest.html[City Attorney's website]
 
