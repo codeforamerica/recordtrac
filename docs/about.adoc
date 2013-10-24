@@ -1,8 +1,14 @@
+= About RecordTrac
+:toc:
+:source-highlighter: pygments
+
+link:index.html[back to index page]
+
 == What Is RecordTrac?
 
 RecordTrac is a quick, simple way for an individual to submit a public records request to a governmental agency. The web application also allows government employees manage, respond to, and fulfill incoming requests. By displaying all records requests and responsive documents, members of the public may find what they need without submitting another public records request.
 
-==Why RecordTrac was built?
+== Why was RecordTrac built?
 
 The 2013 Code for America fellows created RecordTrac with the City of Oakland. As public records requests became larger and more complex, city employees found coordinating a response to be difficult. The old software system no longer met their needs and many requests remained untracked.
 
@@ -10,11 +16,11 @@ Members of the public complained they didn’t understand what happened after th
 
 By making everything completely transparent, it became easier for the City and members of the public to understand what happens to each request. Although this app was initially developed for the City of Oakland, any governmental agencies who is required by law to respond to requests for information or documents can reuse RecordTrac. 
 
-==Design Principles
+== Design Principles
 
 The primary goal was to create a central, shared view for all public records requests and responses from government employees.
 
-* Minimum in, minimum out: Only ask what you need of requesters to fulfill a public records request.
+* Minimum in, maximum out: Only ask what you need of requesters to fulfill a public records request.
 * Transparency: Government employees and members of the public share a view of all requests and how they are being fulfilled.
 * Simple and fun: It should be easy to submit a public records requests. 
 * Comfortable and confident: Users should not be intimidated and should fully understand what happens when they take an action. 
@@ -23,7 +29,7 @@ The primary goal was to create a central, shared view for all public records req
 RecordTrac is not designed to be a document management system or a tool to help government employees redact sensitive or confidential records. It is not a timer, keeping track of how long a government employee has to fulfill a records request. Although you can learn about how a particular governmental agency fulfills a public records request by using RecordTrac, it is not designed to teach bout about freedom of information laws.
 
 
-==Research and references
+== Research and references
 
 The 2013 Code for America fellows conducted research on the way the City of Oakland managed and fulfilled public records requests. This influenced the web app's development. Links to the research can be found below:
 * http://codeforamerica.github.io/public-records/research.html[How the City of Oakland Handles Public Records Requests]

@@ -14,7 +14,7 @@ NOTE: For help contact oakland|@|codeforamerica.org
 
 Understand what is RecordTrac and what motivated the 2013 Code for America fellows to build it. You can also find links to research about the public records request process in Oakland. 
 
-{{ link('what_is_recordtrac') }}
+{{ link('about') }}
 
 == How a _requester_ uses RecordTrac
 
