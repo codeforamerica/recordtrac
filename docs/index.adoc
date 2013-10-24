@@ -20,7 +20,7 @@ Understand what is RecordTrac and what motivated the 2013 Code for America fello
 
 == How a _responder_ uses RecordTrac
 
-== How Is This Built
+== How RecordTrac is Built
 
 Learn about the technical details of implementation so you can see what's involved.
 
@@ -38,6 +38,9 @@ RecordTrac is primary a Python application built on a backend Flask framework an
 === Feature backlog
 Issues and feature backlog are tracked through https://github.com/codeforamerica/public-records[GitHub issues].
 
+== How to Redeploy RecordTrac
+
+== How to Maintain RecordTrac
 
 == API Documentation
 
