@@ -31,10 +31,13 @@ RecordTrac is primary a Python application built on a backend Flask framework an
 * http://getbootstrap.com/2.3.2/ [Bootstrap 2.3.2]
 * http://www.postgresapp.com/ [Postgres 9.3.0]
 * http://www.python.org/getit/ [Python 2.7.5]
+
 === Plugins
 * http://fortawesome.github.io/Font-Awesome/ [Font Awesome 3.2.1]
 * http://www.datatables.net/ [DataTables 1.9.4]
+
 === Service dependencies
+
 === Feature backlog
 Issues and feature backlog are tracked through https://github.com/codeforamerica/public-records[GitHub issues].
 
