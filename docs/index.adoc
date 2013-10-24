@@ -1,0 +1,41 @@
+= RecordTrac Documentation
+
+{% macro link(underscore_name) %}
+link:{{ underscore_name }}.html[{{titleize(underscore_name)}}]
+{% endmacro %}
+
+== Welcome
+
+This is the home page for documentation for RecordTrac app.
+
+NOTE: For help contact ...
+
+== What This Is
+
+* {{ link('overview-of-app') }}
+* {{ link('why-it-was-built') }}
+* {{ link('research-and-references') }}
+* {{ link('principles') }}
+
+== How Is This Built
+
+Learn about the technical details of implementation so you can see what's involved.
+
+
+== API Documentation
+
+* {{ link('api-documentation') }}
+
+== Developer Documentation
+
+How to modify and develop the app's source code.
+
+=== Source Code
+
+* https://github.com/codeforamerica/public-records[Source Code (Github)]
+* https://github.com/codeforamerica/public-records/issues[Issue Tracker (Github)]
+
+=== Developer Docs
+
+* {{ link('db-helpers') }}
+
