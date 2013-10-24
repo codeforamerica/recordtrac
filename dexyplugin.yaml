@@ -1,7 +1,4 @@
-reporter:output:
-    help: Store output in separate gh-pages branch.
-    dir: ../public-records-docs
-
 reporter:ws:
     help: Store output in separate gh-pages branch.
+    readme-filename: None
     dir: ../public-records-docs
