@@ -14,10 +14,15 @@ from notifications import send_prr_email
 from spam import is_spam, is_working_akismet_key
 from requests import get
 from time import time
+from flask.ext.cache import Cache
 
 # Initialize login
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+# Initialize cache
+cache = Cache()
+cache.init_app(app, config={'CACHE_TYPE': 'simple'})
 
 # Submitting a new request
 def new_request():
@@ -111,7 +116,7 @@ def show_request(request_id, template = None):
 			return render_template('alpha.html')
 	else:
 		template = "manage_request_public.html"
-	if req.status and "Closed" in req.status:
+	if req.status and "Closed" in req.status and template != "manage_request_feedback.html":
 		template = "closed.html"
 	return render_template(template, req = req, user_id = get_user_id())
 
@@ -165,6 +170,7 @@ def close(request_id = None):
 	return render_template('error.html', message = "You can only close from a requests page!")
 
 # Shows all public records requests that have been made.
+@cache.cached(timeout=50)
 def requests():
 	# Return first 100, ? limit = 100
 	# Taken from list_of_departments.json:
