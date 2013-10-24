@@ -170,7 +170,6 @@ def close(request_id = None):
 	return render_template('error.html', message = "You can only close from a requests page!")
 
 # Shows all public records requests that have been made.
-@cache.cached(timeout=50)
 def requests():
 	# Return first 100, ? limit = 100
 	# Taken from list_of_departments.json:
