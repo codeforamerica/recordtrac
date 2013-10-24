@@ -10,12 +10,11 @@ This is the home page for documentation for RecordTrac app.
 
 NOTE: For help contact oakland|@|codeforamerica.org
 
-== What is RecordTrac
+== What is RecordTrac?
 
-=== overview-of-app
-=== why-it-was-built
-=== principles
-=== research-and-references
+Understand what is RecordTrac and what motivated the 2013 Code for America fellows to build it. You can also find links to research about the public records request process in Oakland. 
+
+{{ link('what_is_recordtrac') }}
 
 == How a _requester_ uses RecordTrac
 
