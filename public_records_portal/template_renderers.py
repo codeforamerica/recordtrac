@@ -116,7 +116,7 @@ def show_request(request_id, template = None):
 	return render_template(template, req = req, user_id = get_user_id())
 
 def docs():
-	return redirect('http://codeforamerica.github.io/public-records/request.html')
+	return redirect('http://codeforamerica.github.io/public-records/')
 
 @login_required
 def edit_case(request_id):

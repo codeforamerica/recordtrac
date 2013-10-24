@@ -1,7 +1,7 @@
 reporter:output:
     help: Store output in separate gh-pages branch.
-    dir: ../public-records-docs
+    dir: ../public-records-docs/docs/1.0.0
 
 reporter:ws:
     help: Store output in separate gh-pages branch.
-    dir: ../public-records-docs
+    dir: ../public-records-docs/docs/1.0.0
