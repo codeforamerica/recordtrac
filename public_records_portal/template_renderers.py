@@ -111,10 +111,12 @@ def show_request(request_id, template = None):
 			return render_template('alpha.html')
 	else:
 		template = "manage_request_public.html"
-	if req.status and "Closed" in req.status:
+	if req.status and "Closed" in req.status and template != "manage_request_feedback.html":
 		template = "closed.html"
 	return render_template(template, req = req, user_id = get_user_id())
 
+def docs():
+	return redirect('http://codeforamerica.github.io/public-records/request.html')
 
 @login_required
 def edit_case(request_id):
@@ -189,8 +191,15 @@ def requests():
 			requester_name = request.form['requester']
 			filters['requester'] = requester_name
 	else:
-		if 'requester' not in request.args:
-			filters = request.args
+		# Set defaults for logged in user:
+		if current_user.is_anonymous() == False:
+			my_requests = True
+			open_requests = True
+			filters['owner'] = current_user.id
+			filters['status'] = 'open'
+		else:
+			if 'requester' not in request.args:
+				filters = request.args
 	record_requests = get_request_table_data(get_requests_by_filters(filters))
 	user_id = get_user_id()
 	if record_requests:

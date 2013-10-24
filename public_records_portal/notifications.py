@@ -32,6 +32,9 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 		if "Staff" in recipient_type:
 			page = "%scity/request/%s" %(app_url,request_id)
 			include_unsubscribe_link = False # Gets excluded for city staff
+		else:
+			if notification_type == "Request closed":
+				page = "%sfeedback/request/%s" %(app_url,request_id)
 		if recipient_type in ["Staff owner","Requester","Subscriber","Staff participant"]:
 			if user_id:
 				recipient = get_attribute(attribute = "email", obj_id = user_id, obj_type = "User")
