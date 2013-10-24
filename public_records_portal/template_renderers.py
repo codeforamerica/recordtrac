@@ -115,6 +115,8 @@ def show_request(request_id, template = None):
 		template = "closed.html"
 	return render_template(template, req = req, user_id = get_user_id())
 
+def docs():
+	return redirect('http://codeforamerica.github.io/public-records/request.html')
 
 @login_required
 def edit_case(request_id):

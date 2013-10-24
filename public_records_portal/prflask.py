@@ -100,6 +100,9 @@ routing = {
 	'viz': {
 		'url': '/viz'
 	},
+	'docs': {
+		'url': '/docs'
+	},
 	'any_page':{
 		'url': '/<page>'
 	},
