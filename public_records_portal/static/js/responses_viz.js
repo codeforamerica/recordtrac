@@ -1,3 +1,9 @@
+// days to seconds for time graph
+function getDays(seconds) {
+    exactDays = seconds / 86400;
+    return exactDays.toFixed(3);
+}
+
 var shortDeptNames = {
     "Office of the Mayor":                  'Mayor',
     "City Administrator":                   'City Admin',
@@ -28,174 +34,176 @@ var shortDeptNames = {
 }
 
 
-var margin = {top: 30, right: 20, bottom: 30, left: 40},
-    height = 250 - margin.top - margin.bottom,
-    width = $('#responses-freq-viz').parent().width() - margin.left - margin.right;
-
-var formatYAxis = d3.format("f");
-
-var x = d3.scale.ordinal()
-    .rangeRoundBands([0, width], .1);
-
-var y = d3.scale.linear()
-    .range([height, 0]);
-
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
-
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left")
-    .tickFormat(formatYAxis)
-    .ticks(5);
-
-
-
 // Create Frequency Graph for department requests volume
+// ==================================
+
 $(function(){
 
-  var tip = d3.tip()
-    .attr('class', 'd3-tip')
-    .offset([-10, 0])
-    .html(function(d) {
-      return d.department + "<br /><center><div style='font-weight: normal; font-size: 12px; margin-top:5px'>Requests: <span style='color:#FB991B'>" + d.freq + "</span></div></center>";
-    });
+    var margin = {top: 30, right: 40, bottom: 30, left: 40},
+        height = 250 - margin.top - margin.bottom,
+        width = $('#responses-freq-viz').parent().width() - margin.left - margin.right;
 
-  var svg = d3.select("#responses-freq-viz").append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    var formatYAxis = d3.format("f");
 
-  svg.call(tip);
+    var x = d3.scale.ordinal()
+        .rangeRoundBands([0, width], .1);
 
-  d3.json(viz_data_freq, function(error, json) {
-    // if (error) return console.warn("Didn't load responses_data.json properly.");
-    data = viz_data_freq;
-    x.domain(data.map(function(d) { return shortDeptNames[d.department]; }));
-    y.domain([0, d3.max(data, function(d) { return d.freq; })]);
+    var y = d3.scale.linear()
+        .range([height, 0]);
 
-    // X-Axis
-    svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis)
-        .style("width", "50px")
-        .attr("text-anchor", "end")
-        .attr("textLength", "10");
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
 
-    svg.selectAll("text")
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left")
+        .tickFormat(formatYAxis)
+        .ticks(5);
 
-    // Y-Axis
-    svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis)
-        .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", ".71em");
+    var svg = d3.select("#responses-freq-viz").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    // Heading Text
-    svg.append("text")
-        .attr("x", (width/4))
-        .attr("y", -10)
-        .style("font-size", "14px")
-        .style("fill", "#333333")
-        .style("font-weight", "bold")
-        .text("Requests by Department");
+    var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function(d) {
+          return d.department + "<br /><center><div style='font-weight: normal; font-size: 12px; margin-top:5px'>Requests: <span style='color:#FB991B'>" + d.freq + "</span></div></center>";
+        });
+    svg.call(tip);
 
-    // draw bars vectors
-    svg.selectAll(".bar")
-        .data(data)
-        .enter().append("rect")
-        .attr("class", "bar")
-        .attr("x", function(d) { return x(shortDeptNames[d.department]); })
-        .attr("width", x.rangeBand())
-        .attr("y", function(d) { return y(d.freq); })
-        .attr("height", function(d) { return height - y(d.freq); })
-        .on('mouseover', tip.show)
-        .on('mouseout', tip.hide);
+    d3.json(viz_data_freq, function(error, json) {
+        // if (error) return console.warn("Didn't recive departments frequencies.");
+        data = viz_data_freq;
+        x.domain(data.map(function(d) { return shortDeptNames[d.department]; }));
+        y.domain([0, d3.max(data, function(d) { return d.freq; })]);
 
+        // X-Axis
+        svg.append("g")
+            .attr("class", "no-line axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis)
+            .style("width", "50px")
+            .attr("text-anchor", "end")
+            .attr("textLength", "10");
+
+        svg.selectAll("text")
+
+        // Y-Axis
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em");
+
+        // Heading Text
+        svg.append("text")
+            .attr("x", (width/4))
+            .attr("y", -10)
+            .style("font-size", "14px")
+            .style("fill", "#333333")
+            .style("font-weight", "bold")
+            .text("Requests by Department");
+
+        // draw bars vectors
+        svg.selectAll(".bar")
+            .data(data)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", function(d) { return x(shortDeptNames[d.department]); })
+            .attr("width", x.rangeBand())
+            .attr("y", function(d) { return y(d.freq); })
+            .attr("height", function(d) { return height - y(d.freq); })
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide);
   });
 });
 
 
 
-
-// ----- Graph 2 ----- 
-// ===================
-
-var margin = {top: 30, right: 20, bottom: 30, left: 60},
-    height = 250 - margin.top - margin.bottom,
-    width = $('#responses-time-viz').parent().width() - margin.left - margin.right;
-
-var xResponseTime = d3.scale.linear()
-    .range([0, width]);
-
-var yDepartments = d3.scale.ordinal()
-    .rangeRoundBands([height, 0], .1);
-
-var xResponseTimeAxis = d3.svg.axis()
-    .scale(xResponseTime)
-    .orient("bottom");
-
-var yDepartmentsAxis = d3.svg.axis()
-    .scale(yDepartments)
-    .orient("left")
-    .ticks(5);
-
-
-
 // Create Average Response Time Graph 
+// ==================================
+
 $(function() {
 
-  var svgNext = d3.select("#responses-time-viz").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    var marginHoriz = {top: 30, right: 20, bottom: 30, left: 90},
+        height = 250 - marginHoriz.top - marginHoriz.bottom,
+        width = $('#responses-time-viz').parent().width() - marginHoriz.left - marginHoriz.right;
 
-  var tipNext = d3.tip()
-    .attr('class', 'd3-tip')
-    .offset([-10, 0])
-    .html(function(d) {
-      return d.department + "<br /><center><div style='font-weight: normal; font-size: 12px; margin-top:5px'>Requests: <span style='color:#FB991B'>" + d.time + "</span></div></center>";
-    });
+    var xResponseTime = d3.scale.linear()
+        .range([0, width]);
 
-  svgNext.call(tipNext);
+    var yDepartments = d3.scale.ordinal()
+        .rangeRoundBands([height, 0], .1);
 
-  d3.json("static/json/responses_time_data.json", function(error, json) {
-    if (error) return console.warn("Didn't load responses_time_data.json properly.");
-    data = json;
-    xResponseTime.domain([0, d3.max(data, function(d) { return d.time; })]);
-    yDepartments.domain(data.map(function(d) { return shortDeptNames[d.department]; }));
+    var xResponseTimeAxis = d3.svg.axis()
+        .scale(xResponseTime)
+        .orient("bottom");
+
+    var yDepartmentsAxis = d3.svg.axis()
+        .scale(yDepartments)
+        .orient("left")
+        .ticks(5);
+
+    var svgNext = d3.select("#responses-time-viz").append("svg")
+        .attr("width", width + marginHoriz.left + marginHoriz.right)
+        .attr("height", height + marginHoriz.top + marginHoriz.bottom)
+        .append("g")
+        .attr("transform", "translate(" + marginHoriz.left + "," + marginHoriz.top + ")");
+
+    var tipNext = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function(d) {
+          return d.department + "<br /><center><div style='font-weight: normal; font-size: 12px; margin-top:5px'>Requests: <span style='color:#FB991B'>" + d.time + "</span></div></center>";
+        });
+
+    svgNext.call(tipNext);
+
+    d3.json("static/json/responses_time_data.json", function(error, json) {
+        // if (error) return console.warn("Didn't receive time data.");
+        data = json;
+        xResponseTime.domain([0, d3.max(data, function(d) { return d.time; })]);
+        yDepartments.domain(data.map(function(d) { return shortDeptNames[d.department]; }));
 
 
-    // xAxis -- Time responses graph
-    svgNext.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "rotate(-90)")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xResponseTimeAxis);
+        // xAxis -- Time responses graph
+        svgNext.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "rotate(-90)")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xResponseTimeAxis);
 
+        // yAxis -- Depatments listings
+        svgNext.append("g")
+            .attr("class", "no-line axis")
+            .call(yDepartmentsAxis)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end");
 
-    // yAxis -- Depatments listings
-    svgNext.append("g")
-        .attr("class", "y axis")
-        .call(yDepartmentsAxis)
-        .attr("dy", ".71em")
-        .style("text-anchor", "end");
+        // draw bars
+        svgNext.selectAll(".bar")
+            .data(data)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("width", function(d) { return xResponseTime(d.time); })
+            .attr("y", function(d) { return yDepartments(shortDeptNames[d.department]); })
+            .attr("height", yDepartments.rangeBand())
+            .on('mouseover', tipNext.show)
+            .on('mouseout', tipNext.hide);
 
-    svgNext.selectAll(".bar")
-        .data(data)
-        .enter().append("rect")
-        .attr("class", "bar")
-        .attr("width", function(d) { return xResponseTime(d.time); })
-        .attr("y", function(d) { return yDepartments(shortDeptNames[d.department]); })
-        .attr("height", yDepartments.rangeBand())
-        .on('mouseover', tipNext.show)
-        .on('mouseout', tipNext.hide);
-
+        // Heading Text
+        svgNext.append("text")
+            .attr("x", (width/4))
+            .attr("y", -10)
+            .style("font-size", "14px")
+            .style("fill", "#333333")
+            .style("font-weight", "bold")
+            .text("Time to Fill Requests (Days)");
   });
 });
