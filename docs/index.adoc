@@ -1,8 +1,8 @@
 = RecordTrac Documentation
 
-{% macro link(underscore_name) %}
+{% macro link(underscore_name) -%}
 link:{{ underscore_name }}.html[{{titleize(underscore_name)}}]
-{% endmacro %}
+{% endmacro -%}
 
 == Welcome
 
