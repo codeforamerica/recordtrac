@@ -3,10 +3,10 @@
 === High-level technical dependencies 
 You will need to create new accounts for the following services. 
 
-* https://www.heroku.com/ [Heroku or other PaaS (basic level free, web hosting)]
-* http://www.scribd.com/ [Scribd (free, document hosting)]
-* http://akismet.com/ [Akismet (free, spam filter)]
-* http://sendgrid.com/ [Sendgrid (free, e-mail)]
+* https://www.heroku.com[Heroku or other PaaS (basic level free, web hosting)]
+* http://www.scribd.com[Scribd (free, document hosting)]
+* http://akismet.com[Akismet (free, spam filter)]
+* http://sendgrid.com[Sendgrid (free, e-mail)]
 
 
 It is pretty straightforward to switch from Scribd and Sendgrid to other services, and Akismet is by no means necessary. For hosting, it also doesn’t really matter what platform it is. These are not strict dependencies, although in its current state RecordTrac depends on them to run smoothly.
