@@ -18,7 +18,14 @@ Understand what is RecordTrac and what motivated the 2013 Code for America fello
 
 == How a _requester_ uses RecordTrac
 
+* {{ link('publicfeatures') }}
+* {{ link('publictable') }}
+
 == How a _responder_ uses RecordTrac
+
+* {{ link('features') }}
+* {{ link('table') }}
+* {{ link('admin') }}
 
 == How RecordTrac is Built
 
