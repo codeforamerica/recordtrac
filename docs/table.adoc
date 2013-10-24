@@ -31,6 +31,6 @@ City employees can also:
 
 * search through the text displayed in the table
 * select the whether they want to see 10, 25, 50, or a 100 requests per page (The default is set to 50.)
-* view whether a request is open, close, due soon, or overdue 
+* view whether a request is open, closed, due soon, or overdue 
 
 
