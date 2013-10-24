@@ -111,7 +111,7 @@ def show_request(request_id, template = None):
 			return render_template('alpha.html')
 	else:
 		template = "manage_request_public.html"
-	if req.status and "Closed" in req.status:
+	if req.status and "Closed" in req.status and template != "manage_request_feedback.html":
 		template = "closed.html"
 	return render_template(template, req = req, user_id = get_user_id())
 
