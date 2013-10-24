@@ -6,7 +6,7 @@ script:run-casper:
 
 ### "screenshots-source"
 screenshots-source:
-    - docs/screenshots.js|pyg:
+    - docs/screenshots.js|asciisyn:
         - output: True
 
 ### "adoc"
@@ -20,5 +20,8 @@ docs/index.adoc|jinja|asciidoctor:
             }
         - except: 'index'
         - .json # this is just here for json printing demo, feel free to remove
+        - script:run-casper
+        - screenshots-source
         - .py|idio|asciisyn:
             - idio: { ext : '.txt' }
+

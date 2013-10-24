@@ -24,7 +24,7 @@ Learn about the technical details of implementation so you can see what's involv
 
 == API Documentation
 
-* {{ link('api-documentation') }}
+* {{ link('api') }}
 
 == Developer Documentation
 
