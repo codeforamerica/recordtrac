@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block title %}{{title}}{% endblock title %}
 
 {% block container %}
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/about.css') }}">
@@ -42,7 +43,42 @@
 				<h4 id="all request table">Where can I find all the requests submitted through RecordTrac?</h4>
 				<p>RecordTrac displays all current and past records requests at <a href="http://records.oaklandnet.com/requests">records.oaklandnet.com/requests</a>. A description of what RecordTrac displays on this page can be found below:</p> 
 
-				<table border="0" cellpadding="5">
+				<div class="row-fluid">
+					<div class="span1 offset1">
+						<p class="table-legend">'#'</p>
+					</div>
+					<div class="span8">
+						<p class="table-legend-explanation">Each request is assigned a unique number. You can easily track your request with this number by visiting <a href="http://records.oaklandnet.com/track">records.oaklandnet.com/track</a>.</p>
+					</div>
+				</div>
+				<div class="row-fluid">
+					<div class="span1 offset1">
+						<p class="table-legend">'Received'</p>
+					</div>
+					<div class="span8">
+						<p class="table-legend-explanation">This column displays the date when the request was entered in RecordTrac.</p>
+						<p class="table-legend-explanation">You are allowed to submit a public records request any way, including by mail, fax, and over the phone. If a request wasn't originally submitted through RecordTrac, it may take city employees a day or two to enter it into the system.</p>
+					</div>
+				</div>
+				<div class="row-fluid">
+					<div class="span1 offset1">
+						<p class="table-legend">'Point of Contact'</p>
+					</div>
+					<div class="span8">
+						<p class="table-legend-explanation">The 'Point of Contact' is a City of Oakland employee responsible for providing you with the information you need about your public records request.</p>
+						<p class="table-legend-explanation">Sometimes city employees from several departments will be needed to respond to one public records request. They will be added as Helpers.  In that case, if you have any questions about your request send a message to the Point of Contact through RecordTrac.</p>
+					</div>
+				</div>
+				<div class="row-fluid">
+					<div class="span1 offset1">
+						<p class="table-legend">'Department'</p>
+					</div>
+					<div class="span8">
+						<p class="table-legend-explanation">The city department where the point of contact works. Multiple departments may be involved in one request, but the Point of Contact's department will only be displayed.</p>
+					</div>
+				</div>
+				
+				<!-- <table border="0" cellpadding="5">
 				<tr>
 				<td><b>'#'</b></td>
 				<td>Each request is assigned a unique number. You can easily track your request with this number by visiting <a href="http://records.oaklandnet.com/track">records.oaklandnet.com/track</a>.</td>
@@ -67,7 +103,7 @@
 				<td><b>'Department'</b></td>
 				<td>The city department where the point of contact works. Multiple departments may be involved in one request, but the Point of Contact's department will only be displayed.</td>
 				</tr>
-				</table>
+				</table> -->
 		
 				<br>
 

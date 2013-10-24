@@ -1,8 +1,3 @@
-docs/*.html|jinja|easyhtml:
-    - .py|idio
-    - .js|idio|h
-    - .js|idio|l
-
 ### "run-casper"
 script:run-casper:
     - scripts/run-server.sh|shint:
@@ -11,14 +6,22 @@ script:run-casper:
 
 ### "screenshots-source"
 screenshots-source:
-    - docs/screenshots.js|pyg:
+    - docs/screenshots.js|asciisyn:
         - output: True
 
-### "rst"
-.rst|jinja|rstbody|easyhtml:
-    - sourcecode
-    - screenshots-source
-    - script:run-casper
-    - easyhtml: {
-        css: "img { border: thin solid grey; }"
+### "adoc"
+docs/index.adoc|jinja|asciidoctor:
+    - asciidoctor: {
+        'clargs' : '-a icons=font'
         }
+    - docs/*.adoc|jinja|asciidoctor:
+        - asciidoctor: {
+            'clargs' : '-a icons=font'
+            }
+        - except: 'index'
+        - .json # this is just here for json printing demo, feel free to remove
+        - script:run-casper
+        - screenshots-source
+        - .py|idio|asciisyn:
+            - idio: { ext : '.txt' }
+

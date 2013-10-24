@@ -13,4 +13,10 @@ casper.thenOpen('http://localhost:5000/request/1', function userInterface() {
     this.captureSelector("request1request.png", "#request-container");
  });
 
+casper.thenOpen('http://records.oaklandnet.com/api/request/1', function userInterface() {
+	var fs = require('fs');
+    fs.write('api.json', this.getPageContent());
+ });
+
+
 casper.run();

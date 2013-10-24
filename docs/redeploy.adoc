@@ -1,0 +1,50 @@
+== How to Redeploy RecordTrac
+
+=== High-level technical dependencies 
+You will need to create new accounts for the following services. 
+
+* https://www.heroku.com[Heroku or other PaaS (basic level free, web hosting)]
+* http://www.scribd.com[Scribd (free, document hosting)]
+* http://akismet.com[Akismet (free, spam filter)]
+* http://sendgrid.com[Sendgrid (free, e-mail)]
+
+
+It is pretty straightforward to switch from Scribd and Sendgrid to other services, and Akismet is by no means necessary. For hosting, it also doesn’t really matter what platform it is. These are not strict dependencies, although in its current state RecordTrac depends on them to run smoothly.
+
+=== Technical Instructions 
+
+1.) Decide on URL for app (this will be helpful when selecting a heroku URL, and pointing Scribd and Akismet to the right link as well)
+
+2.) Sign up/log into Github, fork https://github.com/codeforamerica/public-records
+
+3.) Then clone the forked repo locally.
+
+4.) Sign up/log into Heroku and download Heroku toolbelt
+
+5.) Create a Postgres database via Heroku add-ons
+
+6.) Sign up/ log into Scribd, sign up for developer account http://www.scribd.com/developers/signup_api
+
+7.) In the public-records repository, save settings.env.example as settings.env and replace SCRIBD_API_KEY and SCRIBD_API_SECRET with corresponding key and secret.
+
+8.) Sign up/ log into Sendgrid.
+
+9.) In settings.env, replace MAIL_USERNAME and MAIL_PASSWORD with your Sendgrid username and password.
+
+10.) Sign up/log into Akismet via wordpress account and get an Akismet key
+
+11.) In settings.env, replace AKISMET_KEY with corresponding key.
+
+12.) Set all the environment variables in your local settings.env in your Heroku config as well, by the following command from your shell (you have to be logged into Heroku).
+
+	heroku config:set AKISMET_KEY=your_key --app heroku-app-name
+
+	(You have to do this for each environment variable)
+
+	Variables that will be different in your heroku config vs. your local settings:
+	ENVIRONMENT (should be ‘PRODUCTION’ in Heroku)
+	APPLICATION_URL (should be your Heroku URL)
+	SQLALCHEMY_DATABASE_URI (your Heroku database, technically could use it locally as well, but probably better to set up a local database)
+
+13.) From the public-records directory: git push origin heroku 
+

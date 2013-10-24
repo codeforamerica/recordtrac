@@ -1,0 +1,75 @@
+= RecordTrac Documentation
+
+{% macro link(underscore_name) -%}
+link:{{ underscore_name }}.html[{{titleize(underscore_name)}}]
+{% endmacro -%}
+
+== Welcome
+
+This is the home page for documentation for RecordTrac app.
+
+NOTE: For help contact oakland|@|codeforamerica.org
+
+== What is RecordTrac?
+
+Understand what is RecordTrac and what motivated the 2013 Code for America fellows to build it. You can also find links to research about the public records request process in Oakland. 
+
+{{ link('about') }}
+
+== How a _requester_ uses RecordTrac
+
+* {{ link('publicfeatures') }}
+* {{ link('publictable') }}
+
+== How a _responder_ uses RecordTrac
+
+* {{ link('features') }}
+* {{ link('table') }}
+* {{ link('admin') }}
+
+== How RecordTrac is Built
+
+Learn about the technical details of implementation so you can see what's involved.
+
+RecordTrac is primary a Python application built on a backend Flask framework and a frontend Bootstrap framework.
+
+=== Platform pieces
+* http://flask.pocoo.org[Flask 0.10]
+* http://getbootstrap.com/2.3.2[Bootstrap 2.3.2]
+* http://www.postgresapp.com[Postgres 9.3.0]
+* http://www.python.org/getit[Python 2.7.5]
+
+=== Plugins
+* http://fortawesome.github.io/Font-Awesome[Font Awesome 3.2.1]
+* http://www.datatables.net[DataTables 1.9.4]
+
+=== Service dependencies
+
+=== Feature backlog
+Issues and feature backlog are tracked through https://github.com/codeforamerica/public-records[GitHub issues].
+
+== How to Redeploy RecordTrac
+
+* {{ link('groundwork') }}
+
+* {{ link('redeploy') }}
+
+== How to Maintain RecordTrac
+
+== API Documentation
+
+* {{ link('api') }}
+
+== Developer Documentation
+
+How to modify and develop the app's source code.
+
+=== Source Code
+
+* https://github.com/codeforamerica/public-records[Source Code (Github)]
+* https://github.com/codeforamerica/public-records/issues[Issue Tracker (Github)]
+
+=== Developer Docs
+
+* {{ link('db-helpers') }}
+
