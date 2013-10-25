@@ -1,0 +1,118 @@
+== RecordTrac's Admin Features
+
+=== Description 
+
+RecordTrac’s administrative controls allows the users to:
+
+* Edit or remove request text 
+* Remove a record
+* Edit or remove the text of a note
+* Edit or remove a question
+* Edit or remove an answer
+* Add or remove a Public Records Request (PRR) liaison
+
+The administrative controls allows the user to permanently delete records, requests, and notes from the database. Because of this, administrative access should be restricted to a small number of users. 
+
+=== How to Remove or Edit a Request
+
+To remove or edit a request, visit records.oaklandnet.com/admin/requestview. 
+
+A description of the fields in the table displayed can be found below:
+
+* Id: Unique ID assigned to each request.
+* Text: Entire text of public records request.
+* Date Created: The date the request was entered in RecordTrac.
+* Status: Status of the records request, namely whether it’s open, closed, due soon, or overdue.
+
+Clicking on the trashcan icon permanently deletes an entire request, while licking on the pencil icon will allow you to edit a request. 
+
+=== How to Remove a Record
+
+To remove a record, visit records.oaklandnet.com/admin/recordreview.
+
+You can only remove a record, not "edit" any of the fields.  Records include web links, uploaded electronic documents, and instructions on how to view or pick up copies of a record. 
+
+A description of the fields in the table displayed can be found below:
+
+* Id: Unique ID assigned to each request.
+* Filename: Name of electronic record uploaded to RecordTrac. 
+* URL: Web address provided to requester.
+* Download URL: Web address where you can automatically download the record. 
+* Access: Instructions on how to view or pick up copies of a record
+
+Click on the trashcan icon to permanently delete the record from RecordTrac. You must also delete the record from Scribd.  
+
+=== How to Remove or Edit a Note
+
+To edit or remove a note, visit records.oaklandnet.com/admin/noteview.
+
+A description of the fields in the table displayed can be found below:
+
+* Id: Unique ID assigned to each request.
+* Text: Entire text of the note.
+* Date Created: The date the note was created. 
+
+Click on the trashcan icon to permanently delete the note from RecordTrac, while clicking on the pencil icon will allow you to edit the text of a note.
+
+=== How to Remove or Edit a Question and Answer Exchange
+
+To remove posted questions and/or answers, visit records.oaklandnet.com/admin/qaview.
+
+A description of the fields in the table displayed can be found below:
+
+* Id: Unique ID assigned to each request.
+* Question: Entire text of the question asked by city staff.
+* Answer: Entire response of question provided by member of the public. 
+* Date Created: The date the exchange was created
+
+Clicking on the trashcan icon permanently deletes the entire question and answer exchange, while clicking on the pencil icon will allow you to edit the text of the question and answer exchange. 
+
+==== How to Change the official Public Records Request (PRR) liaison for a department
+
+To change the Public Record Request (PRR) liaision, or the individual responsible for responding for responding to public records requests for a particular department, visit records.oaklandnet.com/admin/userview
+
+You will see a  list of all employees contained in the official city directory. 
+
+A description of the fields in the table displayed can be found below:
+
+* Contact for: Listing of departments the city employee is the PRR liaison for. 
+* Back-up for: Listing of departments the city employee is a backup for. 
+* Alias: Name of city employee.
+
+Clicking on the trashcan icon permanently deletes the user. To edit the user’s information, click on the pencil icon. You then have the opportunity to edit the user's name, email address, phone number, and which department they are the contact or backup for. 
+
+Enter one of the following department names in the “Contact for” or “Backup For” field. If a user is responsible for multiple departments, separate the department names with a comma.
+
+List of departments:
+
+* Office of the Mayor
+* City Administrator
+* City Clerk
+* City Auditor
+* City Attorney
+* Parks and Recreation
+* Public Works Agency
+* Department of Planning and Building
+* Fire Department
+* Library Services
+* Office of Controller and Treasury
+* Contracts and Compliance
+* Information Technology (IT)
+* Office of Neighborhood Investment
+* Health and Human Services
+* Human Resources
+* Budget and Revenue - Revenue Division
+* Council District 1 - Dan Kalb
+* Council District 2 - Pat Kernighan
+* Council District 3 - Lynette Gibson McElhaney
+* Council District 4 - Libby Schaaf
+* Council District 5 - Noel Gallo
+* Council District 6 - Desley Brooks
+* Council District 7 - Larry Reid
+* Council At Large - Rebecca Kaplan
+* Oakland Police Department
+
+
+
+
+
