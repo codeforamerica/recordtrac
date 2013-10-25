@@ -70,7 +70,7 @@ def get_objs(obj_type):
 		return Record.query.all()
 	return None
 
-## @export "get_avg_response_time"
+### @export "get_avg_response_time"
 def get_avg_response_time(department):
 	q = db.session.query(Request).join(Owner, Request.current_owner == Owner.id).join(User).filter(func.lower(User.department).like("%%%s%%" % department.lower())).all()
 	response_time = None
