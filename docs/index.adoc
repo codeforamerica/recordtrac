@@ -56,8 +56,6 @@ Issues and feature backlog are tracked through https://github.com/codeforamerica
 
 * {{ link('redeploy') }}
 
-== How to Maintain RecordTrac
-
 == API Documentation
 
 * {{ link('api') }}
