@@ -1,4 +1,8 @@
-== All Request Table - Public View
+= All Request Table - Public View
+:toc:
+:source-highlighter: pygments
+
+link:index.html[back to index page]
 
 RecordTrac displays all current and past records requests at http://records.oaklandnet.com/requests[records.oaklandnet.com/requests]. 
 

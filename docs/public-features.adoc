@@ -1,4 +1,7 @@
-== How a Requester Uses RecordTrac
+= How a Requester Uses RecordTrac
+:toc:
+:source-highlighter: pygments
+link:index.html[back to index page]
 
 === Make a Request
 Members of the public can submit a message to city employees requesting a public record. At a minimum, they are required to enter a message. 

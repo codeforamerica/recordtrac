@@ -16,7 +16,7 @@ This searches the database for an object via its class/type (defined in the
 This searches the database for all objects of a certain class/type (defined in
 the "models.py" file) and returns a queryset.
 
-{{ d['/public_records_portal/db_helpers.py|idio|asciisyn']['get_objs'] }}</p>
+{{ d['/public_records_portal/db_helpers.py|idio|asciisyn']['get_objs'] }}
 
 == get_request_by_owner
 Retrieves a request associated with a particular owner:

@@ -1,4 +1,8 @@
-== RecordTrac's Admin Features
+= RecordTrac's Admin Features
+:toc:
+:source-highlighter: pygments
+
+link:index.html[back to index page]
 
 === Description 
 

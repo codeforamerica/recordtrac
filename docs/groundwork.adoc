@@ -1,3 +1,9 @@
+= Groundwork
+:toc:
+:source-highlighter: pygments
+
+link:index.html[back to index page]
+
 == Laying the Groundwork
 
 To redeploy RecordTrac, you need support from key stakeholders _within_ government. The administrator or elected official in charge of overseeing public records request must agree to use this system, and instruct their colleagues to do so. 

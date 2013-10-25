@@ -1,3 +1,9 @@
+= Features
+:toc:
+:source-highlighter: pygments
+
+link:index.html[back to index page]
+
 == How a Responder Uses RecordTrac
 
 A responder is typically an employee of a governmental agency. 
@@ -44,8 +50,11 @@ City employees are the only users able to upload records, extend a request, clos
 
 Only city employees can view:
 * A requester's name
+
 * A requester's phone number
+
 * A particular request's due date. This information is hidden from the public.
+
 * Whether a request is overdue or due soon. Members of the public are only able to tell whether a request is open or closed.
 
 == Tutorial
