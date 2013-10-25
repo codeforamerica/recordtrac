@@ -1,0 +1,33 @@
+== All Request Table - Public View
+
+RecordTrac displays all current and past records requests at http://records.oaklandnet.com/requests[records.oaklandnet.com/requests]. 
+
+=== Fields in the All Request Table
+
+The table displays the following information:
+
+* #: Each request is assigned a unique number. You can easily track requests with this number by visiting http://records.oaklandnet.com/requests[records.oaklandnet.com/track].
+* Received: Most municipalities allow an individual to submit a public records request any way they please, including by mail, fax, and over the phone. If a request wasn't originally submitted through RecordTrac, it may take city employees a day or two to enter it into the system.
+* Request: This is the message sent to the municipality by a member of the public. Sometimes city employees will enter a request on behalf of an individual. If the requested document contains confidential information that may violate the security or privacy of a requester, the public will only see a short description of the document.
+* Point of Contact: The 'Point of Contact' is the employee responsible for providing the requester with the information they need. Sometimes city employees from several departments will be needed to respond to one public records request. They will be added as Helpers, but they will not be displayed on this particular web page. 
+* Department: The city department where the point of contact works. Multiple departments may be involved in one request, but the Point of Contact's department will only be displayed. 
+
+=== Filters
+
+Members of the public are able to filter the all request table by:
+
+* Open requests
+* Department 
+
+When they click on the green “Update Table” button, they can only view the request they selected.
+
+By default, the open requests are only viewed. 
+
+=== Additional features
+
+Members of the public can also also:
+
+* search through the text displayed in the table
+* select the whether they want to see 10, 25, 50, or a 100 requests per page (The default is set to 50.)
+* view whether a request is open or closed
+
