@@ -1,4 +1,6 @@
 = RecordTrac Documentation
+:toc:
+:source-highlighter: pygments
 
 {% macro link(underscore_name) -%}
 link:{{ underscore_name }}.html[{{titleize(underscore_name)}}]
@@ -18,8 +20,8 @@ Understand what is RecordTrac and what motivated the 2013 Code for America fello
 
 == How a _requester_ uses RecordTrac
 
-* {{ link('publicfeatures') }}
-* {{ link('publictable') }}
+* {{ link('public-features') }}
+* {{ link('public-table') }}
 
 == How a _responder_ uses RecordTrac
 
