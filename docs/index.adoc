@@ -74,4 +74,7 @@ How to modify and develop the app's source code.
 === Developer Docs
 
 * {{ link('db-helpers') }}
-
+* {{ link('departments') }}
+* {{ link('models') }}
+* {{ link('notifications') }}
+* {{ link('prr') }}
