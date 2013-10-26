@@ -39,6 +39,7 @@ set_env(key = 'SCRIBD_API_SECRET', default = "")
 set_env(key = 'HOST_URL', default = 'https://www.scribd.com/doc/')
 set_env(key = 'AKISMET_KEY', default = "")
 set_env(key = 'SENDGRID_MONTHLY_LIMIT', default = None)
+set_env(key = 'LIST_OF_ADMINS', default = "")
 
 # Initialize database
 db = SQLAlchemy(app)
