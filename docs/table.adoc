@@ -1,0 +1,40 @@
+= All Request Table
+:toc:
+:source-highlighter: pygments
+
+link:index.html[back to index page]
+
+RecordTrac displays all current and past records requests at http://records.oaklandnet.com/requests[records.oaklandnet.com/requests]. 
+
+=== Fields in the All Request Table
+
+The table displays the following information:
+
+* #: Each request is assigned a unique number. You can easily track your request with this number by visiting http://records.oaklandnet.com/requests[records.oaklandnet.com/track].
+* Received: Most municipalities allow an individual to submit a public records request any way they please, including by mail, fax, and over the phone. If a request wasn't originally submitted through RecordTrac, it may take city employees a day or two to enter it into the system.
+* Request: This is the message sent to the municipality by a member of the public. Sometimes city employees will enter a request on behalf of an individual. If the requested document contains confidential information that may violate the security or privacy of a requester, the public will only see a short description of the document.
+* Point of Contact: The 'Point of Contact' is the employee responsible for providing the requester with the information they need. Sometimes city employees from several departments will be needed to respond to one public records request. They will be added as Helpers, but they will not be displayed on this particular web page. 
+* Department: The city department where the point of contact works. Multiple departments may be involved in one request, but the Point of Contact's department will only be displayed.
+* Requester: _Only city employees are able to view this information._ The first and last name of the person requesting documents or information. If a person does not identify themselves at the time they submit their request, the phrase "not given" will appear in this field.  
+
+=== Filters
+
+City employees are able to filter the all request table by:
+
+* The requests assigned to them
+* Open requests
+* Department 
+
+When they click on the green “Update Table” button, they can only view the request they selected.
+
+By default, the open requests assigned to that particular city employee can be viewed. 
+
+=== Additional features
+
+City employees can also:
+
+* search through the text displayed in the table
+* select the whether they want to see 10, 25, 50, or a 100 requests per page (The default is set to 50.)
+* view whether a request is open, closed, due soon, or overdue 
+
+

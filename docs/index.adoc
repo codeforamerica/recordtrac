@@ -1,4 +1,6 @@
 = RecordTrac Documentation
+:toc:
+:source-highlighter: pygments
 
 {% macro link(underscore_name) -%}
 link:{{ underscore_name }}.html[{{titleize(underscore_name)}}]
@@ -16,12 +18,12 @@ Understand what is RecordTrac and what motivated the 2013 Code for America fello
 
 {{ link('about') }}
 
-== How a _requester_ uses RecordTrac
+== How _citizens_ use RecordTrac
 
-* {{ link('publicfeatures') }}
-* {{ link('publictable') }}
+* {{ link('public-features') }}
+* {{ link('public-table') }}
 
-== How a _responder_ uses RecordTrac
+== How _governments_ use RecordTrac
 
 * {{ link('features') }}
 * {{ link('table') }}
@@ -31,7 +33,7 @@ Understand what is RecordTrac and what motivated the 2013 Code for America fello
 
 Learn about the technical details of implementation so you can see what's involved.
 
-RecordTrac is primary a Python application built on a backend Flask framework and a frontend Bootstrap framework.
+RecordTrac is primarily a Python application built on a backend Flask framework and a frontend Bootstrap framework.
 
 === Platform pieces
 * http://flask.pocoo.org[Flask 0.10]
@@ -54,15 +56,11 @@ Issues and feature backlog are tracked through https://github.com/codeforamerica
 
 * {{ link('redeploy') }}
 
-== How to Maintain RecordTrac
+== Developers
 
-== API Documentation
+=== API Docs
 
 * {{ link('api') }}
-
-== Developer Documentation
-
-How to modify and develop the app's source code.
 
 === Source Code
 
@@ -72,4 +70,7 @@ How to modify and develop the app's source code.
 === Developer Docs
 
 * {{ link('db-helpers') }}
-
+* {{ link('departments') }}
+* {{ link('models') }}
+* {{ link('notifications') }}
+* {{ link('prr') }}

@@ -1,12 +1,14 @@
-= API
+= RecordTrac API
+We make all public records requests available through our API, returning output in a JSON format.
 :toc:
 :source-highlighter: pygments
 
 link:index.html[back to index page]
 
-== Getting a request object
+== GET /api/request
+Every public records request that comes through RecordTrac is assigned a unique ID and made programatically available via a simple GET request.
 
-* by ID 
+=== By ID 
 
 
 GET http://records.oaklandnet.com/api/request/1
@@ -17,12 +19,18 @@ GET http://records.oaklandnet.com/api/request/1
 {{ ppjson(unicode(d['api.json'])) }}
 ----
 
-* by page number 
-
+=== By page number 
+Results are paginated (10 results per page).
 
 GET http://records.oaklandnet.com/api/request?page=2
 
 
-== Explanation of fields in the request:
+== Explanation of fields in the request
 
 {{ d['/public_records_portal/models.py|idio|asciisyn']['Request'] }}
+
+== What else can you do?
+
+We're using Flask-Restless to generate the API, and https://flask-restless.readthedocs.org/en/latest/requestformat.html[their documentation] is a lot more comprehesive, so you should check it out to learn more ways in which you can interact with our API.
+
+The objects you have access to, in addition to request, are note, record, owner, QA and subscriber. You can read more about those http://codeforamerica.github.io/public-records/docs/1.0.0/models.html[here]. At this time, you can only make GET requests.

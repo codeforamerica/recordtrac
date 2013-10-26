@@ -19,6 +19,12 @@ class HomeView(AdminIndexView):
     @expose('/')
     def home(self):
         return self.render('admin.html')
+    def is_accessible(self):
+		if current_user.is_authenticated():
+			admins = app.config['LIST_OF_ADMINS'].split(",")
+			if current_user.email.lower() in admins:
+				return True
+		return False
 
 # Create Admin
 admin = Admin(app, name='Oakland Public Records Admin', url='/admin', index_view = HomeView(name='Home'))
@@ -26,8 +32,9 @@ admin = Admin(app, name='Oakland Public Records Admin', url='/admin', index_view
 class AdminView(ModelView):
     def is_accessible(self):
     	if current_user.is_authenticated():
-    		if 'codeforamerica.org' in current_user.email:
-    			return True
+			admins = app.config['LIST_OF_ADMINS'].split(",")
+			if current_user.email.lower() in admins:
+				return True
         return False
 
 class RequestView(AdminView):

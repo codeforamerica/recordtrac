@@ -1,6 +1,9 @@
-== How a Responder Uses RecordTrac
+= How Governments Use RecordTrac
+A responder is typically an employee of a governmental agency.
+:toc:
+:source-highlighter: pygments
 
-A responder is typically an employee of a governmental agency. 
+link:index.html[back to index page]
 
 === Re-Route Request
 A city employee can send the request to another individual in the official city directory if their department is unable to fulfill it. The city employee will be alerted via email and will become the new point of contact for this request.
@@ -30,8 +33,32 @@ Updates can be provided to the requester through the "Add a Note" feature. The r
 === Request an Extension
 Notify a requester if additional time is needed to fulfill their public records request. Select from one of the four legal reasons to extend a request and edit the message. The due date of the request changes, giving the city employee 14 additional calendar days to respond to the request. The message is posted online and the requester is notified via email. _An extension can only be requested once._
 
+Four legal reasons to request an extension:
+
+* Extension - Large Amount: "Additional time is required to answer your public records request. We need to search for, collect, or examine a large number of records (Government Code Section 6253(c)(2))."
+* Extension - Separate Facility: "Additional time is required to answer your public records request. We need to search for and collect the requested records from a separate facility or set of facilities (Government Code Section 6253(c)(1))."
+* Extension - Another Agency: "Additional time is required to answer your public records request. We need to consult with another agency before we are able to deliver your record (Government Code Section 6253(c)(3))."
+*  "Extension - Data: "Additional time is required to answer your public records request. We need to compile data or create a computer report to extract data (Government Code Section 6253(c)(4))."
+
 === Closing a Request
 To close out a request, city employees can edit a message already provided to them. An email is then sent to the requester notifying them the request is closed. The status of the request will also change. 
+
+Reasons a request can be closed:
+
+* Fulfilled: "We released all of the requested documents."
+* Fulfilled - Private Documents Not Uploaded: "We cannot upload your document online. The records contains sensitive information only you can view."
+* Fulfilled - Information Redacted: "We released all of the requested documents. Personal information, such as home addresses, telephone numbers, and credit card numbers, were removed from the documents to protect the privacy or identity of another individual (Government Code Section 6254(c)). 
+* Fulfilled - Identity of Citizens Making Complaints Removed: "We released all of the requested documents. We removed information identifying private citizens who made complaints to government (City of San Jose v. Superior Court (1999) 74 Cal.App.4th 1008, 1020.))."
+* Not a public records request: "This is not a public records request. For more information about the City of Oakland and its services visit Oakland Answers at answers.oaklandnet.com."
+* Record Does Not Exist: "The record you asked for does not exist."
+* Contact Another Government Agency: "We don't have the records you requested. We suggest you submit a public records request to Alameda County or the state of California."
+* Can Not Release - Personal Records: "We cannot upload the documents you requested. The California Public Records Act prohibits the City from releasing an individual’s employment, medical, or similar files to protect their privacy (Government Code Section 6254(c))."
+* Can Not Release - Ongoing Litigation: "We cannot upload the documents you requested. The California Public Records Act prohibits the City from releasing records related to an on-going litigation (Government Code Section 6254(b))."
+* Can Not Release - Investigative Records: "We cannot upload the documents you requested. The California Public Records Act prohibits the City from releasing investigative records for crimes committed or police incident reports, rap sheets, and arrest records (Government Code Section 6254(f))."
+* Can Not Release - Attorney-Client Privilege: "We cannot upload the documents you requested. The California Public Records Act prohibits the City from releasing communications between an attorney and his or her clients (Government Code Section 6254(k)."
+* Requester Not Interested:"The person who submitted this request determined they no longer need the record.",
+* Unable to contact the requester: "We closed this request after we were unable to contact the requester to determine what they needed."
+
 
 === Re-Open a Request
 Allows you to re-open a request after it is closed. This makes it possible for you to send more messages and upload additional records.
@@ -44,8 +71,11 @@ City employees are the only users able to upload records, extend a request, clos
 
 Only city employees can view:
 * A requester's name
+
 * A requester's phone number
+
 * A particular request's due date. This information is hidden from the public.
+
 * Whether a request is overdue or due soon. Members of the public are only able to tell whether a request is open or closed.
 
 == Tutorial

@@ -1,4 +1,8 @@
-== How to Redeploy RecordTrac
+= How to Redeploy RecordTrac
+:toc:
+:source-highlighter: pygments
+
+link:index.html[back to index page]
 
 === High-level technical dependencies 
 You will need to create new accounts for the following services. 
