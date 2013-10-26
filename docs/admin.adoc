@@ -38,7 +38,7 @@ You can only remove a record, not "edit" any of the fields.  Records include web
 
 A description of the fields in the table displayed can be found below:
 
-* Id: Unique ID assigned to each request.
+* ID: Unique ID assigned to each request.
 * Filename: Name of electronic record uploaded to RecordTrac. 
 * URL: Web address provided to requester.
 * Download URL: Web address where you can automatically download the record. 
@@ -52,7 +52,7 @@ To edit or remove a note, visit records.oaklandnet.com/admin/noteview.
 
 A description of the fields in the table displayed can be found below:
 
-* Id: Unique ID assigned to each request.
+* ID: Unique ID assigned to each request.
 * Text: Entire text of the note.
 * Date Created: The date the note was created. 
 
@@ -64,7 +64,7 @@ To remove posted questions and/or answers, visit records.oaklandnet.com/admin/qa
 
 A description of the fields in the table displayed can be found below:
 
-* Id: Unique ID assigned to each request.
+* ID: Unique ID assigned to each request.
 * Question: Entire text of the question asked by city staff.
 * Answer: Entire response of question provided by member of the public. 
 * Date Created: The date the exchange was created

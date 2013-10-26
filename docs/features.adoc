@@ -1,12 +1,9 @@
-= Features
+= How Governments Use RecordTrac
+A responder is typically an employee of a governmental agency.
 :toc:
 :source-highlighter: pygments
 
 link:index.html[back to index page]
-
-== How a Responder Uses RecordTrac
-
-A responder is typically an employee of a governmental agency. 
 
 === Re-Route Request
 A city employee can send the request to another individual in the official city directory if their department is unable to fulfill it. The city employee will be alerted via email and will become the new point of contact for this request.

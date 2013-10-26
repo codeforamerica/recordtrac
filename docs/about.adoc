@@ -21,9 +21,13 @@ By making everything completely transparent, it became easier for the City and m
 The primary goal was to create a central, shared view for all public records requests and responses from government employees.
 
 * Minimum in, maximum out: Only ask what you need of requesters to fulfill a public records request.
+
 * Transparency: Government employees and members of the public share a view of all requests and how they are being fulfilled.
+
 * Simple and fun: It should be easy to submit a public records requests. 
+
 * Comfortable and confident: Users should not be intimidated and should fully understand what happens when they take an action. 
+
 * Engaging: Requesters should be able to easily interact with government employees and share information with others. 
  
 RecordTrac is not designed to be a document management system or a tool to help government employees redact sensitive or confidential records. It is not a timer, keeping track of how long a government employee has to fulfill a records request. Although you can learn about how a particular governmental agency fulfills a public records request by using RecordTrac, it is not designed to teach bout about freedom of information laws.

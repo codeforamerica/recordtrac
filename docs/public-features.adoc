@@ -1,6 +1,7 @@
-= How a Requester Uses RecordTrac
+= How Citizens Use RecordTrac
 :toc:
 :source-highlighter: pygments
+
 link:index.html[back to index page]
 
 === Make a Request
