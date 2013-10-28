@@ -174,8 +174,9 @@ def close(request_id = None):
 # Shows all public records requests that have been made.
 def requests():
 	# Return first 100, ? limit = 100
-	# Taken from list_of_departments.json:
-	departments = sorted(["Human Resources", "Council District 7 - Larry Reid", "Department of Planning and Building", "Council District 5 - Noel Gallo", "Council District 3 - Lynette Gibson McElhaney", "City Clerk", "Council District 6 - Desley Brooks", "Health and Human Services", "Fire Department", "Budget and Revenue - Revenue Division", "Office of Controller and Treasury", "Information Technology (IT)", "City Attorney", "Council District 2 - Pat Kernighan", "Parks and Recreation", "City Auditor", "Council District 1 - Dan Kalb", "Office of the Mayor", "Council District 4 - Libby Schaaf", "Council At Large - Rebecca Kaplan", "Library Services", "Public Works Agency", "Contracts and Compliance", "City Administrator", "Office of Neighborhood Investment"], key=str.lower)
+	departments_json = open(os.path.join(app.root_path, 'static/json/list_of_departments.json'))
+	list_of_departments = json.load(departments_json)
+	departments = sorted(list_of_departments, key=unicode.lower)
 	filters = {}
 	open_requests = False
 	my_requests = False
