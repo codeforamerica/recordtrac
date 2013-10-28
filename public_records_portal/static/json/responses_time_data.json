@@ -1,22 +1,22 @@
 [
     {
-        "department": 	"Water",
+        "department": 	"Office of the Mayor",
         "time": 		100
     },
     {
-        "department": 	"Housing",
+        "department": 	"Human Resources",
         "time": 		800
     },
     {
-        "department": 	"Mayor",
+        "department": 	"Fire Department",
         "time": 		2200
     },
     {
-        "department": 	"Police",
+        "department": 	"Parks and Recreation",
         "time": 		2000
     },
     {
-        "department": 	"Schools",
+        "department": 	"Oakland Police Department",
         "time": 		200
     }
 ]

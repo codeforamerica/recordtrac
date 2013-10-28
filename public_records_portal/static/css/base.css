@@ -187,7 +187,7 @@ html, body {
   fill: #FB991B ;
 }
 
-.x.axis path {
+.no-line.axis path {
   display: none;
 }
 
@@ -196,7 +196,7 @@ html, body {
   text-anchor: left;
 }
 
-.x.axis {
+.no-line.axis {
   width: 50px;
   overflow: hidden;
 }
