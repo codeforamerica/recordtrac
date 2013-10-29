@@ -59,10 +59,11 @@ def new_request():
 		return render_template('new_request.html', doc_types = doc_types, user_id = get_user_id())
 
 def index():
+	viz_data_freq, viz_data_time = get_viz_data()
 	if current_user.is_anonymous() == False:
 		return redirect(url_for('requests'))
 	else:
-		return render_template('landing.html')
+		return render_template('landing.html', viz_data_freq = json.dumps(viz_data_freq), viz_data_time = json.dumps(viz_data_time))
 
 def viz():
 	viz_data_freq, viz_data_time = get_viz_data()

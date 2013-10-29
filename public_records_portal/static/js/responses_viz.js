@@ -43,6 +43,10 @@ $(function(){
         height = 250 - margin.top - margin.bottom,
         width = $('#responses-freq-viz').parent().width() - margin.left - margin.right;
 
+    $('#responses-freq-viz').parents('.well').height(height + 130);
+
+    console.log($('#responses-freq-viz').parent('.well'));
+
     var formatYAxis = d3.format("f");
 
     var x = d3.scale.ordinal()
