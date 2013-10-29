@@ -1,7 +1,7 @@
 // days to seconds for time graph
 function getDays(seconds) {
     exactDays = seconds / 86400;
-    return exactDays.toFixed(3);
+    return exactDays.toFixed(1);
 }
 
 var shortDeptNames = {
@@ -195,7 +195,7 @@ d3.json(viz_data_time, function(error, json) {
             .data(data)
             .enter().append("rect")
             .attr("class", "bar")
-            .attr("width", function(d) { return xResponseTime(d.time); })
+            .attr("width", function(d) { return xResponseTime(getDays(d.time)); })
             .attr("y", function(d) { return yDepartments(shortDeptNames[d.department]); })
             .attr("height", yDepartments.rangeBand())
             .on('mouseover', tipNext.show)

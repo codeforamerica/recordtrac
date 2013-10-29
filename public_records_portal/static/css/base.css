@@ -180,7 +180,7 @@ html, body {
 }
 
 .bar {
-  fill: #2688ad;
+  fill: #999;
 }
 
 .bar:hover {
@@ -225,7 +225,7 @@ html, body {
 
 /* Style northward tooltips differently */
 .d3-tip.n:after {
-  margin: -1px 0 0 0;
+  margin: -2px 0 0 0;
   top: 100%;
   left: 0;
 }
