@@ -5,11 +5,11 @@ A responder is typically an employee of a governmental agency.
 
 link:index.html[back to index page]
 
-=== Re-Route Request
+=== Change the Point of Contact for a Request
 A city employee can send the request to another individual in the official city directory if their department is unable to fulfill it. The city employee will be alerted via email and will become the new point of contact for this request.
 
 === Add a Helper
-Sometimes more than one person is needed to fulfill a request or it involves multiple departments. Click on 'Helpers' to notify additional city employees of this request.
+Sometimes more than one person is needed to fulfill a request or it involves multiple departments. Click on 'Helpers' to notify additional city employees of this request. The city employee will be alerted via email that they are expected to respond to this request. The helpers will be able to add documents and send messages to the requester via RecordTrac. 
 
 === Ask a Question
 A city employee can ask questions about this particular records request. The requester will be notified via email of this question. The question will be posted online for everyone to view.
@@ -17,15 +17,19 @@ A city employee can ask questions about this particular records request. The req
 === Upload a Record
 Documents stored on a computer can be uploaded. The requester will be notified via email every time a record is uploaded. The documents will be posted online for everyone to view.
 
+You must name every record you upload.  
+
 Records are displayed online via Scribd. Supported file types are the following:
 'txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff'
 
+=== Add a Link to Another Website
+A city employee can respond to a request by providing a link to where the document or information is stored online. The requester will be notified via email about this link. This web address will be posted online for everyone to view.
+
+You must name each link you post.  
+
+
 === Add An Offline Record
 Some records cannot be uploaded to the website and requesters will have to be told when and where to pick up copies of it. The requester will be notified via email about this message. This message will be posted online for everyone to view.
-
-=== Add a Link to Another Website
-
-A city employee can respond to a request by providing a link to where the document or information is stored online. The requester will be notified via email about this link. This web address will be posted online for everyone to view.
 
 === Add a Note
 Updates can be provided to the requester through the "Add a Note" feature. The requester will be notified via email. The message will be posted online for everyone to view.
@@ -63,9 +67,13 @@ Reasons a request can be closed:
 === Re-Open a Request
 Allows you to re-open a request after it is closed. This makes it possible for you to send more messages and upload additional records.
 
+=== Responses
+All responses are displayed in chronological order. Each response includes the time it was uploaded and who uploaded the document or sent the message. 
+
 == What is Unique to the City View
 
-There are two views in RecordTrac: the city employee view and the public view. Any time there is a web page only a city employee who is logged should see there is 'city' in the URL. Ex: http://records.oaklandnet.com/city/request/952.    
+There are two views in RecordTrac: the city employee view and the public view. Any time there is a web page only a city employee who is logged should see there is 'city' in the URL. 
+
 
 City employees are the only users able to upload records, extend a request, close a request, and correspond with the requester through RecordTrac. 
 
