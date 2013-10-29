@@ -149,10 +149,12 @@
       <div class="push"></div>
     </div>
       
-    <div id="footer" class="well well-small footer">
-      <p class="text-center">Made by <!-- <a href="http://codeforamerica.org/2013-partners/oakland/"> -->Code for America 2013 Fellows<!-- </a> --></p>
-      <p class="text-center"><a href="/signup">Get the app</a> for your city or <a href="https://github.com/codeforamerica/public-records#public-records-"> view project info <i class="icon-github"></i></a>.</p>
-    </div>
+    {% block footer %}
+      <div id="footer" class="well well-small footer">
+        <p class="text-center">Made by <!-- <a href="http://codeforamerica.org/2013-partners/oakland/"> -->Code for America 2013 Fellows<!-- </a> --></p>
+        <p class="text-center"><a href="/signup">Get the app</a> for your city or <a href="https://github.com/codeforamerica/public-records#public-records-"> view project info <i class="icon-github"></i></a>.</p>
+      </div>
+    {% endblock footer %}
 
     {% block feedback %}
     <!-- gforms feedback tab -->
