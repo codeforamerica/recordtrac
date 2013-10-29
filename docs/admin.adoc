@@ -15,7 +15,9 @@ RecordTrac’s administrative controls allows the users to:
 * Edit or remove an answer
 * Add or remove a Public Records Request (PRR) liaison
 
-The administrative controls allows the user to permanently delete records, requests, and notes from the database. Because of this, administrative access should be restricted to a small number of users. 
+The administrative controls allows the user to permanently delete records, requests, and notes from the database.Because of this, administrative access should be restricted to a small number of users. 
+
+
 
 === How to Remove or Edit a Request
 
@@ -117,6 +119,26 @@ List of departments:
 * Oakland Police Department
 
 
+=== Best Practices to Consider
 
+Content  should only be removed or edited if sensitive or confidential information is revealed. If this happens, you should:
 
+* Save a copy of the original message. (This will have to be done outside of RecordTrac. There is no way to hide a message from public view.) 
+* Edit the message to indicate why it needs to be removed. 
+* Notify the requester why their post or answer was removed.
+* Provide guidance to the requester on how they can get the record they need. 
+
+If a city staff member enters information incorrectly, simply add a note explaining the mistake. 
+
+If a member of the public enters incorrect information,  the requester (or a city staff member) can add a note correcting  the mistake. 
+
+Sometimes it’s necessary to create a new request. If a new request must be created, we suggest you do the following:
+* Create a new request with the proper information.
+* In the old request, include a note explaining what is wrong with it and a link to the new request.
+* Close out the old request.
+* In the new request, reference and/or provide a link to the old request. 
+
+Although RecordTrac has a spam filter, every once in a while it may receive spam. When confronted with spam, close the request with a note indicating why it is not a public records request.  If there is a large amount of spam requests, it is appropriate to simply remove the spam. 
+
+If a record needs to be removed. It not only has to be deleted on RecordTrac, it has to be removed from Scribd as well. 
 
