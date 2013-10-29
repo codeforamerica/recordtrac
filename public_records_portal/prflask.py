@@ -77,6 +77,9 @@ routing = {
 	'tutorial':{
 		'url': '/tutorial'
 	},
+	'landing':{
+		'url': '/landing'
+	},
 	'index':{
 		'url':'/',
 		'methods':['GET', 'POST']

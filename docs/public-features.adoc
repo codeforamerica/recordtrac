@@ -7,7 +7,7 @@ link:index.html[back to index page]
 === Make a Request
 Members of the public can submit a message to city employees requesting a public record. At a minimum, they are required to enter a message. 
 
-image::new_request_form.png[]
+image::new_request.png
 
 * There is no limit to the amount of text they can put in the request field.
 * If a requester types in birth, death, marriage, or divorce in the request field, they are prompted to go to the county's website. The county maintains records for birth, deaths, marriages, and divorces. 
@@ -17,10 +17,19 @@ image::new_request_form.png[]
 * All contact information is optional, although we strongly encourage the requester to provide an email address. The California Public Records Acts allow individuals to submit anonymous requests. This is why we don't force an individual to provide their contact information. 
 
 === Add a Note
+
+image::public_note.png
+
 The requester can add a note if they need to provide additional information to the municipality about their public records request.  Once a note is added, an email is sent to the Point of Contact and Helpers (the individuals responsible for responding to a request).  This feature was added to encourage all communication to occur within RecordTrac. 
 
 === Answer a Question
+
+image::answer_question.png
+
 A requester can respond to a question asked by a city employee. This field only appears when a city employee asks a question.  Once the requester answers a question, an email is sent to the Point of Contact and Helpers (the individuals responsible for responding to a request). 
 
 === Subscribe to a Request
+
+image::subscribe.png
+
 If an individual is interested in the outcome of a particular request, they can subscribe to a request. They will receive email updates every time a response is added to the particular request and when it's closed.

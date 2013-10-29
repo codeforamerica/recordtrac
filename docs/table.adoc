@@ -8,6 +8,8 @@ RecordTrac displays all current and past records requests at http://records.oakl
 
 === Fields in the All Request Table
 
+image::all_request_table.png
+
 The table displays the following information:
 
 * #: Each request is assigned a unique number. You can easily track your request with this number by visiting http://records.oaklandnet.com/requests[records.oaklandnet.com/track].
@@ -24,6 +26,8 @@ City employees are able to filter the all request table by:
 * The requests assigned to them
 * Open requests
 * Department 
+
+image::filter.png
 
 When they click on the green “Update Table” button, they can only view the request they selected.
 
