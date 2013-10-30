@@ -12,12 +12,10 @@
     <button type="button" class="close" data-dismiss="alert">x</button>
     <div class="span1 text-right"><i class="icon-ok-sign icon-2x"> </i></div>
     <div class="offset1">
-      <p><strong>  Your request has been submitted!</strong></p>
+      <p><strong>  You have successfully unsubscribed from this request.</strong></p>
       {% set requester_id = req.id | get_requester %}
-      <p>You can expect a response from the City of Oakland in the next 10 days.
-      {% if requester_id %} You will be contacted via e-mail with any updates.
-      {% else %} You did not provide an e-mail address so you will have to visit this page for updates. {% endif %}</p>
-      <p>All messages from the City and/or the information and documents you requested will be posted to this page. You can access <a href ="{{request.path}}">this page</a> at any time.</p>
+      <p>You will not receive any new email updates for this request.</p>
+      <p>If you would like to start receiving updates again, you can add your email again using the follow link on the right side of this request page.</p>
     </div>
   </div>
 {% endblock banner %}
