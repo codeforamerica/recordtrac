@@ -397,8 +397,8 @@ def update_subscriber(request_id, alias, phone):
 def get_viz_data():
 	viz_data = Visualization.query.get(1).content
 	viz_time_data = Visualization.query.get(2).content
-	viz_fatest_time_data = Visualization.query.get(3).content
-	return json.loads(viz_data), json.loads(viz_time_data)
+	viz_fastest_time_data = Visualization.query.get(3).content
+	return json.loads(viz_data), json.loads(viz_fatest_time_data)
 
 def create_viz_data():
 	depts_freq = []
