@@ -18,12 +18,12 @@ Understand what is RecordTrac and what motivated the 2013 Code for America fello
 
 {{ link('about') }}
 
-== How _citizens_ use RecordTrac
+== How to make a public records request using RecordTrac.
 
 * {{ link('public-features') }}
 * {{ link('public-table') }}
 
-== How _governments_ use RecordTrac
+== How to respond to a public records request using RecordTrac.
 
 * {{ link('features') }}
 * {{ link('table') }}
