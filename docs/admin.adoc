@@ -15,8 +15,7 @@ RecordTrac’s administrative controls allows the users to:
 * Edit or remove an answer
 * Add or remove a Public Records Request (PRR) liaison
 
-The administrative controls allows the user to permanently delete records, requests, and notes from the database.Because of this, administrative access should be restricted to a small number of users. 
-
+The administrative controls allows the user to permanently delete records, requests, and notes from the database. Because of this, administrative access should be restricted to a small number of users. 
 
 
 === How to Remove or Edit a Request
@@ -157,6 +156,37 @@ You can delete a user by clicking on the trashcan icon.
 
 image::admin_delete_user.png
 
+=== Updating Website Copy
+
+The web copy is not managed through the admin section. To update the copy on the website, the .json files or HTML templates must be modified. 
+
+The copy for the web application can be found in the following .json files:
+
+* Action.json describes the actions a member of the public can take to submit a request, as well as the actions to be taken by a city employee. The text from this file is used for the website's copy. It tells users what will happen when they use a particular feature and who will be able to view the messages or documents uploaded. 
+* Notcityrecords.json: When a member of the public types in a particular word or phrase pertaining to a record not possessed by the City of Oakland while submitting a request, a message pops up explaining to the user they need to contact another municipality. This file keeps track of all the phrases and messages.
+* Prr_help.json: This is the copy displayed on the "New Request" page. It includes tips for submitting a public records request, as well as three examples of public records requests. 
+* Tutorial.json: The copy for the tutorial can be found here. 
+
+All of the HTML files are stored in the templates folder. The names of the files are pretty self-explanatory, and it is simple to find the file that corresponds to each webpage. For example to edit the About page at http://records.oaklandnet.com/about, you must modify the 'about.html' file. 
+
+
+=== Changing Passwords
+
+Passwords are not managed through the admin section. City employees are able to change their own passwords, if they do the following:
+
+Go to http://records.oaklandnet.com/reset_password[records.oaklandnet.com/reset_password].
+
+image::reset_password.png[]
+
+A temporary password will be sent via email.
+
+Use the temporary password to log into the system.
+
+Go to http://records.oaklandnet.com/update_password to change your password.
+
+image::update_password.png[]
+
+Once you click the green “Update” button your password will change. 
 
 === Best Practices to Consider
 
