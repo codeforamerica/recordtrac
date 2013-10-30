@@ -19,6 +19,8 @@ GET http://records.oaklandnet.com/api/request/1
 {{ ppjson(unicode(d['api.json'])) }}
 ----
 
+image::request1response.png[][The alt text for this]
+
 === By page number 
 Results are paginated (10 results per page).
 
