@@ -33,3 +33,14 @@ A requester can respond to a question asked by a city employee. This field only 
 image::subscribe.png[]
 
 If an individual is interested in the outcome of a particular request, they can subscribe to a request. They will receive email updates every time a response is added to the particular request and when it's closed.
+
+== Email notifications
+
+A requester is sent a confirmation email after they submit their request and when a question is asked by a city employee.
+
+Both requesters and subscribes receive email notifications when:
+
+* A record is added by a city employee (This happens every time a record is uploaded. The requester will receive multiple emails if more than one record is uploaded.) 
+* A note is added by a city employee
+* An extension is needed
+* The request is closed

@@ -117,13 +117,21 @@ image::city_url.png[]
 City employees are the only users able to upload records, extend a request, close a request, and correspond with the requester through RecordTrac. 
 
 Only city employees can view:
+
 * A requester's name
-
 * A requester's phone number
-
 * A particular request's due date. This information is hidden from the public.
-
 * Whether a request is overdue or due soon. Members of the public are only able to tell whether a request is open or closed.
+
+== Email Notifications
+
+The Point of Contact and Helpers for a request recieve an email notification when:
+
+* They are assigned a request
+* A requester sends a note through RecordTrac
+* Requester responds to a question
+* A request is "due" in two days (also sent to the department or agency's backup)
+* A request is overdue
 
 == Tutorial
 

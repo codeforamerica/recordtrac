@@ -1,0 +1,25 @@
+<!-- This template is to display success banner immediately after a new requests gets submitted. -->
+
+{% extends "case.html" %}
+{% block title %}Request {{ request_id }}{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block banner %}
+  <!-- success banner -->
+  <div class="alert alert-success">
+    <button type="button" class="close" data-dismiss="alert">x</button>
+    <div class="span1 text-right"><i class="icon-ok-sign icon-2x"> </i></div>
+    <div class="offset1">
+      <p><strong>  You have successfully unsubscribed from this request.</strong></p>
+      {% set requester_id = req.id | get_requester %}
+      <p>You will not receive any new email updates for this request.</p>
+      <p>If you would like to start receiving updates again, you can add your email again using the follow link on the right side of this request page.</p>
+    </div>
+  </div>
+{% endblock banner %}
+
+
+
+
