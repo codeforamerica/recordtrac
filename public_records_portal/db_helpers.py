@@ -435,9 +435,13 @@ def create_viz_data():
 		viz2.content = json.dumps(depts_response_time)
 		viz2.type_viz = 'time'
 	else:
-		viz = Visualization(type_viz = 'time', content = json.dumps(depts_response_time))
+		viz2 = Visualization(type_viz = 'time', content = json.dumps(depts_response_time))
 	if viz3:
 		viz3.content = json.dumps(depts_response_fastest_time)
+	else:
+		viz3 = Visualization(type_viz = 'fastest_time', content = json.dumps(depts_response_fastest_time))
 	db.session.add(viz)
+	db.session.add(viz2)
+	db.session.add(viz3)
 	db.session.commit()
 	
