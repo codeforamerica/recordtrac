@@ -397,6 +397,7 @@ def update_subscriber(request_id, alias, phone):
 def get_viz_data():
 	viz_data = Visualization.query.get(1).content
 	viz_time_data = Visualization.query.get(2).content
+	viz_fatest_time_data = Visualization.query.get(3).content
 	return json.loads(viz_data), json.loads(viz_time_data)
 
 def create_viz_data():
@@ -410,16 +411,22 @@ def create_viz_data():
 		line['department'] = department
 		response_line['department'] = department
 		line['freq'] = len(get_requests_by_filters(line))
-		response_line['time'] = get_avg_response_time(department)
-		depts_response_time.append(response_line)
+		avg_response_time = get_avg_response_time(department)
+		if avg_response_time:
+			response_line['time'] = avg_response_time
+			depts_response_time.append(response_line)
 		depts_freq.append(line)
 	# Only display top 5 departments:
 	depts_freq.sort(key = lambda x:x['freq'], reverse = True)
+	depts_response_fastest_time = depts_response_time
 	depts_response_time.sort(key = lambda x:x['time'], reverse = True)
+	depts_response_fastest_time.sort(key = lambda x:x['time']) 
 	del depts_freq[5:]
 	del depts_response_time[5:]
+	del depts_response_fastest_time[5:]
 	viz = Visualization.query.get(1)
 	viz2 = Visualization.query.get(2)
+	viz3 = Visualization.query.get(3)
 	if viz:
 		viz.content = json.dumps(depts_freq)
 	else:
@@ -429,6 +436,8 @@ def create_viz_data():
 		viz2.type_viz = 'time'
 	else:
 		viz = Visualization(type_viz = 'time', content = json.dumps(depts_response_time))
+	if viz3:
+		viz3.content = json.dumps(depts_response_fastest_time)
 	db.session.add(viz)
 	db.session.commit()
 	
