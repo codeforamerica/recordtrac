@@ -36,16 +36,19 @@ Learn about the technical details of implementation so you can see what's involv
 RecordTrac is primarily a Python application built on a backend Flask framework and a frontend Bootstrap framework.
 
 === Platform pieces
-* http://flask.pocoo.org[Flask 0.10]
-* http://getbootstrap.com/2.3.2[Bootstrap 2.3.2]
-* http://www.postgresapp.com[Postgres 9.3.0]
-* http://www.python.org/getit[Python 2.7.5]
+* http://flask.pocoo.org[Flask 0.10] is used as the backend Python framework.
+* http://getbootstrap.com/2.3.2[Bootstrap 2.3.2] is used as the frontend HTML/CSS/JS framework.
+* http://www.postgresapp.com[Postgres 9.3.0] is used to manage the database.
+* http://www.python.org/getit[Python 2.7.5] is used as the foundational programming language.
 
 === Plugins
-* http://fortawesome.github.io/Font-Awesome[Font Awesome 3.2.1]
-* http://www.datatables.net[DataTables 1.9.4]
+* http://fortawesome.github.io/Font-Awesome[Font Awesome 3.2.1] is used to render all the icons on the site.
+* http://www.datatables.net[DataTables 1.9.4] is used to display the full list of requests in "/requests".
 
 === Service dependencies
+* http://sendgrid.com/[SendGrid] is used for all email notifications about requests.
+* http://akismet.com/[Askimet] is used as a spam filter.
+* http://www.captcha.net/[Captcha] is used to allow requesters to override the spam filter if necessary.
 
 === Feature backlog
 Issues and feature backlog are tracked through https://github.com/codeforamerica/public-records[GitHub issues].
