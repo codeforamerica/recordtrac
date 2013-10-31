@@ -176,7 +176,7 @@ d3.json(viz_data_time, function(error, json) {
         data = viz_data_time;
 
         xResponseTime.domain([0, getHours(d3.max(data, function(d) { return d.time; }))]);
-        yDepartments.domain(data.map(function(d) { return shortDeptNames[d.department]; }));
+        yDepartments.domain(data.map(function(d) { return shortDeptNamesß[d.department]; }));
 
 
         // xAxis -- Time responses graph
@@ -211,6 +211,6 @@ d3.json(viz_data_time, function(error, json) {
             .style("font-size", "14px")
             .style("fill", "#333333")
             .style("font-weight", "bold")
-            .text("Time to Fill Requests (Hours)");
+            .text("Quickest Turnaround by Department (Hours)");
   });
 });
