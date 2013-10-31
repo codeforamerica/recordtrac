@@ -166,7 +166,7 @@ $(function() {
         .attr('class', 'd3-tip')
         .offset([-10, 0])
         .html(function(d) {
-          return d.department + "<br /><center><div style='font-weight: normal; font-size: 12px; margin-top:5px'>Requests: <span style='color:#FB991B'>" + getHours(d.time) + " hours</span></div></center>";
+          return d.department + "<br /><center><div style='font-weight: normal; font-size: 12px; margin-top:5px'>Requests: <span style='color:#FB991B'>" + getDays(d.time) + " days</span></div></center>";
         });
 
     svgNext.call(tipNext);
@@ -175,7 +175,7 @@ d3.json(viz_data_time, function(error, json) {
         // if (error) return console.warn("Didn't recive departments frequencies.");
         data = viz_data_time;
 
-        xResponseTime.domain([0, getHours(d3.max(data, function(d) { return d.time; }))]);
+        xResponseTime.domain([0, getDays(d3.max(data, function(d) { return d.time; }))]);
         yDepartments.domain(data.map(function(d) { return shortDeptNames[d.department]; }));
 
 
@@ -198,7 +198,7 @@ d3.json(viz_data_time, function(error, json) {
             .data(data)
             .enter().append("rect")
             .attr("class", "bar")
-            .attr("width", function(d) { return xResponseTime(getHours(d.time)); })
+            .attr("width", function(d) { return xResponseTime(getDays(d.time)); })
             .attr("y", function(d) { return yDepartments(shortDeptNames[d.department]); })
             .attr("height", yDepartments.rangeBand())
             .on('mouseover', tipNext.show)
@@ -211,6 +211,6 @@ d3.json(viz_data_time, function(error, json) {
             .style("font-size", "14px")
             .style("fill", "#333333")
             .style("font-weight", "bold")
-            .text("Quickest Turnaround by Department (Hours)");
+            .text("Quickest Turnaround by Department (Days)");
   });
 });
