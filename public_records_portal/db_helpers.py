@@ -23,6 +23,13 @@ def get_requester(request_id):
 		return get_attribute(attribute = "user_id", obj = subscribers[0])
 	return None
 
+### @export "get_subscriber"
+def get_subscriber(request_id, user_id):
+# Returns the subscriber for a given request by user ID
+	if request_id and user_id:
+		return Subscriber.query.filter_by(user_id = user_id).filter_by(request_id = request_id).first()
+	return None
+
 ### @export "get_count"
 def get_count(obj_type):
 	return db.session.query(func.count(eval(obj_type).id)).scalar()
@@ -62,12 +69,12 @@ def get_avg_response_time(department):
 	for request in q:
 		if request.status and 'Closed' in request.status:
 			if response_time:
-				response_time = response_time + (request.status_updated - request.date_created)
+				response_time = response_time + (request.status_updated - request.date_created).total_seconds()
 			else:
-				response_time = request.status_updated - request.date_created
+				response_time = (request.status_updated - request.date_created).total_seconds()
 			num_closed = num_closed + 1
 	if num_closed > 0:
-		avg = response_time.seconds / num_closed
+		avg = response_time / num_closed
 		return avg
 	return None
 
@@ -402,7 +409,7 @@ def create_viz_data():
 		depts_freq.append(line)
 	# Only display top 5 departments:
 	depts_freq.sort(key = lambda x:x['freq'], reverse = True)
-	depts_response_fastest_time = depts_response_time
+	depts_response_fastest_time = list(depts_response_time)
 	depts_response_time.sort(key = lambda x:x['time'], reverse = True)
 	depts_response_fastest_time.sort(key = lambda x:x['time']) 
 	del depts_freq[5:]

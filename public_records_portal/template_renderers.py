@@ -110,6 +110,17 @@ def track(request_id = None):
 	else:
 		return render_template("track.html")
 
+def unfollow(request_id, email):
+	success = False
+	user_id = create_or_return_user(email.lower())
+	subscriber = get_subscriber(request_id = request_id, user_id = user_id)
+	if subscriber:
+		success = update_obj(attribute = "should_notify", val = False, obj = subscriber)
+	if success:
+		return show_request(request_id = request_id, template = "manage_request_unfollow.html")
+	else:
+		return render_template('error.html', message = "Unfollowing this request was unsuccessful. You probably weren't following it to begin with.")
+
 def show_request(request_id, template = None):
 	current_user_id = get_user_id()
 	req = get_obj("Request", request_id)

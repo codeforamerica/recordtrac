@@ -3,6 +3,10 @@ function getDays(seconds) {
     exactDays = seconds / 86400;
     return exactDays.toFixed(2);
 }
+function getHours(seconds) {
+    exactHours = seconds / 3600;
+    return exactHours.toFixed(1);
+}
 
 var shortDeptNames = {
     "Office of the Mayor":                  'Mayor',
@@ -162,7 +166,7 @@ $(function() {
         .attr('class', 'd3-tip')
         .offset([-10, 0])
         .html(function(d) {
-          return d.department + "<br /><center><div style='font-weight: normal; font-size: 12px; margin-top:5px'>Requests: <span style='color:#FB991B'>" + getDays(d.time) + "</span></div></center>";
+          return d.department + "<br /><center><div style='font-weight: normal; font-size: 12px; margin-top:5px'>Requests: <span style='color:#FB991B'>" + getDays(d.time) + " days</span></div></center>";
         });
 
     svgNext.call(tipNext);
@@ -170,9 +174,8 @@ $(function() {
 d3.json(viz_data_time, function(error, json) {
         // if (error) return console.warn("Didn't recive departments frequencies.");
         data = viz_data_time;
-        for (var key in data) { console.log(data[key].freq) }
-        for (var key in data) { console.log(getDays(data[key].time)) }
-        xResponseTime.domain([0, d3.max(data, function(d) { console.log(getDays(d.time)); return getDays(d.time); })]);
+
+        xResponseTime.domain([0, getDays(d3.max(data, function(d) { return d.time; }))]);
         yDepartments.domain(data.map(function(d) { return shortDeptNames[d.department]; }));
 
 
@@ -208,6 +211,6 @@ d3.json(viz_data_time, function(error, json) {
             .style("font-size", "14px")
             .style("fill", "#333333")
             .style("font-weight", "bold")
-            .text("Time to Fill Requests (Days)");
+            .text("Quickest Turnaround by Department (Days)");
   });
 });

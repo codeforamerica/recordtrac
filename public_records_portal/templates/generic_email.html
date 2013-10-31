@@ -10,7 +10,14 @@
 <p>
 		You can view the request and take any necessary action at the following webpage: <a href='{{page}}'>{{page}}</a>
 </p>
-<br/>  
+</br>
+
+{% if unfollow_link %}
+<p>
+	You can always choose to <a href='{{unfollow_link}}'>unfollow this request</a>.
+</p>
+{% endif %}
+</br>
 <p>
 <hr>
 <br />
