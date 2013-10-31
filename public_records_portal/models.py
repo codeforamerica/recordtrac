@@ -106,6 +106,7 @@ class Subscriber(db.Model):
 # A person subscribed to a request, who may or may not have created the request, and may or may not own a part of the request.
 	__tablename__ = 'subscriber'
 	id = db.Column(db.Integer, primary_key = True)
+	should_notify = db.Column(db.Boolean, default = True) # Allows a subscriber to unsubscribe
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
 	date_created = db.Column(db.DateTime)
