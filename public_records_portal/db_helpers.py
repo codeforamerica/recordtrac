@@ -402,7 +402,7 @@ def create_viz_data():
 		depts_freq.append(line)
 	# Only display top 5 departments:
 	depts_freq.sort(key = lambda x:x['freq'], reverse = True)
-	depts_response_fastest_time = depts_response_time
+	depts_response_fastest_time = list(depts_response_time)
 	depts_response_time.sort(key = lambda x:x['time'], reverse = True)
 	depts_response_fastest_time.sort(key = lambda x:x['time']) 
 	del depts_freq[5:]
