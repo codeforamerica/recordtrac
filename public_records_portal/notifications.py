@@ -28,6 +28,12 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 	recipient_types = email_info["Recipients"]
 	include_unsubscribe_link = True 
 	for recipient_type in recipient_types:
+		if user_id and (recipient_type == "Requester" or recipient_type == "Subscriber"):
+			subscriber = get_subscriber(request_id = request_id, user_id = user_id)
+			should_notify = get_attribute(attribute = "should_notify", obj = subscriber)
+			if should_notify == False:
+				print "Person unsubscribed, no notification sent."
+				continue
 		page = "%srequest/%s" %(app_url,request_id) # The request URL 
 		if "Staff" in recipient_type:
 			page = "%scity/request/%s" %(app_url,request_id)
@@ -38,6 +44,7 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 		if recipient_type in ["Staff owner","Requester","Subscriber","Staff participant"]:
 			if user_id:
 				recipient = get_attribute(attribute = "email", obj_id = user_id, obj_type = "User")
+				# if recipient_type != "Subscriber" or get_attribute(attribute="")
 				if recipient:
 					send_prr_email(page = page, recipients = [recipient], subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link)
 			else:
@@ -45,6 +52,9 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 		elif recipient_type == "Subscribers":
 			subscribers = get_attribute(attribute = "subscribers", obj_id = request_id, obj_type = "Request")
 			for subscriber in subscribers:
+				if subscriber.should_notify == False:
+					print "Person unsubscribed, no notification sent."
+					continue
 				recipient = get_attribute(attribute = "email", obj_id = subscriber.user_id, obj_type = "User")
 				if recipient:
 					send_prr_email(page = page, recipients = [recipient], subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link) # Each subscriber needs to get a separate e-mail.
