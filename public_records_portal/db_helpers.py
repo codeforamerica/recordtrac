@@ -23,7 +23,6 @@ def get_requester(request_id):
 		return get_attribute(attribute = "user_id", obj = subscribers[0])
 	return None
 
-
 ### @export "get_count"
 def get_count(obj_type):
 	return db.session.query(func.count(eval(obj_type).id)).scalar()
@@ -33,22 +32,7 @@ def get_obj(obj_type, obj_id):
 	""" Query the database for an object via its class/type (defined in models.py) and ID and return the object. """
 	if not obj_id:
 		return None
-	# There has to be a better way of doing this
-	if obj_type == "User":
-		return User.query.get(obj_id)
-	elif obj_type == "Request":
-		return Request.query.get(obj_id)
-	elif obj_type == "Owner":
-		return Owner.query.get(obj_id)
-	elif obj_type == "Note":
-		return Note.query.get(obj_id)
-	elif obj_type == "QA":
-		return QA.query.get(obj_id)
-	elif obj_type == "Subscriber":
-		return Subscriber.query.get(obj_id)
-	elif obj_type == "Record":
-		return Record.query.get(obj_id)
-	return None
+	return eval(obj_type).query.get(obj_id)
 
 ### @export "get_objs"
 def get_objs(obj_type):
@@ -429,15 +413,19 @@ def create_viz_data():
 	viz3 = Visualization.query.get(3)
 	if viz:
 		viz.content = json.dumps(depts_freq)
+		viz.date_updated = datetime.now().isoformat()
 	else:
 		viz = Visualization(type_viz = 'freq', content = json.dumps(depts_freq))
 	if viz2:
 		viz2.content = json.dumps(depts_response_time)
 		viz2.type_viz = 'time'
+		viz2.date_updated = datetime.now().isoformat()
 	else:
 		viz2 = Visualization(type_viz = 'time', content = json.dumps(depts_response_time))
 	if viz3:
 		viz3.content = json.dumps(depts_response_fastest_time)
+		viz3.type_viz = "fastest_time"
+		viz3.date_updated = datetime.now().isoformat()
 	else:
 		viz3 = Visualization(type_viz = 'fastest_time', content = json.dumps(depts_response_fastest_time))
 	db.session.add(viz)
