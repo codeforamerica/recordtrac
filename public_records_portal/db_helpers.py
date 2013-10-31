@@ -62,12 +62,12 @@ def get_avg_response_time(department):
 	for request in q:
 		if request.status and 'Closed' in request.status:
 			if response_time:
-				response_time = response_time + (request.status_updated - request.date_created)
+				response_time = response_time + (request.status_updated - request.date_created).seconds
 			else:
-				response_time = request.status_updated - request.date_created
+				response_time = (request.status_updated - request.date_created).seconds
 			num_closed = num_closed + 1
 	if num_closed > 0:
-		avg = response_time.seconds / num_closed
+		avg = response_time / num_closed
 		return avg
 	return None
 
