@@ -175,7 +175,7 @@ d3.json(viz_data_time, function(error, json) {
         // if (error) return console.warn("Didn't recive departments frequencies.");
         data = viz_data_time;
 
-        xResponseTime.domain([0, d3.max(data, function(d) { return getHours(d.time); })]);
+        xResponseTime.domain([0, d3.max(data, function(d) { return d.time; })]);
         yDepartments.domain(data.map(function(d) { return shortDeptNames[d.department]; }));
 
 
@@ -198,7 +198,7 @@ d3.json(viz_data_time, function(error, json) {
             .data(data)
             .enter().append("rect")
             .attr("class", "bar")
-            .attr("width", function(d) { return xResponseTime(getHours(d.time)); })
+            .attr("width", function(d) { return xResponseTime(d.time); })
             .attr("y", function(d) { return yDepartments(shortDeptNames[d.department]); })
             .attr("height", yDepartments.rangeBand())
             .on('mouseover', tipNext.show)
