@@ -81,6 +81,9 @@ routing = {
 	'landing':{
 		'url': '/landing'
 	},
+	'unfollow':{
+		'url': '/unfollow/<int:request_id>/<string:email>'
+	},
 	'index':{
 		'url':'/',
 		'methods':['GET', 'POST']

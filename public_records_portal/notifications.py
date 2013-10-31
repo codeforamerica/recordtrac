@@ -26,7 +26,8 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 	email_info = get_email_info(notification_type=notification_type)
 	email_subject = "Public Records Request %s: %s" %(request_id, email_info["Subject"])
 	recipient_types = email_info["Recipients"]
-	include_unsubscribe_link = True 
+	include_unsubscribe_link = True
+	unfollow_link = None 
 	for recipient_type in recipient_types:
 		if user_id and (recipient_type == "Requester" or recipient_type == "Subscriber"):
 			subscriber = get_subscriber(request_id = request_id, user_id = user_id)
@@ -39,6 +40,7 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 			page = "%scity/request/%s" %(app_url,request_id)
 			include_unsubscribe_link = False # Gets excluded for city staff
 		else:
+			unfollow_link = "%sunfollow/%s/" %(app_url, request_id)
 			if notification_type == "Request closed":
 				page = "%sfeedback/request/%s" %(app_url,request_id)
 		if recipient_type in ["Staff owner","Requester","Subscriber","Staff participant"]:
@@ -46,7 +48,9 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 				recipient = get_attribute(attribute = "email", obj_id = user_id, obj_type = "User")
 				# if recipient_type != "Subscriber" or get_attribute(attribute="")
 				if recipient:
-					send_prr_email(page = page, recipients = [recipient], subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link)
+					if unfollow_link:
+						unfollow_link = unfollow_link + recipient
+					send_prr_email(page = page, recipients = [recipient], subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link, unfollow_link = unfollow_link)
 			else:
 				print "Can't send an e-mail out if no user exists."
 		elif recipient_type == "Subscribers":
@@ -57,7 +61,9 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 					continue
 				recipient = get_attribute(attribute = "email", obj_id = subscriber.user_id, obj_type = "User")
 				if recipient:
-					send_prr_email(page = page, recipients = [recipient], subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link) # Each subscriber needs to get a separate e-mail.
+					if unfollow_link:
+						unfollow_link = unfollow_link + recipient
+					send_prr_email(page = page, recipients = [recipient], subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link, unfollow_link = unfollow_link) # Each subscriber needs to get a separate e-mail.
 		elif recipient_type == "Staff participants":
 			recipients = []
 			participants = get_attribute(attribute = "owners", obj_id = request_id, obj_type = "Request")
@@ -65,17 +71,17 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 				recipient = get_attribute(attribute = "email", obj_id = participant.user_id, obj_type = "User")
 				if recipient:
 					recipients.append(recipient)
-			send_prr_email(page = page, recipients = recipients, subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = False)
+			send_prr_email(page = page, recipients = recipients, subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = False, unfollow_link = unfollow_link)
 		else:
 			print recipient_type
 			print "Not a valid recipient type"
 
 ### @export "send_prr_email"
-def send_prr_email(page, recipients, subject, template, include_unsubscribe_link = True, cc_everyone = False, password = None):
+def send_prr_email(page, recipients, subject, template, include_unsubscribe_link = True, cc_everyone = False, password = None, unfollow_link = None):
 	if recipients:
 		if send_emails:
 			try:
-				send_email(body = render_template(template, logo_url = "%sstatic/images/CityTree_logo_green.jpg" %(app.config['APPLICATION_URL'] ), page = page, password = password), recipients = recipients, subject = subject, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = cc_everyone)
+				send_email(body = render_template(template, unfollow_link = unfollow_link, logo_url = "%sstatic/images/CityTree_logo_green.jpg" %(app.config['APPLICATION_URL'] ), page = page, password = password), recipients = recipients, subject = subject, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = cc_everyone)
 			except:
 				print "E-mail was not sent."
 		else:
