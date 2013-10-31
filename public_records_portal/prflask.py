@@ -13,7 +13,7 @@ manager.create_api(models.Note, methods=['GET'], results_per_page = 10, allow_fu
 manager.create_api(models.Record, methods=['GET'], results_per_page = 10, allow_functions = True)
 manager.create_api(models.QA, methods=['GET'], results_per_page =10, allow_functions = True)
 manager.create_api(models.Subscriber, methods=['GET'], results_per_page = 10, allow_functions = True)
-manager.create_api(models.Visualizaton, methods=['GET'], results_per_page = 10, allow_functions = True)
+manager.create_api(models.Visualization, methods=['GET'], results_per_page = 10, allow_functions = True)
 
 
 class HomeView(AdminIndexView):
