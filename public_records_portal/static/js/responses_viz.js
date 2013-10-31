@@ -166,7 +166,7 @@ $(function() {
         .attr('class', 'd3-tip')
         .offset([-10, 0])
         .html(function(d) {
-          return d.department + "<br /><center><div style='font-weight: normal; font-size: 12px; margin-top:5px'>Requests: <span style='color:#FB991B'>" + getDays(d.time) + " hours</span></div></center>";
+          return d.department + "<br /><center><div style='font-weight: normal; font-size: 12px; margin-top:5px'>Requests: <span style='color:#FB991B'>" + getDays(d.time) + " days</span></div></center>";
         });
 
     svgNext.call(tipNext);
@@ -211,6 +211,6 @@ d3.json(viz_data_time, function(error, json) {
             .style("font-size", "14px")
             .style("fill", "#333333")
             .style("font-weight", "bold")
-            .text("Quickest Turnaround by Department (Hours)");
+            .text("Quickest Turnaround by Department (Days)");
   });
 });
