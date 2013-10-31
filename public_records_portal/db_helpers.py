@@ -23,7 +23,6 @@ def get_requester(request_id):
 		return get_attribute(attribute = "user_id", obj = subscribers[0])
 	return None
 
-
 ### @export "get_count"
 def get_count(obj_type):
 	return db.session.query(func.count(eval(obj_type).id)).scalar()
@@ -33,22 +32,7 @@ def get_obj(obj_type, obj_id):
 	""" Query the database for an object via its class/type (defined in models.py) and ID and return the object. """
 	if not obj_id:
 		return None
-	# There has to be a better way of doing this
-	if obj_type == "User":
-		return User.query.get(obj_id)
-	elif obj_type == "Request":
-		return Request.query.get(obj_id)
-	elif obj_type == "Owner":
-		return Owner.query.get(obj_id)
-	elif obj_type == "Note":
-		return Note.query.get(obj_id)
-	elif obj_type == "QA":
-		return QA.query.get(obj_id)
-	elif obj_type == "Subscriber":
-		return Subscriber.query.get(obj_id)
-	elif obj_type == "Record":
-		return Record.query.get(obj_id)
-	return None
+	return eval(obj_type).query.get(obj_id)
 
 ### @export "get_objs"
 def get_objs(obj_type):
@@ -397,7 +381,8 @@ def update_subscriber(request_id, alias, phone):
 def get_viz_data():
 	viz_data = Visualization.query.get(1).content
 	viz_time_data = Visualization.query.get(2).content
-	return json.loads(viz_data), json.loads(viz_time_data)
+	viz_fastest_time_data = Visualization.query.get(3).content
+	return json.loads(viz_data), json.loads(viz_fastest_time_data)
 
 def create_viz_data():
 	depts_freq = []
@@ -410,25 +395,41 @@ def create_viz_data():
 		line['department'] = department
 		response_line['department'] = department
 		line['freq'] = len(get_requests_by_filters(line))
-		response_line['time'] = get_avg_response_time(department)
-		depts_response_time.append(response_line)
+		avg_response_time = get_avg_response_time(department)
+		if avg_response_time:
+			response_line['time'] = avg_response_time
+			depts_response_time.append(response_line)
 		depts_freq.append(line)
 	# Only display top 5 departments:
 	depts_freq.sort(key = lambda x:x['freq'], reverse = True)
+	depts_response_fastest_time = depts_response_time
 	depts_response_time.sort(key = lambda x:x['time'], reverse = True)
+	depts_response_fastest_time.sort(key = lambda x:x['time']) 
 	del depts_freq[5:]
 	del depts_response_time[5:]
+	del depts_response_fastest_time[5:]
 	viz = Visualization.query.get(1)
 	viz2 = Visualization.query.get(2)
+	viz3 = Visualization.query.get(3)
 	if viz:
 		viz.content = json.dumps(depts_freq)
+		viz.date_updated = datetime.now().isoformat()
 	else:
 		viz = Visualization(type_viz = 'freq', content = json.dumps(depts_freq))
 	if viz2:
 		viz2.content = json.dumps(depts_response_time)
 		viz2.type_viz = 'time'
+		viz2.date_updated = datetime.now().isoformat()
 	else:
-		viz = Visualization(type_viz = 'time', content = json.dumps(depts_response_time))
+		viz2 = Visualization(type_viz = 'time', content = json.dumps(depts_response_time))
+	if viz3:
+		viz3.content = json.dumps(depts_response_fastest_time)
+		viz3.type_viz = "fastest_time"
+		viz3.date_updated = datetime.now().isoformat()
+	else:
+		viz3 = Visualization(type_viz = 'fastest_time', content = json.dumps(depts_response_fastest_time))
 	db.session.add(viz)
+	db.session.add(viz2)
+	db.session.add(viz3)
 	db.session.commit()
 	

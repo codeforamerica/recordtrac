@@ -188,6 +188,18 @@ image::update_password.png[]
 
 Once you click the green “Update” button your password will change. 
 
+=== Checking Status of RecordTrac
+
+image::app_status.png[]
+
+Developers at Code for America created a quick way for adminstrators to check on the status of the application. Visit http://records.oaklandnet.com/.well-known/status[records.oaklandnet.com/.well-known/status] to get a quick confirmation of whether the app is working.
+
+If the status is 'ok,' it means the app is working properly and users should not encounter any problems.
+
+The number next to SendGrid is the percentage of its email quota the application has used this month. If it is close to 100, then the City is close to hitting its email quotas for the month and may be charged for each additional email. 
+
+The dependencies section lists the web applications used by RecordTrac. Askismet is the spam filter. Scribd is where all uploaded documents are hosted. SendGrid sends out the email notifications and Postgres is where all of the data is stored. 
+
 === Best Practices to Consider
 
 Content  should only be removed or edited if sensitive or confidential information is revealed. If this happens, you should:
