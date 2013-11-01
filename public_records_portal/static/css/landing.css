@@ -1,5 +1,23 @@
 /* custom css for landing.html and child templates */
 
+/* disclaimer */
+#disclaimer {
+	margin-bottom: 1em;
+	margin-top: 1em;
+}
+
+/* data header */
+#recent-requests {
+	margin-top:20px;
+	margin-bottom:30px;
+	}
+
+/* breathing room for landing footer */
+#footer {
+	padding-bottom: 2em;
+}
+
+
 /*hover states for images */
 	.round_link {
 	border-radius: 20px;
@@ -60,9 +78,13 @@ p.text-title {
 	margin-bottom: 0px;
 }
 
-#startemup {
+#seedata {
 	margin-top: 1em;
 	margin-bottom: 3em;
+}
+
+#startmeup {
+	margin-bottom: 1em;
 }
 
 .center-image {
