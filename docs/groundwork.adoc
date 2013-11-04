@@ -10,17 +10,3 @@ To redeploy RecordTrac, you need support from key stakeholders _within_ governme
 
 RecordTrac assumes there is a contact for a given municipality or department within the municipality to handle public records requests. If a government agency has no process at all in place, but is interested in using the system, they could start with one ‘champion’ that is knowledgeable about who has access to different records. The champion can then route requests to the proper parties within government who may have the documents or information a requester needs. 
 
-
-== Best Practices to Consider
-
-RecordTrac is flexible and could complement almost any governmental agency's process for fulfilling records requests. There are however, best practices a governmental agency should adopt to really leverage the power of RecordTrac. Below is an example lifted from the City of Oakland:
-
-* Track all public records requests through RecordTrac, even if you originally received it over the phone, by email, fax, or mail. 
-
-* Don't reveal sensitive information in your message or upload documents that haven't been thoroughly redacted. Everything you do on the site is immediately viewable to the public.
-
-* Upload scanned copies of the [redacted] records online instead of sending the document only to the requester. This prevents you from answering the same public records request multiple times. It also provides proof you responded to the request and exactly what you provided.
-
-* Communicate with everyone through RecordTrac. Only take conversations offline if it involves confidential or sensitive information.
-
-* Review requests no later than two business days after you receive them. This ensures the person responsible for fulfilling a records request gets it in time if it needs to be re-routed to him or her.
