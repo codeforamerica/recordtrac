@@ -112,6 +112,7 @@ All responses are displayed in chronological order. Each response includes the t
 == What is Unique to the City View
 
 There are two views in RecordTrac: the city employee view and the public view. Any time there is a web page only a city employee who is logged should see there is 'city' in the URL. 
+
 image::city_url.png[]
 
 City employees are the only users able to upload records, extend a request, close a request, and correspond with the requester through RecordTrac. 
