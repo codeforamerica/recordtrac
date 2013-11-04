@@ -200,7 +200,7 @@ The number next to SendGrid is the percentage of its email quota the application
 
 The dependencies section lists the web applications used by RecordTrac. Askismet is the spam filter. Scribd is where all uploaded documents are hosted. SendGrid sends out the email notifications and Postgres is where all of the data is stored. 
 
-=== Best Practices to Consider
+=== Best Practices
 
 Content  should only be removed or edited if sensitive or confidential information is revealed. If this happens, you should:
 
@@ -214,6 +214,7 @@ If a city staff member enters information incorrectly, simply add a note explain
 If a member of the public enters incorrect information,  the requester (or a city staff member) can add a note correcting  the mistake. 
 
 Sometimes it’s necessary to create a new request. If a new request must be created, we suggest you do the following:
+
 * Create a new request with the proper information.
 * In the old request, include a note explaining what is wrong with it and a link to the new request.
 * Close out the old request.
