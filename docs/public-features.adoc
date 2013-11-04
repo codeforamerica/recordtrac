@@ -1,4 +1,4 @@
-= How Citizens Use RecordTrac
+= How to make a public records request using RecordTrac
 :toc:
 :source-highlighter: pygments
 
