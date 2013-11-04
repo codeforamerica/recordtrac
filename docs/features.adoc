@@ -1,4 +1,4 @@
-= How Governments Use RecordTrac
+= How to respond to a public records request using RecordTrac
 A responder is typically an employee of a governmental agency.
 :toc:
 :source-highlighter: pygments
