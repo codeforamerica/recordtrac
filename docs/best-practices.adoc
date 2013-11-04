@@ -8,12 +8,18 @@ link:index.html[back to index page]
 
 RecordTrac is flexible and could complement almost any governmental agency's process for fulfilling records requests. There are however, best practices a governmental agency should adopt to really leverage the power of RecordTrac. Below is an example lifted from the City of Oakland:
 
-* Track all public records requests through RecordTrac, even if you originally received it over the phone, by email, fax, or mail. 
+Track all public records requests through RecordTrac, even if you originally received it over the phone, by email, fax, or mail. 
 
-* Don't reveal sensitive information in your message or upload documents that haven't been thoroughly redacted. Everything you do on the site is immediately viewable to the public.
+Don't reveal sensitive information in your message or upload documents that haven't been thoroughly redacted. Everything you do on the site is immediately viewable to the public.
 
-* Upload scanned copies of the [redacted] records online instead of sending the document only to the requester. This prevents you from answering the same public records request multiple times. It also provides proof you responded to the request and exactly what you provided.
+Upload scanned copies of the [redacted] records to RecordTrac. This prevents you from answering the same public records request multiple times. It provides proof you responded to the request.
 
-* Communicate with everyone through RecordTrac. Only take conversations offline if it involves confidential or sensitive information.
+Communicate with everyone through RecordTrac. (Only take conversations offline if it involves confidential or sensitive information.) 
 
-* Review requests no later than two business days after you receive them. This ensures the person responsible for fulfilling a records request gets it in time if it needs to be re-routed to him or her.
+Make your messages or the documents you upload understood by everyone--not just the requester. You can do this by doing the following: 
+
+* Explain all acronyms used.
+* Give each uploaded document a unique name. 
+* If you have to enter a request on behalf of a member of the public, describe the request and/or include a copy of it in your response.  
+
+Review requests no later than two business days after you receive them.
