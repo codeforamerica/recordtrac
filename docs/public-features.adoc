@@ -1,4 +1,4 @@
-= How Citizens Use RecordTrac
+= How to make a public records request using RecordTrac
 :toc:
 :source-highlighter: pygments
 
@@ -33,6 +33,12 @@ A requester can respond to a question asked by a city employee. This field only 
 image::subscribe.png[]
 
 If an individual is interested in the outcome of a particular request, they can subscribe to a request. They will receive email updates every time a response is added to the particular request and when it's closed.
+
+== Share Request
+
+image::share_request.png[]
+
+Anyone can share a request via Twitter and Facebook. 
 
 == Email notifications
 
