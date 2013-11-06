@@ -157,7 +157,7 @@ def notify_due():
 			due_soon, date_due = is_due_soon(req.date_created, req.extended) 
 			if due_soon:
 				change_request_status(req.id, "Due soon")
-				email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Request due"])
+				email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Notification types"]["Request due"])
 			else:
 				# Otherwise, check if it is overdue
 				overdue, date_due = is_overdue(req.date_created, req.extended)
