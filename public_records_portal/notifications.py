@@ -180,13 +180,15 @@ def get_staff_recipients(request):
 	recipients.append(owner_email)
 	# Look up the department for the request, and get the contacts and backup:
 	dept = get_dept_by_request(request)
-	contact_email = get_contact_by_dept(dept)
-	if contact_email and contact_email not in recipients:
-		recipients.append(contact_email)
-	backup_email = get_backup_by_dept(dept)
-	if backup_email and backup_email not in recipients:
-		recipients.append(backup_email)
-	return recipients
+	if dept:
+		contact_email = get_contact_by_dept(dept)
+		if contact_email and contact_email not in recipients:
+			recipients.append(contact_email)
+		backup_email = get_backup_by_dept(dept)
+		if backup_email and backup_email not in recipients:
+			recipients.append(backup_email)
+		return recipients
+	return None
 
 ### @export "should_notify"
 def should_notify(user_email):
