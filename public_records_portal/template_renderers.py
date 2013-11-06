@@ -267,7 +267,8 @@ def login(email=None, password=None):
 			if 'login' in redirect_url or 'logout' in redirect_url:
 				return redirect(url_for('index'))
 			else:
-				return redirect(get_redirect_target())
+				redirect_url = redirect_url.replace("/request/", "/city/request/")
+				return redirect(redirect_url)
 	return render_template('error.html', message = "Your e-mail/ password combo didn't work. You can always <a href='/reset_password'>reset your password</a>.")
 
 def reset_password(email=None):
