@@ -14,16 +14,26 @@ def date_granular(timestamp):
 		timestamp = datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%S.%f")
 	delta = datetime.now() - timestamp
 	days, hours, minutes, seconds = delta.days, delta.seconds//3600, delta.seconds//60, delta.seconds
-	if days > 1:
-		return "%s days ago" % days
-	elif hours > 1:
-		return "%s hours ago" % hours
-	elif minutes > 1:
-		return "%s minutes ago" % minutes
-	elif seconds > 1:
-		return "%s seconds ago" % seconds
-	else:
-		return "Just now."
+	if days < 1:
+		if hours > 1:
+			return "%s hours ago" % hours
+		elif minutes > 1:
+			return "%s minutes ago" % minutes
+		elif seconds > 1:
+			return "%s seconds ago" % seconds
+		else:
+			return "Just now."
+	elif days == 1:
+		return "A day ago"
+	elif days > 1:
+		weeks = days//7
+		if weeks < 1:
+			return "%s days ago" % days
+		if weeks == 1:
+			return "A week ago"
+		elif weeks > 1:
+			return "%s weeks ago" % weeks
+
 
 def date(obj):
 	""" Take a datetime or datetime-like object and return a formatted date. """
