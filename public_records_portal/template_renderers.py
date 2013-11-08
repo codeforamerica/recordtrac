@@ -39,7 +39,7 @@ def new_request(passed_recaptcha = False, data = None):
 		if email == "" and 'ignore_email' not in data and not passed_recaptcha:
 			return render_template('missing_email.html', form = data, user_id = get_user_id())
 		if is_spam(request_text) and not passed_recaptcha:
-			return render_template('recaptcha.html', form = data, message = "Hmm, your request looks like spam. To submit your request, type the following words in the field below.", public_key = app.config['RECAPTCHA_PUBLIC_KEY'])
+			return render_template('recaptcha.html', form = data, message = "Hmm, your request looks like spam. To submit your request, type the numbers or letters you see in the field below.", public_key = app.config['RECAPTCHA_PUBLIC_KEY'])
 		alias = None
 		phone = None
 		if 'request_alias' in data:
