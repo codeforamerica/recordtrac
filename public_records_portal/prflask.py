@@ -78,6 +78,10 @@ routing = {
 	'tutorial':{
 		'url': '/tutorial'
 	},
+	'recaptcha':{
+		'url': '/recaptcha',
+		'methods':['GET', 'POST']
+	},
 	'landing':{
 		'url': '/landing'
 	},
