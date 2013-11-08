@@ -15,6 +15,7 @@ from spam import is_spam, is_working_akismet_key
 from requests import get
 from time import time
 from flask.ext.cache import Cache
+from recaptcha.client import captcha
 
 # Initialize login
 login_manager = LoginManager()
@@ -24,27 +25,30 @@ login_manager.init_app(app)
 cache = Cache()
 cache.init_app(app, config={'CACHE_TYPE': 'simple'})
 
+
+
 # Submitting a new request
-def new_request():
-	if request.method == 'POST':
-		email = request.form['request_email']
-		request_text = request.form['request_text']
-		if is_spam(request_text):
-			return render_template('error.html', message = "Your request looks a lot like spam. If you believe you're seeing this message in error, let us know through the feedback tab.")
-				# <img src = 'http://31.media.tumblr.com/tumblr_lijp30si761qc9z7yo1_500.gif'>")
-		if email == "" and 'ignore_email' not in request.form:
-			return render_template('missing_email.html', form = request.form, user_id = get_user_id())
+def new_request(passed_recaptcha = False, data = None):
+	if request.method == 'POST' or data:
+		if not passed_recaptcha:
+			data = request.form.copy()
+		email = data['request_email']
+		request_text = data['request_text']
 		if request_text == "":
 			return render_template('error.html', message = "You cannot submit an empty request.")
+		if email == "" and 'ignore_email' not in data and not passed_recaptcha:
+			return render_template('missing_email.html', form = data, user_id = get_user_id())
+		if is_spam(request_text) and not passed_recaptcha:
+			return render_template('recaptcha.html', form = data, message = "Hmm, your request looks like spam.", public_key = app.config['RECAPTCHA_PUBLIC_KEY'])
 		alias = None
 		phone = None
-		if 'request_alias' in request.form:
-			alias = request.form['request_alias']
-		if 'request_phone' in request.form:
-			phone = request.form['request_phone']
+		if 'request_alias' in data:
+			alias = data['request_alias']
+		if 'request_phone' in data:
+			phone = data['request_phone']
 		assigned_to_email = app.config['DEFAULT_OWNER_EMAIL']
 		assigned_to_reason = app.config['DEFAULT_OWNER_REASON']
-		department = request.form['request_department']
+		department = data['request_department']
 		if department:
 			prr_email = db_helpers.get_contact_by_dept(department)
 			if prr_email:
@@ -53,7 +57,7 @@ def new_request():
 			else:
 				print "%s is not a valid department" %(department)
 				department = None
-		request_id, is_new = make_request(text = request_text, email = email, assigned_to_email = assigned_to_email, assigned_to_reason = assigned_to_reason, user_id = get_user_id(), alias = alias, phone = phone, department = department)
+		request_id, is_new = make_request(text = request_text, email = email, assigned_to_email = assigned_to_email, assigned_to_reason = assigned_to_reason, user_id = get_user_id(), alias = alias, phone = phone, department = department, passed_recaptcha = passed_recaptcha)
 		if is_new:
 			return redirect(url_for('show_request_for_x', request_id = request_id, audience = 'new'))
 		if not request_id:
@@ -332,6 +336,23 @@ def is_safe_url(target):
 	test_url = urlparse(urljoin(request.host_url, target))
 	return test_url.scheme in ('http', 'https') and \
 		ref_url.netloc == test_url.netloc
+
+
+def recaptcha():
+	if request.method == 'POST':
+		response = captcha.submit(
+			request.form['recaptcha_challenge_field'],
+			request.form['recaptcha_response_field'],
+			app.config['RECAPTCHA_PRIVATE_KEY'],
+			request.remote_addr
+			)
+		if not response.is_valid:
+			message = "Invalid. Please try again."
+			return render_template('recaptcha.html', message = message, public_key = app.config['RECAPTCHA_PUBLIC_KEY'], form = request.form)
+		else:
+			return new_request(passed_recaptcha = True, data = request.form)
+	else:
+		return render_template('error.html', message = "You don't need to be here.")
 
 def well_known_status():
     '''

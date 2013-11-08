@@ -1,0 +1,35 @@
+<!-- This template is for the landing page. -->
+
+{% extends "base.html" %}
+{% block title %}Captcha{% endblock title %}
+
+
+
+{% block container %}
+
+{{ message }}
+</br>
+<form name="input" action="/recaptcha" method="POST">
+ <script type="text/javascript"
+     src="http://www.google.com/recaptcha/api/challenge?k={{public_key}}">
+  </script>
+  <noscript>
+     <iframe src="http://www.google.com/recaptcha/api/noscript?k={{public_key}}"
+         height="300" width="500" frameborder="0"></iframe><br>
+     <textarea id = "recaptcha_challenge_field" name="recaptcha_challenge_field" rows="3" cols="40">
+     </textarea>
+     <input type="hidden" id="recaptcha_response_field" name="recaptcha_response_field"
+         value="manual_challenge">
+  </noscript>
+  {% if form %}
+  	<input type = "hidden" name = "request_text" value = "{{form.request_text}}"/>
+	<input type="hidden"name = "request_alias" value = "{{form.request_alias}}"/>
+	<input type = "hidden" name = "request_phone" value = "{{form.request_phone}}"/>
+	<input type="hidden" name="request_department" value = "{{form.request_department}}"/>
+	<input type="hidden" name="request_email" value="{{form.request_email}}" />
+	{% endif %}
+<input type="submit" value="Submit">
+</form>
+
+{% endblock container %}
+
