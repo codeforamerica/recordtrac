@@ -144,6 +144,10 @@ $(document).ready(function() {
     }
 });
 $(document).on('shown', "#reroutePopover", function () {
+    // to close the popover
+    $('.close').on('click', function(){
+      $('#reroutePopover').popover('hide');
+    })
    $('#rerouteButton').click(function() {
     if($.inArray($('#rerouteEmail').val(), emails) == -1) {
       $('#rerouteEmail').val('');
@@ -152,6 +156,10 @@ $(document).on('shown', "#reroutePopover", function () {
 });
 
 $(document).on('shown', "#notifyPopover", function () {
+    // to close the popover
+    $('.close').on('click', function(){
+      $('#notifyPopover').popover('hide');
+    })
    $('#notifyButton').click(function() {
     if($.inArray($('#notifyEmail').val(), emails) == -1) {
       $('#notifyEmail').val('');
