@@ -114,7 +114,7 @@ $(function(){
             .style("font-size", "14px")
             .style("fill", "#333333")
             .style("font-weight", "bold")
-            .text("Total Number of Requests - Top Five Departments");
+            .text("Total Number of Requests (top five departments)");
 
         // draw bars vectors
         svg.selectAll(".bar")
@@ -211,6 +211,6 @@ d3.json(viz_data_time, function(error, json) {
             .style("font-size", "14px")
             .style("fill", "#333333")
             .style("font-weight", "bold")
-            .text("Quickest Average Response Time -Top Five Departments");
+            .text("Quickest Average Response Time (top five departments)");
   });
 });
