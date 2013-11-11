@@ -121,14 +121,19 @@ def get_owner_data(request_id, attributes = ["alias"]):
 def get_contact_by_dept(dept):
 	""" Return the contact for a given department. """
 	q = db.session.query(User).filter(func.lower(User.contact_for).like("%%%s%%" % dept.lower()))
-	return q[0].email
+	if len(q.all()) > 0:
+		return q[0].email
+	print dept
+	return None
 
 ### @export "get_backup_by_dept"
 def get_backup_by_dept(dept):
 	""" Return the contact for a given department. """
 	q = db.session.query(User).filter(func.lower(User.backup_for).like("%%%s%%" % dept.lower()))
-	return q[0].email
-
+	if len(q.all()) > 0:
+		return q[0].email
+	print dept
+	return None
 
 ### @export "get_requests_by_filters"
 def get_requests_by_filters(filters_dict):

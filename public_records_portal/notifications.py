@@ -157,7 +157,7 @@ def notify_due():
 			due_soon, date_due = is_due_soon(req.date_created, req.extended) 
 			if due_soon:
 				change_request_status(req.id, "Due soon")
-				email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Request due"])
+				email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Notification types"]["Request due"])
 			else:
 				# Otherwise, check if it is overdue
 				overdue, date_due = is_overdue(req.date_created, req.extended)
@@ -180,13 +180,15 @@ def get_staff_recipients(request):
 	recipients.append(owner_email)
 	# Look up the department for the request, and get the contacts and backup:
 	dept = get_dept_by_request(request)
-	contact_email = get_contact_by_dept(dept)
-	if contact_email and contact_email not in recipients:
-		recipients.append(contact_email)
-	backup_email = get_backup_by_dept(dept)
-	if backup_email and backup_email not in recipients:
-		recipients.append(backup_email)
-	return recipients
+	if dept:
+		contact_email = get_contact_by_dept(dept)
+		if contact_email and contact_email not in recipients:
+			recipients.append(contact_email)
+		backup_email = get_backup_by_dept(dept)
+		if backup_email and backup_email not in recipients:
+			recipients.append(backup_email)
+		return recipients
+	return None
 
 ### @export "should_notify"
 def should_notify(user_email):
