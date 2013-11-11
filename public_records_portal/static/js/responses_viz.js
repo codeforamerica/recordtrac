@@ -114,7 +114,7 @@ $(function(){
             .style("font-size", "14px")
             .style("fill", "#333333")
             .style("font-weight", "bold")
-            .text("Request Volume by Department");
+            .text("Number of Requests by Department");
 
         // draw bars vectors
         svg.selectAll(".bar")
