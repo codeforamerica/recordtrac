@@ -147,8 +147,11 @@ def get_requests_by_filters(filters_dict):
 		attr = attr.lower()
 		if type(value) is str or type(value) is unicode:
 			value = value.lower()
-		if attr == 'status' and value == 'open':
-			q = q.filter(not_(getattr(Request, 'status').like("%%%s%%" % 'Closed')))
+		if attr == 'status':
+			if value == 'open':
+				q = q.filter(not_(getattr(Request, 'status').like("%%%s%%" % 'Closed')))
+			elif value == 'closed':
+				q = q.filter((getattr(Request, 'status').like("%%%s%%" % 'Closed')))
 		elif attr == 'requester': 
 			q = q.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % value))
 		else:

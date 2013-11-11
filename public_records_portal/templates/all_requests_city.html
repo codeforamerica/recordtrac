@@ -37,17 +37,17 @@
   <div class="well r_sidebar r_sidebar-fixed">
     <h4>View <small class="count"> {{ record_requests | count }} of {{total_requests_count}} shown</small></h4>
 
-    <form name="filterPublic" class="form-horizontal" id="filterPublic" method="post" action="/requests">
+    <form name="filterPublic" class="form-horizontal" id="filterPublic" method="get" action="/requests">
       <fieldset>
         <!-- Requester's name
          <input name = "requester" id = "requester" type="text" value="{{requester_name}}"> -->
         <label class="checkbox">
-          <input name = "owner_requests" title="my_requests_checkbox" id = "owner_requests" type="checkbox" value=""
+          <input name = "owner" title="my_requests_checkbox" id = "owner" type="checkbox" value="{{user_id}}"
           {% if my_requests %} checked {% endif %}>
               My requests
         </label>
         <label class="checkbox">
-          <input type="checkbox" title="open_requests_checkbox" value="open" name="status_filter" id= "status_filter" 
+          <input type="checkbox" title="open_requests_checkbox" value="open" name="status" id= "status" 
           {% if open_requests %} checked {% endif %}>
                 Open requests
         </label>
@@ -56,9 +56,9 @@
           Due requests
         </label> -->
         <div class="row-fluid">
-          <select class="span12 selectpicker" id = "department_filter" name = "department_filter">
+          <select class="span12 selectpicker" id = "department" name = "department">
             <!-- <option selected="{{dept_selected}}"> -->
-            <option >All departments</option>
+            <option value = "all">All departments</option>
             {% for department in departments %}
               {% if dept_selected == department %}
               <option selected = "selected">{{department}}</option>
