@@ -201,30 +201,27 @@ def requests():
 	my_requests = False
 	requester_name = ""
 	dept_selected = "All departments"
-	if request.method == 'POST':
-		if 'status_filter' in request.form:
-			filters['status'] = 'open'
-			open_requests = True
-		if 'department_filter' in request.form and request.form['department_filter'] != '&nbsp':
-			dept_selected = request.form['department_filter']
-			if dept_selected != "All departments":
-				filters['department'] = request.form['department_filter']
-		if 'owner_requests' in request.form and current_user.is_anonymous() == False:
-			my_requests = True
-			filters['owner'] = current_user.id
-		if 'requester' in request.form and current_user.is_anonymous() == False:
-			requester_name = request.form['requester']
-			filters['requester'] = requester_name
-	else:
-		# Set defaults for logged in user:
-		if current_user.is_anonymous() == False:
-			my_requests = True
-			open_requests = True
-			filters['owner'] = current_user.id
-			filters['status'] = 'open'
+	if request.method == 'GET':
+		filters = request.args.copy()
+		if not filters:
+			if not current_user.is_anonymous():
+				my_requests = True
+				filters['owner'] = current_user.id
+				open_requests = True
+				filters['status'] = 'open'
 		else:
-			if 'requester' not in request.args:
-				filters = request.args
+			if 'department' in filters and filters['department'].lower() == 'all':
+				del filters['department']
+			if 'status' in filters and filters['status'].lower() == 'open':
+				open_requests = True
+			if 'department' in filters:
+				dept_selected = filters['department']
+			# 	if dept_selected != "All departments":
+			# 		filters['department'] = request.args['department_filter']
+			if 'owner' in filters and not current_user.is_anonymous():
+				my_requests = True
+			if 'requester' in filters and current_user.is_anonymous():
+				del filters['requester']
 	record_requests = get_request_table_data(get_requests_by_filters(filters))
 	user_id = get_user_id()
 	if record_requests:
@@ -271,7 +268,9 @@ def login(email=None, password=None):
 			if 'login' in redirect_url or 'logout' in redirect_url:
 				return redirect(url_for('index'))
 			else:
-				return redirect(get_redirect_target())
+				if "city" not in redirect_url:
+					redirect_url = redirect_url.replace("/request/", "/city/request/")
+				return redirect(redirect_url)
 	return render_template('error.html', message = "Your e-mail/ password combo didn't work. You can always <a href='/reset_password'>reset your password</a>.")
 
 def reset_password(email=None):

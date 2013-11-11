@@ -121,14 +121,19 @@ def get_owner_data(request_id, attributes = ["alias"]):
 def get_contact_by_dept(dept):
 	""" Return the contact for a given department. """
 	q = db.session.query(User).filter(func.lower(User.contact_for).like("%%%s%%" % dept.lower()))
-	return q[0].email
+	if len(q.all()) > 0:
+		return q[0].email
+	print dept
+	return None
 
 ### @export "get_backup_by_dept"
 def get_backup_by_dept(dept):
 	""" Return the contact for a given department. """
 	q = db.session.query(User).filter(func.lower(User.backup_for).like("%%%s%%" % dept.lower()))
-	return q[0].email
-
+	if len(q.all()) > 0:
+		return q[0].email
+	print dept
+	return None
 
 ### @export "get_requests_by_filters"
 def get_requests_by_filters(filters_dict):
@@ -147,8 +152,11 @@ def get_requests_by_filters(filters_dict):
 		attr = attr.lower()
 		if type(value) is str or type(value) is unicode:
 			value = value.lower()
-		if attr == 'status' and value == 'open':
-			q = q.filter(not_(getattr(Request, 'status').like("%%%s%%" % 'Closed')))
+		if attr == 'status':
+			if value == 'open':
+				q = q.filter(not_(getattr(Request, 'status').like("%%%s%%" % 'Closed')))
+			elif value == 'closed':
+				q = q.filter((getattr(Request, 'status').like("%%%s%%" % 'Closed')))
 		elif attr == 'requester': 
 			q = q.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % value))
 		else:

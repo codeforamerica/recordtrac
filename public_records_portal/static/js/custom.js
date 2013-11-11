@@ -63,11 +63,6 @@
             return $("#reroutePopover-content").html();
           }
       });
-  // to close the popover
-  $('.popover-container').on('click', '.close', function(){
-    // alert('close me');
-    $('#reroutePopover').popover('hide');
-  })
 
   /* form in notify popover */
   $('#notifyPopover').popover({ 
@@ -79,11 +74,6 @@
             return $("#notifyPopover-content").html();
           }
       });
-  // to close the popover
-  $('.popover-container').on('click', '.close', function(){
-    $('#notifyPopover').popover('hide');
-  })
-
 
   /* form in history popover */
   $('.historyPopover').popover({

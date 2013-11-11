@@ -65,17 +65,17 @@
         <div class="well r_sidebar r_sidebar-fixed">
           <h4>View <small class="count"> {{ record_requests | count }} of {{total_requests_count}} shown</small></h4>
 
-          <form name="filterPublic" class="form-horizontal" id="filterPublic" method="post" action="/requests">
+          <form name="filterPublic" class="form-horizontal" id="filterPublic" method="get" action="/requests">
             <fieldset>
               <label class="checkbox">
-                <input type="checkbox" title="open_requests_checkbox" value="open" name="status_filter" id= "status_filter" 
+                <input type="checkbox" title="open_requests_checkbox" value="open" name="status" id= "status" 
                 {% if open_requests %} checked {% endif %}>
                 Open requests
               </label>
               <div class="row-fluid">
-                <select class="span12 selectpicker" title="select_department" id = "department_filter" name = "department_filter">
+                <select class="span12 selectpicker" title="select_department" id = "department" name = "department">
                   <!-- <option selected="{{dept_selected}}"> -->
-                  <option >All departments</option>
+                  <option value = "all">All departments</option>
                   {% for department in departments %}
                     {% if dept_selected == department %}
                     <option selected = "selected">{{department}}</option>
