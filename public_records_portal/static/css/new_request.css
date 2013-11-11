@@ -42,6 +42,10 @@ line-height: 1.25;
 	background-color: #dffbf5;
 }
 
+.popover-title {
+	display: none;
+}
+
 .popover.top .arrow:after {
 	border-top-color: #dffbf5;
 }
