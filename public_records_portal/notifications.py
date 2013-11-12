@@ -103,7 +103,7 @@ def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_ev
 				message.add_cc(recipient)
 	else:
 		for recipient in recipients:
-			if should_notify(recipient):
+			# if should_notify(recipient):
 				message.add_to(recipient)
 	message.add_bcc(sender)
 	mail.web.send(message)
