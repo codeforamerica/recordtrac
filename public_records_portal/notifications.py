@@ -99,7 +99,7 @@ def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_ev
 	if cc_everyone: # Not being used for now
 		message.add_to(recipients[0])
 		for recipient in recipients:
-			if should_notify(recipient):
+			# if should_notify(recipient):
 				message.add_cc(recipient)
 	else:
 		for recipient in recipients:
