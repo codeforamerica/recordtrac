@@ -187,6 +187,7 @@ def get_staff_recipients(request):
 		backup_email = get_backup_by_dept(dept)
 		if backup_email and backup_email not in recipients:
 			recipients.append(backup_email)
+	if recipients:
 		return recipients
 	return None
 
