@@ -211,6 +211,6 @@ d3.json(viz_data_time, function(error, json) {
             .style("font-size", "14px")
             .style("fill", "#333333")
             .style("font-weight", "bold")
-            .text("Quickest Average Response Time (top five departments)");
+            .text("Average Response Time (quickest five departments)");
   });
 });
