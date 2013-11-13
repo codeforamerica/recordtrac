@@ -10,6 +10,7 @@ install:
 
 before_script:
 - psql -c 'create database publicrecords;' -U postgres
+- python travis_db_setup.py
 
-script:  
+script:
 - python tests.py
