@@ -36,8 +36,8 @@ class RequestTablePresenter:
 		if request.department:
 			self.department = request.department
 		if public:
-			self.display_text = "<td class='status' bgcolor='%s'><small><i class='%s'></i></small></td><td>%s</td><td>%s</td><td><div>%s</div></td><td>%s</td><td>%s</td><td style='display:none;'>%s</td>" %(self.color,self.status_icon,request.id, date(request.date_created), self.text, self.department, self.point_of_contact, request.text)
+			self.display_text = "<td class='status' bgcolor='%s'><small><i class='%s'></i></small></td><td>%s</td><td>%s</td><td><a href='/request/%s'><div>%s</div></a></td><td>%s</td><td>%s</td><td style='display:none;'>%s</td>" %(self.color,self.status_icon,request.id, date(request.date_created), request.id, self.text, self.department, self.point_of_contact, request.text)
 		else:
-			self.display_text = "<td class='status' bgcolor='%s'><small><i class='%s'></i></small></td><td>%s</td><td>%s</td><td><div>%s</div></td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td style='display:none;'>%s</td>" %(self.color,self.status_icon,request.id, date(request.date_created), self.text, self.department, self.point_of_contact, (self.due_date or "N/A"), self.requester or "Not given", request.text)
+			self.display_text = "<td class='status' bgcolor='%s'><small><i class='%s'></i></small></td><td>%s</td><td>%s</td><td><a href='city/request/%s'><div>%s</div></a></td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td style='display:none;'>%s</td>" %(self.color,self.status_icon,request.id, date(request.date_created), request.id, self.text, self.department, self.point_of_contact, (self.due_date or "N/A"), self.requester or "Not given", request.text)
 			
 
