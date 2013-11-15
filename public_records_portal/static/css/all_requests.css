@@ -1,5 +1,14 @@
 /* custom css for all_requests.html and child templates */
 
+/* remove styling from request text link */
+	td a {
+		color: #333;
+	}
+	td a:hover {
+		text-decoration: none;
+		color: #333;
+	}
+
 /* hide table caption */
 	caption {
 		display: none;

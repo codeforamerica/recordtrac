@@ -41,19 +41,22 @@
             </thead>
             <tbody>
               {% for request in record_requests %}
-              {% if user_id %}
-                <tr onclick="window.location.href='/city/request/{{request.id}}';">
+                {% if user_id %}
+                
+                  <tr>
+                    
                 {% else %}
-                <tr onclick="window.location.href='/request/{{request.id}}';">
-                {% endif %}
-                {% block status_view %}{{ request.status }}{% endblock status_view %}
-                  {{ request.display_text | safe }}
-                  {% block city_tabledata %}{% endblock city_tabledata %}
-
-                  </a>
-                </tr>
-              {% else %}
+                
+                  <tr >
+                    
+                  {% endif %}
+                  {% block status_view %}{{ request.status }}{% endblock status_view %}
+                    {{ request.display_text | safe }}
+                    {% block city_tabledata %}{% endblock city_tabledata %}
+                  </tr>
+              
               {% endfor %}
+                
             </tbody>
           </table>
         {% endblock datatable %}
