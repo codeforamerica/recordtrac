@@ -189,7 +189,8 @@ def get_staff_recipients(request):
 			recipients.append(backup_email)
 	if recipients:
 		return recipients
-	return None
+	else:
+		raise ValueError('No staff recipients for request %s' %(request.id)) 
 
 ### @export "should_notify"
 def should_notify(user_email):
