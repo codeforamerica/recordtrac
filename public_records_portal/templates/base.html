@@ -11,6 +11,15 @@
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <style>
+      .ie { display: none; }
+    </style>
+    <!--[if lt IE 9]>
+      <style>
+        .not-ie { display: none; }
+        .ie { display: block; }
+      </style>
+    <![endif]-->
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap.min.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-responsive.min.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/BootSwatchr6.css') }}">
@@ -73,7 +82,7 @@
             </div>
             <!-- Login area -->
             {% if user_id %}
-            <ul class="nav pull-right">
+            <ul class="nav pull-right not-ie">
               <li class="dropdown">
                 <a class="dropdown-toggle" href="#" data-toggle="dropdown">{{ "alias" | get_attribute(user_id, "User") }} <strong class="caret"></strong></a>
                 <div id="logout-dropdown" class="dropdown-menu" >
@@ -88,7 +97,7 @@
             </ul>
 
             {% else %}
-            <ul class="nav pull-right">
+            <ul class="nav pull-right not-ie">
               <li class="dropdown">
                 <a class="dropdown-toggle" href="#" data-toggle="dropdown">City login <strong class="caret"></strong></a>
                 <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
@@ -122,6 +131,19 @@
             <div class="nav-collapse collapse">
               <!-- .nav, .navbar-search, .navbar-form, etc -->
             </div>
+          </div>
+        </div>
+      </div>
+      <div id="ie" class="ie">
+        <div class="row-fluid">
+          <div class="span10">
+            <p>
+              <strong>RecordTrac does not work on your browser.</strong>
+              Please switch to <a href="http://www.mozilla.org/en-US/firefox/new/">Firefox</a>
+              or <a href="https://www.google.com/intl/en/chrome/browser/">Chrome</a> or
+              <a href="http://www.microsoft.com/en-us/download/ie.aspx?q=internet+explorer">upgrade</a>
+              to Internet Explorer 9 or later.
+            </p>
           </div>
         </div>
       </div>
