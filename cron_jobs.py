@@ -7,10 +7,10 @@ from public_records_portal.db_helpers import create_viz_data
 notify_due()
 
 # Set directory fields from information in the directory.json file
-set_directory_fields()
+# set_directory_fields()
 
 # Update user info with information in the departments.json file
-populate_users_with_departments()
+# populate_users_with_departments()
 
 # Create visualizations
 create_viz_data()
