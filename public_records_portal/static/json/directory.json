@@ -1568,13 +1568,6 @@
     "PHONE":""
   },
   {
-    "FULL_NAME":"Neditch, Nicole Germaine",
-    "EMAIL_ADDRESS":"nneditch@oaklandnet.com",
-    "DEPARTMENT":"City Manager Administration Unit",
-    "JOB_TITLE":"City Administrator Analyst",
-    "PHONE":""
-  },
-  {
     "FULL_NAME":"Sanchez, Arturo M.",
     "EMAIL_ADDRESS":"asanchez@oaklandnet.com",
     "DEPARTMENT":"City Manager Administration Unit",
@@ -36699,5 +36692,12 @@
     "DEPARTMENT":"Municipal Lending",
     "JOB_TITLE":"Loan Servicing Specialist",
     "PHONE":"(510)238-6162"
+  },
+  {
+    "FULL_NAME":"Garcia, Mai-Ling",
+    "EMAIL_ADDRESS":"mgarcia@oaklandnet.com",
+    "DEPARTMENT":"City Manager Administration Unit",
+    "JOB_TITLE":"City Administrator Analyst",
+    "PHONE":"(510)238-2105"
   }
 ]
