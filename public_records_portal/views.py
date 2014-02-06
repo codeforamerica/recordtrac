@@ -75,7 +75,7 @@ def index():
 
 def landing():
 	viz_data_freq, viz_data_time = get_viz_data()
-	return render_template('landing.html', viz_data_freq = json.dumps(viz_data_freq), viz_data_time = json.dumps(viz_data_time))
+	return render_template('landing.html', viz_data_freq = json.dumps(viz_data_freq), viz_data_time = json.dumps(viz_data_time), user_id = get_user_id())
 
 def viz():
 	viz_data_freq, viz_data_time = get_viz_data()
