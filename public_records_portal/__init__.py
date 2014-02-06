@@ -24,10 +24,10 @@ set_env(key = 'APPLICATION_URL', default = "http://127.0.0.1:5000/")
 set_env(key = 'ENVIRONMENT', default="LOCAL")
 set_env(key = 'DEFAULT_OWNER_REASON', default = 'The reason the default owner gets assigned a request' )
 set_env(key = 'DEFAULT_OWNER_EMAIL', default = 'citystaff@city.gov')
-set_env(key = 'SQLALCHEMY_DATABASE_URI', default = "postgresql://localhost/publicrecords")
+set_env(key = 'SQLALCHEMY_DATABASE_URI', default = "postgresql://localhost/recordtracdemo")
 # If you set up Sendgrid or another e-mail service:
 set_env(key = 'DEFAULT_MAIL_SENDER', default = 'appemail@app.com') 
-set_env(key = 'MAIL_USERNAME', default='Oakland Public Records')
+set_env(key = 'MAIL_USERNAME', default='PostCode')
 set_env(key = 'MAIL_PASSWORD', default = "")
 # For app logins
 set_env(key = 'ADMIN_PASSWORD', default = "NotSoSecretPassword")

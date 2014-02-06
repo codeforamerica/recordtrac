@@ -28,7 +28,7 @@ class HomeView(AdminIndexView):
 		return False
 
 # Create Admin
-admin = Admin(app, name='Oakland Public Records Admin', url='/admin', index_view = HomeView(name='Home'))
+admin = Admin(app, name='RecordTrac Admin', url='/admin', index_view = HomeView(name='Home'))
 
 class AdminView(ModelView):
     def is_accessible(self):
