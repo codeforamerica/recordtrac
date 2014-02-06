@@ -271,7 +271,9 @@ def login(email=None, password=None):
 				if "city" not in redirect_url:
 					redirect_url = redirect_url.replace("/request/", "/city/request/")
 				return redirect(redirect_url)
-	return render_template('error.html', message = "Your e-mail/ password combo didn't work. You can always <a href='/reset_password'>reset your password</a>.")
+		else:
+			return render_template('error.html', message = "Your e-mail/ password combo didn't work. You can always <a href='/reset_password'>reset your password</a>.")
+	return render_template('error.html', message="Something went wrong.")
 
 def reset_password(email=None):
 	if request.method == 'POST':
