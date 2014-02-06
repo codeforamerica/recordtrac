@@ -42,6 +42,7 @@ set_env(key = 'SENDGRID_MONTHLY_LIMIT', default = None)
 set_env(key = 'LIST_OF_ADMINS', default = "")
 set_env(key = 'RECAPTCHA_PUBLIC_KEY', default = "")
 set_env(key = 'RECAPTCHA_PRIVATE_KEY', default = "")
+set_env(key='AGENCY_NAME', default="[YOUR AGENCY]")
 
 # Initialize database
 db = SQLAlchemy(app)
