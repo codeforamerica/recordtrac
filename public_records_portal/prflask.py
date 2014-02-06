@@ -1,5 +1,5 @@
-from public_records_portal import app, models, db, template_renderers
-from template_renderers import * # Import all the functions that render templates
+from public_records_portal import app, models, db, views
+from views import * # Import all the functions that render templates
 from flask.ext.restless import APIManager
 from flask.ext.admin import Admin, expose, BaseView, AdminIndexView
 from flask.ext.admin.contrib.sqlamodel import ModelView
