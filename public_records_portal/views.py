@@ -26,11 +26,10 @@ cache = Cache()
 cache.init_app(app, config={'CACHE_TYPE': 'simple'})
 
 
-
 # Submitting a new request
 def new_request(passed_recaptcha = False, data = None):
-	if request.method == 'POST' or data:
-		if not passed_recaptcha:
+	if data or request.method == 'POST':
+		if not data and not passed_recaptcha:
 			data = request.form.copy()
 		email = data['request_email']
 		request_text = data['request_text']
@@ -46,18 +45,7 @@ def new_request(passed_recaptcha = False, data = None):
 			alias = data['request_alias']
 		if 'request_phone' in data:
 			phone = data['request_phone']
-		assigned_to_email = app.config['DEFAULT_OWNER_EMAIL']
-		assigned_to_reason = app.config['DEFAULT_OWNER_REASON']
-		department = data['request_department']
-		if department:
-			prr_email = db_helpers.get_contact_by_dept(department)
-			if prr_email:
-				assigned_to_email = prr_email
-				assigned_to_reason = "PRR Liaison for %s" %(department)
-			else:
-				print "%s is not a valid department" %(department)
-				department = None
-		request_id, is_new = make_request(text = request_text, email = email, assigned_to_email = assigned_to_email, assigned_to_reason = assigned_to_reason, user_id = get_user_id(), alias = alias, phone = phone, department = department, passed_recaptcha = passed_recaptcha)
+		request_id, is_new = make_request(text = request_text, email = email, user_id = get_user_id(), alias = alias, phone = phone, department = department, passed_recaptcha = passed_recaptcha)
 		if is_new:
 			return redirect(url_for('show_request_for_x', request_id = request_id, audience = 'new'))
 		if not request_id:
