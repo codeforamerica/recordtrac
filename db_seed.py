@@ -2,6 +2,8 @@ from public_records_portal import prr, db_helpers, departments
 from public_records_portal.prflask import app
 import os, random, string, json
 
+print "Seeding database..."
+
 # Set directory fields from information in the directory.json file
 prr.set_directory_fields()
 
