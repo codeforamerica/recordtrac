@@ -85,7 +85,7 @@ def send_prr_email(page, recipients, subject, template, include_unsubscribe_link
 			except:
 				print "E-mail was not sent."
 		else:
-			print "%s to %s with subject %s" % (render_template(template, page = page), recipients, subject)
+			print "template:%s page:%s to %s with subject %s" % (template, page, recipients, subject)
 
 ### @export "send_email"
 def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_everyone = False):
