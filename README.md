@@ -22,12 +22,12 @@ Install Postgres, Python, and other required packages.
 
 If you are using a standard Postgres installation or from [Homebrew](http://mxcl.github.com/homebrew/) you can also use:
 
-    createdb publicrecords
+    createdb recordtrac
 
 In a new window:
 
-    git clone git://github.com/codeforamerica/public-records.git
-    cd public-records
+    git clone git://github.com/postcode/recordtrac.git
+    cd recordtrac
     sudo pip install -r requirements.txt
 
 Save settings.env.example as settings.env and update relevant fields.
@@ -43,8 +43,9 @@ To be able to catch spammy input, sign up for a free account with [Akismet](http
 If creating the database for the first time, first look up your `SQLALCHEMY_DATABASE_URI` value from settings.env; it will contain a database connection string such as “postgresql://user:password@hostname/dbname”, then run:
 
     env SQLALCHEMY_DATABASE_URI=<value from settings.env> python
-    >>> from public_records_portal import models
+    >>> from public_records_portal import models, db_helpers
     >>> models.db.create_all()
+    >>> db_helpers.create_viz_data()
 
 To use the application locally with custom settings, run:
 
@@ -63,5 +64,9 @@ You should see something similar to:
     2013-05-06 12:16:53 [1780] [INFO] Booting worker with pid: 1780
 
 Navigate to the url (in this case, http://127.0.0.1:5000) in your browser.
+
+# Seed database
+
+foreman run python db_seed.py -e settings.env
 
 <!-- [![Build Status](https://travis-ci.org/codeforamerica/public-records.png?branch=master)](https://travis-ci.org/codeforamerica/public-records) -->
