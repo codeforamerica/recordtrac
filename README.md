@@ -42,7 +42,11 @@ To be able to catch spammy input, sign up for a free account with [Akismet](http
 
 If creating the database for the first time, run:
 
->>> foreman run python db_setup.py 
+    foreman run python db_setup.py
+
+To seed the application with fake user data, requests and responses, run:
+
+    foreman run python db_seed.py
 
 To use the application locally, exit out of python and run:
 
