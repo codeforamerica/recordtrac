@@ -1,11 +1,18 @@
-from public_records_portal import prr, db_helpers
+from public_records_portal import prr, db_helpers, departments
 from public_records_portal.prflask import app
 import os, random, string, json
 
+# Set directory fields from information in the directory.json file
+prr.set_directory_fields()
+
+# Update user info with information in the departments.json file
+departments.populate_users_with_departments()
+
 common_requests = ['City Council meeting minutes', 'Police Report', 'Incident Report', 'Communication between Councilmembers']
 depts_json = open(os.path.join(app.root_path, 'static/json/list_of_departments.json'))
+staff_json = open(os.path.join(app.root_path, 'static/json/staff_emails.json'))
 departments = json.load(depts_json)
-people = ['richa@postcode.io', 'cris@postcode.io', 'andy@postcode.io', 'tamara@postcode.io', 'cj@postcode.io', 'reed@postcode.io']
+people = json.load(staff_json)
 reasons = ['They have the document', 'They would know more about this', 'They are my backup', 'Can you look into this?']
 documents = ['Minutes', 'Report']
 answers = ["Yep, thanks so much!", "No, nevermind then."]
@@ -17,7 +24,7 @@ for i in range(20):
 	random_number = random.randrange(0, 901, 4)
 	another_random_number =  random.randrange(0, 901, 4)
 	request_text = "%(request_type)s %(random_number)s" % locals()
-	request_id, success = prr.make_request(text=request_text, email = 'richa@postcode.io', alias = 'Richa', department = request_department)
+	request_id, success = prr.make_request(text=request_text, department = request_department)
 	if success:
 		prr.add_note(request_id = request_id, text = "We're working on this and will get back to you shortly.", user_id = 2)
 		qa_id = prr.ask_a_question(request_id = request_id, owner_id = 1, question = "You specified %(random_number)s, but that does not exist. Did you mean %(another_random_number)s? " % locals())

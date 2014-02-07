@@ -5,9 +5,7 @@
 """
 
 from public_records_portal import app, db_helpers
-import os
-import time
-import json
+import os, time, json
 from flask import Flask, request
 from flask.ext.login import current_user
 from datetime import datetime, timedelta
@@ -267,6 +265,7 @@ def get_responses_chronologically(req):
 def set_directory_fields():
 	dir_json = open(os.path.join(app.root_path, 'static/json/directory.json'))
 	json_data = json.load(dir_json)
+	staff_emails = []
 	for line in json_data:
 		if line['EMAIL_ADDRESS']:
 			try:
@@ -275,7 +274,10 @@ def set_directory_fields():
 				last, junk, first = line['FULL_NAME'].split(",")
 			email = line['EMAIL_ADDRESS'].lower()
 			user = create_or_return_user(email = email, alias = "%s %s" % (first, last), phone = line['PHONE'], department = line['DEPARTMENT'])
-
+			# Generate an updated json file that stores staff e-mails
+			staff_emails.append(email)
+	with open(os.path.join(app.root_path, 'static/json/staff_emails.json'), 'w') as outfile:
+		json.dump(staff_emails, outfile)
 
 ### @export "is_request_open"
 def is_request_open(request_id):
