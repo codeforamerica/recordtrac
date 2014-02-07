@@ -282,7 +282,7 @@ def create_or_return_user(email=None, alias = None, phone = None, department = N
 
 ### @export "create_user"
 def create_user(email=None, alias = None, phone = None, department = None):
-	user = User(email = email, alias = alias, phone = phone, department = department, password = app.config['ADMIN_PASSWORD'])
+	user = User(email = email, alias = alias or "Anonymous", phone = phone, department = department, password = app.config['ADMIN_PASSWORD'])
 	db.session.add(user)
 	db.session.commit()
 	return user
@@ -364,7 +364,7 @@ def authenticate_login(email, password):
 def set_random_password(email):
 	email = email.lower()
 	user = User.query.filter_by(email = email).first()
-	if not user or not user.department:
+	if not user or not user.department: # Must be a user with an assigned department
 		return None # This is only for existing staff users, not a way to create a user, which we're not allowing yet.
 	password = uuid.uuid4().hex
 	user.set_password(password)
