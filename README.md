@@ -10,7 +10,7 @@ This is a portal to manage and display public record requests, built by the Code
 This application requires [Postgres](http://www.postgresapp.com/) and Xcode developer tools to be installed.
 
     /Applications/Postgres.app/Contents/MacOS/bin/psql
-    CREATE DATABASE your_database_name;
+    CREATE DATABASE recordtrac;
 
 ### Ubuntu Pre-requisites
 
@@ -22,15 +22,15 @@ Install Postgres, Python, and other required packages.
 
 If you are using a standard Postgres installation or from [Homebrew](http://mxcl.github.com/homebrew/) you can also use:
 
-    createdb publicrecords
+    createdb recordtrac
 
 In a new window:
 
-    git clone git://github.com/codeforamerica/public-records.git
-    cd public-records
+    git clone git://github.com/postcode/recordtrac.git
+    cd recordtrac
     sudo pip install -r requirements.txt
 
-Save settings.env.example as settings.env and update relevant fields.
+Save .env.example as .env and update relevant fields.
 
 ### Other Accounts
 
@@ -40,28 +40,26 @@ To be able to catch spammy input, sign up for a free account with [Akismet](http
 
 ## Run locally
 
-If creating the database for the first time, first look up your `SQLALCHEMY_DATABASE_URI` value from settings.env; it will contain a database connection string such as “postgresql://user:password@hostname/dbname”, then run:
+If creating the database for the first time, run:
 
-    env SQLALCHEMY_DATABASE_URI=<value from settings.env> python
-    >>> from public_records_portal import models
-    >>> models.db.create_all()
+>>> foreman run python db_setup.py 
 
-To use the application locally with custom settings, run:
+To use the application locally, exit out of python and run:
 
-    foreman start -e settings.env
-
-Or to run it with the defaults:
-    
     foreman start
+
 
 You should see something similar to:
 
     2013-05-06 12:16:53 [1776] [INFO] Starting gunicorn 0.17.4
-    2013-05-06 12:16:53 [1776] [INFO] Listening at: http://127.0.0.1:8000 (1776)
+    2013-05-06 12:16:53 [1776] [INFO] Listening at: http://127.0.0.1:5000 (1776)
     2013-05-06 12:16:53 [1776] [INFO] Using worker: sync
     2013-05-06 12:16:53 [1779] [INFO] Booting worker with pid: 1779
     2013-05-06 12:16:53 [1780] [INFO] Booting worker with pid: 1780
 
 Navigate to the url (in this case, http://127.0.0.1:5000) in your browser.
+
+You can now login with any e-mail address and the password 'admin'.
+
 
 <!-- [![Build Status](https://travis-ci.org/codeforamerica/public-records.png?branch=master)](https://travis-ci.org/codeforamerica/public-records) -->
