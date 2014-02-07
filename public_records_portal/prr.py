@@ -4,10 +4,8 @@
 .. modlueauthor:: Richa Agarwal <richa@codeforamerica.org>
 """
 
-from public_records_portal import app
-import os
-import time
-import json
+from public_records_portal import app, db_helpers
+import os, time, json
 from flask import Flask, request
 from flask.ext.login import current_user
 from datetime import datetime, timedelta
@@ -142,13 +140,23 @@ def add_link(request_id, url, description, user_id):
 	return False
 
 ### @export "make_request"			
-def make_request(text, email = None, assigned_to_name = None, assigned_to_email = None, assigned_to_reason = None, user_id = None, phone = None, alias = None, department = None, passed_recaptcha = False):
+def make_request(text, email = None, user_id = None, phone = None, alias = None, department = None, passed_recaptcha = False):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
-	if (not passed_recaptcha) and is_spam(text): 
+	if (app.config['ENVIRONMENT'] == 'PRODUCTION') and (not passed_recaptcha) and is_spam(text): 
 		return None, False
 	request_id = find_request(text)
 	if request_id: # Same request already exists
 		return request_id, False
+	assigned_to_email = app.config['DEFAULT_OWNER_EMAIL']
+	assigned_to_reason = app.config['DEFAULT_OWNER_REASON']
+	if department:
+		prr_email = db_helpers.get_contact_by_dept(department)
+		if prr_email:
+			assigned_to_email = prr_email
+			assigned_to_reason = "PRR Liaison for %s" %(department)
+		else:
+			print "%s is not a valid department" %(department)
+			department = None
 	request_id = create_request(text = text, user_id = user_id, department = department) # Actually create the Request object
 	new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email) # Assign someone to the request
 	open_request(request_id) # Set the status of the incoming request to "Open"
@@ -257,6 +265,7 @@ def get_responses_chronologically(req):
 def set_directory_fields():
 	dir_json = open(os.path.join(app.root_path, 'static/json/directory.json'))
 	json_data = json.load(dir_json)
+	staff_emails = []
 	for line in json_data:
 		if line['EMAIL_ADDRESS']:
 			try:
@@ -265,7 +274,10 @@ def set_directory_fields():
 				last, junk, first = line['FULL_NAME'].split(",")
 			email = line['EMAIL_ADDRESS'].lower()
 			user = create_or_return_user(email = email, alias = "%s %s" % (first, last), phone = line['PHONE'], department = line['DEPARTMENT'])
-
+			# Generate an updated json file that stores staff e-mails
+			staff_emails.append(email)
+	with open(os.path.join(app.root_path, 'static/json/staff_emails.json'), 'w') as outfile:
+		json.dump(staff_emails, outfile)
 
 ### @export "is_request_open"
 def is_request_open(request_id):
