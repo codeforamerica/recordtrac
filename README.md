@@ -44,7 +44,9 @@ If creating the database for the first time, run:
 
     foreman run python db_setup.py
 
-To seed the application with fake user data, requests and responses, run:
+There are two external data sources the application depends upon: staff directory information (stored in /public_records_portal/static/json/directory.json) and information about the departments within the agency (stored in /public_records_portal/static/json/departments.json). The data provided is from the City of Oakland, but you should update these files to meet your needs.
+
+To seed the application with user data (as provided in the above two files), requests and responses, run:
 
     foreman run python db_seed.py
 
