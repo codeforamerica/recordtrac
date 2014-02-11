@@ -26,11 +26,10 @@ cache = Cache()
 cache.init_app(app, config={'CACHE_TYPE': 'simple'})
 
 
-
 # Submitting a new request
 def new_request(passed_recaptcha = False, data = None):
-	if request.method == 'POST' or data:
-		if not passed_recaptcha:
+	if data or request.method == 'POST':
+		if not data and not passed_recaptcha:
 			data = request.form.copy()
 		email = data['request_email']
 		request_text = data['request_text']
@@ -38,7 +37,7 @@ def new_request(passed_recaptcha = False, data = None):
 			return render_template('error.html', message = "You cannot submit an empty request.")
 		if email == "" and 'ignore_email' not in data and not passed_recaptcha:
 			return render_template('missing_email.html', form = data, user_id = get_user_id())
-		if is_spam(request_text) and not passed_recaptcha:
+		if (app.config['ENVIRONMENT'] == 'PRODUCTION') and is_spam(request_text) and not passed_recaptcha:
 			return render_template('recaptcha.html', form = data, message = "Hmm, your request looks like spam. To submit your request, type the numbers or letters you see in the field below.", public_key = app.config['RECAPTCHA_PUBLIC_KEY'])
 		alias = None
 		phone = None
@@ -46,18 +45,7 @@ def new_request(passed_recaptcha = False, data = None):
 			alias = data['request_alias']
 		if 'request_phone' in data:
 			phone = data['request_phone']
-		assigned_to_email = app.config['DEFAULT_OWNER_EMAIL']
-		assigned_to_reason = app.config['DEFAULT_OWNER_REASON']
-		department = data['request_department']
-		if department:
-			prr_email = db_helpers.get_contact_by_dept(department)
-			if prr_email:
-				assigned_to_email = prr_email
-				assigned_to_reason = "PRR Liaison for %s" %(department)
-			else:
-				print "%s is not a valid department" %(department)
-				department = None
-		request_id, is_new = make_request(text = request_text, email = email, assigned_to_email = assigned_to_email, assigned_to_reason = assigned_to_reason, user_id = get_user_id(), alias = alias, phone = phone, department = department, passed_recaptcha = passed_recaptcha)
+		request_id, is_new = make_request(text = request_text, email = email, user_id = get_user_id(), alias = alias, phone = phone, passed_recaptcha = passed_recaptcha)
 		if is_new:
 			return redirect(url_for('show_request_for_x', request_id = request_id, audience = 'new'))
 		if not request_id:
@@ -75,7 +63,7 @@ def index():
 
 def landing():
 	viz_data_freq, viz_data_time = get_viz_data()
-	return render_template('landing.html', viz_data_freq = json.dumps(viz_data_freq), viz_data_time = json.dumps(viz_data_time))
+	return render_template('landing.html', viz_data_freq = json.dumps(viz_data_freq), viz_data_time = json.dumps(viz_data_time), user_id = get_user_id())
 
 def viz():
 	viz_data_freq, viz_data_time = get_viz_data()
@@ -271,7 +259,9 @@ def login(email=None, password=None):
 				if "city" not in redirect_url:
 					redirect_url = redirect_url.replace("/request/", "/city/request/")
 				return redirect(redirect_url)
-	return render_template('error.html', message = "Your e-mail/ password combo didn't work. You can always <a href='/reset_password'>reset your password</a>.")
+		else:
+			return render_template('error.html', message = "Your e-mail/ password combo didn't work. You can always <a href='/reset_password'>reset your password</a>.")
+	return render_template('error.html', message="Something went wrong.")
 
 def reset_password(email=None):
 	if request.method == 'POST':

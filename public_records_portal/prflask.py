@@ -1,5 +1,5 @@
-from public_records_portal import app, models, db, template_renderers
-from template_renderers import * # Import all the functions that render templates
+from public_records_portal import app, models, db, views
+from views import * # Import all the functions that render templates
 from flask.ext.restless import APIManager
 from flask.ext.admin import Admin, expose, BaseView, AdminIndexView
 from flask.ext.admin.contrib.sqlamodel import ModelView
@@ -28,7 +28,7 @@ class HomeView(AdminIndexView):
 		return False
 
 # Create Admin
-admin = Admin(app, name='Oakland Public Records Admin', url='/admin', index_view = HomeView(name='Home'))
+admin = Admin(app, name='RecordTrac Admin', url='/admin', index_view = HomeView(name='Home'))
 
 class AdminView(ModelView):
     def is_accessible(self):
