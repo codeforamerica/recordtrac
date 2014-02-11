@@ -45,7 +45,7 @@ def new_request(passed_recaptcha = False, data = None):
 			alias = data['request_alias']
 		if 'request_phone' in data:
 			phone = data['request_phone']
-		request_id, is_new = make_request(text = request_text, email = email, user_id = get_user_id(), alias = alias, phone = phone, department = department, passed_recaptcha = passed_recaptcha)
+		request_id, is_new = make_request(text = request_text, email = email, user_id = get_user_id(), alias = alias, phone = phone, passed_recaptcha = passed_recaptcha)
 		if is_new:
 			return redirect(url_for('show_request_for_x', request_id = request_id, audience = 'new'))
 		if not request_id:
