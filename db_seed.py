@@ -10,6 +10,9 @@ prr.set_directory_fields()
 # Update user info with information in the departments.json file
 departments.populate_users_with_departments()
 
+# Create doc types based on information in the departments.json file
+departments.create_doctypes()
+
 common_requests = ['City Council meeting minutes', 'Police Report', 'Incident Report', 'Communication between Councilmembers']
 depts_json = open(os.path.join(app.root_path, 'static/json/list_of_departments.json'))
 staff_json = open(os.path.join(app.root_path, 'static/json/staff_emails.json'))
