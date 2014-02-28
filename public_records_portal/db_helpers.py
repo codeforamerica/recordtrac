@@ -166,7 +166,7 @@ def get_requests_by_filters(filters_dict):
 				continue
 			else:
 				q = q.filter(request_attr).like("%%%s%%" % value)
-	return q.all()
+	return q.limit(10).all()
 
 ### @export "put_obj"
 def put_obj(obj):
