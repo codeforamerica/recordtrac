@@ -6,6 +6,7 @@ from db_helpers import *
 from departments import *
 import sendgrid
 from flask import render_template
+import helpers
 
 # Set flags:
 
@@ -119,12 +120,12 @@ def due_date(date_obj, extended = None, format = True):
 		date_obj = datetime.strptime(date_obj, "%Y-%m-%dT%H:%M:%S.%f")
 	due_date = date_obj + timedelta(days = days_to_fulfill)
 	if format:
-		return format_date(due_date.date())
-	return due_date.date()
+		return format_date(due_date)
+	return due_date
 
 ### @export "is_due_soon"
 def is_due_soon(date_obj, extended = None):
-	current_date = datetime.now().date()
+	current_date = datetime.now()
 	due = due_date(date_obj = date_obj, extended = extended, format = False)
 	num_days = 2
 	if not (current_date >= due): # if not overdue
@@ -134,7 +135,7 @@ def is_due_soon(date_obj, extended = None):
 
 ### @export "is_overdue"
 def is_overdue(date_obj, extended = None):
-	current_date = datetime.now().date()
+	current_date = datetime.now()
 	due = due_date(date_obj = date_obj, extended = extended, format = False)
 	if (current_date >= due):
 		return True, due
@@ -207,6 +208,6 @@ def should_notify(user_email):
 ### @export "format_date"
 def format_date(obj):
 	""" Take a datetime object and return it in format Jun 12, 2013 """
-	return obj.strftime('%b %d, %Y')
+	return helpers.localize(obj).strftime('%b %d, %Y')
 
 
