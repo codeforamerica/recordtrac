@@ -182,6 +182,7 @@ def close(request_id = None):
 # Shows all public records requests that have been made.
 @timeout(seconds=20)
 def requests():
+	app.logger.debug("Processing requests.")
 	try:
 		# Return first 100, ? limit = 100
 		departments_json = open(os.path.join(app.root_path, 'static/json/list_of_departments.json'))
@@ -219,14 +220,22 @@ def requests():
 				template = 'all_requests_city.html'
 		else:
 			template = "all_requests_noresults.html"
-		total_requests_count = get_count("Request")
-		return render_template(template, record_requests = record_requests, user_id = user_id, title = "All Requests", open_requests = open_requests, departments = departments, dept_selected = dept_selected, my_requests = my_requests, total_requests_count = total_requests_count, requester_name = requester_name)
+			total_requests_count = get_count("Request")
+			return render_template(template,
+                   record_requests = record_requests,
+                   user_id = user_id,
+                   title = "All Requests",
+                   open_requests = open_requests,
+                   departments = departments,
+                   dept_selected = dept_selected,
+                   my_requests = my_requests,
+                   total_requests_count = total_requests_count,
+                   requester_name = requester_name, requests = requests)
 	except Exception, message:
 		if "Too long" in message:
 			message = "Loading requests is taking a while. Try exploring with more restricted search options."
 			print message
 		return render_template('error.html', message = message, user_id = get_user_id())
-
 
 @login_manager.unauthorized_handler
 def unauthorized():
@@ -234,7 +243,7 @@ def unauthorized():
 
 @login_manager.user_loader
 def load_user(userid):
-	user = get_obj("User", userid)
+	user =get_obj("User", userid)
 	return user
 
 

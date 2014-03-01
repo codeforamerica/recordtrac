@@ -4,6 +4,7 @@
 
 """
 
+import logging
 from os import environ
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -54,3 +55,7 @@ set_env(key = 'AGENCY_NAME', default = '')
 
 # Initialize database
 db = SQLAlchemy(app)
+logging.basicConfig()
+logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+
+app.logger.info("\n\nFresh request!")

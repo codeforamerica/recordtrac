@@ -7,6 +7,7 @@ class RequestTablePresenter:
 	def __init__(self, request, public):
 		self.request = request
 		self.id = request.id
+
 		if public:
 			self.status = get_status(request, "public")
 		else:
@@ -16,9 +17,12 @@ class RequestTablePresenter:
 				self.status, self.due_date = status_arr[0], date(status_arr[1])
 			else:
 				self.status, self.due_date = None, None
+
 		self.text = request.text
+
 		if len(self.text) > 140:
 			self.text = '%s...' % self.text[:140]
+
 		if self.status == "open":
 			self.color = "#2688AD"
 		elif self.status == "closed":
@@ -31,8 +35,10 @@ class RequestTablePresenter:
 			self.text = '<span style="background-color: %s" class="label label-important">%s</span> %s' %(self.color, self.status, self.text)
 		else:
 			self.color=""
+
 		self.status_icon = get_status_icon(self.status)
 		self.point_of_contact, self.department = get_owner_data(request.id, attributes = ["alias", "department"])
+
 		if request.department:
 			self.department = request.department
 		if public:
