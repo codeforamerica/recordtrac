@@ -226,8 +226,8 @@ def requests():
 				del filters['requester']
 
 	record_requests = get_request_table_data(get_requests_by_filters(filters))
-        requests = Request.query.paginate(1, 50)
-        record_requests = requests.items
+        # requests = Request.query.paginate(1, 50)
+        # record_requests = requests.items
 
 	user_id = get_user_id()
 	if record_requests:

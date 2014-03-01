@@ -1,14 +1,23 @@
 from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
-from sqlalchemy.orm import relationship
+
+from sqlalchemy import Table, Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship, backref
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
+
 from datetime import datetime
 from public_records_portal import db
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
 
+Base = declarative_base()
 
 ### @export "User"
-class User(db.Model):
+class User(Base):
+        __tablename__ = 'user'
+
 	id = db.Column(db.Integer, primary_key = True)
+
 	alias = db.Column(db.String(100))
 	email = db.Column(db.String(100), unique=True)
 	phone = db.Column(db.String())
@@ -17,6 +26,8 @@ class User(db.Model):
 	department = db.Column(db.String())
 	contact_for = db.Column(db.String()) # comma separated list
 	backup_for = db.Column(db.String()) # comma separated list
+        owners = relationship("Owner")
+
 	def is_authenticated(self):
 		return True
 	def is_active(self):
@@ -40,7 +51,7 @@ class User(db.Model):
 		return '<User %r>' % self.email
 
 ### @export "Request"
-class Request(db.Model): 
+class Request(Base): 
 # The public records request
 	__tablename__ = 'request'
 	id = db.Column(db.Integer, primary_key =True)
@@ -50,8 +61,11 @@ class Request(db.Model):
 	status_updated = db.Column(db.DateTime)
 	text = db.Column(db.String(), unique=True) # The actual request text.
 	subscribers = relationship("Subscriber", cascade ="all, delete") # The list of subscribers following this request.
+
 	owners = relationship("Owner", cascade="all,delete") # The list of city staff ever assigned to the request.
-	current_owner = db.Column(db.Integer) # The Owner ID for the city staff that currently 'owns' the request.
+	current_owner = Column(Integer) # The Owner ID for the city staff that currently 'owns' the request.
+        point_person = relationship("Owner", uselist=False)
+
 	records = relationship("Record", cascade="all,delete", order_by = "Record.date_created.desc()") # The list of records that have been uploaded for this request.
 	notes = relationship("Note", cascade="all,delete", order_by = "Note.date_created.desc()") # The list of notes appended to this request.
 	status = db.Column(db.String(400)) # The status of the request (open, closed, etc.)
@@ -64,9 +78,11 @@ class Request(db.Model):
 		self.department = department
 	def __repr__(self):
 		return '<Request %r>' % self.text
+        def contact_name(self):
+                return self.point_person.user.alias
 
 ### @export "QA"
-class QA(db.Model):
+class QA(Base):
 # A Q & A block for a request 
 	__tablename__ = 'qa'
 	id = db.Column(db.Integer, primary_key = True)
@@ -85,11 +101,14 @@ class QA(db.Model):
 		return "<QA Q: %r A: %r>" %(self.question, self.answer)
 
 ### @export "Owner"
-class Owner(db.Model): 
+class Owner(Base): 
 # A member of city staff assigned to a particular request, that may or may not upload records towards that request.
 	__tablename__ = 'owner'
 	id = db.Column(db.Integer, primary_key =True)
-	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+	user_id = Column(Integer, ForeignKey('user.id'))
+        user = relationship("User")
+
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
 	reason = db.Column(db.String()) # Reason they were assigned
 	date_created = db.Column(db.DateTime)
@@ -102,7 +121,7 @@ class Owner(db.Model):
 		return '<Owner %r>' %self.user_id
 
 ### @export "Subscriber"
-class Subscriber(db.Model): 
+class Subscriber(Base): 
 # A person subscribed to a request, who may or may not have created the request, and may or may not own a part of the request.
 	__tablename__ = 'subscriber'
 	id = db.Column(db.Integer, primary_key = True)
@@ -119,7 +138,7 @@ class Subscriber(db.Model):
 		return '<Subscriber %r>' %self.user_id
 
 ### @export "Record"
-class Record(db.Model):
+class Record(Base):
 # A record that is attached to a particular request. A record can be online (uploaded document, link) or offline.
 	__tablename__ = 'record'
 	id = db.Column(db.Integer, primary_key = True)
@@ -145,7 +164,7 @@ class Record(db.Model):
 		return '<Record %r>' % self.description
 
 ### @export "Note"
-class Note(db.Model):
+class Note(Base):
 # A note on a request.
 	__tablename__ = 'note'
 	id = db.Column(db.Integer, primary_key = True)
@@ -162,7 +181,7 @@ class Note(db.Model):
 		return '<Note %r>' % self.text
 
 ### @export "Visualization"
-class Visualization(db.Model):
+class Visualization(Base):
 	__tablename__ = 'visualization'
 	id = db.Column(db.Integer, primary_key = True)
 	content = db.Column(db.String())

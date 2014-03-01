@@ -16,6 +16,7 @@
 {% block custom_script_links %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/underscore-min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/backbone-min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/moment.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/requests.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-select.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/custom.bootstrap-select.js') }}"></script>
@@ -42,26 +43,31 @@
               <caption>List of current requests.</caption>
               <thead>
                 <tr>
-                  <th class="status"></th>
-                  <th>#</th>
+                  <th class="status">Status</th>
+                  <th>ID</th>
                   <th>Received</th>
-                  <th scope="col">Request</th>
-                  <th scope="col">Department</th>
-                  <th scope="col">Point of Contact</th>
-                  <th style='display:none;' scope="col"></th>
+                  <th>Request</th>
+                  <th>Department</th>
+                  <th>Point of Contact</th>
                 </tr>
               </thead>
               <tbody>
                 <% _.each( requests, function( request ) { %>                
                   <tr>
-                    <td class="<%= request["status"] %>">
-                      <%= request["status"] %>
+                    <td class="<%= request.status.toLowerCase() %>">
+                      <%= request.status %>
                     </td>
                     <td><%= request.id %></td>
-                    <td><%= request.date_created %></td>
-                    <td><%= request.department %></td>
-                    <td><%= request.text %></td>
-                    <td><%= console.log(request) %></td>
+                    <td><%= moment(request.date_created).format("MMM Do, YYYY") %></td>
+                    <td>
+                      <% if ( request.text.length > 140 ) { %>
+                        <%= request.text.substring(0, 140).trim() + "..." %>
+                      <% } else { %>
+                        <%= request.text %>
+                      <% } %>
+                    </td>
+                    <td><%= request.department %></td>                    
+                    <td><%= request.contact_name %></td>
                   </tr>
                 <% } ); %>
               </tbody>
