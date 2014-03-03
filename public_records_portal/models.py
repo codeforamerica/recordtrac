@@ -9,6 +9,7 @@ from datetime import datetime
 from public_records_portal import db
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
+import re
 
 Base = db.Model
 
@@ -80,6 +81,9 @@ class Request(Base):
 		return '<Request %r>' % self.text
         def contact_name(self):
                 return self.point_person.user.alias
+
+        def is_closed(self):
+                return re.match('.*(closed).*', self.status) is not None
 
 ### @export "QA"
 class QA(Base):
