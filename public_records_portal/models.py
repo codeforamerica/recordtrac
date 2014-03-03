@@ -10,7 +10,7 @@ from public_records_portal import db
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
 
-Base = declarative_base()
+Base = db.Model
 
 ### @export "User"
 class User(Base):
