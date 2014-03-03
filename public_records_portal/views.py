@@ -214,6 +214,9 @@ def requests():
 					del filters['requester']
 		record_requests = get_request_table_data(get_requests_by_filters(filters))
 		user_id = get_user_id()
+                
+                total_requests_count = 0
+                
 		if record_requests:
 			template = 'all_requests.html'
 			if user_id: 
@@ -221,7 +224,8 @@ def requests():
 		else:
 			template = "all_requests_noresults.html"
 			total_requests_count = get_count("Request")
-			return render_template(template,
+
+                return render_template(template,
                    record_requests = record_requests,
                    user_id = user_id,
                    title = "All Requests",
