@@ -39,11 +39,10 @@
         {% block datatable %}
           <script type="text/template" id="search_results_template">   
             <div class="row"><div class="span6"><div id="allrequestTable_length" class="dataTables_length"><label><select size="1" name="allrequestTable_length" aria-controls="allrequestTable"><option value="10">10</option><option value="25">25</option><option value="50" selected="selected">50</option><option value="100">100</option></select> records per page</label></div></div><div class="span6"><div class="dataTables_filter" id="allrequestTable_filter"><label>Search  <input type="text" aria-controls="allrequestTable" placeholder="I'd like to find..."></label></div></div></div>
-            <table>
-              <caption>List of current requests.</caption>
+            <table id="requests">
               <thead>
                 <tr>
-                  <th class="status">Status</th>
+                  <th class="status"></th>
                   <th>ID</th>
                   <th>Received</th>
                   <th>Request</th>
@@ -54,17 +53,19 @@
               <tbody>
                 <% _.each( requests, function( request ) { %>                
                   <tr>
-                    <td class="<%= request.status.toLowerCase() %>">
-                      <%= request.status %>
+                    <td class="status <%= request.solid_status %>">
+                      <i class="icon-archive icon-light"></i>
                     </td>
                     <td><%= request.id %></td>
                     <td><%= moment(request.date_created).format("MMM Do, YYYY") %></td>
                     <td>
-                      <% if ( request.text.length > 140 ) { %>
-                        <%= request.text.substring(0, 140).trim() + "..." %>
-                      <% } else { %>
-                        <%= request.text %>
-                      <% } %>
+                      <a href="/request/<%= request.id %>">
+                        <% if ( request.text.length > 140 ) { %>
+                          <%= request.text.substring(0, 140).trim() + "..." %>
+                        <% } else { %>
+                          <%= request.text %>
+                        <% } %>
+                      </a>
                     </td>
                     <td><%= request.department %></td>                    
                     <td><%= request.contact_name %></td>
