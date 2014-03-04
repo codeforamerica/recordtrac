@@ -85,6 +85,12 @@ class Request(Base):
         def is_closed(self):
                 return re.match('.*(closed).*', self.status) is not None
 
+        def solid_status(self):
+                if self.is_closed:
+                        return "closed"
+                else:
+                        return "open"
+
 ### @export "QA"
 class QA(Base):
 # A Q & A block for a request 
