@@ -62,10 +62,8 @@ class Request(Base):
 	status_updated = db.Column(db.DateTime)
 	text = db.Column(db.String(), unique=True) # The actual request text.
 	subscribers = relationship("Subscriber", cascade ="all, delete") # The list of subscribers following this request.
-
-	owners = relationship("Owner", cascade="all,delete") # The list of city staff ever assigned to the request.
-	current_owner = Column(Integer) # The Owner ID for the city staff that currently 'owns' the request.
-        point_person = relationship("Owner", uselist=False)
+	current_owner = Column(Integer, ForeignKey("owner.id"))
+        point_person = relationship("Owner", foreign_keys = [current_owner], uselist = False)
 
 	records = relationship("Record", cascade="all,delete", order_by = "Record.date_created.desc()") # The list of records that have been uploaded for this request.
 	notes = relationship("Note", cascade="all,delete", order_by = "Note.date_created.desc()") # The list of notes appended to this request.
@@ -117,9 +115,11 @@ class Owner(Base):
 	id = db.Column(db.Integer, primary_key =True)
 
 	user_id = Column(Integer, ForeignKey('user.id'))
-        user = relationship("User")
+        user = relationship("User", uselist = False)
 
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
+        request = relationship("Request", foreign_keys = [request_id], backref = "owners")
+
 	reason = db.Column(db.String()) # Reason they were assigned
 	date_created = db.Column(db.DateTime)
 	def __init__(self, request_id, user_id, reason= None):
