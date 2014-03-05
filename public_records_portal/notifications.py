@@ -16,7 +16,7 @@ test = "[TEST] "
 if app.config['ENVIRONMENT'] == 'PRODUCTION':
 	send_emails = True
 	test = ""
-elif 'EMAIL_ONLY' in app.config:
+elif 'DEV_EMAIL' in app.config:
 	send_emails = True
 
 ### @export "generate_prr_emails"
@@ -101,8 +101,8 @@ def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_ev
 	message = sendgrid.Message(sender, subject, plaintext, html)
 	if not include_unsubscribe_link:
 		message.add_filter_setting("subscriptiontrack", "enable", 0)
-	if 'EMAIL_ONLY' in app.config:
-		recipients = [app.config['EMAIL_ONLY']]
+	if 'DEV_EMAIL' in app.config:
+		recipients = [app.config['DEV_EMAIL']]
 	if cc_everyone: # Not being used for now
 		message.add_to(recipients[0])
 		for recipient in recipients:
@@ -113,7 +113,8 @@ def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_ev
 			# if should_notify(recipient):
 				message.add_to(recipient)
 	message.add_bcc(sender)
-	mail.web.send(message)
+	status, msg = mail.web.send(message)
+	print status
 
 ### @export "due_date"
 def due_date(date_obj, extended = None, format = True):
