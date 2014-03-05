@@ -12,9 +12,12 @@ import helpers
 
 send_emails = False
 test = "[TEST] "
+
 if app.config['ENVIRONMENT'] == 'PRODUCTION':
 	send_emails = True
 	test = ""
+elif 'EMAIL_ONLY' in app.config:
+	send_emails = True
 
 ### @export "generate_prr_emails"
 def generate_prr_emails(request_id, notification_type, user_id = None):
@@ -98,6 +101,8 @@ def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_ev
 	message = sendgrid.Message(sender, subject, plaintext, html)
 	if not include_unsubscribe_link:
 		message.add_filter_setting("subscriptiontrack", "enable", 0)
+	if 'EMAIL_ONLY' in app.config:
+		recipients = [app.config['EMAIL_ONLY']]
 	if cc_everyone: # Not being used for now
 		message.add_to(recipients[0])
 		for recipient in recipients:
