@@ -6,23 +6,18 @@
     defaults:
     {
       page: 0,
-      per_page: 15,
-      total_requests: 0,
-      offset: 0
+      per_page: 10,
+      num_results: 0
     },
 
     prev_page: function ()
     {
-      this.set({
-        "offset": this.get("offset") - this.get("per_page")
-      })
+      this.set({ page: this.get("page") - 1 })
     },
 
     next_page: function ()
     {
-      this.set({
-        "offset": this.get("offset") + this.get("per_page")
-      })
+      this.set({ page: this.get("page") + 1 })
     }
 
   })
@@ -47,10 +42,11 @@
     build: function ()
     {
       console.log("Fetching a new result set.")
-      var query = JSON.stringify({"limit": this._query.get("per_page"), "offset": this._query.get("offset")})
-      console.log(query)
       this.fetch({
-        data: { "q": query },
+        data: {
+          "results_per_page": this._query.get("per_page"),
+          "page": this._query.get("page")
+        },
         dataType: "json",
         contentType: "application/json"
       });
@@ -58,6 +54,10 @@
 
     parse: function ( response )
     {
+      this._query.set({
+        "num_results": response.num_results,
+        "page": response.page
+      })
       return response.objects
     }
 
@@ -98,12 +98,12 @@
 
     initialize: function ()
     {
-      this.collection.on( "add", this.render, this )
+      this.collection.on( "sync", this.render, this )
     },
 
-    render: function ()
+    render: function (event_name)
     {
-      console.log("Rendering new results.")
+      console.log("Rendering new results on event: " + event_name)
       var vars = { requests: this.collection.toJSON() }
       var template = _.template( $("#search_results_template").html(), vars )
       this.$el.html( template )
@@ -112,7 +112,8 @@
     events:
     {
       "click .pagination .prev": "prev",
-      "click .pagination .next": "next"
+      "click .pagination .next": "next",
+      "change #per-page": "update_per_page"
     },
 
     prev: function ()
@@ -123,12 +124,17 @@
     next: function ()
     {
       this.model.next_page()
+    },
+
+    update_per_page: function ( event )
+    {
+      this.model.set("per_page", event.target.value)
     }
 
   });
 
-  var query = new Query();
-  var request_set = new RequestSet([], { query: query });
+  query = new Query();
+  request_set = new RequestSet([], { query: query });
   var filter_box = new FilterBox({ el: $("#sidebar_container"), model: query });
   var search_results = new SearchResults({
     el: $("#search_results_container"),

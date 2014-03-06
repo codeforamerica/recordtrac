@@ -29,12 +29,7 @@
 		margin-bottom: 1em;
 		margin-top: 1em;
 	}
-	#allrequestTable_filter label {
-		margin-bottom: 1em;
-		margin-top: 0.5em;
-		font-weight: bold;
-		font-size: 17.5px;
-	}
+
 	#allrequestTable_info {
 	margin-left: 1.75em;
 	}
@@ -86,6 +81,14 @@ h3 {
  * Fresh styles for the requests table are below. Things are in the process of being
  * ported.
  */
+
+#search label {
+  margin-bottom: 1em;
+  margin-top: 0.5em;
+  font-weight: bold;
+  font-size: 17.5px;
+  display: inline;
+}
 
 #requests th, #requests td {
     text-align: left;

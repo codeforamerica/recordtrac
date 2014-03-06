@@ -17,13 +17,13 @@
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/font-awesome.min.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/base.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/feedback.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/DT_bootstrap.css') }}">
+
     {% block custom_css_links %}
 
     {% endblock custom_css_links %}
     
     
-<!--     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/select2.css') }}"> -->
+    <!--     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/select2.css') }}"> -->
 
   <!-- modernizr -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/modernizr-latest.js') }}"></script>
@@ -175,13 +175,8 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.validate.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/custom.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/underscore-min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/backbone-min.js') }}"></script>
 
-    {% block custom_script_links %}
-      
-    {% endblock custom_script_links %}
-
-  
+    {% block custom_script_links %}      
+    {% endblock custom_script_links %}  
   </body>
 </html>

@@ -8,7 +8,11 @@ from flask.ext.admin.contrib.sqlamodel import ModelView
 manager = APIManager(app, flask_sqlalchemy_db=db)
 # The endpoints created are /api/object, e.g. publicrecordsareawesome.com/api/request/
 request_methods = ['contact_name', 'solid_status']
-manager.create_api(models.Request, methods=['GET'], results_per_page=10, allow_functions = True,
+manager.create_api(models.Request,
+                   methods=['GET'],
+                   results_per_page = 15,
+                   max_results_per_page = 100,
+                   allow_functions = True,
                    include_methods = request_methods)
 manager.create_api(models.Owner, methods=['GET'], results_per_page = 10, allow_functions = True)
 manager.create_api(models.Note, methods=['GET'], results_per_page = 10, allow_functions = True)

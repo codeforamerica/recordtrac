@@ -3,7 +3,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-  {{ title }}
+  {{ title }} &#45; RecordTrac
 {% endblock title %}
 
 {% block custom_css_links %}
@@ -38,7 +38,14 @@
       <div>
         {% block datatable %}
           <script type="text/template" id="search_results_template">   
-            <div class="row"><div class="span6"><div id="allrequestTable_length" class="dataTables_length"><label><select size="1" name="allrequestTable_length" aria-controls="allrequestTable"><option value="10">10</option><option value="25">25</option><option value="50" selected="selected">50</option><option value="100">100</option></select> records per page</label></div></div><div class="span6"><div class="dataTables_filter" id="allrequestTable_filter"><label>Search  <input type="text" aria-controls="allrequestTable" placeholder="I'd like to find..."></label></div></div></div>
+            <div class="row">
+              <div class="span6 offset8">
+                <div id="search">
+                  <label>Search</label>
+                  <input type="text" placeholder="I'd like to find...">
+                </div>
+              </div>
+            </div>
             <table id="requests">
               <thead>
                 <tr>
@@ -82,14 +89,17 @@
               <div class="span6">
                 <div class="pagination">
                   <ul>
-                    <li class="prev"><a href="#">Prev</a></li>
-                    <li class="next"><a href="#">Next</a></li>
+                    <li class="prev"><a href="javascript:void(0)">Prev</a></li>
+                    <li class="next"><a href="javascript:void(0)">Next</a></li>
                   </ul>
                 </div>
               </div>
             </div>
           </script>
-          <div id="search_results_container"></div>
+          <div id="search_results_container">
+            <i class="fa fa-spinner"></i>
+            <p>Loading...</p>
+          </div>
         {% endblock datatable %}
       </div>
     </div>
@@ -98,12 +108,7 @@
       {% block sidebar %}
         <script type="text/template" id="sidebar_template">                                         
           <div id="filterbox" class="well r_sidebar r_sidebar-fixed">
-            <h4>
-              View
-              <small class="count">
-                <%= current_results %> of <%= total_requests %> shown
-              </small>
-            </h4>
+            <h4>View</h4>
             <form name="filterPublic" class="form-horizontal" id="filterPublic" method="get" action="/requests">
               <fieldset>
                 <label class="checkbox">
@@ -116,19 +121,7 @@
                            checked
                          {% endif %}>
                   Open requests
-                </label>
-                <div class="row-fluid">
-                  <select class="span12 selectpicker" title="select_department" id = "department" name = "department">
-                    <option value = "all">All departments</option>
-                      {% for department in departments %}
-                        {% if dept_selected == department %}
-                          <option selected = "selected">{{department}}</option>
-                        {% else %}
-                          <option>{{department}}</option>
-                        {% endif %}
-                      {% endfor %}
-                  </select>
-                </div>
+                </label>               
               </fieldset>
             </form>
           </div>
