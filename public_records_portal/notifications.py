@@ -69,9 +69,10 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 			recipients = []
 			participants = get_attribute(attribute = "owners", obj_id = request_id, obj_type = "Request")
 			for participant in participants:
-				recipient = get_attribute(attribute = "email", obj_id = participant.user_id, obj_type = "User")
-				if recipient:
-					recipients.append(recipient)
+				if participant.active: # Only send an e-mail if they are active in the request
+					recipient = get_attribute(attribute = "email", obj_id = participant.user_id, obj_type = "User")
+					if recipient:
+						recipients.append(recipient)
 			send_prr_email(page = page, recipients = recipients, subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = False, unfollow_link = unfollow_link)
 		else:
 			print recipient_type
