@@ -3,17 +3,54 @@ from views import * # Import all the functions that render templates
 from flask.ext.restless import APIManager
 from flask.ext.admin import Admin, expose, BaseView, AdminIndexView
 from flask.ext.admin.contrib.sqlamodel import ModelView
+from flask import jsonify, request
+import anyjson
+
+@app.route("/api/request")
+def fetch_requests():
+    """
+    Ultra-custom API endpoint for serving up requests.
+    Supports limit, search, and page parameters and returns json with an object that
+    has a list of results in the 'objects' field.
+    """
+    
+    page   = request.args.get('page')   or 1
+    limit  = request.args.get('limit')  or 15
+    offset = limit * page
+
+    results = db.session.query(Request)
+                     
+    # Check for a text search term and add to the query if we can.
+    search_term = request.args.get('search')
+    if search_term:
+        results = results.filter("to_tsvector(text) @@ to_tsquery('" + search_term + "')")
+
+    results = results \
+        .limit(limit) \
+        .offset(offset)
+
+    # TODO(cj@postcode.io): This map is pretty kludgy, we should be detecting columns and auto
+    # magically making them fields in the JSON objects we return.
+    results = map(lambda r: { "id":           r.id, \
+                              "text":         r.text, \
+                              "date_created": r.date_created.isoformat(), \
+                              "department":   r.department, \
+                              # The following two attributes are defined as model methods,
+                              # and not regular SQLAlchemy attributes.
+                              "contact_name": r.contact_name(), \
+                              "solid_status": r.solid_status()
+                          }, results)
+    matches = {
+        "objects": results
+    }
+
+    response = anyjson.serialize(matches)
+    return response
 
 # Create API
 manager = APIManager(app, flask_sqlalchemy_db=db)
+
 # The endpoints created are /api/object, e.g. publicrecordsareawesome.com/api/request/
-request_methods = ['contact_name', 'solid_status']
-manager.create_api(models.Request,
-                   methods=['GET'],
-                   results_per_page = 15,
-                   max_results_per_page = 100,
-                   allow_functions = True,
-                   include_methods = request_methods)
 manager.create_api(models.Owner, methods=['GET'], results_per_page = 10, allow_functions = True)
 manager.create_api(models.Note, methods=['GET'], results_per_page = 10, allow_functions = True)
 manager.create_api(models.Record, methods=['GET'], results_per_page = 10, allow_functions = True)
