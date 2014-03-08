@@ -5,19 +5,22 @@
 
     defaults:
     {
-      page: 0,
+      search_term: "",
+      page_number: 1,
+      // Using an attribute called 'page' makes weird things happen here. JFYI.
       per_page: 10,
       num_results: 0
     },
 
     prev_page: function ()
     {
-      this.set({ page: this.get("page") - 1 })
+      this.set({ page_number: this.get("page_number") - 1 })
     },
 
     next_page: function ()
     {
-      this.set({ page: this.get("page") + 1 })
+      this.set({ page_number: this.get("page_number") + 1 })
+      console.log( this.get("page_number") )
     }
 
   })
@@ -42,11 +45,20 @@
     build: function ()
     {
       console.log("Fetching a new result set.")
+
+      var data_params = {
+        // "results_per_page": this._query.get("per_page"),
+        "page": this._query.get("page_number")
+      }
+
+      var search_term = this._query.get("search_term")
+      if ( search_term !== "" )
+      {
+        data_params["search"] = search_term
+      }
+
       this.fetch({
-        data: {
-          "results_per_page": this._query.get("per_page"),
-          "page": this._query.get("page")
-        },
+        data: data_params,
         dataType: "json",
         contentType: "application/json"
       });
@@ -133,9 +145,43 @@
 
   });
 
-  query = new Query();
-  request_set = new RequestSet([], { query: query });
-  var filter_box = new FilterBox({ el: $("#sidebar_container"), model: query });
+  SearchField = Backbone.View.extend({
+
+    initialize: function ()
+    {
+      this.render()
+    },
+
+    render: function ()
+    {
+      var template = _.template( $("#search_field_template").html(), { current_query: this.model.get("search_term") } )
+      this.$el.html( template )
+    },
+
+    events:
+    {
+      "keyup #search input": "set_search_term"
+    },
+
+    set_search_term: function ( event )
+    {
+      console.log( event.target.value )
+      this.model.set( "search_term", event.target.value )
+    }
+
+  });
+
+
+  var query = new Query();
+  var request_set = new RequestSet([], { query: query });
+  var filter_box = new FilterBox({
+    el: $("#sidebar_container"),
+    model: query
+  });
+  var search_field = new SearchField({
+    el: $("#search_field_container"),
+    model: query
+  });
   var search_results = new SearchResults({
     el: $("#search_results_container"),
     model: query,
