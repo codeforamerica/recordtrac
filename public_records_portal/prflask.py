@@ -16,7 +16,7 @@ def fetch_requests():
     
     page   = request.args.get('page')   or 1
     limit  = request.args.get('limit')  or 15
-    offset = limit * page
+    offset = limit * (int(page) - 1)
 
     results = db.session.query(Request)
                      
