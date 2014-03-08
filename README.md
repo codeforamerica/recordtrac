@@ -16,21 +16,29 @@ This application requires [Postgres](http://www.postgresapp.com/) and Xcode deve
 
 Install Postgres, Python, and other required packages.
 
-    sudo apt-get install postgresql-9.1 postgresql-server-dev-9.1 python-dev
+    sudo apt-get update
+    sudo apt-get install -y git
+    sudo apt-get install -y postgresql-9.1 postgresql-server-dev-9.1 python-dev
+    sudo apt-get install -y python-pip
 
 ### Postgres & Python
 
 If you are using a standard Postgres installation or from [Homebrew](http://mxcl.github.com/homebrew/) you can also use:
 
-    createdb recordtrac
+    sudo -u postgres createuser -P -s -e testuser
+    sudo -u postgres createdb recordtrac
 
 In a new window:
 
     git clone git://github.com/postcode/recordtrac.git
     cd recordtrac
     sudo pip install -r requirements.txt
+    cp .env.example .env
+    sed -i 's/localhost/testuser\:testpwd\@localhost/g' .env
 
-Save .env.example as .env and update relevant fields.
+Update relevant fields in .env.
+
+    vi .env
 
 ### Other Accounts
 
@@ -44,7 +52,9 @@ If creating the database for the first time, run:
 
     foreman run python db_setup.py
 
-To seed the application with fake user data, requests and responses, run:
+There are two external data sources the application depends upon: staff directory information (stored in public_records_portal/static/json/directory.json) and information about the departments within the agency (stored in public_records_portal/static/json/departments.json). The data provided is from the City of Oakland, but you should update these files to meet your needs.
+
+To seed the application with user data (as provided in the above two files), requests and responses, run:
 
     foreman run python db_seed.py
 
