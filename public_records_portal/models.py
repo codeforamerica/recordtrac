@@ -64,8 +64,6 @@ class Request(Base):
 	subscribers = relationship("Subscriber", cascade ="all, delete") # The list of subscribers following this request.
 	current_owner = Column(Integer, ForeignKey("owner.id"))
 	point_person = relationship("Owner", foreign_keys = [current_owner], uselist = False)
-	owners = relationship("Owner", cascade="all,delete", order_by = "Owner.date_created.asc()") # The list of city staff ever assigned to the request.
-	current_owner = db.Column(db.Integer) # The Owner ID for the city staff that currently 'owns' the request.
 	records = relationship("Record", cascade="all,delete", order_by = "Record.date_created.desc()") # The list of records that have been uploaded for this request.
 	notes = relationship("Note", cascade="all,delete", order_by = "Note.date_created.desc()") # The list of notes appended to this request.
 	status = db.Column(db.String(400)) # The status of the request (open, closed, etc.)
@@ -117,7 +115,7 @@ class Owner(Base):
 	user_id = Column(Integer, ForeignKey('user.id'))
 	user = relationship("User", uselist = False)
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
-	request = relationship("Request", foreign_keys = [request_id], backref = "owners")
+	request = relationship("Request", foreign_keys = [request_id], backref = db.backref("owners", order_by = "Owner.date_created.asc()"))
 	active = db.Column(db.Boolean, default = True) # Indicate whether they're still involved in the request or not.
 	reason = db.Column(db.String()) # Reason they were assigned
 	date_created = db.Column(db.DateTime)
