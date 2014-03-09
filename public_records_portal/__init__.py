@@ -30,8 +30,9 @@ set_env(key = 'DEFAULT_OWNER_EMAIL', default = '')
 set_env(key = 'DEFAULT_OWNER_REASON', default = 'Default' )
 # If you set up Sendgrid or another e-mail service:
 set_env(key = 'DEFAULT_MAIL_SENDER', default = '')  # The e-mail address used as the FROM field for all notifications
-set_env(key = 'MAIL_USERNAME', default='') # The Sendgrid username
-set_env(key = 'MAIL_PASSWORD', default = '') # The Sendgrid password
+set_env(key = 'MAIL_USERNAME', default='') # The SendGrid username
+set_env(key = 'MAIL_PASSWORD', default = '') # The SendGrid password
+set_env(key='SENDGRID_MONTHLY_LIMIT', default='') # Your SendGrid Monthly Limit
 # User login default, password can be used with any e-mail address:
 set_env(key = 'ADMIN_PASSWORD', default = 'admin')
 # Define who has admin access (/admin) with a comma delimited list of e-mail addresses:

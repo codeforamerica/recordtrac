@@ -7,9 +7,9 @@
   <table class="table table-condensed">
     <thead>
       <tr>
+        <th>Name</th>
         <th>Date</th>
         <th></th>
-        <th>To</th>
         <th>Note</th>
       </tr>
     </thead>
@@ -17,11 +17,19 @@
       <!-- the order of data returned here should be reverse chronological (right now it's shown as oldest first)-->
       {% for owner in req.owners %}
       <tr>
+        <td>{{ "alias" | get_attribute(owner.user_id, "User") }}</td>
         <td>{{ owner.date_created | date }}</td>
         <td><i class="icon-circle-arrow-right"></i></td>
-        <td>{{ "alias" | get_attribute(owner.user_id, "User") }}</td>
         <td>{{ owner.reason }}</td>
-      </tr>              
+      </tr>
+       {% if not owner.active %}
+      <tr>
+        <td></td>
+        <td>{{ owner.date_updated | date }}</td>
+        <td><i class="icon-circle-arrow-left"></i></td>
+        <td>Unassigned</td>
+      </tr>
+       {% endif %}           
       {% endfor %}
     </tbody>
   </table>

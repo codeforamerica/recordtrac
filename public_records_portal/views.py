@@ -16,6 +16,7 @@ from requests import get
 from time import time
 from flask.ext.cache import Cache
 from recaptcha.client import captcha
+from timeout import timeout
 
 # Initialize login
 login_manager = LoginManager()
@@ -179,47 +180,50 @@ def close(request_id = None):
 	return render_template('error.html', message = "You can only close from a requests page!")
 
 # Shows all public records requests that have been made.
+@timeout(seconds=20)
 def requests():
-	# Return first 100, ? limit = 100
-	departments_json = open(os.path.join(app.root_path, 'static/json/list_of_departments.json'))
-	list_of_departments = json.load(departments_json)
-	departments = sorted(list_of_departments, key=unicode.lower)
-	filters = {}
-	open_requests = False
-	my_requests = False
-	requester_name = ""
-	dept_selected = "All departments"
-	if request.method == 'GET':
-		filters = request.args.copy()
-		if not filters:
-			if not current_user.is_anonymous():
-				my_requests = True
-				filters['owner'] = current_user.id
-				open_requests = True
+	try:
+		departments_json = open(os.path.join(app.root_path, 'static/json/list_of_departments.json'))
+		list_of_departments = json.load(departments_json)
+		departments = sorted(list_of_departments, key=unicode.lower)
+		my_requests = False
+		requester_name = ""
+		dept_selected = "All departments"
+		open_requests = True
+		if request.method == 'GET':
+			filters = request.args.copy()
+			if not filters:
+				if not current_user.is_anonymous():
+					my_requests = True
+					filters['owner'] = current_user.id
 				filters['status'] = 'open'
+			else:
+				if 'department' in filters and filters['department'].lower() == 'all':
+					del filters['department']
+				if not ('status' in filters and filters['status'].lower() == 'open'):
+					open_requests = False
+				if 'department' in filters:
+					dept_selected = filters['department']
+				if 'owner' in filters and not current_user.is_anonymous():
+					my_requests = True
+				if 'requester' in filters and current_user.is_anonymous():
+					del filters['requester']
+		record_requests = get_request_table_data(get_requests_by_filters(filters))
+		user_id = get_user_id()
+		if record_requests:
+			template = 'all_requests.html'
+			if user_id: 
+				template = 'all_requests_city.html'
 		else:
-			if 'department' in filters and filters['department'].lower() == 'all':
-				del filters['department']
-			if 'status' in filters and filters['status'].lower() == 'open':
-				open_requests = True
-			if 'department' in filters:
-				dept_selected = filters['department']
-			# 	if dept_selected != "All departments":
-			# 		filters['department'] = request.args['department_filter']
-			if 'owner' in filters and not current_user.is_anonymous():
-				my_requests = True
-			if 'requester' in filters and current_user.is_anonymous():
-				del filters['requester']
-	record_requests = get_request_table_data(get_requests_by_filters(filters))
-	user_id = get_user_id()
-	if record_requests:
-		template = 'all_requests.html'
-		if user_id: 
-			template = 'all_requests_city.html'
-	else:
-		template = "all_requests_noresults.html"
-	total_requests_count = get_count("Request")
-	return render_template(template, record_requests = record_requests, user_id = user_id, title = "All Requests", open_requests = open_requests, departments = departments, dept_selected = dept_selected, my_requests = my_requests, total_requests_count = total_requests_count, requester_name = requester_name)
+			template = "all_requests_noresults.html"
+		total_requests_count = get_count("Request")
+		return render_template(template, record_requests = record_requests, user_id = user_id, title = "All Requests", open_requests = open_requests, departments = departments, dept_selected = dept_selected, my_requests = my_requests, total_requests_count = total_requests_count, requester_name = requester_name)
+	except Exception, message:
+		if "Too long" in message:
+			message = "Loading requests is taking a while. Try exploring with more restricted search options."
+			app.logger.info("\n\nLoading requests timed out.")
+		return render_template('error.html', message = message, user_id = get_user_id())
+
 
 @login_manager.unauthorized_handler
 def unauthorized():

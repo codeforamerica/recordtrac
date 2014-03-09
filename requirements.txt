@@ -15,3 +15,4 @@ alembic==0.5.0
 Flask-Admin==1.0.6
 Flask-Cache==0.12
 recaptcha-client==1.0.6
+pytz==2012d

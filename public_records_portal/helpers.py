@@ -6,6 +6,11 @@ from jinja2 import Markup
 from db_helpers import *
 from notifications import *
 import akismet
+import pytz
+
+def localize(datetime_str):
+	tz = pytz.timezone("US/Pacific") # This should eventually be set dynamically
+	return datetime_str.replace(tzinfo=pytz.utc).astimezone(tz) # This appears to work in Heroku but not locally
 
 def date_granular(timestamp):
 	if not timestamp:
@@ -40,15 +45,12 @@ def date(obj):
 	if not obj:
 		return None
 	try:
-		return format_date(obj.date())
+		return format_date(obj)
 	except: # Not a datetime object
-		try:
-			return format_date(datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f").date())
-		except:
-			return format_date(obj) # Just return the thing, maybe it's already a date
+ 		return format_date(datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f"))
 
 def timestamp(obj):
-	return obj.strftime('%H:%M:%S')
+	return localize(obj).strftime('%H:%M:%S')
 
 
 def tutorial(section):

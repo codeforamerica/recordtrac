@@ -6,6 +6,8 @@ from db_helpers import *
 from departments import *
 import sendgrid
 from flask import render_template
+import helpers
+import logging
 
 # Set flags:
 
@@ -20,6 +22,7 @@ elif 'DEV_EMAIL' in app.config:
 
 ### @export "generate_prr_emails"
 def generate_prr_emails(request_id, notification_type, user_id = None):
+	app.logger.info("\n\n Generating e-mails for request with ID: %s, notification type: %s, and user ID: %s" %(request_id, notification_type, user_id))
 	app_url = app.config['APPLICATION_URL'] 
 	# Define the e-mail template:
 	template = "generic_email.html" 
@@ -32,12 +35,14 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 	include_unsubscribe_link = True
 	unfollow_link = None 
 	for recipient_type in recipient_types:
+		# Skip anyone that has unsubscribed
 		if user_id and (recipient_type == "Requester" or recipient_type == "Subscriber"):
 			subscriber = get_subscriber(request_id = request_id, user_id = user_id)
 			should_notify = get_attribute(attribute = "should_notify", obj = subscriber)
 			if should_notify == False:
-				print "Person unsubscribed, no notification sent."
+				app.logger.info("\n\nSubscriber %s unsubscribed, no notification sent." % subscriber.id)
 				continue
+		# Set up the e-mail
 		page = "%srequest/%s" %(app_url,request_id) # The request URL 
 		if "Staff" in recipient_type:
 			page = "%scity/request/%s" %(app_url,request_id)
@@ -71,16 +76,19 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 			recipients = []
 			participants = get_attribute(attribute = "owners", obj_id = request_id, obj_type = "Request")
 			for participant in participants:
-				recipient = get_attribute(attribute = "email", obj_id = participant.user_id, obj_type = "User")
-				if recipient:
-					recipients.append(recipient)
+				if participant.active: # Only send an e-mail if they are active in the request
+					recipient = get_attribute(attribute = "email", obj_id = participant.user_id, obj_type = "User")
+					if recipient:
+						recipients.append(recipient)
 			send_prr_email(page = page, recipients = recipients, subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = False, unfollow_link = unfollow_link)
+			app.logger.info("\n\nRecipients: %s" % recipients)
 		else:
 			print recipient_type
 			print "Not a valid recipient type"
 
 ### @export "send_prr_email"
 def send_prr_email(page, recipients, subject, template, include_unsubscribe_link = True, cc_everyone = False, password = None, unfollow_link = None):
+	app.logger.info("\n\nAttempting to send an e-mail to %s with subject %s, referencing page %s and template %s" % (recipients, subject, page, template))
 	if recipients:
 		if send_emails:
 			try:
@@ -125,12 +133,12 @@ def due_date(date_obj, extended = None, format = True):
 		date_obj = datetime.strptime(date_obj, "%Y-%m-%dT%H:%M:%S.%f")
 	due_date = date_obj + timedelta(days = days_to_fulfill)
 	if format:
-		return format_date(due_date.date())
-	return due_date.date()
+		return format_date(due_date)
+	return due_date
 
 ### @export "is_due_soon"
 def is_due_soon(date_obj, extended = None):
-	current_date = datetime.now().date()
+	current_date = datetime.now()
 	due = due_date(date_obj = date_obj, extended = extended, format = False)
 	num_days = 2
 	if not (current_date >= due): # if not overdue
@@ -140,7 +148,7 @@ def is_due_soon(date_obj, extended = None):
 
 ### @export "is_overdue"
 def is_overdue(date_obj, extended = None):
-	current_date = datetime.now().date()
+	current_date = datetime.now()
 	due = due_date(date_obj = date_obj, extended = extended, format = False)
 	if (current_date >= due):
 		return True, due
@@ -213,6 +221,6 @@ def should_notify(user_email):
 ### @export "format_date"
 def format_date(obj):
 	""" Take a datetime object and return it in format Jun 12, 2013 """
-	return obj.strftime('%b %d, %Y')
+	return helpers.localize(obj).strftime('%b %d, %Y')
 
 
