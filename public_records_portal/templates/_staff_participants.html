@@ -1,6 +1,10 @@
 {% for owner in req.owners %}
-	{% set participant = (owner | display_staff_participant(req)) %} 
-	{% if participant %}
-		{{ participant }} </br>
+	{% if owner.active %}
+		{% set participant = (owner | display_staff_participant(req)) %} 
+		{% if participant %}
+			{{ participant }} </br>
+		{% endif %}
 	{% endif %}
 {% endfor %}
+
+

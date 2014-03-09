@@ -13,6 +13,7 @@ from sqlalchemy import func, not_
 import uuid
 import json
 import os
+import logging 
 
 ### @export "get_requester"
 def get_requester(request_id): 
@@ -92,7 +93,8 @@ def get_dept_by_request(request):
 		try:
 			point_of_contact = User.query.get(Owner.query.get(request.current_owner).user_id)
 			return point_of_contact.department
-		except:
+		except Exception, e:
+			app.logger.info("\n\nThere was an error getting a department for request with ID %s: %s" %(request.id, e))
 			return None
 	return request.department
 
@@ -162,7 +164,8 @@ def get_requests_by_filters(filters_dict):
 		else:
 			try:
 				request_attr = getattr(Request, attr)
-			except AttributeError:
+			except AttributeError, e:
+				
 				continue
 			else:
 				q = q.filter(request_attr).like("%%%s%%" % value)
@@ -337,15 +340,18 @@ def find_owner(request_id, user_id):
 ### @export "add_staff_participant"
 def add_staff_participant(request_id, email = None, user_id = None, reason = None):
 	""" Creates an owner for the request if it doesn't exist, and returns the owner ID and True if a new one was created. Returns the owner ID and False if existing."""
+	is_new = True
 	if not user_id:
 		user_id = create_or_return_user(email = email)
 	participant = Owner.query.filter_by(request_id = request_id, user_id = user_id).first()
 	if not participant:
 		participant = Owner(request_id = request_id, user_id = user_id, reason = reason)
-		db.session.add(participant)
-		db.session.commit()
-		return participant.id, True
-	return participant.id, False
+	else:
+		participant.active = True
+		is_new = False
+	db.session.add(participant)
+	db.session.commit()
+	return participant.id, is_new
 
 ### @export "authenticate_login"
 def authenticate_login(email, password):
