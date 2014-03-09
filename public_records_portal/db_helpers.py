@@ -343,15 +343,26 @@ def add_staff_participant(request_id, email = None, user_id = None, reason = Non
 	is_new = True
 	if not user_id:
 		user_id = create_or_return_user(email = email)
-	participant = Owner.query.filter_by(request_id = request_id, user_id = user_id).first()
+	participant = Owner.query.filter_by(request_id = request_id, user_id = user_id, active = True).first()
 	if not participant:
+		if not reason:
+			reason = "Added a response"
 		participant = Owner(request_id = request_id, user_id = user_id, reason = reason)
 	else:
-		participant.active = True
 		is_new = False
+		app.logger.info("\n\nStaff participant with owner ID: %s already active on request %s" %(participant.id, request_id))
 	db.session.add(participant)
 	db.session.commit()
 	return participant.id, is_new
+
+### @export "remove_staff_participant"
+def remove_staff_participant(owner_id, reason = None):
+	participant = Owner.query.get(owner_id)
+	participant.active = False
+	participant.date_updated = datetime.now().isoformat()
+	db.session.add(participant)
+	db.session.commit()
+
 
 ### @export "authenticate_login"
 def authenticate_login(email, password):
