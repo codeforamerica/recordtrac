@@ -50,7 +50,7 @@ class Request(db.Model):
 	status_updated = db.Column(db.DateTime)
 	text = db.Column(db.String(), unique=True) # The actual request text.
 	subscribers = relationship("Subscriber", cascade ="all, delete") # The list of subscribers following this request.
-	owners = relationship("Owner", cascade="all,delete") # The list of city staff ever assigned to the request.
+	owners = relationship("Owner", cascade="all,delete", order_by = "Owner.date_created.asc()") # The list of city staff ever assigned to the request.
 	current_owner = db.Column(db.Integer) # The Owner ID for the city staff that currently 'owns' the request.
 	records = relationship("Record", cascade="all,delete", order_by = "Record.date_created.desc()") # The list of records that have been uploaded for this request.
 	notes = relationship("Note", cascade="all,delete", order_by = "Note.date_created.desc()") # The list of notes appended to this request.
