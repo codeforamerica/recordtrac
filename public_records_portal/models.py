@@ -81,17 +81,17 @@ class Request(Base):
                 return self.point_person.user.alias
 
         def is_closed(self):
-                return re.match('.*(closed).*', self.status) is not None
+                return re.match('.*(closed).*', self.status, re.IGNORECASE) is not None
 
         def solid_status(self):
-                if self.is_closed:
+                if self.is_closed():
                         return "closed"
                 else:
                         return "open"
 
 ### @export "QA"
 class QA(Base):
-# A Q & A block for a request 
+# A Q & A block for a request
 	__tablename__ = 'qa'
 	id = db.Column(db.Integer, primary_key = True)
 	question = db.Column(db.String())

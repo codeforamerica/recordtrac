@@ -9,7 +9,8 @@
       page_number: 1,
       // Using an attribute called 'page' makes weird things happen here. JFYI.
       per_page: 10,
-      num_results: 0
+      num_results: 0,
+      is_closed: false
     },
 
     prev_page: function ()
@@ -48,7 +49,8 @@
 
       var data_params = {
         // "results_per_page": this._query.get("per_page"),
-        "page": this._query.get("page_number")
+        "page": this._query.get("page_number"),
+        "is_closed": this._query.get("is_closed")
       }
 
       var search_term = this._query.get("search_term")
@@ -85,23 +87,23 @@
 
     render: function ()
     {
-      var variables = {
-        current_results: this.model.per_page,
-        total_requests: this.model.total_requests
+      var vars = {
+        "is_closed": this.model.get( "is_closed" )
       }
-      var template = _.template( $("#sidebar_template").html(), variables );
+      var template = _.template( $("#sidebar_template").html(), vars );
       this.$el.html( template );
     },
 
     events:
     {
-      "click #filterbox input[type=checkbox]": "change_search",
-      "change #filterbox .selectpicker": "change_search"
+      "click #filterbox input[type=checkbox]": "toggle_show_closed"
     },
 
-    change_search: function ()
+    toggle_show_closed: function ( event )
     {
-      this.model.set( { "total_requests": this.model.get( "total_requests" ) + 10 } )
+      this.model.set( {
+        "is_closed": !( this.model.get( "is_closed" ) )
+      } )
     }
 
   });

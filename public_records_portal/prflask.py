@@ -3,7 +3,7 @@ from views import * # Import all the functions that render templates
 from flask.ext.restless import APIManager
 from flask.ext.admin import Admin, expose, BaseView, AdminIndexView
 from flask.ext.admin.contrib.sqlamodel import ModelView
-from flask import jsonify, request
+from flask import jsonify, request, Response
 import anyjson
 
 @app.route("/api/request")
@@ -24,6 +24,14 @@ def fetch_requests():
     search_term = request.args.get('search')
     if search_term:
         results = results.filter("to_tsvector(text) @@ to_tsquery('" + search_term + "')")
+        
+    # Filter based on current request status.
+    is_closed = request.args.get('is_closed')
+    if is_closed != None:
+        if is_closed.lower() == "true":
+            results = results.filter(Request.status.ilike("%closed%"))
+        elif is_closed.lower() == "false":
+            results = results.filter(~Request.status.ilike("%closed%"))
 
     results = results \
         .limit(limit) \
@@ -38,14 +46,15 @@ def fetch_requests():
                               # The following two attributes are defined as model methods,
                               # and not regular SQLAlchemy attributes.
                               "contact_name": r.contact_name(), \
-                              "solid_status": r.solid_status()
+                              "solid_status": r.solid_status(), \
+                              "status":       r.status
                           }, results)
     matches = {
         "objects": results
     }
 
     response = anyjson.serialize(matches)
-    return response
+    return Response(response, mimetype = "application/json")
 
 # Create API
 manager = APIManager(app, flask_sqlalchemy_db=db)

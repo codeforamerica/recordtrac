@@ -65,7 +65,9 @@
                 <% _.each( requests, function( request ) { %>                
                   <tr>
                     <td class="status <%= request.solid_status %>">
-                      <i class="icon-archive icon-light"></i>
+                      <% if ( request.solid_status === "closed" ) { %>
+                        <i class="icon-archive icon-light"></i>
+                      <% } %>
                     </td>
                     <td><%= request.id %></td>
                     <td><%= moment(request.date_created).format("MMM Do, YYYY") %></td>
@@ -121,9 +123,9 @@
                          value="open"
                          name="status"
                          id="status" 
-                         {% if open_requests %}
+                         <% if ( !is_closed ) { %>
                            checked
-                         {% endif %}>
+                         <% } %> >
                   Open requests
                 </label>               
               </fieldset>
