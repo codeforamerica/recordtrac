@@ -189,7 +189,7 @@ def close(request_id = None):
 	return render_template('error.html', message = "You can only close from a requests page!")
 
 # Shows all public records requests that have been made.
-@timeout(seconds=20)
+@timeout(seconds=25)
 def requests():
 	try:
 		departments_json = open(os.path.join(app.root_path, 'static/json/list_of_departments.json'))
