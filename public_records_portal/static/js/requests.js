@@ -96,7 +96,7 @@
 
     events:
     {
-      "click #filterbox input[type=checkbox]": "toggle_show_closed"
+      "click #status": "toggle_show_closed"
     },
 
     toggle_show_closed: function ( event )

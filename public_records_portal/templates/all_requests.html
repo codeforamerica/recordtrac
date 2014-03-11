@@ -24,31 +24,39 @@
 
 {% block container %}
   <div class="row-fluid">
-    <div class="span8 offset1">
+    <div class="span11 offset1">
 
-      <div id="exploreTitle" class="row-fluid">
-        <h3>Explore <span class="badge"> {{total_requests_count}}</span> requests and counting</h3>
-        <a href="/new" class="btn btn-primary btn-large pull-right">Request new record</a>
-      </div>
-
+      {# 'Explore' and 'Request new' button. #}
       <div class="row-fluid">
-        <p class="intro_text">RecordTrac makes every public records request available to the public, including messages or documents uploaded by city staff. Search through current and past requests. You may find what you need!</p>
+        <div class="span9">
+          <div id="exploreTitle">
+            <h3>Explore <span class="badge">{{total_requests_count}}</span> requests and counting</h3>
+            <a href="/new" class="btn btn-primary btn-large pull-right">Request new record</a>
+          </div>
+        </div>
       </div>
 
-      <div>
-        {% block datatable %}
-          <script type="text/template" id="search_field_template">
-            <div class="row">
-              <div class="span6 offset8">
-                <div id="search">
-                  <label>Search</label>
-                  <input type="text" placeholder="I'd like to find...">
-                </div>
-              </div>
-            </div>
-          </script>
-          <div id="search_field_container"></div>
+      {# Blurb about what RecordTrac does. #}
+      <div class="row-fluid">
+        <div class="span9">
+          <p class="intro_text">RecordTrac makes every public records request available to the public, including messages or documents uploaded by city staff. Search through current and past requests. You may find what you need!</p>
+        </div>
+      </div>
 
+      {# Search field. #}
+      <div class="row-fluid">
+        <div id="search_field_container" class="span9"></div>
+        <script type="text/template" id="search_field_template">
+          <div id="search" class="pull-right">
+            <label>Search</label>
+            <input type="text" placeholder="I'd like to find...">
+          </div>
+        </script>
+      </div>
+
+      {# Search results table. #}
+      <div class="row-fluid">
+        <div class="span9" id="search_results_container"></div>
           <script type="text/template" id="search_results_template">
             <table id="requests">
               <thead>
@@ -86,36 +94,18 @@
                 <% } ); %>
               </tbody>
             </table>
-            <div class="row">
-              <div class="span6">
-                <div class="dataTables_info" id="allrequestTable_info">
-                  
-                </div>
-              </div>
-              <div class="span6">
-                <div class="pagination">
-                  <ul>
-                    {# <li class="prev"><a href="javascript:void(0)">Prev</a></li> #}
-                    <li class="next"><a href="javascript:void(0)">Next</a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </script>
-          <div id="search_results_container">
-            <i class="fa fa-spinner"></i>
-            <p>Loading...</p>
+          <div class="pull-right pagination">
+            <ul>
+              <li class="next"><a href="javascript:void(0)">Next</a></li>
+            </ul>
           </div>
-        {% endblock datatable %}
-      </div>
-    </div>
-
-    <div class="span3">
-      {% block sidebar %}
+        </script>
+          <div class="span2">
+        <div id="sidebar_container"></div>
         <script type="text/template" id="sidebar_template">                                         
-          <div id="filterbox" class="well r_sidebar r_sidebar-fixed">
-            <h4>View</h4>
-            <form name="filterPublic" class="form-horizontal" id="filterPublic" method="get" action="/requests">
+          <div id="filterbox" class="well">
+            <h4>View</h4> 
+            <form>
               <fieldset>
                 <label class="checkbox">
                   <input type="checkbox"
@@ -132,8 +122,8 @@
             </form>
           </div>
         </script>
-        <div id="sidebar_container"></div>
-      {% endblock sidebar %}
+      </div>
+      </div>              
     </div>
   </div>
 {% endblock container%}
