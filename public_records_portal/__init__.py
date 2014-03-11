@@ -14,10 +14,10 @@ app = Flask(__name__)
 app.debug = True
 
 # Set environment variables
-def set_env(key, default):
+def set_env(key, default = None):
 	if key in environ:
 		app.config[key] = environ[key]
-	else:
+	elif default:
 		app.config[key] = default
 
 # UPDATES TO THESE DEFAULTS SHOULD OCCUR IN YOUR .env FILE.
@@ -28,7 +28,7 @@ set_env(key = 'SQLALCHEMY_DATABASE_URI', default = "postgresql://localhost/recor
 set_env(key = 'ENVIRONMENT', default="LOCAL")
 # Set the default records liaison, this matters more in a production environment:
 set_env(key = 'DEFAULT_OWNER_EMAIL', default = '')
-set_env(key = 'DEFAULT_OWNER_REASON', default = '' )
+set_env(key = 'DEFAULT_OWNER_REASON', default = 'Default' )
 # If you set up Sendgrid or another e-mail service:
 set_env(key = 'DEFAULT_MAIL_SENDER', default = '')  # The e-mail address used as the FROM field for all notifications
 set_env(key = 'MAIL_USERNAME', default='') # The SendGrid username
@@ -52,10 +52,15 @@ set_env(key = 'RECAPTCHA_PRIVATE_KEY', default = "")
 # The name of your agency, e.g. City of Oakland:
 set_env(key = 'AGENCY_NAME', default = '')
 
+# No defaults should be set for this.  Used for local e-mail testing.
+set_env(key = 'DEV_EMAIL')
+
 
 # Initialize database
 db = SQLAlchemy(app)
+
 logging.basicConfig()
 logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
 app.logger.info("\n\nFresh request!")
+

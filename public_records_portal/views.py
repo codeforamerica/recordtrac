@@ -184,7 +184,6 @@ def close(request_id = None):
 def requests():
 	app.logger.debug("Processing requests.")
 	try:
-		# Return first 100, ? limit = 100
 		departments_json = open(os.path.join(app.root_path, 'static/json/list_of_departments.json'))
 		list_of_departments = json.load(departments_json)
 		departments = sorted(list_of_departments, key=unicode.lower)
@@ -206,8 +205,6 @@ def requests():
 					open_requests = False
 				if 'department' in filters:
 					dept_selected = filters['department']
-				# 	if dept_selected != "All departments":
-				# 		filters['department'] = request.args['department_filter']
 				if 'owner' in filters and not current_user.is_anonymous():
 					my_requests = True
 				if 'requester' in filters and current_user.is_anonymous():
@@ -238,7 +235,7 @@ def requests():
 	except Exception, message:
 		if "Too long" in message:
 			message = "Loading requests is taking a while. Try exploring with more restricted search options."
-			print message
+			app.logger.info("\n\nLoading requests timed out.")
 		return render_template('error.html', message = message, user_id = get_user_id())
 
 @login_manager.unauthorized_handler
