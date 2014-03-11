@@ -60,12 +60,12 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 						unfollow_link = unfollow_link + recipient
 					send_prr_email(page = page, recipients = [recipient], subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link, unfollow_link = unfollow_link)
 			else:
-				print "Can't send an e-mail out if no user exists."
+				app.logger.debug("\n\n No user ID provided")
 		elif recipient_type == "Subscribers":
 			subscribers = get_attribute(attribute = "subscribers", obj_id = request_id, obj_type = "Request")
 			for subscriber in subscribers:
 				if subscriber.should_notify == False:
-					print "Person unsubscribed, no notification sent."
+					app.logger.info("\n\n Subscriber %s unsubscribed" % subscriber.id)
 					continue
 				recipient = get_attribute(attribute = "email", obj_id = subscriber.user_id, obj_type = "User")
 				if recipient:
@@ -83,8 +83,7 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 			send_prr_email(page = page, recipients = recipients, subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = False, unfollow_link = unfollow_link)
 			app.logger.info("\n\nRecipients: %s" % recipients)
 		else:
-			print recipient_type
-			print "Not a valid recipient type"
+			app.logger.info("Not a valid recipient type: %s" % recipient_type)
 
 ### @export "send_prr_email"
 def send_prr_email(page, recipients, subject, template, include_unsubscribe_link = True, cc_everyone = False, password = None, unfollow_link = None):
@@ -93,10 +92,11 @@ def send_prr_email(page, recipients, subject, template, include_unsubscribe_link
 		if send_emails:
 			try:
 				send_email(body = render_template(template, unfollow_link = unfollow_link, logo_url = "%sstatic/images/CityTree_logo_green.jpg" %(app.config['APPLICATION_URL'] ), page = page, password = password), recipients = recipients, subject = subject, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = cc_everyone)
-			except:
-				print "E-mail was not sent."
+				app.logger.info("\n\n E-mail sent successfully!")
+			except Exception, e:
+				app.logger.info("\n\nThere was an error sending the e-mail: %s" % e)
 		else:
-			print "template:%s page:%s to %s with subject %s" % (template, page, recipients, subject)
+			app.logger.info("\n\n E-mail flag turned off, no e-mails sent.")
 
 ### @export "send_email"
 def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_everyone = False):
@@ -119,8 +119,10 @@ def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_ev
 			# if should_notify(recipient):
 				message.add_to(recipient)
 	message.add_bcc(sender)
-	status, msg = mail.web.send(message)
-	print status
+	status = mail.web.send(message)
+	if status == False:
+		app.logger.info("\n\nSendgrid did not deliver e-mail.")
+	return status
 
 ### @export "due_date"
 def due_date(date_obj, extended = None, format = True):

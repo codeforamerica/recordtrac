@@ -17,6 +17,7 @@ from notifications import generate_prr_emails
 import scribd_helpers
 from db_helpers import *
 from spam import is_spam
+import logging
 
 ### @export "add_resource"
 def add_resource(resource, request_body, current_user_id = None):
@@ -155,7 +156,7 @@ def make_request(text, email = None, user_id = None, phone = None, alias = None,
 			assigned_to_email = prr_email
 			assigned_to_reason = "PRR Liaison for %s" %(department)
 		else:
-			print "%s is not a valid department" %(department)
+			app.logger.info("%s is not a valid department" %(department))
 			department = None
 	request_id = create_request(text = text, user_id = user_id, department = department) # Actually create the Request object
 	new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email) # Assign someone to the request

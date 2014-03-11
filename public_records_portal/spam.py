@@ -1,5 +1,6 @@
 from public_records_portal import app
 import akismet
+import logging
 
 def is_spam(comment):
 	key = app.config['AKISMET_KEY']
@@ -7,6 +8,7 @@ def is_spam(comment):
 	if isinstance(comment, unicode):
 		comment = comment.encode('utf8', 'ignore')
 	if akismet.comment_check(key = key, blog = blog, user_ip = '127.0.0.1', user_agent = 'Mozzila/5.0 (...) Gecko/20051111 Firefox/1.5', comment_content = comment) or 'http' in comment:
+		app.logger.info("Spam detected: %s" % comment )
 		return True
 	return False
 
