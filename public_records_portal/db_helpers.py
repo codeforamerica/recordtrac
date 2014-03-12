@@ -125,7 +125,7 @@ def get_contact_by_dept(dept):
 	q = db.session.query(User).filter(func.lower(User.contact_for).like("%%%s%%" % dept.lower()))
 	if len(q.all()) > 0:
 		return q[0].email
-	print dept
+	app.logger.debug("Department: %s" % dept)
 	return None
 
 ### @export "get_backup_by_dept"
@@ -134,7 +134,7 @@ def get_backup_by_dept(dept):
 	q = db.session.query(User).filter(func.lower(User.backup_for).like("%%%s%%" % dept.lower()))
 	if len(q.all()) > 0:
 		return q[0].email
-	print dept
+	app.logger.debug("Department: %s" % dept)
 	return None
 
 ### @export "get_requests_by_filters"
@@ -241,17 +241,19 @@ def create_note(request_id, text, user_id):
 		note = Note(request_id = request_id, text = text, user_id = user_id)
 		put_obj(note)
 		return note.id
-	except:
+	except Exception, e:
+		app.logger.info("\n\nThere was an issue with creating a note with text: %s %s" % (text, e))
 		return None
 
 ### @export "create_record"
 def create_record(request_id, user_id, description, doc_id = None, filename = None, access = None, url = None):
-	# try:
+	try:
 		record = Record(doc_id = doc_id, request_id = request_id, user_id = user_id, description = description, filename = filename, url = url, access = access)
 		put_obj(record)
 		return record.id
-	# except:
-		# return None
+	except Exception, e:
+		app.logger.info("\n\nThere was an issue with creating a record: %s" % e)
+		return None
 
 def remove_obj(obj_type, obj_id):
 	obj = get_obj(obj_type, obj_id)
@@ -275,7 +277,8 @@ def create_or_return_user(email=None, alias = None, phone = None, department = N
 		if not user:
 			user = create_user(email = email, alias = alias, phone = phone, department = department)
 		else:
-			user = update_user(user, alias, phone, department)
+			if alias or phone or department: # Update user if fields to update are provided
+				user = update_user(user, alias, phone, department)
 		if not_id:
 			return user
 		return user.id
@@ -288,6 +291,7 @@ def create_user(email=None, alias = None, phone = None, department = None):
 	user = User(email = email, alias = alias or "Anonymous", phone = phone, department = department, password = app.config['ADMIN_PASSWORD'])
 	db.session.add(user)
 	db.session.commit()
+	app.logger.info("\n\nCreated new user, alias: %s id: %s" % (user.alias, user.id))
 	return user
 
 ### @export "update_user"
@@ -302,6 +306,7 @@ def update_user(user, alias = None, phone = None, department = None):
 		user.password = app.config['ADMIN_PASSWORD']
 	db.session.add(user)
 	db.session.commit()
+	app.logger.info("\n\nUpdated user %s, alias: %s phone: %s department: %s" % (user.id, alias, phone, department))
 	return user
 
 ### @export "create_owner"
@@ -313,6 +318,7 @@ def create_owner(request_id, reason, email = None, user_id = None):
 	participant = Owner(request_id = request_id, user_id = user_id, reason = reason)
 	db.session.add(participant)
 	db.session.commit()
+	app.logger.info("\n\nCreated owner with id: %s" % participant.id)
 	return participant.id
 
 ### @export "change_request_status"
@@ -321,6 +327,7 @@ def change_request_status(request_id, status):
 	req.status = status
 	req.status_updated = datetime.now().isoformat()
 	db.session.add(req)
+	app.logger.info("\n\nChanged status for request: %s to %s" % (request_id, status))
 	db.session.commit()
 
 ### @export "find_request"
@@ -408,6 +415,7 @@ def update_subscriber(request_id, alias, phone):
 	sub.user_id = user_id
 	db.session.add(sub)
 	db.session.commit()
+	app.logger.info("\n\nUpdated subscriber for request %s with alias: %s and phone: %s" % (request_id, alias, phone))
 
 ### @export "get_viz_data"
 def get_viz_data():

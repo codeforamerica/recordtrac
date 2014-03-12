@@ -20,7 +20,7 @@
         <td>{{ "alias" | get_attribute(owner.user_id, "User") }}</td>
         <td>{{ owner.date_created | date }}</td>
         <td><i class="icon-circle-arrow-right"></i></td>
-        <td>{{ owner.reason }}</td>
+        <td>{{ owner.reason or "N/A"}}</td>
       </tr>
        {% if not owner.active %}
       <tr>

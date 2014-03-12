@@ -26,6 +26,11 @@ login_manager.init_app(app)
 cache = Cache()
 cache.init_app(app, config={'CACHE_TYPE': 'simple'})
 
+# Set flags:
+
+check_for_spam = True
+if app.config['ENVIRONMENT'] == 'PRODUCTION':
+	check_for_spam = True
 
 # Submitting a new request
 def new_request(passed_recaptcha = False, data = None):
@@ -38,7 +43,7 @@ def new_request(passed_recaptcha = False, data = None):
 			return render_template('error.html', message = "You cannot submit an empty request.")
 		if email == "" and 'ignore_email' not in data and not passed_recaptcha:
 			return render_template('missing_email.html', form = data, user_id = get_user_id())
-		if (app.config['ENVIRONMENT'] == 'PRODUCTION') and is_spam(request_text) and not passed_recaptcha:
+		if check_for_spam and is_spam(request_text) and not passed_recaptcha:
 			return render_template('recaptcha.html', form = data, message = "Hmm, your request looks like spam. To submit your request, type the numbers or letters you see in the field below.", public_key = app.config['RECAPTCHA_PUBLIC_KEY'])
 		alias = None
 		phone = None
@@ -46,11 +51,12 @@ def new_request(passed_recaptcha = False, data = None):
 			alias = data['request_alias']
 		if 'request_phone' in data:
 			phone = data['request_phone']
-		request_id, is_new = make_request(text = request_text, email = email, user_id = get_user_id(), alias = alias, phone = phone, passed_recaptcha = passed_recaptcha)
+		request_id, is_new = make_request(text = request_text, email = email, user_id = get_user_id(), alias = alias, phone = phone, passed_recaptcha = passed_recaptcha, department = data['request_department'])
 		if is_new:
 			return redirect(url_for('show_request_for_x', request_id = request_id, audience = 'new'))
 		if not request_id:
 			return render_template('error.html', message = "Your request looks a lot like spam.")
+		app.logger.info("\n\nDuplicate request entered: %s" % request_text)
 		return render_template('error.html', message = "Your request is the same as /request/%s" % request_id)
 	else:
 		doc_types = os.path.exists(os.path.join(app.root_path, 'static/json/doctypes.json'))
@@ -141,10 +147,13 @@ def add_a_resource(resource):
 	if request.method == 'POST':
 		resource_id = add_resource(resource = resource, request_body = request, current_user_id = current_user.id)
 		if type(resource_id) == int or str(resource_id).isdigit():
+			app.logger.info("\n\nSuccessfully added resource: %s with id: %s" % (resource, resource_id))
 			return redirect(url_for('show_request_for_x', audience='city', request_id = request.form['request_id']))
 		elif resource_id == False:
+			app.logger.info("\n\nThere was an issue with adding resource: %s" % resource)
 			return render_template('error.html')
 		else:
+			app.logger.info("\n\nThere was an issue with the upload: %s" % resource_id)
 			return render_template('help_with_uploads.html', message = resource_id)
 	return render_template('error.html', message = "You can only update requests from a request page!")
 
@@ -260,7 +269,9 @@ def any_page(page):
 		return render_template('error.html', message = "%s totally doesn't exist." %(page), user_id = get_user_id())
 
 def tutorial():
-	return render_template('tutorial.html', user_id = get_user_id())
+	user_id = get_user_id()
+	app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
+	return render_template('tutorial.html', user_id = user_id)
 
 def login(email=None, password=None):
 	if request.method == 'POST':
@@ -277,7 +288,9 @@ def login(email=None, password=None):
 					redirect_url = redirect_url.replace("/request/", "/city/request/")
 				return redirect(redirect_url)
 		else:
+			app.logger.info("\n\nLogin failed (due to incorrect e-mail/password combo) for email: %s." % email)
 			return render_template('error.html', message = "Your e-mail/ password combo didn't work. You can always <a href='/reset_password'>reset your password</a>.")
+	app.logger.info("\n\nLogin failed for email: %s." % email)
 	return render_template('error.html', message="Something went wrong.")
 
 def reset_password(email=None):
@@ -286,8 +299,10 @@ def reset_password(email=None):
 		password = set_random_password(email)
 		if password:
 			send_prr_email(page = app.config['APPLICATION_URL'], recipients = [email], subject = "Your temporary password", template = "password_email.html", include_unsubscribe_link = False, password = password)
+			app.logger.info("\n\nPassword reset sent for email: %s." % email)
 			message = "Thanks! You should receive an e-mail shortly with instructions on how to login and update your password."
 		else:
+			app.logger.info("\n\nPassword reset attempted and denied for email: %s." % email)
 			message = "Looks like you're not a user already. Currently, this system requires logins only for city employees. "
 	return render_template('reset_password.html', message = message)
 
@@ -297,8 +312,10 @@ def update_password(password=None):
 	if request.method == 'POST':
 		if set_password(current_user, request.form['password']):
 			return index()
+		app.logger.info("\n\nFailure updating password for user " % current_user.id)
 		return render_template('error.html', message = "Something went wrong updating your password.")
 	else:
+		app.logger.info("\n\nSuccessfully updated password for user " % current_user.id)
 		return render_template('update_password.html', user_id = current_user.id)
 
 def staff_card(user_id):
@@ -317,11 +334,11 @@ def get_user_id():
 # See new_requests.(html/js)
 def is_public_record():
 	request_text = request.form['request_text']
-
 	not_records_filepath = os.path.join(app.root_path, 'static/json/notcityrecords.json')
 	not_records_json = open(not_records_filepath)
 	json_data = json.load(not_records_json)
 	request_text = request_text.lower()
+	app.logger.info("Someone input %s" %(request_text))
 	if "birth" in request_text or "death" in request_text or "marriage" in request_text:
 		return json_data["Certificate"]
 	if "divorce" in request_text:
@@ -358,6 +375,7 @@ def recaptcha():
 		else:
 			return new_request(passed_recaptcha = True, data = request.form)
 	else:
+		app.logger.info("\n\nAttempted access to recaptcha not via POST")
 		return render_template('error.html', message = "You don't need to be here.")
 
 def well_known_status():
