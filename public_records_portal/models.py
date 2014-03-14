@@ -2,7 +2,6 @@ from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
 
 from sqlalchemy import Table, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship, backref
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 
 from datetime import datetime
@@ -11,23 +10,19 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import json
 import re
 
-Base = db.Model
-
 ### @export "User"
-class User(Base):
-        __tablename__ = 'user'
-
+class User(db.Model):
+	__tablename__ = 'user'
 	id = db.Column(db.Integer, primary_key = True)
-
 	alias = db.Column(db.String(100))
 	email = db.Column(db.String(100), unique=True)
 	phone = db.Column(db.String())
 	date_created = db.Column(db.DateTime)
 	password = db.Column(db.String(255))
-	department = db.Column(db.String())
+	department = db.Column(Integer, ForeignKey("department.id"))
 	contact_for = db.Column(db.String()) # comma separated list
 	backup_for = db.Column(db.String()) # comma separated list
-        owners = relationship("Owner")
+	owners = relationship("Owner")
 
 	def is_authenticated(self):
 		return True
@@ -51,8 +46,25 @@ class User(Base):
 	def __repr__(self):
 		return '<User %r>' % self.email
 
+
+### @export "Department"
+class Department(db.Model):
+	__tablename__ = 'department'
+	id = db.Column(db.Integer, primary_key =True)
+	date_created = db.Column(db.DateTime)
+	date_updated = db.Column(db.DateTime)
+	name = db.Column(db.String(), unique=True)
+	users = relationship("Request") # The list of users in this departmenty
+	requests = relationship("Request", order_by = "Request.date_created.asc()") # The list of requests currently associated with this department
+	def __init__(self, name):
+		self.name = name
+		self.date_created = datetime.now().isoformat()
+	def __repr__(self):
+		return '<Department %r>' % self.name
+
+
 ### @export "Request"
-class Request(Base): 
+class Request(db.Model): 
 # The public records request
 	__tablename__ = 'request'
 	id = db.Column(db.Integer, primary_key =True)
@@ -62,13 +74,15 @@ class Request(Base):
 	status_updated = db.Column(db.DateTime)
 	text = db.Column(db.String(), unique=True) # The actual request text.
 	subscribers = relationship("Subscriber", cascade ="all, delete") # The list of subscribers following this request.
-	current_owner = Column(Integer, ForeignKey("owner.id"))
+	current_owner = db.Column(Integer, ForeignKey("owner.id"))
 	point_person = relationship("Owner", foreign_keys = [current_owner], uselist = False)
 	records = relationship("Record", cascade="all,delete", order_by = "Record.date_created.desc()") # The list of records that have been uploaded for this request.
 	notes = relationship("Note", cascade="all,delete", order_by = "Note.date_created.desc()") # The list of notes appended to this request.
 	status = db.Column(db.String(400)) # The status of the request (open, closed, etc.)
 	creator_id = db.Column(db.Integer, db.ForeignKey('user.id')) # If city staff created it on behalf of the public, otherwise the creator is the subscriber with creator = true
 	department = db.Column(db.String())
+	department_id = db.Column(Integer, ForeignKey("department.id", name='fk_request_department_id', use_alter = True))
+	current_department = relationship("Department", foreign_keys = [department_id], uselist = False)
 	def __init__(self, text, creator_id = None, department = None):
 		self.text = text
 		self.date_created = datetime.now().isoformat()
@@ -76,20 +90,16 @@ class Request(Base):
 		self.department = department
 	def __repr__(self):
 		return '<Request %r>' % self.text
-        def contact_name(self):
-                return self.point_person.user.alias
-
         def is_closed(self):
-                return re.match('.*(closed).*', self.status, re.IGNORECASE) is not None
-
+        	return re.match('.*(closed).*', self.status, re.IGNORECASE) is not None
         def solid_status(self):
-                if self.is_closed():
-                        return "closed"
-                else:
-                        return "open"
+        	if self.is_closed():
+				return "closed"
+        	else:
+				return "open"
 
 ### @export "QA"
-class QA(Base):
+class QA(db.Model):
 # A Q & A block for a request
 	__tablename__ = 'qa'
 	id = db.Column(db.Integer, primary_key = True)
@@ -108,7 +118,7 @@ class QA(Base):
 		return "<QA Q: %r A: %r>" %(self.question, self.answer)
 
 ### @export "Owner"
-class Owner(Base): 
+class Owner(db.Model): 
 # A member of city staff assigned to a particular request, that may or may not upload records towards that request.
 	__tablename__ = 'owner'
 	id = db.Column(db.Integer, primary_key =True)
@@ -130,7 +140,7 @@ class Owner(Base):
 		return '<Owner %r>' %self.user_id
 
 ### @export "Subscriber"
-class Subscriber(Base): 
+class Subscriber(db.Model): 
 # A person subscribed to a request, who may or may not have created the request, and may or may not own a part of the request.
 	__tablename__ = 'subscriber'
 	id = db.Column(db.Integer, primary_key = True)
@@ -147,7 +157,7 @@ class Subscriber(Base):
 		return '<Subscriber %r>' %self.user_id
 
 ### @export "Record"
-class Record(Base):
+class Record(db.Model):
 # A record that is attached to a particular request. A record can be online (uploaded document, link) or offline.
 	__tablename__ = 'record'
 	id = db.Column(db.Integer, primary_key = True)
@@ -173,7 +183,7 @@ class Record(Base):
 		return '<Record %r>' % self.description
 
 ### @export "Note"
-class Note(Base):
+class Note(db.Model):
 # A note on a request.
 	__tablename__ = 'note'
 	id = db.Column(db.Integer, primary_key = True)
@@ -190,7 +200,7 @@ class Note(Base):
 		return '<Note %r>' % self.text
 
 ### @export "Visualization"
-class Visualization(Base):
+class Visualization(db.Model):
 	__tablename__ = 'visualization'
 	id = db.Column(db.Integer, primary_key = True)
 	content = db.Column(db.String())
