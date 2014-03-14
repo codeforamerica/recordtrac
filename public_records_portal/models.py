@@ -90,13 +90,18 @@ class Request(db.Model):
 		self.department = department
 	def __repr__(self):
 		return '<Request %r>' % self.text
-        def is_closed(self):
-        	return re.match('.*(closed).*', self.status, re.IGNORECASE) is not None
-        def solid_status(self):
-        	if self.is_closed():
-				return "closed"
-        	else:
-				return "open"
+	def department_name(self):
+		if self.current_department:
+			return self.current_department.name
+		else:
+			return "N/A"
+	def is_closed(self):
+		return re.match('.*(closed).*', self.status, re.IGNORECASE) is not None
+	def solid_status(self):
+		if self.is_closed():
+			return "closed"
+		else:
+			return "open"
 
 ### @export "QA"
 class QA(db.Model):
