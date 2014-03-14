@@ -117,7 +117,16 @@
                            checked
                          <% } %> >
                   Open requests
-                </label>               
+                </label>
+                <div class="row-fluid">
+                <select class="span12"title="department"id="department_name"name="department">
+                 <!-- <option selected="<%= department %>"> -->
+                  <option value="all">All departments</option>
+                  {% for department in departments %}
+                    <option>{{department}}</option>
+                  {% endfor %}
+                </select>
+              </div>               
               </fieldset>
             </form>
           </div>

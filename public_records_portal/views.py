@@ -17,6 +17,8 @@ from time import time
 from flask.ext.cache import Cache
 from recaptcha.client import captcha
 from timeout import timeout
+from flask import jsonify, request, Response
+import anyjson
 
 # Initialize login
 login_manager = LoginManager()
@@ -200,45 +202,43 @@ def requests():
 		requester_name = ""
 		dept_selected = "All departments"
 		open_requests = True
-		if request.method == 'GET':
-			filters = request.args.copy()
-			if not filters:
-				if not current_user.is_anonymous():
-					my_requests = True
-					filters['owner'] = current_user.id
-				filters['status'] = 'open'
-			else:
-				if 'department' in filters and filters['department'].lower() == 'all':
-					del filters['department']
-				if not ('status' in filters and filters['status'].lower() == 'open'):
-					open_requests = False
-				if 'department' in filters:
-					dept_selected = filters['department']
-				if 'owner' in filters and not current_user.is_anonymous():
-					my_requests = True
-				if 'requester' in filters and current_user.is_anonymous():
-					del filters['requester']
-		record_requests = get_request_table_data(get_requests_by_filters(filters))
+		# if request.method == 'GET':
+		# 	filters = request.args.copy()
+		# 	if not filters:
+		# 		if not current_user.is_anonymous():
+		# 			my_requests = True
+		# 			filters['owner'] = current_user.id
+		# 		filters['status'] = 'open'
+		# 	else:
+		# 		if 'department' in filters and filters['department'].lower() == 'all':
+		# 			del filters['department']
+		# 		if not ('status' in filters and filters['status'].lower() == 'open'):
+		# 			open_requests = False
+		# 		if 'department' in filters:
+		# 			dept_selected = filters['department']
+		# 		if 'owner' in filters and not current_user.is_anonymous():
+		# 			my_requests = True
+		# 		if 'requester' in filters and current_user.is_anonymous():
+		# 			del filters['requester']
+		# record_requests = get_request_table_data(get_requests_by_filters(filters))
 		user_id = get_user_id()
                 
                 total_requests_count = 0
                 
-		if record_requests:
-			template = 'all_requests.html'
-			if user_id: 
-				template = 'all_requests_city.html'
-		else:
-			template = "all_requests_noresults.html"
-			total_requests_count = get_count("Request")
-
-                return render_template(template,
-                   record_requests = record_requests,
+		# if record_requests:
+		template = 'all_requests.html'
+		# 	if user_id: 
+		# 		template = 'all_requests_city.html'
+		# else:
+		# 	template = "all_requests_noresults.html"
+		# 	total_requests_count = get_count("Request")
+		return render_template(template,
+                   # record_requests = record_requests,
                    user_id = user_id,
                    title = "All Requests",
-                   open_requests = open_requests,
+                   # open_requests = open_requests,
                    departments = departments,
-                   dept_selected = dept_selected,
-                   my_requests = my_requests,
+                   # my_requests = my_requests,
                    total_requests_count = total_requests_count,
                    requester_name = requester_name, requests = requests)
 	except Exception, message:
@@ -246,6 +246,62 @@ def requests():
 			message = "Loading requests is taking a while. Try exploring with more restricted search options."
 			app.logger.info("\n\nLoading requests timed out.")
 		return render_template('error.html', message = message, user_id = get_user_id())
+
+
+def fetch_requests():
+    """
+    Ultra-custom API endpoint for serving up requests.
+    Supports limit, search, and page parameters and returns json with an object that
+    has a list of results in the 'objects' field.
+    """
+    department = request.args.get('department') 
+    app.logger.info("\n\nDepartment filter: %s" %department)
+    page   = request.args.get('page')   or 1
+    limit  = request.args.get('limit')  or 15
+    offset = limit * (int(page) - 1)
+
+    results = db.session.query(Request)
+    if department and department != "All departments":
+    	department = Department.query.filter_by(name = department).first()
+    	if department:
+    		results = results.filter(Request.department_id == department.id)
+ 
+                     
+    # Check for a text search term and add to the query if we can.
+    search_term = request.args.get('search')
+    if search_term:
+        results = results.filter("to_tsvector(text) @@ to_tsquery('" + search_term + "')")
+        
+    # Filter based on current request status.
+    is_closed = request.args.get('is_closed')
+    if is_closed != None:
+        if is_closed.lower() == "true":
+            results = results.filter(Request.status.ilike("%closed%"))
+        elif is_closed.lower() == "false":
+            results = results.filter(~Request.status.ilike("%closed%"))
+
+    results = results \
+        .limit(limit) \
+        .offset(offset)
+
+    # TODO(cj@postcode.io): This map is pretty kludgy, we should be detecting columns and auto
+    # magically making them fields in the JSON objects we return.
+    results = map(lambda r: { "id":           r.id, \
+                              "text":         r.text, \
+                              "date_created": r.date_created.isoformat(), \
+                              "department":   r.current_department.name, \
+                              # The following two attributes are defined as model methods,
+                              # and not regular SQLAlchemy attributes.
+                              "contact_name": r.point_person.user.alias, \
+                              "solid_status": r.solid_status(), \
+                              "status":       r.status
+                          }, results)
+    matches = {
+        "objects": results
+    }
+
+    response = anyjson.serialize(matches)
+    return Response(response, mimetype = "application/json")
 
 @login_manager.unauthorized_handler
 def unauthorized():
