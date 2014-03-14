@@ -10,7 +10,8 @@
       // Using an attribute called 'page' makes weird things happen here. JFYI.
       per_page: 10,
       num_results: 0,
-      is_closed: false
+      is_closed: false,
+      department: ""
     },
 
     prev_page: function ()
@@ -40,7 +41,7 @@
 
     url: function ()
     {
-      return "/api/request"
+      return "/custom/request"
     },
 
     build: function ()
@@ -57,6 +58,11 @@
       if ( search_term !== "" )
       {
         data_params["search"] = search_term
+      }
+      var department = this._query.get("department")
+      if ( department != "")
+      {
+        data_params["department"] = department
       }
 
       this.fetch({
@@ -88,7 +94,8 @@
     render: function ()
     {
       var vars = {
-        "is_closed": this.model.get( "is_closed" )
+        "is_closed": this.model.get( "is_closed" ),
+        "department": this.model.get( "department")
       }
       var template = _.template( $("#sidebar_template").html(), vars );
       this.$el.html( template );
@@ -96,7 +103,9 @@
 
     events:
     {
-      "click #status": "toggle_show_closed"
+      "click #status": "toggle_show_closed",
+      "change #department_name": "set_department"
+
     },
 
     toggle_show_closed: function ( event )
@@ -104,9 +113,15 @@
       this.model.set( {
         "is_closed": !( this.model.get( "is_closed" ) )
       } )
-    }
+    },
+    set_department: function (event)
+  {
+    console.log(event.target.value)
+    this.model.set("department", event.target.value)
+  }    
 
   });
+
 
   SearchResults = Backbone.View.extend({
 
@@ -156,7 +171,12 @@
 
     render: function ()
     {
-      var template = _.template( $("#search_field_template").html(), { current_query: this.model.get("search_term") } )
+      var template = _.template( 
+        $("#search_field_template").html(), 
+          { current_query: this.model.get("search_term") 
+          }
+        )
+
       this.$el.html( template )
     },
 
@@ -172,6 +192,10 @@
     }
 
   });
+
+
+
+
 
 
   var query = new Query();
