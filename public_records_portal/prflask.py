@@ -3,63 +3,16 @@ from views import * # Import all the functions that render templates
 from flask.ext.restless import APIManager
 from flask.ext.admin import Admin, expose, BaseView, AdminIndexView
 from flask.ext.admin.contrib.sqlamodel import ModelView
-from flask import jsonify, request, Response
-import anyjson
 
-@app.route("/api/request")
-def fetch_requests():
-    """
-    Ultra-custom API endpoint for serving up requests.
-    Supports limit, search, and page parameters and returns json with an object that
-    has a list of results in the 'objects' field.
-    """
-    
-    page   = request.args.get('page')   or 1
-    limit  = request.args.get('limit')  or 15
-    offset = limit * (int(page) - 1)
 
-    results = db.session.query(Request)
-                     
-    # Check for a text search term and add to the query if we can.
-    search_term = request.args.get('search')
-    if search_term:
-        results = results.filter("to_tsvector(text) @@ to_tsquery('" + search_term + "')")
-        
-    # Filter based on current request status.
-    is_closed = request.args.get('is_closed')
-    if is_closed != None:
-        if is_closed.lower() == "true":
-            results = results.filter(Request.status.ilike("%closed%"))
-        elif is_closed.lower() == "false":
-            results = results.filter(~Request.status.ilike("%closed%"))
 
-    results = results \
-        .limit(limit) \
-        .offset(offset)
-
-    # TODO(cj@postcode.io): This map is pretty kludgy, we should be detecting columns and auto
-    # magically making them fields in the JSON objects we return.
-    results = map(lambda r: { "id":           r.id, \
-                              "text":         r.text, \
-                              "date_created": r.date_created.isoformat(), \
-                              "department":   r.department, \
-                              # The following two attributes are defined as model methods,
-                              # and not regular SQLAlchemy attributes.
-                              "contact_name": r.contact_name(), \
-                              "solid_status": r.solid_status(), \
-                              "status":       r.status
-                          }, results)
-    matches = {
-        "objects": results
-    }
-
-    response = anyjson.serialize(matches)
-    return Response(response, mimetype = "application/json")
 
 # Create API
 manager = APIManager(app, flask_sqlalchemy_db=db)
 
 # The endpoints created are /api/object, e.g. publicrecordsareawesome.com/api/request/
+manager.create_api(models.Request, methods=['GET'], results_per_page = 10, allow_functions = True)
+manager.create_api(models.Department, methods=['GET'], results_per_page = 10, allow_functions = True)
 manager.create_api(models.Owner, methods=['GET'], results_per_page = 10, allow_functions = True)
 manager.create_api(models.Note, methods=['GET'], results_per_page = 10, allow_functions = True)
 manager.create_api(models.Record, methods=['GET'], results_per_page = 10, allow_functions = True)
@@ -114,15 +67,21 @@ class NoteView(AdminView):
 
 class UserView(AdminView):
 	can_create = False
-	column_list = ('id', 'contact_for', 'backup_for', 'alias')
+	column_list = ('id', 'contact_for', 'backup_for', 'alias', 'department')
 	column_searchable_list = ('contact_for', 'alias')
-	form_excluded_columns = ('date_created', 'department', 'password')
+	form_excluded_columns = ('date_created', 'password')
+
+class DepartmentView(AdminView):
+	can_create = True
+	column_list = ('id', 'name', 'date_created', 'date_updated')
+
 
 admin.add_view(RequestView(Request, db.session))
 admin.add_view(RecordView(Record, db.session))
 admin.add_view(NoteView(Note, db.session))
 admin.add_view(QAView(QA, db.session))
 admin.add_view(UserView(User, db.session))
+admin.add_view(DepartmentView(Department, db.session))
 
 # Routing dictionary.
 routing = {
@@ -175,6 +134,10 @@ routing = {
 	},
 	'any_page':{
 		'url': '/<page>'
+	},
+	'fetch_requests':{
+		'url': '/custom/request',
+		'methods': ['GET', 'POST']
 	},
 	'requests':{
 		'url': '/requests',

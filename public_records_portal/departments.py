@@ -2,6 +2,7 @@ import os
 import json
 from public_records_portal import app
 from db_helpers import *
+from models import Department
 
 """ 
 .. module:: prr
@@ -73,12 +74,15 @@ def get_depts(user):
 def populate_users_with_departments():
 	users = get_objs("User")
 	for u in users:
-		dept = get_dept(u)
+		dept = Department.query.filter_by(name = get_dept(u)).first()
+		if not dept:
+			dept = Department(name = get_dept(u))
+			db.session.add(dept)
+			db.session.commit()
 		if dept:
-			update_obj(attribute = "department", val = dept, obj = u)
+			update_obj(attribute = "department", val = dept.id, obj = u)
 		depts_contact, depts_backup = get_depts(u)
 		if depts_contact:
 			update_obj(attribute = "contact_for", val = ",".join(depts_contact), obj = u)
 		if depts_backup:
 			update_obj(attribute = "backup_for", val = ",".join(depts_backup), obj = u)
-
