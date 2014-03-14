@@ -60,7 +60,7 @@ set_env(key = 'DEV_EMAIL')
 db = SQLAlchemy(app)
 
 logging.basicConfig()
-logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+# logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
 app.logger.info("\n\nFresh request!")
 

@@ -289,7 +289,7 @@ def fetch_requests():
     results = map(lambda r: { "id":           r.id, \
                               "text":         r.text, \
                               "date_created": r.date_created.isoformat(), \
-                              "department":   r.current_department.name, \
+                              "department":   r.department_name(), \
                               # The following two attributes are defined as model methods,
                               # and not regular SQLAlchemy attributes.
                               "contact_name": r.point_person.user.alias, \
