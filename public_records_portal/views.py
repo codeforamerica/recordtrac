@@ -277,7 +277,7 @@ def fetch_requests():
     my_requests = request.args.get('my_requests')
     if my_requests != None:
     	if my_requests.lower() == "true":
-    		results = results.filter(Request.id == Owner.request_id).filter(Owner.user_id == get_user_id()) 
+    		results = results.filter(Request.id == Owner.request_id).filter(Owner.user_id == get_user_id()).filter(Owner.active == True)
     		app.logger.info("\n\n Filtering to only your requests...")
 
     results = results.order_by(Request.date_created.desc()) \
