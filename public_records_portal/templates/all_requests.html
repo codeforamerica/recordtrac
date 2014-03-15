@@ -1,5 +1,4 @@
 <!-- This template is show all cases in the system. -->
-
 {% extends "base.html" %}
 
 {% block title %}
@@ -104,20 +103,33 @@
         <div id="sidebar_container"></div>
         <script type="text/template" id="sidebar_template">                                         
           <div id="filterbox" class="well">
-            <h4>View</h4> 
+            <h4>View <small class="count"> ...a subset... of {{total_requests_count}} shown</small></h4>
             <form>
               <fieldset>
                 <label class="checkbox">
                   <input type="checkbox"
                          title="open_requests_checkbox"
                          value="open"
-                         name="status"
-                         id="status" 
+                         name="is_closed"
+                         id="is_closed" 
                          <% if ( !is_closed ) { %>
                            checked
                          <% } %> >
                   Open requests
                 </label>
+              {% if user_id %}
+              <label class="checkbox">
+                <input type="checkbox"
+                    title="my_requests_checkbox"
+                    value="{{user_id}}"
+                    name="my_requests"
+                    id="my_requests"
+                    <% if ( my_requests ) { %>
+                    checked
+                    <% } %> >
+                 My requests
+               </label>
+              {% endif %}
                 <div class="row-fluid">
                 <select class="span12"title="department"id="department_name"name="department">
                  <!-- <option selected="<%= department %>"> -->
