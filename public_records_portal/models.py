@@ -86,7 +86,7 @@ class Request(db.Model):
 	text = db.Column(db.String(), unique=True) # The actual request text.
 	owners = relationship("Owner", cascade = "all, delete", order_by="Owner.date_created.asc()")
 	subscribers = relationship("Subscriber", cascade ="all, delete") # The list of subscribers following this request.
-	# current_owner = db.Column(Integer) # Deprecated
+	current_owner = db.Column(Integer) # Deprecated
 	records = relationship("Record", cascade="all,delete", order_by = "Record.date_created.desc()") # The list of records that have been uploaded for this request.
 	notes = relationship("Note", cascade="all,delete", order_by = "Note.date_created.desc()") # The list of notes appended to this request.
 	status = db.Column(db.String(400)) # The status of the request (open, closed, etc.)
@@ -128,9 +128,9 @@ class Request(db.Model):
 		return re.match('.*(closed).*', self.status, re.IGNORECASE) is not None
 	def solid_status(self):
 		if self.is_closed():
-			if current_user.is_anonymous():
-				return "closed"
-			else:
+			return "closed"
+		else:
+			if not current_user.is_anonymous():
 				due = self.due_date()
 				if datetime.now() >= due:
 					return "overdue"
