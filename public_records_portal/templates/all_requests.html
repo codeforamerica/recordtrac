@@ -79,7 +79,11 @@
                     <td><%= request.id %></td>
                     <td><%= moment(request.date_created).format("MMM Do, YYYY") %></td>
                     <td>
+                    {% if user_id %}
+                      <a href="/city/request/<%= request.id %>">
+                    {% else %}
                       <a href="/request/<%= request.id %>">
+                    {% endif %}
                         <% if ( request.text.length > 140 ) { %>
                           <%= request.text.substring(0, 140).trim() + "..." %>
                         <% } else { %>

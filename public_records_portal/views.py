@@ -248,6 +248,7 @@ def fetch_requests():
     page   = request.args.get('page')   or 1
     limit  = request.args.get('limit')  or 15
     offset = limit * (int(page) - 1)
+    user_id = get_user_id()
 
     results = db.session.query(Request)
 
@@ -264,7 +265,7 @@ def fetch_requests():
     # Check for a text search term and add to the query if we can.
     search_term = request.args.get('search')
     if search_term:
-        results = results.filter("to_tsvector(text) @@ to_tsquery('" + search_term + "')")
+        results = results.filter("to_tsvector(text) @@ to_tsquery('" + search_term + ":*')")
         
     # Filter based on current request status.
     is_closed = request.args.get('is_closed')
@@ -273,12 +274,12 @@ def fetch_requests():
         #     results = results.filter(Request.status.ilike("%closed%"))
         if is_closed.lower() == "false":
             results = results.filter(~Request.status.ilike("%closed%"))
-
-    my_requests = request.args.get('my_requests')
-    if my_requests != None:
-    	if my_requests.lower() == "true":
-    		results = results.filter(Request.id == Owner.request_id).filter(Owner.user_id == get_user_id()).filter(Owner.active == True)
-    		app.logger.info("\n\n Filtering to only your requests...")
+    if user_id:
+	    my_requests = request.args.get('my_requests')
+	    if my_requests != None:
+	    	if my_requests.lower() == "true":
+	    		results = results.filter(Request.id == Owner.request_id).filter(Owner.user_id == user_id).filter(Owner.active == True)
+	    		app.logger.info("\n\n Filtering to only your requests...")
 
     results = results.order_by(Request.date_created.desc()) \
         .limit(limit) \
