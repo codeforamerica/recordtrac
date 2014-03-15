@@ -107,7 +107,7 @@ class Request(db.Model):
 		return "N/A"
 	def department_name(self):
 		if self.department_obj:
-			return self.department_obj.name
+			return self.department_obj.name or "N/A"
 		return "N/A"
 	def is_closed(self):
 		return re.match('.*(closed).*', self.status, re.IGNORECASE) is not None
