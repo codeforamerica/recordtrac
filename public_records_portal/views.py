@@ -255,17 +255,22 @@ def fetch_requests():
     has a list of results in the 'objects' field.
     """
     department = request.args.get('department') 
-    app.logger.info("\n\nDepartment filter: %s" %department)
+    app.logger.info("\n\nDepartment filter:%s." %department)
     page   = request.args.get('page')   or 1
     limit  = request.args.get('limit')  or 15
     offset = limit * (int(page) - 1)
 
     results = db.session.query(Request)
+
     if department and department != "All departments":
     	department = Department.query.filter_by(name = department).first()
     	if department:
     		results = results.filter(Request.department_id == department.id)
+    	else:
+    		return "No results!"
  
+ 	if not results:
+ 		return "No results!"
                      
     # Check for a text search term and add to the query if we can.
     search_term = request.args.get('search')
@@ -280,7 +285,7 @@ def fetch_requests():
         elif is_closed.lower() == "false":
             results = results.filter(~Request.status.ilike("%closed%"))
 
-    results = results \
+    results = results.order_by(Request.date_created.desc()) \
         .limit(limit) \
         .offset(offset)
 
@@ -292,7 +297,7 @@ def fetch_requests():
                               "department":   r.department_name(), \
                               # The following two attributes are defined as model methods,
                               # and not regular SQLAlchemy attributes.
-                              "contact_name": r.point_person.user.alias, \
+                              "contact_name": r.point_person_name(), \
                               "solid_status": r.solid_status(), \
                               "status":       r.status
                           }, results)

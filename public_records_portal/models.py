@@ -20,6 +20,7 @@ class User(db.Model):
 	date_created = db.Column(db.DateTime)
 	password = db.Column(db.String(255))
 	department = db.Column(Integer, ForeignKey("department.id"))
+	current_department = relationship("Department", foreign_keys = [department], uselist = False)
 	contact_for = db.Column(db.String()) # comma separated list
 	backup_for = db.Column(db.String()) # comma separated list
 	owners = relationship("Owner")
@@ -45,7 +46,11 @@ class User(db.Model):
 		self.department = department
 	def __repr__(self):
 		return '<User %r>' % self.email
-
+	def department_name(self):
+		if self.current_department and self.current_department.name:
+			return self.current_department.name
+		else:
+			return "N/A"
 
 ### @export "Department"
 class Department(db.Model):
@@ -54,7 +59,7 @@ class Department(db.Model):
 	date_created = db.Column(db.DateTime)
 	date_updated = db.Column(db.DateTime)
 	name = db.Column(db.String(), unique=True)
-	users = relationship("Request") # The list of users in this departmenty
+	users = relationship("User") # The list of users in this department
 	requests = relationship("Request", order_by = "Request.date_created.asc()") # The list of requests currently associated with this department
 	def __init__(self, name):
 		self.name = name
@@ -73,16 +78,16 @@ class Request(db.Model):
 	qas = relationship("QA", cascade="all,delete", order_by = "QA.date_created.desc()") # The list of QA units for this request
 	status_updated = db.Column(db.DateTime)
 	text = db.Column(db.String(), unique=True) # The actual request text.
+	owners = relationship("Owner", cascade = "all, delete", order_by="Owner.date_created.asc()")
 	subscribers = relationship("Subscriber", cascade ="all, delete") # The list of subscribers following this request.
-	current_owner = db.Column(Integer, ForeignKey("owner.id"))
-	point_person = relationship("Owner", foreign_keys = [current_owner], uselist = False)
+	# current_owner = db.Column(Integer, ForeignKey("owner.id")) # Deprecated
 	records = relationship("Record", cascade="all,delete", order_by = "Record.date_created.desc()") # The list of records that have been uploaded for this request.
 	notes = relationship("Note", cascade="all,delete", order_by = "Note.date_created.desc()") # The list of notes appended to this request.
 	status = db.Column(db.String(400)) # The status of the request (open, closed, etc.)
 	creator_id = db.Column(db.Integer, db.ForeignKey('user.id')) # If city staff created it on behalf of the public, otherwise the creator is the subscriber with creator = true
 	department = db.Column(db.String())
-	department_id = db.Column(Integer, ForeignKey("department.id", name='fk_request_department_id', use_alter = True))
-	current_department = relationship("Department", foreign_keys = [department_id], uselist = False)
+	department_id = db.Column(db.Integer, db.ForeignKey("department.id"))
+	department_obj = relationship("Department", uselist = False)
 	def __init__(self, text, creator_id = None, department = None):
 		self.text = text
 		self.date_created = datetime.now().isoformat()
@@ -90,11 +95,20 @@ class Request(db.Model):
 		self.department = department
 	def __repr__(self):
 		return '<Request %r>' % self.text
+	def point_person(self):
+		for o in self.owners:
+			if o.is_point_person:
+				return o
+		return None
+		# return self.owners[0]
+	def point_person_name(self):
+		if self.point_person():
+			return self.point_person().user.alias
+		return "N/A"
 	def department_name(self):
-		if self.current_department:
-			return self.current_department.name
-		else:
-			return "N/A"
+		if self.department_obj:
+			return self.department_obj.name
+		return "N/A"
 	def is_closed(self):
 		return re.match('.*(closed).*', self.status, re.IGNORECASE) is not None
 	def solid_status(self):
@@ -130,17 +144,19 @@ class Owner(db.Model):
 	user_id = Column(Integer, ForeignKey('user.id'))
 	user = relationship("User", uselist = False)
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
-	request = relationship("Request", foreign_keys = [request_id], backref = db.backref("owners", order_by = "Owner.date_created.asc()"))
+	request = relationship("Request", foreign_keys = [request_id])
 	active = db.Column(db.Boolean, default = True) # Indicate whether they're still involved in the request or not.
 	reason = db.Column(db.String()) # Reason they were assigned
 	date_created = db.Column(db.DateTime)
 	date_updated = db.Column(db.DateTime)
-	def __init__(self, request_id, user_id, reason= None):
+	is_point_person = db.Column(db.Boolean)
+	def __init__(self, request_id, user_id, reason= None, is_point_person = False):
 		self.reason = reason
 		self.user_id = user_id
 		self.request_id = request_id
 		self.date_created = datetime.now().isoformat()
 		self.date_updated = self.date_created
+		self.is_point_person = is_point_person
 	def __repr__(self):
 		return '<Owner %r>' %self.user_id
 

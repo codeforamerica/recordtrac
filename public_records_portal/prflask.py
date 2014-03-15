@@ -47,7 +47,7 @@ class RequestView(AdminView):
 	can_create = False
 	column_list = ('id', 'text', 'date_created', 'status') # The fields the admin can view
 	column_searchable_list = ('status', 'text') # The fields the admin can search a request by
-	form_excluded_columns = ('date_created', 'current_owner', 'extended', 'status', 'status_updated') # The fields the admin cannot edit.
+	form_excluded_columns = ('date_created', 'extended', 'status', 'status_updated') # The fields the admin cannot edit.
 
 class RecordView(AdminView):
 	can_create = False
