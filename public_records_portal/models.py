@@ -4,7 +4,7 @@ from sqlalchemy import Table, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from public_records_portal import db
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
@@ -105,6 +105,15 @@ class Request(db.Model):
 			if o.is_point_person:
 				return o
 		return None
+	def requester(self):
+		if self.subscribers:
+			return self.subscribers[0] or None # The first subscriber is always the requester
+		return None
+	def requester_name(self):
+		requester = self.requester()
+		if requester and requester.user:
+			return requester.user.get_alias()
+		return "N/A"
 	def point_person_name(self):
 		point_person = self.point_person()
 		if point_person and point_person.user:
@@ -121,6 +130,15 @@ class Request(db.Model):
 			return "closed"
 		else:
 			return "open"
+	def due_date(self):
+		days_to_fulfill = 10
+		if self.extended:
+			days_to_fulfill = days_to_fulfill + 14
+		due_date = (self.date_created + timedelta(days = days_to_fulfill))
+		return due_date
+		# tz = pytz.timezone("US/Pacific") # This should eventually be set dynamically
+		# return due_date.replace(tzinfo=pytz.utc).astimezone(tz) # This appears to work in Heroku but not locally
+
 
 ### @export "QA"
 class QA(db.Model):
@@ -172,6 +190,7 @@ class Subscriber(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
 	should_notify = db.Column(db.Boolean, default = True) # Allows a subscriber to unsubscribe
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	user = relationship("User", uselist = False)
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
 	date_created = db.Column(db.DateTime)
 	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id')) # Not null if responsible for fulfilling a part of the request
