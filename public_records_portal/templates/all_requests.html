@@ -66,6 +66,10 @@
                   <th>Request</th>
                   <th>Department</th>
                   <th>Point of Contact</th>
+                  {% if user_id %}
+                  <th>Due</th>
+                  <th>Requester</th>
+                  {% endif %}
                 </tr>
               </thead>
               <tbody>
@@ -93,6 +97,10 @@
                     </td>
                     <td><%= request.department %></td>                    
                     <td><%= request.contact_name %></td>
+                    {% if user_id %}
+                    <td><%= request.due_date %></td>
+                    <td><%= request.requester %></td>
+                    {% endif %}
                   </tr>
                 <% } ); %>
               </tbody>

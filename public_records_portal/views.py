@@ -10,7 +10,7 @@ from db_helpers import *
 import departments
 import os, json
 from urlparse import urlparse, urljoin
-from notifications import send_prr_email
+from notifications import send_prr_email, format_date
 from spam import is_spam, is_working_akismet_key
 from requests import get
 from time import time
@@ -19,6 +19,7 @@ from recaptcha.client import captcha
 from timeout import timeout
 from flask import jsonify, request, Response
 import anyjson
+import helpers
 
 # Initialize login
 login_manager = LoginManager()
@@ -291,6 +292,8 @@ def fetch_requests():
                               "text":         r.text, \
                               "date_created": r.date_created.isoformat(), \
                               "department":   r.department_name(), \
+                              "requester":   r.requester_name(), \
+                              "due_date":    format_date(r.due_date()), \
                               # The following two attributes are defined as model methods,
                               # and not regular SQLAlchemy attributes.
                               "contact_name": r.point_person_name(), \
