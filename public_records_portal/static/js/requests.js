@@ -11,6 +11,7 @@
       per_page: 10,
       num_results: 0,
       is_closed: false,
+      my_requests: true,
       department: ""
     },
 
@@ -51,7 +52,8 @@
       var data_params = {
         // "results_per_page": this._query.get("per_page"),
         "page": this._query.get("page_number"),
-        "is_closed": this._query.get("is_closed")
+        "is_closed": this._query.get("is_closed"),
+        "my_requests": this._query.get("my_requests")
       }
 
       var search_term = this._query.get("search_term")
@@ -95,6 +97,7 @@
     {
       var vars = {
         "is_closed": this.model.get( "is_closed" ),
+        "my_requests": this.model.get( "my_requests"),
         "department": this.model.get( "department")
       }
       var template = _.template( $("#sidebar_template").html(), vars );
@@ -103,15 +106,21 @@
 
     events:
     {
-      "click #status": "toggle_show_closed",
+      "click #is_closed": "toggle_show_closed",
+      "click #my_requests": "toggle_my_requests",
       "change #department_name": "set_department"
-
     },
 
     toggle_show_closed: function ( event )
     {
       this.model.set( {
         "is_closed": !( this.model.get( "is_closed" ) )
+      } )
+    },
+    toggle_my_requests: function ( event )
+    {
+      this.model.set( {
+        "my_requests": !( this.model.get( "my_requests" ) )
       } )
     },
     set_department: function (event)

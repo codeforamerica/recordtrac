@@ -198,10 +198,10 @@ def requests():
 		departments_json = open(os.path.join(app.root_path, 'static/json/list_of_departments.json'))
 		list_of_departments = json.load(departments_json)
 		departments = sorted(list_of_departments, key=unicode.lower)
-		my_requests = False
-		requester_name = ""
-		dept_selected = "All departments"
-		open_requests = True
+		# my_requests = False
+		# requester_name = ""
+		# dept_selected = "All departments"
+		# open_requests = True
 		# if request.method == 'GET':
 		# 	filters = request.args.copy()
 		# 	if not filters:
@@ -222,25 +222,14 @@ def requests():
 		# 			del filters['requester']
 		# record_requests = get_request_table_data(get_requests_by_filters(filters))
 		user_id = get_user_id()
-                
-                total_requests_count = 0
-                
-		# if record_requests:
+		total_requests_count = get_count("Request")
 		template = 'all_requests.html'
-		# 	if user_id: 
-		# 		template = 'all_requests_city.html'
-		# else:
-		# 	template = "all_requests_noresults.html"
-		# 	total_requests_count = get_count("Request")
+
 		return render_template(template,
-                   # record_requests = record_requests,
                    user_id = user_id,
                    title = "All Requests",
-                   # open_requests = open_requests,
                    departments = departments,
-                   # my_requests = my_requests,
-                   total_requests_count = total_requests_count,
-                   requester_name = requester_name, requests = requests)
+                   total_requests_count = total_requests_count)
 	except Exception, message:
 		if "Too long" in message:
 			message = "Loading requests is taking a while. Try exploring with more restricted search options."
@@ -280,10 +269,16 @@ def fetch_requests():
     # Filter based on current request status.
     is_closed = request.args.get('is_closed')
     if is_closed != None:
-        if is_closed.lower() == "true":
-            results = results.filter(Request.status.ilike("%closed%"))
-        elif is_closed.lower() == "false":
+        # if is_closed.lower() == "true":
+        #     results = results.filter(Request.status.ilike("%closed%"))
+        if is_closed.lower() == "false":
             results = results.filter(~Request.status.ilike("%closed%"))
+
+    my_requests = request.args.get('my_requests')
+    if my_requests != None:
+    	if my_requests.lower() == "true":
+    		results = results.filter(Request.id == Owner.request_id).filter(Owner.user_id == get_user_id()) 
+    		app.logger.info("\n\n Filtering to only your requests...")
 
     results = results.order_by(Request.date_created.desc()) \
         .limit(limit) \
