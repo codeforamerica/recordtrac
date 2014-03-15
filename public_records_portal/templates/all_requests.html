@@ -88,11 +88,17 @@
                     {% else %}
                       <a href="/request/<%= request.id %>">
                     {% endif %}
-                        <% if ( request.text.length > 140 ) { %>
+                    <% if ( request.solid_status === "due soon" ) { %>
+                          <span style = "background-color: #FB991B" class="label label-warning">due soon</span> <%= request.text %>
+                     <% } %>
+                    <% if ( request.solid_status === "overdue" ) { %>
+                          <span style = "background-color: #CA1A1A" class="label label-important">overdue</span> <%= request.text %>
+                    <% } %>
+                    <% if ( request.text.length > 140 ) { %>
                           <%= request.text.substring(0, 140).trim() + "..." %>
-                        <% } else { %>
+                    <% } else { %>
                           <%= request.text %>
-                        <% } %>
+                    <% } %>
                       </a>
                     </td>
                     <td><%= request.department %></td>                    

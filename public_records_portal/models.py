@@ -1,4 +1,5 @@
 from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
+from flask.ext.login import current_user
 
 from sqlalchemy import Table, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship, backref
@@ -85,7 +86,7 @@ class Request(db.Model):
 	text = db.Column(db.String(), unique=True) # The actual request text.
 	owners = relationship("Owner", cascade = "all, delete", order_by="Owner.date_created.asc()")
 	subscribers = relationship("Subscriber", cascade ="all, delete") # The list of subscribers following this request.
-	current_owner = db.Column(Integer) # Deprecated
+	# current_owner = db.Column(Integer) # Deprecated
 	records = relationship("Record", cascade="all,delete", order_by = "Record.date_created.desc()") # The list of records that have been uploaded for this request.
 	notes = relationship("Note", cascade="all,delete", order_by = "Note.date_created.desc()") # The list of notes appended to this request.
 	status = db.Column(db.String(400)) # The status of the request (open, closed, etc.)
@@ -127,18 +128,21 @@ class Request(db.Model):
 		return re.match('.*(closed).*', self.status, re.IGNORECASE) is not None
 	def solid_status(self):
 		if self.is_closed():
-			return "closed"
-		else:
-			return "open"
+			if current_user.is_anonymous():
+				return "closed"
+			else:
+				due = self.due_date()
+				if datetime.now() >= due:
+					return "overdue"
+				elif (datetime.now() + timedelta(days = 2)) >= due:
+					return "due soon"
+		return "open"
 	def due_date(self):
 		days_to_fulfill = 10
 		if self.extended:
 			days_to_fulfill = days_to_fulfill + 14
 		due_date = (self.date_created + timedelta(days = days_to_fulfill))
 		return due_date
-		# tz = pytz.timezone("US/Pacific") # This should eventually be set dynamically
-		# return due_date.replace(tzinfo=pytz.utc).astimezone(tz) # This appears to work in Heroku but not locally
-
 
 ### @export "QA"
 class QA(db.Model):
