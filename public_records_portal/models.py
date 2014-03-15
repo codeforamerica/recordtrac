@@ -37,6 +37,8 @@ class User(db.Model):
 		self.password = generate_password_hash(password)
 	def check_password(self, password):
 		return check_password_hash(self.password, password)
+	def get_alias(self):
+		return self.alias or "N/A"
 	def __init__(self, email=None, alias = None, phone=None, department = None, password=None):
 		self.email = email
 		self.alias = alias
@@ -66,7 +68,8 @@ class Department(db.Model):
 		self.date_created = datetime.now().isoformat()
 	def __repr__(self):
 		return '<Department %r>' % self.name
-
+	def get_name(self):
+		return self.name or "N/A"
 
 ### @export "Request"
 class Request(db.Model): 
@@ -100,14 +103,14 @@ class Request(db.Model):
 			if o.is_point_person:
 				return o
 		return None
-		# return self.owners[0]
 	def point_person_name(self):
-		if self.point_person():
-			return self.point_person().user.alias
+		point_person = self.point_person()
+		if point_person and point_person.user:
+			return point_person.user.get_alias()
 		return "N/A"
 	def department_name(self):
 		if self.department_obj:
-			return self.department_obj.name or "N/A"
+			return self.department_obj.get_name 
 		return "N/A"
 	def is_closed(self):
 		return re.match('.*(closed).*', self.status, re.IGNORECASE) is not None
