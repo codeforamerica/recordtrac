@@ -80,7 +80,7 @@ class Request(db.Model):
 	text = db.Column(db.String(), unique=True) # The actual request text.
 	owners = relationship("Owner", cascade = "all, delete", order_by="Owner.date_created.asc()")
 	subscribers = relationship("Subscriber", cascade ="all, delete") # The list of subscribers following this request.
-	# current_owner = db.Column(Integer, ForeignKey("owner.id")) # Deprecated
+	current_owner = db.Column(Integer, ForeignKey("owner.id")) # Deprecated
 	records = relationship("Record", cascade="all,delete", order_by = "Record.date_created.desc()") # The list of records that have been uploaded for this request.
 	notes = relationship("Note", cascade="all,delete", order_by = "Note.date_created.desc()") # The list of notes appended to this request.
 	status = db.Column(db.String(400)) # The status of the request (open, closed, etc.)
