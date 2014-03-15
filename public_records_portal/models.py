@@ -38,7 +38,9 @@ class User(db.Model):
 	def check_password(self, password):
 		return check_password_hash(self.password, password)
 	def get_alias(self):
-		return self.alias or "N/A"
+		if self.alias and self.alias != "":
+			return self.alias
+		return "N/A"
 	def __init__(self, email=None, alias = None, phone=None, department = None, password=None):
 		self.email = email
 		self.alias = alias
