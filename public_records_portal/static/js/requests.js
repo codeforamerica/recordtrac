@@ -198,6 +198,7 @@
     {
       console.log( event.target.value )
       this.model.set( "search_term", event.target.value )
+      this.model.set({ page_number: 1 })
     }
 
   });
