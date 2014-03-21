@@ -31,7 +31,7 @@ cache.init_app(app, config={'CACHE_TYPE': 'simple'})
 
 # Set flags:
 
-check_for_spam = True
+check_for_spam = False
 if app.config['ENVIRONMENT'] == 'PRODUCTION':
 	check_for_spam = True
 
@@ -48,6 +48,7 @@ def new_request(passed_recaptcha = False, data = None):
 			return render_template('missing_email.html', form = data, user_id = get_user_id())
 		if check_for_spam and is_spam(request_text) and not passed_recaptcha:
 			return render_template('recaptcha.html', form = data, message = "Hmm, your request looks like spam. To submit your request, type the numbers or letters you see in the field below.", public_key = app.config['RECAPTCHA_PUBLIC_KEY'])
+
 		alias = None
 		phone = None
 		if 'request_alias' in data:
