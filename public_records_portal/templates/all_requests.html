@@ -53,10 +53,12 @@
         </script>
       </div>
 
+
       {# Search results table. #}
       <div class="row-fluid">
         <div class="span9" id="search_results_container"></div>
           <script type="text/template" id="search_results_template">
+          
             <table id="requests">
               <thead>
                 <tr>
@@ -73,6 +75,7 @@
                 </tr>
               </thead>
               <tbody>
+              <% if (requests.length != 0) { %>
                 <% _.each( requests, function( request ) { %>                
                   <tr>
                     <td class="status <%= request.solid_status %>">
@@ -109,19 +112,38 @@
                     {% endif %}
                   </tr>
                 <% } ); %>
+           <% } else { %>
+          No results :(
+          <% } %>
+
               </tbody>
             </table>
-          <div class="pull-right pagination">
+
+          <div class="pull-left pagination">
             <ul>
-              <li class="next"><a href="javascript:void(0)">Next</a></li>
+            <li> Showing <%=start_index%> to <%=end_index%> of <%= num_results %> entries </li>
             </ul>
+          </div>            
+          <div class="pull-right pagination">
+            <% if (page_number > 1) { %>
+              <ul>
+                <li class="prev"><a href="javascript:void(0)">Previous</a></li>
+              </ul>
+            <% } %>   
+            <% if (more_results) { %>
+              <ul>
+                <li class="next"><a href="javascript:void(0)">Next</a></li>
+              </ul>
+            <% } %>
           </div>
+
         </script>
+
           <div class="span2">
         <div id="sidebar_container"></div>
         <script type="text/template" id="sidebar_template">                                         
           <div id="filterbox" class="well">
-            <h4>View <small class="count"> ...a subset... of {{total_requests_count}} shown</small></h4>
+            <h4>View <small class="count"> <%= num_results %> of {{total_requests_count}} shown</small></h4>
             <form>
               <fieldset>
                 <label class="checkbox">
@@ -150,7 +172,9 @@
               {% endif %}
                 <div class="row-fluid">
                 <select class="span12"title="department"id="department_name"name="department">
-                 <!-- <option selected="<%= department %>"> -->
+                <% if (department) { %>
+                 <option selected><%= department %></option>
+                <% } %>
                   <option value="all">All departments</option>
                   {% for department in departments %}
                     <option>{{department}}</option>

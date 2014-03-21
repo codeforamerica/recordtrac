@@ -199,38 +199,15 @@ def requests():
 		departments_json = open(os.path.join(app.root_path, 'static/json/list_of_departments.json'))
 		list_of_departments = json.load(departments_json)
 		departments = sorted(list_of_departments, key=unicode.lower)
-		# my_requests = False
-		# requester_name = ""
-		# dept_selected = "All departments"
-		# open_requests = True
-		# if request.method == 'GET':
-		# 	filters = request.args.copy()
-		# 	if not filters:
-		# 		if not current_user.is_anonymous():
-		# 			my_requests = True
-		# 			filters['owner'] = current_user.id
-		# 		filters['status'] = 'open'
-		# 	else:
-		# 		if 'department' in filters and filters['department'].lower() == 'all':
-		# 			del filters['department']
-		# 		if not ('status' in filters and filters['status'].lower() == 'open'):
-		# 			open_requests = False
-		# 		if 'department' in filters:
-		# 			dept_selected = filters['department']
-		# 		if 'owner' in filters and not current_user.is_anonymous():
-		# 			my_requests = True
-		# 		if 'requester' in filters and current_user.is_anonymous():
-		# 			del filters['requester']
-		# record_requests = get_request_table_data(get_requests_by_filters(filters))
 		user_id = get_user_id()
 		total_requests_count = get_count("Request")
 		template = 'all_requests.html'
 
 		return render_template(template,
-                   user_id = user_id,
-                   title = "All Requests",
-                   departments = departments,
-                   total_requests_count = total_requests_count)
+				   user_id = user_id,
+				   title = "All Requests",
+				   departments = departments,
+				   total_requests_count = total_requests_count)
 	except Exception, message:
 		if "Too long" in message:
 			message = "Loading requests is taking a while. Try exploring with more restricted search options."
@@ -239,73 +216,104 @@ def requests():
 
 
 def fetch_requests():
-    """
-    Ultra-custom API endpoint for serving up requests.
-    Supports limit, search, and page parameters and returns json with an object that
-    has a list of results in the 'objects' field.
-    """
-    department = request.args.get('department') 
-    app.logger.info("\n\nDepartment filter:%s." %department)
-    page   = request.args.get('page')   or 1
-    limit  = request.args.get('limit')  or 15
-    offset = limit * (int(page) - 1)
-    user_id = get_user_id()
+	"""
+	Ultra-custom API endpoint for serving up requests.
+	Supports limit, search, and page parameters and returns json with an object that
+	has a list of results in the 'objects' field.
+	"""
 
-    results = db.session.query(Request)
+	user_id = get_user_id()
 
-    if department and department != "All departments":
-    	department = Department.query.filter_by(name = department).first()
-    	if department:
-    		results = results.filter(Request.department_id == department.id)
-    	else:
-    		return "No results!"
- 
- 	if not results:
- 		return "No results!"
-                     
-    # Check for a text search term and add to the query if we can.
-    search_term = request.args.get('search')
-    if search_term:
-        results = results.filter("to_tsvector(text) @@ to_tsquery('" + search_term + ":*')")
-        
-    # Filter based on current request status.
-    is_closed = request.args.get('is_closed')
-    if is_closed != None:
-        # if is_closed.lower() == "true":
-        #     results = results.filter(Request.status.ilike("%closed%"))
-        if is_closed.lower() == "false":
-            results = results.filter(~Request.status.ilike("%closed%"))
-    if user_id:
-	    my_requests = request.args.get('my_requests')
-	    if my_requests != None:
-	    	if my_requests.lower() == "true":
-	    		results = results.filter(Request.id == Owner.request_id).filter(Owner.user_id == user_id).filter(Owner.active == True)
-	    		app.logger.info("\n\n Filtering to only your requests...")
+	# Initialize database query
+	results = db.session.query(Request)
 
-    results = results.order_by(Request.date_created.desc()) \
-        .limit(limit) \
-        .offset(offset)
+	# Filter by department
+	department = request.args.get('department') 
+	if department and department != "All departments":
+		app.logger.info("\n\nDepartment filter:%s." %department)
+		department = Department.query.filter_by(name = department).first()
+		if department:
+			results = results.filter(Request.department_id == department.id)
 
-    # TODO(cj@postcode.io): This map is pretty kludgy, we should be detecting columns and auto
-    # magically making them fields in the JSON objects we return.
-    results = map(lambda r: { "id":           r.id, \
-                              "text":         r.text, \
-                              "date_created": r.date_created.isoformat(), \
-                              "department":   r.department_name(), \
-                              "requester":   r.requester_name(), \
-                              "due_date":    format_date(r.due_date()), \
-                              # The following two attributes are defined as model methods,
-                              # and not regular SQLAlchemy attributes.
-                              "contact_name": r.point_person_name(), \
-                              "solid_status": r.solid_status(), \
-                              "status":       r.status
-                          }, results)
-    matches = {
-        "objects": results
-    }
+	# Filter by search term
+	search_input = request.args.get('search')
+	if search_input:
+		search_terms = search_input.strip().split(" ") # Get rid of leading and trailing spaces and generate a list of the search terms
+		num_terms = len(search_terms)
+		# Set up the query
+		search_query = ""
+		if num_terms > 1:
+			for x in range(num_terms - 1):
+				search_query = search_query + search_terms[x] + ' & ' 
+		search_query = search_query + search_terms[num_terms - 1] + ":*" # Catch substrings
+		app.logger.info("Search query: %s" % search_query)
+		results = results.filter("to_tsvector(text) @@ to_tsquery('%s')" % search_query)
 
-    response = anyjson.serialize(matches)
-    return Response(response, mimetype = "application/json")
+	# Filter based on current request status
+	is_closed = request.args.get('is_closed')
+	if is_closed != None:
+		# if is_closed.lower() == "true":
+		#     results = results.filter(Request.status.ilike("%closed%"))
+		if is_closed.lower() == "false":
+			results = results.filter(~Request.status.ilike("%closed%"))
+
+	# Filter based on owner's requests
+	if user_id:
+		my_requests = request.args.get('my_requests')
+		if my_requests != None:
+			if my_requests.lower() == "true":
+				results = results.filter(Request.id == Owner.request_id).filter(Owner.user_id == user_id).filter(Owner.active == True)
+
+	page_number  = request.args.get('page') or 1
+	page_number = int(page_number)
+
+	limit  = request.args.get('limit')  or 15
+	offset = limit * (page_number - 1)
+
+
+	# Execute query
+	more_results = False
+	num_results = results.count()
+	start_index = 0
+	end_index = 0
+
+	if num_results != 0:
+		start_index = (page_number - 1) * limit
+		if start_index == 0:
+			start_index = 1
+		if num_results > (limit * page_number):
+			more_results = True
+			end_index = start_index + 14
+		else:
+			end_index = num_results
+
+
+	results = results.order_by(Request.date_created.desc()).limit(limit).offset(offset).all()
+
+	# TODO(cj@postcode.io): This map is pretty kludgy, we should be detecting columns and auto
+	# magically making them fields in the JSON objects we return.
+	results = map(lambda r: { "id":           r.id, \
+							  "text":         r.text, \
+							  "date_created": r.date_created.isoformat(), \
+							  "department":   r.department_name(), \
+							  "requester":   r.requester_name(), \
+							  "due_date":    format_date(r.due_date()), \
+							  # The following two attributes are defined as model methods,
+							  # and not regular SQLAlchemy attributes.
+							  "contact_name": r.point_person_name(), \
+							  "solid_status": r.solid_status(), \
+							  "status":       r.status
+	   }, results)
+	# app.logger.info("\n\nResults: %s" % results)
+	matches = {
+		"objects": results,
+		"num_results": num_results,
+		"more_results": more_results,
+		"start_index": start_index,
+		"end_index": end_index
+		}
+	response = anyjson.serialize(matches)
+	return Response(response, mimetype = "application/json")
 
 @login_manager.unauthorized_handler
 def unauthorized():
@@ -439,52 +447,52 @@ def recaptcha():
 		return render_template('error.html', message = "You don't need to be here.")
 
 def well_known_status():
-    '''
-    '''
-    response = {
-        'status': 'ok',
-        'updated': int(time()),
-        'dependencies': ['Akismet', 'Scribd', 'Sendgrid', 'Postgres'],
-        'resources': {}
-        }
-    
-    #
-    # Try to connect to the database and get the first user.
-    #
-    try:
-        if not get_obj('User', 1):
-            raise Exception('Failed to get the first user')
-        
-    except Exception, e:
-        response['status'] = 'Database fail: %s' % e
-        return jsonify(response)
-    
-    #
-    # Try to connect to Akismet and see if the key is valid.
-    #
-    try:
-        if not is_working_akismet_key():
-            raise Exception('Akismet reported a non-working key')
-        
-    except Exception, e:
-        response['status'] = 'Akismet fail: %s' % e
-        return jsonify(response)
-    
-    #
-    # Try to ask Sendgrid how many emails we have sent in the past month.
-    #
-    try:
-        url = 'https://sendgrid.com/api/stats.get.json?api_user=%(MAIL_USERNAME)s&api_key=%(MAIL_PASSWORD)s&days=30' % app.config
-        got = get(url)
-        
-        if got.status_code != 200:
-            raise Exception('HTTP status %s from Sendgrid /api/stats.get' % got.status_code)
-        
-        mails = sum([m['delivered'] + m['repeat_bounces'] for m in got.json()])
-        response['resources']['Sendgrid'] = 100 * float(mails) / int(app.config.get('SENDGRID_MONTHLY_LIMIT') or 40000)
-        
-    except Exception, e:
-        response['status'] = 'Sendgrid fail: %s' % e
-        return jsonify(response)
-    
-    return jsonify(response)
+	'''
+	'''
+	response = {
+		'status': 'ok',
+		'updated': int(time()),
+		'dependencies': ['Akismet', 'Scribd', 'Sendgrid', 'Postgres'],
+		'resources': {}
+		}
+	
+	#
+	# Try to connect to the database and get the first user.
+	#
+	try:
+		if not get_obj('User', 1):
+			raise Exception('Failed to get the first user')
+		
+	except Exception, e:
+		response['status'] = 'Database fail: %s' % e
+		return jsonify(response)
+	
+	#
+	# Try to connect to Akismet and see if the key is valid.
+	#
+	try:
+		if not is_working_akismet_key():
+			raise Exception('Akismet reported a non-working key')
+		
+	except Exception, e:
+		response['status'] = 'Akismet fail: %s' % e
+		return jsonify(response)
+	
+	#
+	# Try to ask Sendgrid how many emails we have sent in the past month.
+	#
+	try:
+		url = 'https://sendgrid.com/api/stats.get.json?api_user=%(MAIL_USERNAME)s&api_key=%(MAIL_PASSWORD)s&days=30' % app.config
+		got = get(url)
+		
+		if got.status_code != 200:
+			raise Exception('HTTP status %s from Sendgrid /api/stats.get' % got.status_code)
+		
+		mails = sum([m['delivered'] + m['repeat_bounces'] for m in got.json()])
+		response['resources']['Sendgrid'] = 100 * float(mails) / int(app.config.get('SENDGRID_MONTHLY_LIMIT') or 40000)
+		
+	except Exception, e:
+		response['status'] = 'Sendgrid fail: %s' % e
+		return jsonify(response)
+	
+	return jsonify(response)
