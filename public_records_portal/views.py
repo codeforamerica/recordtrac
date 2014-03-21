@@ -383,10 +383,10 @@ def update_password(password=None):
 	if request.method == 'POST':
 		if set_password(current_user, request.form['password']):
 			return index()
-		app.logger.info("\n\nFailure updating password for user " % current_user.id)
+		app.logger.info("\n\nFailure updating password for user %s" % current_user.id)
 		return render_template('error.html', message = "Something went wrong updating your password.")
 	else:
-		app.logger.info("\n\nSuccessfully updated password for user " % current_user.id)
+		app.logger.info("\n\nSuccessfully updated password for user %s" % current_user.id)
 		return render_template('update_password.html', user_id = current_user.id)
 
 def staff_card(user_id):
