@@ -1,22 +1,31 @@
 from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
-from sqlalchemy.orm import relationship
-from datetime import datetime
+from flask.ext.login import current_user
+
+from sqlalchemy import Table, Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship, backref
+from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
+
+from datetime import datetime, timedelta
 from public_records_portal import db
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
-
+import re
 
 ### @export "User"
 class User(db.Model):
+	__tablename__ = 'user'
 	id = db.Column(db.Integer, primary_key = True)
 	alias = db.Column(db.String(100))
 	email = db.Column(db.String(100), unique=True)
 	phone = db.Column(db.String())
 	date_created = db.Column(db.DateTime)
 	password = db.Column(db.String(255))
-	department = db.Column(db.String())
+	department = db.Column(Integer, ForeignKey("department.id"))
+	current_department = relationship("Department", foreign_keys = [department], uselist = False)
 	contact_for = db.Column(db.String()) # comma separated list
 	backup_for = db.Column(db.String()) # comma separated list
+	owners = relationship("Owner")
+
 	def is_authenticated(self):
 		return True
 	def is_active(self):
@@ -29,6 +38,10 @@ class User(db.Model):
 		self.password = generate_password_hash(password)
 	def check_password(self, password):
 		return check_password_hash(self.password, password)
+	def get_alias(self):
+		if self.alias and self.alias != "":
+			return self.alias
+		return "N/A"
 	def __init__(self, email=None, alias = None, phone=None, department = None, password=None):
 		self.email = email
 		self.alias = alias
@@ -38,6 +51,28 @@ class User(db.Model):
 		self.department = department
 	def __repr__(self):
 		return '<User %r>' % self.email
+	def department_name(self):
+		if self.current_department and self.current_department.name:
+			return self.current_department.name
+		else:
+			return "N/A"
+
+### @export "Department"
+class Department(db.Model):
+	__tablename__ = 'department'
+	id = db.Column(db.Integer, primary_key =True)
+	date_created = db.Column(db.DateTime)
+	date_updated = db.Column(db.DateTime)
+	name = db.Column(db.String(), unique=True)
+	users = relationship("User") # The list of users in this department
+	requests = relationship("Request", order_by = "Request.date_created.asc()") # The list of requests currently associated with this department
+	def __init__(self, name):
+		self.name = name
+		self.date_created = datetime.now().isoformat()
+	def __repr__(self):
+		return '<Department %r>' % self.name
+	def get_name(self):
+		return self.name or "N/A"
 
 ### @export "Request"
 class Request(db.Model): 
@@ -49,14 +84,16 @@ class Request(db.Model):
 	qas = relationship("QA", cascade="all,delete", order_by = "QA.date_created.desc()") # The list of QA units for this request
 	status_updated = db.Column(db.DateTime)
 	text = db.Column(db.String(), unique=True) # The actual request text.
+	owners = relationship("Owner", cascade = "all, delete", order_by="Owner.date_created.asc()")
 	subscribers = relationship("Subscriber", cascade ="all, delete") # The list of subscribers following this request.
-	owners = relationship("Owner", cascade="all,delete", order_by = "Owner.date_created.asc()") # The list of city staff ever assigned to the request.
-	current_owner = db.Column(db.Integer) # The Owner ID for the city staff that currently 'owns' the request.
+	current_owner = db.Column(Integer) # Deprecated
 	records = relationship("Record", cascade="all,delete", order_by = "Record.date_created.desc()") # The list of records that have been uploaded for this request.
 	notes = relationship("Note", cascade="all,delete", order_by = "Note.date_created.desc()") # The list of notes appended to this request.
 	status = db.Column(db.String(400)) # The status of the request (open, closed, etc.)
 	creator_id = db.Column(db.Integer, db.ForeignKey('user.id')) # If city staff created it on behalf of the public, otherwise the creator is the subscriber with creator = true
 	department = db.Column(db.String())
+	department_id = db.Column(db.Integer, db.ForeignKey("department.id"))
+	department_obj = relationship("Department", uselist = False)
 	def __init__(self, text, creator_id = None, department = None):
 		self.text = text
 		self.date_created = datetime.now().isoformat()
@@ -64,10 +101,52 @@ class Request(db.Model):
 		self.department = department
 	def __repr__(self):
 		return '<Request %r>' % self.text
+	def point_person(self):
+		for o in self.owners:
+			if o.is_point_person:
+				return o
+		return None
+	def requester(self):
+		if self.subscribers:
+			return self.subscribers[0] or None # The first subscriber is always the requester
+		return None
+	def requester_name(self):
+		requester = self.requester()
+		if requester and requester.user:
+			return requester.user.get_alias()
+		return "N/A"
+	def point_person_name(self):
+		point_person = self.point_person()
+		if point_person and point_person.user:
+			return point_person.user.get_alias()
+		return "N/A"
+	def department_name(self):
+		if self.department_obj:
+			return self.department_obj.get_name()
+		return "N/A"
+	def is_closed(self):
+		return re.match('.*(closed).*', self.status, re.IGNORECASE) is not None
+	def solid_status(self):
+		if self.is_closed():
+			return "closed"
+		else:
+			if not current_user.is_anonymous():
+				due = self.due_date()
+				if datetime.now() >= due:
+					return "overdue"
+				elif (datetime.now() + timedelta(days = 2)) >= due:
+					return "due soon"
+		return "open"
+	def due_date(self):
+		days_to_fulfill = 10
+		if self.extended:
+			days_to_fulfill = days_to_fulfill + 14
+		due_date = (self.date_created + timedelta(days = days_to_fulfill))
+		return due_date
 
 ### @export "QA"
 class QA(db.Model):
-# A Q & A block for a request 
+# A Q & A block for a request
 	__tablename__ = 'qa'
 	id = db.Column(db.Integer, primary_key = True)
 	question = db.Column(db.String())
@@ -89,18 +168,22 @@ class Owner(db.Model):
 # A member of city staff assigned to a particular request, that may or may not upload records towards that request.
 	__tablename__ = 'owner'
 	id = db.Column(db.Integer, primary_key =True)
-	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	user_id = Column(Integer, ForeignKey('user.id'))
+	user = relationship("User", uselist = False)
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
+	request = relationship("Request", foreign_keys = [request_id])
 	active = db.Column(db.Boolean, default = True) # Indicate whether they're still involved in the request or not.
 	reason = db.Column(db.String()) # Reason they were assigned
 	date_created = db.Column(db.DateTime)
 	date_updated = db.Column(db.DateTime)
-	def __init__(self, request_id, user_id, reason= None):
+	is_point_person = db.Column(db.Boolean)
+	def __init__(self, request_id, user_id, reason= None, is_point_person = False):
 		self.reason = reason
 		self.user_id = user_id
 		self.request_id = request_id
 		self.date_created = datetime.now().isoformat()
 		self.date_updated = self.date_created
+		self.is_point_person = is_point_person
 	def __repr__(self):
 		return '<Owner %r>' %self.user_id
 
@@ -111,6 +194,7 @@ class Subscriber(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
 	should_notify = db.Column(db.Boolean, default = True) # Allows a subscriber to unsubscribe
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	user = relationship("User", uselist = False)
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
 	date_created = db.Column(db.DateTime)
 	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id')) # Not null if responsible for fulfilling a part of the request

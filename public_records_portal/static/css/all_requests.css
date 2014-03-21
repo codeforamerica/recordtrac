@@ -9,11 +9,6 @@
 		color: #333;
 	}
 
-/* hide table caption */
-	caption {
-		display: none;
-	}
-
 /* breathing room for filter count */
 	small.count {
 		margin-left: 1em;
@@ -34,12 +29,7 @@
 		margin-bottom: 1em;
 		margin-top: 1em;
 	}
-	#allrequestTable_filter label {
-		margin-bottom: 1em;
-		margin-top: 0.5em;
-		font-weight: bold;
-		font-size: 17.5px;
-	}
+
 	#allrequestTable_info {
 	margin-left: 1.75em;
 	}
@@ -78,42 +68,6 @@ td.status {
 	color: white;
 }
 
-#allrequestTable tbody tr:hover, #allrequestTable tbody tr.highlighted {
-	background-color: rgba(23,178,146, .3);
-	cursor: pointer;
-}
-
-table.dataTable thead th.status {
-	padding-left: 1px !important;
-	padding-right: 1px !important;
-	width: 2% !important;
-}
-
-table.dataTable tbody td.status {
-	padding-left: 1px !important;
-	padding-right: 1px !important;
-	width: 2% !important;
-
-	text-align: center;
-	vertical-align: middle;
-}
-
-table.dataTable tbody td.closed {
-	background-color: #2a2b2b;
-}
-
-table.dataTable tbody td.open {
-	background-color: #2688AD;
-}
-
-table.dataTable tbody td.soon {
-	background-color: #FB991B;
-}
-
-table.dataTable tbody td.overdue {
-	background-color: #CA1A1A;
-}
-
 .intro_text {
 	margin-bottom: 2%;
 }
@@ -121,4 +75,55 @@ table.dataTable tbody td.overdue {
 /* allows the "Request new record" button appear inline with Explore header */
 h3 {
 	display: inline;
+}
+
+/*
+ * Fresh styles for the requests table are below. Things are in the process of being
+ * ported.
+ */
+
+#search label {
+  font-weight: bold;
+  font-size: 17.5px;
+  display: inline;
+}
+
+#requests th, #requests td {
+    text-align: left;
+	  vertical-align: middle;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#requests thead tr {
+    border-bottom: 1px solid #808080;
+}
+
+#requests tbody tr {
+    border-bottom: 1px solid #DDD;
+}
+
+#requests tbody tr:hover {
+	  background-color: rgba(23,178,146, .3);
+}
+
+#requests .status {
+    padding: 5px;
+	  width: 14px;
+}
+
+#requests .status.closed {
+    background-color: #2a2b2b;
+}
+
+#requests .status.open {
+    background-color: #2688AD;
+}
+
+#requests .status.soon {
+    background-color: #FB991B;
+}
+
+#requests .status.overdue {
+    background-color: #CA1A1A;
 }

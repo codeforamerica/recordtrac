@@ -1,18 +1,50 @@
 /* Table initialisation */
 $(document).ready(function() {
-	$('#allrequestTable').dataTable( {
-		"aaSorting": [[ 1, "desc" ]], // 2nd column sort on #
-		"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
-		"sPaginationType": "bootstrap",
-		
-		"aoColumnDefs": [
-      		{ "bSortable": false, "aTargets": [ 0 ] }
-    	],
-		"iDisplayLength": 50,
-		"oLanguage": {
-			"sLengthMenu": "_MENU_ records per page"
-		}
-	} );
+  // Takes in an array of objects and produces an array of arrays
+  // that are formatted how datatables expects.
+  function filter_for_datatables ( rows )
+  {
+    var a = $.map( rows, function ( row ) {
+      // jQuery seems to flatten arrays that come out of map(), so this wacky double
+      // nesting is needed to work around it.
+      return [ [ "", row["id"], row["date_created"], row["text"], row["department"], "hello" ] ]
+    })
+    return a
+  }
+
+	// $('#allrequestTable').dataTable( {
+	// 	"aaSorting": [[ 1, "desc" ]], // 2nd column sort on #
+	// 	"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+	// 	"sPaginationType": "bootstrap",
+	// 	"aoColumnDefs": [
+  //     		{ "bSortable": false, "aTargets": [ 0 ] }
+  //   	],
+	// 	"iDisplayLength": 50,
+	// 	"oLanguage": {
+	// 		"sLengthMenu": "_MENU_ records per page"
+	// 	},
+
+  //   // Rely on the API for serving up our list of requests.
+  //   "bServerSide": true,
+  //   "bProcessing": true,
+  //   "sAjaxSource": "/api/request",
+  //   "fnServerData": function(url, data, callback) {
+  //     console.log ( data, callback );
+  //     $.getJSON(url, {
+  //       "q": { "limit":  data[4]["value"], // iDisplayLength
+  //              "offset": data[3]["value"]  // iDisplayStart
+  //            }
+  //     }, function(data) {
+  //       console.log(data);
+  //       callback({
+  //         // "iTotalRecords":        data.num_results,
+  //         "iTotalDisplayRecords": data.num_results,
+  //         "aaData":               filter_for_datatables(data.objects)
+  //       });
+  //     });
+  //   }
+	});
+
 	/* adds placeholder text for search box */
 	$('.dataTables_filter label input').attr( {
 		"placeholder": "I'd like to find...",
@@ -166,5 +198,3 @@ if ( $.fn.DataTable.TableTools ) {
 		}
 	} );
 }
-
-

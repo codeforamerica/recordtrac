@@ -4,10 +4,15 @@ from flask.ext.restless import APIManager
 from flask.ext.admin import Admin, expose, BaseView, AdminIndexView
 from flask.ext.admin.contrib.sqlamodel import ModelView
 
+
+
+
 # Create API
 manager = APIManager(app, flask_sqlalchemy_db=db)
+
 # The endpoints created are /api/object, e.g. publicrecordsareawesome.com/api/request/
-manager.create_api(models.Request, methods=['GET'], results_per_page=10, allow_functions = True)
+manager.create_api(models.Request, methods=['GET'], results_per_page = 10, allow_functions = True)
+manager.create_api(models.Department, methods=['GET'], results_per_page = 10, allow_functions = True)
 manager.create_api(models.Owner, methods=['GET'], results_per_page = 10, allow_functions = True)
 manager.create_api(models.Note, methods=['GET'], results_per_page = 10, allow_functions = True)
 manager.create_api(models.Record, methods=['GET'], results_per_page = 10, allow_functions = True)
@@ -42,7 +47,7 @@ class RequestView(AdminView):
 	can_create = False
 	column_list = ('id', 'text', 'date_created', 'status') # The fields the admin can view
 	column_searchable_list = ('status', 'text') # The fields the admin can search a request by
-	form_excluded_columns = ('date_created', 'current_owner', 'extended', 'status', 'status_updated') # The fields the admin cannot edit.
+	form_excluded_columns = ('date_created', 'extended', 'status', 'status_updated') # The fields the admin cannot edit.
 
 class RecordView(AdminView):
 	can_create = False
@@ -62,15 +67,21 @@ class NoteView(AdminView):
 
 class UserView(AdminView):
 	can_create = False
-	column_list = ('id', 'contact_for', 'backup_for', 'alias')
+	column_list = ('id', 'contact_for', 'backup_for', 'alias', 'department')
 	column_searchable_list = ('contact_for', 'alias')
-	form_excluded_columns = ('date_created', 'department', 'password')
+	form_excluded_columns = ('date_created', 'password')
+
+class DepartmentView(AdminView):
+	can_create = True
+	column_list = ('id', 'name', 'date_created', 'date_updated')
+
 
 admin.add_view(RequestView(Request, db.session))
 admin.add_view(RecordView(Record, db.session))
 admin.add_view(NoteView(Note, db.session))
 admin.add_view(QAView(QA, db.session))
 admin.add_view(UserView(User, db.session))
+admin.add_view(DepartmentView(Department, db.session))
 
 # Routing dictionary.
 routing = {
@@ -123,6 +134,10 @@ routing = {
 	},
 	'any_page':{
 		'url': '/<page>'
+	},
+	'fetch_requests':{
+		'url': '/custom/request',
+		'methods': ['GET', 'POST']
 	},
 	'requests':{
 		'url': '/requests',
