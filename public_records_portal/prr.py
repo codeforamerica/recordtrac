@@ -17,6 +17,7 @@ from notifications import generate_prr_emails
 import scribd_helpers
 from db_helpers import *
 from spam import is_spam
+import logging
 
 ### @export "add_resource"
 def add_resource(resource, request_body, current_user_id = None):
@@ -150,12 +151,13 @@ def make_request(text, email = None, user_id = None, phone = None, alias = None,
 	assigned_to_email = app.config['DEFAULT_OWNER_EMAIL']
 	assigned_to_reason = app.config['DEFAULT_OWNER_REASON']
 	if department:
+		app.logger.info("\n\nDepartment chosen: %s" %department)
 		prr_email = db_helpers.get_contact_by_dept(department)
 		if prr_email:
 			assigned_to_email = prr_email
 			assigned_to_reason = "PRR Liaison for %s" %(department)
 		else:
-			print "%s is not a valid department" %(department)
+			app.logger.info("%s is not a valid department" %(department))
 			department = None
 	request_id = create_request(text = text, user_id = user_id, department = department) # Actually create the Request object
 	new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email) # Assign someone to the request
@@ -201,12 +203,23 @@ def open_request(request_id):
 ### @export "assign_owner"	
 def assign_owner(request_id, reason, email = None): 
 	""" Called any time a new owner is assigned. This will overwrite the current owner."""
-	owner_id, is_new_owner = add_staff_participant(request_id = request_id, reason = reason, email = email)
 	req = get_obj("Request", request_id)
-	if req.current_owner == owner_id: # Already the current owner
+	past_owner_id = None
+	# If there is already an owner, unassign them:
+	if req.point_person():
+		past_owner_id = req.point_person().id
+		past_owner = get_obj("Owner", req.point_person().id)
+		update_obj(attribute = "is_point_person", val = False, obj = past_owner)
+	owner_id, is_new_owner = add_staff_participant(request_id = request_id, reason = reason, email = email, is_point_person = True)
+	if (past_owner_id == owner_id): # Already the current owner, so don't send any e-mails
 		return owner_id
-	update_obj(attribute = "current_owner", val = owner_id, obj = req)
+
+	app.logger.info("\n\nA new owner has been assigned: Owner: %s" % owner_id)
+	new_owner = get_obj("Owner", owner_id)	
+	# Update the associated department on request
+	update_obj(attribute = "department_id", val = new_owner.user.department, obj = req)
 	user_id = get_attribute(attribute = "user_id", obj_id = owner_id, obj_type = "Owner")
+	# Send notifications
 	if is_new_owner:
 		generate_prr_emails(request_id = request_id, notification_type = "Request assigned", user_id = user_id)
 	return owner_id

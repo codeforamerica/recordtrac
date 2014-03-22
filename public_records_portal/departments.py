@@ -2,6 +2,7 @@ import os
 import json
 from public_records_portal import app
 from db_helpers import *
+from models import Department
 
 """ 
 .. module:: prr
@@ -33,6 +34,10 @@ def create_list_depts():
 	depts_json = open(os.path.join(app.root_path, 'static/json/departments.json'))
 	json_data = json.load(depts_json)
 	for department in json_data:
+		d = Department.query.filter_by(name = department).first()
+		if not d:
+			d = Department(name = department)
+			put_obj(d)
 		depts.append(department)
   	with open(os.path.join(app.root_path, 'static/json/list_of_departments.json'), 'w') as outfile:
   		json.dump(depts, outfile)
@@ -70,15 +75,21 @@ def get_depts(user):
 	return depts_contact, depts_backup
 
 ### @export "populate_users_with_departments"
+# This is for PRR Liaisons
 def populate_users_with_departments():
 	users = get_objs("User")
 	for u in users:
-		dept = get_dept(u)
+		department_name = get_dept(u)
+		if not department_name:
+			continue
+		dept = Department.query.filter_by(name = department_name).first()
+		if not dept:
+			dept = Department(name = department_name)
+			put_obj(dept)
 		if dept:
-			update_obj(attribute = "department", val = dept, obj = u)
+			update_obj(attribute = "department", val = dept.id, obj = u)
 		depts_contact, depts_backup = get_depts(u)
 		if depts_contact:
 			update_obj(attribute = "contact_for", val = ",".join(depts_contact), obj = u)
 		if depts_backup:
 			update_obj(attribute = "backup_for", val = ",".join(depts_backup), obj = u)
-

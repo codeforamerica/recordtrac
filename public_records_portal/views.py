@@ -10,13 +10,16 @@ from db_helpers import *
 import departments
 import os, json
 from urlparse import urlparse, urljoin
-from notifications import send_prr_email
+from notifications import send_prr_email, format_date
 from spam import is_spam, is_working_akismet_key
 from requests import get
 from time import time
 from flask.ext.cache import Cache
 from recaptcha.client import captcha
 from timeout import timeout
+from flask import jsonify, request, Response
+import anyjson
+import helpers
 
 # Initialize login
 login_manager = LoginManager()
@@ -26,6 +29,11 @@ login_manager.init_app(app)
 cache = Cache()
 cache.init_app(app, config={'CACHE_TYPE': 'simple'})
 
+# Set flags:
+
+check_for_spam = False
+if app.config['ENVIRONMENT'] == 'PRODUCTION':
+	check_for_spam = True
 
 # Submitting a new request
 def new_request(passed_recaptcha = False, data = None):
@@ -38,19 +46,21 @@ def new_request(passed_recaptcha = False, data = None):
 			return render_template('error.html', message = "You cannot submit an empty request.")
 		if email == "" and 'ignore_email' not in data and not passed_recaptcha:
 			return render_template('missing_email.html', form = data, user_id = get_user_id())
-		if (app.config['ENVIRONMENT'] == 'PRODUCTION') and is_spam(request_text) and not passed_recaptcha:
+		if check_for_spam and is_spam(request_text) and not passed_recaptcha:
 			return render_template('recaptcha.html', form = data, message = "Hmm, your request looks like spam. To submit your request, type the numbers or letters you see in the field below.", public_key = app.config['RECAPTCHA_PUBLIC_KEY'])
+
 		alias = None
 		phone = None
 		if 'request_alias' in data:
 			alias = data['request_alias']
 		if 'request_phone' in data:
 			phone = data['request_phone']
-		request_id, is_new = make_request(text = request_text, email = email, user_id = get_user_id(), alias = alias, phone = phone, passed_recaptcha = passed_recaptcha)
+		request_id, is_new = make_request(text = request_text, email = email, user_id = get_user_id(), alias = alias, phone = phone, passed_recaptcha = passed_recaptcha, department = data['request_department'])
 		if is_new:
 			return redirect(url_for('show_request_for_x', request_id = request_id, audience = 'new'))
 		if not request_id:
 			return render_template('error.html', message = "Your request looks a lot like spam.")
+		app.logger.info("\n\nDuplicate request entered: %s" % request_text)
 		return render_template('error.html', message = "Your request is the same as /request/%s" % request_id)
 	else:
 		doc_types = os.path.exists(os.path.join(app.root_path, 'static/json/doctypes.json'))
@@ -141,10 +151,13 @@ def add_a_resource(resource):
 	if request.method == 'POST':
 		resource_id = add_resource(resource = resource, request_body = request, current_user_id = current_user.id)
 		if type(resource_id) == int or str(resource_id).isdigit():
+			app.logger.info("\n\nSuccessfully added resource: %s with id: %s" % (resource, resource_id))
 			return redirect(url_for('show_request_for_x', audience='city', request_id = request.form['request_id']))
 		elif resource_id == False:
+			app.logger.info("\n\nThere was an issue with adding resource: %s" % resource)
 			return render_template('error.html')
 		else:
+			app.logger.info("\n\nThere was an issue with the upload: %s" % resource_id)
 			return render_template('help_with_uploads.html', message = resource_id)
 	return render_template('error.html', message = "You can only update requests from a request page!")
 
@@ -180,44 +193,22 @@ def close(request_id = None):
 	return render_template('error.html', message = "You can only close from a requests page!")
 
 # Shows all public records requests that have been made.
-@timeout(seconds=20)
+@timeout(seconds=25)
 def requests():
+	app.logger.debug("Processing requests.")
 	try:
 		departments_json = open(os.path.join(app.root_path, 'static/json/list_of_departments.json'))
 		list_of_departments = json.load(departments_json)
 		departments = sorted(list_of_departments, key=unicode.lower)
-		my_requests = False
-		requester_name = ""
-		dept_selected = "All departments"
-		open_requests = True
-		if request.method == 'GET':
-			filters = request.args.copy()
-			if not filters:
-				if not current_user.is_anonymous():
-					my_requests = True
-					filters['owner'] = current_user.id
-				filters['status'] = 'open'
-			else:
-				if 'department' in filters and filters['department'].lower() == 'all':
-					del filters['department']
-				if not ('status' in filters and filters['status'].lower() == 'open'):
-					open_requests = False
-				if 'department' in filters:
-					dept_selected = filters['department']
-				if 'owner' in filters and not current_user.is_anonymous():
-					my_requests = True
-				if 'requester' in filters and current_user.is_anonymous():
-					del filters['requester']
-		record_requests = get_request_table_data(get_requests_by_filters(filters))
 		user_id = get_user_id()
-		if record_requests:
-			template = 'all_requests.html'
-			if user_id: 
-				template = 'all_requests_city.html'
-		else:
-			template = "all_requests_noresults.html"
 		total_requests_count = get_count("Request")
-		return render_template(template, record_requests = record_requests, user_id = user_id, title = "All Requests", open_requests = open_requests, departments = departments, dept_selected = dept_selected, my_requests = my_requests, total_requests_count = total_requests_count, requester_name = requester_name)
+		template = 'all_requests.html'
+
+		return render_template(template,
+				   user_id = user_id,
+				   title = "All Requests",
+				   departments = departments,
+				   total_requests_count = total_requests_count)
 	except Exception, message:
 		if "Too long" in message:
 			message = "Loading requests is taking a while. Try exploring with more restricted search options."
@@ -225,13 +216,115 @@ def requests():
 		return render_template('error.html', message = message, user_id = get_user_id())
 
 
+def fetch_requests():
+	"""
+	Ultra-custom API endpoint for serving up requests.
+	Supports limit, search, and page parameters and returns json with an object that
+	has a list of results in the 'objects' field.
+	"""
+
+	user_id = get_user_id()
+
+	# Initialize database query
+	results = db.session.query(Request)
+
+	# Filter by department
+	department = request.args.get('department') 
+	if department and department != "All departments":
+		app.logger.info("\n\nDepartment filter:%s." %department)
+		department = Department.query.filter_by(name = department).first()
+		if department:
+			results = results.filter(Request.department_id == department.id)
+		else:
+			results = results.filter(Request.department == request.args.get('department'))
+
+	# Filter by search term
+	search_input = request.args.get('search')
+	if search_input:
+		search_terms = search_input.strip().split(" ") # Get rid of leading and trailing spaces and generate a list of the search terms
+		num_terms = len(search_terms)
+		# Set up the query
+		search_query = ""
+		if num_terms > 1:
+			for x in range(num_terms - 1):
+				search_query = search_query + search_terms[x] + ' & ' 
+		search_query = search_query + search_terms[num_terms - 1] + ":*" # Catch substrings
+		app.logger.info("Search query: %s" % search_query)
+		results = results.filter("to_tsvector(text) @@ to_tsquery('%s')" % search_query)
+
+	# Filter based on current request status
+	is_closed = request.args.get('is_closed')
+	if is_closed != None:
+		# if is_closed.lower() == "true":
+		#     results = results.filter(Request.status.ilike("%closed%"))
+		if is_closed.lower() == "false":
+			results = results.filter(~Request.status.ilike("%closed%"))
+
+	# Filter based on owner's requests
+	if user_id:
+		my_requests = request.args.get('my_requests')
+		if my_requests != None:
+			if my_requests.lower() == "true":
+				results = results.filter(Request.id == Owner.request_id).filter(Owner.user_id == user_id).filter(Owner.active == True)
+
+	page_number  = request.args.get('page') or 1
+	page_number = int(page_number)
+
+	limit  = request.args.get('limit')  or 15
+	offset = limit * (page_number - 1)
+
+
+	# Execute query
+	more_results = False
+	num_results = results.count()
+	start_index = 0
+	end_index = 0
+
+	if num_results != 0:
+		start_index = (page_number - 1) * limit
+		if start_index == 0:
+			start_index = 1
+		if num_results > (limit * page_number):
+			more_results = True
+			end_index = start_index + 14
+		else:
+			end_index = num_results
+
+
+	results = results.order_by(Request.date_created.desc()).limit(limit).offset(offset).all()
+
+	# TODO(cj@postcode.io): This map is pretty kludgy, we should be detecting columns and auto
+	# magically making them fields in the JSON objects we return.
+	results = map(lambda r: { "id":           r.id, \
+							  "text":         r.text, \
+							  "date_created": r.date_created.isoformat(), \
+							  "department":   r.department or r.department_name(), \
+							  "requester":   r.requester_name(), \
+							  "due_date":    format_date(r.due_date()), \
+							  # The following two attributes are defined as model methods,
+							  # and not regular SQLAlchemy attributes.
+							  "contact_name": r.point_person_name(), \
+							  "solid_status": r.solid_status(), \
+							  "status":       r.status
+	   }, results)
+	# app.logger.info("\n\nResults: %s" % results)
+	matches = {
+		"objects": results,
+		"num_results": num_results,
+		"more_results": more_results,
+		"start_index": start_index,
+		"end_index": end_index
+		}
+	response = anyjson.serialize(matches)
+	return Response(response, mimetype = "application/json")
+
 @login_manager.unauthorized_handler
 def unauthorized():
 	return render_template('alpha.html')
 
 @login_manager.user_loader
 def load_user(userid):
-	user = get_obj("User", userid)
+	user =get_obj("User", userid)
 	return user
 
 
@@ -247,7 +340,9 @@ def any_page(page):
 		return render_template('error.html', message = "%s totally doesn't exist." %(page), user_id = get_user_id())
 
 def tutorial():
-	return render_template('tutorial.html', user_id = get_user_id())
+	user_id = get_user_id()
+	app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
+	return render_template('tutorial.html', user_id = user_id)
 
 def login(email=None, password=None):
 	if request.method == 'POST':
@@ -264,7 +359,9 @@ def login(email=None, password=None):
 					redirect_url = redirect_url.replace("/request/", "/city/request/")
 				return redirect(redirect_url)
 		else:
+			app.logger.info("\n\nLogin failed (due to incorrect e-mail/password combo) for email: %s." % email)
 			return render_template('error.html', message = "Your e-mail/ password combo didn't work. You can always <a href='/reset_password'>reset your password</a>.")
+	app.logger.info("\n\nLogin failed for email: %s." % email)
 	return render_template('error.html', message="Something went wrong.")
 
 def reset_password(email=None):
@@ -273,8 +370,10 @@ def reset_password(email=None):
 		password = set_random_password(email)
 		if password:
 			send_prr_email(page = app.config['APPLICATION_URL'], recipients = [email], subject = "Your temporary password", template = "password_email.html", include_unsubscribe_link = False, password = password)
+			app.logger.info("\n\nPassword reset sent for email: %s." % email)
 			message = "Thanks! You should receive an e-mail shortly with instructions on how to login and update your password."
 		else:
+			app.logger.info("\n\nPassword reset attempted and denied for email: %s." % email)
 			message = "Looks like you're not a user already. Currently, this system requires logins only for city employees. "
 	return render_template('reset_password.html', message = message)
 
@@ -284,8 +383,10 @@ def update_password(password=None):
 	if request.method == 'POST':
 		if set_password(current_user, request.form['password']):
 			return index()
+		app.logger.info("\n\nFailure updating password for user %s" % current_user.id)
 		return render_template('error.html', message = "Something went wrong updating your password.")
 	else:
+		app.logger.info("\n\nSuccessfully updated password for user %s" % current_user.id)
 		return render_template('update_password.html', user_id = current_user.id)
 
 def staff_card(user_id):
@@ -304,11 +405,11 @@ def get_user_id():
 # See new_requests.(html/js)
 def is_public_record():
 	request_text = request.form['request_text']
-
 	not_records_filepath = os.path.join(app.root_path, 'static/json/notcityrecords.json')
 	not_records_json = open(not_records_filepath)
 	json_data = json.load(not_records_json)
 	request_text = request_text.lower()
+	app.logger.info("Someone input %s" %(request_text))
 	if "birth" in request_text or "death" in request_text or "marriage" in request_text:
 		return json_data["Certificate"]
 	if "divorce" in request_text:
@@ -345,55 +446,56 @@ def recaptcha():
 		else:
 			return new_request(passed_recaptcha = True, data = request.form)
 	else:
+		app.logger.info("\n\nAttempted access to recaptcha not via POST")
 		return render_template('error.html', message = "You don't need to be here.")
 
 def well_known_status():
-    '''
-    '''
-    response = {
-        'status': 'ok',
-        'updated': int(time()),
-        'dependencies': ['Akismet', 'Scribd', 'Sendgrid', 'Postgres'],
-        'resources': {}
-        }
-    
-    #
-    # Try to connect to the database and get the first user.
-    #
-    try:
-        if not get_obj('User', 1):
-            raise Exception('Failed to get the first user')
-        
-    except Exception, e:
-        response['status'] = 'Database fail: %s' % e
-        return jsonify(response)
-    
-    #
-    # Try to connect to Akismet and see if the key is valid.
-    #
-    try:
-        if not is_working_akismet_key():
-            raise Exception('Akismet reported a non-working key')
-        
-    except Exception, e:
-        response['status'] = 'Akismet fail: %s' % e
-        return jsonify(response)
-    
-    #
-    # Try to ask Sendgrid how many emails we have sent in the past month.
-    #
-    try:
-        url = 'https://sendgrid.com/api/stats.get.json?api_user=%(MAIL_USERNAME)s&api_key=%(MAIL_PASSWORD)s&days=30' % app.config
-        got = get(url)
-        
-        if got.status_code != 200:
-            raise Exception('HTTP status %s from Sendgrid /api/stats.get' % got.status_code)
-        
-        mails = sum([m['delivered'] + m['repeat_bounces'] for m in got.json()])
-        response['resources']['Sendgrid'] = 100 * float(mails) / int(app.config.get('SENDGRID_MONTHLY_LIMIT') or 40000)
-        
-    except Exception, e:
-        response['status'] = 'Sendgrid fail: %s' % e
-        return jsonify(response)
-    
-    return jsonify(response)
+	'''
+	'''
+	response = {
+		'status': 'ok',
+		'updated': int(time()),
+		'dependencies': ['Akismet', 'Scribd', 'Sendgrid', 'Postgres'],
+		'resources': {}
+		}
+	
+	#
+	# Try to connect to the database and get the first user.
+	#
+	try:
+		if not get_obj('User', 1):
+			raise Exception('Failed to get the first user')
+		
+	except Exception, e:
+		response['status'] = 'Database fail: %s' % e
+		return jsonify(response)
+	
+	#
+	# Try to connect to Akismet and see if the key is valid.
+	#
+	try:
+		if not is_working_akismet_key():
+			raise Exception('Akismet reported a non-working key')
+		
+	except Exception, e:
+		response['status'] = 'Akismet fail: %s' % e
+		return jsonify(response)
+	
+	#
+	# Try to ask Sendgrid how many emails we have sent in the past month.
+	#
+	try:
+		url = 'https://sendgrid.com/api/stats.get.json?api_user=%(MAIL_USERNAME)s&api_key=%(MAIL_PASSWORD)s&days=30' % app.config
+		got = get(url)
+		
+		if got.status_code != 200:
+			raise Exception('HTTP status %s from Sendgrid /api/stats.get' % got.status_code)
+		
+		mails = sum([m['delivered'] + m['repeat_bounces'] for m in got.json()])
+		response['resources']['Sendgrid'] = 100 * float(mails) / int(app.config.get('SENDGRID_MONTHLY_LIMIT') or 40000)
+		
+	except Exception, e:
+		response['status'] = 'Sendgrid fail: %s' % e
+		return jsonify(response)
+	
+	return jsonify(response)

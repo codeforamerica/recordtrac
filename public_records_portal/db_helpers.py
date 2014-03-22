@@ -64,10 +64,11 @@ def get_objs(obj_type):
 
 ### @export "get_avg_response_time"
 def get_avg_response_time(department):
-	q = db.session.query(Request).join(Owner, Request.current_owner == Owner.id).join(User).filter(func.lower(User.department).like("%%%s%%" % department.lower())).all()
+	app.logger.info("\n\nCalculating average response time for department: %s" % department)
+	d = Department.query.filter_by(name = department).first()
 	response_time = None
 	num_closed = 0
-	for request in q:
+	for request in d.requests:
 		if request.status and 'Closed' in request.status:
 			if response_time:
 				response_time = response_time + (request.status_updated - request.date_created).total_seconds()
@@ -84,19 +85,7 @@ def get_request_by_owner(owner_id):
 	""" Return the request that a particular owner belongs to """
 	if not owner_id:
 		return None
-	return Request.query.filter_by(current_owner = owner_id).first()
-
-### @export "get_dept_by_request"
-def get_dept_by_request(request):
-	""" Return the department that a particular request belongs to """
-	if not request.department: # If it wasn't specified at time of request, we guess using the current point of contact:
-		try:
-			point_of_contact = User.query.get(Owner.query.get(request.current_owner).user_id)
-			return point_of_contact.department
-		except Exception, e:
-			app.logger.info("\n\nThere was an error getting a department for request with ID %s: %s" %(request.id, e))
-			return None
-	return request.department
+	return Owner.query.get(owner_id).request
 
 ### @export "get_owners_by_user_id"
 def get_owners_by_user_id(user_id):
@@ -108,16 +97,18 @@ def get_owners_by_user_id(user_id):
 ### @export "get_owner_data"
 def get_owner_data(request_id, attributes = ["alias"]):
 	""" Return the alias of the current owner for a particular request. """
-	owner_data = []
-	if not request_id:
-		return owner_data
-	q = db.session.query(User).join(Owner, User.id == Owner.user_id).join(Request, Owner.id == Request.current_owner).filter(Request.id == request_id).all()
-	for attribute in attributes:
-		if len(q) > 0:
-			owner_data.append(getattr(q[0], attribute))
-		else:
-			owner_data.append(None)
-	return owner_data
+	r = Request.query.get(request_id)
+	return r.point_person().user.alias
+	# owner_data = []
+	# if not request_id:
+	# 	return owner_data
+	# q = db.session.query(User).join(Owner, User.id == Owner.user_id).join(Request, Owner.id == Request.current_owner).filter(Request.id == request_id).all()
+	# for attribute in attributes:
+	# 	if len(q) > 0:
+	# 		owner_data.append(getattr(q[0], attribute))
+	# 	else:
+	# 		owner_data.append(None)
+	# return owner_data
 
 ### @export "get_prr_liaison_by_dept"
 def get_contact_by_dept(dept):
@@ -125,7 +116,7 @@ def get_contact_by_dept(dept):
 	q = db.session.query(User).filter(func.lower(User.contact_for).like("%%%s%%" % dept.lower()))
 	if len(q.all()) > 0:
 		return q[0].email
-	print dept
+	app.logger.debug("Department: %s" % dept)
 	return None
 
 ### @export "get_backup_by_dept"
@@ -134,7 +125,7 @@ def get_backup_by_dept(dept):
 	q = db.session.query(User).filter(func.lower(User.backup_for).like("%%%s%%" % dept.lower()))
 	if len(q.all()) > 0:
 		return q[0].email
-	print dept
+	app.logger.debug("Department: %s" % dept)
 	return None
 
 ### @export "get_requests_by_filters"
@@ -142,9 +133,11 @@ def get_requests_by_filters(filters_dict):
 	""" Return the queryset of requests for the filters provided. """
 	q = db.session.query(Request)
 	if 'department' in filters_dict:
-		q = q.join(Owner, Request.current_owner == Owner.id).join(User).filter(func.lower(User.department).like("%%%s%%" % filters_dict['department'].lower()))
-		if 'owner' in filters_dict:
-			q = q.filter(Request.id == Owner.request_id).filter(Owner.user_id == filters_dict['owner']) 
+		department = Department.query.filter_by(name = filters_dict['department']).first()
+    	if department:
+			q = q.filter(Request.department_id == department.id)
+			if 'owner' in filters_dict:
+				q = q.filter(Request.id == Owner.request_id).filter(Owner.user_id == filters_dict['owner']) 
 	else:
 		if 'owner' in filters_dict:
 			q = q.join(Owner, Request.id == Owner.request_id).filter(Owner.user_id == filters_dict['owner']) 
@@ -169,7 +162,7 @@ def get_requests_by_filters(filters_dict):
 				continue
 			else:
 				q = q.filter(request_attr).like("%%%s%%" % value)
-	return q.all()
+	return q.limit(10).all()
 
 ### @export "put_obj"
 def put_obj(obj):
@@ -177,6 +170,7 @@ def put_obj(obj):
 	if obj:
 		db.session.add(obj)
 		db.session.commit()
+		app.logger.info("\n\nCommitted object to database: %s" % obj)
 		return True
 	return False
 
@@ -195,6 +189,7 @@ def get_attribute(attribute, obj_id = None, obj_type = None, obj = None):
 ### @export "update_obj"
 def update_obj(attribute, val, obj_type = None, obj_id = None, obj = None):
 	""" Obtain the object by obj_id and obj_type if obj is not provided, and update the specified attribute for that object. Return true if successful. """
+	app.logger.info("\n\nUpdating attribute: %s with value: %s for obj_type: %s, obj_id: %s, obj: %s"%(attribute, val,obj_type, obj_id, obj))
 	if obj_id and obj_type:
 		obj = get_obj(obj_type, obj_id)
 	if obj:
@@ -241,17 +236,19 @@ def create_note(request_id, text, user_id):
 		note = Note(request_id = request_id, text = text, user_id = user_id)
 		put_obj(note)
 		return note.id
-	except:
+	except Exception, e:
+		app.logger.info("\n\nThere was an issue with creating a note with text: %s %s" % (text, e))
 		return None
 
 ### @export "create_record"
 def create_record(request_id, user_id, description, doc_id = None, filename = None, access = None, url = None):
-	# try:
+	try:
 		record = Record(doc_id = doc_id, request_id = request_id, user_id = user_id, description = description, filename = filename, url = url, access = access)
 		put_obj(record)
 		return record.id
-	# except:
-		# return None
+	except Exception, e:
+		app.logger.info("\n\nThere was an issue with creating a record: %s" % e)
+		return None
 
 def remove_obj(obj_type, obj_id):
 	obj = get_obj(obj_type, obj_id)
@@ -269,13 +266,24 @@ def create_answer(qa_id, subscriber_id, answer):
 
 ### @export "create_or_return_user"
 def create_or_return_user(email=None, alias = None, phone = None, department = None, not_id = False):
+	app.logger.info("\n\nCreating or returning user...")
 	if email:
 		email = email.lower()
 		user = User.query.filter_by(email = email).first()
+		if department and type(department) != int and not department.isdigit():
+			d = Department.query.filter_by(name = department).first()
+			if d:
+				department = d.id
+			else:
+				d = Department(name = department)
+				db.session.add(d)
+				db.session.commit()
+				department = d.id
 		if not user:
 			user = create_user(email = email, alias = alias, phone = phone, department = department)
 		else:
-			user = update_user(user, alias, phone, department)
+			if alias or phone or department: # Update user if fields to update are provided
+				user = update_user(user, alias, phone, department)
 		if not_id:
 			return user
 		return user.id
@@ -288,6 +296,7 @@ def create_user(email=None, alias = None, phone = None, department = None):
 	user = User(email = email, alias = alias or "Anonymous", phone = phone, department = department, password = app.config['ADMIN_PASSWORD'])
 	db.session.add(user)
 	db.session.commit()
+	app.logger.info("\n\nCreated new user, alias: %s id: %s" % (user.alias, user.id))
 	return user
 
 ### @export "update_user"
@@ -302,6 +311,7 @@ def update_user(user, alias = None, phone = None, department = None):
 		user.password = app.config['ADMIN_PASSWORD']
 	db.session.add(user)
 	db.session.commit()
+	app.logger.info("\n\nUpdated user %s, alias: %s phone: %s department: %s" % (user.id, alias, phone, department))
 	return user
 
 ### @export "create_owner"
@@ -313,6 +323,7 @@ def create_owner(request_id, reason, email = None, user_id = None):
 	participant = Owner(request_id = request_id, user_id = user_id, reason = reason)
 	db.session.add(participant)
 	db.session.commit()
+	app.logger.info("\n\nCreated owner with id: %s" % participant.id)
 	return participant.id
 
 ### @export "change_request_status"
@@ -321,6 +332,7 @@ def change_request_status(request_id, status):
 	req.status = status
 	req.status_updated = datetime.now().isoformat()
 	db.session.add(req)
+	app.logger.info("\n\nChanged status for request: %s to %s" % (request_id, status))
 	db.session.commit()
 
 ### @export "find_request"
@@ -338,7 +350,7 @@ def find_owner(request_id, user_id):
 	return None
 
 ### @export "add_staff_participant"
-def add_staff_participant(request_id, email = None, user_id = None, reason = None):
+def add_staff_participant(request_id, is_point_person = False, email = None, user_id = None, reason = None):
 	""" Creates an owner for the request if it doesn't exist, and returns the owner ID and True if a new one was created. Returns the owner ID and False if existing."""
 	is_new = True
 	if not user_id:
@@ -347,7 +359,7 @@ def add_staff_participant(request_id, email = None, user_id = None, reason = Non
 	if not participant:
 		if not reason:
 			reason = "Added a response"
-		participant = Owner(request_id = request_id, user_id = user_id, reason = reason)
+		participant = Owner(request_id = request_id, user_id = user_id, reason = reason, is_point_person = is_point_person)
 	else:
 		is_new = False
 		app.logger.info("\n\nStaff participant with owner ID: %s already active on request %s" %(participant.id, request_id))
@@ -408,6 +420,7 @@ def update_subscriber(request_id, alias, phone):
 	sub.user_id = user_id
 	db.session.add(sub)
 	db.session.commit()
+	app.logger.info("\n\nUpdated subscriber for request %s with alias: %s and phone: %s" % (request_id, alias, phone))
 
 ### @export "get_viz_data"
 def get_viz_data():

@@ -15,7 +15,7 @@ ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'o
 
 
 def progress(bytes_sent, bytes_total):
-    print("%s of %s (%s%%)" % (bytes_sent, bytes_total, bytes_sent*100/bytes_total))
+    app.logger.info("Scribd upload in progress: %s of %s (%s%%)" % (bytes_sent, bytes_total, bytes_sent*100/bytes_total))
 
 def upload(file, filename, API_KEY, API_SECRET):
     # Configure the Scribd API.
@@ -32,7 +32,7 @@ def upload(file, filename, API_KEY, API_SECRET):
         doc_id = doc.id
         return doc_id
     except scribd.ResponseError, err:
-        print 'Scribd failed: code=%d, error=%s' % (err.errno, err.strerror)
+        app.logger.info('Scribd failed: code=%d, error=%s' % (err.errno, err.strerror))
         return err.strerror
 
 def get_scribd_download_url(doc_id, record_id = None, API_KEY = None, API_SECRET = None):
