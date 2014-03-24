@@ -210,9 +210,11 @@ def requests():
 				   departments = departments,
 				   total_requests_count = total_requests_count)
 	except Exception, message:
+		app.logger.info("\n\n%s" % message)
 		if "Too long" in message:
 			message = "Loading requests is taking a while. Try exploring with more restricted search options."
-			app.logger.info("\n\nLoading requests timed out.")
+		else: 
+			message = "Something went wrong loading the requests. We're looking into it!"
 		return render_template('error.html', message = message, user_id = get_user_id())
 
 
