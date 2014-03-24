@@ -193,7 +193,8 @@ def ask_a_question(request_id, owner_id, question):
 def answer_a_question(qa_id, answer, subscriber_id = None):
 	""" A requester can answer a question city staff asked them about their request."""
 	request_id = create_answer(qa_id, subscriber_id, answer)
-	change_request_status(request_id, "Pending")
+	# We aren't changing the request status if someone's answered a question anymore, but we could
+	# change_request_status(request_id, "Pending")
 	generate_prr_emails(request_id = request_id, notification_type = "Question answered")
 
 ### @export "open_request"	
