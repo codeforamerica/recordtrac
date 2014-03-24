@@ -94,11 +94,17 @@ class Request(db.Model):
 	department = db.Column(db.String())
 	department_id = db.Column(db.Integer, db.ForeignKey("department.id"))
 	department_obj = relationship("Department", uselist = False)
-	def __init__(self, text, creator_id = None, department = None):
+	date_received = db.Column(db.DateTime)
+	offline_submission_type = db.Column(db.String())
+
+	def __init__(self, text, creator_id = None, department = None, offline_submission_type = None, date_received = None):
 		self.text = text
 		self.date_created = datetime.now().isoformat()
 		self.creator_id = creator_id
 		self.department = department
+		self.offline_submission_type = offline_submission_type
+		self.date_received = date_received
+
 	def __repr__(self):
 		return '<Request %r>' % self.text
 	def point_person(self):
@@ -174,6 +180,7 @@ class Owner(db.Model):
 	request = relationship("Request", foreign_keys = [request_id])
 	active = db.Column(db.Boolean, default = True) # Indicate whether they're still involved in the request or not.
 	reason = db.Column(db.String()) # Reason they were assigned
+	reason_unassigned = db.Column(db.String()) # Reason they were unassigned
 	date_created = db.Column(db.DateTime)
 	date_updated = db.Column(db.DateTime)
 	is_point_person = db.Column(db.Boolean)
