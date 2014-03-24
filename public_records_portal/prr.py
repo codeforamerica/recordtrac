@@ -104,7 +104,7 @@ def add_note(request_id, text, user_id):
 def upload_record(request_id, file, description, user_id):
 	""" Creates a record with upload/download attributes """
 	try:
-		doc_id, filename = scribd_helpers.upload_file(file)
+		doc_id, filename = scribd_helpers.upload_file(file = file, request_id = request_id)
 	except:
 		return "The upload timed out, please try again."
 	if doc_id == False:
