@@ -79,7 +79,7 @@ def update_descriptions():
     for doc in scribd.api_user.all():
         record = models.Record.query.filter_by(doc_id = doc.id).first()
         if record:
-            link_back = app.config['APPLICATION_URL'] + 'request/' str(record.request_id)
+            link_back = app.config['APPLICATION_URL'] + 'request/' + str(record.request_id)
             description =  "This document was uploaded via RecordTrac in response to a public records request for the %s. You can view the original request here: %s" % ( app.config['AGENCY_NAME'], link_back)
             doc.description = description
             doc.save()
