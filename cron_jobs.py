@@ -17,4 +17,4 @@ notify_due()
 create_viz_data()
 
 # Update the Scribd document descriptions
-update_descriptions()
+# update_descriptions()
