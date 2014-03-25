@@ -79,7 +79,7 @@ def update_descriptions():
     for doc in scribd.api_user.all():
         record = models.Record.query.filter_by(doc_id = doc.id).first()
         if record:
-            link_back = app.config['APPLICATION_URL'] + str(record.request_id)
+            link_back = app.config['APPLICATION_URL'] + 'request/' str(record.request_id)
             description =  "This document was uploaded via RecordTrac in response to a public records request for the %s. You can view the original request here: %s" % ( app.config['AGENCY_NAME'], link_back)
             doc.description = description
             doc.save()
@@ -95,7 +95,7 @@ def upload_file(file, request_id):
         if allowed[0]:
             filename = secure_filename(file.filename)
             if upload_to_scribd: # Check flag
-                link_back = app.config['APPLICATION_URL'] + str(request_id)
+                link_back = app.config['APPLICATION_URL'] + 'request/' + str(request_id)
                 doc_id = upload(file = file, filename = filename, API_KEY = app.config['SCRIBD_API_KEY'], API_SECRET = app.config['SCRIBD_API_SECRET'], description = "This document was uploaded via RecordTrac in response to a public records request for the %s. You can view the original request here: %s" % (app.config['AGENCY_NAME'], link_back))
                 return doc_id, filename
             else:
