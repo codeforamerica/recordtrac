@@ -1,5 +1,5 @@
 import scribd
-from public_records_portal import app
+from public_records_portal import app, models
 from timeout import timeout
 from werkzeug import secure_filename
 import tempfile
@@ -72,6 +72,20 @@ def make_private(doc_id, API_KEY, API_SECRET):
     doc = scribd.api_user.get(doc_id)
     doc.access = 'private'
     doc.save()
+
+
+def update_descriptions():
+    scribd.config(app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
+    for doc in scribd.api_user.all():
+        record = models.Record.query.filter_by(doc_id = doc.id).first()
+        if record:
+            link_back = app.config['APPLICATION_URL'] + str(record.request_id)
+            description =  "This document was uploaded via RecordTrac in response to a public records request for the %s. You can view the original request here: %s" % ( app.config['AGENCY_NAME'], link_back)
+            doc.description = description
+            doc.save()
+            app.logger.info("\n\nUpdated Scribd document %s's description to %s" %(doc.id, description))
+
+
 
 @timeout(seconds=20)
 def upload_file(file, request_id): 
