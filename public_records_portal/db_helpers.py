@@ -432,9 +432,8 @@ def get_viz_data():
 def create_viz_data():
 	depts_freq = []
 	depts_response_time = []
-	depts_json = open(os.path.join(app.root_path, 'static/json/list_of_departments.json'))
-	json_data = json.load(depts_json)
-	for department in json_data:
+	for department in Department.query.all():
+		department = department.name
 		line = {}
 		response_line = {}
 		line['department'] = department
