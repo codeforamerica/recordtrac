@@ -119,10 +119,13 @@ def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_ev
 			# if should_notify(recipient):
 				message.add_to(recipient)
 	message.add_bcc(sender)
-	status = mail.web.send(message)
-	if status == False:
-		app.logger.info("\n\nSendgrid did not deliver e-mail.")
-	return status
+	if send_emails:
+		status = mail.web.send(message)
+		if status == False:
+			app.logger.info("\n\nSendgrid did not deliver e-mail.")
+		return status
+	app.logger.info("\n\nNo e-mail was sent, probably because you're in a non-production environment.")
+	return False
 
 ### @export "due_date"
 def due_date(date_obj, extended = None, format = True):
