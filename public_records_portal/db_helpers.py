@@ -64,11 +64,10 @@ def get_objs(obj_type):
 
 ### @export "get_avg_response_time"
 def get_avg_response_time(department):
-	app.logger.info("\n\nCalculating average response time for department: %s" % department)
-	d = Department.query.filter_by(name = department).first()
+	q = db.session.query(Request).join(Owner, Request.current_owner == Owner.id).join(User).filter(func.lower(User.department).like("%%%s%%" % department.lower())).all()
 	response_time = None
 	num_closed = 0
-	for request in d.requests:
+	for request in q:
 		if request.status and 'Closed' in request.status:
 			if response_time:
 				response_time = response_time + (request.status_updated - request.date_created).total_seconds()
@@ -432,8 +431,9 @@ def get_viz_data():
 def create_viz_data():
 	depts_freq = []
 	depts_response_time = []
-	for department in Department.query.all():
-		department = department.name
+	depts_json = open(os.path.join(app.root_path, 'static/json/list_of_departments.json'))
+	json_data = json.load(depts_json)
+	for department in json_data:
 		line = {}
 		response_line = {}
 		line['department'] = department
