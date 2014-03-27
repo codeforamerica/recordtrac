@@ -15,8 +15,11 @@
 			<div class="span8">
 				<h1 id="landing_brand">RecordTrac</h1>
 				<h3>A better way to find public records.</h3>
-				
 			</div>
+			<div class="span4">
+				<img src="{{ url_for('static', filename = 'images/logo.png')}}" alt="{{config['AGENCY_NAME']}} logo" width="130" height="130"/>
+			</div>
+
 		</div>
 		<div class="row-fluid">
 			<p class="lead">Use RecordTrac to tell the {{config['AGENCY_NAME']}} the type of documents you need. We display every message or record uploaded. You may find what you're looking for without having to submit a new request.  <a href="/about">Find out more…</a></p>
@@ -119,7 +122,7 @@
 {% block footer %}
     <div id="footer" class="footer">
       <p class="text-center">Made by <!-- <a href="http://codeforamerica.org/2013-partners/oakland/"> -->Code for America 2013 Fellows<!-- </a> --></p>
-      <p class="text-center"><a href="/signup">Get the app</a> for your city or <a href="https://github.com/postcode/recordtrac#RecordTrac"> view project info <i class="icon-github"></i></a>.</p>
+      <p class="text-center"><a href="/signup">Get the app</a> for your city or <a href="https://github.com/postcode/recordtrac#recordtrac"> view project info <i class="icon-github"></i></a>.</p>
     </div>
 {% endblock footer %}
 

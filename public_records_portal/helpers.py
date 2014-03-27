@@ -77,7 +77,8 @@ def explain_action(action, explanation_type = None):
 			explanation_str = explanation_str + " " + explanation['Who']
 		if 'Action' in explanation:
 			explanation_str = explanation_str + " " + explanation['Action']
-		return explanation_str
+		return explanation_str.replace('*agency*', app.config['AGENCY_NAME'])
+
 
 # We don't use this anymore since we validate against the city directory, but this could be one way of doing it.
 def email_validation(email):
