@@ -23,7 +23,7 @@ var shortDeptNames = {
     "Contracts and Compliance":             'Contracts',
     "Information Technology (IT)":          'IT',
     "Office of Neighborhood Investment":    'Neighborhood',
-    "Health and Human Services":            'Health',
+    "Health and Human Services":            'HHS',
     "Human Resources":                      'HR',
     "Budget and Revenue - Revenue Division":            'Budget',
     "Council District 1 - Dan Kalb":        'D1',
@@ -34,9 +34,22 @@ var shortDeptNames = {
     "Council District 6 - Desley Brooks":   'D6',
     "Council District 7 - Larry Reid":      'D7',
     "Council At Large - Rebecca Kaplan":    'Council',
-    "Oakland Police Department":            'Police'
+    "Oakland Police Department":            'Police',
+    "City Manager Administration Unit":      "City Manager",
+    "Revenue: Administration":               "Revenue" 
 }
 
+
+function getShortDeptName(department) {
+    if (department in shortDeptNames)
+    {
+        return shortDeptNames[department];
+    }
+    else {
+        return department
+    }
+
+}
 
 // Create Frequency Graph for department requests volume
 // ==================================
@@ -84,7 +97,7 @@ $(function(){
     d3.json(viz_data_freq, function(error, json) {
         // if (error) return console.warn("Didn't recive departments frequencies.");
         data = viz_data_freq;
-        x.domain(data.map(function(d) { return shortDeptNames[d.department]; }));
+        x.domain(data.map(function(d) { return getShortDeptName(d.department); }));
         y.domain([0, d3.max(data, function(d) { return d.freq; })]);
 
         // X-Axis
@@ -114,14 +127,14 @@ $(function(){
             .style("font-size", "14px")
             .style("fill", "#333333")
             .style("font-weight", "bold")
-            .text("Total Number of Requests (top five departments)");
+            .text("Total # of Requests (top 5 departments)");
 
         // draw bars vectors
         svg.selectAll(".bar")
             .data(data)
             .enter().append("rect")
             .attr("class", "bar")
-            .attr("x", function(d) { return x(shortDeptNames[d.department]); })
+            .attr("x", function(d) { return x(getShortDeptName(d.department)); })
             .attr("width", x.rangeBand())
             .attr("y", function(d) { return y(d.freq); })
             .attr("height", function(d) { return height - y(d.freq); })
@@ -166,7 +179,7 @@ $(function() {
         .attr('class', 'd3-tip')
         .offset([-10, 0])
         .html(function(d) {
-          return d.department + "<br /><center><div style='font-weight: normal; font-size: 12px; margin-top:5px'>Requests: <span style='color:#FB991B'>" + getDays(d.time) + " days</span></div></center>";
+          return d.department + "<br /><center><div style='font-weight: normal; font-size: 12px; margin-top:5px'>Average response time: <span style='color:#FB991B'>" + getDays(d.time) + " days</span></div></center>";
         });
 
     svgNext.call(tipNext);
@@ -176,7 +189,7 @@ d3.json(viz_data_time, function(error, json) {
         data = viz_data_time;
 
         xResponseTime.domain([0, getDays(d3.max(data, function(d) { return d.time; }))]);
-        yDepartments.domain(data.map(function(d) { return shortDeptNames[d.department]; }));
+        yDepartments.domain(data.map(function(d) { return getShortDeptName(d.department); }));
 
 
         // xAxis -- Time responses graph
@@ -199,18 +212,20 @@ d3.json(viz_data_time, function(error, json) {
             .enter().append("rect")
             .attr("class", "bar")
             .attr("width", function(d) { return xResponseTime(getDays(d.time)); })
-            .attr("y", function(d) { return yDepartments(shortDeptNames[d.department]); })
+            .attr("y", function(d) { return yDepartments(getShortDeptName(d.department)); })
             .attr("height", yDepartments.rangeBand())
             .on('mouseover', tipNext.show)
             .on('mouseout', tipNext.hide);
 
         // Heading Text
         svgNext.append("text")
-            .attr("x", (width/4))
+            .attr("x", (width/8))
             .attr("y", -10)
             .style("font-size", "14px")
             .style("fill", "#333333")
             .style("font-weight", "bold")
-            .text("Average Response Time (quickest five departments)");
+            .text("Average # Days to Respond (quickest 5 departments)");
   });
 });
+
+

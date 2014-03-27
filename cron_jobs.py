@@ -14,7 +14,7 @@ notify_due()
 # populate_users_with_departments()
 
 # Create visualizations
-# create_viz_data()
+create_viz_data()
 
 # Update the Scribd document descriptions
 # update_descriptions()
