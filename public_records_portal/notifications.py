@@ -195,7 +195,7 @@ def get_staff_recipients(request):
 	owner_email = get_owner_data(request.id, attributes=["email"])[0]
 	recipients.append(owner_email)
 	# Look up the department for the request, and get the contacts and backup:
-	dept = request.departmant_name()
+	dept = request.department_name()
 	if dept != "N/A":
 		contact_email = get_contact_by_dept(dept)
 		if contact_email and contact_email not in recipients:
