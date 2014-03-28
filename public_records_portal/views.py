@@ -369,9 +369,13 @@ def login(email=None, password=None):
 			app.logger.info("\n\nLogin failed (due to incorrect e-mail/password combo) for email: %s." % email)
 			return render_template('error.html', message = "Your e-mail/ password combo didn't work. You can always <a href='/reset_password'>reset your password</a>.")
 		app.logger.info("\n\nLogin failed for email: %s." % email)
-		return render_template('error.html', message="Something went wrong.")
+		return render_template('error.html', message="Something went wrong.", user_id = get_user_id())
 	else:
-		return render_template('generic.html', message = "If you work for the %s and are trying to log into RecordTrac, please log in by clicking City login in the upper-right corner of this page." % app.config['AGENCY_NAME'])
+		user_id = get_user_id()
+		if user_id:
+			return render_template('generic.html', message = 'You are already logged in. If you wish to log in as another user, first log out by clicking your name in the upper-right corner of this page and clicking Logout.', user_id = user_id)
+		else:
+			return render_template('generic.html', message = "If you work for the %s and are trying to log into RecordTrac, please log in by clicking City login in the upper-right corner of this page." % app.config['AGENCY_NAME'])
 
 def reset_password(email=None):
 	if request.method == 'POST':
