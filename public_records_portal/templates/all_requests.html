@@ -170,15 +170,6 @@
                     <% } %> >
                  My requests
                </label>
-                 By requester name
-                <input 
-                  type="text" 
-                  class="input-small"
-                  title="requester_name"
-                  name="requester_name"
-                  id="requester_name"
-                  placeholder="Enter name"
-                  value="<%=requester_name %>">
               {% endif %}
                 <div class="row-fluid">
                 <select class="span12"title="department"id="department_name"name="department">
@@ -190,7 +181,18 @@
                     <option>{{department}}</option>
                   {% endfor %}
                 </select>
-              </div>               
+              </div>
+              {% if user_id %}
+               By requester name
+                <input 
+                  type="text" 
+                  class="input-small"
+                  title="requester_name"
+                  name="requester_name"
+                  id="requester_name"
+                  placeholder="Enter name"
+                  value="<%=requester_name %>">  
+              {% endif %}             
               </fieldset>
             </form>
           </div>
