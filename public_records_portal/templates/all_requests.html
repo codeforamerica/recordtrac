@@ -159,7 +159,8 @@
                 </label>
               {% if user_id %}
               <label class="checkbox">
-                <input type="checkbox"
+                <input 
+                    type="checkbox"
                     title="my_requests_checkbox"
                     value="{{user_id}}"
                     name="my_requests"
@@ -169,6 +170,15 @@
                     <% } %> >
                  My requests
                </label>
+                 By requester name
+                <input 
+                  type="text" 
+                  class="input-small"
+                  title="requester_name"
+                  name="requester_name"
+                  id="requester_name"
+                  placeholder="Enter name"
+                  value="<%=requester_name %>">
               {% endif %}
                 <div class="row-fluid">
                 <select class="span12"title="department"id="department_name"name="department">

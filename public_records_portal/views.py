@@ -262,12 +262,17 @@ def fetch_requests():
 		if is_closed.lower() == "false":
 			results = results.filter(~Request.status.ilike("%closed%"))
 
-	# Filter based on owner's requests
+	# Filters for agency staff only:
 	if user_id:
+		# Filter based on owner's requests
 		my_requests = request.args.get('my_requests')
 		if my_requests != None:
 			if my_requests.lower() == "true":
 				results = results.filter(Request.id == Owner.request_id).filter(Owner.user_id == user_id).filter(Owner.active == True)
+		# Filter based on requester name
+		requester_name = request.args.get('requester_name')
+		if requester_name and requester_name != "":
+			results = results.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % requester_name))
 
 	page_number  = request.args.get('page') or 1
 	page_number = int(page_number)
