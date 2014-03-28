@@ -143,7 +143,7 @@
   {
     this.model.set("requester_name", event.target.value)
     this.model.set({ page_number: 1 })
-  }, 300)    
+  }, 500)    
 
   });
 
