@@ -12,7 +12,7 @@ manager = APIManager(app, flask_sqlalchemy_db=db)
 
 # The endpoints created are /api/object, e.g. publicrecordsareawesome.com/api/request/
 manager.create_api(models.Request, methods=['GET'], results_per_page = 10, allow_functions = True)
-manager.create_api(models.Department, methods=['GET'], results_per_page = 10, allow_functions = True)
+# manager.create_api(models.Department, methods=['GET'], results_per_page = 10, allow_functions = True)
 # manager.create_api(models.Owner, methods=['GET'], results_per_page = 10, allow_functions = True)
 manager.create_api(models.Note, methods=['GET'], results_per_page = 10, allow_functions = True)
 manager.create_api(models.Record, methods=['GET'], results_per_page = 10, allow_functions = True)
