@@ -5,7 +5,7 @@ from flask import render_template, request, redirect, url_for, jsonify
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
 from public_records_portal import app
 from filters import *
-from prr import add_resource, update_resource, make_request, close_request, get_request_table_data
+from prr import add_resource, update_resource, make_request, close_request
 from db_helpers import *
 import departments
 import os, json

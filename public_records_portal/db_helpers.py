@@ -15,14 +15,6 @@ import json
 import os
 import logging 
 
-### @export "get_requester"
-def get_requester(request_id): 
-# Returns the first person who subscribed to a request, which is the requester
-	subscribers = get_attribute(attribute = "subscribers", obj_id = request_id, obj_type = "Request")
-	if subscribers:
-		subscribers.sort(key = lambda x:x.date_created)
-		return get_attribute(attribute = "user_id", obj = subscribers[0])
-	return None
 
 ### @export "get_subscriber"
 def get_subscriber(request_id, user_id):
