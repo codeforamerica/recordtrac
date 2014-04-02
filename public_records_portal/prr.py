@@ -184,7 +184,9 @@ def ask_a_question(request_id, owner_id, question):
 	qa_id = create_QA(request_id = request_id, question = question, owner_id = owner_id)
 	if qa_id:
 		change_request_status(request_id, "Pending")
-		generate_prr_emails(request_id, notification_type = "Question asked", user_id = req.requester().user_id)
+		requester = req.requester()
+		if requester:
+			generate_prr_emails(request_id, notification_type = "Question asked", user_id = requester.user_id)
 		add_staff_participant(request_id = request_id, user_id = get_attribute(attribute = "user_id", obj_id = owner_id, obj_type = "Owner"))
 		return qa_id
 	return False
