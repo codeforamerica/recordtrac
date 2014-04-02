@@ -128,42 +128,6 @@ def get_backup_by_dept(dept):
 	app.logger.debug("Department: %s" % dept)
 	return None
 
-### @export "get_requests_by_filters"
-def get_requests_by_filters(filters_dict):
-	""" Return the queryset of requests for the filters provided. """
-	q = db.session.query(Request)
-	if 'department' in filters_dict:
-		department = Department.query.filter_by(name = filters_dict['department']).first()
-    	if department:
-			q = q.filter(Request.department_id == department.id)
-			if 'owner' in filters_dict:
-				q = q.filter(Request.id == Owner.request_id).filter(Owner.user_id == filters_dict['owner']) 
-	else:
-		if 'owner' in filters_dict:
-			q = q.join(Owner, Request.id == Owner.request_id).filter(Owner.user_id == filters_dict['owner']) 
-	for attr, value in filters_dict.items():
-		if attr == 'department' or attr == 'owner':
-			continue
-		attr = attr.lower()
-		if type(value) is str or type(value) is unicode:
-			value = value.lower()
-		if attr == 'status':
-			if value == 'open':
-				q = q.filter(not_(getattr(Request, 'status').like("%%%s%%" % 'Closed')))
-			elif value == 'closed':
-				q = q.filter((getattr(Request, 'status').like("%%%s%%" % 'Closed')))
-		elif attr == 'requester': 
-			q = q.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % value))
-		else:
-			try:
-				request_attr = getattr(Request, attr)
-			except AttributeError, e:
-				
-				continue
-			else:
-				q = q.filter(request_attr).like("%%%s%%" % value)
-	return q.limit(10).all()
-
 ### @export "put_obj"
 def put_obj(obj):
 	""" Add and commit the object to the database. Return true if successful. """
@@ -432,14 +396,11 @@ def get_viz_data():
 def create_viz_data():
 	depts_freq = []
 	depts_response_time = []
-	depts_json = open(os.path.join(app.root_path, 'static/json/list_of_departments.json'))
-	json_data = json.load(depts_json)
-	for department in json_data:
-		line = {}
-		response_line = {}
-		line['department'] = department
-		response_line['department'] = department
-		line['freq'] = len(get_requests_by_filters(line))
+	for d in Department.query.all():
+		department = d.name
+		line, response_line = {}, {}
+		line['department'], response_line['department'] = department, department
+		line['freq'] = (db.session.query(Request).filter(Request.department_id == d.id)).count()
 		avg_response_time = get_avg_response_time(department)
 		if avg_response_time:
 			response_line['time'] = avg_response_time

@@ -210,9 +210,11 @@ def requests():
 				   departments = departments,
 				   total_requests_count = total_requests_count)
 	except Exception, message:
+		app.logger.info("\n\n%s" % message)
 		if "Too long" in message:
 			message = "Loading requests is taking a while. Try exploring with more restricted search options."
-			app.logger.info("\n\nLoading requests timed out.")
+		else: 
+			message = "Something went wrong loading the requests. We're looking into it!"
 		return render_template('error.html', message = message, user_id = get_user_id())
 
 
@@ -260,12 +262,17 @@ def fetch_requests():
 		if is_closed.lower() == "false":
 			results = results.filter(~Request.status.ilike("%closed%"))
 
-	# Filter based on owner's requests
+	# Filters for agency staff only:
 	if user_id:
+		# Filter based on owner's requests
 		my_requests = request.args.get('my_requests')
 		if my_requests != None:
 			if my_requests.lower() == "true":
 				results = results.filter(Request.id == Owner.request_id).filter(Owner.user_id == user_id).filter(Owner.active == True)
+		# Filter based on requester name
+		requester_name = request.args.get('requester_name')
+		if requester_name and requester_name != "":
+			results = results.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % requester_name))
 
 	page_number  = request.args.get('page') or 1
 	page_number = int(page_number)
@@ -361,8 +368,14 @@ def login(email=None, password=None):
 		else:
 			app.logger.info("\n\nLogin failed (due to incorrect e-mail/password combo) for email: %s." % email)
 			return render_template('error.html', message = "Your e-mail/ password combo didn't work. You can always <a href='/reset_password'>reset your password</a>.")
-	app.logger.info("\n\nLogin failed for email: %s." % email)
-	return render_template('error.html', message="Something went wrong.")
+		app.logger.info("\n\nLogin failed for email: %s." % email)
+		return render_template('error.html', message="Something went wrong.", user_id = get_user_id())
+	else:
+		user_id = get_user_id()
+		if user_id:
+			return render_template('generic.html', message = 'You are already logged in. If you wish to log in as another user, first log out by clicking your name in the upper-right corner of this page and clicking Logout.', user_id = user_id)
+		else:
+			return render_template('generic.html', message = "If you work for the %s and are trying to log into RecordTrac, please log in by clicking City login in the upper-right corner of this page." % app.config['AGENCY_NAME'])
 
 def reset_password(email=None):
 	if request.method == 'POST':

@@ -9,6 +9,7 @@
       page_number: 1,
       // Using an attribute called 'page' makes weird things happen here. JFYI.
       is_closed: true,
+      requester_name: "",
       my_requests: false,
       department: "",
       more_results: false,
@@ -53,6 +54,7 @@
       var data_params = {
         "page": this._query.get("page_number"),
         "is_closed": this._query.get("is_closed"),
+        "requester_name": this._query.get("requester_name"),
         "my_requests": this._query.get("my_requests")
       }
 
@@ -93,13 +95,14 @@
 
     initialize: function ()
     {
-      this.model.on( "change", this.render, this )
+      this.render()
     },
 
     render: function ()
     {
       var vars = {
         "is_closed": this.model.get( "is_closed" ),
+        "requester_name": this.model.get ("requester_name"),
         "my_requests": this.model.get( "my_requests"),
         "department": this.model.get( "department"),
         "page_number": this.model.get("page_number"),
@@ -112,6 +115,7 @@
     events:
     {
       "click #is_closed": "toggle_show_closed",
+      "keyup #requester_name": "set_requester_name",
       "click #my_requests": "toggle_my_requests",
       "change #department_name": "set_department"
     },
@@ -134,7 +138,12 @@
   {
     this.model.set("department", event.target.value)
     this.model.set({ page_number: 1 })
-  }    
+  },
+      set_requester_name: _.debounce(function (event)
+  {
+    this.model.set("requester_name", event.target.value)
+    this.model.set({ page_number: 1 })
+  }, 500)    
 
   });
 
@@ -200,13 +209,14 @@
       "keyup #search input": "set_search_term"
     },
 
-    set_search_term: function ( event )
+    set_search_term: _.debounce(function ( event )
     {
       this.model.set( "search_term", event.target.value )
       this.model.set({ page_number: 1 })
-    }
+    }, 300)
 
   });
+ 
 
 
   var query = new Query();
