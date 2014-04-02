@@ -6,7 +6,7 @@ from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 
 from datetime import datetime, timedelta
-from public_records_portal import db
+from public_records_portal import db, app
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
 import re
@@ -55,6 +55,7 @@ class User(db.Model):
 		if self.current_department and self.current_department.name:
 			return self.current_department.name
 		else:
+			app.logger.error("\n\nUser %s is not associated with a department." % self.email)
 			return "N/A"
 
 ### @export "Department"
@@ -111,11 +112,14 @@ class Request(db.Model):
 		for o in self.owners:
 			if o.is_point_person:
 				return o
+		app.logger.error("\n\nRequest %s has no point of contact." % self.id)
 		return None
 	def requester(self):
 		if self.subscribers:
 			return self.subscribers[0] or None # The first subscriber is always the requester
+		app.logger.error("\n\nRequest %s has no requester." % self.id)
 		return None
+
 	def requester_name(self):
 		requester = self.requester()
 		if requester and requester.user:

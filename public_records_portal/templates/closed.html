@@ -5,7 +5,7 @@
 {% block title %}Request {{ req.id }}{% endblock %}
 
 {% block status %}
-    {% set status = ( req | get_status('city') ) %}
+    {% set status = req.solid_status() %}
     {% include '_manage_requests_status.html' %}
 {% endblock status %}
 

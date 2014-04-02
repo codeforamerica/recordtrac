@@ -16,8 +16,15 @@
 
 {% block requester_info %}
   <small>
-    {% set sid = req.id | get_requester %}     
-    Requester's name: <span class="label">{{ ("alias" | get_attribute(sid, "User")) or "Not provided"}}</span> and phone number: <span class="label"> {{ ("phone" | get_attribute(sid, "User")) or "Not provided" }}</span>
+    {% set alias = "Not provided" %}
+    {% set phone = "Not provided" %}
+    {% set requester = req.requester() %}
+    {% if requester %}
+       {% set user = requester.user %}  
+       {% set alias = user.alias %}
+       {% set phone = user.phone %}
+    {% endif %}
+      Requester's name: <span class="label">{{ alias }}</span> and phone number: <span class="label"> {{ phone }}</span>
   </small>
 {% endblock requester_info %}
 
@@ -37,7 +44,7 @@
 {% block sidebar %}
 
   {% block status %}
-    {% set status = ( req | get_status('city') ) %}
+    {% set status = req.solid_status() %}
     {% include '_manage_requests_status.html' %}
   {% endblock status %}
 

@@ -15,14 +15,6 @@ import json
 import os
 import logging 
 
-### @export "get_requester"
-def get_requester(request_id): 
-# Returns the first person who subscribed to a request, which is the requester
-	subscribers = get_attribute(attribute = "subscribers", obj_id = request_id, obj_type = "Request")
-	if subscribers:
-		subscribers.sort(key = lambda x:x.date_created)
-		return get_attribute(attribute = "user_id", obj = subscribers[0])
-	return None
 
 ### @export "get_subscriber"
 def get_subscriber(request_id, user_id):
@@ -313,6 +305,7 @@ def find_owner(request_id, user_id):
 		return owner.id
 	return None
 
+
 ### @export "add_staff_participant"
 def add_staff_participant(request_id, is_point_person = False, email = None, user_id = None, reason = None):
 	""" Creates an owner for the request if it doesn't exist, and returns the owner ID and True if a new one was created. Returns the owner ID and False if existing."""
@@ -324,12 +317,18 @@ def add_staff_participant(request_id, is_point_person = False, email = None, use
 		if not reason:
 			reason = "Added a response"
 		participant = Owner(request_id = request_id, user_id = user_id, reason = reason, is_point_person = is_point_person)
+		app.logger.info("\n\nStaff participant with owner ID: %s added to request %s. Is point of contact: %s" %(participant.id, request_id, is_point_person))
 	else:
-		is_new = False
-		app.logger.info("\n\nStaff participant with owner ID: %s already active on request %s" %(participant.id, request_id))
+		if is_point_person and not participant.is_point_person:
+			participant.is_point_person = True
+			app.logger.info("\n\nStaff participant with owner ID: %s is now the point of contact for request %s" %(participant.id, request_id))
+		else:
+			is_new = False
+			app.logger.info("\n\nStaff participant with owner ID: %s already active on request %s" %(participant.id, request_id))
 	db.session.add(participant)
 	db.session.commit()
 	return participant.id, is_new
+
 
 ### @export "remove_staff_participant"
 def remove_staff_participant(owner_id, reason = None):
