@@ -55,7 +55,7 @@
               <span class="icon-bar"></span>
             </a>
             <!-- Be sure to leave the brand out there if you want it shown -->
-            <a class="brand" href="/landing"><img src="{{ url_for('static', filename='images/City-Tree-w--name-shite-vers-3.png') }}" alt="City of Oakland tree"/> <strong>RecordTrac</strong></a>
+            <a class="brand" href="/landing"><img src="{{ url_for('static', filename = 'images/logo.png')}}" alt="{{config['AGENCY_NAME']}} logo" width="35" height="35"/><strong> RecordTrac</strong><small id="beta" class="text-warning"></small></a>
             <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
               <ul class="nav tabs">
                 {% if user_id %}
@@ -90,7 +90,7 @@
             {% else %}
             <ul class="nav pull-right">
               <li class="dropdown">
-                <a class="dropdown-toggle" href="#" data-toggle="dropdown">City login <strong class="caret"></strong></a>
+                <a class="dropdown-toggle" href="#" data-toggle="dropdown">{{config['AGENCY_NAME']}} login <strong class="caret"></strong></a>
                 <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
                
                 <!-- Login form here -->
@@ -98,7 +98,7 @@
                     <!-- <div class="control-group"> -->
                       <label>Email</label>
                       <!-- <div class="controls"> -->
-                        <input type="text" class="input-medium" name="email" title="input_email" placeholder="you@oaklandnet.com">
+                        <input type="text" class="input-medium" name="email" title="input_email" placeholder="you@email.com">
                       <!-- </div> -->
                     <!-- </div> -->
                     <!-- <div class="control-group"> -->
@@ -146,7 +146,7 @@
     {% block footer %}
       <div id="footer" class="well well-small footer">
         <p class="text-center">Made by <!-- <a href="http://codeforamerica.org/2013-partners/oakland/"> -->Code for America 2013 Fellows<!-- </a> --></p>
-        <p class="text-center"><a href="/signup">Get the app</a> for your city or <a href="https://github.com/codeforamerica/public-records#public-records-"> view project info <i class="icon-github"></i></a>.</p>
+        <p class="text-center"><a href="/signup">Get the app</a> for your agency or <a href="https://github.com/postcode/recordtrac#recordtrac-"> view project info <i class="icon-github"></i></a>.</p>
       </div>
     {% endblock footer %}
 
