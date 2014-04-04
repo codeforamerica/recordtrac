@@ -120,10 +120,15 @@ def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_ev
 				message.add_to(recipient)
 	message.add_bcc(sender)
 	if send_emails:
-		status = mail.web.send(message)
-		if status == False:
-			app.logger.info("\n\nSendgrid did not deliver e-mail.")
-		return status
+		app.logger.info("\n\n Attempting to send e-mail with body: %s, subject: %s, to %s" %(body, subject, recipients))
+		try:
+			status = mail.web.send(message)
+			if status == False:
+				app.logger.info("\n\nSendgrid did not deliver e-mail.")
+			return status
+		except Exception, e:
+			app.logger.error("\n\nNo e-mail was sent, error: %s" % e)
+			return False
 	app.logger.info("\n\nNo e-mail was sent, probably because you're in a non-production environment.")
 	return False
 
