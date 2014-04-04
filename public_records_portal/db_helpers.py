@@ -86,22 +86,6 @@ def get_owners_by_user_id(user_id):
 		return None
 	return Owner.query.filter_by(user_id = user_id)
 
-### @export "get_owner_data"
-def get_owner_data(request_id, attributes = ["alias"]):
-	""" Return the alias of the current owner for a particular request. """
-	r = Request.query.get(request_id)
-	return r.point_person().user.alias
-	# owner_data = []
-	# if not request_id:
-	# 	return owner_data
-	# q = db.session.query(User).join(Owner, User.id == Owner.user_id).join(Request, Owner.id == Request.current_owner).filter(Request.id == request_id).all()
-	# for attribute in attributes:
-	# 	if len(q) > 0:
-	# 		owner_data.append(getattr(q[0], attribute))
-	# 	else:
-	# 		owner_data.append(None)
-	# return owner_data
-
 ### @export "get_prr_liaison_by_dept"
 def get_contact_by_dept(dept):
 	""" Return the contact for a given department. """

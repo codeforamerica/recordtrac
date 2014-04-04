@@ -200,8 +200,9 @@ def notify_due():
 ### @export "get_staff_recipients"
 def get_staff_recipients(request):
 	recipients = []
-	owner_email = get_owner_data(request.id, attributes=["email"])[0]
-	recipients.append(owner_email)
+	owner_email = request.point_person().user.email
+	if owner_email:
+		recipients.append(owner_email)
 	# Look up the department for the request, and get the contacts and backup:
 	dept = request.department_name()
 	if dept != "N/A":
