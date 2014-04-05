@@ -1,6 +1,8 @@
 Public Records 
 ==============
 
+2014 Update: This project is currently being maintained by [PostCode](http://www.postcode.io/recordtrac) and you can view the most current GitHub repository here: https://github.com/postcode/recordtrac
+
 This is a portal to manage and display public record requests, built by the Code for America 2013 Oakland team. The project is currently being piloted with [the City of Oakland](http://www2.oaklandnet.com/Government/o/CityAdministration/PublicRecordsRequest/index.htm), but hopefully extensible to other municipalities. Our docs are available [here](http://codeforamerica.github.io/public-records/docs/1.0.0/). We'd love your feedback. E-mail us at oakland at codeforamerica dot org or [open an issue](https://github.com/codeforamerica/public-records/issues?state=open) if you have any questions.
 
 ## Installation
