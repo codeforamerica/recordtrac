@@ -45,7 +45,8 @@ class User(db.Model):
 	def __init__(self, email=None, alias = None, phone=None, department = None, password=None):
 		self.email = email
 		self.alias = alias
-		self.phone = phone
+		if phone != "":
+			self.phone = phone
 		self.date_created = datetime.now().isoformat()
 		self.set_password(password)
 		self.department = department
@@ -117,7 +118,6 @@ class Request(db.Model):
 	def requester(self):
 		if self.subscribers:
 			return self.subscribers[0] or None # The first subscriber is always the requester
-		app.logger.error("\n\nRequest %s has no requester." % self.id)
 		return None
 
 	def requester_name(self):

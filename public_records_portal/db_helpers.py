@@ -233,7 +233,7 @@ def create_or_return_user(email=None, alias = None, phone = None, department = N
 
 ### @export "create_user"
 def create_user(email=None, alias = None, phone = None, department = None):
-	user = User(email = email, alias = alias or "Anonymous", phone = phone, department = department, password = app.config['ADMIN_PASSWORD'])
+	user = User(email = email, alias = alias, phone = phone, department = department, password = app.config['ADMIN_PASSWORD'])
 	db.session.add(user)
 	db.session.commit()
 	app.logger.info("\n\nCreated new user, alias: %s id: %s" % (user.alias, user.id))
