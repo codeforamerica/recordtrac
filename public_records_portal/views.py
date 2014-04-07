@@ -242,8 +242,8 @@ def fetch_requests():
 
 	# Filter by search term
 	search_input = request.args.get('search')
-	app.logger.info("\n\nSEARCH: %s" % search_input)
 	if search_input:
+		app.logger.info("\n\nSEARCH: %s" % search_input)
 		search_terms = search_input.strip().split(" ") # Get rid of leading and trailing spaces and generate a list of the search terms
 		num_terms = len(search_terms)
 		# Set up the query
