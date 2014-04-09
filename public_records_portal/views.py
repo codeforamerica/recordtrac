@@ -243,6 +243,7 @@ def fetch_requests():
 	# Filter by search term
 	search_input = request.args.get('search')
 	if search_input:
+		app.logger.info("\n\nSEARCH: %s" % search_input)
 		search_terms = search_input.strip().split(" ") # Get rid of leading and trailing spaces and generate a list of the search terms
 		num_terms = len(search_terms)
 		# Set up the query
@@ -251,7 +252,6 @@ def fetch_requests():
 			for x in range(num_terms - 1):
 				search_query = search_query + search_terms[x] + ' & ' 
 		search_query = search_query + search_terms[num_terms - 1] + ":*" # Catch substrings
-		app.logger.info("Search query: %s" % search_query)
 		results = results.filter("to_tsvector(text) @@ to_tsquery('%s')" % search_query)
 
 	# Filter based on current request status
@@ -272,7 +272,7 @@ def fetch_requests():
 		# Filter based on requester name
 		requester_name = request.args.get('requester_name')
 		if requester_name and requester_name != "":
-			results = results.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % requester_name))
+			results = results.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % requester_name.lower()))
 
 	page_number  = request.args.get('page') or 1
 	page_number = int(page_number)

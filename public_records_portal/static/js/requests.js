@@ -9,7 +9,6 @@
       page_number: 1,
       // Using an attribute called 'page' makes weird things happen here. JFYI.
       is_closed: true,
-      requester_name: "",
       my_requests: false,
       department: "",
       more_results: false,
@@ -135,15 +134,15 @@
       this.model.set({ page_number: 1 })
     },
     set_department: function (event)
-  {
-    this.model.set("department", event.target.value)
-    this.model.set({ page_number: 1 })
-  },
-      set_requester_name: _.debounce(function (event)
-  {
-    this.model.set("requester_name", event.target.value)
-    this.model.set({ page_number: 1 })
-  }, 500)    
+    {
+      this.model.set("department", event.target.value)
+      this.model.set({ page_number: 1 })
+    },
+    set_requester_name: _.debounce(function (event)
+    {
+      this.model.set("requester_name", event.target.value)
+      this.model.set({ page_number: 1 })
+    }, 500)    
 
   });
 

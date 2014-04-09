@@ -120,10 +120,15 @@ def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_ev
 				message.add_to(recipient)
 	message.add_bcc(sender)
 	if send_emails:
-		status = mail.web.send(message)
-		if status == False:
-			app.logger.info("\n\nSendgrid did not deliver e-mail.")
-		return status
+		app.logger.info("\n\n Attempting to send e-mail with body: %s, subject: %s, to %s" %(body, subject, recipients))
+		try:
+			status = mail.web.send(message)
+			if status == False:
+				app.logger.info("\n\nSendgrid did not deliver e-mail.")
+			return status
+		except Exception, e:
+			app.logger.error("\n\nNo e-mail was sent, error: %s" % e)
+			return False
 	app.logger.info("\n\nNo e-mail was sent, probably because you're in a non-production environment.")
 	return False
 
@@ -195,8 +200,9 @@ def notify_due():
 ### @export "get_staff_recipients"
 def get_staff_recipients(request):
 	recipients = []
-	owner_email = get_owner_data(request.id, attributes=["email"])[0]
-	recipients.append(owner_email)
+	owner_email = request.point_person().user.email
+	if owner_email:
+		recipients.append(owner_email)
 	# Look up the department for the request, and get the contacts and backup:
 	dept = request.department_name()
 	if dept != "N/A":

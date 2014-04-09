@@ -24,7 +24,7 @@
        {% set alias = user.alias %}
        {% set phone = user.phone %}
     {% endif %}
-      Requester's name: <span class="label">{{ alias }}</span> and phone number: <span class="label"> {{ phone }}</span>
+      Requester's name: <span class="label">{{ alias or "Not provided" }}</span> and phone number: <span class="label"> {{ phone or "Not provided" }}</span>
   </small>
 {% endblock requester_info %}
 
