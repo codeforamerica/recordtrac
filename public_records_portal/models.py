@@ -113,7 +113,6 @@ class Request(db.Model):
 		for o in self.owners:
 			if o.is_point_person:
 				return o
-		app.logger.error("\n\nRequest %s has no point of contact." % self.id)
 		return None
 	def requester(self):
 		if self.subscribers:
