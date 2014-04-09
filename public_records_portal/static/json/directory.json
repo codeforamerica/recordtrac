@@ -2,42 +2,7 @@
   {
     "FULL_NAME":"Agarwal, Richa",
     "EMAIL_ADDRESS":"richa@postcode.io",
-    "DEPARTMENT":"Engineering",
-    "JOB_TITLE":"Founder",
-    "PHONE":"6505211198"
-  },
-  {
-    "FULL_NAME":"Cristina, Cris",
-    "EMAIL_ADDRESS":"cris@postcode.io",
-    "DEPARTMENT":"Design",
-    "JOB_TITLE":"Founder",
-    "PHONE":""
-  },
-  {
-    "FULL_NAME":"Bryan, CJ",
-    "EMAIL_ADDRESS":"cj@postcode.io",
-    "DEPARTMENT":"Engineering",
-    "JOB_TITLE":"Founder",
-    "PHONE":""
-  },
-  {
-    "FULL_NAME":"Manik-Perlman, Tamara",
-    "EMAIL_ADDRESS":"tamara@postcode.io",
-    "DEPARTMENT":"Research",
-    "JOB_TITLE":"Founder",
-    "PHONE":""
-  },
-  {
-    "FULL_NAME":"Hull, Andy",
-    "EMAIL_ADDRESS":"andy@postcode.io",
-    "DEPARTMENT":"Engineering",
-    "JOB_TITLE":"Founder",
-    "PHONE":""
-  },
-  {
-    "FULL_NAME":"Duecy-Gibbs, Reed",
-    "EMAIL_ADDRESS":"reed@postcode.io",
-    "DEPARTMENT":"Design",
+    "DEPARTMENT":"PostCode",
     "JOB_TITLE":"Founder",
     "PHONE":""
   }

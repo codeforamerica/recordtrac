@@ -113,6 +113,7 @@ class Request(db.Model):
 		for o in self.owners:
 			if o.is_point_person:
 				return o
+		# Not really an error the first time someone is assigned
 		app.logger.error("\n\nRequest %s has no point of contact." % self.id)
 		return None
 	def requester(self):

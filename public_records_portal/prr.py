@@ -140,7 +140,7 @@ def add_link(request_id, url, description, user_id):
 	return False
 
 ### @export "make_request"			
-def make_request(text, email = None, user_id = None, phone = None, alias = None, department = None, passed_recaptcha = False):
+def make_request(text, email = None, user_id = None, phone = None, alias = None, department = None, passed_recaptcha = False, dt = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
 	if (app.config['ENVIRONMENT'] == 'PRODUCTION') and (not passed_recaptcha) and is_spam(text): 
 		return None, False
@@ -158,7 +158,7 @@ def make_request(text, email = None, user_id = None, phone = None, alias = None,
 		else:
 			app.logger.info("%s is not a valid department" %(department))
 			department = None
-	request_id = create_request(text = text, user_id = user_id, department = department) # Actually create the Request object
+	request_id = create_request(text = text, user_id = user_id, department = department, dt = dt) # Actually create the Request object
 	new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email) # Assign someone to the request
 	open_request(request_id) # Set the status of the incoming request to "Open"
 	subscriber_user_id = create_or_return_user(email = email, alias = alias, phone = phone)
