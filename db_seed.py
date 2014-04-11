@@ -33,15 +33,15 @@ for i in range(20):
 	four_days_ago = (datetime.now() - timedelta(days = 4)).isoformat()
 	request_id, success = prr.make_request(text=request_text, department = request_department, dt = four_days_ago)
 	if success:
-		prr.add_note(request_id = request_id, text = "We're working on this and will get back to you shortly.", user_id = 2)
+		prr.add_note(request_id = request_id, text = "We're working on this and will get back to you shortly.", user_id = 1)
 		qa_id = prr.ask_a_question(request_id = request_id, owner_id = 1, question = "You specified %(random_number)s, but that does not exist. Did you mean %(another_random_number)s? " % locals())
 		if qa_id:
 			answer = random.choice(answers)
 			prr.answer_a_question(qa_id = qa_id, answer = answer)
 			if "Yep" in answer:
-				prr.add_link(request_id = request_id, url = "http://www.postcode.io", description = "Report %(another_random_number)s" % locals(), user_id = 3)
+				prr.add_link(request_id = request_id, url = "http://www.postcode.io", description = "Report %(another_random_number)s" % locals(), user_id = 1)
 			else:
-				prr.close_request(request_id = request_id, reason = "Record does not exist.", user_id = 4)
+				prr.close_request(request_id = request_id, reason = "Record does not exist.", user_id = 1)
 		prr.assign_owner(request_id = request_id, reason = random.choice(reasons), email = random.choice(people))
 		db_helpers.add_staff_participant(request_id = request_id, email = random.choice(people), reason = random.choice(reasons))
 		

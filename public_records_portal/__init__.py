@@ -27,8 +27,9 @@ set_env(key = 'APPLICATION_URL', default = "http://127.0.0.1:5000/")
 set_env(key = 'SQLALCHEMY_DATABASE_URI', default = "postgresql://localhost/recordtrac")
 set_env(key = 'ENVIRONMENT', default="LOCAL")
 # Set the default records liaison, this matters more in a production environment:
-set_env(key = 'DEFAULT_OWNER_EMAIL', default = '')
-set_env(key = 'DEFAULT_OWNER_REASON', default = 'Default' )
+set_env(key = 'DEFAULT_OWNER_EMAIL', default = 'recordtrac@postcode.io')
+set_env(key = 'DEFAULT_OWNER_NAME', default = 'PostCode.io')
+set_env(key = 'DEFAULT_OWNER_REASON', default = 'PostCode.io can help you get @recordtrac in your agency.' )
 # If you set up Sendgrid or another e-mail service:
 set_env(key = 'DEFAULT_MAIL_SENDER', default = '')  # The e-mail address used as the FROM field for all notifications
 set_env(key = 'MAIL_USERNAME', default='') # The SendGrid username
@@ -50,7 +51,7 @@ set_env(key = 'AKISMET_KEY', default = '')
 set_env(key = 'RECAPTCHA_PUBLIC_KEY', default = "")
 set_env(key = 'RECAPTCHA_PRIVATE_KEY', default = "")
 # The name of your agency, e.g. City of Oakland:
-set_env(key = 'AGENCY_NAME', default = '')
+set_env(key = 'AGENCY_NAME', default = 'Your agency name')
 
 # No defaults should be set for this.  Used for local e-mail testing.
 set_env(key = 'DEV_EMAIL')
