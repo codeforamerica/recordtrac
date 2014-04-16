@@ -13,21 +13,42 @@
       department: "",
       more_results: false,
       start_index: 0,
-      end_index: 0
+      end_index: 0,
+      status: "",
+      sort_by_ascending: true,
+      sort_by_attribute: ""
     },
 
     prev_page: function ()
     {
       if (this.get("page_number") > 1) {
       this.set({ page_number: this.get("page_number") - 1 })
-    }
+      }
     },
 
     next_page: function ()
     {
       this.set({ page_number: this.get("page_number") + 1 })
-    }
+    },
 
+    set_sort: function(event)
+    {
+
+
+    if (this.get("sort_by_attribute") == event.target.id) {
+        if (this.get("sort_by_ascending") == true) {
+          this.set({sort_by_ascending: false})
+        }
+        else
+        {
+                this.set({ sort_by_ascending: true})
+        }
+      }
+      else
+      {
+        this.set({sort_by_attribute: event.target.id})
+      }
+    }
   })
 
   Request = Backbone.Model.extend({})
@@ -46,7 +67,6 @@
     {
       return "/custom/request"
     },
-
     build: function ()
     {
 
@@ -54,7 +74,9 @@
         "page": this._query.get("page_number"),
         "is_closed": this._query.get("is_closed"),
         "requester_name": this._query.get("requester_name"),
-        "my_requests": this._query.get("my_requests")
+        "my_requests": this._query.get("my_requests"),
+        "ascending": this._query.get("sort_by_ascending"),
+        "sort_by": this._query.get("sort_by_attribute")
       }
 
       var search_term = this._query.get("search_term")
@@ -66,6 +88,11 @@
       if ( department != "")
       {
         data_params["department"] = department
+      }
+      var status = this._query.get("status")
+      if ( status != "")
+      {
+        data_params["status"] = status
       }
 
       this.fetch({
@@ -101,9 +128,10 @@
     {
       var vars = {
         "is_closed": this.model.get( "is_closed" ),
-        "requester_name": this.model.get ("requester_name"),
-        "my_requests": this.model.get( "my_requests"),
-        "department": this.model.get( "department"),
+        "requester_name": this.model.get("requester_name"),
+        "my_requests": this.model.get("my_requests"),
+        "department": this.model.get("department"),
+        "status": this.model.get("status"),
         "page_number": this.model.get("page_number"),
         "num_results": this.model.get("num_results")
       }
@@ -116,7 +144,8 @@
       "click #is_closed": "toggle_show_closed",
       "keyup #requester_name": "set_requester_name",
       "click #my_requests": "toggle_my_requests",
-      "change #department_name": "set_department"
+      "change #department_name": "set_department",
+      "change #status": "set_status"
     },
 
     toggle_show_closed: function ( event )
@@ -136,6 +165,11 @@
     set_department: function (event)
     {
       this.model.set("department", event.target.value)
+      this.model.set({ page_number: 1 })
+    },
+    set_status: function (event)
+    {
+      this.model.set("status", event.target.value)
       this.model.set({ page_number: 1 })
     },
     set_requester_name: _.debounce(function (event)
@@ -171,7 +205,8 @@
     events:
     {
       "click .pagination .prev": "prev",
-      "click .pagination .next": "next"
+      "click .pagination .next": "next",
+      "click #headings th": "sort",
     },
 
     prev: function ()
@@ -182,6 +217,10 @@
     next: function ()
     {
       this.model.next_page()
+    },
+    sort: function(event)
+    {   
+      this.model.set_sort(event)
     }
   });
 
