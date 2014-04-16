@@ -146,16 +146,6 @@ def due_date(date_obj, extended = None, format = True):
 		return format_date(due_date)
 	return due_date
 
-### @export "is_due_soon"
-def is_due_soon(date_obj, extended = None):
-	current_date = datetime.now()
-	due = due_date(date_obj = date_obj, extended = extended, format = False)
-	num_days = 2
-	if not (current_date >= due): # if not overdue
-		if (current_date + timedelta(days = num_days)) >= due:
-			return True, due
-	return False, due
-
 ### @export "is_overdue"
 def is_overdue(date_obj, extended = None):
 	current_date = datetime.now()
@@ -176,20 +166,17 @@ def notify_due():
 	email_json = open(os.path.join(app.root_path, 'static/json/emails.json'))
 	json_data = json.load(email_json)
 	for req in requests:
-		if "Closed" not in req.status:
+		status = req.solid_status
+		if status != "closed":
 			# Check if it is due in 2 days
-			due_soon, date_due = is_due_soon(req.date_created, req.extended) 
-			if due_soon:
+			if status == "due soon":
 				change_request_status(req.id, "Due soon")
 				email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Notification types"]["Request due"])
+			elif status == "overdue":
+				change_request_status(req.id, "Overdue")
+				email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Notification types"]["Request overdue"]["Subject"])
 			else:
-				# Otherwise, check if it is overdue
-				overdue, date_due = is_overdue(req.date_created, req.extended)
-				if overdue:
-					change_request_status(req.id, "Overdue")
-					email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Notification types"]["Request overdue"]["Subject"])
-				else:
-					continue
+				continue
 			recipients = get_staff_recipients(req)
 			app_url = app.config['APPLICATION_URL']
 			page = "%scity/request/%s" %(app_url,req.id)
