@@ -60,13 +60,13 @@
           <script type="text/template" id="search_results_template">
           
             <table id="requests">
-              <thead>
+              <thead id = "headings">
                 <tr>
                   <th class="status"></th>
-                  <th>#</th>
-                  <th>Received</th>
-                  <th>Request</th>
-                  <th>Department</th>
+                  <th><a id = "id">#</a></th>
+                  <th><a id="date_created">Received</a></th>
+                  <th><a id = "text">Request</a></th>
+                  <th><a id = "department">Department</a></th>
                   <th>Point of Contact</th>
                   {% if user_id %}
                   <th>Due</th>
@@ -181,6 +181,21 @@
                 </select>
               </div>
               {% if user_id %}
+                <div class="row-fluid">
+                <select class="span12" id="request_status">
+                <% if (status) { %>
+                 <option selected><%= status %></option>
+                <% } %>
+                    <option value = "All statuses">All statuses</option>
+                    <option>Open</option>
+                    <option>Due soon</option>
+                    <option>Rerouted</option>
+                    <option>Reopened</option>
+                    <option>A response has been added</option>
+                    <option>Pending</option>
+                    <option>Closed</option>
+                </select>
+              </div>
                By requester name
                 <input 
                   type="text" 

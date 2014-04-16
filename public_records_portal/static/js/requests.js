@@ -15,8 +15,7 @@
       start_index: 0,
       end_index: 0,
       status: "",
-      sort_by_ascending: true,
-      sort_by_attribute: ""
+      sort_by_ascending: true
     },
 
     prev_page: function ()
@@ -44,8 +43,7 @@
                 this.set({ sort_by_ascending: true})
         }
       }
-      else
-      {
+    else {
         this.set({sort_by_attribute: event.target.id})
       }
     }
@@ -145,7 +143,7 @@
       "keyup #requester_name": "set_requester_name",
       "click #my_requests": "toggle_my_requests",
       "change #department_name": "set_department",
-      "change #status": "set_status"
+      "change #request_status": "set_status"
     },
 
     toggle_show_closed: function ( event )
@@ -206,7 +204,7 @@
     {
       "click .pagination .prev": "prev",
       "click .pagination .next": "next",
-      "click #headings th": "sort",
+      "click #headings a": "sort",
     },
 
     prev: function ()
