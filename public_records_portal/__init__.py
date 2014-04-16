@@ -61,6 +61,3 @@ db = SQLAlchemy(app)
 
 logging.basicConfig()
 # logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
-
-app.logger.info("\n\nFresh request!")
-
