@@ -288,6 +288,7 @@ def fetch_requests():
 		else:
 			results = results.order_by((getattr(Request, sort_by)).desc())
 
+
 	page_number  = request.args.get('page') or 1
 	page_number = int(page_number)
 
@@ -322,7 +323,7 @@ def fetch_requests():
 							  "date_created": r.date_created.isoformat(), \
 							  "department":   r.department or r.department_name(), \
 							  "requester":   r.requester_name(), \
-							  "due_date":    format_date(r.due_date()), \
+							  "due_date":    format_date(r.due_date), \
 							  # The following two attributes are defined as model methods,
 							  # and not regular SQLAlchemy attributes.
 							  "contact_name": r.point_person_name(), \

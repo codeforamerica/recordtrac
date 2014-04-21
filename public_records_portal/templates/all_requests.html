@@ -55,22 +55,22 @@
 
 
       {# Search results table. #}
+
       <div class="row-fluid">
         <div class="span9" id="search_results_container"></div>
           <script type="text/template" id="search_results_template">
-          
             <table id="requests">
               <thead id = "headings">
                 <tr>
                   <th class="status"></th>
-                  <th><a id = "id">#</a></th>
-                  <th><a id="date_created">Received</a></th>
-                  <th><a id = "text">Request</a></th>
-                  <th><a id = "department">Department</a></th>
-                  <th>Point of Contact</th>
+                  <th style="width:20px"><a id ="id"># <i class="<%=id_icon%>"></i></a></th>
+                  <th style="width:80px"><a id = "date_created">Received <i class="<%=received_icon%>"></i></a></th>
+                  <th style="width:80px"><a id = "text">Request <i class="<%=text_icon%>"></i></a></th>
+                  <th style="width:80px">Department</th>
+                  <th style="width:80px">Point of Contact</th>
                   {% if user_id %}
-                  <th>Due</th>
-                  <th>Requester</th>
+                  <th style="width:80px"><a id = "due_date">Due <i class ="<%=due_icon%>"></i></a></th>
+                  <th style="width:80px">Requester</th>
                   {% endif %}
                 </tr>
               </thead>

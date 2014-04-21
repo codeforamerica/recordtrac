@@ -15,7 +15,8 @@
       start_index: 0,
       end_index: 0,
       status: "",
-      sort_by_ascending: true
+      sort_by_ascending: false,
+      sort_by_attribute: 'id'
     },
 
     prev_page: function ()
@@ -30,22 +31,44 @@
       this.set({ page_number: this.get("page_number") + 1 })
     },
 
-    set_sort: function(event)
+    toggle_sort_order: function()
     {
-
-
-    if (this.get("sort_by_attribute") == event.target.id) {
-        if (this.get("sort_by_ascending") == true) {
-          this.set({sort_by_ascending: false})
-        }
-        else
+      this.set({sort_by_ascending: !this.get("sort_by_ascending")})
+    },
+    set_icon: function(attribute)
+    {
+     if (this.get("sort_by_ascending") == true)
+      {
+        this.set(attribute, "icon icon-sort-down")
+      } 
+      else
+      {
+        this.set(attribute, "icon icon-sort-up")
+      }
+    },
+    reset_sort: function(attribute)
+    {
+      var attributes=["id", "text", "due_date", "date_created"];
+      for (var i in attributes)
+      {
+        if (attributes[i] != attribute)
         {
-                this.set({ sort_by_ascending: true})
+          this.set(attributes[i], "icon icon-sort")
         }
       }
-    else {
-        this.set({sort_by_attribute: event.target.id})
+    },
+    set_sort: function(attribute)
+    {
+      this.reset_sort(attribute)
+      if (this.get("sort_by_attribute") == attribute) 
+      {
+         this.toggle_sort_order(attribute)
       }
+      else 
+      {
+          this.set({sort_by_attribute: attribute})
+      }
+      this.set_icon(attribute)
     }
   })
 
@@ -183,6 +206,7 @@
 
     initialize: function ()
     {
+      this.model.reset_sort("")
       this.collection.on( "sync", this.render, this )
     },
 
@@ -194,10 +218,17 @@
         "num_results": this.model.get("num_results"),
         "more_results": this.model.get("more_results"),
         "start_index": this.model.get("start_index"),
-        "end_index": this.model.get("end_index")
+        "end_index": this.model.get("end_index"),
+        "id_icon": this.model.get("id"),
+        "text_icon": this.model.get("text"),
+        "received_icon": this.model.get("date_created"),
+        "due_icon": this.model.get("due_date")
       }
-      var template = _.template( $("#search_results_template").html(), vars )
+
+      var data = _.extend(vars, this.model.get_icon);
+      var template = _.template( $("#search_results_template").html(), data )
       this.$el.html( template )
+
     },
 
     events:
@@ -218,7 +249,7 @@
     },
     sort: function(event)
     {   
-      this.model.set_sort(event)
+      this.model.set_sort(event.target.id)
     }
   });
 
