@@ -82,6 +82,7 @@ class Request(db.Model):
 	__tablename__ = 'request'
 	id = db.Column(db.Integer, primary_key =True)
 	date_created = db.Column(db.DateTime)
+	due_date = db.Column(db.DateTime)
 	extended = db.Column(db.Boolean, default = False) # Has the due date been extended?
 	qas = relationship("QA", cascade="all,delete", order_by = "QA.date_created.desc()") # The list of QA units for this request
 	status_updated = db.Column(db.DateTime)
@@ -106,9 +107,14 @@ class Request(db.Model):
 		self.department = department
 		self.offline_submission_type = offline_submission_type
 		self.date_received = date_received
+		self.due_date = datetime.now() + timedelta(days = int(app.config['DAYS_TO_FULFILL']))
 
 	def __repr__(self):
 		return '<Request %r>' % self.text
+
+	def extension(self):
+		self.extended = True 
+		self.due_date = self.due_date + timedelta(days = int(app.config['DAYS_AFTER_EXTENSION']))
 	def point_person(self):
 		for o in self.owners:
 			if o.is_point_person:
@@ -140,18 +146,11 @@ class Request(db.Model):
 			return "closed"
 		else:
 			if not current_user.is_anonymous():
-				due = self.due_date()
-				if datetime.now() >= due:
+				if datetime.now() >= self.due_date:
 					return "overdue"
-				elif (datetime.now() + timedelta(days = 2)) >= due:
+				elif (datetime.now() + timedelta(days = 2)) >= self.due_date:
 					return "due soon"
 		return "open"
-	def due_date(self):
-		days_to_fulfill = 10
-		if self.extended:
-			days_to_fulfill = days_to_fulfill + 14
-		due_date = (self.date_created + timedelta(days = days_to_fulfill))
-		return due_date
 
 ### @export "QA"
 class QA(db.Model):
