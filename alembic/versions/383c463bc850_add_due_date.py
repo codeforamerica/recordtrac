@@ -1,13 +1,13 @@
 """Add due date
 Revision ID: 383c463bc850
-Revises: 26cee7734778
+Revises: 53a8fafffb47
 Create Date: 2014-04-17 21:57:37.492270
 
 """
 
 # revision identifiers, used by Alembic.
 revision = '383c463bc850'
-down_revision = '26cee7734778'
+down_revision = '53a8fafffb47'
 
 from alembic import op
 import sqlalchemy as sa
