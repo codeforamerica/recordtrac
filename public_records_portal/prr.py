@@ -75,7 +75,8 @@ def update_resource(resource, request_body):
 
 ### @export "request_extension"
 def request_extension(request_id, extension_reasons, user_id):
-	update_obj(attribute = "extended", val = True, obj_type = "Request", obj_id = request_id)
+	req = Request.query.get(request_id)
+	req.extension()
 	text = "Request extended:"
 	for reason in extension_reasons:
 		text = text + reason + "</br>"
