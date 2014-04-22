@@ -48,7 +48,10 @@ class User(db.Model):
 		if phone != "":
 			self.phone = phone
 		self.date_created = datetime.now().isoformat()
-		self.set_password(password)
+		if password:
+			self.set_password(password)
+		else:
+			self.set_password(app.config['ADMIN_PASSWORD'])
 		self.department = department
 	def __repr__(self):
 		return '<User %r>' % self.email

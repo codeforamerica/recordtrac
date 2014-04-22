@@ -66,14 +66,14 @@ class NoteView(AdminView):
 	form_excluded_columns = ('date_created')
 
 class UserView(AdminView):
-	can_create = False
-	column_list = ('id', 'contact_for', 'backup_for', 'alias', 'department')
+	can_create = True
+	column_list = ('id', 'contact_for', 'backup_for', 'alias')
 	column_searchable_list = ('contact_for', 'alias')
 	form_excluded_columns = ('date_created', 'password')
 
 class DepartmentView(AdminView):
 	can_create = True
-	column_list = ('id', 'name', 'date_created', 'date_updated')
+	column_list = ('id', 'name', 'date_created', 'date_updated', 'users')
 
 
 admin.add_view(RequestView(Request, db.session))
