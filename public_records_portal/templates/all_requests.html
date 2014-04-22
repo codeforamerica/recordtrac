@@ -181,21 +181,6 @@
                 </select>
               </div>
               {% if user_id %}
-                <div class="row-fluid">
-                <select class="span12" id="request_status">
-                <% if (status) { %>
-                 <option selected><%= status %></option>
-                <% } %>
-                    <option value = "All statuses">All statuses</option>
-                    <option>Open</option>
-                    <option>Due soon</option>
-                    <option>Rerouted</option>
-                    <option>Reopened</option>
-                    <option>A response has been added</option>
-                    <option>Pending</option>
-                    <option>Closed</option>
-                </select>
-              </div>
                By requester name
                 <input 
                   type="text" 

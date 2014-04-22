@@ -273,10 +273,11 @@ def fetch_requests():
 		requester_name = request.args.get('requester_name')
 		if requester_name and requester_name != "":
 			results = results.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % requester_name.lower()))
-		status = request.args.get('status')
-		# Filter by status
-		if status and status != "All statuses":
-			results = results.filter(Request.status == status)
+			
+	# status = request.args.get('status')
+	# # Filter by status
+	# if status and status != "All statuses":
+	# 	results = results.filter(Request.solid_status() == status.lower())
 
 	sort_by = request.args.get('sort_by') 
 	if sort_by and sort_by != '':
