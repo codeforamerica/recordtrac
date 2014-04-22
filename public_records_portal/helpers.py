@@ -10,7 +10,6 @@ import pytz
 
 def localize(datetime_str):
 	tz = pytz.timezone("US/Pacific") # This should eventually be set dynamically
-	app.logger.info("\n\nDate: %s" % datetime_str)
 	return datetime_str.replace(tzinfo=pytz.utc).astimezone(tz) # This appears to work in Heroku but not locally
 
 def date_granular(timestamp):
