@@ -287,6 +287,7 @@ def fetch_requests():
 			results = results.order_by((getattr(Request, sort_by)).asc())
 		else:
 			results = results.order_by((getattr(Request, sort_by)).desc())
+	results = results.order_by(Request.id.desc())
 
 
 	page_number  = request.args.get('page') or 1

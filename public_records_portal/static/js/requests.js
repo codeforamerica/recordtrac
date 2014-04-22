@@ -14,9 +14,7 @@
       more_results: false,
       start_index: 0,
       end_index: 0,
-      status: "",
-      sort_by_ascending: false,
-      sort_by_attribute: 'id'
+      status: ""
     },
 
     prev_page: function ()
@@ -39,11 +37,11 @@
     {
      if (this.get("sort_by_ascending") == true)
       {
-        this.set(attribute, "icon icon-sort-down")
+        this.set(attribute, "icon icon-sort-up")
       } 
       else
       {
-        this.set(attribute, "icon icon-sort-up")
+        this.set(attribute, "icon icon-sort-down")
       }
     },
     reset_sort: function(attribute)
@@ -62,11 +60,12 @@
       this.reset_sort(attribute)
       if (this.get("sort_by_attribute") == attribute) 
       {
-         this.toggle_sort_order(attribute)
+         this.toggle_sort_order()
       }
       else 
       {
           this.set({sort_by_attribute: attribute})
+          this.set({sort_by_ascending: false})
       }
       this.set_icon(attribute)
     }
