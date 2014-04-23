@@ -68,6 +68,7 @@
           this.set({sort_by_ascending: false})
       }
       this.set_icon(attribute)
+      this.set({ page_number: 1 })
     }
   })
 
