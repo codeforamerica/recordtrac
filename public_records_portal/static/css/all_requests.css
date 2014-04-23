@@ -9,6 +9,35 @@
 		color: #333;
 	}
 
+	table {
+		margin: 0 auto;
+		clear: both;
+		width: 100%;
+	}
+
+	table thead th {
+		padding: 3px 18px 3px 10px;
+		border-bottom: 1px solid black;
+		font-weight: bold;
+	}
+
+	table thead th div {
+		cursor: pointer;
+		*cursor: hand;
+	}
+
+	table tfoot th {
+		padding: 3px 18px 3px 10px;
+		border-top: 1px solid black;
+		font-weight: bold;
+	}
+
+	table td {
+		padding: 3px 10px;
+	}
+
+
+
 /* breathing room for filter count */
 	small.count {
 		margin-left: 1em;

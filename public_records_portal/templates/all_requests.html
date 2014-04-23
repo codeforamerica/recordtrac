@@ -62,15 +62,15 @@
             <table id="requests">
               <thead id = "headings">
                 <tr>
-                  <th class="status"></th>
-                  <th style="width:20px"><a id ="id" href="#" class="<%=id_icon%>"> #</a></th>
-                  <th style="width:80px"><a id = "date_created" href="#" class="<%=received_icon%>"> Received</a></th>
-                  <th style="width:80px"><a id = "text" href="#" class="<%=text_icon%>"> Request</a></th>
-                  <th style="width:80px">Department</th>
-                  <th style="width:80px">Point of Contact</th>
+                  <th style="width: 3%" class="status"></th>
+                  <th style="width: 4%"><div id="id"># <i class="<%=id_icon%>"></i>&nbsp;</div></th>
+                  <th style="width: 12%"><div id="date_created">Received <i class="<%=received_icon%>"></i>&nbsp;</div></th>
+                  <th style="width: 25%"><div id="text">Request <i class="<%=text_icon%>"></i>&nbsp;</div></th>
+                  <th style="width: 15%">Department</th>
+                  <th style="width: 15%">Point of Contact</th>
                   {% if user_id %}
-                  <th style="width:80px"><a id = "due_date" href="#" class ="<%=due_icon%>"> Due</a></th>
-                  <th style="width:80px">Requester</th>
+                  <th style="width: 12%"><div id="due_date">Due <i class ="<%=due_icon%>"></i>&nbsp;</div></th>
+                  <th style="width: 14%">Requester</th>
                   {% endif %}
                 </tr>
               </thead>
@@ -78,14 +78,14 @@
               <% if (requests.length != 0) { %>
                 <% _.each( requests, function( request ) { %>                
                   <tr>
-                    <td class="status <%= request.solid_status %>">
+                    <td style="width: 3%" class="status <%= request.solid_status %>">
                       <% if ( request.solid_status === "closed" ) { %>
                         <i class="icon-archive icon-light"></i>
                       <% } %>
                     </td>
-                    <td><%= request.id %></td>
-                    <td><%= moment(request.date_created).format("MMM Do, YYYY") %></td>
-                    <td>
+                    <td style="width: 4%"><%= request.id %></td>
+                    <td style="width: 12%"><%= moment(request.date_created).format("MMM Do, YYYY") %></td>
+                    <td style = "width: 25%">
                     {% if user_id %}
                       <a href="/city/request/<%= request.id %>">
                     {% else %}
@@ -104,11 +104,11 @@
                     <% } %>
                       </a>
                     </td>
-                    <td><%= request.department %></td>                    
-                    <td><%= request.contact_name %></td>
+                    <td style="width: 15%"><%= request.department %></td>                    
+                    <td style="width: 15%"><%= request.contact_name %></td>
                     {% if user_id %}
-                    <td><%= request.due_date %></td>
-                    <td><%= request.requester %></td>
+                    <td style="width: 12%"><%= request.due_date %></td>
+                    <td style="width: 14%"><%= request.requester %></td>
                     {% endif %}
                   </tr>
                 <% } ); %>

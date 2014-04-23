@@ -234,7 +234,7 @@
     {
       "click .pagination .prev": "prev",
       "click .pagination .next": "next",
-      "click #headings a": "sort",
+      "click #headings div": "sort",
     },
 
     prev: function ()
