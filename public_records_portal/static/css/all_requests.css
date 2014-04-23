@@ -21,12 +21,12 @@
 		font-weight: bold;
 	}
 
-	table thead th div {
+	table thead th.sortable {
 		cursor: pointer;
 		*cursor: hand;
 	}
 
-	table thead th div:hover {
+	table thead th.sortable:hover {
 		color:#17b292;
 	}
 

@@ -63,13 +63,13 @@
               <thead id = "headings">
                 <tr>
                   <th style="width: 3%" class="status"></th>
-                  <th style="width: 4%"><div id="id"># <i class="<%=id_icon%>"></i>&nbsp;</div></th>
-                  <th style="width: 12%"><div id="date_created">Received <i class="<%=received_icon%>"></i>&nbsp;</div></th>
-                  <th style="width: 25%"><div id="text">Request <i class="<%=text_icon%>"></i>&nbsp;</div></th>
+                  <th class="sortable" id="id" style="width: 4%">#  <i class="<%=id_icon%>"></i></th>
+                  <th class="sortable" id="date_created" style="width: 12%">Received  <i class="<%=received_icon%>"></th>
+                  <th class="sortable" id="text" style="width: 25%">Request  <i class="<%=text_icon%>"></i></th>
                   <th style="width: 15%">Department</th>
                   <th style="width: 15%">Point of Contact</th>
                   {% if user_id %}
-                  <th style="width: 12%"><div id="due_date">Due <i class ="<%=due_icon%>"></i>&nbsp;</div></th>
+                  <th class="sortable" id="due_date" style="width: 12%">Due  <i class ="<%=due_icon%>"></i></th>
                   <th style="width: 14%">Requester</th>
                   {% endif %}
                 </tr>
