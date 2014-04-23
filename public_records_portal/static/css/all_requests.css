@@ -26,6 +26,10 @@
 		*cursor: hand;
 	}
 
+	table thead th div:hover {
+		color:#17b292;
+	}
+
 	table tfoot th {
 		padding: 3px 18px 3px 10px;
 		border-top: 1px solid black;
