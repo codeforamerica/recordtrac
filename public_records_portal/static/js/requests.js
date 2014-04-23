@@ -235,7 +235,7 @@
     {
       "click .pagination .prev": "prev",
       "click .pagination .next": "next",
-      "click #headings div": "sort",
+      "click #headings th.sortable": "sort"
     },
 
     prev: function ()
@@ -248,8 +248,13 @@
       this.model.next_page()
     },
     sort: function(event)
-    {   
-      this.model.set_sort(event.target.id)
+    { 
+      var sort_attribute = event.target.id
+      if (sort_attribute == "")  
+      {
+        sort_attribute = event.target.parentNode.id
+      }
+      this.model.set_sort(sort_attribute)
     }
   });
 
