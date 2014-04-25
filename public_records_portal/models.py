@@ -26,6 +26,7 @@ class User(db.Model):
 	contact_for = db.Column(db.String()) # comma separated list
 	backup_for = db.Column(db.String()) # comma separated list
 	owners = relationship("Owner")
+	subscribers = relationship("Subscriber")
 
 	def is_authenticated(self):
 		return True
@@ -77,6 +78,8 @@ class Department(db.Model):
 		self.date_created = datetime.now().isoformat()
 	def __repr__(self):
 		return '<Department %r>' % self.name
+	def __str__(self):
+		return self.name
 	def get_name(self):
 		return self.name or "N/A"
 
@@ -151,11 +154,11 @@ class Request(db.Model):
 		return "N/A"
 	def is_closed(self):
 		return re.match('.*(closed).*', self.status, re.IGNORECASE) is not None
-	def solid_status(self):
+	def solid_status(self, cron_job = False):
 		if self.is_closed():
 			return "closed"
 		else:
-			if not current_user.is_anonymous():
+			if cron_job or (not current_user.is_anonymous()):
 				if datetime.now() >= self.due_date:
 					return "overdue"
 				elif (datetime.now() + timedelta(days = 2)) >= self.due_date:
