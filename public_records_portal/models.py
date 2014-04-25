@@ -57,6 +57,8 @@ class User(db.Model):
 		self.department = department
 	def __repr__(self):
 		return '<User %r>' % self.email
+	def __str__(self):
+		return self.email
 	def department_name(self):
 		if self.current_department and self.current_department.name:
 			return self.current_department.name
