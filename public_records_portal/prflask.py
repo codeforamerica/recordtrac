@@ -55,7 +55,7 @@ class RecordView(AdminView):
 	can_create = False
 	column_searchable_list = ('description', 'filename', 'url', 'download_url', 'access')
 	column_list = ('request_id', 'description', 'filename', 'url', 'download_url', 'access')
-	can_edit = True
+	can_edit = False
 
 class QAView(AdminView):
 	can_create = False
@@ -78,7 +78,7 @@ class UserView(AdminView):
 class DepartmentView(AdminView):
 	can_create = True
 	can_edit = True
-	column_list = ('id', 'name', 'date_created', 'date_updated', 'users')
+	column_list = ('id', 'name', 'date_created', 'date_updated')
 
 
 admin.add_view(RequestView(Request, db.session))
