@@ -11,6 +11,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import json
 import re
 
+
 ### @export "User"
 class User(db.Model):
 	__tablename__ = 'user'
@@ -25,6 +26,7 @@ class User(db.Model):
 	contact_for = db.Column(db.String()) # comma separated list
 	backup_for = db.Column(db.String()) # comma separated list
 	owners = relationship("Owner")
+	subscribers = relationship("Subscriber")
 
 	def is_authenticated(self):
 		return True
@@ -48,10 +50,15 @@ class User(db.Model):
 		if phone != "":
 			self.phone = phone
 		self.date_created = datetime.now().isoformat()
-		self.set_password(password)
+		if password:
+			self.set_password(password)
+		else:
+			self.set_password(app.config['ADMIN_PASSWORD'])
 		self.department = department
 	def __repr__(self):
 		return '<User %r>' % self.email
+	def __str__(self):
+		return self.email
 	def department_name(self):
 		if self.current_department and self.current_department.name:
 			return self.current_department.name
@@ -73,6 +80,8 @@ class Department(db.Model):
 		self.date_created = datetime.now().isoformat()
 	def __repr__(self):
 		return '<Department %r>' % self.name
+	def __str__(self):
+		return self.name
 	def get_name(self):
 		return self.name or "N/A"
 
@@ -82,6 +91,7 @@ class Request(db.Model):
 	__tablename__ = 'request'
 	id = db.Column(db.Integer, primary_key =True)
 	date_created = db.Column(db.DateTime)
+	due_date = db.Column(db.DateTime)
 	extended = db.Column(db.Boolean, default = False) # Has the due date been extended?
 	qas = relationship("QA", cascade="all,delete", order_by = "QA.date_created.desc()") # The list of QA units for this request
 	status_updated = db.Column(db.DateTime)
@@ -106,15 +116,24 @@ class Request(db.Model):
 		self.department = department
 		self.offline_submission_type = offline_submission_type
 		self.date_received = date_received
+		self.due_date = datetime.now() + timedelta(days = int(app.config['DAYS_TO_FULFILL']))
 
 	def __repr__(self):
 		return '<Request %r>' % self.text
+
+	def set_due_date(self):
+		if not self.due_date:
+			self.due_date = self.date_created + timedelta(days = int(app.config['DAYS_TO_FULFILL']))
+			if self.extension:
+				self.due_date = self.due_date + timedelta(days = int(app.config['DAYS_AFTER_EXTENSION']))
+
+	def extension(self):
+		self.extended = True 
+		self.due_date = self.due_date + timedelta(days = int(app.config['DAYS_AFTER_EXTENSION']))
 	def point_person(self):
 		for o in self.owners:
 			if o.is_point_person:
 				return o
-		# Not really an error the first time someone is assigned
-		app.logger.error("\n\nRequest %s has no point of contact." % self.id)
 		return None
 	def requester(self):
 		if self.subscribers:
@@ -137,23 +156,16 @@ class Request(db.Model):
 		return "N/A"
 	def is_closed(self):
 		return re.match('.*(closed).*', self.status, re.IGNORECASE) is not None
-	def solid_status(self):
+	def solid_status(self, cron_job = False):
 		if self.is_closed():
 			return "closed"
 		else:
-			if not current_user.is_anonymous():
-				due = self.due_date()
-				if datetime.now() >= due:
+			if cron_job or (not current_user.is_anonymous()):
+				if datetime.now() >= self.due_date:
 					return "overdue"
-				elif (datetime.now() + timedelta(days = 2)) >= due:
+				elif (datetime.now() + timedelta(days = 2)) >= self.due_date:
 					return "due soon"
 		return "open"
-	def due_date(self):
-		days_to_fulfill = 10
-		if self.extended:
-			days_to_fulfill = days_to_fulfill + 14
-		due_date = (self.date_created + timedelta(days = days_to_fulfill))
-		return due_date
 
 ### @export "QA"
 class QA(db.Model):

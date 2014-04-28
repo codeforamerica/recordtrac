@@ -45,9 +45,11 @@ class AdminView(ModelView):
 
 class RequestView(AdminView):
 	can_create = False
+	can_edit = True
 	column_list = ('id', 'text', 'date_created', 'status') # The fields the admin can view
 	column_searchable_list = ('status', 'text') # The fields the admin can search a request by
-	form_excluded_columns = ('date_created', 'extended', 'status', 'status_updated') # The fields the admin cannot edit.
+	form_excluded_columns = ('date_created', 'extended', 'status', 'status_updated', 'current_owner') # The fields the admin cannot edit.
+	column_labels = dict(department_obj = "Department")
 
 class RecordView(AdminView):
 	can_create = False
@@ -57,22 +59,25 @@ class RecordView(AdminView):
 
 class QAView(AdminView):
 	can_create = False
+	can_edit = True
 	column_list = ('request_id', 'question', 'answer', 'date_created')
 	form_excluded_columns = ('date_created')
 
 class NoteView(AdminView):
 	can_create = False
+	can_edit = True
 	column_list = ('request_id', 'text', 'date_created')
 	form_excluded_columns = ('date_created')
 
 class UserView(AdminView):
-	can_create = False
-	column_list = ('id', 'contact_for', 'backup_for', 'alias', 'department')
-	column_searchable_list = ('contact_for', 'alias')
+	can_create = True
+	column_list = ('id', 'contact_for', 'backup_for', 'alias', 'email')
+	column_searchable_list = ('contact_for', 'alias', 'email')
 	form_excluded_columns = ('date_created', 'password')
 
 class DepartmentView(AdminView):
 	can_create = True
+	can_edit = True
 	column_list = ('id', 'name', 'date_created', 'date_updated')
 
 

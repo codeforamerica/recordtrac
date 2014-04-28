@@ -209,8 +209,7 @@ def create_answer(qa_id, subscriber_id, answer):
 def create_or_return_user(email=None, alias = None, phone = None, department = None, not_id = False):
 	app.logger.info("\n\nCreating or returning user...")
 	if email:
-		email = email.lower()
-		user = User.query.filter_by(email = email).first()
+		user = User.query.filter(func.lower(User.email) == func.lower(email)).first()
 		if department and type(department) != int and not department.isdigit():
 			d = Department.query.filter_by(name = department).first()
 			if d:

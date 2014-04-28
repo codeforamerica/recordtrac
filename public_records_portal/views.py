@@ -273,6 +273,23 @@ def fetch_requests():
 		requester_name = request.args.get('requester_name')
 		if requester_name and requester_name != "":
 			results = results.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % requester_name.lower()))
+			
+	# status = request.args.get('status')
+	# # Filter by status
+	# if status and status != "All statuses":
+	# 	results = results.filter(Request.solid_status() == status.lower())
+
+	sort_by = request.args.get('sort_by') 
+	if sort_by and sort_by != '':
+		ascending = request.args.get('ascending')
+		app.logger.info("\n\nAscending? %s" % ascending)
+		app.logger.info("\n\nSort by? %s" % sort_by)
+		if ascending == "true":
+			results = results.order_by((getattr(Request, sort_by)).asc())
+		else:
+			results = results.order_by((getattr(Request, sort_by)).desc())
+	results = results.order_by(Request.id.desc())
+
 
 	page_number  = request.args.get('page') or 1
 	page_number = int(page_number)
@@ -298,7 +315,8 @@ def fetch_requests():
 			end_index = num_results
 
 
-	results = results.order_by(Request.date_created.desc()).limit(limit).offset(offset).all()
+	results = results.limit(limit).offset(offset).all()
+	# results = results.limit(limit).offset(offset).all()
 
 	# TODO(cj@postcode.io): This map is pretty kludgy, we should be detecting columns and auto
 	# magically making them fields in the JSON objects we return.
@@ -307,14 +325,14 @@ def fetch_requests():
 							  "date_created": r.date_created.isoformat(), \
 							  "department":   r.department_name(), \
 							  "requester":   r.requester_name(), \
-							  "due_date":    format_date(r.due_date()), \
+							  "due_date":    format_date(r.due_date), \
 							  # The following two attributes are defined as model methods,
 							  # and not regular SQLAlchemy attributes.
 							  "contact_name": r.point_person_name(), \
 							  "solid_status": r.solid_status(), \
 							  "status":       r.status
 	   }, results)
-	# app.logger.info("\n\nResults: %s" % results)
+
 	matches = {
 		"objects": results,
 		"num_results": num_results,
