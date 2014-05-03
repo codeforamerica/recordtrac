@@ -109,7 +109,11 @@ def track(request_id = None):
 	if request.method == 'POST':
 		if not request_id:
 			request_id = request.form['request_id']
-		return redirect(url_for('show_request', request_id = request_id))
+		if not current_user.is_anonymous():
+			audience = 'city'
+		else:
+			audience = 'public'
+		return redirect(url_for('show_request_for_x', audience= audience, request_id = request_id))
 	else:
 		return render_template("track.html")
 

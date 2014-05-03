@@ -245,7 +245,9 @@ def update_user(user, alias = None, phone = None, department = None):
 	if phone:
 		user.phone = phone
 	if department:
-		user.department = department
+		d = Department.query.filter_by(name = department).first()
+		if d:
+			user.department = d.id
 	if not user.password:
 		user.password = app.config['ADMIN_PASSWORD']
 	db.session.add(user)
