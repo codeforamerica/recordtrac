@@ -241,8 +241,6 @@ def fetch_requests():
 		department = Department.query.filter_by(name = department).first()
 		if department:
 			results = results.filter(Request.department_id == department.id)
-		else:
-			results = results.filter(Request.department == request.args.get('department'))
 
 	# Filter by search term
 	search_input = request.args.get('search')
@@ -327,7 +325,7 @@ def fetch_requests():
 	results = map(lambda r: { "id":           r.id, \
 							  "text":         r.text, \
 							  "date_created": r.date_created.isoformat(), \
-							  "department":   r.department or r.department_name(), \
+							  "department":   r.department_name(), \
 							  "requester":   r.requester_name(), \
 							  "due_date":    format_date(r.due_date), \
 							  # The following two attributes are defined as model methods,
