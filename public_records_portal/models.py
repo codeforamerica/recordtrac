@@ -115,17 +115,21 @@ class Request(db.Model):
 		self.creator_id = creator_id
 		self.department = department
 		self.offline_submission_type = offline_submission_type
-		self.date_received = date_received
-		self.due_date = datetime.now() + timedelta(days = int(app.config['DAYS_TO_FULFILL']))
+		if date_received:
+			self.date_received = datetime.strptime(date_received, '%b %d %Y %I:%M%p')
 
 	def __repr__(self):
 		return '<Request %r>' % self.text
 
 	def set_due_date(self):
 		if not self.due_date:
-			self.due_date = self.date_created + timedelta(days = int(app.config['DAYS_TO_FULFILL']))
+			date_received = self.date_received
+			if not date_received:
+				date_received = self.date_created
+			app.logger.info("\n\n Date received: %s" % self.date_received)
+			self.due_date =  date_received + timedelta(days = int(app.config['DAYS_TO_FULFILL']))
 			if self.extension:
-				self.due_date = self.due_date + timedelta(days = int(app.config['DAYS_AFTER_EXTENSION']))
+				self.due_date = date_received + timedelta(days = int(app.config['DAYS_AFTER_EXTENSION']))
 
 	def extension(self):
 		self.extended = True 
