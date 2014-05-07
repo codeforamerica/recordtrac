@@ -53,6 +53,17 @@
   });
 
 
+/* form in unassign popover */
+  $('#unassignPopover').popover({ 
+          html : true,
+          title: function() {
+            return $("#unassignPopover-head").html();
+          },
+          content: function() {
+            return $("#unassignPopover-content").html();
+          }
+      });
+
 /* form in reroute popover */
   $('#reroutePopover').popover({ 
           html : true,

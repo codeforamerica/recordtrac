@@ -155,6 +155,19 @@ $(document).on('shown', "#reroutePopover", function () {
   });
 });
 
+$(document).on('shown', "#unassignPopover", function () {
+    // to close the popover
+    $('.close').on('click', function(){
+      $('#unassignPopover').popover('hide');
+    })
+   $('#rerouteButton').click(function() {
+    if($.inArray($('#rerouteEmail').val(), emails) == -1) {
+      $('#rerouteEmail').val('');
+    }
+  });
+});
+
+
 $(document).on('shown', "#notifyPopover", function () {
     // to close the popover
     $('.close').on('click', function(){
