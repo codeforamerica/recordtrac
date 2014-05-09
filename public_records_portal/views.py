@@ -264,6 +264,37 @@ def fetch_requests():
 		if is_closed.lower() == "false":
 			results = results.filter(~Request.status.ilike("%closed%"))
 
+
+
+	# Filter by due_soon
+	due_soon = request.args.get('due_soon')
+	# due soon should only be an option for open requests
+	if due_soon != None:
+		if due_soon.lower() == "true":
+			two_days = datetime.now() + timedelta(days = 2)
+			results = results.filter(Request.due_date < two_days).filter(Request.due_date > datetime.now()).filter(~Request.status.ilike("%closed%"))
+
+	overdue = request.args.get('overdue')
+	# overdue should be mutually exclusive with due soon, and should only be an option for open requests
+	if overdue != None:
+		if overdue.lower() == "true":
+			results = results.filter(Request.due_date < datetime.now()).filter(~Request.status.ilike("%closed%"))
+
+
+	# min_date_created = datetime.strptime('May 1 2014', '%b %d %Y')
+	# max_date_created = datetime.strptime('May 20 2014', '%b %d %Y')
+	min_date_created = None
+	max_date_created = None
+	if min_date_created and max_date_created:
+		results = results.filter(Request.date_created >= min_date_created).filter(Request.date_created <= max_date_created)
+
+	# min_due_date = datetime.strptime('May 15 2014', '%b %d %Y')
+	# max__due_date = datetime.strptime('May 20 2014', '%b %d %Y')
+	min_due_date = None
+	max_due_date = None
+	if min_due_date and max_due_date:
+		results = results.filter(Request.due_date >= min_due_date).filter(Request.due_date <= max_due_date)
+
 	# Filters for agency staff only:
 	if user_id:
 		# Filter based on owner's requests

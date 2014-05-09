@@ -320,6 +320,7 @@ def remove_staff_participant(owner_id, reason = None):
 	participant = Owner.query.get(owner_id)
 	participant.active = False
 	participant.date_updated = datetime.now().isoformat()
+	participant.reason_unassigned = reason
 	db.session.add(participant)
 	db.session.commit()
 

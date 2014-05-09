@@ -1,5 +1,27 @@
 $(document).ready(function(){
   /* validates ask a question form */
+
+
+var i = 0;
+$('.unassignPopover').click(function() {
+    var el = $(this);
+    i += 1;
+
+    $('.unassignPopover').popover({
+        trigger: 'manual',
+        html: true,
+        title: function() {
+           return  $('.unassignPopover').children('div').eq(1);
+          },
+        content: function() {
+           var message = "Count is" + i;
+             return message;
+        }
+    });
+    $('.unassignPopover').popover("show");
+
+});
+
   $("#question").validate({
     rules: {
       question_text: {
@@ -154,6 +176,20 @@ $(document).on('shown', "#reroutePopover", function () {
     }
   });
 });
+
+
+$(document).on('shown', ".unassignPopover", function () {
+    // to close the popover
+    $('.close').on('click', function(){
+      $('.unassignPopover').popover('hide');
+    })
+   $('#rerouteButton').click(function() {
+    if($.inArray($('#rerouteEmail').val(), emails) == -1) {
+      $('#rerouteEmail').val('');
+    }
+  });
+});
+
 
 $(document).on('shown', "#notifyPopover", function () {
     // to close the popover
