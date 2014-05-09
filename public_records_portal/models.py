@@ -123,7 +123,7 @@ class Request(db.Model):
 
 	def set_due_date(self):
 		self.due_date = self.date_created + timedelta(days = int(app.config['DAYS_TO_FULFILL']))
-		if self.extension:
+		if self.extension == True:
 				self.due_date = self.due_date + timedelta(days = int(app.config['DAYS_AFTER_EXTENSION']))
 
 	def extension(self):
