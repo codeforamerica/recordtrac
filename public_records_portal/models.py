@@ -122,9 +122,8 @@ class Request(db.Model):
 		return '<Request %r>' % self.text
 
 	def set_due_date(self):
-		if not self.due_date:
-			self.due_date = self.date_created + timedelta(days = int(app.config['DAYS_TO_FULFILL']))
-			if self.extension:
+		self.due_date = self.date_created + timedelta(days = int(app.config['DAYS_TO_FULFILL']))
+		if self.extension:
 				self.due_date = self.due_date + timedelta(days = int(app.config['DAYS_AFTER_EXTENSION']))
 
 	def extension(self):
