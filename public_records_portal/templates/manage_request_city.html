@@ -80,7 +80,7 @@
 
 {% block request_dates %}
   {{super()}}
-  <div class="text-center">Due: <span class="label">{{ req.date_created | due_date(req.extended) }}</span></div>
+  <div class="text-center">Due: <span class="label">{{ req.due_date | date }}</span></div>
 {% endblock request_dates %}
 
 {% block follow %}{% endblock follow %}
