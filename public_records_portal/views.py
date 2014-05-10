@@ -252,6 +252,9 @@ def fetch_requests():
 		department = Department.query.filter_by(name = department).first()
 		if department:
 			results = results.filter(Request.department_id == department.id)
+		else:
+			# Just return an empty query set
+			results = results.filter(Request.department_id < 0)
 
 	# Filter by search term
 	search_input = request.args.get('search')
