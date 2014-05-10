@@ -2,7 +2,6 @@
 	{% if owner.active %}
 		{% set participant = (owner | display_staff_participant(req)) %} 
 		{% if participant %}
-
 			<div data-placement="left" class="unassignPopover">
         <div class="popover-container">
           {{ participant }}<span class="pull-right"><font color ='white'> remove</font></span>
@@ -16,13 +15,13 @@
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <input type="hidden" name="owner_id" value="{{ owner.id }}"/>
                 <input type="text" name="reason_unassigned" value="Task completed" required />
+                <input type="text" name="reason_unassigned" value="Task completed" required />
                 <button id="unassignButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
               </div>
             </div>
           </form>
         </div>
       </div>
-
 		{% endif %}
 	{% endif %}
 {% endfor %}

@@ -151,9 +151,12 @@ def create_QA(request_id, question, owner_id):
 	return qa.id
 
 ### @export "create_request"
-def create_request(text, user_id, department = None):
+def create_request(text, user_id, department = None, offline_submission_type = None, date_received = None):
 	""" Create a Request object and return the ID. """
-	req = Request(text = text, creator_id = user_id, department = department)
+	req = Request(text = text, creator_id = user_id, department = department, offline_submission_type = offline_submission_type, date_received = date_received)
+	db.session.add(req)
+	db.session.commit()
+	req.set_due_date()
 	db.session.add(req)
 	db.session.commit()
 	return req.id
@@ -323,6 +326,7 @@ def remove_staff_participant(owner_id, reason = None):
 	participant.reason_unassigned = reason
 	db.session.add(participant)
 	db.session.commit()
+	return owner_id
 
 
 ### @export "authenticate_login"
