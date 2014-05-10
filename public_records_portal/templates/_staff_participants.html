@@ -1,6 +1,6 @@
 {% for owner in req.owners %}
 	{% if owner.active %}
-		{% set participant = owner.user.alias %} 
+		{% set participant = (owner | display_staff_participant(req)) %} 
 		{% if participant %}
 
 			<div data-placement="left" class="unassignPopover">
