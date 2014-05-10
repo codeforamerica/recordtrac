@@ -1,11 +1,11 @@
 {% for owner in req.owners %}
 	{% if owner.active %}
-		{% set participant = (owner | display_staff_participant(req)) %} 
+		{% set participant = owner.user.alias %} 
 		{% if participant %}
 
 			<div data-placement="left" class="unassignPopover">
         <div class="popover-container">
-          {{ participant }}<span class="pull-right"><small><i class="icon-remove-sign"></i></small><font color ='white'> remove</font></span>
+          {{ participant }}<span class="pull-right"><font color ='white'> remove</font></span>
         </div> 
   		  <div id="unassignPopover-head" class="hide">Remove helper: <a class="close" href="#">&times;</a> </div>
         <div id="unassignPopover-content" class="hide">              

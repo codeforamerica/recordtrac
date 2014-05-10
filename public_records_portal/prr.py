@@ -54,8 +54,11 @@ def update_resource(resource, request_body):
 	elif "qa" in resource:
 		return answer_a_question(int(fields['qa_id']), fields['answer_text'])
 	elif "owner" in resource:
-		change_request_status(int(fields['request_id']), "Rerouted")
-		return assign_owner(int(fields['request_id']), fields['owner_reason'], fields['owner_email'])
+		if "reason_unassigned" in fields:
+			return remove_staff_participant(owner_id = fields['owner_id'], reason = fields['reason_unassigned'])
+		else:
+			change_request_status(int(fields['request_id']), "Rerouted")
+			return assign_owner(int(fields['request_id']), fields['owner_reason'], fields['owner_email'])
 	elif "reopen" in resource:
 		change_request_status(int(fields['request_id']), "Reopened")
 		return fields['request_id']
