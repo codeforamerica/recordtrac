@@ -364,7 +364,7 @@ def fetch_requests():
 	# magically making them fields in the JSON objects we return.
 	results = map(lambda r: { "id":           r.id, \
 							  "text":         r.text, \
-							  "date_created": r.date_created.isoformat(), \
+							  "date_created": (r.date_received or r.date_created).isoformat(), \
 							  "department":   r.department_name(), \
 							  "requester":   r.requester_name(), \
 							  "due_date":    format_date(r.due_date), \
