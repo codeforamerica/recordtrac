@@ -209,7 +209,7 @@ def create_answer(qa_id, subscriber_id, answer):
 def create_or_return_user(email=None, alias = None, phone = None, department = None, not_id = False):
 	app.logger.info("\n\nCreating or returning user...")
 	if email:
-		user = User.query.filter(func.lower(User.email) == func.lower(email)).first()
+		user = User.query.filter(User.email == func.lower(email)).first()
 		if department and type(department) != int and not department.isdigit():
 			d = Department.query.filter_by(name = department).first()
 			if d:
@@ -246,7 +246,9 @@ def update_user(user, alias = None, phone = None, department = None):
 	if phone:
 		user.phone = phone
 	if department:
-		user.department = department
+		d = Department.query.filter_by(name = department).first()
+		if d:
+			user.department = d.id
 	if not user.password:
 		user.password = app.config['ADMIN_PASSWORD']
 	db.session.add(user)
@@ -338,8 +340,7 @@ def authenticate_login(email, password):
 
 ### @export "set_random_password"
 def set_random_password(email):
-	email = email.lower()
-	user = User.query.filter_by(email = email).first()
+	user = User.query.filter(User.email == func.lower(email)).first()
 	if not user or not user.department: # Must be a user with an assigned department
 		return None # This is only for existing staff users, not a way to create a user, which we're not allowing yet.
 	password = uuid.uuid4().hex

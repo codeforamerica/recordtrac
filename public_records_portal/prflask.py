@@ -71,7 +71,8 @@ class NoteView(AdminView):
 
 class UserView(AdminView):
 	can_create = True
-	column_list = ('id', 'contact_for', 'backup_for', 'alias', 'email')
+	can_edit = True
+	column_list = ('id', 'contact_for', 'backup_for', 'alias', 'email', 'department')
 	column_searchable_list = ('contact_for', 'alias', 'email')
 	form_excluded_columns = ('date_created', 'password')
 
