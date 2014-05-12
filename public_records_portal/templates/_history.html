@@ -16,15 +16,16 @@
     <tbody>
       <!-- the order of data returned here should be reverse chronological (right now it's shown as oldest first)-->
       {% for owner in req.owners %}
+      {% set alias =  "alias" | get_attribute(owner.user_id, "User") %}
       <tr>
-        <td>{{ "alias" | get_attribute(owner.user_id, "User") }}</td>
+        <td>{{ alias }}</td>
         <td><i class="icon-plus-sign"></i></td>
         <td>{{ owner.date_created | date }}</td>
         <td>{{ owner.reason or "N/A" }}</td>
       </tr>
        {% if not owner.active %}
       <tr>
-        <td></td>
+        <td>{{ alias }}</td>
         <td><i class="icon-remove-sign"></i></td>
         <td>{{ owner.date_updated | date }}</td>
         <td>{{ owner.reason_unassigned or "Unassigned" }}</td>
