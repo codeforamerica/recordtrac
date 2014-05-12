@@ -86,22 +86,6 @@ def get_owners_by_user_id(user_id):
 		return None
 	return Owner.query.filter_by(user_id = user_id)
 
-### @export "get_owner_data"
-def get_owner_data(request_id, attributes = ["alias"]):
-	""" Return the alias of the current owner for a particular request. """
-	r = Request.query.get(request_id)
-	return r.point_person().user.alias
-	# owner_data = []
-	# if not request_id:
-	# 	return owner_data
-	# q = db.session.query(User).join(Owner, User.id == Owner.user_id).join(Request, Owner.id == Request.current_owner).filter(Request.id == request_id).all()
-	# for attribute in attributes:
-	# 	if len(q) > 0:
-	# 		owner_data.append(getattr(q[0], attribute))
-	# 	else:
-	# 		owner_data.append(None)
-	# return owner_data
-
 ### @export "get_prr_liaison_by_dept"
 def get_contact_by_dept(dept):
 	""" Return the contact for a given department. """
@@ -167,9 +151,12 @@ def create_QA(request_id, question, owner_id):
 	return qa.id
 
 ### @export "create_request"
-def create_request(text, user_id, department = None):
+def create_request(text, user_id, department = None, offline_submission_type = None, date_received = None):
 	""" Create a Request object and return the ID. """
-	req = Request(text = text, creator_id = user_id, department = department)
+	req = Request(text = text, creator_id = user_id, department = department, offline_submission_type = offline_submission_type, date_received = date_received)
+	db.session.add(req)
+	db.session.commit()
+	req.set_due_date()
 	db.session.add(req)
 	db.session.commit()
 	return req.id
@@ -224,8 +211,7 @@ def create_answer(qa_id, subscriber_id, answer):
 def create_or_return_user(email=None, alias = None, phone = None, department = None, not_id = False):
 	app.logger.info("\n\nCreating or returning user...")
 	if email:
-		email = email.lower()
-		user = User.query.filter_by(email = email).first()
+		user = User.query.filter(User.email == func.lower(email)).first()
 		if department and type(department) != int and not department.isdigit():
 			d = Department.query.filter_by(name = department).first()
 			if d:
@@ -249,7 +235,7 @@ def create_or_return_user(email=None, alias = None, phone = None, department = N
 
 ### @export "create_user"
 def create_user(email=None, alias = None, phone = None, department = None):
-	user = User(email = email, alias = alias or "Anonymous", phone = phone, department = department, password = app.config['ADMIN_PASSWORD'])
+	user = User(email = email, alias = alias, phone = phone, department = department, password = app.config['ADMIN_PASSWORD'])
 	db.session.add(user)
 	db.session.commit()
 	app.logger.info("\n\nCreated new user, alias: %s id: %s" % (user.alias, user.id))
@@ -262,7 +248,9 @@ def update_user(user, alias = None, phone = None, department = None):
 	if phone:
 		user.phone = phone
 	if department:
-		user.department = department
+		d = Department.query.filter_by(name = department).first()
+		if d:
+			user.department = d.id
 	if not user.password:
 		user.password = app.config['ADMIN_PASSWORD']
 	db.session.add(user)
@@ -335,8 +323,10 @@ def remove_staff_participant(owner_id, reason = None):
 	participant = Owner.query.get(owner_id)
 	participant.active = False
 	participant.date_updated = datetime.now().isoformat()
+	participant.reason_unassigned = reason
 	db.session.add(participant)
 	db.session.commit()
+	return owner_id
 
 
 ### @export "authenticate_login"
@@ -354,8 +344,7 @@ def authenticate_login(email, password):
 
 ### @export "set_random_password"
 def set_random_password(email):
-	email = email.lower()
-	user = User.query.filter_by(email = email).first()
+	user = User.query.filter(User.email == func.lower(email)).first()
 	if not user or not user.department: # Must be a user with an assigned department
 		return None # This is only for existing staff users, not a way to create a user, which we're not allowing yet.
 	password = uuid.uuid4().hex

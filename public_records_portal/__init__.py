@@ -52,8 +52,13 @@ set_env(key = 'RECAPTCHA_PRIVATE_KEY', default = "")
 # The name of your agency, e.g. City of Oakland:
 set_env(key = 'AGENCY_NAME', default = '')
 
+# The number of days an agency has (determined by law or policy) to fulfill a request
+set_env(key = 'DAYS_TO_FULFILL', default = '10')
+set_env(key = 'DAYS_AFTER_EXTENSION', default = '14')
+
 # No defaults should be set for this.  Used for local e-mail testing.
 set_env(key = 'DEV_EMAIL')
+
 
 
 # Initialize database
@@ -61,6 +66,3 @@ db = SQLAlchemy(app)
 
 logging.basicConfig()
 # logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
-
-app.logger.info("\n\nFresh request!")
-

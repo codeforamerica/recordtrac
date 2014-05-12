@@ -30,6 +30,16 @@
      i.icon-user {
           padding-right: 3px;
      }
+    .unassignPopover:hover {
+      background-color:#17b292;
+      cursor: pointer;
+      *cursor: hand;
+      background-color: rgba(23,178,146, .3);
+      color: #555;
+      border-radius: 10px;
+      padding: 5px;
+      margin-bottom: 0px;
+  }
      /*i.icon-arrow-right:hover {
           color: #888;
      }
