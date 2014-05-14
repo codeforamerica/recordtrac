@@ -16,21 +16,29 @@ This application requires [Postgres](http://www.postgresapp.com/) and Xcode deve
 
 Install Postgres, Python, and other required packages.
 
-    sudo apt-get install postgresql-9.1 postgresql-server-dev-9.1 python-dev
+    sudo apt-get update
+    sudo apt-get install -y git
+    sudo apt-get install -y postgresql-9.1 postgresql-server-dev-9.1 python-dev
+    sudo apt-get install -y python-pip
 
 ### Postgres & Python
 
 If you are using a standard Postgres installation or from [Homebrew](http://mxcl.github.com/homebrew/) you can also use:
 
-    createdb recordtrac
+    sudo -u postgres createuser -P -s -e testuser
+    sudo -u postgres createdb recordtrac
 
 In a new window:
 
     git clone git://github.com/postcode/recordtrac.git
     cd recordtrac
     sudo pip install -r requirements.txt
+    cp .env.example .env
+    sed -i 's/localhost/testuser\:testpwd\@localhost/g' .env
 
-Save .env.example as .env and update relevant fields.
+Update relevant fields in .env.
+
+    vi .env
 
 ### Other Accounts
 
