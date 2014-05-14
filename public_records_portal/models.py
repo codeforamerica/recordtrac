@@ -116,7 +116,10 @@ class Request(db.Model):
 		self.department = department
 		self.offline_submission_type = offline_submission_type
 		if date_received:
-			self.date_received = datetime.strptime(date_received, '%m/%d/%Y')
+			if type(date_received) is datetime:
+				self.date_received = date_received
+			else:
+				self.date_received = datetime.strptime(date_received, '%m/%d/%Y')
 
 	def __repr__(self):
 		return '<Request %r>' % self.text

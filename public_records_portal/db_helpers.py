@@ -61,11 +61,12 @@ def get_avg_response_time(department):
 	response_time = None
 	num_closed = 0
 	for request in d.requests:
+		date_created = request.date_received or request.date_created
 		if request.status and 'Closed' in request.status:
 			if response_time:
-				response_time = response_time + (request.status_updated - request.date_created).total_seconds()
+				response_time = response_time + (request.status_updated - date_created).total_seconds()
 			else:
-				response_time = (request.status_updated - request.date_created).total_seconds()
+				response_time = (request.status_updated - date_created).total_seconds()
 			num_closed = num_closed + 1
 	if num_closed > 0:
 		avg = response_time / num_closed
@@ -157,8 +158,6 @@ def create_request(text, user_id, department = None, offline_submission_type = N
 	db.session.add(req)
 	db.session.commit()
 	req.set_due_date()
-	db.session.add(req)
-	db.session.commit()
 	return req.id
 
 ### @export "create_subscriber"
@@ -248,9 +247,12 @@ def update_user(user, alias = None, phone = None, department = None):
 	if phone:
 		user.phone = phone
 	if department:
-		d = Department.query.filter_by(name = department).first()
-		if d:
-			user.department = d.id
+		if type(department) != int and not department.isdigit():
+			d = Department.query.filter_by(name = department).first()
+			if d:
+				user.department = d.id
+		else:
+			user.department = department
 	if not user.password:
 		user.password = app.config['ADMIN_PASSWORD']
 	db.session.add(user)

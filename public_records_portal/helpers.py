@@ -77,7 +77,8 @@ def explain_action(action, explanation_type = None):
 			explanation_str = explanation_str + " " + explanation['Who']
 		if 'Action' in explanation:
 			explanation_str = explanation_str + " " + explanation['Action']
-		return explanation_str
+		return explanation_str.replace('*agency*', app.config['AGENCY_NAME'])
+
 
 def new_lines(value):
 	new_value = value.replace('\n','<br>\n')

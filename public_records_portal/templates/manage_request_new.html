@@ -32,10 +32,10 @@
         {% if (requester) %}
           {% set email = requester.user.email %}
         {% endif %}
-        <p>You can expect a response from the City of Oakland in the next 10 days.
-        {% if email %} You will be contacted via e-mail with any updates.
-        {% else %} You did not provide an e-mail address so you will have to visit this page for updates. {% endif %}</p>
-        <p>All messages from the City and/or the information and documents you requested will be posted to this page. You can access <a href ="{{request.path}}">this page</a> at any time.</p>
+      <p>You can expect a response from the {{config['AGENCY_NAME']}} in the next 10 days.
+      {% if email %} You will be contacted via e-mail with any updates.
+      {% else %} You did not provide an e-mail address so you will have to visit this page for updates. {% endif %}</p>
+      <p>All messages from the {{config['AGENCY_NAME']}} and/or the information and documents you requested will be posted to this page. You can access <a href ="{{request.path}}">this page</a> at any time.</p>
       {% endif %}
     </div>
   </div>
