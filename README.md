@@ -5,6 +5,10 @@ This is a portal to manage and display public record requests, built by the Code
 
 ## Installation
 
+We recommend you use Vagrant to set up RecordTrac locally. Thanks to @vzvenyach for putting together instructions, which we've slightly modified and can be found here: https://github.com/postcode/recordtrac-vagrant
+
+Otherwise, feel free to set up per instructions below.
+
 ### Mac OS X Pre-requisites
 
 This application requires [Postgres](http://www.postgresapp.com/) and Xcode developer tools to be installed.
