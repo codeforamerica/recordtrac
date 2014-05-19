@@ -17,7 +17,7 @@ class ResponsePresenter:
 			self.response = note
 			self.update_url = "update_a_note_delete"
 			self.type = "note"
-			if "Request extended" in self.response.text:
+			if "Request extended:" in self.response.text:
 				self.type = "extension"
 		if self.type=="offline":
 			self.icon = "icon-file-alt icon-large"
@@ -68,7 +68,7 @@ class ResponsePresenter:
 		elif self.type == "link":
 			return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s'>%s <i class='icon-external-link'></i></a>" % (self.response.url, self.response.url, self.response.description)
 		elif self.type == "extension":
-			junk, text = self.response.text.split(":")
+			text = self.response.text.strip("Request extended:")
 			return text
 
 	def get_icon(self):
