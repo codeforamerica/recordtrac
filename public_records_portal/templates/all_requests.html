@@ -48,22 +48,166 @@
         </div>
       </div>
 
-      {# Search field. #}
-      <div class="row-fluid">
-        <div id="search_field_container" class="span9"></div>
-        <script type="text/template" id="search_field_template">
-          <div id="search" class="pull-right">
-            <label>Search</label>
-            <input type="text" placeholder="I'd like to find...">
-          </div>
-        </script>
-      </div>
+      
 
 
       {# Search results table. #}
 
-      <div class="row-fluid">
-        <div class="span9" id="search_results_container"></div>
+        <div class="row-fluid">
+
+        <div class="span3 well search_style">
+          <h4 class="underline">SEARCH</h4>
+          {# Search field. #}
+            <div class="row-fluid">
+              <div id="search_field_container"></div>
+              <script type="text/template" id="search_field_template">
+                <div id="search">
+                  <input type="text" placeholder="enter search term...">
+                </div>
+              </script>
+            </div>
+          <div id="sidebar_container"></div>
+            <script type="text/template" id="sidebar_template">                                         
+            <div id="filterbox">
+              <h4 class="underline">ADVANCED FILTER</h4>
+                <h5>My Requests</h5>
+                <div class="indent">
+                  {% if user_id %}
+                  <label class="checkbox">
+                    <input 
+                        type="checkbox"
+                        title="my_requests_checkbox"
+                        value="{{user_id}}"
+                        name="my_requests"
+                        id="my_requests"
+                        <% if ( my_requests ) { %>
+                        checked
+                        <% } %> >
+                     <em>as Point of Contact</em>
+                   </label>
+                  {% endif %}
+                  {% if user_id %}
+                  <label class="checkbox">
+                    <input 
+                        type="checkbox"
+                        title="my_requests_checkbox"
+                        value="{{user_id}}"
+                        name="my_requests"
+                        id="my_requests"
+                        <% if ( my_requests ) { %>
+                        checked
+                        <% } %> >
+                     <em>as Helper</em>
+                   </label>
+                  {% endif %}
+                </div>
+                <h5>Status</h5>
+                <div class="indent" style="padding-bottom: 15px;">
+                  <label class="checkbox">
+                    <input type="checkbox"
+                           title="open_requests_checkbox"
+                           value="open"
+                           name="is_closed"
+                           id="is_closed" 
+                           <% if ( !is_closed ) { %>
+                             checked
+                           <% } %> >
+                    <em class="overdue_style">Overdue</em>
+                  </label>
+                  <label class="checkbox">
+                    <input type="checkbox"
+                           title="open_requests_checkbox"
+                           value="open"
+                           name="is_closed"
+                           id="is_closed" 
+                           <% if ( !is_closed ) { %>
+                             checked
+                           <% } %> >
+                    <em class="duesoon_style">Due Soon</em>
+                  </label>
+                  <label class="checkbox">
+                    <input type="checkbox"
+                           title="open_requests_checkbox"
+                           value="open"
+                           name="is_closed"
+                           id="is_closed" 
+                           <% if ( !is_closed ) { %>
+                             checked
+                           <% } %> >
+                    <em class="open_style">Recently Requested</em>
+                  </label>
+                  <label class="checkbox">
+                    <input type="checkbox"
+                           title="open_requests_checkbox"
+                           value="open"
+                           name="is_closed"
+                           id="is_closed" 
+                           <% if ( !is_closed ) { %>
+                             checked
+                           <% } %> >
+                    <em class="closed_style">Closed</em>
+                  </label>
+                  </div>
+                <h5 style="display: inline; ">Response Due Date</h5>&nbsp;&nbsp;<a href=""><em>All Dates</em></a>
+                  <div class = "control-group indent">
+                    <input 
+                      type="text" 
+                      class="span5" 
+                      style="display:inline;"
+                      id="datepicker1" 
+                      name="request_received_begin" > 
+                      &nbsp;-&nbsp;
+                      <input 
+                        type="text" 
+                        class="span5" 
+                        id="datepicker2" 
+                        name="request_received_end" > 
+                  </div>
+                <h5 style="display: inline;">Request Date</h5>&nbsp;&nbsp;<a href=""><em>All Dates</em></a>
+                  <div class = "control-group indent">
+                    <input 
+                      type="text" 
+                      class="span5" 
+                      style="display:inline;"
+                      id="datepicker1" 
+                      name="request_received_begin" > 
+                      &nbsp;-&nbsp;
+                      <input 
+                        type="text" 
+                        class="span5" 
+                        id="datepicker2" 
+                        name="request_received_end" > 
+                  </div>
+                <h5>Requestor Name</h5>
+                <div class="indent">
+                  {% if user_id %}
+                    <input 
+                      type="text" 
+                      class="span10"
+                      name="requester_name"
+                      id="requester_name"
+                      placeholder="enter name">
+                  {% endif %} 
+                </div>
+                <h5>Department</h5>
+                <div class="row-fluid indent">
+                  <select class="span10"title="department"id="department_name"name="department">
+                  <% if (department) { %>
+                   <option selected><%= department %></option>
+                  <% } %>
+                    <option value="All departments">All departments</option>
+                    {% for department in departments %}
+                      <option>{{department}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                            
+            </div>
+          </script>
+        </div>
+     
+
+        <div class="span8" id="search_results_container"></div>
           <script type="text/template" id="search_results_template">
             <table id="requests">
               <thead id = "headings">
@@ -145,63 +289,6 @@
 
         </script>
 
-          <div class="span2">
-        <div id="sidebar_container"></div>
-        <script type="text/template" id="sidebar_template">                                         
-          <div id="filterbox" class="well">
-            <h4>View </h4>
-                <label class="checkbox">
-                  <input type="checkbox"
-                         title="open_requests_checkbox"
-                         value="open"
-                         name="is_closed"
-                         id="is_closed" 
-                         <% if ( !is_closed ) { %>
-                           checked
-                         <% } %> >
-                  Open requests
-                </label>
-              Request received
-              <div class = "control-group">
-              <input class ="input-block-level" type="text" class="span2" id="datepicker1" name="request_received_begin" > - <input class ="input-block-level" type="text" class="span2" id="datepicker2" name="request_received_end" > 
-              </div>
-              {% if user_id %}
-              <label class="checkbox">
-                <input 
-                    type="checkbox"
-                    title="my_requests_checkbox"
-                    value="{{user_id}}"
-                    name="my_requests"
-                    id="my_requests"
-                    <% if ( my_requests ) { %>
-                    checked
-                    <% } %> >
-                 My requests
-               </label>
-              {% endif %}
-                <div class="row-fluid">
-                <select class="span12"title="department"id="department_name"name="department">
-                <% if (department) { %>
-                 <option selected><%= department %></option>
-                <% } %>
-                  <option value="All departments">All departments</option>
-                  {% for department in departments %}
-                    <option>{{department}}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              {% if user_id %}
-               By requester name
-                <input 
-                  type="text" 
-                  class="input-small"
-                  name="requester_name"
-                  id="requester_name"
-                  placeholder="Enter name">
-              {% endif %}             
-          </div>
-        </script>
-      </div>
       </div>              
     </div>
   </div>

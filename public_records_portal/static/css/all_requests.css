@@ -160,3 +160,36 @@ h3 {
 #requests .status.overdue {
     background-color: #CA1A1A;
 }
+
+/* sidebar search styling */
+
+.underline {
+	border-bottom: 1px solid gray;
+	padding-bottom: 7px;
+}
+.indent {
+	margin-left: 10px;
+}
+.search_style h5 {
+	margin: 15px 0px 3px;
+}
+.overdue_style{
+	border-left: 8px solid red;
+	padding-left: 5px;
+	margin-left: 5px;
+}
+.duesoon_style{
+	border-left: 8px solid orange;
+	padding-left: 5px;
+	margin-left: 5px;
+}
+.open_style{
+	border-left: 8px solid #2688AD;
+	padding-left: 5px;
+	margin-left: 5px;
+}
+.closed_style{
+	border-left: 8px solid black;
+	padding-left: 5px;
+	margin-left: 5px;
+}
