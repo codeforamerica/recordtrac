@@ -246,9 +246,12 @@ def update_user(user, alias = None, phone = None, department = None):
 	if phone:
 		user.phone = phone
 	if department:
-		d = Department.query.filter_by(name = department).first()
-		if d:
-			user.department = d.id
+		if type(department) != int and not department.isdigit():
+			d = Department.query.filter_by(name = department).first()
+			if d:
+				user.department = d.id
+		else:
+			user.department = department
 	if not user.password:
 		user.password = app.config['ADMIN_PASSWORD']
 	db.session.add(user)
