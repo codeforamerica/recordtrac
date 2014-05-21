@@ -17,7 +17,7 @@
 				<h3>A better way to find public records.</h3>
 			</div>
 			<div class="span4">
-				<img src="{{ url_for('static', filename = 'images/logo_black.png')}}" alt="{{config['AGENCY_NAME']}} logo" width="125px"/>
+				<img src="{{ url_for('static', filename = 'images/logo.png')}}" alt="{{config['AGENCY_NAME']}} logo" width="130" height="130"/>
 			</div>
 
 		</div>
@@ -82,7 +82,7 @@
 		</div> -->
 		<div class="row-fluid">
 			<div class="span4 offset4">
-				<a href="#recent-requests" id="seedata" class="btn btn-large btn-block btn-primary">See how Oakland's doing <i class="icon-arrow-down"> </i></a>
+				<a href="#recent-requests" id="seedata" class="btn btn-large btn-block btn-primary">See how {{config['AGENCY_NAME']}}'s doing <i class="icon-arrow-down"> </i></a>
 			</div>
 		</div>
 	</div>

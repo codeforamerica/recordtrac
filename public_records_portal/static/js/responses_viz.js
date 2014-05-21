@@ -36,7 +36,8 @@ var shortDeptNames = {
     "Council At Large - Rebecca Kaplan":    'Council',
     "Oakland Police Department":            'Police',
     "City Manager Administration Unit":      "City Manager",
-    "Revenue: Administration":               "Revenue" 
+    "Revenue: Administration":               "Revenue",
+    "Parks & Recreation":                    "Parks & Rec" 
 }
 
 

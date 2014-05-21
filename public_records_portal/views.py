@@ -37,6 +37,7 @@ if app.config['ENVIRONMENT'] == 'PRODUCTION':
 
 # Submitting a new request
 def new_request(passed_recaptcha = False, data = None):
+	user_id = get_user_id()
 	if data or request.method == 'POST':
 		if not data and not passed_recaptcha:
 			data = request.form.copy()
@@ -51,11 +52,18 @@ def new_request(passed_recaptcha = False, data = None):
 
 		alias = None
 		phone = None
+		offline_submission_type = None
+		date_received = None
 		if 'request_alias' in data:
 			alias = data['request_alias']
 		if 'request_phone' in data:
 			phone = data['request_phone']
-		request_id, is_new = make_request(text = request_text, email = email, user_id = get_user_id(), alias = alias, phone = phone, passed_recaptcha = passed_recaptcha, department = data['request_department'])
+		if 'format_received' in data:
+			offline_submission_type = data['format_received']
+		if 'date_received' in data:
+			date_received = data['date_received']
+		app.logger.info("\n\n Date received: %s" % date_received)
+		request_id, is_new = make_request(text = request_text, email = email, user_id = user_id, alias = alias, phone = phone, passed_recaptcha = passed_recaptcha, department = data['request_department'], offline_submission_type = offline_submission_type, date_received = date_received)
 		if is_new:
 			return redirect(url_for('show_request_for_x', request_id = request_id, audience = 'new'))
 		if not request_id:
@@ -64,7 +72,10 @@ def new_request(passed_recaptcha = False, data = None):
 		return render_template('error.html', message = "Your request is the same as /request/%s" % request_id)
 	else:
 		doc_types = os.path.exists(os.path.join(app.root_path, 'static/json/doctypes.json'))
-		return render_template('new_request.html', doc_types = doc_types, user_id = get_user_id())
+		if user_id:
+			return render_template('offline_request.html', doc_types = doc_types, user_id = user_id)
+		else:
+			return render_template('new_request.html', doc_types = doc_types, user_id = user_id)
 
 def index():
 	if current_user.is_anonymous() == False:
@@ -242,7 +253,8 @@ def fetch_requests():
 		if department:
 			results = results.filter(Request.department_id == department.id)
 		else:
-			results = results.filter(Request.department == request.args.get('department'))
+			# Just return an empty query set
+			results = results.filter(Request.department_id < 0)
 
 	# Filter by search term
 	search_input = request.args.get('search')
@@ -265,6 +277,35 @@ def fetch_requests():
 		#     results = results.filter(Request.status.ilike("%closed%"))
 		if is_closed.lower() == "false":
 			results = results.filter(~Request.status.ilike("%closed%"))
+
+	# Filter by due_soon
+	due_soon = request.args.get('due_soon')
+	# due soon should only be an option for open requests
+	if due_soon != None:
+		if due_soon.lower() == "true":
+			two_days = datetime.now() + timedelta(days = 2)
+			results = results.filter(Request.due_date < two_days).filter(Request.due_date > datetime.now()).filter(~Request.status.ilike("%closed%"))
+
+	overdue = request.args.get('overdue')
+	# overdue should be mutually exclusive with due soon, and should only be an option for open requests
+	if overdue != None:
+		if overdue.lower() == "true":
+			results = results.filter(Request.due_date < datetime.now()).filter(~Request.status.ilike("%closed%"))
+
+	# min_date_created = datetime.strptime('May 1 2014', '%b %d %Y')
+	# max_date_created = datetime.strptime('May 20 2014', '%b %d %Y')
+	min_date_created = None
+	max_date_created = None
+	if min_date_created and max_date_created:
+		results = results.filter(Request.date_created >= min_date_created).filter(Request.date_created <= max_date_created)
+
+	# min_due_date = datetime.strptime('May 15 2014', '%b %d %Y')
+	# max__due_date = datetime.strptime('May 20 2014', '%b %d %Y')
+	min_due_date = None
+	max_due_date = None
+	if min_due_date and max_due_date:
+		results = results.filter(Request.due_date >= min_due_date).filter(Request.due_date <= max_due_date)
+
 
 	# Filters for agency staff only:
 	if user_id:
@@ -326,8 +367,8 @@ def fetch_requests():
 	# magically making them fields in the JSON objects we return.
 	results = map(lambda r: { "id":           r.id, \
 							  "text":         r.text, \
-							  "date_created": r.date_created.isoformat(), \
-							  "department":   r.department or r.department_name(), \
+							  "date_created": helpers.date(r.date_received or r.date_created), \
+							  "department":   r.department_name(), \
 							  "requester":   r.requester_name(), \
 							  "due_date":    format_date(r.due_date), \
 							  # The following two attributes are defined as model methods,
