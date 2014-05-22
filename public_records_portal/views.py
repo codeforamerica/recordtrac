@@ -233,31 +233,18 @@ def requests():
 		return render_template('error.html', message = message, user_id = get_user_id())
 
 
-def fetch_requests():
-	"""
-	Ultra-custom API endpoint for serving up requests.
-	Supports limit, search, and page parameters and returns json with an object that
-	has a list of results in the 'objects' field.
-	"""
-
-	user_id = get_user_id()
-
-	# Initialize database query
-	results = db.session.query(Request)
-
-	# Filter by department
-	department = request.args.get('department') 
-	if department and department != "All departments":
-		app.logger.info("\n\nDepartment filter:%s." %department)
-		department = Department.query.filter_by(name = department).first()
+def filter_department(department_name, results):
+	app.logger.info("\n\nDepartment filter:%s." % department_name)
+	if department_name and department_name != "All departments":
+		department = Department.query.filter_by(name = department_name).first()
 		if department:
 			results = results.filter(Request.department_id == department.id)
 		else:
 			# Just return an empty query set
 			results = results.filter(Request.department_id < 0)
+	return results
 
-	# Filter by search term
-	search_input = request.args.get('search')
+def filter_search_term(search_input, results):
 	if search_input:
 		app.logger.info("\n\nSEARCH: %s" % search_input)
 		search_terms = search_input.strip().split(" ") # Get rid of leading and trailing spaces and generate a list of the search terms
@@ -269,28 +256,63 @@ def fetch_requests():
 				search_query = search_query + search_terms[x] + ' & ' 
 		search_query = search_query + search_terms[num_terms - 1] + ":*" # Catch substrings
 		results = results.filter("to_tsvector(text) @@ to_tsquery('%s')" % search_query)
+	return results
 
-	# Filter based on current request status
-	is_closed = request.args.get('is_closed')
+def filter_status(is_closed, results):
 	if is_closed != None:
 		# if is_closed.lower() == "true":
 		#     results = results.filter(Request.status.ilike("%closed%"))
 		if is_closed.lower() == "false":
 			results = results.filter(~Request.status.ilike("%closed%"))
+	return results
 
-	# Filter by due_soon
-	due_soon = request.args.get('due_soon')
-	# due soon should only be an option for open requests
+def filter_due_soon(due_soon, results):
 	if due_soon != None:
 		if due_soon.lower() == "true":
 			two_days = datetime.now() + timedelta(days = 2)
 			results = results.filter(Request.due_date < two_days).filter(Request.due_date > datetime.now()).filter(~Request.status.ilike("%closed%"))
+	return results
 
-	overdue = request.args.get('overdue')
-	# overdue should be mutually exclusive with due soon, and should only be an option for open requests
+def filter_overdue(overdue, results):
 	if overdue != None:
 		if overdue.lower() == "true":
 			results = results.filter(Request.due_date < datetime.now()).filter(~Request.status.ilike("%closed%"))
+	return results
+
+def filter_my_requests(my_requests, results, user_id):
+	if my_requests != None:
+			if my_requests.lower() == "true":
+				results = results.filter(Request.id == Owner.request_id).filter(Owner.user_id == user_id).filter(Owner.active == True)
+	return results
+
+def filter_requester_name(requester_name, results):
+	if requester_name and requester_name != "":
+		results = results.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % requester_name.lower()))
+	return results
+
+def fetch_requests():
+	"""
+	Ultra-custom API endpoint for serving up requests.
+	Supports limit, search, and page parameters and returns json with an object that
+	has a list of results in the 'objects' field.
+	"""
+	user_id = get_user_id()
+	# Initialize database query
+	results = db.session.query(Request)
+
+	# Filters!
+	results = filter_department(department_name = request.args.get('department'), results = results)
+	results = filter_search_term(search_input = request.args.get('search'), results = results)
+	results = filter_status(request.args.get('is_closed'), results = results)
+	# due soon should only be an option for open requests
+	results = filter_due_soon(due_soon = request.args.get('due_soon'), results = results)
+	# overdue should be mutually exclusive with due soon, and should only be an option for open requests
+	results = filter_overdue(overdue = request.args.get('overdue'), results = results)
+
+	# Filters for agency staff only:
+	if user_id:
+		results = filter_my_requests(my_requests = request.args.get('my_requests'), results = results, user_id = user_id)
+		results = filter_requester_name(requester_name = request.args.get('requester_name'), results = results)
 
 	# min_date_created = datetime.strptime('May 1 2014', '%b %d %Y')
 	# max_date_created = datetime.strptime('May 20 2014', '%b %d %Y')
@@ -306,24 +328,8 @@ def fetch_requests():
 	if min_due_date and max_due_date:
 		results = results.filter(Request.due_date >= min_due_date).filter(Request.due_date <= max_due_date)
 
-
-	# Filters for agency staff only:
-	if user_id:
-		# Filter based on owner's requests
-		my_requests = request.args.get('my_requests')
-		if my_requests != None:
-			if my_requests.lower() == "true":
-				results = results.filter(Request.id == Owner.request_id).filter(Owner.user_id == user_id).filter(Owner.active == True)
-		# Filter based on requester name
-		requester_name = request.args.get('requester_name')
-		if requester_name and requester_name != "":
-			results = results.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % requester_name.lower()))
+	# Sorting!
 			
-	# status = request.args.get('status')
-	# # Filter by status
-	# if status and status != "All statuses":
-	# 	results = results.filter(Request.solid_status() == status.lower())
-
 	sort_by = request.args.get('sort_by') 
 	if sort_by and sort_by != '':
 		ascending = request.args.get('ascending')
@@ -335,6 +341,8 @@ def fetch_requests():
 			results = results.order_by((getattr(Request, sort_by)).desc())
 	results = results.order_by(Request.id.desc())
 
+
+	# Pagination!
 
 	page_number  = request.args.get('page') or 1
 	page_number = int(page_number)
@@ -359,9 +367,7 @@ def fetch_requests():
 		else:
 			end_index = num_results
 
-
 	results = results.limit(limit).offset(offset).all()
-	# results = results.limit(limit).offset(offset).all()
 
 	# TODO(cj@postcode.io): This map is pretty kludgy, we should be detecting columns and auto
 	# magically making them fields in the JSON objects we return.
