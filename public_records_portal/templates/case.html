@@ -53,7 +53,8 @@
           <div id = "request-container">
             <!-- request area -->
             <div class="row-fluid">
-              <h3 class="control-widget">Request <span class="muted">#{{req.id}}</span></h3>{% block clarify_request %}{% endblock clarify_request %}{% block public_note %}{% endblock public_note %}
+              <h3 class="control-widget">Request <span class="muted">#{{req.id}}</span></h3>
+              {% block clarify_request %}{% endblock clarify_request %}{% block public_note %}{% endblock public_note %}
                
               <p class="lead" truncateable="250"> {{ req.text | new_lines }} </p>
             </div>
@@ -175,7 +176,7 @@
       {% endblock sidebar %}
 
       {% block request_dates %}
-        <div class="muted text-center">Created: {{ req.date_created | date }}</div>
+        <div class="muted text-center">Created: {{ (req.date_received or req.date_created) | date }}</div>
       {% endblock request_dates %}
 
       {% block follow %}

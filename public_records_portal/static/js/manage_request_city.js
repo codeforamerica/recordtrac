@@ -1,5 +1,26 @@
 $(document).ready(function(){
   /* validates ask a question form */
+
+
+$('.unassignPopover').click(function() {
+    var el = $(this);
+    $('.unassignPopover').popover({
+        trigger: 'manual',
+        html: true,
+        title: function() {
+           return  el.children('div').eq(1).html();
+          },
+        content: function() {
+             return  el.children('div').eq(2).html();
+        }
+    });
+    el.popover("show");
+        $('.close').on('click', function(){
+      $('.unassignPopover').popover('hide');
+    })
+
+});
+
   $("#question").validate({
     rules: {
       question_text: {
@@ -154,6 +175,8 @@ $(document).on('shown', "#reroutePopover", function () {
     }
   });
 });
+
+
 
 $(document).on('shown', "#notifyPopover", function () {
     // to close the popover

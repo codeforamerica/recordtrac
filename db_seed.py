@@ -30,8 +30,8 @@ for i in range(20):
 	random_number = random.randrange(0, 901, 4)
 	another_random_number =  random.randrange(0, 901, 4)
 	request_text = "%(request_type)s %(random_number)s" % locals()
-	four_days_ago = (datetime.now() - timedelta(days = 4)).isoformat()
-	request_id, success = prr.make_request(text=request_text, department = request_department, dt = four_days_ago)
+	four_days_ago = (datetime.now() - timedelta(days = 4))
+	request_id, success = prr.make_request(text=request_text, department = request_department, date_received = four_days_ago)
 	if success:
 		prr.add_note(request_id = request_id, text = "We're working on this and will get back to you shortly.", user_id = 1)
 		qa_id = prr.ask_a_question(request_id = request_id, owner_id = 1, question = "You specified %(random_number)s, but that does not exist. Did you mean %(another_random_number)s? " % locals())

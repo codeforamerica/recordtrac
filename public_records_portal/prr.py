@@ -54,8 +54,11 @@ def update_resource(resource, request_body):
 	elif "qa" in resource:
 		return answer_a_question(int(fields['qa_id']), fields['answer_text'])
 	elif "owner" in resource:
-		change_request_status(int(fields['request_id']), "Rerouted")
-		return assign_owner(int(fields['request_id']), fields['owner_reason'], fields['owner_email'])
+		if "reason_unassigned" in fields:
+			return remove_staff_participant(owner_id = fields['owner_id'], reason = fields['reason_unassigned'])
+		else:
+			change_request_status(int(fields['request_id']), "Rerouted")
+			return assign_owner(int(fields['request_id']), fields['owner_reason'], fields['owner_email'])
 	elif "reopen" in resource:
 		change_request_status(int(fields['request_id']), "Reopened")
 		return fields['request_id']
@@ -141,7 +144,7 @@ def add_link(request_id, url, description, user_id):
 	return False
 
 ### @export "make_request"			
-def make_request(text, email = None, user_id = None, phone = None, alias = None, department = None, passed_recaptcha = False, dt = None):
+def make_request(text, email = None, user_id = None, phone = None, alias = None, department = None, passed_recaptcha = False, offline_submission_type = None, date_received = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
 	if (app.config['ENVIRONMENT'] == 'PRODUCTION') and (not passed_recaptcha) and is_spam(text): 
 		return None, False
@@ -159,7 +162,7 @@ def make_request(text, email = None, user_id = None, phone = None, alias = None,
 		else:
 			app.logger.info("%s is not a valid department" %(department))
 			department = None
-	request_id = create_request(text = text, user_id = user_id, department = department, dt = dt) # Actually create the Request object
+	request_id = create_request(text = text, user_id = user_id, department = department, offline_submission_type = offline_submission_type, date_received = date_received) # Actually create the Request object
 	new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email) # Assign someone to the request
 	open_request(request_id) # Set the status of the incoming request to "Open"
 	subscriber_user_id = create_or_return_user(email = email, alias = alias, phone = phone)

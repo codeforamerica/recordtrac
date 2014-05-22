@@ -9,7 +9,10 @@
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/all_requests.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/all_requests_noresults.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.min.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.min.css') 
+  }}">
+       <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui-1.10.4.custom.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui.css') }}">
 {% endblock custom_css_links %}
 
 {% block custom_script_links %}
@@ -19,6 +22,9 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/requests.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-select.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/custom.bootstrap-select.js') }}"></script>
+   <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-ui-1.10.4.custom.min.js') }}"></script> 
+    <script type="text/javascript" src="{{ url_for('static', filename='js/date_picker.js') }}"></script>
+
 {% endblock custom_script_links %}
 
 {% block container %}
@@ -91,18 +97,19 @@
                     {% else %}
                       <a href="/request/<%= request.id %>">
                     {% endif %}
-                    <% if ( request.solid_status === "due soon" ) { %>
-                          <span style = "background-color: #FB991B" class="label label-warning">due soon</span> <%= request.text %>
-                     <% } %>
-                    <% if ( request.solid_status === "overdue" ) { %>
-                          <span style = "background-color: #CA1A1A" class="label label-important">overdue</span> <%= request.text %>
-                    <% } %>
                     <% if ( request.text.length > 140 ) { %>
-                          <%= request.text.substring(0, 140).trim() + "..." %>
+                        <% text = request.text.substring(0, 140).trim() + "..." %>
                     <% } else { %>
-                          <%= request.text %>
+                        <% text = request.text %>
                     <% } %>
-                      </a>
+                    <% if (request.solid_status ==="due soon") { %>
+                        <span style = "background-color: #FB991B" class="label label-warning">due soon</span> <%=text%>
+                     <% } else if (request.solid_status === "overdue" ) { %>
+                        <span style = "background-color: #CA1A1A" class="label label-important">overdue</span> <%=text %>
+                    <% } else { %>
+                        <%= text %>
+                    <% } %>
+                    </a>
                     </td>
                     <td style="width: 15%"><%= request.department %></td>                    
                     <td style="width: 15%"><%= request.contact_name %></td>
