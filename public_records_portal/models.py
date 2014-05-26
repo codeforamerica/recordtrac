@@ -118,8 +118,10 @@ class Request(db.Model):
 		if date_received:
 			if type(date_received) is datetime:
 				self.date_received = date_received
-			else:
-				self.date_received = datetime.strptime(date_received, '%m/%d/%Y')
+			else: # If an incoming string, this is from the jQuery datepicker
+				date_received = datetime.strptime(date_received, '%m/%d/%Y') 
+				date_received = date_received + timedelta(hours = 7) # This is somewhat of a hack, but we need to get this back in UTC (+7 hours offset from Pacific Time) time but still treat it as a 'naive' datetime object
+				self.date_received = date_received 
 
 	def __repr__(self):
 		return '<Request %r>' % self.text
