@@ -21,25 +21,28 @@
       <div class="span1 text-right"><i class="icon-warning-sign icon-2x"> </i></div>
     {% endif %}
     <div class="offset1">
-      {% if user_id %}
-          <p><strong>  The request has been submitted!</strong></p>
-        <p>
-        {% if email %} The requester has been notified via email that they can expect to hear a response from the City of Oakland in the next 10 days. Requester will be automatically contacted with any updates.
-        {% else %} Because the requester did not provide an email address, the agency is responsible for communicating updates to the requester in the format received. {% endif %}</p>
-      {% else %}
-        <p><strong>  Your request has been submitted!</strong></p>
-        {% set requester = req.requester() %}
-        {% if (requester) %}
-          {% set email = requester.user.email %}
+    {% if user_id %}
+      <p><strong>  The request has been submitted!</strong></p>
+      <p>
+        {% if email %} 
+          The requester has been notified via email that they can expect to hear a response from the {{config['AGENCY_NAME']}} in the next 10 days. Requester will be automatically contacted with any updates.
+        {% else %} 
+          Because the requester did not provide an email address, the agency is responsible for communicating updates to the requester in the format received. 
         {% endif %}
-      <p>You can expect a response from the {{config['AGENCY_NAME']}} in the next 10 days.
-      {% if email %} You will be contacted via e-mail with any updates.
-      {% else %} You did not provide an e-mail address so you will have to visit this page for updates. {% endif %}</p>
-      <p>All messages from the {{config['AGENCY_NAME']}} and/or the information and documents you requested will be posted to this page. You can access <a href ="{{request.path}}">this page</a> at any time.</p>
-      {% endif %}
+      </p>
+    {% else %}
+        <p><strong>  Your request has been submitted!</strong></p>
+        <p>You can expect a response from the {{config['AGENCY_NAME']}} in the next 10 days.
+          {% if email %} 
+            You will be contacted via e-mail with any updates.
+          {% else %} 
+            You did not provide an e-mail address so you will have to visit this page for updates. 
+          {% endif %}
+        </p>
+        <p>All messages from the {{config['AGENCY_NAME']}} and/or the information and documents you requested will be posted to this page. You can access <a href ="{{request.path}}">this page</a> at any time.</p>
+    {% endif %}
     </div>
   </div>
 {% endblock banner %}
-
 
 
