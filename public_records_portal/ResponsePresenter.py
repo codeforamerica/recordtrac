@@ -63,7 +63,7 @@ class ResponsePresenter:
 					download_url = "This document is still being uploaded, but it will be available shortly."
 			return """
 			<a href='%(download_url)s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%(download_url)s' target='_blank'><b>%(description)s</b></a>
-			<a href = '%(scribd_url)s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='View in Scribd' target='_blank'><i class='icon-external-link'></i></a>
+			<a href = '%(scribd_url)s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='View document on Scribd hosting service' target='_blank'><i class='icon-external-link'></i></a>
 			""" %{"download_url": download_url, "description": self.response.description, "scribd_url": self.response.url} 
 		elif self.type == "note":
 			return self.response.text
