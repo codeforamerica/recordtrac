@@ -173,10 +173,11 @@ class Request(db.Model):
 			return "closed"
 		else:
 			if cron_job or (not current_user.is_anonymous()):
-				if datetime.now() >= self.due_date:
-					return "overdue"
-				elif (datetime.now() + timedelta(days = 2)) >= self.due_date:
-					return "due soon"
+				if self.due_date:
+					if datetime.now() >= self.due_date:
+						return "overdue"
+					elif (datetime.now() + timedelta(days = 2)) >= self.due_date:
+						return "due soon"
 		return "open"
 
 ### @export "QA"
