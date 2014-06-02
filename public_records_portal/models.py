@@ -163,7 +163,11 @@ class Request(db.Model):
 			return self.department_obj.get_name()
 		return "N/A"
 	def is_closed(self):
-		return re.match('.*(closed).*', self.status, re.IGNORECASE) is not None
+		if self.status:
+			return re.match('.*(closed).*', self.status, re.IGNORECASE) is not None
+		else:
+			app.logger.info("\n\n Request with this ID has no status: %s" % self.id)
+			return False
 	def solid_status(self, cron_job = False):
 		if self.is_closed():
 			return "closed"

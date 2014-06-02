@@ -219,6 +219,8 @@ def should_notify(user_email):
 ### @export "format_date"
 def format_date(obj):
 	""" Take a datetime object and return it in format Jun 12, 2013 """
+	if not obj:
+		return None
 	return helpers.localize(obj).strftime('%b %d, %Y')
 
 
