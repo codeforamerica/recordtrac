@@ -4,6 +4,7 @@ from flask.ext.login import current_user
 from sqlalchemy import Table, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
+from sqlalchemy import and_, or_
 
 from datetime import datetime, timedelta
 from public_records_portal import db, app
@@ -172,6 +173,23 @@ class Request(db.Model):
 				elif (datetime.now() + timedelta(days = 2)) >= self.due_date:
 					return "due soon"
 		return "open"
+
+        @hybrid_property
+        def open(self):
+                return ~self.status.ilike("%closed%")
+
+        @hybrid_property
+        def due_soon(self):
+                two_days = datetime.now() + timedelta(days = 2)
+                return and_(Request.due_date < two_days, Request.due_date > datetime.now, ~Request.status.ilike("%closed%"))
+     
+        @hybrid_property
+        def overdue(self):
+                return and_(Request.due_date < datetime.now(), ~Request.status.ilike("%closed%"))
+        
+        @hybrid_property
+        def closed(self):
+                return Request.status.ilike("%closed%")
 
 ### @export "QA"
 class QA(db.Model):

@@ -270,27 +270,32 @@ def fetch_requests():
 		search_query = search_query + search_terms[num_terms - 1] + ":*" # Catch substrings
 		results = results.filter("to_tsvector(text) @@ to_tsquery('%s')" % search_query)
 
-	# Filter based on current request status
-	is_closed = request.args.get('is_closed')
-	if is_closed != None:
-		# if is_closed.lower() == "true":
-		#     results = results.filter(Request.status.ilike("%closed%"))
-		if is_closed.lower() == "false":
-			results = results.filter(~Request.status.ilike("%closed%"))
+	# Accumulate status filters
+	status_filters = []
 
-	# Filter by due_soon
-	due_soon = request.args.get('due_soon')
+        if str(request.args.get('open')).lower() == 'true':
+                status_filters.append(Request.open)
+        else:
+                status_filters.append(~Request.open)
+
 	# due soon should only be an option for open requests
-	if due_soon != None:
-		if due_soon.lower() == "true":
-			two_days = datetime.now() + timedelta(days = 2)
-			results = results.filter(Request.due_date < two_days).filter(Request.due_date > datetime.now()).filter(~Request.status.ilike("%closed%"))
+        # if str(request.args.get('due_soon')).lower() == 'true':
+        #         status_filters.append(Request.due_soon)
 
-	overdue = request.args.get('overdue')
 	# overdue should be mutually exclusive with due soon, and should only be an option for open requests
-	if overdue != None:
-		if overdue.lower() == "true":
-			results = results.filter(Request.due_date < datetime.now()).filter(~Request.status.ilike("%closed%"))
+        # if str(request.args.get('overdue')).lower() == 'true':
+        #         status_filters.append(Request.overdue)
+
+        # if str(request.args.get('closed')).lower() == 'true':
+        #         status_filters.append(Request.closed)
+
+	# Apply the set of status filters to the query.
+	# Using 'or', they're non-exclusive!
+        app.logger.info(str(status_filters))
+	results.filter(or_(*status_filters))
+
+	app.logger.info(status_filters)
+	app.logger.info(str(results.statement.compile(dialect=postgresql.dialect())))
 
 	# min_date_created = datetime.strptime('May 1 2014', '%b %d %Y')
 	# max_date_created = datetime.strptime('May 20 2014', '%b %d %Y')

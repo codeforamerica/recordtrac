@@ -70,84 +70,72 @@
             <script type="text/template" id="sidebar_template">                                         
             <div id="filterbox">
               <h4 class="underline">ADVANCED FILTER</h4>
-                <h5>My Requests</h5>
-                <div class="indent">
-                  {% if user_id %}
-                  <label class="checkbox">
-                    <input 
+                {% if user_id %}
+                  <h5>My Requests</h5>
+                  <div class="indent">
+                    <label class="checkbox">
+                      <input 
+                         type="checkbox"
+                         title="my_requests_checkbox"
+                         value="{{user_id}}"
+                         name="my_requests"
+                         id="my_requests"
+                         <% if ( my_requests ) { %>
+                         checked
+                         <% } %> >
+                      <em>as Point of Contact</em>
+                    </label>
+                    <label class="checkbox">
+                      <input 
                         type="checkbox"
                         title="my_requests_checkbox"
                         value="{{user_id}}"
                         name="my_requests"
                         id="my_requests"
                         <% if ( my_requests ) { %>
-                        checked
+                          checked
                         <% } %> >
-                     <em>as Point of Contact</em>
-                   </label>
-                  {% endif %}
-                  {% if user_id %}
-                  <label class="checkbox">
-                    <input 
-                        type="checkbox"
-                        title="my_requests_checkbox"
-                        value="{{user_id}}"
-                        name="my_requests"
-                        id="my_requests"
-                        <% if ( my_requests ) { %>
-                        checked
-                        <% } %> >
-                     <em>as Helper</em>
-                   </label>
-                  {% endif %}
-                </div>
+                      <em>as Helper</em>
+                    </label>
+                  </div>
+                {% endif %}
+
                 <h5>Status</h5>
                 <div class="indent" style="padding-bottom: 15px;">
                   <label class="checkbox">
                     <input type="checkbox"
-                           title="open_requests_checkbox"
-                           value="open"
-                           name="is_closed"
-                           id="is_closed" 
-                           <% if ( !is_closed ) { %>
+                           id="open" 
+                           <% if ( open ) { %>
+                             checked
+                           <% } %> >
+                    <em class="open_style">Open</em>
+                  </label>
+                  <label class="checkbox">
+                    <input type="checkbox"
+                           id="overdue" 
+                           <% if ( overdue ) { %>
                              checked
                            <% } %> >
                     <em class="overdue_style">Overdue</em>
                   </label>
                   <label class="checkbox">
                     <input type="checkbox"
-                           title="open_requests_checkbox"
-                           value="open"
-                           name="is_closed"
-                           id="is_closed" 
-                           <% if ( !is_closed ) { %>
+                           id="due_soon" 
+                           <% if ( due_soon ) { %>
                              checked
                            <% } %> >
                     <em class="duesoon_style">Due Soon</em>
                   </label>
                   <label class="checkbox">
                     <input type="checkbox"
-                           title="open_requests_checkbox"
-                           value="open"
-                           name="is_closed"
-                           id="is_closed" 
-                           <% if ( !is_closed ) { %>
-                             checked
-                           <% } %> >
-                    <em class="open_style">Recently Requested</em>
-                  </label>
-                  <label class="checkbox">
-                    <input type="checkbox"
-                           title="open_requests_checkbox"
-                           value="open"
-                           name="is_closed"
-                           id="is_closed" 
-                           <% if ( !is_closed ) { %>
+                           id="closed" 
+                           <% if ( closed ) { %>
                              checked
                            <% } %> >
                     <em class="closed_style">Closed</em>
                   </label>
-                  </div>
+                </div>
+
                 <h5 style="display: inline; ">Response Due Date</h5>&nbsp;&nbsp;<a href=""><em>All Dates</em></a>
                   <div class = "control-group indent">
                     <input 
@@ -178,17 +166,17 @@
                         id="datepicker2" 
                         name="request_received_end" > 
                   </div>
-                <h5>Requestor Name</h5>
-                <div class="indent">
                   {% if user_id %}
-                    <input 
-                      type="text" 
-                      class="span10"
-                      name="requester_name"
-                      id="requester_name"
-                      placeholder="enter name">
+                    <h5>Requestor Name</h5>
+                    <div class="indent">
+                      <input 
+                        type="text" 
+                        class="span10"
+                        name="requester_name"
+                        id="requester_name"
+                        placeholder="enter name">
+                    </div>
                   {% endif %} 
-                </div>
                 <h5>Department</h5>
                 <div class="row-fluid indent">
                   <select class="span10"title="department"id="department_name"name="department">
