@@ -65,6 +65,15 @@ class User(db.Model):
 		else:
 			app.logger.error("\n\nUser %s is not associated with a department." % self.email)
 			return "N/A"
+	def staff_info(self):
+		if self.department:
+			attrs = {}
+			attrs['email'] = self.email
+			attrs['alias'] = self.alias
+			attrs['department'] = self.department_name()
+			return attrs
+		else:
+			return False
 
 ### @export "Department"
 class Department(db.Model):

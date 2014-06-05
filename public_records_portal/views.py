@@ -20,6 +20,8 @@ from timeout import timeout
 from flask import jsonify, request, Response
 import anyjson
 import helpers
+import csv_export
+import csv
 
 # Initialize login
 login_manager = LoginManager()
@@ -76,6 +78,9 @@ def new_request(passed_recaptcha = False, data = None):
 			return render_template('offline_request.html', doc_types = doc_types, user_id = user_id)
 		else:
 			return render_template('new_request.html', doc_types = doc_types, user_id = user_id)
+
+def to_csv():
+	return Response(csv_export.export(), mimetype='text/csv')
 
 def index():
 	if current_user.is_anonymous() == False:

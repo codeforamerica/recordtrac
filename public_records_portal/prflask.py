@@ -19,6 +19,9 @@ manager.create_api(models.Record, methods=['GET'], results_per_page = 10, allow_
 manager.create_api(models.QA, methods=['GET'], results_per_page =10, allow_functions = True)
 # manager.create_api(models.Subscriber, methods=['GET'], results_per_page = 10, allow_functions = True)
 manager.create_api(models.Visualization, methods=['GET'], results_per_page = 10, allow_functions = True)
+includes = ['id']
+include_methods = ['staff_info']
+manager.create_api(models.User, methods=['GET'], allow_functions = True, include_columns=includes, include_methods = include_methods)
 
 
 class HomeView(AdminIndexView):
@@ -189,6 +192,9 @@ routing = {
 	'well_known_status': {
 	    'url': '/.well-known/status',
 	    'methods': ['GET']
+	},
+	'to_csv': {
+		'url': '/to_csv'
 	}
 }
 
