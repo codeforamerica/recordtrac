@@ -131,23 +131,26 @@ $('.unassignPopover').click(function() {
 
 var map = {};
 var emails = []
+var contacts = []
+
+/* typeahead for email in reroute form */
+$.getJSON("/api/user", function(data) {
+    var user_data = data['objects']
+    $.each(user_data, function (i, line) {
+      if (line['staff_info'] != false)
+      {
+        var staff = line['staff_info']
+        emails.push(staff['email']);
+        map[staff['alias'] + " - " + staff['email']] = staff['email'];
+        contacts.push(staff['alias'] + " - " + staff['email']);
+      }          
+ });
+});
 
 $(document).ready(function() {
-  /* typeahead for email in reroute form */
   $('#rerouteEmail').typeahead.defaults = {
       source: function(query, process) {
-        var contacts = [];
-        $.getJSON("/static/json/directory.json", function(data) {
-            $.each(data, function (i, line) {
-              var array = line['FULL_NAME'].split(",");
-              var first = array[1];
-              var last = array[0];
-              emails.push(line.EMAIL_ADDRESS);
-              map[first + " " + last + " - " + line.EMAIL_ADDRESS] = line.EMAIL_ADDRESS;
-              contacts.push(first + " " + last + " - " + line.EMAIL_ADDRESS);
-         });
          process(contacts);
-        });
       }
       , updater: function (item) {
         selectedContact = map[item];
