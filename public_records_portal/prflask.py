@@ -21,7 +21,7 @@ manager.create_api(models.QA, methods=['GET'], results_per_page =10, allow_funct
 manager.create_api(models.Visualization, methods=['GET'], results_per_page = 10, allow_functions = True)
 includes = ['id']
 include_methods = ['staff_info']
-manager.create_api(models.User, methods=['GET'], allow_functions = True, include_columns=includes, include_methods = include_methods)
+manager.create_api(models.User, methods=['GET'], results_per_page = None, include_columns=includes, include_methods = include_methods)
 
 
 class HomeView(AdminIndexView):
