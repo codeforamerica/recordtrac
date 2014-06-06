@@ -10,7 +10,7 @@
       open: true,
       due_soon: true,
       overdue: true,
-      closed: true,
+      closed: false,
       my_requests: false,
       department: "",
       more_results: false,
@@ -94,40 +94,8 @@
 
     build: function ()
     {
-      // var data_params = {
-      //   "page": this._query.get("page_number"),
-      //   "is_closed": this._query.get("is_closed"),
-      //   "requester_name": this._query.get("requester_name"),
-      //   "my_requests": this._query.get("my_requests"),
-      //   "ascending": this._query.get("sort_by_ascending"),
-      //   "sort_by": this._query.get("sort_by_attribute")
-      // }
-
-      // var search_term = this._query.get("search_term")
-      // if ( search_term !== "" )
-      // {
-      //   data_params["search"] = search_term
-      // }
-      // var department = this._query.get("department")
-      // if ( department != "")
-      // {
-      //   data_params["department"] = department
-      // }
-      // var status = this._query.get("status")
-      // if ( status != "")
-      // {
-      //   data_params["status"] = status
-      // }
-
-      var things = _.map( this._query.attributes, function ( value, key ) {
-        if ( key !== "" ) {
-          return [ key, value ]
-        }
-      } )
-      things = _.object( things )
-
       this.fetch({
-        data: things,
+        data: this._query.attributes,
         dataType: "json",
         contentType: "application/json"
       });
@@ -153,6 +121,7 @@
     initialize: function ()
     {
       this.render()
+      this.model.on('change', this.render, this);
     },
 
     render: function ()
@@ -173,29 +142,24 @@
       "change #request_status":    "set_status"
     },
 
-    toggle: function ( attribute_name )
-    {
-      this.model.set(attribute_name, !( this.model.get( attribute_name ) ) )
+    toggle: function(attribute_name) {
+      this.model.set(attribute_name, !(this.model.get(attribute_name)));
     },
 
-    toggle_open: function ()
-    {
-      this.toggle("open")
+    toggle_open: function() {
+      this.toggle("open");
     },
 
-    toggle_overdue: function ()
-    {
-      this.toggle("overdue")
+    toggle_due_soon: function() {
+      this.toggle("due_soon");
     },
 
-    toggle_due_soon: function ()
-    {
-      this.toggle("due_soon")
+    toggle_overdue: function() {
+      this.toggle("overdue");
     },
 
-    toggle_closed: function ()
-    {
-      this.toggle("closed")
+    toggle_closed: function() {
+      this.toggle('closed');
     },
 
     toggle_my_requests: function ( event )

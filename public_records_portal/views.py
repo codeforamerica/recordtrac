@@ -275,24 +275,21 @@ def fetch_requests():
 
         if str(request.args.get('open')).lower() == 'true':
                 status_filters.append(Request.open)
-        else:
-                status_filters.append(~Request.open)
 
 	# due soon should only be an option for open requests
-        # if str(request.args.get('due_soon')).lower() == 'true':
-        #         status_filters.append(Request.due_soon)
+        if str(request.args.get('due_soon')).lower() == 'true':
+                status_filters.append(Request.due_soon)
 
 	# overdue should be mutually exclusive with due soon, and should only be an option for open requests
-        # if str(request.args.get('overdue')).lower() == 'true':
-        #         status_filters.append(Request.overdue)
+        if str(request.args.get('overdue')).lower() == 'true':
+                status_filters.append(Request.overdue)
 
-        # if str(request.args.get('closed')).lower() == 'true':
-        #         status_filters.append(Request.closed)
-
+        if str(request.args.get('closed')).lower() == 'true':
+                status_filters.append(Request.closed)
+        
 	# Apply the set of status filters to the query.
 	# Using 'or', they're non-exclusive!
-        app.logger.info(str(status_filters))
-	results.filter(or_(*status_filters))
+	results = results.filter(or_(*status_filters))
 
 	app.logger.info(status_filters)
 	app.logger.info(str(results.statement.compile(dialect=postgresql.dialect())))

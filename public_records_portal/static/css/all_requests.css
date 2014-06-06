@@ -173,6 +173,14 @@ h3 {
 .search_style h5 {
 	margin: 15px 0px 3px;
 }
+.status input[type=radio]{
+  margin-left: 0;
+}
+.all_style{
+  border-left: 8px solid #bbb;
+  padding-left: 5px;
+  margin-left: 5px;
+}
 .overdue_style{
 	border-left: 8px solid red;
 	padding-left: 5px;

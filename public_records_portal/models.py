@@ -1,3 +1,5 @@
+from IPython import embed
+
 from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
 from flask.ext.login import current_user
 
@@ -176,16 +178,17 @@ class Request(db.Model):
 
         @hybrid_property
         def open(self):
-                return ~self.status.ilike("%closed%")
+                two_days = datetime.now() + timedelta(days = 2)
+                return and_(~self.closed, self.due_date > two_days)
 
         @hybrid_property
         def due_soon(self):
                 two_days = datetime.now() + timedelta(days = 2)
-                return and_(Request.due_date < two_days, Request.due_date > datetime.now, ~Request.status.ilike("%closed%"))
+                return and_(self.due_date < two_days, self.due_date > datetime.now(), ~self.closed)
      
         @hybrid_property
         def overdue(self):
-                return and_(Request.due_date < datetime.now(), ~Request.status.ilike("%closed%"))
+                return and_(self.due_date < datetime.now(), ~self.closed)
         
         @hybrid_property
         def closed(self):
