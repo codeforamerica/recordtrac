@@ -193,6 +193,17 @@
     }, 300)
   });
 
+  RequesterName = Backbone.View.extend({
+    events: {
+      "keyup input[type=search]": "set_requester_name"
+    },
+
+    set_requester_name: _.debounce(function(event) {
+      console.log(event.target.value);
+      this.model.set('requester_name', event.target.value);
+    }, 300)
+  });
+
   SearchResults = Backbone.View.extend({
 
     initialize: function ()
@@ -254,6 +265,12 @@
     el: $("#search_field"),
     model: query
   });
+
+  var requester_name = new RequesterName({
+    el: $("#requester_name"),
+    model: query
+  });
+
   var search_results = new SearchResults({
     el: $("#search_results_container"),
     model: query,
