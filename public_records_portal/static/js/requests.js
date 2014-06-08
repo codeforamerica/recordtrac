@@ -7,16 +7,15 @@
     {
       search_term: "",
       page_number: 1, // Using an attribute called 'page' makes weird things happen here. JFYI.
-      open: true,
-      due_soon: true,
-      overdue: true,
+      open: false,
+      due_soon: false,
+      overdue: false,
       closed: false,
       my_requests: false,
       department: "",
       more_results: false,
       start_index: 0,
-      end_index: 0,
-      status: "",
+      end_index: 0
     },
 
     prev_page: function ()
@@ -117,29 +116,25 @@
 
   // Smaller filter query control box that sits off to the side.
   FilterBox = Backbone.View.extend({
-
-    initialize: function ()
-    {
-      this.render()
+    initialize: function() {
+      this.render();
       this.model.on('change', this.render, this);
     },
 
-    render: function ()
-    {
-      var template = _.template( $("#sidebar_template").html(), this.model.attributes );
-      this.$el.html( template );
+    render: function() {
+      var template = _.template($("#sidebar_template").html(), this.model.attributes);
+      this.$el.html(template);
     },
 
-    events:
-    {
-      "click #open":               "toggle_open",
-      "click #due_soon":           "toggle_due_soon",
-      "click #overdue":            "toggle_overdue",
-      "click #closed":             "toggle_closed",
-      "keyup #requester_name":     "set_requester_name",
-      "click #my_requests":        "toggle_my_requests",
-      "change #department_name":   "set_department",
-      "change #request_status":    "set_status"
+    events: {
+      "click #open":             "toggle_open",
+      "click #due_soon":         "toggle_due_soon",
+      "click #overdue":          "toggle_overdue",
+      "click #closed":           "toggle_closed",
+      "keyup #requester_name":   "set_requester_name",
+      "click #my_requests":      "toggle_my_requests",
+      "change #department_name": "set_department",
+      "change #request_status":  "set_status"
     },
 
     toggle: function(attribute_name) {
@@ -184,9 +179,17 @@
       this.model.set("requester_name", event.target.value)
       this.model.set({ page_number: 1 })
     }, 500)
-
   });
 
+  SearchField = Backbone.View.extend({
+    events: {
+      "keyup #search": "set_search_term"
+    },
+
+    set_search_term: _.debounce(function(event) {
+      this.model.set('search_term', event.target.value);
+    }, 300)
+  });
 
   SearchResults = Backbone.View.extend({
 
@@ -239,37 +242,6 @@
     }
   });
 
-  SearchField = Backbone.View.extend({
-
-    initialize: function ()
-    {
-      this.render()
-    },
-
-    render: function ()
-    {
-      var template = _.template(
-        $("#search_field_template").html(),
-          { current_query: this.model.get("search_term")
-          }
-        )
-
-      this.$el.html( template )
-    },
-
-    events:
-    {
-      "keyup #search input": "set_search_term"
-    },
-
-    set_search_term: _.debounce(function ( event )
-    {
-      this.model.set( "search_term", event.target.value )
-      this.model.set({ page_number: 1 })
-    }, 300)
-
-  });
-
   var query = new Query();
   var request_set = new RequestSet([], { query: query });
   var filter_box = new FilterBox({
@@ -277,7 +249,7 @@
     model: query
   });
   var search_field = new SearchField({
-    el: $("#search_field_container"),
+    el: $("#search_field"),
     model: query
   });
   var search_results = new SearchResults({

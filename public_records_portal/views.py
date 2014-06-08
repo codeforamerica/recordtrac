@@ -257,7 +257,7 @@ def fetch_requests():
 			results = results.filter(Request.department_id < 0)
 
 	# Filter by search term
-	search_input = request.args.get('search')
+	search_input = request.args.get('search_term')
 	if search_input:
 		app.logger.info("\n\nSEARCH: %s" % search_input)
 		search_terms = search_input.strip().split(" ") # Get rid of leading and trailing spaces and generate a list of the search terms
@@ -316,6 +316,7 @@ def fetch_requests():
 		if my_requests != None:
 			if my_requests.lower() == "true":
 				results = results.filter(Request.id == Owner.request_id).filter(Owner.user_id == user_id).filter(Owner.active == True)
+
 		# Filter based on requester name
 		requester_name = request.args.get('requester_name')
 		if requester_name and requester_name != "":
