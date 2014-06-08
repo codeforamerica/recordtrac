@@ -64,23 +64,17 @@
                     <label class="checkbox">
                       <input 
                          type="checkbox"
-                         title="my_requests_checkbox"
-                         value="{{user_id}}"
-                         name="my_requests"
-                         id="my_requests"
-                         <% if ( my_requests ) { %>
-                         checked
+                         id="mine_as_poc"
+                         <% if (mine_as_poc) { %>
+                           checked
                          <% } %> >
                       <em>as Point of Contact</em>
                     </label>
                     <label class="checkbox">
                       <input 
                         type="checkbox"
-                        title="my_requests_checkbox"
-                        value="{{user_id}}"
-                        name="my_requests"
-                        id="my_requests"
-                        <% if ( my_requests ) { %>
+                        id="mine_as_helper"
+                        <% if (mine_as_helper) { %>
                           checked
                         <% } %> >
                       <em>as Helper</em>
@@ -125,59 +119,60 @@
                 </div>
 
                 <h5 style="display: inline; ">Response Due Date</h5>&nbsp;&nbsp;<a href=""><em>All Dates</em></a>
-                  <div class = "control-group indent">
+                <div class = "control-group indent">
+                  <input 
+                    type="text" 
+                    class="span5" 
+                    style="display:inline;"
+                    id="datepicker1" 
+                    name="request_received_begin" > 
+                    &nbsp;-&nbsp;
                     <input 
                       type="text" 
                       class="span5" 
-                      style="display:inline;"
-                      id="datepicker1" 
-                      name="request_received_begin" > 
-                      &nbsp;-&nbsp;
-                      <input 
-                        type="text" 
-                        class="span5" 
-                        id="datepicker2" 
-                        name="request_received_end" > 
-                  </div>
+                      id="datepicker2" 
+                      name="request_received_end" > 
+                </div>
+
                 <h5 style="display: inline;">Request Date</h5>&nbsp;&nbsp;<a href=""><em>All Dates</em></a>
-                  <div class = "control-group indent">
+                <div class = "control-group indent">
+                  <input 
+                    type="text" 
+                    class="span5" 
+                    style="display:inline;"
+                    id="datepicker1" 
+                    name="request_received_begin" > 
+                    &nbsp;-&nbsp;
                     <input 
                       type="text" 
                       class="span5" 
-                      style="display:inline;"
-                      id="datepicker1" 
-                      name="request_received_begin" > 
-                      &nbsp;-&nbsp;
-                      <input 
-                        type="text" 
-                        class="span5" 
-                        id="datepicker2" 
-                        name="request_received_end" > 
+                      id="datepicker2" 
+                      name="request_received_end" > 
+                </div>
+
+                {% if user_id %}
+                  <h5>Requester Name</h5>
+                  <div class="indent">
+                    <input type="search" 
+                      class="span10"                             
+                      id="requester_name"
+                      placeholder="enter name"
+                      value="<%- requester_name %>" >
                   </div>
-                  {% if user_id %}
-                    <h5>Requestor Name</h5>
-                    <div class="indent">
-                      <input 
-                        type="text" 
-                        class="span10"
-                        name="requester_name"
-                        id="requester_name"
-                        placeholder="enter name">
-                    </div>
-                  {% endif %} 
+                {% endif %} 
+
                 <h5>Department</h5>
                 <div class="row-fluid indent">
-                  <select class="span10"title="department"id="department_name"name="department">
-                  <% if (department) { %>
-                   <option selected><%= department %></option>
-                  <% } %>
+                  <select class="span10" title="department" id="department_name" name="department">
+                    <% if (department) { %>
+                      <option selected><%= department %></option>
+                    <% } %>
                     <option value="All departments">All departments</option>
                     {% for department in departments %}
                       <option>{{department}}</option>
                     {% endfor %}
                   </select>
-                </div>
-                            
+                </div>                            
             </div>
           </script>
         </div>

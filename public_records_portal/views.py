@@ -308,25 +308,23 @@ def fetch_requests():
 	if min_due_date and max_due_date:
 		results = results.filter(Request.due_date >= min_due_date).filter(Request.due_date <= max_due_date)
 
-
 	# Filters for agency staff only:
 	if user_id:
-		# Filter based on owner's requests
-		my_requests = request.args.get('my_requests')
-		if my_requests != None:
-			if my_requests.lower() == "true":
-				results = results.filter(Request.id == Owner.request_id).filter(Owner.user_id == user_id).filter(Owner.active == True)
+		# Where am I the Point of Contact?
+                if str(request.args.get('mine_as_poc')).lower() == 'true':
+                        results = results.filter(Request.id == Owner.request_id) \
+                                         .filter(Owner.user_id == user_id) \
+                                         .filter(Owner.active == True)
+
+                # Where am I just a Helper?
+                if str(request.args.get('mine_as_poc')).lower() == 'true':
+                        results = results.filter(Request.id == Owner.request_id).filter(Owner.user_id == user_id)
 
 		# Filter based on requester name
 		requester_name = request.args.get('requester_name')
 		if requester_name and requester_name != "":
 			results = results.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % requester_name.lower()))
 			
-	# status = request.args.get('status')
-	# # Filter by status
-	# if status and status != "All statuses":
-	# 	results = results.filter(Request.solid_status() == status.lower())
-
 	sort_by = request.args.get('sort_by') 
 	if sort_by and sort_by != '':
 		ascending = request.args.get('ascending')
