@@ -1,5 +1,3 @@
-from IPython import embed
-
 from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
 from flask.ext.login import current_user
 
