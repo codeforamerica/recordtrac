@@ -162,18 +162,21 @@
             </div>
           {% endif %} 
 
-          <h5>Department</h5>
-          <div class="row-fluid indent">
-            <select class="span10" title="department" id="department_name" name="department">
-              <% if (department) { %>
-                <option selected><%= department %></option>
-              <% } %>
-              <option value="All departments">All departments</option>
-              {% for department in departments %}
-                <option>{{department}}</option>
-              {% endfor %}
-            </select>
-          </div>                            
+          <div id="department_selector_container"></div>
+          <script type="text/template" id="department_selector_template">
+            <h5>Department</h5>
+            <div class="row-fluid indent">
+              <select class="span10">
+                <% if (department) { %>
+                  <option selected><%= department %></option>
+                <% } %>
+                <option value="All departments">All departments</option>
+                {% for department in departments %}
+                  <option>{{department}}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </script>
         </div>
      
         <div class="span8" id="search_results_container"></div>

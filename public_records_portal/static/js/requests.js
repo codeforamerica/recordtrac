@@ -135,7 +135,6 @@
       "click #closed":           "toggle_closed",
       "keyup #requester_name":   "set_requester_name",
       "click #my_requests":      "toggle_my_requests",
-      "change #department_name": "set_department",
       "change #request_status":  "set_status"
     },
 
@@ -166,11 +165,7 @@
       } )
       this.model.set({ page_number: 1 })
     },
-    set_department: function (event)
-    {
-      this.model.set("department", event.target.value)
-      this.model.set({ page_number: 1 })
-    },
+
     set_status: function (event)
     {
       this.model.set("status", event.target.value)
@@ -202,6 +197,26 @@
       console.log(event.target.value);
       this.model.set('requester_name', event.target.value);
     }, 300)
+  });
+
+  DepartmentSelector = Backbone.View.extend({
+    initialize: function() {
+      this.render();
+      this.model.on('change:department', this.render, this);
+    },
+
+    render: function() {
+      var template = _.template($("#department_selector_template").html(), this.model.attributes);
+      this.$el.html(template);
+    },
+
+    events: {
+      "change select": "set_department"
+    },
+
+    set_department: function(event) {
+      this.model.set('department', event.target.value)
+    }
   });
 
   SearchResults = Backbone.View.extend({
@@ -268,6 +283,11 @@
 
   var requester_name = new RequesterName({
     el: $("#requester_name"),
+    model: query
+  });
+
+  var department_selector = new DepartmentSelector({
+    el: $("#department_selector_container"),
     model: query
   });
 
