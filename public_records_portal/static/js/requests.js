@@ -129,17 +129,20 @@
     },
 
     events: {
-      "click #open":             "toggle_open",
-      "click #due_soon":         "toggle_due_soon",
-      "click #overdue":          "toggle_overdue",
-      "click #closed":           "toggle_closed",
-      "keyup #requester_name":   "set_requester_name",
-      "click #my_requests":      "toggle_my_requests",
-      "change #request_status":  "set_status"
+      "click #mine_as_poc":    "toggle_mine_as_poc",
+      "click #mine_as_helper": "toggle_mine_as_helper",
+      "click #open":           "toggle_open",
+      "click #due_soon":       "toggle_due_soon",
+      "click #overdue":        "toggle_overdue",
+      "click #closed":         "toggle_closed"
     },
 
-    toggle: function(attribute_name) {
-      this.model.set(attribute_name, !(this.model.get(attribute_name)));
+    toggle_mine_as_poc: function() {
+      this.toggle('mine_as_poc');
+    },
+
+    toggle_mine_as_helper: function() {
+      this.toggle('mine_as_helper');
     },
 
     toggle_open: function() {
@@ -158,24 +161,9 @@
       this.toggle('closed');
     },
 
-    toggle_my_requests: function ( event )
-    {
-      this.model.set( {
-        "my_requests": !( this.model.get( "my_requests" ) )
-      } )
-      this.model.set({ page_number: 1 })
-    },
-
-    set_status: function (event)
-    {
-      this.model.set("status", event.target.value)
-      this.model.set({ page_number: 1 })
-    },
-    set_requester_name: _.debounce(function (event)
-    {
-      this.model.set("requester_name", event.target.value)
-      this.model.set({ page_number: 1 })
-    }, 500)
+    toggle: function(attribute_name) {
+      this.model.set(attribute_name, !(this.model.get(attribute_name)));
+    }
   });
 
   SearchField = Backbone.View.extend({
@@ -218,6 +206,18 @@
       this.model.set('department', event.target.value)
     }
   });
+
+  // DateFilter = Backbone.View.extend({
+  //   initialize: function() {
+  //     this.render();
+  //   },
+
+  //   template: _.template($(this.template_selector)),
+
+  //   render: function() {
+  //     this.$el.html(this.template);
+  //   }
+  // });
 
   SearchResults = Backbone.View.extend({
 
@@ -272,10 +272,12 @@
 
   var query = new Query();
   var request_set = new RequestSet([], { query: query });
+
   var filter_box = new FilterBox({
     el: $("#sidebar_container"),
     model: query
   });
+
   var search_field = new SearchField({
     el: $("#search_field"),
     model: query
@@ -290,6 +292,12 @@
     el: $("#department_selector_container"),
     model: query
   });
+
+  // var due_date = new DateFilter({
+  //   el: $("#due_date_container"),
+  //   model: query,
+
+  // });
 
   var search_results = new SearchResults({
     el: $("#search_results_container"),
