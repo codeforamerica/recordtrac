@@ -325,17 +325,16 @@ def fetch_requests():
 		if requester_name and requester_name != "":
 			results = results.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % requester_name.lower()))
 			
-	sort_by = request.args.get('sort_by') 
+	sort_by = request.args.get('sort_column') 
 	if sort_by and sort_by != '':
-		ascending = request.args.get('ascending')
-		app.logger.info("\n\nAscending? %s" % ascending)
-		app.logger.info("\n\nSort by? %s" % sort_by)
-		if ascending == "true":
+		ascending = request.args.get('sort_direction')
+		app.logger.info("Sort Direction: %s" % ascending)
+		app.logger.info("Sort Column: %s" % sort_by)
+		if ascending == "asc":
 			results = results.order_by((getattr(Request, sort_by)).asc())
 		else:
 			results = results.order_by((getattr(Request, sort_by)).desc())
 	results = results.order_by(Request.id.desc())
-
 
 	page_number  = request.args.get('page') or 1
 	page_number = int(page_number)

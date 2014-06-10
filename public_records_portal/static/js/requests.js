@@ -2,22 +2,30 @@
 (function($) {
 
   Query = Backbone.Model.extend({
-
-    defaults:
-    {
+    defaults: {
+      sort_column: "id",
+      sort_direction: "desc",
       search_term: "",
-      page_number: 1, // Using an attribute called 'page' makes weird things happen here. JFYI.
       open: false,
       due_soon: false,
       overdue: false,
       closed: false,
       mine_as_poc: false,
       mine_as_helper: false,
+      min_due_date: "",
+      max_due_date: "",
+      min_request_date: "",
+      max_request_date: "",
       requester_name: "",
       department: "",
+      page_number: 1, // Using an attribute called 'page' makes weird things happen here. JFYI.
       more_results: false,
       start_index: 0,
       end_index: 0
+    },
+
+    toggle: function(attribute_name) {
+      this.set(attribute_name, !(this.get(attribute_name)));
     },
 
     prev_page: function ()
@@ -32,47 +40,12 @@
       this.set({ page_number: this.get("page_number") + 1 })
     },
 
-    toggle_sort_order: function()
-    {
-      this.set({sort_by_ascending: !this.get("sort_by_ascending")})
-    },
-
-    set_icon: function(attribute)
-    {
-      if (this.get("sort_by_ascending") == true)
-      {
-        this.set(attribute, "icon icon-sort-up")
+    switch_sort_direction: function() {
+      if (this.get('sort_direction') === 'desc') {
+        this.set('sort_direction', 'asc');
+      } else {
+        this.set('sort_direction', 'desc');
       }
-      else
-      {
-        this.set(attribute, "icon icon-sort-down")
-      }
-    },
-    reset_sort: function(attribute)
-    {
-      var attributes=["id", "text", "due_date", "date_created"];
-      for (var i in attributes)
-      {
-        if (attributes[i] != attribute)
-        {
-          this.set(attributes[i], "icon icon-sort")
-        }
-      }
-    },
-    set_sort: function(attribute)
-    {
-      this.reset_sort(attribute)
-      if (this.get("sort_by_attribute") == attribute)
-      {
-         this.toggle_sort_order()
-      }
-      else
-      {
-          this.set({sort_by_attribute: attribute})
-          this.set({sort_by_ascending: false})
-      }
-      this.set_icon(attribute)
-      this.set({ page_number: 1 })
     }
   })
 
@@ -138,31 +111,27 @@
     },
 
     toggle_mine_as_poc: function() {
-      this.toggle('mine_as_poc');
+      this.model.toggle('mine_as_poc');
     },
 
     toggle_mine_as_helper: function() {
-      this.toggle('mine_as_helper');
+      this.model.toggle('mine_as_helper');
     },
 
     toggle_open: function() {
-      this.toggle("open");
+      this.model.toggle("open");
     },
 
     toggle_due_soon: function() {
-      this.toggle("due_soon");
+      this.model.toggle("due_soon");
     },
 
     toggle_overdue: function() {
-      this.toggle("overdue");
+      this.model.toggle("overdue");
     },
 
     toggle_closed: function() {
-      this.toggle('closed');
-    },
-
-    toggle: function(attribute_name) {
-      this.model.set(attribute_name, !(this.model.get(attribute_name)));
+      this.model.toggle('closed');
     }
   });
 
@@ -207,66 +176,56 @@
     }
   });
 
-  // DateFilter = Backbone.View.extend({
-  //   initialize: function() {
-  //     this.render();
-  //   },
+  var DateFilter = Backbone.View.extend({
+    initialize: function() {
+      this.render();
+    },
 
-  //   template: _.template($(this.template_selector)),
+    template: _.template($('#date_filter_template').html()),
 
-  //   render: function() {
-  //     this.$el.html(this.template);
-  //   }
-  // });
+    render: function() {
+      this.$el.html(this.template, this.model.attributes);
+    }
+  });
 
   SearchResults = Backbone.View.extend({
-
-    initialize: function ()
-    {
-      this.model.reset_sort("")
-      this.collection.on( "sync", this.render, this )
+    initialize: function() {
+      this.collection.on("sync", this.render, this);
     },
 
-    render: function (event_name)
-    {
-      var vars = {
-        requests: this.collection.toJSON(),
-        "id_icon": this.model.get("id"),
-        "text_icon": this.model.get("text"),
-        "received_icon": this.model.get("date_created"),
-        "due_icon": this.model.get("due_date")
-      }
+    template: _.template($("#search_results_template").html()),
 
-      var data = _.extend(vars, this.model.get_icon, this.model.attributes);
-      var template = _.template( $("#search_results_template").html(), data )
-      this.$el.html( template )
-
+    render: function(event_name) {
+      this.$el.html(this.template(_.extend({ 'requests': this.collection.toJSON() }, this.model.attributes)));
+      this.$el.find('#' + this.model.attributes.sort_column).addClass(this.model.attributes.sort_direction);
     },
 
-    events:
-    {
+    events: {
       "click .pagination .prev": "prev",
       "click .pagination .next": "next",
-      "click #headings th.sortable": "sort"
+      "click th.sortable": "sort"
     },
 
-    prev: function ()
-    {
-      this.model.prev_page()
+    prev: function() {
+      this.model.prev_page();
     },
 
-    next: function ()
-    {
+    next: function() {
       this.model.next_page()
     },
-    sort: function(event)
-    {
-      var sort_attribute = event.target.id
-      if (sort_attribute == "")
-      {
-        sort_attribute = event.target.parentNode.id
+
+    sort: function(event) {
+      var column_to_sort = event.target.id;
+
+      if (column_to_sort === this.model.get('sort_column')) {
+        // If there's a click on the current column, flip the sort direction.
+        this.model.switch_sort_direction();
+      } else {
+        // Otherwise we should default to a descending sort.
+        this.model.set('sort_direction', 'desc');
       }
-      this.model.set_sort(sort_attribute)
+
+      this.model.set('sort_column', column_to_sort);
     }
   });
 
@@ -293,11 +252,13 @@
     model: query
   });
 
-  // var due_date = new DateFilter({
-  //   el: $("#due_date_container"),
-  //   model: query,
-
-  // });
+  var due_date = new DateFilter({
+    el: $("#due_date_container"),
+    model: query,
+    min_field: 'min_due_date',
+    max_field: 'max_due_date',
+    title: 'Response Due Date'
+  });
 
   var search_results = new SearchResults({
     el: $("#search_results_container"),

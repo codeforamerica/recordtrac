@@ -173,6 +173,9 @@ h3 {
 .search_style h5 {
 	margin: 15px 0px 3px;
 }
+.status{
+  padding-bottom: 15px;
+}
 .status input[type=radio]{
   margin-left: 0;
 }
@@ -200,4 +203,21 @@ h3 {
 	border-left: 8px solid black;
 	padding-left: 5px;
 	margin-left: 5px;
+}
+
+/* Icon glips for sortalbe and sorted columns. */
+.sortable:after {
+  font-family: FontAwesome;
+}
+   
+.sortable:after {
+  content: " \f0dc";
+}
+
+.sortable.desc:after {
+  content: " \f0dd";
+}
+
+.sortable.asc:after {
+  content: " \f0de";
 }
