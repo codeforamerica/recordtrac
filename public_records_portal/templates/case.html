@@ -141,8 +141,16 @@
             </div>
             {% endfor %}
           {% else %}<!--added an if then to check to see if any responses exist - if no then show text here for the "if any response exists" above -->
-            <div class="row-fluid">
-              <p id="no-records"><br><i>No records uploaded yet.</i></p>
+            <div class = "row-fluid"> 
+              <br>
+              {% set requester = req.requester() %}
+              {% if requester %}
+                  {% set email = requester.user.email %}
+              {% endif %}
+              {% if not email %}
+                <p id="no-email"><i>Requester did not provide an e-mail address. <i class="icon-question-sign" title= "If a clarification is needed and no alternate contact information has been provided, it may not be possible to respond to this request."></i></i></p>
+              {% endif %}
+              <p id="no-records"><i>No records uploaded yet.</i></p>
             </div>
           {% endif %}
         </div>
