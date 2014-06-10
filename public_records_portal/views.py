@@ -80,7 +80,10 @@ def new_request(passed_recaptcha = False, data = None):
 			return render_template('new_request.html', doc_types = doc_types, user_id = user_id)
 
 def to_csv():
-	return Response(csv_export.export(), mimetype='text/csv')
+	if get_user_id():
+		return Response(csv_export.export(), mimetype='text/csv')
+	else:
+		return render_template('error.html', message = "You must be logged in to do this.")
 
 def index():
 	if current_user.is_anonymous() == False:

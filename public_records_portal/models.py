@@ -44,6 +44,10 @@ class User(db.Model):
 		if self.alias and self.alias != "":
 			return self.alias
 		return "N/A"
+	def get_phone(self):
+		if self.phone and self.phone != "":
+			return self.phone
+		return "N/A"
 	def __init__(self, email=None, alias = None, phone=None, department = None, password=None):
 		self.email = email
 		self.alias = alias
@@ -152,6 +156,12 @@ class Request(db.Model):
 			if o.is_point_person:
 				return o
 		return None
+	def all_owners(self):
+		all_owners = []
+		for o in self.owners:
+			all_owners.append(o.user.get_alias())
+		return all_owners
+		
 	def requester(self):
 		if self.subscribers:
 			return self.subscribers[0] or None # The first subscriber is always the requester
@@ -161,6 +171,12 @@ class Request(db.Model):
 		requester = self.requester()
 		if requester and requester.user:
 			return requester.user.get_alias()
+		return "N/A"
+
+	def requester_phone(self):
+		requester = self.requester()
+		if requester and requester.user:
+			return requester.user.get_phone()
 		return "N/A"
 	def point_person_name(self):
 		point_person = self.point_person()
