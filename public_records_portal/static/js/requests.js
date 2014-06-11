@@ -18,7 +18,9 @@
       max_request_date: "",
       requester_name: "",
       department: "",
-      page_number: 1, // Using an attribute called 'page' makes weird things happen here. JFYI.
+      // Using an attribute called 'page' makes weird things happen here. JFYI.
+      page_number: 1,
+      bloop: 5,
       more_results: false,
       start_index: 0,
       end_index: 0
@@ -28,16 +30,14 @@
       this.set(attribute_name, !(this.get(attribute_name)));
     },
 
-    prev_page: function ()
-    {
+    prev_page: function() {
       if (this.get("page_number") > 1) {
-        this.set({ page_number: this.get("page_number") - 1 })
+        this.set('page_number', this.get('page_number') - 1);
       }
     },
 
-    next_page: function ()
-    {
-      this.set({ page_number: this.get("page_number") + 1 })
+    next_page: function() {
+      this.set('page_number', this.get('page_number') + 1);
     },
 
     switch_sort_direction: function() {
@@ -52,22 +52,18 @@
   Request = Backbone.Model.extend({})
 
   RequestSet = Backbone.Collection.extend({
-
     model: Request,
 
-    initialize: function( models, options )
-    {
+    initialize: function(models, options) {
       this._query = options.query
-      this._query.on( "change", this.build, this )
+      this._query.on("change", this.build, this);
     },
 
-    url: function ()
-    {
+    url: function() {
       return "/custom/request"
     },
 
-    build: function ()
-    {
+    build: function() {
       this.fetch({
         data: this._query.attributes,
         dataType: "json",
@@ -75,18 +71,15 @@
       });
     },
 
-    parse: function ( response )
-    {
+    parse: function(response) {
       this._query.set({
         "more_results": response.more_results,
-        "start_index": response.start_index,
-        "end_index": response.end_index,
-        "page": response.page,
-        "num_results": response.num_results
+        "start_index":  response.start_index,
+        "end_index":    response.end_index,
+        "num_results":  response.num_results
       })
       return response.objects
     }
-
   })
 
   // Smaller filter query control box that sits off to the side.
@@ -151,7 +144,6 @@
     },
 
     set_requester_name: _.debounce(function(event) {
-      console.log(event.target.value);
       this.model.set('requester_name', event.target.value);
     }, 300)
   });
@@ -195,7 +187,9 @@
 
     template: _.template($("#search_results_template").html()),
 
-    render: function(event_name) {
+    render: function() {
+      console.log(this.model.get('page_number'));
+      console.log(this.model.attributes);
       this.$el.html(this.template(_.extend({ 'requests': this.collection.toJSON() }, this.model.attributes)));
       this.$el.find('#' + this.model.attributes.sort_column).addClass(this.model.attributes.sort_direction);
     },
@@ -211,7 +205,7 @@
     },
 
     next: function() {
-      this.model.next_page()
+      this.model.next_page();
     },
 
     sort: function(event) {
@@ -266,6 +260,5 @@
     collection: request_set
   })
 
-  query.set({ "page": 1 })
-
+  request_set.fetch();
 })(jQuery);

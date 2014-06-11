@@ -336,12 +336,10 @@ def fetch_requests():
 			results = results.order_by((getattr(Request, sort_by)).desc())
 	results = results.order_by(Request.id.desc())
 
-	page_number  = request.args.get('page') or 1
-	page_number = int(page_number)
-
-	limit  = request.args.get('limit')  or 15
+	page_number = int(request.args.get('page_number') or 1)
+	limit = int(request.args.get('limit') or 15)
 	offset = limit * (page_number - 1)
-
+        app.logger.info("Page Number: {0}, Limit: {1}, Offset: {2}".format(page_number, limit, offset))
 
 	# Execute query
 	more_results = False
@@ -359,9 +357,7 @@ def fetch_requests():
 		else:
 			end_index = num_results
 
-
 	results = results.limit(limit).offset(offset).all()
-	# results = results.limit(limit).offset(offset).all()
 
 	# TODO(cj@postcode.io): This map is pretty kludgy, we should be detecting columns and auto
 	# magically making them fields in the JSON objects we return.

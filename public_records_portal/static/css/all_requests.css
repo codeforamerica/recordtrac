@@ -208,16 +208,17 @@ h3 {
 /* Icon glips for sortalbe and sorted columns. */
 .sortable:after {
   font-family: FontAwesome;
+  padding-left: 5px;
 }
    
 .sortable:after {
-  content: " \f0dc";
+  content: "\f0dc";
 }
 
 .sortable.desc:after {
-  content: " \f0dd";
+  content: "\f0dd";
 }
 
 .sortable.asc:after {
-  content: " \f0de";
+  content: "\f0de";
 }
