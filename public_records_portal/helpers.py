@@ -80,11 +80,14 @@ def explain_action(action, explanation_type = None):
 		return explanation_str.replace('*agency*', app.config['AGENCY_NAME'])
 
 
+def clean_text(value):
+	return str(Markup(value).striptags())
+
 def new_lines(value):
-	new_value = value.replace('\n','<br>\n')
-	if value != new_value:
-		return Markup(new_value)
-	return value
+	value = value.replace('\n','this_is_a_new_line')
+	value = clean_text(value)
+	value = value.replace('this_is_a_new_line','<br>')
+	return Markup(value)
 
 def display_staff_participant(owner, request):
 	point_of_contact = request.point_person()

@@ -380,7 +380,7 @@ def fetch_requests():
 	# TODO(cj@postcode.io): This map is pretty kludgy, we should be detecting columns and auto
 	# magically making them fields in the JSON objects we return.
 	results = map(lambda r: { "id":           r.id, \
-							  "text":         r.text, \
+							  "text":         helpers.clean_text(r.text), \
 							  "date_created": helpers.date(r.date_received or r.date_created), \
 							  "department":   r.department_name(), \
 							  "requester":   r.requester_name(), \
