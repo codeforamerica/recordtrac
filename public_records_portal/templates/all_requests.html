@@ -193,8 +193,8 @@
                         <i class="icon-archive icon-light"></i>
                       <% } %>
                     </td>
-                    <td style="width: 4%"><%= request.id %></td>
-                    <td style="width: 12%"><%= moment(request.date_created).format("MMM Do, YYYY") %></td>
+                    <td style="width: 4%"><%- request.id %></td>
+                    <td style="width: 12%"><%- moment(request.date_created).format("MMM Do, YYYY") %></td>
                     <td style = "width: 25%">
                     {% if user_id %}
                       <a href="/city/request/<%= request.id %>">
@@ -202,23 +202,23 @@
                       <a href="/request/<%= request.id %>">
                     {% endif %}
                     <% if ( request.solid_status === "due soon" ) { %>
-                          <span style = "background-color: #FB991B" class="label label-warning">due soon</span> <%= request.text %>
+                          <span style = "background-color: #FB991B" class="label label-warning">due soon</span> <%- request.text %>
                      <% } %>
                     <% if ( request.solid_status === "overdue" ) { %>
-                          <span style = "background-color: #CA1A1A" class="label label-important">overdue</span> <%= request.text %>
+                          <span style = "background-color: #CA1A1A" class="label label-important">overdue</span> <%- request.text %>
                     <% } %>
                     <% if ( request.text.length > 140 ) { %>
-                          <%= request.text.substring(0, 140).trim() + "..." %>
+                          <%- request.text.substring(0, 140).trim() + "..." %>
                     <% } else { %>
-                          <%= request.text %>
+                          <%- request.text %>
                     <% } %>
                       </a>
                     </td>
-                    <td style="width: 15%"><%= request.department %></td>                    
-                    <td style="width: 15%"><%= request.contact_name %></td>
+                    <td style="width: 15%"><%- request.department %></td>                    
+                    <td style="width: 15%"><%- request.contact_name %></td>
                     {% if user_id %}
-                    <td style="width: 12%"><%= request.due_date %></td>
-                    <td style="width: 14%"><%= request.requester %></td>
+                    <td style="width: 12%"><%- request.due_date %></td>
+                    <td style="width: 14%"><%- request.requester %></td>
                     {% endif %}
                   </tr>
                 <% } ); %>
@@ -231,7 +231,7 @@
 
           <div class="pull-left pagination">
             <ul>
-              <li>Showing <%=start_index%> to <%=end_index%> of <%= num_results %> entries</li>
+              <li>Showing <%- start_index %> to <%- end_index %> of <%- num_results %> entries</li>
             </ul>
           </div>
             
