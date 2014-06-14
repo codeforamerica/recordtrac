@@ -69,15 +69,6 @@ class User(db.Model):
 		else:
 			app.logger.error("\n\nUser %s is not associated with a department." % self.email)
 			return "N/A"
-	def staff_info(self):
-		if self.department:
-			attrs = {}
-			attrs['email'] = self.email
-			attrs['alias'] = self.alias
-			attrs['department'] = self.department_name()
-			return attrs
-		else:
-			return False
 
 ### @export "Department"
 class Department(db.Model):
@@ -259,7 +250,7 @@ class Subscriber(db.Model):
 	user = relationship("User", uselist = False)
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
 	date_created = db.Column(db.DateTime)
-	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id')) # Not null if responsible for fulfilling a part of the request
+	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id')) # Not null if responsible for fulfilling a part of the request. UPDATE 6-11-2014: This isn't used. we should get rid of it.
  	def __init__(self, request_id, user_id, creator = False):
  		self.user_id = user_id
 		self.request_id = request_id
@@ -301,7 +292,7 @@ class Note(db.Model):
 	date_created = db.Column(db.DateTime)
 	text = db.Column(db.String())
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id')) # The request it belongs to.
-	user_id = db.Column(db.Integer, db.ForeignKey('user.id')) # The user who wrote the note. Right now only city staff can.
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id')) # The user who wrote the note. Right now only stored for city staff - otherwise it's an anonymous/ 'requester' note.
 	def __init__(self, request_id, text, user_id):
 		self.text = text
 		self.request_id = request_id
