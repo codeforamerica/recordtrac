@@ -154,12 +154,19 @@ def show_request(request_id, template = None):
 		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
 	if template:
 		if "city" in template and not current_user_id:
-			return render_template('alpha.html')
+			return render_template('alpha.html')			
 	else:
 		template = "manage_request_public.html"
 	if req.status and "Closed" in req.status and template != "manage_request_feedback.html":
 		template = "closed.html"
 	return render_template(template, req = req, user_id = get_user_id())
+
+def staff_to_json():
+	users = User.query.filter(User.department != None).all()
+	staff_data = []
+	for u in users:
+		staff_data.append({'alias': u.alias, 'email': u.email})
+	return jsonify(**{'objects': staff_data})
 
 def docs():
 	return redirect('http://codeforamerica.github.io/public-records/docs/1.0.0')
