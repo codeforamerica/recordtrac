@@ -129,54 +129,75 @@ $('.unassignPopover').click(function() {
     $('input[name=extend_reason]').val(estr);
   });
 
-var map = {};
-var emails = []
-var contacts = []
-
+function prepareStaffTypeahead(){
 /* typeahead for email in reroute form */
-$.getJSON("/api/user", function(data) {
-    var user_data = data['objects']
-    $.each(user_data, function (i, line) {
-      if (line['staff_info'] != false)
-      {
-        var staff = line['staff_info']
-        emails.push(staff['email']);
-        map[staff['alias'] + " - " + staff['email']] = staff['email'];
-        contacts.push(staff['alias'] + " - " + staff['email']);
-      }          
- });
-});
+  var map = {};
+  var emails = []
+  var contacts = []
 
-$(document).ready(function() {
+
+  $.getJSON("/api/staff", function(data) {
+        var user_data = data['objects']
+        $.each(user_data, function (i, staff) {
+              emails.push(staff['email']);
+              map[staff['alias'] + " - " + staff['email']] = staff['email'];
+              contacts.push(staff['alias'] + " - " + staff['email']);        
+       });
+    });
+  return { map:map, emails:emails, contacts:contacts }
+}
+
+function setStaffTypeahead(contacts, map) {
+
   $('#rerouteEmail').typeahead.defaults = {
       source: function(query, process) {
-         process(contacts);
+          process(contacts);
       }
       , updater: function (item) {
-        selectedContact = map[item];
-        return selectedContact;
+          selectedContact = map[item];
+          return selectedContact;
       }
-      ,matcher: function(item) {
-        if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) != -1){
-        return true;
-       }
+      , matcher: function(item) {
+          if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) != -1)
+          {
+            return true;
+          }
       }
-    , items: 8
-    , menu: '<ul class="typeahead dropdown-menu"></ul>'
-    , item: '<li><a href="#"></a></li>'
-    , minLength: 1
+      , items: 8
+      , menu: '<ul class="typeahead dropdown-menu"></ul>'
+      , item: '<li><a href="#"></a></li>'
+      , minLength: 1
     }
-});
+}
+
+function validateTypeaheadInput(emails) {
+  $(document).on('shown', "#notifyPopover", function () {
+    $('#notifyButton').click(function() {
+      if($.inArray($('#notifyEmail').val(), emails) == -1) {
+        $('#notifyEmail').val('');
+      }
+    });
+  });
+  $(document).on('shown', "#reroutePopover", function () {
+    $('#rerouteButton').click(function() {
+      if($.inArray($('#rerouteEmail').val(), emails) == -1) {
+        $('#rerouteEmail').val('');
+      }
+    });
+  });
+}
+
+
+staff = prepareStaffTypeahead();
+setStaffTypeahead(staff.contacts, staff.map);
+validateTypeaheadInput(staff.emails);
+
+
 $(document).on('shown', "#reroutePopover", function () {
     // to close the popover
     $('.close').on('click', function(){
       $('#reroutePopover').popover('hide');
     })
-   $('#rerouteButton').click(function() {
-    if($.inArray($('#rerouteEmail').val(), emails) == -1) {
-      $('#rerouteEmail').val('');
-    }
-  });
 });
 
 
@@ -186,14 +207,11 @@ $(document).on('shown', "#notifyPopover", function () {
     $('.close').on('click', function(){
       $('#notifyPopover').popover('hide');
     })
-   $('#notifyButton').click(function() {
-    if($.inArray($('#notifyEmail').val(), emails) == -1) {
-      $('#notifyEmail').val('');
-    }
-  });
 });
 
 $(document).ready(function() {
+
+
   (function( $ ){
     $.fn.sticky = function() {
 
