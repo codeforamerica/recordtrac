@@ -294,19 +294,23 @@ def fetch_requests():
 	app.logger.info(status_filters)
 	app.logger.info(str(results.statement.compile(dialect=postgresql.dialect())))
 
-	# min_date_created = datetime.strptime('May 1 2014', '%b %d %Y')
-	# max_date_created = datetime.strptime('May 20 2014', '%b %d %Y')
-	min_date_created = None
-	max_date_created = None
-	if min_date_created and max_date_created:
-		results = results.filter(Request.date_created >= min_date_created).filter(Request.date_created <= max_date_created)
+        date_format = '%m/%d/%Y'
 
-	# min_due_date = datetime.strptime('May 15 2014', '%b %d %Y')
-	# max__due_date = datetime.strptime('May 20 2014', '%b %d %Y')
-	min_due_date = None
-	max_due_date = None
+	min_request_date = request.args.get('min_request_date')
+	max_request_date = request.args.get('max_request_date')
+        if min_request_date and max_request_date:
+                min_request_date = datetime.strptime(min_request_date, date_format)
+                max_request_date = datetime.strptime(max_request_date, date_format)
+		results = results.filter(and_(Request.date_created >= min_request_date, Request.date_created <= max_request_date))
+                app.logger.info('Request Date Bounding. Min: {0}, Max: {1}'.format(min_request_date, max_request_date))
+
+	min_due_date = request.args.get('min_due_date')
+	max_due_date = request.args.get('max_due_date')
 	if min_due_date and max_due_date:
-		results = results.filter(Request.due_date >= min_due_date).filter(Request.due_date <= max_due_date)
+                min_due_date = datetime.strptime(min_due_date, date_format)
+                max_due_date = datetime.strptime(max_due_date, date_format)
+		results = results.filter(and_(Request.due_date >= min_due_date, Request.due_date <= max_due_date))
+                app.logger.info('Due Date Bounding. Min: {0}, Max: {1}'.format(min_due_date, max_due_date))
 
 	# Filters for agency staff only:
 	if user_id:

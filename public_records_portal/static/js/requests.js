@@ -169,14 +169,45 @@
   });
 
   var DateFilter = Backbone.View.extend({
-    initialize: function() {
+    initialize: function(options) {
+      this.title = options.title;
+      this.min_field = options.min_field;
+      this.max_field = options.max_field;
       this.render();
+      this.model.on('change', this.render, this);
     },
 
     template: _.template($('#date_filter_template').html()),
 
     render: function() {
-      this.$el.html(this.template, this.model.attributes);
+      var for_template = {
+        title: this.title,
+        min_value: this.model.get(this.min_field),
+        max_value: this.model.get(this.max_field)
+      }
+
+      this.$el.html(this.template(for_template));
+      this.$el.find('.min_field').datepicker();
+      this.$el.find('.max_field').datepicker();
+    },
+
+    events: {
+      'change .min_field': 'update_min',
+      'change .max_field': 'update_max',
+      'click .all_dates': 'clear_dates'
+    },
+
+    update_min: function(event) {
+      this.model.set(this.min_field, event.target.value);
+    },
+
+    update_max: function(event) {
+      this.model.set(this.max_field, event.target.value);
+    },
+
+    clear_dates: function() {
+      this.model.set(this.min_field, "");
+      this.model.set(this.max_field, "");
     }
   });
 
@@ -188,8 +219,6 @@
     template: _.template($("#search_results_template").html()),
 
     render: function() {
-      console.log(this.model.get('page_number'));
-      console.log(this.model.attributes);
       this.$el.html(this.template(_.extend({ 'requests': this.collection.toJSON() }, this.model.attributes)));
       this.$el.find('#' + this.model.attributes.sort_column).addClass(this.model.attributes.sort_direction);
     },
@@ -246,12 +275,20 @@
     model: query
   });
 
+  var request_date = new DateFilter({
+    el: $("#request_date_container"),
+    model: query,
+    min_field: 'min_request_date',
+    max_field: 'max_request_date',
+    title: 'Request Date'
+  });
+
   var due_date = new DateFilter({
     el: $("#due_date_container"),
     model: query,
     min_field: 'min_due_date',
     max_field: 'max_due_date',
-    title: 'Response Due Date'
+    title: 'Due Date'
   });
 
   var search_results = new SearchResults({

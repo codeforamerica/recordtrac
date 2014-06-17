@@ -222,3 +222,12 @@ h3 {
 .sortable.asc:after {
   content: "\f0de";
 }
+
+/* Date picker's! */
+.date_filter h5, .date_filter .all_dates {
+  display: inline;
+}
+
+.date_filter .max_field {
+  margin-left: 20px;
+}
