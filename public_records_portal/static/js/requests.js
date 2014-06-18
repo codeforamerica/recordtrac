@@ -1,3 +1,30 @@
+(function(){
+
+window.App = {
+  Models: {},
+  Collections: {},
+  Views: {},
+  Router: {}
+};
+
+App.Router = Backbone.Router.extend({
+});
+Router = new App.Router;
+Backbone.history.start({pushState: true})
+
+})();
+
+function getURLParameter(name) {
+    return decodeURI(
+        (RegExp(name + '=' + '(.+?)(&|$)').exec(window.location.search)||[,null])[1]
+    );
+}
+
+function setRouteURL(key, value) {
+
+}
+
+
 // Manage the display of the record request table.
 (function($) {
 
@@ -10,23 +37,24 @@
       // Using an attribute called 'page' makes weird things happen here. JFYI.
       is_closed: true,
       my_requests: false,
-      department: "",
+      department: "All departments",
       more_results: false,
       start_index: 0,
       end_index: 0,
-      status: ""
+      status: "",
+      requester_name: "",
+      search: ""
     },
-
     prev_page: function ()
     {
       if (this.get("page_number") > 1) {
-      this.set({ page_number: this.get("page_number") - 1 })
+      this.set({ page_number: parseInt(this.get("page_number")) - 1 })
       }
     },
 
     next_page: function ()
     {
-      this.set({ page_number: this.get("page_number") + 1 })
+      this.set({ page_number: parseInt(this.get("page_number")) + 1 })
     },
 
     toggle_sort_order: function()
@@ -76,12 +104,23 @@
 
   RequestSet = Backbone.Collection.extend({
 
+
     model: Request,
 
     initialize: function( models, options )
     {
       this._query = options.query
+      var that = this
+      this._filters = ['is_closed', 'requester_name', 'my_requests', 'department', 'page_number', 'sort_by_ascending', 'sort_by_attribute', 'search']
+      $.each(this._filters, function( index, filter) {
+          var value = getURLParameter(filter)
+          if (value != 'null' && value != undefined && value != 'undefined') {
+            that._query.set(filter, value)
+        }
+      });
+      
       this._query.on( "change", this.build, this )
+
     },
 
     url: function ()
@@ -91,30 +130,33 @@
     build: function ()
     {
 
+      var route_url = ""
+      var that = this
       var data_params = {
-        "page": this._query.get("page_number"),
-        "is_closed": this._query.get("is_closed"),
-        "requester_name": this._query.get("requester_name"),
-        "my_requests": this._query.get("my_requests"),
-        "ascending": this._query.get("sort_by_ascending"),
-        "sort_by": this._query.get("sort_by_attribute")
       }
 
-      var search_term = this._query.get("search_term")
-      if ( search_term !== "" )
-      {
-        data_params["search"] = search_term
-      }
-      var department = this._query.get("department")
-      if ( department != "")
-      {
-        data_params["department"] = department
-      }
-      var status = this._query.get("status")
-      if ( status != "")
-      {
-        data_params["status"] = status
-      }
+      $.each(this._filters, function( index, filter ) {
+         value = that._query.get(filter)
+          if (value != "" && value != 'undefined' && value != undefined) {
+            // this wouldn't be needed if we named page and search consistently:
+               if (filter == "search")
+               {
+                  data_params['search'] = that._query.get('search_term')
+               }
+               else if (filter == "page_number")
+               {
+                  data_params['page'] = that._query.get('page_number')
+               }
+               else
+               {
+                  data_params[filter] = value
+               }
+          }
+      });
+
+      // var params = $.param( data_params );
+      route_url = "requests?" + decodeURIComponent($.param(data_params));
+      Router.navigate(route_url)
 
       this.fetch({
         data: data_params,
@@ -187,6 +229,7 @@
     {
       this.model.set("department", event.target.value)
       this.model.set({ page_number: 1 })
+
     },
     set_status: function (event)
     {
