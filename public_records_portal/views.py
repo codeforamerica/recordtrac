@@ -351,9 +351,9 @@ def fetch_requests():
 
 	# Sorting!
 			
-	sort_by = request.args.get('sort_by') 
+	sort_by = request.args.get('sort_by_attribute') 
 	if sort_by and sort_by != '':
-		ascending = request.args.get('ascending')
+		ascending = request.args.get('sort_by_ascending')
 		app.logger.info("\n\nAscending? %s" % ascending)
 		app.logger.info("\n\nSort by? %s" % sort_by)
 		if ascending == "true":
