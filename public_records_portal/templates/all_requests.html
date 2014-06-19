@@ -52,7 +52,7 @@
       <div class="row-fluid">
         <div id="search_field_container" class="span9"></div>
         <script type="text/template" id="search_field_template">
-          <div id="search" class="pull-right">
+          <div id="search_term" class="pull-right">
             <label>Search</label>
             <input type="text" placeholder="I'd like to find...">
           </div>
@@ -181,7 +181,6 @@
                 <% if (department) { %>
                  <option selected><%= department %></option>
                 <% } %>
-                  <option value="All departments">All departments</option>
                   {% for department in departments %}
                     <option>{{department}}</option>
                   {% endfor %}

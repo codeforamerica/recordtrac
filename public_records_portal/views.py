@@ -323,7 +323,7 @@ def fetch_requests():
 
 	# Filters!
 	results = filter_department(department_name = request.args.get('department'), results = results)
-	results = filter_search_term(search_input = request.args.get('search'), results = results)
+	results = filter_search_term(search_input = request.args.get('search_term'), results = results)
 	results = filter_status(request.args.get('is_closed'), results = results)
 	# due soon should only be an option for open requests
 	results = filter_due_soon(due_soon = request.args.get('due_soon'), results = results)
@@ -365,7 +365,7 @@ def fetch_requests():
 
 	# Pagination!
 
-	page_number  = request.args.get('page') or 1
+	page_number  = request.args.get('page_number') or 1
 	page_number = int(page_number)
 
 	limit  = request.args.get('limit')  or 15

@@ -1,10 +1,6 @@
 (function(){
 
 window.App = {
-  Models: {},
-  Collections: {},
-  Views: {},
-  Router: {}
 };
 
 App.Router = Backbone.Router.extend({
@@ -20,10 +16,6 @@ function getURLParameter(name) {
     );
 }
 
-function setRouteURL(key, value) {
-
-}
-
 
 // Manage the display of the record request table.
 (function($) {
@@ -35,15 +27,16 @@ function setRouteURL(key, value) {
       search_term: "",
       page_number: 1,
       // Using an attribute called 'page' makes weird things happen here. JFYI.
-      is_closed: true,
-      my_requests: false,
+      is_closed: 'true',
+      my_requests: 'false',
       department: "All departments",
       more_results: false,
       start_index: 0,
       end_index: 0,
       status: "",
-      requester_name: "",
-      search: ""
+      sort_by_ascending: 'false',
+      sort_by_attribute: 'id',
+      requester_name: ""
     },
     prev_page: function ()
     {
@@ -59,11 +52,18 @@ function setRouteURL(key, value) {
 
     toggle_sort_order: function()
     {
-      this.set({sort_by_ascending: !this.get("sort_by_ascending")})
+      if (this.get('sort_by_ascending') == 'true')
+      {
+        this.set('sort_by_ascending', 'false')
+      }
+      else
+      {    
+        this.set('sort_by_ascending', 'true')
+      }
     },
     set_icon: function(attribute)
     {
-     if (this.get("sort_by_ascending") == true)
+     if (this.get("sort_by_ascending") == 'true')
       {
         this.set(attribute, "icon icon-sort-up")
       } 
@@ -93,7 +93,7 @@ function setRouteURL(key, value) {
       else 
       {
           this.set({sort_by_attribute: attribute})
-          this.set({sort_by_ascending: false})
+          this.set({sort_by_ascending: 'false'})
       }
       this.set_icon(attribute)
       this.set({ page_number: 1 })
@@ -111,7 +111,9 @@ function setRouteURL(key, value) {
     {
       this._query = options.query
       var that = this
-      this._filters = ['is_closed', 'requester_name', 'my_requests', 'department', 'page_number', 'sort_by_ascending', 'sort_by_attribute', 'search']
+      // this wouldn't be needed if we named page and search consistently:
+      this._filters = ['is_closed', 'requester_name', 'my_requests', 'department', 'page_number', 'sort_by_ascending', 'sort_by_attribute', 'search_term']
+
       $.each(this._filters, function( index, filter) {
           var value = getURLParameter(filter)
           if (value != 'null' && value != undefined && value != 'undefined') {
@@ -132,30 +134,24 @@ function setRouteURL(key, value) {
 
       var route_url = ""
       var that = this
-      var data_params = {
-      }
+      var data_params = {}
 
       $.each(this._filters, function( index, filter ) {
          value = that._query.get(filter)
           if (value != "" && value != 'undefined' && value != undefined) {
-            // this wouldn't be needed if we named page and search consistently:
-               if (filter == "search")
-               {
-                  data_params['search'] = that._query.get('search_term')
-               }
-               else if (filter == "page_number")
-               {
-                  data_params['page'] = that._query.get('page_number')
-               }
-               else
-               {
-                  data_params[filter] = value
-               }
+                data_params[filter] = value
+                if (route_url == "")
+                {
+                  route_url += "requests?"
+                }
+                else
+                {
+                  route_url += "&"
+                }
+                route_url = route_url + encodeURIComponent(filter) + "=" + encodeURIComponent(value)
           }
       });
 
-      // var params = $.param( data_params );
-      route_url = "requests?" + decodeURIComponent($.param(data_params));
       Router.navigate(route_url)
 
       this.fetch({
@@ -171,7 +167,6 @@ function setRouteURL(key, value) {
         "more_results": response.more_results,
         "start_index": response.start_index,
         "end_index": response.end_index,
-        "page": response.page,
         "num_results": response.num_results
       })
       return response.objects
@@ -213,16 +208,26 @@ function setRouteURL(key, value) {
 
     toggle_show_closed: function ( event )
     {
-      this.model.set( {
-        "is_closed": !( this.model.get( "is_closed" ) )
-      } )
+      if (this.model.get('is_closed') == 'true')
+      {
+        this.model.set('is_closed', 'false')
+      }
+      else
+      {
+        this.model.set('is_closed', 'true')
+      }
       this.model.set({ page_number: 1 })
     },
     toggle_my_requests: function ( event )
     {
-      this.model.set( {
-        "my_requests": !( this.model.get( "my_requests" ) )
-      } )
+      if (this.model.get('my_requests') == 'true')
+      {
+        this.model.set('my_requests', 'false')
+      }
+      else
+      {
+        this.model.set('my_requests', 'true')
+      }
       this.model.set({ page_number: 1 })
     },
     set_department: function (event)
@@ -321,13 +326,12 @@ function setRouteURL(key, value) {
 
     events:
     {
-      "keyup #search input": "set_search_term"
+      "keyup #search_term input": "set_search_term"
     },
 
     set_search_term: _.debounce(function ( event )
     {
       this.model.set( "search_term", event.target.value )
-      this.model.set({ page_number: 1 })
     }, 300)
 
   });
@@ -350,6 +354,5 @@ function setRouteURL(key, value) {
     collection: request_set
   })
 
-  query.set({ "page": 1 })
 
 })(jQuery);
