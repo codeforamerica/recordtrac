@@ -129,51 +129,75 @@ $('.unassignPopover').click(function() {
     $('input[name=extend_reason]').val(estr);
   });
 
-var map = {};
-var emails = []
+function prepareStaffTypeahead(){
+/* typeahead for email in reroute form */
+  var map = {};
+  var emails = []
+  var contacts = []
 
-$(document).ready(function() {
-  /* typeahead for email in reroute form */
+
+  $.getJSON("/api/staff", function(data) {
+        var user_data = data['objects']
+        $.each(user_data, function (i, staff) {
+              emails.push(staff['email']);
+              map[staff['alias'] + " - " + staff['email']] = staff['email'];
+              contacts.push(staff['alias'] + " - " + staff['email']);        
+       });
+    });
+  return { map:map, emails:emails, contacts:contacts }
+}
+
+function setStaffTypeahead(contacts, map) {
+
   $('#rerouteEmail').typeahead.defaults = {
       source: function(query, process) {
-        var contacts = [];
-        $.getJSON("/static/json/directory.json", function(data) {
-            $.each(data, function (i, line) {
-              var array = line['FULL_NAME'].split(",");
-              var first = array[1];
-              var last = array[0];
-              emails.push(line.EMAIL_ADDRESS);
-              map[first + " " + last + " - " + line.EMAIL_ADDRESS] = line.EMAIL_ADDRESS;
-              contacts.push(first + " " + last + " - " + line.EMAIL_ADDRESS);
-         });
-         process(contacts);
-        });
+          process(contacts);
       }
       , updater: function (item) {
-        selectedContact = map[item];
-        return selectedContact;
+          selectedContact = map[item];
+          return selectedContact;
       }
-      ,matcher: function(item) {
-        if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) != -1){
-        return true;
-       }
+      , matcher: function(item) {
+          if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) != -1)
+          {
+            return true;
+          }
       }
-    , items: 8
-    , menu: '<ul class="typeahead dropdown-menu"></ul>'
-    , item: '<li><a href="#"></a></li>'
-    , minLength: 1
+      , items: 8
+      , menu: '<ul class="typeahead dropdown-menu"></ul>'
+      , item: '<li><a href="#"></a></li>'
+      , minLength: 1
     }
-});
+}
+
+function validateTypeaheadInput(emails) {
+  $(document).on('shown', "#notifyPopover", function () {
+    $('#notifyButton').click(function() {
+      if($.inArray($('#notifyEmail').val(), emails) == -1) {
+        $('#notifyEmail').val('');
+      }
+    });
+  });
+  $(document).on('shown', "#reroutePopover", function () {
+    $('#rerouteButton').click(function() {
+      if($.inArray($('#rerouteEmail').val(), emails) == -1) {
+        $('#rerouteEmail').val('');
+      }
+    });
+  });
+}
+
+
+staff = prepareStaffTypeahead();
+setStaffTypeahead(staff.contacts, staff.map);
+validateTypeaheadInput(staff.emails);
+
+
 $(document).on('shown', "#reroutePopover", function () {
     // to close the popover
     $('.close').on('click', function(){
       $('#reroutePopover').popover('hide');
     })
-   $('#rerouteButton').click(function() {
-    if($.inArray($('#rerouteEmail').val(), emails) == -1) {
-      $('#rerouteEmail').val('');
-    }
-  });
 });
 
 
@@ -183,14 +207,11 @@ $(document).on('shown', "#notifyPopover", function () {
     $('.close').on('click', function(){
       $('#notifyPopover').popover('hide');
     })
-   $('#notifyButton').click(function() {
-    if($.inArray($('#notifyEmail').val(), emails) == -1) {
-      $('#notifyEmail').val('');
-    }
-  });
 });
 
 $(document).ready(function() {
+
+
   (function( $ ){
     $.fn.sticky = function() {
 

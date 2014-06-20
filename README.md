@@ -1,9 +1,16 @@
 RecordTrac 
 ==============
 
-This is a portal to manage and display public record requests, built by the Code for America 2013 Oakland team. The project is currently being used by [the City of Oakland](http://www2.oaklandnet.com/Government/o/CityAdministration/PublicRecordsRequest/index.htm), and is extensible to other municipalities. Our docs are available [here](http://codeforamerica.github.io/public-records/docs/1.0.0/). We'd love your feedback. E-mail us at recordtrac at postcode dot io or [open an issue](https://github.com/postcode/recordtrac/issues?state=open) if you have any questions.
+Hi there!
+
+RecordTrac is an application that some really cool folks at [PostCode](http://www.postcode.io) built and are trying to bring to more government agencies. If you’d like to learn more about the application, you can do so here: http://www.postcode.io/recordtrac If you’re trying to help bring it to your agency, we’d love to help! Generally, the best place to start is by talking to us. If you would like a demo or want something to demo, we’d also be happy to set that up. You can get in touch with us by e-mailing recordtrac@postcode.io. Our core focus right now is getting this adopted in other agencies, with the goal of bringing their FOIA processes online. If you have other uses for it in mind, we’d still love to talk.
+
 
 ## Installation
+
+We recommend you use Vagrant to set up RecordTrac locally. Thanks to @vzvenyach for putting together instructions, which we've slightly modified and can be found here: https://github.com/postcode/recordtrac-vagrant
+
+Otherwise, feel free to set up per instructions below.
 
 ### Mac OS X Pre-requisites
 
@@ -16,21 +23,29 @@ This application requires [Postgres](http://www.postgresapp.com/) and Xcode deve
 
 Install Postgres, Python, and other required packages.
 
-    sudo apt-get install postgresql-9.1 postgresql-server-dev-9.1 python-dev
+    sudo apt-get update
+    sudo apt-get install -y git
+    sudo apt-get install -y postgresql-9.1 postgresql-server-dev-9.1 python-dev
+    sudo apt-get install -y python-pip
 
 ### Postgres & Python
 
 If you are using a standard Postgres installation or from [Homebrew](http://mxcl.github.com/homebrew/) you can also use:
 
-    createdb recordtrac
+    sudo -u postgres createuser -P -s -e testuser
+    sudo -u postgres createdb recordtrac
 
 In a new window:
 
     git clone git://github.com/postcode/recordtrac.git
     cd recordtrac
     sudo pip install -r requirements.txt
+    cp .env.example .env
+    sed -i 's/localhost/testuser\:testpwd\@localhost/g' .env
 
-Save .env.example as .env and update relevant fields.
+Update relevant fields in .env.
+
+    vi .env
 
 ### Other Accounts
 

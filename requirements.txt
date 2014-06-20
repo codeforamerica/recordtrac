@@ -8,7 +8,7 @@ Jinja2==2.6
 SQLAlchemy==0.9.3
 Werkzeug==0.8.3
 psycopg2==2.4.6
-python-scribd==1.2.0
+https://python-scribd.googlecode.com/files/python-scribd-1.2.0.zip
 sendgrid==0.1.3
 gunicorn==0.17.4
 requests==1.1.0

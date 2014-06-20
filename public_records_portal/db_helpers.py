@@ -222,7 +222,7 @@ def create_or_return_user(email=None, alias = None, phone = None, department = N
 				db.session.commit()
 				department = d.id
 		if not user:
-			user = create_user(email = email, alias = alias, phone = phone, department = department)
+			user = create_user(email = email.lower(), alias = alias, phone = phone, department = department)
 		else:
 			if alias or phone or department: # Update user if fields to update are provided
 				user = update_user(user, alias, phone, department)

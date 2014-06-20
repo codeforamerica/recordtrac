@@ -20,6 +20,9 @@ from timeout import timeout
 from flask import jsonify, request, Response
 import anyjson
 import helpers
+import csv_export
+import csv
+from datetime import datetime, timedelta
 
 # Initialize login
 login_manager = LoginManager()
@@ -60,8 +63,13 @@ def new_request(passed_recaptcha = False, data = None):
 			phone = data['request_phone']
 		if 'format_received' in data:
 			offline_submission_type = data['format_received']
-		if 'date_received' in data:
+		if 'date_received' in data: # From the jQuery datepicker
 			date_received = data['date_received']
+			try:
+				date_received = datetime.strptime(date_received, '%m/%d/%Y') 
+				date_received = date_received + timedelta(hours = 7) # This is somewhat of a hack, but we need to get this back in UTC (+7 hours offset from Pacific Time) time but still treat it as a 'naive' datetime object
+			except ValueError:
+				return render_template('error.html', message = "Please use the datepicker to select a date.")
 		app.logger.info("\n\n Date received: %s" % date_received)
 		request_id, is_new = make_request(text = request_text, email = email, user_id = user_id, alias = alias, phone = phone, passed_recaptcha = passed_recaptcha, department = data['request_department'], offline_submission_type = offline_submission_type, date_received = date_received)
 		if is_new:
@@ -76,6 +84,12 @@ def new_request(passed_recaptcha = False, data = None):
 			return render_template('offline_request.html', doc_types = doc_types, user_id = user_id)
 		else:
 			return render_template('new_request.html', doc_types = doc_types, user_id = user_id)
+
+def to_csv():
+	if get_user_id():
+		return Response(csv_export.export(), mimetype='text/csv')
+	else:
+		return render_template('error.html', message = "You must be logged in to do this.")
 
 def index():
 	if current_user.is_anonymous() == False:
@@ -146,12 +160,19 @@ def show_request(request_id, template = None):
 		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
 	if template:
 		if "city" in template and not current_user_id:
-			return render_template('alpha.html')
+			return render_template('alpha.html')			
 	else:
 		template = "manage_request_public.html"
 	if req.status and "Closed" in req.status and template != "manage_request_feedback.html":
 		template = "closed.html"
 	return render_template(template, req = req, user_id = get_user_id())
+
+def staff_to_json():
+	users = User.query.filter(User.department != None).all()
+	staff_data = []
+	for u in users:
+		staff_data.append({'alias': u.alias, 'email': u.email})
+	return jsonify(**{'objects': staff_data})
 
 def docs():
 	return redirect('http://codeforamerica.github.io/public-records/docs/1.0.0')
@@ -232,34 +253,20 @@ def requests():
 			message = "Something went wrong loading the requests. We're looking into it!"
 		return render_template('error.html', message = message, user_id = get_user_id())
 
-
-def fetch_requests():
-	"""
-	Ultra-custom API endpoint for serving up requests.
-	Supports limit, search, and page parameters and returns json with an object that
-	has a list of results in the 'objects' field.
-	"""
-
-	user_id = get_user_id()
-
-	# Initialize database query
-	results = db.session.query(Request)
-
-	# Filter by department
-	department = request.args.get('department') 
-	if department and department != "All departments":
-		app.logger.info("\n\nDepartment filter:%s." %department)
-		department = Department.query.filter_by(name = department).first()
+def filter_department(department_name, results):
+	app.logger.info("\n\nDepartment filter:%s." % department_name)
+	if department_name and department_name != "All departments":
+		department = Department.query.filter_by(name = department_name).first()
 		if department:
 			results = results.filter(Request.department_id == department.id)
 		else:
 			# Just return an empty query set
 			results = results.filter(Request.department_id < 0)
+	return results
 
-	# Filter by search term
-	search_input = request.args.get('search_term')
+def filter_search_term(search_input, results):
 	if search_input:
-		app.logger.info("\n\nSEARCH: %s" % search_input)
+		app.logger.info("Searching for '%s'." % search_input)
 		search_terms = search_input.strip().split(" ") # Get rid of leading and trailing spaces and generate a list of the search terms
 		num_terms = len(search_terms)
 		# Set up the query
@@ -269,8 +276,25 @@ def fetch_requests():
 				search_query = search_query + search_terms[x] + ' & ' 
 		search_query = search_query + search_terms[num_terms - 1] + ":*" # Catch substrings
 		results = results.filter("to_tsvector(text) @@ to_tsquery('%s')" % search_query)
+	return results
 
-	# Accumulate status filters
+def fetch_requests():
+	"""
+	Ultra-custom API endpoint for serving up requests.
+	Supports limit, search, and page parameters and returns json with an object that
+	has a list of results in the 'objects' field.
+	"""
+	user_id = get_user_id()
+	results = db.session.query(Request)
+
+	# Filters!
+	results = filter_department(department_name = request.args.get('department'), results = results)
+	results = filter_search_term(search_input = request.args.get('search_term'), results = results)
+        
+	# Filter by search term
+	# search_input = request.args.get('search_term')
+
+        # Accumulate status filters
 	status_filters = []
 
         if str(request.args.get('open')).lower() == 'true':
@@ -321,7 +345,7 @@ def fetch_requests():
                                          .filter(Owner.active == True)
 
                 # Where am I just a Helper?
-                if str(request.args.get('mine_as_poc')).lower() == 'true':
+                if str(request.args.get('mine_as_helper')).lower() == 'true':
                         results = results.filter(Request.id == Owner.request_id).filter(Owner.user_id == user_id)
 
 		# Filter based on requester name
@@ -330,6 +354,13 @@ def fetch_requests():
 			results = results.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % requester_name.lower()))
 			
 	sort_by = request.args.get('sort_column') 
+
+	# Filters for agency staff only:
+	# if user_id:
+		# results = filter_my_requests(my_requests = request.args.get('my_requests'), results = results, user_id = user_id)
+		# results = filter_requester_name(requester_name = request.args.get('requester_name'), results = results)
+
+        # Figure out which column and direction to sort by.
 	if sort_by and sort_by != '':
 		ascending = request.args.get('sort_direction')
 		app.logger.info("Sort Direction: %s" % ascending)
@@ -366,16 +397,16 @@ def fetch_requests():
 	# TODO(cj@postcode.io): This map is pretty kludgy, we should be detecting columns and auto
 	# magically making them fields in the JSON objects we return.
 	results = map(lambda r: { "id":           r.id, \
-							  "text":         r.text, \
-							  "date_created": helpers.date(r.date_received or r.date_created), \
-							  "department":   r.department_name(), \
-							  "requester":   r.requester_name(), \
-							  "due_date":    format_date(r.due_date), \
-							  # The following two attributes are defined as model methods,
-							  # and not regular SQLAlchemy attributes.
-							  "contact_name": r.point_person_name(), \
-							  "solid_status": r.solid_status(), \
-							  "status":       r.status
+                                  "text":         helpers.clean_text(r.text), \
+                                  "date_created": helpers.date(r.date_received or r.date_created), \
+                                  "department":   r.department_name(), \
+                                  "requester":   r.requester_name(), \
+                                  "due_date":    format_date(r.due_date), \
+                                  # The following two attributes are defined as model methods,
+                                  # and not regular SQLAlchemy attributes.
+                                  "contact_name": r.point_person_name(), \
+                                  "solid_status": r.solid_status(), \
+                                  "status":       r.status
 	   }, results)
 
 	matches = {

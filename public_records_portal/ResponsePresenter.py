@@ -17,7 +17,7 @@ class ResponsePresenter:
 			self.response = note
 			self.update_url = "update_a_note_delete"
 			self.type = "note"
-			if "Request extended" in self.response.text:
+			if "Request extended:" in self.response.text:
 				self.type = "extension"
 		if self.type=="offline":
 			self.icon = "icon-file-alt icon-large"
@@ -59,16 +59,18 @@ class ResponsePresenter:
 			download_url = self.response.download_url
 			if not download_url:
 				download_url = scribd_helpers.get_scribd_download_url(doc_id = self.response.doc_id, record_id = self.response.id)
+				if not download_url:
+					download_url = "This document is still being uploaded, but it will be available shortly."
 			return """
-			<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s'>%s <i class='icon-external-link'></i></a>
-			<a href = '%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='Download %s'><i class='icon-download-alt'></i></a>
-			""" % (self.response.url, self.response.url, self.response.description, download_url, download_url) 
+			<a href='%(download_url)s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%(download_url)s' target='_blank'><b>%(description)s</b></a>
+			<a href = '%(scribd_url)s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='View document on Scribd hosting service' target='_blank'><i class='icon-external-link'></i></a>
+			""" %{"download_url": download_url, "description": self.response.description, "scribd_url": self.response.url} 
 		elif self.type == "note":
 			return self.response.text
 		elif self.type == "link":
 			return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s'>%s <i class='icon-external-link'></i></a>" % (self.response.url, self.response.url, self.response.description)
 		elif self.type == "extension":
-			junk, text = self.response.text.split(":")
+			text = self.response.text.strip("Request extended:")
 			return text
 
 	def get_icon(self):
