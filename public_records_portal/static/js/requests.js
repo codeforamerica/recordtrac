@@ -1,3 +1,22 @@
+(function(){
+
+window.App = {
+};
+
+App.Router = Backbone.Router.extend({
+});
+Router = new App.Router;
+Backbone.history.start({pushState: true})
+
+})();
+
+function getURLParameter(name) {
+    return decodeURI(
+        (RegExp(name + '=' + '(.+?)(&|$)').exec(window.location.search)||[,null])[1]
+    );
+}
+
+
 // Manage the display of the record request table.
 (function($) {
 
@@ -57,6 +76,19 @@
     initialize: function(models, options) {
       this._query = options.query
       this._query.on("change", this.build, this);
+
+      var that = this
+      // this wouldn't be needed if we named page and search consistently:
+      this._filters = ['is_closed', 'requester_name', 'my_requests', 'department', 'page_number', 'sort_by_ascending', 'sort_by_attribute', 'search_term']
+
+      $.each(this._filters, function( index, filter) {
+          var value = getURLParameter(filter)
+          if (value != 'null' && value != undefined && value != 'undefined') {
+            that._query.set(filter, value)
+        }
+      });
+
+      this._query.on( "change", this.build, this )
     },
 
     url: function() {
@@ -64,6 +96,28 @@
     },
 
     build: function() {
+      var route_url = ""
+      var that = this
+      var data_params = {}
+
+      $.each(this._filters, function( index, filter ) {
+         value = that._query.get(filter)
+          if (value != "" && value != 'undefined' && value != undefined) {
+                data_params[filter] = value
+                if (route_url == "")
+                {
+                  route_url += "requests?"
+                }
+                else
+                {
+                  route_url += "&"
+                }
+                route_url = route_url + encodeURIComponent(filter) + "=" + encodeURIComponent(value)
+          }
+      });
+
+      Router.navigate(route_url)
+
       this.fetch({
         data: this._query.attributes,
         dataType: "json",
@@ -298,4 +352,5 @@
   })
 
   request_set.fetch();
+
 })(jQuery);

@@ -81,7 +81,7 @@ def explain_action(action, explanation_type = None):
 
 
 def clean_text(value):
-	return str(Markup(value).striptags())
+	return unicode(Markup(value).striptags())
 
 def new_lines(value):
 	value = value.replace('\n','this_is_a_new_line')

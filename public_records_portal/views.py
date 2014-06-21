@@ -290,9 +290,6 @@ def fetch_requests():
 	# Filters!
 	results = filter_department(department_name = request.args.get('department'), results = results)
 	results = filter_search_term(search_input = request.args.get('search_term'), results = results)
-        
-	# Filter by search term
-	# search_input = request.args.get('search_term')
 
         # Accumulate status filters
 	status_filters = []
