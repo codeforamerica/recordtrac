@@ -19,12 +19,11 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/underscore-min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/backbone-min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/moment.min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/requests.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-select.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/custom.bootstrap-select.js') }}"></script>
-   <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-ui-1.10.4.custom.min.js') }}"></script> 
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-ui-1.10.4.custom.min.js') }}"></script> 
     <script type="text/javascript" src="{{ url_for('static', filename='js/date_picker.js') }}"></script>
-
+    <script type="text/javascript" src="{{ url_for('static', filename='js/requests.js') }}"></script>
 {% endblock custom_script_links %}
 
 {% block container %}
@@ -48,79 +47,193 @@
         </div>
       </div>
 
-      {# Search field. #}
-      <div class="row-fluid">
-        <div id="search_field_container" class="span9"></div>
-        <script type="text/template" id="search_field_template">
-          <div id="search_term" class="pull-right">
-            <label>Search</label>
-            <input type="text" placeholder="I'd like to find...">
-          </div>
-        </script>
-      </div>
-
-
       {# Search results table. #}
-
       <div class="row-fluid">
-        <div class="span9" id="search_results_container"></div>
+        <div class="span3 well search_style">
+
+          <div id="search_field_container" class="span9"></div>
+          <script type="text/template" id="search_field_template">
+            <div id="search_term" class="pull-right">
+              <label>Search</label>
+              <input type="text" placeholder="I'd like to find...">
+            </div>
+           </script>
+    
+            <div id="sidebar_container"></div>
+            <script type="text/template" id="sidebar_template">                                         
+              <h4 class="underline">ADVANCED FILTER</h4>
+                {% if user_id %}
+                  <h5>My Requests</h5>
+                  <div class="indent">
+                    <label class="checkbox">
+                      <input 
+                         type="checkbox"
+                         id="mine_as_poc"
+                         <% if (mine_as_poc) { %>
+                           checked
+                         <% } %> >
+                      <em>as Point of Contact</em>
+                    </label>
+                    <label class="checkbox">
+                      <input 
+                        type="checkbox"
+                        id="mine_as_helper"
+                        <% if (mine_as_helper) { %>
+                          checked
+                        <% } %> >
+                      <em>as Helper</em>
+                    </label>
+                  </div>
+                {% endif %}
+
+                <h5>Status</h5>
+                <div class="indent" style="padding-bottom: 15px;">
+                {% if user_id %}
+                  <label class="checkbox">
+                    <input type="checkbox"
+                           id="open" 
+                           <% if (open) { %>
+                             checked
+                           <% } %> >
+                    <em class="open_style">Open</em>
+                  </label>
+                  <label class="checkbox">
+                    <input type="checkbox"
+                           id="due_soon" 
+                           <% if (due_soon) { %>
+                             checked
+                           <% } %> >
+                    <em class="duesoon_style">Due Soon</em>
+                  </label>
+                  <label class="checkbox">
+                    <input type="checkbox"
+                           id="overdue" 
+                           <% if (overdue) { %>
+                             checked
+                           <% } %> >
+                    <em class="overdue_style">Overdue</em>
+                  </label>
+                  {% endif %}
+                  <label class="checkbox">
+                    <input type="checkbox"
+                           id="closed" 
+                           <% if (closed) { %>
+                             checked
+                           <% } %> >
+                    <em class="closed_style">Closed</em>
+                  </label>
+                </div>
+              </div>
+            </script>
+
+            <div id="request_date_container"></div>
+            {% if user_id %}
+            <div id="due_date_container"></div>
+            {% endif %}
+            <script type="text/template" id="date_filter_template">
+              <div class="date_filter">
+                <h5><%- title %></h5>
+                <a class="all_dates">All Dates</a>
+                <div class="control-group indent">
+                  <input type="text" 
+                         class="span5 min_field" 
+                         name="request_received_begin"
+                         value="<%- min_value %>" > 
+                  <input type="text" 
+                         class="span5 max_field" 
+                         name="request_received_end"
+                         value="<%- max_value %>" > 
+                </div>
+              </div>
+            </script>
+
+            {% if user_id %}
+              <h5>Requester Name</h5>
+              <div class="indent" id="requester_name">
+                <input type="search" 
+                       class="span10 max_field"                             
+                       placeholder="enter name" >
+              </div>
+            {% endif %} 
+
+            <div id="department_selector_container"></div>
+            <script type="text/template" id="department_selector_template">
+              <h5>Department</h5>
+              <div class="row-fluid indent">
+                <select class="span10">
+                  <% if (department) { %>
+                    <option selected><%= department %></option>
+                  <% } %>
+                  <option value="All departments">All departments</option>
+                  {% for department in departments %}
+                    <option>{{department}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </script>
+          </div>
+     
+          <div class="span8" id="search_results_container"></div>
           <script type="text/template" id="search_results_template">
             <table id="requests">
-              <thead id = "headings">
+              <thead id="headings">
                 <tr>
-                  <th style="width: 3%" class="status"></th>
-                  <th class="sortable" id="id" style="width: 4%">#  <i class="<%=id_icon%>"></i></th>
-                  <th class="sortable" id="date_created" style="width: 12%">Received  <i class="<%=received_icon%>"></th>
-                  <th class="sortable" id="text" style="width: 25%">Request  <i class="<%=text_icon%>"></i></th>
+                  <th class="status" style="width: 3%"></th>
+                  <th id="id" class="sortable" style="width: 4%">#</th>
+                  <th id="date_created" class="sortable" style="width: 12%">Received</th>
+                  <th id="text" class="sortable" style="width: 25%">Request</th>
                   <th style="width: 15%">Department</th>
                   <th style="width: 15%">Point of Contact</th>
                   {% if user_id %}
-                  <th class="sortable" id="due_date" style="width: 12%">Due  <i class ="<%=due_icon%>"></i></th>
-                  <th style="width: 14%">Requester</th>
+                    <th id="due_date" class="sortable"  style="width: 12%">Due</th>
+                    <th style="width: 14%">Requester</th>
                   {% endif %}
                 </tr>
               </thead>
               <tbody>
-              <% if (requests.length != 0) { %>
-                <% _.each( requests, function( request ) { %>                
+              <% if (requests.length > 0) { %>
+                <% _.each(requests, function(request) { %>                
                   <tr>
                     <td style="width: 3%" class="status <%= request.solid_status %>">
                       <% if ( request.solid_status === "closed" ) { %>
                         <i class="icon-archive icon-light"></i>
                       <% } %>
                     </td>
-                    <td style="width: 4%"><%= request.id %></td>
-                    <td style="width: 12%"><%= moment(request.date_created).format("MMM Do, YYYY") %></td>
+                    <td style="width: 4%"><%- request.id %></td>
+                    <td style="width: 12%"><%- moment(request.date_created).format("MMM Do, YYYY") %></td>
                     <td style = "width: 25%">
                     {% if user_id %}
                       <a href="/city/request/<%= request.id %>">
                     {% else %}
                       <a href="/request/<%= request.id %>">
                     {% endif %}
-                    <% if ( request.text.length > 140 ) { %>
-                        <% text = request.text.substring(0, 140).trim() + "..." %>
-                    <% } else { %>
-                        <% text = request.text %>
+
+                    <% if (request.solid_status === "due soon") { %>
+                      <span style = "background-color: #FB991B" class="label label-warning">due soon</span> <%- request.text %>
                     <% } %>
-                    <% if (request.solid_status ==="due soon") { %>
-                        <span style = "background-color: #FB991B" class="label label-warning">due soon</span> <%=text%>
-                     <% } else if (request.solid_status === "overdue" ) { %>
-                        <span style = "background-color: #CA1A1A" class="label label-important">overdue</span> <%=text %>
-                    <% } else { %>
-                        <%= text %>
+
+                    <% if (request.solid_status === "overdue") { %>
+                      <span style = "background-color: #CA1A1A" class="label label-important">overdue</span> <%- request.text %>
                     <% } %>
+
+                    <% if (request.text.length > 140) { %>
+                      <%- request.text.substring(0, 140).trim() + "..." %>
+                    <% } else { %>
+                      <%- request.text %>
+                    <% } %>
+
                     </a>
                     </td>
-                    <td style="width: 15%"><%= request.department %></td>                    
-                    <td style="width: 15%"><%= request.contact_name %></td>
+                    <td style="width: 15%"><%- request.department %></td>                    
+                    <td style="width: 15%"><%- request.contact_name %></td>
                     {% if user_id %}
-                    <td style="width: 12%"><%= request.due_date %></td>
-                    <td style="width: 14%"><%= request.requester %></td>
+                    <td style="width: 12%"><%- request.due_date %></td>
+                    <td style="width: 14%"><%- request.requester %></td>
                     {% endif %}
                   </tr>
                 <% } ); %>
-           <% } else { %>
-          <td></td><td></td><td></td><td></td><td>No matching records found</td><td></td><td></td><td></td>
+              <% } else { %>
+              <td></td><td></td><td></td><td></td><td>No matching records found</td><td></td><td></td><td></td>
           <% } %>
 
               </tbody>
@@ -128,9 +241,10 @@
 
           <div class="pull-left pagination">
             <ul>
-            <li> Showing <%=start_index%> to <%=end_index%> of <%= num_results %> entries </li>
+              <li>Showing <%- start_index %> to <%- end_index %> of <%- num_results %> entries</li>
             </ul>
-          </div>            
+          </div>
+            
           <div class="pull-right pagination">
             <% if (page_number > 1) { %>
               <ul>
@@ -143,62 +257,7 @@
               </ul>
             <% } %>
           </div>
-
-        </script>
-
-          <div class="span2">
-        <div id="sidebar_container"></div>
-        <script type="text/template" id="sidebar_template">                                         
-          <div id="filterbox" class="well">
-            <h4>View </h4>
-                <label class="checkbox">
-                  <input type="checkbox"
-                         title="open_requests_checkbox"
-                         value="open"
-                         name="is_closed"
-                         id="is_closed" 
-                         <% if ( !is_closed ) { %>
-                           checked
-                         <% } %> >
-                  Open requests
-                </label>
-              {% if user_id %}
-              <label class="checkbox">
-                <input 
-                    type="checkbox"
-                    title="my_requests_checkbox"
-                    value="{{user_id}}"
-                    name="my_requests"
-                    id="my_requests"
-                    <% if ( my_requests ) { %>
-                    checked
-                    <% } %> >
-                 My requests
-               </label>
-              {% endif %}
-                <div class="row-fluid">
-                <select class="span12"title="department"id="department_name"name="department">
-                <% if (department) { %>
-                 <option selected><%= department %></option>
-                <% } %>
-                  {% for department in departments %}
-                    <option>{{department}}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              {% if user_id %}
-               By requester name
-                <input 
-                  type="text" 
-                  class="input-small"
-                  name="requester_name"
-                  id="requester_name"
-                  placeholder="Enter name">
-              {% endif %}             
-          </div>
-        </script>
+        </script>      
       </div>
-      </div>              
-    </div>
   </div>
-{% endblock container%}
+{% endblock container %}

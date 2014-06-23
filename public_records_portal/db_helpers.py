@@ -9,7 +9,8 @@ from public_records_portal import db, app
 from models import *
 from datetime import datetime, timedelta
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
-from sqlalchemy import func, not_
+from sqlalchemy import func, not_, and_, or_
+from sqlalchemy.dialects import postgresql
 import uuid
 import json
 import os
