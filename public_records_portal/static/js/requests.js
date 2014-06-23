@@ -119,7 +119,7 @@ function getURLParameter(name) {
       Router.navigate(route_url)
 
       this.fetch({
-        data: this._query.attributes,
+        data: data_params,
         dataType: "json",
         contentType: "application/json"
       });
