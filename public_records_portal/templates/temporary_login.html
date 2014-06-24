@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block container %}
+
+<div class="row-fluid">
+	<div class="span10 offset1">
+		<div class="row-fluid">
+			<h3>Temporary login</h3>
+			<p>Use your agency email address along with the temporary password provided in the most recent email.</> 
+			
+		    <form class="" method="post" id="loginForm" action="/login">
+		    	<fieldset>
+		          <div class="row-fluid">
+		            <!-- <h4>Add a note</h4> -->
+		            <div class="span4">
+			            <div class="control-group">
+			              <div class="controls">
+			              	<label>Email</label>
+			              	<input type="text" class="input-block-level" name="email" title="input_email" placeholder="you@email.com">
+			              </div>
+			            </div>
+			            <div class="control-group">
+			              <div class="controls">
+			              	<label>Temporary password</label>
+			              	<input type="password" class="input-block-level" name="password" title="input_password" placeholder="*****">
+			              </div>
+			            </div>
+			            <div class="control-group">
+			              <div class="controls">
+			                <input type="submit" value="City login" title="login_button" class="btn btn btn-primary btn-span"/>
+			              </div>
+			            </div>
+		        	</div>
+		          </div>
+		        </fieldset>			        
+		    </form>
+
+    	</div>
+	</div>
+</div>
+
+{% endblock container %}
+
