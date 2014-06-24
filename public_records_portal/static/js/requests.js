@@ -30,7 +30,7 @@ Backbone.history.start({pushState: true})
       min_request_date: "",
       max_request_date: "",
       requester_name: "",
-      department: "All departments",
+      department: "",
       // Using an attribute called 'page' makes weird things happen here. JFYI.
       page_number: 1,
       bloop: 5,
