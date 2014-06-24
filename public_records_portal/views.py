@@ -459,7 +459,7 @@ def login(email=None, password=None):
 				return redirect(redirect_url)
 		else:
 			app.logger.info("\n\nLogin failed (due to incorrect e-mail/password combo) for email: %s." % email)
-			return render_template('error.html', message = "Your e-mail/ password combo didn't work. You can always <a href='/reset_password'>reset your password</a>.")
+			return render_template('error.html', message = "That e-mail/ password combo didn't work. You can always <a href='/reset_password'>reset your password</a>.")
 		app.logger.info("\n\nLogin failed for email: %s." % email)
 		return render_template('error.html', message="Something went wrong.", user_id = get_user_id())
 	else:
