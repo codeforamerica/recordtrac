@@ -77,8 +77,7 @@ Backbone.history.start({pushState: true})
 
       var filter_query = function(){
         this.url = function(url){
-          var the_url = decodeURI(url)
-          return the_url
+          return decodeURI(url)
         }
       }
       var filter_query = new filter_query
