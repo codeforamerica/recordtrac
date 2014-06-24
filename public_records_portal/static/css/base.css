@@ -96,6 +96,10 @@
 		padding-left: 17%;
 	}
 
+	li.dropdown.open div.dropdown-menu.active a {
+		background-color: transparent;
+	}
+
 
 
 
