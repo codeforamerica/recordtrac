@@ -339,12 +339,13 @@ def fetch_requests():
                 if str(request.args.get('mine_as_poc')).lower() == 'true':
                         results = results.filter(Request.id == Owner.request_id) \
                                          .filter(Owner.user_id == user_id) \
-                                         .filter(Owner.active == True)
+                                         .filter(Owner.is_point_person == True)
 
                 # Where am I just a Helper?
                 if str(request.args.get('mine_as_helper')).lower() == 'true':
-                        results = results.filter(Request.id == Owner.request_id).filter(Owner.user_id == user_id)
-
+                		results = results.filter(Request.id == Owner.request_id) \
+                                         .filter(Owner.user_id == user_id) \
+                                         .filter(Owner.active == True)
 		# Filter based on requester name
 		requester_name = request.args.get('requester_name')
 		if requester_name and requester_name != "":

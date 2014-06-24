@@ -36,7 +36,7 @@ function getURLParameter(name) {
       min_request_date: "",
       max_request_date: "",
       requester_name: "",
-      department: "",
+      department: "All departments",
       // Using an attribute called 'page' makes weird things happen here. JFYI.
       page_number: 1,
       bloop: 5,
@@ -79,7 +79,7 @@ function getURLParameter(name) {
 
       var that = this
       // this wouldn't be needed if we named page and search consistently:
-      this._filters = ['is_closed', 'requester_name', 'my_requests', 'department', 'page_number', 'sort_by_ascending', 'sort_by_attribute', 'search_term']
+      this._filters = ['open', 'due_soon', 'overdue', 'closed', 'mine_as_poc', 'mine_as_helper', 'sort_column', 'sort_direction', 'min_due_date', 'max_due_date', 'min_request_date', 'max_request_date', 'requester_name', 'department', 'page_number', 'search_term']
 
       $.each(this._filters, function( index, filter) {
           var value = getURLParameter(filter)
@@ -119,7 +119,7 @@ function getURLParameter(name) {
       Router.navigate(route_url)
 
       this.fetch({
-        data: this._query.attributes,
+        data: data_params,
         dataType: "json",
         contentType: "application/json"
       });

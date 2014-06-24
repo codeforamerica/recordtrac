@@ -88,6 +88,7 @@
 
                 <h5>Status</h5>
                 <div class="indent" style="padding-bottom: 15px;">
+                {% if user_id %}
                   <label class="checkbox">
                     <input type="checkbox"
                            id="open" 
@@ -112,6 +113,7 @@
                            <% } %> >
                     <em class="overdue_style">Overdue</em>
                   </label>
+                  {% endif %}
                   <label class="checkbox">
                     <input type="checkbox"
                            id="closed" 
@@ -125,7 +127,9 @@
             </script>
 
             <div id="request_date_container"></div>
+            {% if user_id %}
             <div id="due_date_container"></div>
+            {% endif %}
             <script type="text/template" id="date_filter_template">
               <div class="date_filter">
                 <h5><%- title %></h5>
