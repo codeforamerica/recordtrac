@@ -1,4 +1,3 @@
---allow-unverified python-scribd
 Flask==0.9
 Flask-SQLAlchemy==0.16
 Flask-Restless==0.12.1
