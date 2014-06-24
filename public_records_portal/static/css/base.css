@@ -79,6 +79,22 @@
 		color: #eee !important;
 	}
 
+/* login dropdown */
+	form#loginForm.form-horizontal {
+		margin-bottom: 10px;
+	}
+
+	form#loginForm.form-horizontal input.input-medium {
+		margin-bottom: 10px;
+	}
+
+	li.dropdown.open div.dropdown-menu {
+		padding-bottom: 5px !important;
+	}
+
+	li.dropdown.open div.dropdown-menu a {
+		padding-left: 17%;
+	}
 
 
 
