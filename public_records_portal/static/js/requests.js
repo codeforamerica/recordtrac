@@ -11,9 +11,7 @@ Backbone.history.start({pushState: true})
 })();
 
 function getURLParameter(name) {
-    return decodeURI(
-        (RegExp(name + '=' + '(.+?)(&|$)').exec(window.location.search)||[,null])[1]
-    );
+    return decodeURI(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURI(name).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
 }
 
 
@@ -80,13 +78,23 @@ function getURLParameter(name) {
       var that = this
       // this wouldn't be needed if we named page and search consistently:
       this._filters = ['open', 'due_soon', 'overdue', 'closed', 'mine_as_poc', 'mine_as_helper', 'sort_column', 'sort_direction', 'min_due_date', 'max_due_date', 'min_request_date', 'max_request_date', 'requester_name', 'department', 'page_number', 'search_term']
-
-      $.each(this._filters, function( index, filter) {
-          var value = getURLParameter(filter)
+      // var url = decodeURI(window.location.search)
+      // console.log(url);
+      var filter_query = function(){
+        this.url = function(url){
+          var the_url = decodeURI(url)
+          return the_url
+        }
+      }
+      var filter_query = new filter_query
+       var vars = filter_query.url(window.location.search.substring(1)).split('&')
+        $.each(vars, function(index, variable) {
+          var filter = decodeURIComponent(variable.split("=")[0])
+          var value = decodeURIComponent(variable.split("=")[1])
           if (value != 'null' && value != undefined && value != 'undefined') {
             that._query.set(filter, value)
-        }
-      });
+          }
+        })
 
       this._query.on( "change", this.build, this )
     },
