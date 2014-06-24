@@ -20,6 +20,9 @@ from timeout import timeout
 from flask import jsonify, request, Response
 import anyjson
 import helpers
+import csv_export
+import csv
+from datetime import datetime, timedelta
 
 # Initialize login
 login_manager = LoginManager()
@@ -60,8 +63,13 @@ def new_request(passed_recaptcha = False, data = None):
 			phone = data['request_phone']
 		if 'format_received' in data:
 			offline_submission_type = data['format_received']
-		if 'date_received' in data:
+		if 'date_received' in data: # From the jQuery datepicker
 			date_received = data['date_received']
+			try:
+				date_received = datetime.strptime(date_received, '%m/%d/%Y') 
+				date_received = date_received + timedelta(hours = 7) # This is somewhat of a hack, but we need to get this back in UTC (+7 hours offset from Pacific Time) time but still treat it as a 'naive' datetime object
+			except ValueError:
+				return render_template('error.html', message = "Please use the datepicker to select a date.")
 		app.logger.info("\n\n Date received: %s" % date_received)
 		request_id, is_new = make_request(text = request_text, email = email, user_id = user_id, alias = alias, phone = phone, passed_recaptcha = passed_recaptcha, department = data['request_department'], offline_submission_type = offline_submission_type, date_received = date_received)
 		if is_new:
@@ -76,6 +84,12 @@ def new_request(passed_recaptcha = False, data = None):
 			return render_template('offline_request.html', doc_types = doc_types, user_id = user_id)
 		else:
 			return render_template('new_request.html', doc_types = doc_types, user_id = user_id)
+
+def to_csv():
+	if get_user_id():
+		return Response(csv_export.export(), mimetype='text/csv')
+	else:
+		return render_template('error.html', message = "You must be logged in to do this.")
 
 def index():
 	if current_user.is_anonymous() == False:
@@ -146,12 +160,19 @@ def show_request(request_id, template = None):
 		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
 	if template:
 		if "city" in template and not current_user_id:
-			return render_template('alpha.html')
+			return render_template('alpha.html')			
 	else:
 		template = "manage_request_public.html"
 	if req.status and "Closed" in req.status and template != "manage_request_feedback.html":
 		template = "closed.html"
 	return render_template(template, req = req, user_id = get_user_id())
+
+def staff_to_json():
+	users = User.query.filter(User.department != None).all()
+	staff_data = []
+	for u in users:
+		staff_data.append({'alias': u.alias, 'email': u.email})
+	return jsonify(**{'objects': staff_data})
 
 def docs():
 	return redirect('http://codeforamerica.github.io/public-records/docs/1.0.0')
@@ -232,7 +253,6 @@ def requests():
 			message = "Something went wrong loading the requests. We're looking into it!"
 		return render_template('error.html', message = message, user_id = get_user_id())
 
-
 def filter_department(department_name, results):
 	app.logger.info("\n\nDepartment filter:%s." % department_name)
 	if department_name and department_name != "All departments":
@@ -246,7 +266,7 @@ def filter_department(department_name, results):
 
 def filter_search_term(search_input, results):
 	if search_input:
-		app.logger.info("\n\nSEARCH: %s" % search_input)
+		app.logger.info("Searching for '%s'." % search_input)
 		search_terms = search_input.strip().split(" ") # Get rid of leading and trailing spaces and generate a list of the search terms
 		num_terms = len(search_terms)
 		# Set up the query
@@ -258,38 +278,6 @@ def filter_search_term(search_input, results):
 		results = results.filter("to_tsvector(text) @@ to_tsquery('%s')" % search_query)
 	return results
 
-def filter_status(is_closed, results):
-	if is_closed != None:
-		# if is_closed.lower() == "true":
-		#     results = results.filter(Request.status.ilike("%closed%"))
-		if is_closed.lower() == "false":
-			results = results.filter(~Request.status.ilike("%closed%"))
-	return results
-
-def filter_due_soon(due_soon, results):
-	if due_soon != None:
-		if due_soon.lower() == "true":
-			two_days = datetime.now() + timedelta(days = 2)
-			results = results.filter(Request.due_date < two_days).filter(Request.due_date > datetime.now()).filter(~Request.status.ilike("%closed%"))
-	return results
-
-def filter_overdue(overdue, results):
-	if overdue != None:
-		if overdue.lower() == "true":
-			results = results.filter(Request.due_date < datetime.now()).filter(~Request.status.ilike("%closed%"))
-	return results
-
-def filter_my_requests(my_requests, results, user_id):
-	if my_requests != None:
-			if my_requests.lower() == "true":
-				results = results.filter(Request.id == Owner.request_id).filter(Owner.user_id == user_id).filter(Owner.active == True)
-	return results
-
-def filter_requester_name(requester_name, results):
-	if requester_name and requester_name != "":
-		results = results.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % requester_name.lower()))
-	return results
-
 def fetch_requests():
 	"""
 	Ultra-custom API endpoint for serving up requests.
@@ -297,59 +285,94 @@ def fetch_requests():
 	has a list of results in the 'objects' field.
 	"""
 	user_id = get_user_id()
-	# Initialize database query
 	results = db.session.query(Request)
 
 	# Filters!
 	results = filter_department(department_name = request.args.get('department'), results = results)
-	results = filter_search_term(search_input = request.args.get('search'), results = results)
-	results = filter_status(request.args.get('is_closed'), results = results)
+	results = filter_search_term(search_input = request.args.get('search_term'), results = results)
+
+        # Accumulate status filters
+	status_filters = []
+
+        if str(request.args.get('open')).lower() == 'true':
+                status_filters.append(Request.open)
+
 	# due soon should only be an option for open requests
-	results = filter_due_soon(due_soon = request.args.get('due_soon'), results = results)
+        if str(request.args.get('due_soon')).lower() == 'true':
+                status_filters.append(Request.due_soon)
+
 	# overdue should be mutually exclusive with due soon, and should only be an option for open requests
-	results = filter_overdue(overdue = request.args.get('overdue'), results = results)
+        if str(request.args.get('overdue')).lower() == 'true':
+                status_filters.append(Request.overdue)
+
+        if str(request.args.get('closed')).lower() == 'true':
+                status_filters.append(Request.closed)
+        
+	# Apply the set of status filters to the query.
+	# Using 'or', they're non-exclusive!
+	results = results.filter(or_(*status_filters))
+
+	app.logger.info(status_filters)
+	app.logger.info(str(results.statement.compile(dialect=postgresql.dialect())))
+
+        date_format = '%m/%d/%Y'
+
+	min_request_date = request.args.get('min_request_date')
+	max_request_date = request.args.get('max_request_date')
+        if min_request_date and max_request_date:
+                min_request_date = datetime.strptime(min_request_date, date_format)
+                max_request_date = datetime.strptime(max_request_date, date_format)
+		results = results.filter(and_(Request.date_created >= min_request_date, Request.date_created <= max_request_date))
+                app.logger.info('Request Date Bounding. Min: {0}, Max: {1}'.format(min_request_date, max_request_date))
+
+	min_due_date = request.args.get('min_due_date')
+	max_due_date = request.args.get('max_due_date')
+	if min_due_date and max_due_date:
+                min_due_date = datetime.strptime(min_due_date, date_format)
+                max_due_date = datetime.strptime(max_due_date, date_format)
+		results = results.filter(and_(Request.due_date >= min_due_date, Request.due_date <= max_due_date))
+                app.logger.info('Due Date Bounding. Min: {0}, Max: {1}'.format(min_due_date, max_due_date))
 
 	# Filters for agency staff only:
 	if user_id:
-		results = filter_my_requests(my_requests = request.args.get('my_requests'), results = results, user_id = user_id)
-		results = filter_requester_name(requester_name = request.args.get('requester_name'), results = results)
+		# Where am I the Point of Contact?
+                if str(request.args.get('mine_as_poc')).lower() == 'true':
+                        results = results.filter(Request.id == Owner.request_id) \
+                                         .filter(Owner.user_id == user_id) \
+                                         .filter(Owner.is_point_person == True)
 
-	# min_date_created = datetime.strptime('May 1 2014', '%b %d %Y')
-	# max_date_created = datetime.strptime('May 20 2014', '%b %d %Y')
-	min_date_created = None
-	max_date_created = None
-	if min_date_created and max_date_created:
-		results = results.filter(Request.date_created >= min_date_created).filter(Request.date_created <= max_date_created)
-
-	# min_due_date = datetime.strptime('May 15 2014', '%b %d %Y')
-	# max__due_date = datetime.strptime('May 20 2014', '%b %d %Y')
-	min_due_date = None
-	max_due_date = None
-	if min_due_date and max_due_date:
-		results = results.filter(Request.due_date >= min_due_date).filter(Request.due_date <= max_due_date)
-
-	# Sorting!
+                # Where am I just a Helper?
+                if str(request.args.get('mine_as_helper')).lower() == 'true':
+                		results = results.filter(Request.id == Owner.request_id) \
+                                         .filter(Owner.user_id == user_id) \
+                                         .filter(Owner.active == True)
+		# Filter based on requester name
+		requester_name = request.args.get('requester_name')
+		if requester_name and requester_name != "":
+			results = results.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % requester_name.lower()))
 			
-	sort_by = request.args.get('sort_by') 
+	sort_by = request.args.get('sort_column') 
+
+	# Filters for agency staff only:
+	# if user_id:
+		# results = filter_my_requests(my_requests = request.args.get('my_requests'), results = results, user_id = user_id)
+		# results = filter_requester_name(requester_name = request.args.get('requester_name'), results = results)
+
+        # Figure out which column and direction to sort by.
 	if sort_by and sort_by != '':
-		ascending = request.args.get('ascending')
-		app.logger.info("\n\nAscending? %s" % ascending)
-		app.logger.info("\n\nSort by? %s" % sort_by)
-		if ascending == "true":
+		ascending = request.args.get('sort_direction')
+		app.logger.info("Sort Direction: %s" % ascending)
+		app.logger.info("Sort Column: %s" % sort_by)
+		if ascending == "asc":
 			results = results.order_by((getattr(Request, sort_by)).asc())
 		else:
 			results = results.order_by((getattr(Request, sort_by)).desc())
 	results = results.order_by(Request.id.desc())
 
-
-	# Pagination!
-
-	page_number  = request.args.get('page') or 1
-	page_number = int(page_number)
-
-	limit  = request.args.get('limit')  or 15
+	page_number = int(request.args.get('page_number') or 1)
+	limit = int(request.args.get('limit') or 15)
 	offset = limit * (page_number - 1)
-
+        app.logger.info("Page Number: {0}, Limit: {1}, Offset: {2}".format(page_number, limit, offset))
 
 	# Execute query
 	more_results = False
@@ -372,16 +395,16 @@ def fetch_requests():
 	# TODO(cj@postcode.io): This map is pretty kludgy, we should be detecting columns and auto
 	# magically making them fields in the JSON objects we return.
 	results = map(lambda r: { "id":           r.id, \
-							  "text":         r.text, \
-							  "date_created": helpers.date(r.date_received or r.date_created), \
-							  "department":   r.department_name(), \
-							  "requester":   r.requester_name(), \
-							  "due_date":    format_date(r.due_date), \
-							  # The following two attributes are defined as model methods,
-							  # and not regular SQLAlchemy attributes.
-							  "contact_name": r.point_person_name(), \
-							  "solid_status": r.solid_status(), \
-							  "status":       r.status
+                                  "text":         helpers.clean_text(r.text), \
+                                  "date_created": helpers.date(r.date_received or r.date_created), \
+                                  "department":   r.department_name(), \
+                                  "requester":   r.requester_name(), \
+                                  "due_date":    format_date(r.due_date), \
+                                  # The following two attributes are defined as model methods,
+                                  # and not regular SQLAlchemy attributes.
+                                  "contact_name": r.point_person_name(), \
+                                  "solid_status": r.solid_status(), \
+                                  "status":       r.status
 	   }, results)
 
 	matches = {
