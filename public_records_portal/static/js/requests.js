@@ -45,12 +45,12 @@ Backbone.history.start({pushState: true})
 
     prev_page: function() {
       if (this.get("page_number") > 1) {
-        this.set('page_number', this.get('page_number') - 1);
+        this.set({ page_number: parseInt(this.get("page_number")) - 1 })
       }
     },
 
     next_page: function() {
-      this.set('page_number', this.get('page_number') + 1);
+      this.set({ page_number: parseInt(this.get("page_number")) + 1 })
     },
 
     switch_sort_direction: function() {
