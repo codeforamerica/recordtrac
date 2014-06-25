@@ -476,7 +476,7 @@ def reset_password(email=None):
 		if password:
 			send_prr_email(page = app.config['APPLICATION_URL'], recipients = [email], subject = "Your temporary password", template = "password_email.html", include_unsubscribe_link = False, password = password)
 			app.logger.info("\n\nPassword reset sent for email: %s." % email)
-			message = "Thanks! You should receive an e-mail shortly with instructions on how to login and update your password."
+			message = "We've sent you an email with instructions to reset your password."
 		else:
 			app.logger.info("\n\nPassword reset attempted and denied for email: %s." % email)
 			message = "Looks like you're not a user already. Currently, this system requires logins only for city employees. "
