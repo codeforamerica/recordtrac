@@ -185,13 +185,32 @@ Backbone.history.start({pushState: true})
   });
 
   SearchField = Backbone.View.extend({
+    initialize: function() {
+      this.render();
+      this.model.on('change:search_term', this.render, this);
+    },
+
+    template: _.template($("#search_field_template").html()),
+
+    render: function() {
+      this.$el.html(this.template({ search_term: this.model.get('search_term') }));
+      if (this.should_be_focused) {
+        this.$el.find('input[type=search]').first().focus().val('').val(this.model.get('search_term'));
+      }
+    },
+
     events: {
-      "keyup #search_term": "set_search_term"
+      "keyup input[type=search]": "set_search_term",
+      "focus input":              "remember_focus"
     },
 
     set_search_term: _.debounce(function(event) {
       this.model.set('search_term', event.target.value);
-    }, 300)
+    }, 300),
+
+    remember_focus: function() {
+      this.should_be_focused = true;
+    }
   });
 
   RequesterName = Backbone.View.extend({
@@ -317,7 +336,7 @@ Backbone.history.start({pushState: true})
   });
 
   var search_field = new SearchField({
-    el: $("#search_field"),
+    el: $("#search_field_container"),
     model: query
   });
 
