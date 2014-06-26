@@ -186,7 +186,7 @@ Backbone.history.start({pushState: true})
 
   SearchField = Backbone.View.extend({
     events: {
-      "keyup #search": "set_search_term"
+      "keyup #search_term": "set_search_term"
     },
 
     set_search_term: _.debounce(function(event) {
@@ -196,7 +196,7 @@ Backbone.history.start({pushState: true})
 
   RequesterName = Backbone.View.extend({
     events: {
-      "keyup input[type=search]": "set_requester_name"
+      "keyup #requester_name": "set_requester_name"
     },
 
     set_requester_name: _.debounce(function(event) {
@@ -322,7 +322,7 @@ Backbone.history.start({pushState: true})
   });
 
   var requester_name = new RequesterName({
-    el: $("#requester_name"),
+    el: $("#requester_name_field"),
     model: query
   });
 

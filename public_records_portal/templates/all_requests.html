@@ -53,7 +53,7 @@
 
             <h5>Search</h5>
             <div class = "indent" id="search_field">
-              <input id="search" type="text" placeholder="I'd like to find...">
+              <input id="search_term" type="search" placeholder="I'd like to find...">
             </div>
     
             <div id="sidebar_container"></div>
@@ -146,10 +146,8 @@
 
             {% if user_id %}
               <h5>Requester Name</h5>
-              <div class="indent" id="requester_name">
-                <input type="search" 
-                       class="span10 max_field"                             
-                       placeholder="enter name" >
+              <div class = "indent" id="requester_name_field">
+                <input id="requester_name" type="search" placeholder="Enter name">
               </div>
             {% endif %} 
 
