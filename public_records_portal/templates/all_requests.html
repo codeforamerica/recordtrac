@@ -55,7 +55,7 @@
           <script type="text/template" id="search_field_template">
             <h5>Search</h5>
             <div class="indent">
-              <input type="search" placeholder="I'd like to find..." value="<%- search_term %>">
+              <input id = "search_term" type="search" placeholder="I'd like to find..." value="<%- search_term %>">
             </div>
           </script>
     
@@ -148,10 +148,13 @@
             </script>
 
             {% if user_id %}
-              <h5>Requester Name</h5>
-              <div class = "indent" id="requester_name_field">
-                <input id="requester_name" type="search" placeholder="Enter name">
-              </div>
+              <div id="requester_name_container"></div>
+              <script type="text/template" id="requester_name_template">
+                <h5>Requester Name</h5>
+                <div class="indent">
+                  <input id="requester_name" type="search" placeholder="Enter name" value="<%- requester_name %>">
+                </div>
+              </script>
             {% endif %} 
 
             <div id="department_selector_container"></div>

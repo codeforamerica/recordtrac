@@ -195,12 +195,12 @@ Backbone.history.start({pushState: true})
     render: function() {
       this.$el.html(this.template({ search_term: this.model.get('search_term') }));
       if (this.should_be_focused) {
-        this.$el.find('input[type=search]').first().focus().val('').val(this.model.get('search_term'));
+        this.$el.find('#search').focus().val('').val(this.model.get('search_term'));
       }
     },
 
     events: {
-      "keyup input[type=search]": "set_search_term",
+      "keyup #search_term": "set_search_term",
       "focus input":              "remember_focus"
     },
 
@@ -214,13 +214,34 @@ Backbone.history.start({pushState: true})
   });
 
   RequesterName = Backbone.View.extend({
+
+    initialize: function() {
+      this.render();
+      this.model.on('change:requester_name', this.render, this);
+    },
+
+    template: _.template($("#requester_name_template").html()),
+
+    render: function() {
+      this.$el.html(this.template({ requester_name: this.model.get('requester_name') }));
+      if (this.should_be_focused) {
+        this.$el.find('#requester_name').focus().val('').val(this.model.get('requester_name'));
+      }
+    },
+
     events: {
-      "keyup #requester_name": "set_requester_name"
+      "keyup #requester_name": "set_requester_name",
+      "focus input":              "remember_focus"
     },
 
     set_requester_name: _.debounce(function(event) {
       this.model.set('requester_name', event.target.value);
-    }, 300)
+    }, 300),
+
+    remember_focus: function() {
+      this.should_be_focused = true;
+    }
+
   });
 
   DepartmentSelector = Backbone.View.extend({
@@ -341,7 +362,7 @@ Backbone.history.start({pushState: true})
   });
 
   var requester_name = new RequesterName({
-    el: $("#requester_name_field"),
+    el: $("#requester_name_container"),
     model: query
   });
 
