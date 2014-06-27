@@ -41,6 +41,7 @@ Backbone.history.start({pushState: true})
 
     toggle: function(attribute_name) {
       this.set(attribute_name, !(this.get(attribute_name)));
+      this.model.set({ page_number: 1 })
     },
 
     prev_page: function() {
@@ -208,6 +209,7 @@ Backbone.history.start({pushState: true})
 
     set_search_term: _.debounce(function(event) {
       this.model.set('search_term', event.target.value);
+      this.model.set({ page_number: 1 })
     }, 300),
 
     remember_focus: function() {
@@ -238,6 +240,7 @@ Backbone.history.start({pushState: true})
 
     set_requester_name: _.debounce(function(event) {
       this.model.set('requester_name', event.target.value);
+      this.model.set({ page_number: 1 })
     }, 300),
 
     remember_focus: function() {
@@ -263,6 +266,7 @@ Backbone.history.start({pushState: true})
 
     set_department: function(event) {
       this.model.set('department', event.target.value)
+      this.model.set({ page_number: 1 })
     }
   });
 
@@ -297,15 +301,18 @@ Backbone.history.start({pushState: true})
 
     update_min: function(event) {
       this.model.set(this.min_field, event.target.value);
+      this.model.set({ page_number: 1 })
     },
 
     update_max: function(event) {
       this.model.set(this.max_field, event.target.value);
+      this.model.set({ page_number: 1 })
     },
 
     clear_dates: function() {
       this.model.set(this.min_field, "");
       this.model.set(this.max_field, "");
+      this.model.set({ page_number: 1 })
     }
   });
 
@@ -347,6 +354,7 @@ Backbone.history.start({pushState: true})
       }
 
       this.model.set('sort_column', column_to_sort);
+      this.model.set({ page_number: 1 })
     }
   });
 
