@@ -41,7 +41,7 @@ Backbone.history.start({pushState: true})
 
     toggle: function(attribute_name) {
       this.set(attribute_name, !(this.get(attribute_name)));
-      this.model.set({ page_number: 1 })
+      this.set({ page_number: 1 })
     },
 
     prev_page: function() {
