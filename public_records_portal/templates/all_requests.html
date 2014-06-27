@@ -27,6 +27,7 @@
 {% endblock custom_script_links %}
 
 {% block container %}
+  <input type="hidden" id="user_id" value="{{user_id}}">
   <div class="row-fluid">
     <div class="span11 offset1">
 
@@ -92,7 +93,7 @@
                   <label class="checkbox">
                     <input type="checkbox"
                            id="open" 
-                           <% if (open) { %>
+                           <% if (open == 'true' || open == true) { %>
                              checked
                            <% } %> >
                     <em class="open_style">Open</em>
@@ -100,7 +101,7 @@
                   <label class="checkbox">
                     <input type="checkbox"
                            id="due_soon" 
-                           <% if (due_soon) { %>
+                           <% if (due_soon == 'true' || due_soon == true) { %>
                              checked
                            <% } %> >
                     <em class="duesoon_style">Due Soon</em>
@@ -108,7 +109,7 @@
                   <label class="checkbox">
                     <input type="checkbox"
                            id="overdue" 
-                           <% if (overdue) { %>
+                           <% if (overdue == 'true' || overdue == true) { %>
                              checked
                            <% } %> >
                     <em class="overdue_style">Overdue</em>
@@ -117,7 +118,7 @@
                   <label class="checkbox">
                     <input type="checkbox"
                            id="closed" 
-                           <% if (closed) { %>
+                           <% if (closed == 'true' || closed == true) { %>
                              checked
                            <% } %> >
                     <em class="closed_style">Closed</em>

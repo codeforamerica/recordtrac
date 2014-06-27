@@ -16,27 +16,27 @@ Backbone.history.start({pushState: true})
 
   Query = Backbone.Model.extend({
     defaults: {
-      sort_column: "id",
-      sort_direction: "desc",
-      search_term: "",
-      open: false,
-      due_soon: false,
-      overdue: false,
-      closed: false,
-      mine_as_poc: false,
-      mine_as_helper: false,
-      min_due_date: "",
-      max_due_date: "",
-      min_request_date: "",
-      max_request_date: "",
-      requester_name: "",
-      department: "",
-      // Using an attribute called 'page' makes weird things happen here. JFYI.
-      page_number: 1,
-      bloop: 5,
-      more_results: false,
-      start_index: 0,
-      end_index: 0
+      open:               true,
+      closed:             false,
+      due_soon:           true,
+      overdue:            true,
+      mine_as_poc:        true,
+      mine_as_helper:     true,
+      sort_column:        "id",
+      sort_direction:     "desc",
+      search_term:        "",
+      min_due_date:       "",
+      max_due_date:       "",
+      min_request_date:   "",
+      max_request_date:   "",
+      requester_name:     "",
+      department:         "",
+      page_number:        1,
+      more_results:       false,
+      start_index:        0,
+      end_index:          0,
+      filters:            ['closed', 'sort_column', 'sort_direction', 'min_request_date', 'max_request_date', 'department', 'page_number', 'search_term'],
+      staff_only_filters: ['open', 'due_soon', 'overdue', 'mine_as_poc', 'mine_as_helper', 'min_due_date', 'max_due_date', 'requester_name']
     },
 
     toggle: function(attribute_name) {
@@ -70,10 +70,12 @@ Backbone.history.start({pushState: true})
     initialize: function(models, options) {
       this._query = options.query
       this._query.on("change", this.build, this);
-
+      this._filters = this._query.get('filters')
       var that = this
-      // this wouldn't be needed if we named page and search consistently:
-      this._filters = ['open', 'due_soon', 'overdue', 'closed', 'mine_as_poc', 'mine_as_helper', 'sort_column', 'sort_direction', 'min_due_date', 'max_due_date', 'min_request_date', 'max_request_date', 'requester_name', 'department', 'page_number', 'search_term']
+      if ($('#user_id').val() != 'None') // If user is logged in, initialize staff filters
+      {
+        this._filters = this._filters.concat(this._query.get('staff_only_filters'))
+      }
 
       var filter_query = function(){
         this.url = function(url){
@@ -85,8 +87,12 @@ Backbone.history.start({pushState: true})
         $.each(vars, function(index, variable) {
           var filter = decodeURIComponent(variable.split("=")[0])
           var value = decodeURIComponent(variable.split("=")[1])
-          if (value != 'null' && value != undefined && value != 'undefined') {
+          if (value != 'undefined') {
             that._query.set(filter, value)
+            if (filter == 'search_term')
+            {
+              SearchField.set_search_term
+            }
           }
         })
 
@@ -104,7 +110,8 @@ Backbone.history.start({pushState: true})
 
       $.each(this._filters, function( index, filter ) {
          value = that._query.get(filter)
-          if (value != "" && value != 'undefined' && value != undefined) {
+          if (value != 'undefined') {
+            console.log(filter + value)
                 data_params[filter] = value
                 if (route_url == "")
                 {
