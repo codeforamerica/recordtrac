@@ -89,10 +89,6 @@ Backbone.history.start({pushState: true})
           var value = decodeURIComponent(variable.split("=")[1])
           if (value != 'undefined') {
             that._query.set(filter, value)
-            if (filter == 'search_term')
-            {
-              SearchField.set_search_term
-            }
           }
         })
 
