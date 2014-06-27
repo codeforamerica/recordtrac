@@ -146,16 +146,15 @@
                 </div>
               </div>
             </script>
-
+            <div id="requester_name_container"></div>
+            <script type="text/template" id="requester_name_template">
             {% if user_id %}
-              <div id="requester_name_container"></div>
-              <script type="text/template" id="requester_name_template">
                 <h5>Requester Name</h5>
                 <div class="indent">
                   <input id="requester_name" type="search" placeholder="Enter name" value="<%- requester_name %>">
                 </div>
-              </script>
             {% endif %} 
+            </script>
 
             <div id="department_selector_container"></div>
             <script type="text/template" id="department_selector_template">
