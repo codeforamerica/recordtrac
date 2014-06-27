@@ -190,7 +190,6 @@ Backbone.history.start({pushState: true})
   SearchField = Backbone.View.extend({
     initialize: function() {
       this.render();
-      this.model.on('change:search_term', this.render, this);
     },
 
     template: _.template($("#search_field_template").html()),
@@ -204,7 +203,7 @@ Backbone.history.start({pushState: true})
 
     events: {
       "keyup #search_term": "set_search_term",
-      "focus input":              "remember_focus"
+      "focus input":        "remember_focus"
     },
 
     set_search_term: _.debounce(function(event) {
@@ -221,7 +220,6 @@ Backbone.history.start({pushState: true})
 
     initialize: function() {
       this.render();
-      this.model.on('change:requester_name', this.render, this);
     },
 
     template: _.template($("#requester_name_template").html()),
