@@ -111,7 +111,6 @@ Backbone.history.start({pushState: true})
       $.each(this._filters, function( index, filter ) {
          value = that._query.get(filter)
           if (value != 'undefined') {
-            console.log(filter + value)
                 data_params[filter] = value
                 if (route_url == "")
                 {
