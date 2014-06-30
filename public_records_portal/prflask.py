@@ -190,7 +190,7 @@ routing = {
 	    'methods': ['GET']
 	},
 	'to_csv': {
-		'url': '/to_csv'
+		'url': '/export'
 	},
 	'staff_to_json': {
 		'url': '/api/staff'

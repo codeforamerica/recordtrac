@@ -16,31 +16,32 @@ Backbone.history.start({pushState: true})
 
   Query = Backbone.Model.extend({
     defaults: {
-      sort_column: "id",
-      sort_direction: "desc",
-      search_term: "",
-      open: false,
-      due_soon: false,
-      overdue: false,
-      closed: false,
-      mine_as_poc: false,
-      mine_as_helper: false,
-      min_due_date: "",
-      max_due_date: "",
-      min_request_date: "",
-      max_request_date: "",
-      requester_name: "",
-      department: "",
-      // Using an attribute called 'page' makes weird things happen here. JFYI.
-      page_number: 1,
-      bloop: 5,
-      more_results: false,
-      start_index: 0,
-      end_index: 0
+      open:               true,
+      closed:             false,
+      due_soon:           true,
+      overdue:            true,
+      mine_as_poc:        true,
+      mine_as_helper:     true,
+      sort_column:        "id",
+      sort_direction:     "desc",
+      search_term:        "",
+      min_due_date:       "",
+      max_due_date:       "",
+      min_request_date:   "",
+      max_request_date:   "",
+      requester_name:     "",
+      department:         "",
+      page_number:        1,
+      more_results:       false,
+      start_index:        0,
+      end_index:          0,
+      filters:            ['closed', 'sort_column', 'sort_direction', 'min_request_date', 'max_request_date', 'department', 'page_number', 'search_term'],
+      staff_only_filters: ['open', 'due_soon', 'overdue', 'mine_as_poc', 'mine_as_helper', 'min_due_date', 'max_due_date', 'requester_name']
     },
 
     toggle: function(attribute_name) {
       this.set(attribute_name, !(this.get(attribute_name)));
+      this.set({ page_number: 1 })
     },
 
     prev_page: function() {
@@ -70,10 +71,12 @@ Backbone.history.start({pushState: true})
     initialize: function(models, options) {
       this._query = options.query
       this._query.on("change", this.build, this);
-
+      this._filters = this._query.get('filters')
       var that = this
-      // this wouldn't be needed if we named page and search consistently:
-      this._filters = ['open', 'due_soon', 'overdue', 'closed', 'mine_as_poc', 'mine_as_helper', 'sort_column', 'sort_direction', 'min_due_date', 'max_due_date', 'min_request_date', 'max_request_date', 'requester_name', 'department', 'page_number', 'search_term']
+      if ($('#user_id').val() != 'None') // If user is logged in, initialize staff filters
+      {
+        this._filters = this._filters.concat(this._query.get('staff_only_filters'))
+      }
 
       var filter_query = function(){
         this.url = function(url){
@@ -85,7 +88,7 @@ Backbone.history.start({pushState: true})
         $.each(vars, function(index, variable) {
           var filter = decodeURIComponent(variable.split("=")[0])
           var value = decodeURIComponent(variable.split("=")[1])
-          if (value != 'null' && value != undefined && value != 'undefined') {
+          if (value != 'undefined') {
             that._query.set(filter, value)
           }
         })
@@ -104,7 +107,7 @@ Backbone.history.start({pushState: true})
 
       $.each(this._filters, function( index, filter ) {
          value = that._query.get(filter)
-          if (value != "" && value != 'undefined' && value != undefined) {
+          if (value != 'undefined') {
                 data_params[filter] = value
                 if (route_url == "")
                 {
@@ -185,23 +188,63 @@ Backbone.history.start({pushState: true})
   });
 
   SearchField = Backbone.View.extend({
+    initialize: function() {
+      this.render();
+    },
+
+    template: _.template($("#search_field_template").html()),
+
+    render: function() {
+      this.$el.html(this.template({ search_term: this.model.get('search_term') }));
+      if (this.should_be_focused) {
+        this.$el.find('#search').focus().val('').val(this.model.get('search_term'));
+      }
+    },
+
     events: {
-      "keyup #search": "set_search_term"
+      "keyup #search_term": "set_search_term",
+      "focus input":        "remember_focus"
     },
 
     set_search_term: _.debounce(function(event) {
       this.model.set('search_term', event.target.value);
-    }, 300)
+      this.model.set({ page_number: 1 })
+    }, 300),
+
+    remember_focus: function() {
+      this.should_be_focused = true;
+    }
   });
 
   RequesterName = Backbone.View.extend({
+
+    initialize: function() {
+      this.render();
+    },
+
+    template: _.template($("#requester_name_template").html()),
+
+    render: function() {
+      this.$el.html(this.template({ requester_name: this.model.get('requester_name') }));
+      if (this.should_be_focused) {
+        this.$el.find('#requester_name').focus().val('').val(this.model.get('requester_name'));
+      }
+    },
+
     events: {
-      "keyup input[type=search]": "set_requester_name"
+      "keyup #requester_name": "set_requester_name",
+      "focus input":              "remember_focus"
     },
 
     set_requester_name: _.debounce(function(event) {
       this.model.set('requester_name', event.target.value);
-    }, 300)
+      this.model.set({ page_number: 1 })
+    }, 300),
+
+    remember_focus: function() {
+      this.should_be_focused = true;
+    }
+
   });
 
   DepartmentSelector = Backbone.View.extend({
@@ -221,6 +264,7 @@ Backbone.history.start({pushState: true})
 
     set_department: function(event) {
       this.model.set('department', event.target.value)
+      this.model.set({ page_number: 1 })
     }
   });
 
@@ -255,15 +299,18 @@ Backbone.history.start({pushState: true})
 
     update_min: function(event) {
       this.model.set(this.min_field, event.target.value);
+      this.model.set({ page_number: 1 })
     },
 
     update_max: function(event) {
       this.model.set(this.max_field, event.target.value);
+      this.model.set({ page_number: 1 })
     },
 
     clear_dates: function() {
       this.model.set(this.min_field, "");
       this.model.set(this.max_field, "");
+      this.model.set({ page_number: 1 })
     }
   });
 
@@ -305,6 +352,7 @@ Backbone.history.start({pushState: true})
       }
 
       this.model.set('sort_column', column_to_sort);
+      this.model.set({ page_number: 1 })
     }
   });
 
@@ -317,12 +365,12 @@ Backbone.history.start({pushState: true})
   });
 
   var search_field = new SearchField({
-    el: $("#search_field"),
+    el: $("#search_field_container"),
     model: query
   });
 
   var requester_name = new RequesterName({
-    el: $("#requester_name"),
+    el: $("#requester_name_container"),
     model: query
   });
 
