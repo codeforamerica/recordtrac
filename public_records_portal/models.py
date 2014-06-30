@@ -4,6 +4,7 @@ from flask.ext.login import current_user
 from sqlalchemy import Table, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
+from sqlalchemy import and_, or_
 
 from datetime import datetime, timedelta
 from public_records_portal import db, app
@@ -43,6 +44,10 @@ class User(db.Model):
 	def get_alias(self):
 		if self.alias and self.alias != "":
 			return self.alias
+		return "N/A"
+	def get_phone(self):
+		if self.phone and self.phone != "":
+			return self.phone
 		return "N/A"
 	def __init__(self, email=None, alias = None, phone=None, department = None, password=None):
 		self.email = email
@@ -115,13 +120,8 @@ class Request(db.Model):
 		self.creator_id = creator_id
 		self.department = department
 		self.offline_submission_type = offline_submission_type
-		if date_received:
-			if type(date_received) is datetime:
+		if date_received and type(date_received) is datetime:
 				self.date_received = date_received
-			else: # If an incoming string, this is from the jQuery datepicker
-				date_received = datetime.strptime(date_received, '%m/%d/%Y') 
-				date_received = date_received + timedelta(hours = 7) # This is somewhat of a hack, but we need to get this back in UTC (+7 hours offset from Pacific Time) time but still treat it as a 'naive' datetime object
-				self.date_received = date_received 
 
 	def __repr__(self):
 		return '<Request %r>' % self.text
@@ -143,6 +143,12 @@ class Request(db.Model):
 			if o.is_point_person:
 				return o
 		return None
+	def all_owners(self):
+		all_owners = []
+		for o in self.owners:
+			all_owners.append(o.user.get_alias())
+		return all_owners
+		
 	def requester(self):
 		if self.subscribers:
 			return self.subscribers[0] or None # The first subscriber is always the requester
@@ -152,6 +158,12 @@ class Request(db.Model):
 		requester = self.requester()
 		if requester and requester.user:
 			return requester.user.get_alias()
+		return "N/A"
+
+	def requester_phone(self):
+		requester = self.requester()
+		if requester and requester.user:
+			return requester.user.get_phone()
 		return "N/A"
 	def point_person_name(self):
 		point_person = self.point_person()
@@ -179,6 +191,31 @@ class Request(db.Model):
 					elif (datetime.now() + timedelta(days = 2)) >= self.due_date:
 						return "due soon"
 		return "open"
+
+        @hybrid_property
+        def open(self):
+                two_days = datetime.now() + timedelta(days = 2)
+                return and_(~self.closed, self.due_date > two_days)
+
+        @hybrid_property
+        def due_soon(self):
+                two_days = datetime.now() + timedelta(days = 2)
+                return and_(self.due_date < two_days, self.due_date > datetime.now(), ~self.closed)
+     
+        @hybrid_property
+        def overdue(self):
+                return and_(self.due_date < datetime.now(), ~self.closed)
+        
+        @hybrid_property
+        def closed(self):
+                return Request.status.ilike("%closed%")
+
+        # TODO(cj@postcode.io): This needs to get reviewed.
+        @hybrid_property
+        def my_requests(self):
+                return filter(Request.id == Owner.request_id) \
+                        .filter(Owner.user_id == user_id) \
+                        .filter(Owner.active == True)
 
 ### @export "QA"
 class QA(db.Model):
@@ -234,7 +271,7 @@ class Subscriber(db.Model):
 	user = relationship("User", uselist = False)
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
 	date_created = db.Column(db.DateTime)
-	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id')) # Not null if responsible for fulfilling a part of the request
+	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id')) # Not null if responsible for fulfilling a part of the request. UPDATE 6-11-2014: This isn't used. we should get rid of it.
  	def __init__(self, request_id, user_id, creator = False):
  		self.user_id = user_id
 		self.request_id = request_id
@@ -276,7 +313,7 @@ class Note(db.Model):
 	date_created = db.Column(db.DateTime)
 	text = db.Column(db.String())
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id')) # The request it belongs to.
-	user_id = db.Column(db.Integer, db.ForeignKey('user.id')) # The user who wrote the note. Right now only city staff can.
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id')) # The user who wrote the note. Right now only stored for city staff - otherwise it's an anonymous/ 'requester' note.
 	def __init__(self, request_id, text, user_id):
 		self.text = text
 		self.request_id = request_id

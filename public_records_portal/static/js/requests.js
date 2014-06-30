@@ -1,120 +1,127 @@
+(function(){
+
+window.App = {
+};
+
+App.Router = Backbone.Router.extend({
+});
+Router = new App.Router;
+Backbone.history.start({pushState: true})
+
+})();
+
+
 // Manage the display of the record request table.
 (function($) {
 
   Query = Backbone.Model.extend({
-
-    defaults:
-    {
-      search_term: "",
-      page_number: 1,
-      // Using an attribute called 'page' makes weird things happen here. JFYI.
-      is_closed: true,
-      my_requests: false,
-      department: "",
-      more_results: false,
-      start_index: 0,
-      end_index: 0,
-      status: ""
+    defaults: {
+      open:               true,
+      closed:             false,
+      due_soon:           true,
+      overdue:            true,
+      mine_as_poc:        true,
+      mine_as_helper:     true,
+      sort_column:        "id",
+      sort_direction:     "desc",
+      search_term:        "",
+      min_due_date:       "",
+      max_due_date:       "",
+      min_request_date:   "",
+      max_request_date:   "",
+      requester_name:     "",
+      department:         "",
+      page_number:        1,
+      more_results:       false,
+      start_index:        0,
+      end_index:          0,
+      filters:            ['closed', 'sort_column', 'sort_direction', 'min_request_date', 'max_request_date', 'department', 'page_number', 'search_term'],
+      staff_only_filters: ['open', 'due_soon', 'overdue', 'mine_as_poc', 'mine_as_helper', 'min_due_date', 'max_due_date', 'requester_name']
     },
 
-    prev_page: function ()
-    {
-      if (this.get("page_number") > 1) {
-      this.set({ page_number: this.get("page_number") - 1 })
-      }
-    },
-
-    next_page: function ()
-    {
-      this.set({ page_number: this.get("page_number") + 1 })
-    },
-
-    toggle_sort_order: function()
-    {
-      this.set({sort_by_ascending: !this.get("sort_by_ascending")})
-    },
-    set_icon: function(attribute)
-    {
-     if (this.get("sort_by_ascending") == true)
-      {
-        this.set(attribute, "icon icon-sort-up")
-      } 
-      else
-      {
-        this.set(attribute, "icon icon-sort-down")
-      }
-    },
-    reset_sort: function(attribute)
-    {
-      var attributes=["id", "text", "due_date", "date_created"];
-      for (var i in attributes)
-      {
-        if (attributes[i] != attribute)
-        {
-          this.set(attributes[i], "icon icon-sort")
-        }
-      }
-    },
-    set_sort: function(attribute)
-    {
-      this.reset_sort(attribute)
-      if (this.get("sort_by_attribute") == attribute) 
-      {
-         this.toggle_sort_order()
-      }
-      else 
-      {
-          this.set({sort_by_attribute: attribute})
-          this.set({sort_by_ascending: false})
-      }
-      this.set_icon(attribute)
+    toggle: function(attribute_name) {
+      this.set(attribute_name, !(this.get(attribute_name)));
       this.set({ page_number: 1 })
+    },
+
+    prev_page: function() {
+      if (this.get("page_number") > 1) {
+        this.set({ page_number: parseInt(this.get("page_number")) - 1 })
+      }
+    },
+
+    next_page: function() {
+      this.set({ page_number: parseInt(this.get("page_number")) + 1 })
+    },
+
+    switch_sort_direction: function() {
+      if (this.get('sort_direction') === 'desc') {
+        this.set('sort_direction', 'asc');
+      } else {
+        this.set('sort_direction', 'desc');
+      }
     }
   })
 
   Request = Backbone.Model.extend({})
 
   RequestSet = Backbone.Collection.extend({
-
     model: Request,
 
-    initialize: function( models, options )
-    {
+    initialize: function(models, options) {
       this._query = options.query
+      this._query.on("change", this.build, this);
+      this._filters = this._query.get('filters')
+      var that = this
+      if ($('#user_id').val() != 'None') // If user is logged in, initialize staff filters
+      {
+        this._filters = this._filters.concat(this._query.get('staff_only_filters'))
+      }
+
+      var filter_query = function(){
+        this.url = function(url){
+          return decodeURI(url)
+        }
+      }
+      var filter_query = new filter_query
+       var vars = filter_query.url(window.location.search.substring(1)).split('&')
+        $.each(vars, function(index, variable) {
+          var filter = decodeURIComponent(variable.split("=")[0])
+          var value = decodeURIComponent(variable.split("=")[1])
+          if (value != 'undefined') {
+            that._query.set(filter, value)
+          }
+        })
+
       this._query.on( "change", this.build, this )
     },
 
-    url: function ()
-    {
+    url: function() {
       return "/custom/request"
     },
-    build: function ()
-    {
 
-      var data_params = {
-        "page": this._query.get("page_number"),
-        "is_closed": this._query.get("is_closed"),
-        "requester_name": this._query.get("requester_name"),
-        "my_requests": this._query.get("my_requests"),
-        "ascending": this._query.get("sort_by_ascending"),
-        "sort_by": this._query.get("sort_by_attribute")
-      }
+    build: function() {
+      var route_url = ""
+      var that = this
+      var data_params = {}
 
-      var search_term = this._query.get("search_term")
-      if ( search_term !== "" )
-      {
-        data_params["search"] = search_term
-      }
-      var department = this._query.get("department")
-      if ( department != "")
-      {
-        data_params["department"] = department
-      }
-      var status = this._query.get("status")
-      if ( status != "")
-      {
-        data_params["status"] = status
-      }
+      $.each(this._filters, function( index, filter ) {
+         value = that._query.get(filter)
+          if (value != 'undefined') {
+                data_params[filter] = value
+                if (route_url == "")
+                {
+                  route_url += "requests?"
+                }
+                else
+                {
+                  route_url += "&"
+                }
+                route_url = route_url + encodeURIComponent(filter) + "=" + encodeURIComponent(value)
+          }
+      });
+
+      Router.navigate(route_url)
 
       this.fetch({
         data: data_params,
@@ -123,190 +130,277 @@
       });
     },
 
-    parse: function ( response )
-    {
+    parse: function(response) {
       this._query.set({
         "more_results": response.more_results,
-        "start_index": response.start_index,
-        "end_index": response.end_index,
-        "page": response.page,
-        "num_results": response.num_results
+        "start_index":  response.start_index,
+        "end_index":    response.end_index,
+        "num_results":  response.num_results
       })
       return response.objects
     }
-
   })
 
   // Smaller filter query control box that sits off to the side.
   FilterBox = Backbone.View.extend({
-
-    initialize: function ()
-    {
-      this.render()
+    initialize: function() {
+      this.render();
+      this.model.on('change', this.render, this);
     },
 
-    render: function ()
-    {
-      var vars = {
-        "is_closed": this.model.get( "is_closed" ),
-        "requester_name": this.model.get("requester_name"),
-        "my_requests": this.model.get("my_requests"),
-        "department": this.model.get("department"),
-        "status": this.model.get("status"),
-        "page_number": this.model.get("page_number"),
-        "num_results": this.model.get("num_results")
-      }
-      var template = _.template( $("#sidebar_template").html(), vars );
-      this.$el.html( template );
+    render: function() {
+      var template = _.template($("#sidebar_template").html(), this.model.attributes);
+      this.$el.html(template);
     },
 
-    events:
-    {
-      "click #is_closed": "toggle_show_closed",
-      "keyup #requester_name": "set_requester_name",
-      "click #my_requests": "toggle_my_requests",
-      "change #department_name": "set_department",
-      "change #request_status": "set_status"
+    events: {
+      "click #mine_as_poc":    "toggle_mine_as_poc",
+      "click #mine_as_helper": "toggle_mine_as_helper",
+      "click #open":           "toggle_open",
+      "click #due_soon":       "toggle_due_soon",
+      "click #overdue":        "toggle_overdue",
+      "click #closed":         "toggle_closed"
     },
 
-    toggle_show_closed: function ( event )
-    {
-      this.model.set( {
-        "is_closed": !( this.model.get( "is_closed" ) )
-      } )
-      this.model.set({ page_number: 1 })
-    },
-    toggle_my_requests: function ( event )
-    {
-      this.model.set( {
-        "my_requests": !( this.model.get( "my_requests" ) )
-      } )
-      this.model.set({ page_number: 1 })
-    },
-    set_department: function (event)
-    {
-      this.model.set("department", event.target.value)
-      this.model.set({ page_number: 1 })
-    },
-    set_status: function (event)
-    {
-      this.model.set("status", event.target.value)
-      this.model.set({ page_number: 1 })
-    },
-    set_requester_name: _.debounce(function (event)
-    {
-      this.model.set("requester_name", event.target.value)
-      this.model.set({ page_number: 1 })
-    }, 500)    
-
-  });
-
-
-  SearchResults = Backbone.View.extend({
-
-    initialize: function ()
-    {
-      this.model.reset_sort("")
-      this.collection.on( "sync", this.render, this )
+    toggle_mine_as_poc: function() {
+      this.model.toggle('mine_as_poc');
     },
 
-    render: function (event_name)
-    {
-      var vars = { 
-        requests: this.collection.toJSON(),
-        "page_number": this.model.get("page_number"),
-        "num_results": this.model.get("num_results"),
-        "more_results": this.model.get("more_results"),
-        "start_index": this.model.get("start_index"),
-        "end_index": this.model.get("end_index"),
-        "id_icon": this.model.get("id"),
-        "text_icon": this.model.get("text"),
-        "received_icon": this.model.get("date_created"),
-        "due_icon": this.model.get("due_date")
-      }
-
-      var data = _.extend(vars, this.model.get_icon);
-      var template = _.template( $("#search_results_template").html(), data )
-      this.$el.html( template )
-
+    toggle_mine_as_helper: function() {
+      this.model.toggle('mine_as_helper');
     },
 
-    events:
-    {
-      "click .pagination .prev": "prev",
-      "click .pagination .next": "next",
-      "click #headings th.sortable": "sort"
+    toggle_open: function() {
+      this.model.toggle("open");
     },
 
-    prev: function ()
-    {
-      this.model.prev_page()
+    toggle_due_soon: function() {
+      this.model.toggle("due_soon");
     },
 
-    next: function ()
-    {
-      this.model.next_page()
+    toggle_overdue: function() {
+      this.model.toggle("overdue");
     },
-    sort: function(event)
-    { 
-      var sort_attribute = event.target.id
-      if (sort_attribute == "")  
-      {
-        sort_attribute = event.target.parentNode.id
-      }
-      this.model.set_sort(sort_attribute)
+
+    toggle_closed: function() {
+      this.model.toggle('closed');
     }
   });
 
   SearchField = Backbone.View.extend({
-
-    initialize: function ()
-    {
-      this.render()
+    initialize: function() {
+      this.render();
     },
 
-    render: function ()
-    {
-      var template = _.template( 
-        $("#search_field_template").html(), 
-          { current_query: this.model.get("search_term") 
-          }
-        )
+    template: _.template($("#search_field_template").html()),
 
-      this.$el.html( template )
+    render: function() {
+      this.$el.html(this.template({ search_term: this.model.get('search_term') }));
+      if (this.should_be_focused) {
+        this.$el.find('#search').focus().val('').val(this.model.get('search_term'));
+      }
     },
 
-    events:
-    {
-      "keyup #search input": "set_search_term"
+    events: {
+      "keyup #search_term": "set_search_term",
+      "focus input":        "remember_focus"
     },
 
-    set_search_term: _.debounce(function ( event )
-    {
-      this.model.set( "search_term", event.target.value )
+    set_search_term: _.debounce(function(event) {
+      this.model.set('search_term', event.target.value);
       this.model.set({ page_number: 1 })
-    }, 300)
+    }, 300),
+
+    remember_focus: function() {
+      this.should_be_focused = true;
+    }
+  });
+
+  RequesterName = Backbone.View.extend({
+
+    initialize: function() {
+      this.render();
+    },
+
+    template: _.template($("#requester_name_template").html()),
+
+    render: function() {
+      this.$el.html(this.template({ requester_name: this.model.get('requester_name') }));
+      if (this.should_be_focused) {
+        this.$el.find('#requester_name').focus().val('').val(this.model.get('requester_name'));
+      }
+    },
+
+    events: {
+      "keyup #requester_name": "set_requester_name",
+      "focus input":              "remember_focus"
+    },
+
+    set_requester_name: _.debounce(function(event) {
+      this.model.set('requester_name', event.target.value);
+      this.model.set({ page_number: 1 })
+    }, 300),
+
+    remember_focus: function() {
+      this.should_be_focused = true;
+    }
 
   });
- 
 
+  DepartmentSelector = Backbone.View.extend({
+    initialize: function() {
+      this.render();
+      this.model.on('change:department', this.render, this);
+    },
+
+    render: function() {
+      var template = _.template($("#department_selector_template").html(), this.model.attributes);
+      this.$el.html(template);
+    },
+
+    events: {
+      "change select": "set_department"
+    },
+
+    set_department: function(event) {
+      this.model.set('department', event.target.value)
+      this.model.set({ page_number: 1 })
+    }
+  });
+
+  var DateFilter = Backbone.View.extend({
+    initialize: function(options) {
+      this.title = options.title;
+      this.min_field = options.min_field;
+      this.max_field = options.max_field;
+      this.render();
+      this.model.on('change', this.render, this);
+    },
+
+    template: _.template($('#date_filter_template').html()),
+
+    render: function() {
+      var for_template = {
+        title: this.title,
+        min_value: this.model.get(this.min_field),
+        max_value: this.model.get(this.max_field)
+      }
+
+      this.$el.html(this.template(for_template));
+      this.$el.find('.min_field').datepicker();
+      this.$el.find('.max_field').datepicker();
+    },
+
+    events: {
+      'change .min_field': 'update_min',
+      'change .max_field': 'update_max',
+      'click .all_dates': 'clear_dates'
+    },
+
+    update_min: function(event) {
+      this.model.set(this.min_field, event.target.value);
+      this.model.set({ page_number: 1 })
+    },
+
+    update_max: function(event) {
+      this.model.set(this.max_field, event.target.value);
+      this.model.set({ page_number: 1 })
+    },
+
+    clear_dates: function() {
+      this.model.set(this.min_field, "");
+      this.model.set(this.max_field, "");
+      this.model.set({ page_number: 1 })
+    }
+  });
+
+  SearchResults = Backbone.View.extend({
+    initialize: function() {
+      this.collection.on("sync", this.render, this);
+    },
+
+    template: _.template($("#search_results_template").html()),
+
+    render: function() {
+      this.$el.html(this.template(_.extend({ 'requests': this.collection.toJSON() }, this.model.attributes)));
+      this.$el.find('#' + this.model.attributes.sort_column).addClass(this.model.attributes.sort_direction);
+    },
+
+    events: {
+      "click .pagination .prev": "prev",
+      "click .pagination .next": "next",
+      "click th.sortable": "sort"
+    },
+
+    prev: function() {
+      this.model.prev_page();
+    },
+
+    next: function() {
+      this.model.next_page();
+    },
+
+    sort: function(event) {
+      var column_to_sort = event.target.id;
+
+      if (column_to_sort === this.model.get('sort_column')) {
+        // If there's a click on the current column, flip the sort direction.
+        this.model.switch_sort_direction();
+      } else {
+        // Otherwise we should default to a descending sort.
+        this.model.set('sort_direction', 'desc');
+      }
+
+      this.model.set('sort_column', column_to_sort);
+      this.model.set({ page_number: 1 })
+    }
+  });
 
   var query = new Query();
   var request_set = new RequestSet([], { query: query });
+
   var filter_box = new FilterBox({
     el: $("#sidebar_container"),
     model: query
   });
+
   var search_field = new SearchField({
     el: $("#search_field_container"),
     model: query
   });
+
+  var requester_name = new RequesterName({
+    el: $("#requester_name_container"),
+    model: query
+  });
+
+  var department_selector = new DepartmentSelector({
+    el: $("#department_selector_container"),
+    model: query
+  });
+
+  var request_date = new DateFilter({
+    el: $("#request_date_container"),
+    model: query,
+    min_field: 'min_request_date',
+    max_field: 'max_request_date',
+    title: 'Request Date'
+  });
+
+  var due_date = new DateFilter({
+    el: $("#due_date_container"),
+    model: query,
+    min_field: 'min_due_date',
+    max_field: 'max_due_date',
+    title: 'Due Date'
+  });
+
   var search_results = new SearchResults({
     el: $("#search_results_container"),
     model: query,
     collection: request_set
   })
 
-  query.set({ "page": 1 })
+  request_set.fetch();
 
 })(jQuery);
