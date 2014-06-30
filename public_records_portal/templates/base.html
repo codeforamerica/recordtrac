@@ -150,20 +150,22 @@
       </div>
     {% endblock footer %}
 
-    {% block feedback %}
-    <!-- gforms feedback tab -->
-        <h5 class="text-center hidden-phone" ><a id="floating_link" href="#feedbackModal" data-toggle="modal" class="bootstro" data-bootstro-title="Feedback" data-bootstro-content="{{"Feedback" | tutorial }}" data-bootstro-step="9" data-bootstro-placement="right" data-bootstro-width="50%"> Feedback</a></h5>
-       
-      <!-- Modal for feedback -->
-      <div id="feedbackModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel" aria-hidden="true">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    {% if 'GOOGLE_FEEDBACK_FORM_ID' in config %}
+      {% block feedback %}
+      <!-- gforms feedback tab -->
+          <h5 class="text-center hidden-phone" ><a id="floating_link" href="#feedbackModal" data-toggle="modal" class="bootstro" data-bootstro-title="Feedback" data-bootstro-content="{{"Feedback" | tutorial }}" data-bootstro-step="9" data-bootstro-placement="right" data-bootstro-width="50%"> Feedback</a></h5>
+         
+        <!-- Modal for feedback -->
+        <div id="feedbackModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+          <div class="modal-body">
+            <iframe title="feedback_form" src="https://docs.google.com/forms/d/{{config['GOOGLE_FEEDBACK_FORM_ID']}}/viewform?embedded=true" width="500" height="390" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+          </div>
         </div>
-        <div class="modal-body">
-          <iframe title="feedback_form" src="https://docs.google.com/forms/d/1UYbs_Rk9eeK4OAKFpfSQnxPBTQ8DcG7iO6RnIiB6Qaw/viewform?embedded=true" width="500" height="390" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
-        </div>
-      </div>
-    {% endblock feedback %}
+      {% endblock feedback %}
+    {% endif %}
 
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.10.1.min.js') }}"></script> 
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.validate.js') }}"></script>

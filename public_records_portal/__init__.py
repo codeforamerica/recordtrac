@@ -60,7 +60,7 @@ set_env(key = 'DAYS_AFTER_EXTENSION', default = '14')
 # No defaults should be set for this.  Used for local e-mail testing.
 set_env(key = 'DEV_EMAIL')
 
-
+set_env(key = 'GOOGLE_FEEDBACK_FORM_ID')
 
 # Initialize database
 db = SQLAlchemy(app)
