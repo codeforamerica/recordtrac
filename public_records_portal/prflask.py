@@ -5,10 +5,9 @@ from flask.ext.admin import Admin, expose, BaseView, AdminIndexView
 from flask.ext.admin.contrib.sqlamodel import ModelView
 
 
-
-
 # Create API
 manager = APIManager(app, flask_sqlalchemy_db=db)
+
 
 # The endpoints created are /api/object, e.g. publicrecordsareawesome.com/api/request/
 manager.create_api(models.Request, methods=['GET'], results_per_page = 10, allow_functions = True)
