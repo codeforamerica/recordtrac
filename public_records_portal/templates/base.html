@@ -42,7 +42,7 @@
   </script>
   <!-- auth_script requires jquery and Mozilla's 'include.js' shim -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.10.1.min.js') }}"></script> 
-  <script type="text/javascript" src="{{ url_for('static', filename='js/include.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/include.js') }}"></script>
   <script type="text/javascript">{{ auth_script|safe }}</script>
 
   </head>
