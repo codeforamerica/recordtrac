@@ -207,6 +207,38 @@ def create_answer(qa_id, subscriber_id, answer):
 	db.session.commit()
 	return qa.request_id
 
+# Following three functions are for integration with Mozilla Persona
+
+### @export "get_user"
+def get_user(kwargs):
+    u = User.query.filter(db.or_(
+        User.id == kwargs.get('id'),
+        User.email == kwargs.get('email')
+    )).first()
+    if u is None: # user didn't exist in db
+        return create_browserid_user(kwargs)
+    return u
+
+### @export "get_user_by_id"
+def get_user_by_id(id):
+    return User.query.get(id)
+
+### @export "create_browserid_user"
+def create_browserid_user(kwargs):
+    """
+    Takes browserid response and creates a user.
+    """
+    if kwargs['status'] == 'okay':
+    	email = kwargs['email']
+    	# Check if email is in csv
+    	if email.endswith('@codeforamerica.org'):
+	        user = User(email) # Plus fields from csv
+	        db.session.add(user)
+	        db.session.commit()
+	        return user
+    return None
+
+
 ### @export "create_or_return_user"
 def create_or_return_user(email=None, alias = None, phone = None, department = None, not_id = False):
 	app.logger.info("\n\nCreating or returning user...")
