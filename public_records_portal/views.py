@@ -3,11 +3,13 @@
 
 from flask import render_template, request, redirect, url_for, jsonify
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
+from flaskext.browserid import BrowserID
 from public_records_portal import app
 from filters import *
 from prr import add_resource, update_resource, make_request, close_request
 from db_helpers import *
-import departments
+from db_helpers import get_user_by_id # finds a user by their id
+from db_helpers import get_user # finds a user based on BrowserID response
 import os, json
 from urlparse import urlparse, urljoin
 from notifications import send_prr_email, format_date
@@ -21,16 +23,17 @@ from flask import jsonify, request, Response
 import anyjson
 import helpers
 import csv_export
-import csv
 from datetime import datetime, timedelta
 
 # Initialize login
+
 login_manager = LoginManager()
+login_manager.user_loader(get_user_by_id)
 login_manager.init_app(app)
 
-# Initialize cache
-cache = Cache()
-cache.init_app(app, config={'CACHE_TYPE': 'simple'})
+browser_id = BrowserID()
+browser_id.user_loader(get_user)
+browser_id.init_app(app)
 
 # Set flags:
 
@@ -409,15 +412,6 @@ def fetch_requests():
 		}
 	response = anyjson.serialize(matches)
 	return Response(response, mimetype = "application/json")
-
-@login_manager.unauthorized_handler
-def unauthorized():
-	return render_template('alpha.html')
-
-@login_manager.user_loader
-def load_user(userid):
-	user =get_obj("User", userid)
-	return user
 
 def any_page(page):
 	try:
