@@ -65,11 +65,12 @@ def new_request(passed_recaptcha = False, data = None):
 			offline_submission_type = data['format_received']
 		if 'date_received' in data: # From the jQuery datepicker
 			date_received = data['date_received']
-			try:
-				date_received = datetime.strptime(date_received, '%m/%d/%Y') 
-				date_received = date_received + timedelta(hours = 7) # This is somewhat of a hack, but we need to get this back in UTC (+7 hours offset from Pacific Time) time but still treat it as a 'naive' datetime object
-			except ValueError:
-				return render_template('error.html', message = "Please use the datepicker to select a date.")
+			if date_received != "":
+				try:
+					date_received = datetime.strptime(date_received, '%m/%d/%Y') 
+					date_received = date_received + timedelta(hours = 7) # This is somewhat of a hack, but we need to get this back in UTC (+7 hours offset from Pacific Time) time but still treat it as a 'naive' datetime object
+				except ValueError:
+					return render_template('error.html', message = "Please use the datepicker to select a date.")
 		app.logger.info("\n\n Date received: %s" % date_received)
 		request_id, is_new = make_request(text = request_text, email = email, user_id = user_id, alias = alias, phone = phone, passed_recaptcha = passed_recaptcha, department = data['request_department'], offline_submission_type = offline_submission_type, date_received = date_received)
 		if is_new:
