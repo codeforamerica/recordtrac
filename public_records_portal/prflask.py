@@ -11,7 +11,6 @@ manager = APIManager(app, flask_sqlalchemy_db=db)
 
 # The endpoints created are /api/object, e.g. publicrecordsareawesome.com/api/request/
 manager.create_api(models.Request, methods=['GET'], results_per_page = 10, allow_functions = True)
-# manager.create_api(models.Department, methods=['GET'], results_per_page = 10, allow_functions = True)
 # manager.create_api(models.Owner, methods=['GET'], results_per_page = 10, allow_functions = True)
 manager.create_api(models.Note, methods=['GET'], results_per_page = 10, allow_functions = True)
 manager.create_api(models.Record, methods=['GET'], results_per_page = 10, allow_functions = True)
@@ -70,7 +69,7 @@ class NoteView(AdminView):
 class UserView(AdminView):
 	can_create = True
 	can_edit = True
-	column_list = ('id', 'contact_for', 'backup_for', 'alias', 'email', 'department')
+	column_list = ('id', 'contact_for', 'backup_for', 'alias', 'email', 'department', 'is_staff')
 	column_searchable_list = ('contact_for', 'alias', 'email')
 	form_excluded_columns = ('date_created', 'password')
 
@@ -193,6 +192,9 @@ routing = {
 	},
 	'staff_to_json': {
 		'url': '/api/staff'
+	},
+	'departments_to_json': {
+		'url': '/api/departments'
 	}
 }
 
