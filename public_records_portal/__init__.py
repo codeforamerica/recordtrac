@@ -38,18 +38,18 @@ set_env(key='SENDGRID_MONTHLY_LIMIT', default='') # Your SendGrid Monthly Limit
 # User login default, password can be used with any e-mail address:
 set_env(key = 'ADMIN_PASSWORD', default = 'admin')
 # Define who has admin access (/admin) with a comma delimited list of e-mail addresses:
-set_env(key = 'LIST_OF_ADMINS', default = '')
+set_env(key = 'LIST_OF_ADMINS')
 # Flask app secret key:
-set_env(key = 'SECRET_KEY', default = '')
+set_env(key = 'SECRET_KEY')
 # For Scribd uploads:
-set_env(key = 'SCRIBD_API_KEY', default = '')
-set_env(key = 'SCRIBD_API_SECRET', default = '')
+set_env(key = 'SCRIBD_API_KEY')
+set_env(key = 'SCRIBD_API_SECRET')
 set_env(key = 'HOST_URL', default = 'https://www.scribd.com/doc/')
 # For spam filtering:
-set_env(key = 'AKISMET_KEY', default = '')
+set_env(key = 'AKISMET_KEY')
 # For CAPTCHA:
-set_env(key = 'RECAPTCHA_PUBLIC_KEY', default = "")
-set_env(key = 'RECAPTCHA_PRIVATE_KEY', default = "")
+set_env(key = 'RECAPTCHA_PUBLIC_KEY')
+set_env(key = 'RECAPTCHA_PRIVATE_KEY')
 # The name of your agency, e.g. City of Oakland:
 set_env(key = 'AGENCY_NAME', default = 'Your agency name')
 
