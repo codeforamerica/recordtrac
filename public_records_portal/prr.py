@@ -278,7 +278,7 @@ def set_directory_fields():
 		with open(app.config['STAFF_FILEPATH']) as csvfile:
 			dictreader = csv.DictReader(csvfile, delimiter=',')
 			for row in dictreader:
-				create_or_return_user(email = row['email'].lower(), alias = row['name'], phone = row['phone number'], department = row['department'], is_staff = True)
+				create_or_return_user(email = row['email'].lower(), alias = row['name'], phone = row['phone number'], department = row['department name'], is_staff = True)
 	else:
 		app.logger.info("\n\n Please add an environment variable for where to find csv data on the users in your agency.")
 
@@ -287,9 +287,9 @@ def set_directory_fields():
 		with open(app.config['LIAISONS_FILEPATH']) as csvfile:
 			dictreader = csv.DictReader(csvfile, delimiter=',')
 			for row in dictreader:
-				user = create_or_return_user(email = row['contact'], contact_for = row['department'])
-				if row['backup'] != "":
-					user = create_or_return_user(email = row['backup'], backup_for = row['department'])
+				user = create_or_return_user(email = row['PRR liaison'], contact_for = row['department name'])
+				if row['PRR backup'] != "":
+					user = create_or_return_user(email = row['PRR backup'], backup_for = row['department name'])
 	else:
 		app.logger.info("\n\n Please add an environment variable for where to find department liaison data for your agency.")
 
