@@ -211,11 +211,7 @@ def create_answer(qa_id, subscriber_id, answer):
 
 ### @export "get_user"
 def get_user(kwargs):
-    u = User.query.filter(db.or_(
-        User.id == kwargs.get('id'),
-        User.email == kwargs.get('email')
-    )).first()
-    return u 
+    return User.query.filter(User.email == kwargs.get('email')).filter(User.is_staff == True).first()
 
 ### @export "get_user_by_id"
 def get_user_by_id(id):
