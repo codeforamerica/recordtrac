@@ -24,9 +24,10 @@ class HomeView(AdminIndexView):
         return self.render('admin.html')
     def is_accessible(self):
 		if current_user.is_authenticated():
-			admins = app.config['LIST_OF_ADMINS'].split(",")
-			if current_user.email.lower() in admins:
-				return True
+			if 'LIST_OF_ADMINS' in app.config:
+				admins = app.config['LIST_OF_ADMINS'].split(",")
+				if current_user.email.lower() in admins:
+					return True
 		return False
 
 # Create Admin
@@ -35,9 +36,10 @@ admin = Admin(app, name='RecordTrac Admin', url='/admin', index_view = HomeView(
 class AdminView(ModelView):
     def is_accessible(self):
     	if current_user.is_authenticated():
-			admins = app.config['LIST_OF_ADMINS'].split(",")
-			if current_user.email.lower() in admins:
-				return True
+    		if 'LIST_OF_ADMINS' in app.config:
+				admins = app.config['LIST_OF_ADMINS'].split(",")
+				if current_user.email.lower() in admins:
+					return True
         return False
 
 class RequestView(AdminView):
