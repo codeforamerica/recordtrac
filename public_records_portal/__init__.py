@@ -62,6 +62,13 @@ set_env(key = 'DEV_EMAIL')
 
 set_env(key = 'GOOGLE_FEEDBACK_FORM_ID')
 
+# If this is not set, no one will be able to log into RecordTrac
+set_env(key = 'STAFF_FILEPATH')
+
+# If this is not set, requests will initially be routed only to the default owner
+set_env(key = 'LIAISONS_FILEPATH')
+
+
 # Initialize database
 db = SQLAlchemy(app)
 
