@@ -82,7 +82,6 @@ def new_request(passed_recaptcha = False, data = None):
 		app.logger.info("\n\nDuplicate request entered: %s" % request_text)
 		return render_template('error.html', message = "Your request is the same as /request/%s" % request_id)
 	else:
-		# doc_types = os.path.exists(os.path.join(app.root_path, 'static/json/doctypes.json'))
 		routing_available = False
 		if 'LIAISONS_FILEPATH' in app.config:
 			routing_available = True
