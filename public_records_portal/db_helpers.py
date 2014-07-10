@@ -215,32 +215,14 @@ def get_user(kwargs):
         User.id == kwargs.get('id'),
         User.email == kwargs.get('email')
     )).first()
-    if u is None: # user didn't exist in db
-        return create_browserid_user(kwargs)
-    return u
+    return u 
 
 ### @export "get_user_by_id"
 def get_user_by_id(id):
     return User.query.get(id)
 
-### @export "create_browserid_user"
-def create_browserid_user(kwargs):
-    """
-    Takes browserid response and creates a user.
-    """
-    if kwargs['status'] == 'okay':
-    	email = kwargs['email']
-    	# Check if email is in csv
-    	if email.endswith('@codeforamerica.org'):
-	        user = User(email) # Plus fields from csv
-	        db.session.add(user)
-	        db.session.commit()
-	        return user
-    return None
-
-
 ### @export "create_or_return_user"
-def create_or_return_user(email=None, alias = None, phone = None, department = None, not_id = False):
+def create_or_return_user(email=None, alias = None, phone = None, department = None, contact_for = None, backup_for = None, not_id = False, is_staff = None):
 	app.logger.info("\n\nCreating or returning user...")
 	if email:
 		user = User.query.filter(User.email == func.lower(email)).first()
@@ -254,27 +236,27 @@ def create_or_return_user(email=None, alias = None, phone = None, department = N
 				db.session.commit()
 				department = d.id
 		if not user:
-			user = create_user(email = email.lower(), alias = alias, phone = phone, department = department)
+			user = create_user(email = email.lower(), alias = alias, phone = phone, department = department, contact_for = contact_for, backup_for = backup_for, is_staff = is_staff)
 		else:
-			if alias or phone or department: # Update user if fields to update are provided
-				user = update_user(user, alias, phone, department)
+			if alias or phone or department or contact_for or backup_for: # Update user if fields to update are provided
+				user = update_user(user = user, alias = alias, phone = phone, department = department, contact_for = contact_for, backup_for = backup_for, is_staff = is_staff)
 		if not_id:
 			return user
 		return user.id
 	else:
-		user = create_user(alias = alias, phone = phone)
+		user = create_user(alias = alias, phone = phone, is_staff = is_staff)
 		return user.id
 
 ### @export "create_user"
-def create_user(email=None, alias = None, phone = None, department = None):
-	user = User(email = email, alias = alias, phone = phone, department = department, password = app.config['ADMIN_PASSWORD'])
+def create_user(email=None, alias = None, phone = None, department = None, contact_for = None, backup_for = None, is_staff = None):
+	user = User(email = email, alias = alias, phone = phone, department = department, contact_for = contact_for, backup_for = backup_for, is_staff = is_staff)
 	db.session.add(user)
 	db.session.commit()
 	app.logger.info("\n\nCreated new user, alias: %s id: %s" % (user.alias, user.id))
 	return user
 
 ### @export "update_user"
-def update_user(user, alias = None, phone = None, department = None):
+def update_user(user, alias = None, phone = None, department = None, contact_for = None, backup_for = None, is_staff = None):
 	if alias:
 		user.alias = alias
 	if phone:
@@ -286,8 +268,16 @@ def update_user(user, alias = None, phone = None, department = None):
 				user.department = d.id
 		else:
 			user.department = department
-	if not user.password:
-		user.password = app.config['ADMIN_PASSWORD']
+	if contact_for:
+		if user.contact_for and contact_for not in user.contact_for:
+			contact_for = user.contact_for + "," + contact_for
+		user.contact_for = contact_for
+	if backup_for:
+		if user.backup_for and backup_for not in user.backup_for:
+			backup_for = user.backup_for + "," + backup_for
+		user.backup_for = backup_for
+	if is_staff:
+		user.is_staff = is_staff
 	db.session.add(user)
 	db.session.commit()
 	app.logger.info("\n\nUpdated user %s, alias: %s phone: %s department: %s" % (user.id, alias, phone, department))
