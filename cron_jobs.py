@@ -8,14 +8,8 @@ from public_records_portal.scribd_helpers import update_descriptions
 notify_due()
 
 # Set directory fields from information in the directory.json file
-# set_directory_fields()
-
-
-# Update user info with information in the departments.json file
-# populate_users_with_departments()
+set_directory_fields()
 
 # Create visualizations
 create_viz_data()
 
-# Update the Scribd document descriptions
-# update_descriptions()

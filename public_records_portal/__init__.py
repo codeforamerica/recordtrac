@@ -22,48 +22,45 @@ def set_env(key, default = None):
 
 # UPDATES TO THESE DEFAULTS SHOULD OCCUR IN YOUR .env FILE.
 
-# The basics, these should be accurate or the app will not run properly:
-set_env(key = 'APPLICATION_URL', default = "http://127.0.0.1:5000/")
+set_env(key = 'APPLICATION_URL', default = "http://127.0.0.1:5000/") 
 set_env(key = 'SQLALCHEMY_DATABASE_URI', default = "postgresql://localhost/recordtrac")
 set_env(key = 'ENVIRONMENT', default="LOCAL")
-# Set the default records liaison, this matters more in a production environment:
+# The default records liaison, to whom requests get routed to if no department is selected:
 set_env(key = 'DEFAULT_OWNER_EMAIL', default = 'recordtrac@postcode.io')
-set_env(key = 'DEFAULT_OWNER_NAME', default = 'PostCode.io')
-set_env(key = 'DEFAULT_OWNER_REASON', default = 'PostCode.io can help you get @recordtrac in your agency.' )
-# If you set up Sendgrid or another e-mail service:
-set_env(key = 'DEFAULT_MAIL_SENDER', default = '')  # The e-mail address used as the FROM field for all notifications
-set_env(key = 'MAIL_USERNAME', default='') # The SendGrid username
-set_env(key = 'MAIL_PASSWORD', default = '') # The SendGrid password
-set_env(key='SENDGRID_MONTHLY_LIMIT', default='') # Your SendGrid Monthly Limit
-# User login default, password can be used with any e-mail address:
-set_env(key = 'ADMIN_PASSWORD', default = 'admin')
-# Define who has admin access (/admin) with a comma delimited list of e-mail addresses:
-set_env(key = 'LIST_OF_ADMINS', default = '')
-# Flask app secret key:
-set_env(key = 'SECRET_KEY', default = '')
-# For Scribd uploads:
-set_env(key = 'SCRIBD_API_KEY', default = '')
-set_env(key = 'SCRIBD_API_SECRET', default = '')
-set_env(key = 'HOST_URL', default = 'https://www.scribd.com/doc/')
-# For spam filtering:
-set_env(key = 'AKISMET_KEY', default = '')
-# For CAPTCHA:
-set_env(key = 'RECAPTCHA_PUBLIC_KEY', default = "")
-set_env(key = 'RECAPTCHA_PRIVATE_KEY', default = "")
-# The name of your agency, e.g. City of Oakland:
-set_env(key = 'AGENCY_NAME', default = 'Your agency name')
+set_env(key = 'DEFAULT_OWNER_REASON', default = 'Open government coordinator' )
+
+set_env(key = 'HOST_URL', default = 'https://www.scribd.com/doc/') # Where the documents/record uploads are hosted
+set_env(key = 'AGENCY_NAME', default = 'Your agency name') # e.g. City of Oakland
+set_env(key = 'SECRET_KEY', default = 'Change this to something super secret') # Flask application's secret key
 
 # The number of days an agency has (determined by law or policy) to fulfill a request
 set_env(key = 'DAYS_TO_FULFILL', default = '10')
 set_env(key = 'DAYS_AFTER_EXTENSION', default = '14')
 
-# No defaults should be set for this.  Used for local e-mail testing.
-set_env(key = 'DEV_EMAIL')
 
-set_env(key = 'GOOGLE_FEEDBACK_FORM_ID')
+# Set rest of the variables that don't have defaults:
+envvars = [
+			'DEFAULT_MAIL_SENDER', # The e-mail address used as the FROM field for all notifications
+			'MAIL_USERNAME', # The SendGrid username
+			'MAIL_PASSWORD', # The SendGrid password
+			'SENDGRID_MONTHLY_LIMIT', # Your SendGrid Monthly Limit
+			'LIST_OF_ADMINS', # Defines who has admin access (/admin) with a comma delimited list of e-mail addresses. i.e. 'richa@codeforamerica.org,cris@codeforamerica.org'
+			'SECRET_KEY', # Flask app secret key
+			'SCRIBD_API_KEY',
+			'SCRIBD_API_SECRET',
+			'AKISMET_KEY', # Used for spam filtering
+			'RECAPTCHA_PUBLIC_KEY',
+			'RECAPTCHA_PRIVATE_KEY',
+			'DEV_EMAIL', # Used for local e-mail testing if set
+			'GOOGLE_FEEDBACK_FORM_ID', # The form ID that the feedback tab is hooked up to,
+			'STAFF_FILEPATH', # The path/URL at which a csv containing staff data lives. If this is not set, no one will be able to log into RecordTrac
+			'LIAISONS_FILEPATH' # The path/URL at which a csv containing liaisons/department data lives. If this is not set, initial request routing will always be directed to the default owner
+			,
+			]
+for envvar in envvars:
+	set_env(key = envvar)
+
 
 # Initialize database
 db = SQLAlchemy(app)
 
-logging.basicConfig()
-# logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
