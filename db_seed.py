@@ -5,20 +5,11 @@ from datetime import datetime, timedelta
 
 print "Seeding database..."
 
-# Set directory fields from information in the directory.json file
-prr.set_directory_fields()
-
-# Update user info with information in the departments.json file
-departments.populate_users_with_departments()
-
-# Create doc types based on information in the departments.json file
-departments.create_doctypes()
-
 common_requests = ['City Council meeting minutes', 'Police Report', 'Incident Report', 'Communication between Councilmembers']
-depts_json = open(os.path.join(app.root_path, 'static/json/list_of_departments.json'))
-staff_json = open(os.path.join(app.root_path, 'static/json/staff_emails.json'))
-departments = json.load(depts_json)
-people = json.load(staff_json)
+
+departments = [d.name for d in models.Department.query.all()]
+people = [d.email for d in models.User.query.all()]
+
 reasons = ['They have the document', 'They would know more about this', 'They are my backup', 'Can you look into this?']
 documents = ['Minutes', 'Report']
 answers = ["Yep, thanks so much!", "No, nevermind then."]

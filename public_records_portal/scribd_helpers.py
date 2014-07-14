@@ -37,11 +37,11 @@ def upload(file, filename, API_KEY, API_SECRET, description):
         app.logger.info('Scribd failed: code=%d, error=%s' % (err.errno, err.strerror))
         return err.strerror
 
-def get_scribd_download_url(doc_id, record_id = None, API_KEY = None, API_SECRET = None):
-	if not API_KEY:
-		API_KEY = app.config['SCRIBD_API_KEY']
-	if not API_SECRET:
-		API_SECRET = app.config['SCRIBD_API_SECRET']
+def get_scribd_download_url(doc_id, record_id = None):
+    if not upload_to_scribd:
+        return None
+	API_KEY = app.config['SCRIBD_API_KEY']
+	API_SECRET = app.config['SCRIBD_API_SECRET']
 	try:
 		scribd.config(API_KEY, API_SECRET)
 		doc = scribd.api_user.get(doc_id)
@@ -51,6 +51,7 @@ def get_scribd_download_url(doc_id, record_id = None, API_KEY = None, API_SECRET
 		return doc_url
 	except:
 		return None
+
 
 def set_scribd_download_url(download_url, record_id):
     update_obj('download_url', download_url, obj_type = 'Record', obj_id = record_id)
@@ -74,8 +75,8 @@ def make_private(doc_id, API_KEY, API_SECRET):
     doc.save()
 
 
-def update_descriptions():
-    scribd.config(app.config['SCRIBD_API_KEY'], app.config['SCRIBD_API_SECRET'])
+def update_descriptions(API_KEY, API_SECRET):
+    scribd.config(API_KEY, API_SECRET)
     for doc in scribd.api_user.all():
         record = models.Record.query.filter_by(doc_id = doc.id).first()
         if record:
@@ -94,12 +95,11 @@ def upload_file(file, request_id):
         allowed = allowed_file(file.filename)
         if allowed[0]:
             filename = secure_filename(file.filename)
-            if upload_to_scribd: # Check flag
-                link_back = app.config['APPLICATION_URL'] + 'request/' + str(request_id)
-                doc_id = upload(file = file, filename = filename, API_KEY = app.config['SCRIBD_API_KEY'], API_SECRET = app.config['SCRIBD_API_SECRET'], description = "This document was uploaded via RecordTrac in response to a public records request for the %s. You can view the original request here: %s" % (app.config['AGENCY_NAME'], link_back))
-                return doc_id, filename
-            else:
+            if not upload_to_scribd:
                 return '1', filename # Don't need to do real uploads locally
+            link_back = app.config['APPLICATION_URL'] + 'request/' + str(request_id)
+            doc_id = upload(file = file, filename = filename, API_KEY = app.config['SCRIBD_API_KEY'], API_SECRET = app.config['SCRIBD_API_SECRET'], description = "This document was uploaded via RecordTrac in response to a public records request for the %s. You can view the original request here: %s" % (app.config['AGENCY_NAME'], link_back))
+            return doc_id, filename
         else:
             return allowed # Returns false and extension
     return None, None

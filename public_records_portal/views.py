@@ -3,11 +3,13 @@
 
 from flask import render_template, request, redirect, url_for, jsonify
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
+from flaskext.browserid import BrowserID
 from public_records_portal import app
 from filters import *
 from prr import add_resource, update_resource, make_request, close_request
 from db_helpers import *
-import departments
+from db_helpers import get_user_by_id # finds a user by their id
+from db_helpers import get_user # finds a user based on BrowserID response
 import os, json
 from urlparse import urlparse, urljoin
 from notifications import send_prr_email, format_date
@@ -21,16 +23,17 @@ from flask import jsonify, request, Response
 import anyjson
 import helpers
 import csv_export
-import csv
 from datetime import datetime, timedelta
 
 # Initialize login
+
 login_manager = LoginManager()
+login_manager.user_loader(get_user_by_id)
 login_manager.init_app(app)
 
-# Initialize cache
-cache = Cache()
-cache.init_app(app, config={'CACHE_TYPE': 'simple'})
+browser_id = BrowserID()
+browser_id.user_loader(get_user)
+browser_id.init_app(app)
 
 # Set flags:
 
@@ -80,11 +83,13 @@ def new_request(passed_recaptcha = False, data = None):
 		app.logger.info("\n\nDuplicate request entered: %s" % request_text)
 		return render_template('error.html', message = "Your request is the same as /request/%s" % request_id)
 	else:
-		doc_types = os.path.exists(os.path.join(app.root_path, 'static/json/doctypes.json'))
+		routing_available = False
+		if 'LIAISONS_FILEPATH' in app.config:
+			routing_available = True
 		if user_id:
-			return render_template('offline_request.html', doc_types = doc_types, user_id = user_id)
+			return render_template('offline_request.html', routing_available = routing_available, user_id = user_id)
 		else:
-			return render_template('new_request.html', doc_types = doc_types, user_id = user_id)
+			return render_template('new_request.html', routing_available = routing_available, user_id = user_id)
 
 def to_csv():
 	if get_user_id():
@@ -169,11 +174,18 @@ def show_request(request_id, template = None):
 	return render_template(template, req = req, user_id = get_user_id())
 
 def staff_to_json():
-	users = User.query.filter(User.department != None).all()
+	users = User.query.filter(User.is_staff == True).all()
 	staff_data = []
 	for u in users:
 		staff_data.append({'alias': u.alias, 'email': u.email})
 	return jsonify(**{'objects': staff_data})
+
+def departments_to_json():
+	departments = Department.query.all()
+	department_data = []
+	for d in departments:
+		department_data.append({'department': d.name})
+	return jsonify(**{'objects': department_data})
 
 def docs():
 	return redirect('http://codeforamerica.github.io/public-records/docs/1.0.0')
@@ -234,9 +246,7 @@ def close(request_id = None):
 def requests():
 	app.logger.debug("Processing requests.")
 	try:
-		departments_json = open(os.path.join(app.root_path, 'static/json/list_of_departments.json'))
-		list_of_departments = json.load(departments_json)
-		departments = sorted(list_of_departments, key=unicode.lower)
+		departments = [d.name for d in Department.query.all()]
 		user_id = get_user_id()
 		total_requests_count = get_count("Request")
 		template = 'all_requests.html'
@@ -410,15 +420,6 @@ def fetch_requests():
 		}
 	response = anyjson.serialize(matches)
 	return Response(response, mimetype = "application/json")
-
-@login_manager.unauthorized_handler
-def unauthorized():
-	return render_template('alpha.html')
-
-@login_manager.user_loader
-def load_user(userid):
-	user =get_obj("User", userid)
-	return user
 
 def any_page(page):
 	try:

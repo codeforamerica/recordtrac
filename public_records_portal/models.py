@@ -28,6 +28,7 @@ class User(db.Model):
 	backup_for = db.Column(db.String()) # comma separated list
 	owners = relationship("Owner")
 	subscribers = relationship("Subscriber")
+	is_staff = db.Column(db.Boolean, default = False) # Is this user an active agency member?
 
 	def is_authenticated(self):
 		return True
@@ -37,10 +38,6 @@ class User(db.Model):
 		return False
 	def get_id(self):
 		return unicode(self.id)
-	def set_password(self, password):
-		self.password = generate_password_hash(password)
-	def check_password(self, password):
-		return check_password_hash(self.password, password)
 	def get_alias(self):
 		if self.alias and self.alias != "":
 			return self.alias
@@ -49,17 +46,20 @@ class User(db.Model):
 		if self.phone and self.phone != "":
 			return self.phone
 		return "N/A"
-	def __init__(self, email=None, alias = None, phone=None, department = None, password=None):
+	def __init__(self, email=None, alias = None, phone=None, department = None, contact_for=None, backup_for=None, is_staff = False):
 		self.email = email
 		self.alias = alias
-		if phone != "":
+		if phone and phone != "":
 			self.phone = phone
 		self.date_created = datetime.now().isoformat()
-		if password:
-			self.set_password(password)
-		else:
-			self.set_password(app.config['ADMIN_PASSWORD'])
-		self.department = department
+		if department and department != "":
+			self.department = department
+		if contact_for and contact_for != "":
+			self.contact_for = contact_for
+		if backup_for and backup_for != "":
+			self.backup_for = backup_for
+		if is_staff:
+			self.is_staff = is_staff
 	def __repr__(self):
 		return '<User %r>' % self.email
 	def __str__(self):
@@ -103,7 +103,6 @@ class Request(db.Model):
 	text = db.Column(db.String(), unique=True) # The actual request text.
 	owners = relationship("Owner", cascade = "all, delete", order_by="Owner.date_created.asc()")
 	subscribers = relationship("Subscriber", cascade ="all, delete") # The list of subscribers following this request.
-	current_owner = db.Column(Integer) # Deprecated
 	records = relationship("Record", cascade="all,delete", order_by = "Record.date_created.desc()") # The list of records that have been uploaded for this request.
 	notes = relationship("Note", cascade="all,delete", order_by = "Note.date_created.desc()") # The list of notes appended to this request.
 	status = db.Column(db.String(400)) # The status of the request (open, closed, etc.)
@@ -209,13 +208,6 @@ class Request(db.Model):
         @hybrid_property
         def closed(self):
                 return Request.status.ilike("%closed%")
-
-        # TODO(cj@postcode.io): This needs to get reviewed.
-        @hybrid_property
-        def my_requests(self):
-                return filter(Request.id == Owner.request_id) \
-                        .filter(Owner.user_id == user_id) \
-                        .filter(Owner.active == True)
 
 ### @export "QA"
 class QA(db.Model):

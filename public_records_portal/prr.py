@@ -17,6 +17,7 @@ import scribd_helpers
 from db_helpers import *
 from spam import is_spam
 import logging
+import csv
 
 ### @export "add_resource"
 def add_resource(resource, request_body, current_user_id = None):
@@ -165,10 +166,11 @@ def make_request(text, email = None, user_id = None, phone = None, alias = None,
 	request_id = create_request(text = text, user_id = user_id, department = department, offline_submission_type = offline_submission_type, date_received = date_received) # Actually create the Request object
 	new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email) # Assign someone to the request
 	open_request(request_id) # Set the status of the incoming request to "Open"
-	subscriber_user_id = create_or_return_user(email = email, alias = alias, phone = phone)
-	subscriber_id, is_new_subscriber = create_subscriber(request_id = request_id, user_id = subscriber_user_id)
-	if subscriber_id:
-		generate_prr_emails(request_id, notification_type = "Request made", user_id = subscriber_user_id) # Send them an e-mail notification
+	if email or alias or phone:
+		subscriber_user_id = create_or_return_user(email = email, alias = alias, phone = phone)
+		subscriber_id, is_new_subscriber = create_subscriber(request_id = request_id, user_id = subscriber_user_id)
+		if subscriber_id:
+			generate_prr_emails(request_id, notification_type = "Request made", user_id = subscriber_user_id) # Send them an e-mail notification
 	return request_id, True
 
 ### @export "add_subscriber"	
@@ -267,22 +269,31 @@ def get_responses_chronologically(req):
 
 ### @export "set_directory_fields"
 def set_directory_fields():
-	dir_json = open(os.path.join(app.root_path, 'static/json/directory.json'))
-	json_data = json.load(dir_json)
-	staff_emails = []
-	for line in json_data:
-		if line['EMAIL_ADDRESS']:
-			try:
-				last, first = line['FULL_NAME'].split(",")
-			except:
-				last, junk, first = line['FULL_NAME'].split(",")
-			email = line['EMAIL_ADDRESS'].lower()
-			user = create_or_return_user(email = email, alias = "%s %s" % (first, last), phone = line['PHONE'], department = line['DEPARTMENT'])
-			# Generate an updated json file that stores staff e-mails
-			staff_emails.append(email)
-	with open(os.path.join(app.root_path, 'static/json/staff_emails.json'), 'w') as outfile:
-		json.dump(staff_emails, outfile)
+	# Set basic user data
+	if 'STAFF_FILEPATH' in app.config:
 
+		# This gets run at regular internals via cron_jobs.py in order to keep the staff user list up to date. Before users are added/updated, ALL users get reset to 'inactive', and then only the ones in the current CSV are set to active. 
+		for user in User.query.filter(User.is_staff == True).all():
+			update_user(user = user, is_staff = False)
+		with open(app.config['STAFF_FILEPATH']) as csvfile:
+			dictreader = csv.DictReader(csvfile, delimiter=',')
+			for row in dictreader:
+				create_or_return_user(email = row['email'].lower(), alias = row['name'], phone = row['phone number'], department = row['department name'], is_staff = True)
+	else:
+		app.logger.info("\n\n Please add an environment variable for where to find csv data on the users in your agency.")
+
+	# Set liaisons data (who is a PRR liaison for what department)
+	if 'LIAISONS_FILEPATH' in app.config:
+		with open(app.config['LIAISONS_FILEPATH']) as csvfile:
+			dictreader = csv.DictReader(csvfile, delimiter=',')
+			for row in dictreader:
+				user = create_or_return_user(email = row['PRR liaison'], contact_for = row['department name'])
+				if row['PRR backup'] != "":
+					user = create_or_return_user(email = row['PRR backup'], backup_for = row['department name'])
+	else:
+		app.logger.info("\n\n Please add an environment variable for where to find department liaison data for your agency.")
+
+			
 ### @export "last_note"
 def last_note(request_id):
 	notes = get_attribute(attribute = "notes", obj_id = request_id, obj_type = "Request")
