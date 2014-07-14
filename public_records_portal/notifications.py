@@ -91,7 +91,7 @@ def send_prr_email(page, recipients, subject, template, include_unsubscribe_link
 	if recipients:
 		if send_emails:
 			try:
-				send_email(body = render_template(template, unfollow_link = unfollow_link, logo_url = "%sstatic/images/CityTree_logo_green.jpg" %(app.config['APPLICATION_URL'] ), page = page, password = password), recipients = recipients, subject = subject, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = cc_everyone)
+				send_email(body = render_template(template, unfollow_link = unfollow_link, page = page, password = password), recipients = recipients, subject = subject, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = cc_everyone)
 				app.logger.info("\n\n E-mail sent successfully!")
 			except Exception, e:
 				app.logger.info("\n\nThere was an error sending the e-mail: %s" % e)
