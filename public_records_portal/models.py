@@ -187,7 +187,7 @@ class Request(db.Model):
 				if self.due_date:
 					if datetime.now() >= self.due_date:
 						return "overdue"
-					elif (datetime.now() + timedelta(days = 2)) >= self.due_date:
+					elif (datetime.now() + timedelta(days = int(app.config['DAYS_UNTIL_OVERDUE']))) >= self.due_date:
 						return "due soon"
 		return "open"
 

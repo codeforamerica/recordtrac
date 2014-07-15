@@ -34,8 +34,10 @@ set_env(key = 'AGENCY_NAME', default = 'Your agency name') # e.g. City of Oaklan
 set_env(key = 'SECRET_KEY', default = 'Change this to something super secret') # Flask application's secret key
 
 # The number of days an agency has (determined by law or policy) to fulfill a request
+# Currently due dates and overdue status is only showed to logged in agency staff
 set_env(key = 'DAYS_TO_FULFILL', default = '10')
 set_env(key = 'DAYS_AFTER_EXTENSION', default = '14')
+set_env(key = 'DAYS_UNTIL_OVERDUE', default = '2') 
 
 
 # Set rest of the variables that don't have defaults:
@@ -54,7 +56,7 @@ envvars = [
 			'DEV_EMAIL', # Used for local e-mail testing if set
 			'GOOGLE_FEEDBACK_FORM_ID', # The form ID that the feedback tab is hooked up to,
 			'STAFF_FILEPATH', # The path/URL at which a csv containing staff data lives. If this is not set, no one will be able to log into RecordTrac
-			'LIAISONS_FILEPATH', # The path/URL at which a csv containing liaisons/department data lives. If this is not set, initial request routing will always be directed to the default owner,
+			'LIAISONS_FILEPATH', # The path/URL at which a csv containing liaisons/department data lives. If this is not set, initial request routing will always be directed to the default owner
 			'LOGO_ON_WHITE_FILEPATH', # The path/URL at which a logo (on a white background) of the agency is hosted. (.png or .jpg)
 			'LOGO_ON_BLACK_FILEPATH' # The path/URL at which a logo (on a black background) of the agency is hosted. (.png or .jpg)
 			,
