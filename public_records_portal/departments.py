@@ -9,25 +9,6 @@ from models import Department
 	:synopsis: Public records functionality as related to a municipality's different departments.
 .. modlueauthor:: Richa Agarwal <richa@codeforamerica.org>
 """
-### @export "create_doctypes"
-def create_doctypes():
-	""" # Creates a file called doctypes.json from departments.json that is used by typeahead to map document types to the department which can fulfill it. """
-	depts = []
-	depts_json = open(os.path.join(app.root_path, 'static/json/departments.json'))
-	json_data = json.load(depts_json)
-	for department in json_data:
-		if "Council" in department:
-			document_types = ['Council records']
-		else:
-			document_types = json_data[department]["Document Types"]
-		for document_type in document_types:
-			line = {}
-			line['DEPARTMENT'] = department
-			line['DOC_TYPE'] = document_type
-			depts.append(line)
-	with open(os.path.join(app.root_path, 'static/json/doctypes.json'), 'w') as outfile:
-  		json.dump(depts, outfile)
-
 
 ### @export "get_dept_backup"
 def get_dept_backup(dept_contact):
