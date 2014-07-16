@@ -55,10 +55,10 @@ envvars = [
 			'RECAPTCHA_PRIVATE_KEY',
 			'DEV_EMAIL', # Used for local e-mail testing if set
 			'GOOGLE_FEEDBACK_FORM_ID', # The form ID that the feedback tab is hooked up to,
-			'STAFF_FILEPATH', # The path/URL at which a csv containing staff data lives. If this is not set, no one will be able to log into RecordTrac
-			'LIAISONS_FILEPATH', # The path/URL at which a csv containing liaisons/department data lives. If this is not set, initial request routing will always be directed to the default owner
-			'LOGO_ON_WHITE_FILEPATH', # The path/URL at which a logo (on a white background) of the agency is hosted. (.png or .jpg)
-			'LOGO_ON_BLACK_FILEPATH' # The path/URL at which a logo (on a black background) of the agency is hosted. (.png or .jpg)
+			'STAFF_URL', # The path/URL at which a csv containing staff data lives. If this is not set, no one will be able to log into RecordTrac
+			'LIAISONS_URL', # The path/URL at which a csv containing liaisons/department data lives. If this is not set, initial request routing will always be directed to the default owner
+			'LOGO_ON_WHITE_URL', # The path/URL at which a logo (on a white background) of the agency is hosted. (.png or .jpg)
+			'LOGO_ON_BLACK_URL' # The path/URL at which a logo (on a black background) of the agency is hosted. (.png or .jpg)
 			,
 			]
 for envvar in envvars:

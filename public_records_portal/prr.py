@@ -271,12 +271,12 @@ def get_responses_chronologically(req):
 ### @export "set_directory_fields"
 def set_directory_fields():
 	# Set basic user data
-	if 'STAFF_FILEPATH' in app.config:
+	if 'STAFF_URL' in app.config:
 
 		# This gets run at regular internals via cron_jobs.py in order to keep the staff user list up to date. Before users are added/updated, ALL users get reset to 'inactive', and then only the ones in the current CSV are set to active. 
 		for user in User.query.filter(User.is_staff == True).all():
 			update_user(user = user, is_staff = False)
-		csvfile = urllib.urlopen(app.config['STAFF_FILEPATH'])
+		csvfile = urllib.urlopen(app.config['STAFF_URL'])
 		dictreader = csv.DictReader(csvfile, delimiter=',')
 		for row in dictreader:
 			create_or_return_user(email = row['email'].lower(), alias = row['name'], phone = row['phone number'], department = row['department name'], is_staff = True)
@@ -284,8 +284,8 @@ def set_directory_fields():
 		app.logger.info("\n\n Please add an environment variable for where to find csv data on the users in your agency.")
 
 	# Set liaisons data (who is a PRR liaison for what department)
-	if 'LIAISONS_FILEPATH' in app.config:
-		csvfile = urllib.urlopen(app.config['LIAISONS_FILEPATH'])
+	if 'LIAISONS_URL' in app.config:
+		csvfile = urllib.urlopen(app.config['LIAISONS_URL'])
 		dictreader = csv.DictReader(csvfile, delimiter=',')
 		for row in dictreader:
 			user = create_or_return_user(email = row['PRR liaison'], contact_for = row['department name'])
