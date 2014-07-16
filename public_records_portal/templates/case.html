@@ -20,7 +20,7 @@
     <a href="#" 
       onclick="
         window.open(
-          'http://twitter.com/intent/tweet?text=Requested from the City of Oakland:&amp;via=RecordTrac&amp;url=http://records.oaklandnet.com/request/{{req.id}}', 
+          'http://twitter.com/intent/tweet?text=Requested from {{config['AGENCY_NAME']}}:&amp;via=RecordTrac&amp;url={{config['APPLICATION_URL']}}request/{{req.id}}', 
           'facebook-share-dialog', 
           'width=550,height=350'); 
         return false;">
@@ -31,7 +31,7 @@
     <a href="#" 
       onclick="
         window.open(
-          'https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Frecords.oaklandnet.com%2Frequest%2F{{req.id}}', 
+          'https://www.facebook.com/sharer/sharer.php?u={{config['APPLICATION_URL']}}request/{{req.id}}', 
           'facebook-share-dialog', 
           'width=626,height=436'); 
         return false;">

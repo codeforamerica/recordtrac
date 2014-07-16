@@ -84,7 +84,7 @@ def new_request(passed_recaptcha = False, data = None):
 		return render_template('error.html', message = "Your request is the same as /request/%s" % request_id)
 	else:
 		routing_available = False
-		if 'LIAISONS_FILEPATH' in app.config:
+		if 'LIAISONS_URL' in app.config:
 			routing_available = True
 		if user_id:
 			return render_template('offline_request.html', routing_available = routing_available, user_id = user_id)
