@@ -148,7 +148,7 @@ def add_link(request_id, url, description, user_id):
 ### @export "make_request"			
 def make_request(text, email = None, user_id = None, phone = None, alias = None, department = None, passed_recaptcha = False, offline_submission_type = None, date_received = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
-	if (app.config['ENVIRONMENT'] == 'PRODUCTION') and (not passed_recaptcha) and is_spam(text): 
+	if not passed_recaptcha and is_spam(text): 
 		return None, False
 	request_id = find_request(text)
 	if request_id: # Same request already exists
