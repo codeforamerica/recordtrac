@@ -404,7 +404,6 @@ def fetch_requests():
 			  "text":         helpers.clean_text(r.text), \
 			  "date_created": helpers.date(r.date_received or r.date_created), \
 			  "department":   r.department_name(), \
-			  "due_date":     format_date(r.due_date), \
 			  "status":       r.status, \
 			  # The following two attributes are defined as model methods,
 			  # and not regular SQLAlchemy attributes.
