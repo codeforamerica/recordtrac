@@ -18,6 +18,7 @@ from db_helpers import *
 from spam import is_spam
 import logging
 import csv
+import urllib
 
 ### @export "add_resource"
 def add_resource(resource, request_body, current_user_id = None):
@@ -275,21 +276,21 @@ def set_directory_fields():
 		# This gets run at regular internals via cron_jobs.py in order to keep the staff user list up to date. Before users are added/updated, ALL users get reset to 'inactive', and then only the ones in the current CSV are set to active. 
 		for user in User.query.filter(User.is_staff == True).all():
 			update_user(user = user, is_staff = False)
-		with open(app.config['STAFF_FILEPATH']) as csvfile:
-			dictreader = csv.DictReader(csvfile, delimiter=',')
-			for row in dictreader:
-				create_or_return_user(email = row['email'].lower(), alias = row['name'], phone = row['phone number'], department = row['department name'], is_staff = True)
+		csvfile = urllib.urlopen(app.config['STAFF_FILEPATH'])
+		dictreader = csv.DictReader(csvfile, delimiter=',')
+		for row in dictreader:
+			create_or_return_user(email = row['email'].lower(), alias = row['name'], phone = row['phone number'], department = row['department name'], is_staff = True)
 	else:
 		app.logger.info("\n\n Please add an environment variable for where to find csv data on the users in your agency.")
 
 	# Set liaisons data (who is a PRR liaison for what department)
 	if 'LIAISONS_FILEPATH' in app.config:
-		with open(app.config['LIAISONS_FILEPATH']) as csvfile:
-			dictreader = csv.DictReader(csvfile, delimiter=',')
-			for row in dictreader:
-				user = create_or_return_user(email = row['PRR liaison'], contact_for = row['department name'])
-				if row['PRR backup'] != "":
-					user = create_or_return_user(email = row['PRR backup'], backup_for = row['department name'])
+		csvfile = urllib.urlopen(app.config['LIAISONS_FILEPATH'])
+		dictreader = csv.DictReader(csvfile, delimiter=',')
+		for row in dictreader:
+			user = create_or_return_user(email = row['PRR liaison'], contact_for = row['department name'])
+			if row['PRR backup'] != "":
+				user = create_or_return_user(email = row['PRR backup'], backup_for = row['department name'])
 	else:
 		app.logger.info("\n\n Please add an environment variable for where to find department liaison data for your agency.")
 
