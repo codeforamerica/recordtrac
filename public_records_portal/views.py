@@ -397,19 +397,35 @@ def fetch_requests():
 
 	# TODO(cj@postcode.io): This map is pretty kludgy, we should be detecting columns and auto
 	# magically making them fields in the JSON objects we return.
-	results = map(lambda r: {     
-		  "id":           r.id, \
-		  "text":         helpers.clean_text(r.text), \
-		  "date_created": helpers.date(r.date_received or r.date_created), \
-		  "department":   r.department_name(), \
-		  "requester":    r.requester_name(), \
-		  "due_date":     format_date(r.due_date), \
-		  "status":       r.status, \
-		  # The following two attributes are defined as model methods,
-		  # and not regular SQLAlchemy attributes.
-		  "contact_name": r.point_person_name(), \
-		  "solid_status": r.solid_status()
-		   }, results)
+
+	if current_user.is_anonymous():
+		results = map(lambda r: {     
+			  "id":           r.id, \
+			  "text":         helpers.clean_text(r.text), \
+			  "date_created": helpers.date(r.date_received or r.date_created), \
+			  "department":   r.department_name(), \
+			  "due_date":     format_date(r.due_date), \
+			  "status":       r.status, \
+			  # The following two attributes are defined as model methods,
+			  # and not regular SQLAlchemy attributes.
+			  "contact_name": r.point_person_name(), \
+			  "solid_status": r.solid_status()
+			   }, results)
+	else:
+		results = map(lambda r: {     
+			  "id":           r.id, \
+			  "text":         helpers.clean_text(r.text), \
+			  "date_created": helpers.date(r.date_received or r.date_created), \
+			  "department":   r.department_name(), \
+			  "requester":    r.requester_name(), \
+			  "due_date":     format_date(r.due_date), \
+			  "status":       r.status, \
+			  # The following two attributes are defined as model methods,
+			  # and not regular SQLAlchemy attributes.
+			  "contact_name": r.point_person_name(), \
+			  "solid_status": r.solid_status()
+			   }, results)
+
 
 	matches = {
 		"objects": 		results,
