@@ -28,7 +28,7 @@ $(document).ready(function(){
               value: '',
               text: ''
           }));
- /* Initialize the select element with data from doctypes.json */
+ /* Initialize the select element with department data */
   $.getJSON("api/departments", function(data) {
       var departments_data = data['objects']
       $.each(departments_data, function (i, line) {

@@ -12,37 +12,6 @@ $(document).ready(function() {
     return a
   }
 
-	// $('#allrequestTable').dataTable( {
-	// 	"aaSorting": [[ 1, "desc" ]], // 2nd column sort on #
-	// 	"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
-	// 	"sPaginationType": "bootstrap",
-	// 	"aoColumnDefs": [
-  //     		{ "bSortable": false, "aTargets": [ 0 ] }
-  //   	],
-	// 	"iDisplayLength": 50,
-	// 	"oLanguage": {
-	// 		"sLengthMenu": "_MENU_ records per page"
-	// 	},
-
-  //   // Rely on the API for serving up our list of requests.
-  //   "bServerSide": true,
-  //   "bProcessing": true,
-  //   "sAjaxSource": "/api/request",
-  //   "fnServerData": function(url, data, callback) {
-  //     console.log ( data, callback );
-  //     $.getJSON(url, {
-  //       "q": { "limit":  data[4]["value"], // iDisplayLength
-  //              "offset": data[3]["value"]  // iDisplayStart
-  //            }
-  //     }, function(data) {
-  //       console.log(data);
-  //       callback({
-  //         // "iTotalRecords":        data.num_results,
-  //         "iTotalDisplayRecords": data.num_results,
-  //         "aaData":               filter_for_datatables(data.objects)
-  //       });
-  //     });
-  //   }
 	});
 
 	/* adds placeholder text for search box */
@@ -50,15 +19,6 @@ $(document).ready(function() {
 		"placeholder": "I'd like to find...",
 		});
 } );
-
-// /* Set the defaults for DataTables initialisation */
-// $.extend( true, $.fn.dataTable.defaults, {
-// 	"sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
-// 	"sPaginationType": "bootstrap",
-// 	"oLanguage": {
-// 		"sLengthMenu": "_MENU_ records per page"
-// 	}
-// } );
 
 
 /* Default class modification */

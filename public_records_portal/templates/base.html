@@ -59,7 +59,7 @@
               <span class="icon-bar"></span>
             </a>
             <!-- Be sure to leave the brand out there if you want it shown -->
-            <a class="brand" href="/landing"><img src="{{ url_for('static', filename = 'images/logo.png')}}" alt="{{config['AGENCY_NAME']}} logo" width="35" height="35"/><strong> RecordTrac</strong><small id="beta" class="text-warning"></small></a>
+            <a class="brand" href="/landing"><img src="{{config['LOGO_ON_BLACK_URL']}}" alt="{{config['AGENCY_NAME']}} logo" width="35" height="35"/><strong> RecordTrac</strong><small id="beta" class="text-warning"></small></a>
             <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
               <ul class="nav tabs">
                 {% if user_id %}
