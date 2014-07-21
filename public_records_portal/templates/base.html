@@ -61,37 +61,30 @@
             <!-- Be sure to leave the brand out there if you want it shown -->
             <a class="brand" href="/landing"><img id="logo_nav" src="{{config['LOGO_ON_BLACK_URL']}}" alt="{{config['AGENCY_NAME']}} logo" width="35" height="35"/><strong> RecordTrac</strong><small id="beta" class="text-warning"></small></a>
             <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
-              <ul class="nav tabs">
+              
                 {% if user_id %}
-                <li><a href="/new">New request</a></li>
-                <li><a href="/requests">All requests</a></li>
-                <li><a href="/tutorial">Tutorial</a></li>
-<!--                 <li><a href="/admin">Admin</a></li> -->
-                <li><a href="/about">About</a></li>
+                  <ul class="nav tabs">
+                    <li><a href="/new">New request</a></li>
+                    <li><a href="/requests">All requests</a></li>
+                    <li><a href="/tutorial">Tutorial</a></li>
+                  <!-- <li><a href="/admin">Admin</a></li> -->
+                    <li><a href="/about">About</a></li>
+                  </ul>
+                  <ul class="nav pull-right">
+                    <li><button id="browserid-logout" class="btn">{{config['AGENCY_NAME']}} Logout</button></li>
+                  </ul>
                 {% else %}
-                <li><a href="/new">New request</a></li>
-                <li><a href="/requests">Explore requests</a></li>
-                <li><a href="/about">About</a></li>
+                  <ul class="nav tabs">
+                    <li><a href="/new">New request</a></li>
+                    <li><a href="/requests">Explore requests</a></li>
+                    <li><a href="/about">About</a></li>
+                  </ul>
+                  <ul class="nav pull-right">
+                    <li><button id="browserid-login" class="btn">{{config['AGENCY_NAME']}} Login</button></li>
+                  </ul>
                 {% endif %}
-              </ul>
             </div>
-          <!-- Login area -->
-            {% if user_id %}
-            <ul class="nav pull-right">
-              <li class="dropdown">
-                  <!-- Logout form here -->
-                  <button id="browserid-logout">{{config['AGENCY_NAME']}} Logout</button>
-              </li>
-            </ul>
-
-            {% else %}
-            <ul class="nav pull-right">
-              <li class="dropdown">
-                <!-- Login form here -->
-                  <button id="browserid-login">{{config['AGENCY_NAME']}} login</button>
-              </li>
-            </ul>
-            {% endif %}
+          
 
             <!-- Everything you want hidden at 940px or less, place within here -->
             <div class="nav-collapse collapse">
