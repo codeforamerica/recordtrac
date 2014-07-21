@@ -34,7 +34,7 @@
 
 
 /* brand area */
-	img[alt="City of Oakland"] {
+	img[id="logo_landing"] {
 		/*display: inline-block;
 		margin-top: -1.5em;
 		margin-right: 1em;*/
