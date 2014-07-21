@@ -16,7 +16,7 @@
 
 /* navbar layout tweaks due to insertion of Oakland tree logo */
 	/* tree logo */
-	img[alt="City of Oakland tree"] {
+	img[id="logo_nav"] {
 		margin-top: -5px;
 		margin-right: 10px;
 	}
