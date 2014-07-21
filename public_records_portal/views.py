@@ -569,7 +569,7 @@ def recaptcha_templatetype(templatetype):
 			elif templatetype == "answer":
 				app.logger.info("Template type is answer!")
 				return update_a_resource(passed_recaptcha = True, data = request.form, resource = "qa")
-			elif templatetype == "generic":
+			elif templatetype == "request":
 				return new_request(passed_recaptcha = True, data = request.form)
 	else:
 		app.logger.info("\n\nAttempted access to recaptcha not via POST")
