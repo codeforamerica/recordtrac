@@ -54,6 +54,7 @@ envvars = [
 			'RECAPTCHA_PUBLIC_KEY',
 			'RECAPTCHA_PRIVATE_KEY',
 			'DEV_EMAIL', # Used for local e-mail testing if set
+			'CHECK_FOR_SPAM', # Used to test spam locally if set
 			'GOOGLE_FEEDBACK_FORM_ID', # The form ID that the feedback tab is hooked up to,
 			'STAFF_URL', # The path/URL at which a csv containing staff data lives. If this is not set, no one will be able to log into RecordTrac
 			'LIAISONS_URL', # The path/URL at which a csv containing liaisons/department data lives. If this is not set, initial request routing will always be directed to the default owner

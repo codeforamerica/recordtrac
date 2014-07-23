@@ -85,8 +85,8 @@ def request_extension(request_id, extension_reasons, user_id):
 	return add_note(request_id = request_id, text = text, user_id = user_id)
 
 ### @export "add_note"
-def add_note(request_id, text, user_id, passed_recaptcha = False):
-	if not text or text == "" or (not user_id and is_spam(text) and not passed_recaptcha):
+def add_note(request_id, text, user_id, passed_spam_filter = False):
+	if not text or text == "" or (not user_id and not passed_spam_filter):
 		return False
 	note_id = create_note(request_id = request_id, text = text, user_id = user_id)
 	if note_id:
@@ -142,9 +142,9 @@ def add_link(request_id, url, description, user_id):
 	return False
 
 ### @export "make_request"			
-def make_request(text, email = None, user_id = None, phone = None, alias = None, department = None, passed_recaptcha = False, offline_submission_type = None, date_received = None):
+def make_request(text, email = None, user_id = None, phone = None, alias = None, department = None, passed_spam_filter = False, offline_submission_type = None, date_received = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
-	if not passed_recaptcha and (not user_id and is_spam(text)): 
+	if (not user_id) and (not passed_spam_filter): 
 		return None, False
 	request_id = find_request(text)
 	if request_id: # Same request already exists
@@ -194,9 +194,9 @@ def ask_a_question(request_id, owner_id, question):
 	return False
 
 ### @export "answer_a_question"
-def answer_a_question(qa_id, answer, subscriber_id = None, passed_recaptcha = False):
+def answer_a_question(qa_id, answer, subscriber_id = None, passed_spam_filter = False):
 	""" A requester can answer a question city staff asked them about their request."""
-	if not answer or answer == "" or (is_spam(answer) and not passed_recaptcha):
+	if (not answer) or (answer == "") or (not passed_spam_filter):
 		return False
 	else:
 		request_id = create_answer(qa_id, subscriber_id, answer)
