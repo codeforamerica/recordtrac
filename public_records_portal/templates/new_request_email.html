@@ -7,7 +7,7 @@
 			<div style="clear:both;">
 				<span style="font-family: arial,helvetica,sans-serif;"><span style="color: rgb(51, 51, 51); font-size: 14px;">
 					<p>
-					Thank you for submitting a public records request to the City of Oakland. You will receive email updates about your request, but you can always view any activity on the request page, <a href='{{page}}'>{{page}}</a>.
+					Thank you for submitting a public records request to the {{config['AGENCY_NAME']}}. You will receive email updates about your request, but you can always view any activity on the request page, <a href='{{page}}'>{{page}}</a>.
 				</p>
 				<p>In the next 10 days, you can expect a response from the City.</br>
 				A response can be the following:<ul>
@@ -15,7 +15,7 @@
 				<li>an estimate on when your records will be delivered</li>
 				<li>a note explaining why the records cannot be released</li>
 				<li>the documents you requested</li></ul></p>
-			<p>This email is an automated notification, which is unable to receive replies. Please contact Arlette Flores-Medina, the Open Government Coordinator, with any questions or concerns by calling (510) 238 2965 or emailing aflores@oaklandcityattorney.org.</p>
+			<p>This email is an automated notification, which is unable to receive replies. Please contact {{config['DEFAULT_OWNER_EMAIL']}} with any questions or concerns.</p>
 <br/>  
 <p>
 <hr>
@@ -23,7 +23,7 @@
 <br />
 <span style="font-family: arial,helvetica,sans-serif;"><span style="color: rgb(51, 51, 51); font-size: 11px;">
 <center>
-<i>The 2013 Code for America fellows are creating a new web application that will help the City of Oakland manage public records requests. For more information about Code for America, visit to <a href="http://codeforamerica.org/2013-partners/oakland/">codeforamerica.org</a>.</i>
+<i>For more information about RecordTrac, visit <a href="http://postcode.io/recordtrac">PostCode.io</a>.</i>
 </center>
 </span>
 </p>
@@ -37,11 +37,8 @@
 
 <span style="font-family: arial,helvetica,sans-serif;"><span style="color: rgb(51, 51, 51); font-size: 11px;">
 <center>
-<img src="{{logo_url}}" width="50" height="40"> <br /> <br />
-The City of Oakland <br/>
-1 Frank H. Ogawa Plaza <br/>
-Oakland, CA 94612 <br />
-Phone Number: (510) 444-CITY 
+<img src="{{config['LOGO_ON_WHITE_URL']}}" width="50" height="40"> <br /> <br />
+{{config['AGENCY_NAME']}}
 
 </center>
 <span>

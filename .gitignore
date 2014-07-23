@@ -4,3 +4,8 @@ websiteconfig.py
 settings.env
 notes/
 .DS_Store
+# @waltz's emacs gitignore partee pak
+*~
+.#*
+#~#
+.env

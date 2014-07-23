@@ -4,21 +4,21 @@
 .. modlueauthor:: Richa Agarwal <richa@codeforamerica.org>
 """
 
-from public_records_portal import app
-import os
-import time
-import json
+from public_records_portal import app, db_helpers
+import os, time, json
 from flask import Flask, request
 from flask.ext.login import current_user
 from datetime import datetime, timedelta
 from models import *
 from ResponsePresenter import ResponsePresenter
 from RequestPresenter import RequestPresenter
-from RequestTablePresenter import RequestTablePresenter
 from notifications import generate_prr_emails
 import scribd_helpers
 from db_helpers import *
 from spam import is_spam
+import logging
+import csv
+import urllib
 
 ### @export "add_resource"
 def add_resource(resource, request_body, current_user_id = None):
@@ -56,8 +56,11 @@ def update_resource(resource, request_body):
 	elif "qa" in resource:
 		return answer_a_question(int(fields['qa_id']), fields['answer_text'])
 	elif "owner" in resource:
-		change_request_status(int(fields['request_id']), "Rerouted")
-		return assign_owner(int(fields['request_id']), fields['owner_reason'], fields['owner_email'])
+		if "reason_unassigned" in fields:
+			return remove_staff_participant(owner_id = fields['owner_id'], reason = fields['reason_unassigned'])
+		else:
+			change_request_status(int(fields['request_id']), "Rerouted")
+			return assign_owner(int(fields['request_id']), fields['owner_reason'], fields['owner_email'])
 	elif "reopen" in resource:
 		change_request_status(int(fields['request_id']), "Reopened")
 		return fields['request_id']
@@ -77,7 +80,8 @@ def update_resource(resource, request_body):
 
 ### @export "request_extension"
 def request_extension(request_id, extension_reasons, user_id):
-	update_obj(attribute = "extended", val = True, obj_type = "Request", obj_id = request_id)
+	req = Request.query.get(request_id)
+	req.extension()
 	text = "Request extended:"
 	for reason in extension_reasons:
 		text = text + reason + "</br>"
@@ -105,7 +109,7 @@ def add_note(request_id, text, user_id):
 def upload_record(request_id, file, description, user_id):
 	""" Creates a record with upload/download attributes """
 	try:
-		doc_id, filename = scribd_helpers.upload_file(file)
+		doc_id, filename = scribd_helpers.upload_file(file = file, request_id = request_id)
 	except:
 		return "The upload timed out, please try again."
 	if doc_id == False:
@@ -142,17 +146,28 @@ def add_link(request_id, url, description, user_id):
 	return False
 
 ### @export "make_request"			
-def make_request(text, email = None, assigned_to_name = None, assigned_to_email = None, assigned_to_reason = None, user_id = None, phone = None, alias = None, department = None, passed_recaptcha = False):
+def make_request(text, email = None, user_id = None, phone = None, alias = None, department = None, passed_recaptcha = False, offline_submission_type = None, date_received = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
-	if (not passed_recaptcha) and is_spam(text): 
+	if (app.config['ENVIRONMENT'] == 'PRODUCTION') and (not passed_recaptcha) and is_spam(text): 
 		return None, False
 	request_id = find_request(text)
 	if request_id: # Same request already exists
 		return request_id, False
-	request_id = create_request(text = text, user_id = user_id, department = department) # Actually create the Request object
+	assigned_to_email = app.config['DEFAULT_OWNER_EMAIL']
+	assigned_to_reason = app.config['DEFAULT_OWNER_REASON']
+	if department:
+		app.logger.info("\n\nDepartment chosen: %s" %department)
+		prr_email = db_helpers.get_contact_by_dept(department)
+		if prr_email:
+			assigned_to_email = prr_email
+			assigned_to_reason = "PRR Liaison for %s" %(department)
+		else:
+			app.logger.info("%s is not a valid department" %(department))
+			department = None
+	request_id = create_request(text = text, user_id = user_id, department = department, offline_submission_type = offline_submission_type, date_received = date_received) # Actually create the Request object
 	new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email) # Assign someone to the request
 	open_request(request_id) # Set the status of the incoming request to "Open"
-	if email or phone or alias: # If the user provided an e-mail address, add them as a subscriber to the request.
+	if email or alias or phone:
 		subscriber_user_id = create_or_return_user(email = email, alias = alias, phone = phone)
 		subscriber_id, is_new_subscriber = create_subscriber(request_id = request_id, user_id = subscriber_user_id)
 		if subscriber_id:
@@ -171,10 +186,13 @@ def add_subscriber(request_id, email):
 ### @export "ask_a_question"	
 def ask_a_question(request_id, owner_id, question):
 	""" City staff can ask a question about a request they are confused about."""
+	req = get_obj("Request", request_id)
 	qa_id = create_QA(request_id = request_id, question = question, owner_id = owner_id)
 	if qa_id:
 		change_request_status(request_id, "Pending")
-		generate_prr_emails(request_id, notification_type = "Question asked", user_id = get_requester(request_id))
+		requester = req.requester()
+		if requester:
+			generate_prr_emails(request_id, notification_type = "Question asked", user_id = requester.user_id)
 		add_staff_participant(request_id = request_id, user_id = get_attribute(attribute = "user_id", obj_id = owner_id, obj_type = "Owner"))
 		return qa_id
 	return False
@@ -183,7 +201,8 @@ def ask_a_question(request_id, owner_id, question):
 def answer_a_question(qa_id, answer, subscriber_id = None):
 	""" A requester can answer a question city staff asked them about their request."""
 	request_id = create_answer(qa_id, subscriber_id, answer)
-	change_request_status(request_id, "Pending")
+	# We aren't changing the request status if someone's answered a question anymore, but we could
+	# change_request_status(request_id, "Pending")
 	generate_prr_emails(request_id = request_id, notification_type = "Question answered")
 
 ### @export "open_request"	
@@ -193,30 +212,26 @@ def open_request(request_id):
 ### @export "assign_owner"	
 def assign_owner(request_id, reason, email = None): 
 	""" Called any time a new owner is assigned. This will overwrite the current owner."""
-	owner_id, is_new_owner = add_staff_participant(request_id = request_id, reason = reason, email = email)
 	req = get_obj("Request", request_id)
-	if req.current_owner == owner_id: # Already the current owner
+	past_owner_id = None
+	# If there is already an owner, unassign them:
+	if req.point_person():
+		past_owner_id = req.point_person().id
+		past_owner = get_obj("Owner", req.point_person().id)
+		update_obj(attribute = "is_point_person", val = False, obj = past_owner)
+	owner_id, is_new_owner = add_staff_participant(request_id = request_id, reason = reason, email = email, is_point_person = True)
+	if (past_owner_id == owner_id): # Already the current owner, so don't send any e-mails
 		return owner_id
-	update_obj(attribute = "current_owner", val = owner_id, obj = req)
+
+	app.logger.info("\n\nA new owner has been assigned: Owner: %s" % owner_id)
+	new_owner = get_obj("Owner", owner_id)	
+	# Update the associated department on request
+	update_obj(attribute = "department_id", val = new_owner.user.department, obj = req)
 	user_id = get_attribute(attribute = "user_id", obj_id = owner_id, obj_type = "Owner")
+	# Send notifications
 	if is_new_owner:
 		generate_prr_emails(request_id = request_id, notification_type = "Request assigned", user_id = user_id)
 	return owner_id
-
-### @export "get_request_table_data"
-def get_request_table_data(requests):
-	public = False
-	if current_user.is_anonymous():
-		public = True
-	request_table_data = []
-	if not requests:
-		return request_table_data
-	for req in requests:
-		request_table_data.append(RequestTablePresenter(request = req, public = public))
-	if not request_table_data:
-		return request_table_data
-	request_table_data.sort(key = lambda x:x.request.date_created, reverse = True)
-	return request_table_data
 
 ### @export "get_request_data_chronologically"
 def get_request_data_chronologically(req):
@@ -255,25 +270,31 @@ def get_responses_chronologically(req):
 
 ### @export "set_directory_fields"
 def set_directory_fields():
-	dir_json = open(os.path.join(app.root_path, 'static/json/directory.json'))
-	json_data = json.load(dir_json)
-	for line in json_data:
-		if line['EMAIL_ADDRESS']:
-			try:
-				last, first = line['FULL_NAME'].split(",")
-			except:
-				last, junk, first = line['FULL_NAME'].split(",")
-			email = line['EMAIL_ADDRESS'].lower()
-			user = create_or_return_user(email = email, alias = "%s %s" % (first, last), phone = line['PHONE'], department = line['DEPARTMENT'])
+	# Set basic user data
+	if 'STAFF_URL' in app.config:
 
+		# This gets run at regular internals via cron_jobs.py in order to keep the staff user list up to date. Before users are added/updated, ALL users get reset to 'inactive', and then only the ones in the current CSV are set to active. 
+		for user in User.query.filter(User.is_staff == True).all():
+			update_user(user = user, is_staff = False)
+		csvfile = urllib.urlopen(app.config['STAFF_URL'])
+		dictreader = csv.DictReader(csvfile, delimiter=',')
+		for row in dictreader:
+			create_or_return_user(email = row['email'].lower(), alias = row['name'], phone = row['phone number'], department = row['department name'], is_staff = True)
+	else:
+		app.logger.info("\n\n Please add an environment variable for where to find csv data on the users in your agency.")
 
-### @export "is_request_open"
-def is_request_open(request_id):
-	status = get_attribute(attribute = "status", obj_id = request_id, obj_type = "Request")
-	if status and 'Closed' in status:
-		return False
-	return True
+	# Set liaisons data (who is a PRR liaison for what department)
+	if 'LIAISONS_URL' in app.config:
+		csvfile = urllib.urlopen(app.config['LIAISONS_URL'])
+		dictreader = csv.DictReader(csvfile, delimiter=',')
+		for row in dictreader:
+			user = create_or_return_user(email = row['PRR liaison'], contact_for = row['department name'])
+			if row['PRR backup'] != "":
+				user = create_or_return_user(email = row['PRR backup'], backup_for = row['department name'])
+	else:
+		app.logger.info("\n\n Please add an environment variable for where to find department liaison data for your agency.")
 
+			
 ### @export "last_note"
 def last_note(request_id):
 	notes = get_attribute(attribute = "notes", obj_id = request_id, obj_type = "Request")

@@ -7,7 +7,7 @@
 	<div class="span10 offset1">
 		<div class="row-fluid">
 			<div id="about_image" class="span10">
-				<img src="{{ url_for('static', filename='images/CityTree_logo_green.jpg') }}" width="10%" alt="City of Oakland"/>
+				<img src="{{ url_for('static', filename = 'images/logo_black.png')}}" alt="{{config['AGENCY_NAME']}} logo" width="100" height="100"/>
 				<i class="icon-plus icon-3x text-center muted"></i>
 				<img src="{{ url_for('static', filename='images/CfA_logo.png') }}" width="20%" alt="Code for America"/>
 			</div>
@@ -21,14 +21,14 @@
 			<li><a href="#all request table">Where can I find all the requests submitted through RecordTrac?</a></li>
 			<li><a href="#show">Why can you show everyone my request?</a> </li>
 			<li><a href="#documents">Why aren't all documents uploaded on RecordTrac?</a> </li> 
-			<li><a href="#redeploy">What should I do if I want my city to use RecordTrac?</a> </li>
+			<li><a href="#redeploy">What should I do if I want my agency to use RecordTrac?</a> </li>
 			
 			</ul>
 
 			<br>
 
 				<h4 id="what">What is RecordTrac?</h4>
-				<p>RecordTrac is a quick, simple way for you to submit a public records request to the City of Oakland.</p>  
+				<p>RecordTrac is a quick, simple way for you to submit a public records request to {{config['AGENCY_NAME']}}</p>  
 				<p><strong>Every message or record uploaded on this site is completely public.</strong> This makes easier to understand what happens to every request.</p>
 				<br>
 
@@ -41,14 +41,14 @@
 
 
 				<h4 id="all request table">Where can I find all the requests submitted through RecordTrac?</h4>
-				<p>RecordTrac displays all current and past records requests at <a href="http://records.oaklandnet.com/requests">records.oaklandnet.com/requests</a>. A description of what RecordTrac displays on this page can be found below:</p> 
+				<p>RecordTrac displays all current and past records requests at <a href="{{config['APPLICATION_URL']}}requests">{{config['APPLICATION_URL']}}requests</a>. A description of what RecordTrac displays on this page can be found below:</p> 
 
 				<div class="row-fluid">
 					<div class="span1 offset1">
 						<p class="table-legend">'#'</p>
 					</div>
 					<div class="span8">
-						<p class="table-legend-explanation">Each request is assigned a unique number. You can easily track your request with this number by visiting <a href="http://records.oaklandnet.com/track">records.oaklandnet.com/track</a>.</p>
+						<p class="table-legend-explanation">Each request is assigned a unique number. You can easily track your request with this number by visiting <a href="{{config['APPLICATION_URL']}}track">{{config['APPLICATION_URL']}}track</a>.</p>
 					</div>
 				</div>
 				<div class="row-fluid">
@@ -57,7 +57,7 @@
 					</div>
 					<div class="span8">
 						<p class="table-legend-explanation">This column displays the date when the request was entered in RecordTrac.</p>
-						<p class="table-legend-explanation">You are allowed to submit a public records request any way, including by mail, fax, and over the phone. If a request wasn't originally submitted through RecordTrac, it may take city employees a day or two to enter it into the system.</p>
+						<p class="table-legend-explanation">You are allowed to submit a public records request any way, including by mail, fax, and over the phone. If a request wasn't originally submitted through RecordTrac, it may take agency employees a day or two to enter it into the system.</p>
 					</div>
 				</div>
 				<div class="row-fluid">
@@ -65,8 +65,8 @@
 						<p class="table-legend">'Point of Contact'</p>
 					</div>
 					<div class="span8">
-						<p class="table-legend-explanation">The 'Point of Contact' is a City of Oakland employee responsible for providing you with the information you need about your public records request.</p>
-						<p class="table-legend-explanation">Sometimes city employees from several departments will be needed to respond to one public records request. They will be added as Helpers.  In that case, if you have any questions about your request send a message to the Point of Contact through RecordTrac.</p>
+						<p class="table-legend-explanation">The 'Point of Contact' is a {{config['AGENCY_NAME']}} employee responsible for providing you with the information you need about your public records request.</p>
+						<p class="table-legend-explanation">Sometimes {{config['AGENCY_NAME']}} employees from several departments will be needed to respond to one public records request. They will be added as Helpers.  In that case, if you have any questions about your request send a message to the Point of Contact through RecordTrac.</p>
 					</div>
 				</div>
 				<div class="row-fluid">
@@ -74,50 +74,22 @@
 						<p class="table-legend">'Department'</p>
 					</div>
 					<div class="span8">
-						<p class="table-legend-explanation">The city department where the point of contact works. Multiple departments may be involved in one request, but the Point of Contact's department will only be displayed.</p>
+						<p class="table-legend-explanation">The agency department where the point of contact works. Multiple departments may be involved in one request, but the Point of Contact's department will only be displayed.</p>
 					</div>
 				</div>
-				
-				<!-- <table border="0" cellpadding="5">
-				<tr>
-				<td><b>'#'</b></td>
-				<td>Each request is assigned a unique number. You can easily track your request with this number by visiting <a href="http://records.oaklandnet.com/track">records.oaklandnet.com/track</a>.</td>
-				</tr>
-				<tr>
-				<td><b>'Received'</b></td>
-				<td><p>This column displays the date when the request was entered in RecordTrac.</p>
-				<p>You are allowed to submit a public records request any way, including by mail, fax, and over the phone. If a request wasn't originally submitted through RecordTrac, it may take city employees a day or two to enter it into the system.</p></td>
-				</tr>
-				<tr>
-				<td><b>'Request'</b></td>
-				<td>
-				<p>This is the message sent to the city of Oakland by a member of the public.  Sometimes city employees will enter a request on behalf of an individual. If the requested document contains confidential information that may violate the security or privacy of a requester, you'll only see a description of the document.</p>
-				</td>
-				</tr>
-				<tr>
-				<td><b>'Point of Contact'</b></td>
-				<td><p>The 'Point of Contact' is a City of Oakland employee responsible for providing you with the information you need about your public records request.</p>
-				<p>Sometimes city employees from several departments will be needed to respond to one public records request. They will be added as Helpers.  In that case, if you have any questions about your request send a message to the Point of Contact through RecordTrac.</p>  </td>
-				</tr>
-				<tr>
-				<td><b>'Department'</b></td>
-				<td>The city department where the point of contact works. Multiple departments may be involved in one request, but the Point of Contact's department will only be displayed.</td>
-				</tr>
-				</table> -->
-		
 				<br>
 
 
 				<h4 id="show">Why can you show everyone my request?</h4>
-				<p>The California Public Records Act and Oakland’s Sunshine Ordinance gives everyone access to documents, photos, emails, texts, audio recordings, and data about the City and its business. This is why we can display your request and any responses from city staff. To make you feel comfortable, we don't allow the public to view your name or contact information through this website. </p>
+				<p>The California Public Records Act and Oakland’s Sunshine Ordinance gives everyone access to documents, photos, emails, texts, audio recordings, and data about the {{config['AGENCY_NAME']}} and its business. This is why we can display your request and any responses from {{config['AGENCY_NAME']}} staff. To make you feel comfortable, we don't allow the public to view your name or contact information through this website. However, by submitting a request you are creating a public record, and information you include is requestable under the law.</p>
 
-				<p>According to the Public Records Act, the City must:</p>
+				<p>According to the Public Records Act, the {{config['AGENCY_NAME']}} must:</p>
 				<ul>
 				<li>Help you locate the record</li>
 				<li>Allow you to view the records immediately during business hours</li>
 				<li>Respond within 10 days</li> 
 				</ul>
-				<p>The City may ask for a 14-day extension if they have to sort through a large number of documents, retrieve the document from a facility outside of City Hall, consult with another agency, or write a computer program to get data.</p> 
+				<p>The {{config['AGENCY_NAME']}} may ask for a 14-day extension if they have to sort through a large number of documents, retrieve the document from a facility outside of City Hall, consult with another agency, or write a computer program to get data.</p> 
 				<p>
 					For more information on the Public Records Act and the Sunshine Ordinance, check out these resources:
 				</p>
@@ -127,12 +99,12 @@
 				</ul>
 				<br>
 				<h4 id="documents">Why aren't all documents uploaded on RecordTrac?</h4>
-				<p>The City of Oakland will not publicly release records or information that violates your right to privacy. This also includes records that will compromise your safety or the completion of a law enforcement investigation.</p>
+				<p>The {{config['AGENCY_NAME']}} will not publicly release records or information that violates your right to privacy. This also includes records that will compromise your safety or the completion of a law enforcement investigation.</p>
 
-				<p>Many police reports contain sensitive information that can only be sent to the individuals directly involved in the crime or incident. The Oakland Police Department (OPD) will not release these types of reports through RecordTrac. You will, however, better understand the number and types of records requests processed by OPD.</p>   
+				<p>For example, many police reports contain sensitive information that can only be sent to the individuals directly involved in the crime or incident, and will not be released through RecordTrac. You will, however, better understand the number and types of records requests processed, even when the record itself cannot be uploaded due to sensitive data.</p>   
 				<br>
-				<h4 id="redeploy">What should I do if I want my city to use RecordTrac?</h4>
-				<p>RecordTrac is an open-source software project that can be redeployed by any municipality. If you want to reuse RecordTrac, we'd love to hear from you. Visit our sign-up page by <a href="http://records.oaklandnet.com/signup">clicking here</a>.</p>
+				<h4 id="redeploy">What should I do if I want my agency to use RecordTrac?</h4>
+				<p>RecordTrac is an open-source software project that can be redeployed by any municipality. If you want to reuse RecordTrac, we'd love to hear from you. Visit our sign-up page by <a href="http://www.recordtrac.com">clicking here</a>.</p>
 
 			</div>
 		</div>

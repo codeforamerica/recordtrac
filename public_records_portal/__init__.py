@@ -1,9 +1,10 @@
 """A flask app to handle public records requests and display responses.
 
-.. moduleauthor:: Richa Agarwal <richa@codeforamerica.org>
+.. moduleauthor:: Richa Agarwal <richa@postcode.io>
 
 """
 
+import logging
 from os import environ
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -13,35 +14,57 @@ app = Flask(__name__)
 app.debug = True
 
 # Set environment variables
-def set_env(key, default):
+def set_env(key, default = None):
 	if key in environ:
 		app.config[key] = environ[key]
-	else:
+	elif default:
 		app.config[key] = default
 
-# You can overwrite these defaults, ideally in a file such as settings.env. See settings.env.example
-set_env(key = 'APPLICATION_URL', default = "http://127.0.0.1:5000/")
+# UPDATES TO THESE DEFAULTS SHOULD OCCUR IN YOUR .env FILE.
+
+set_env(key = 'APPLICATION_URL', default = "http://127.0.0.1:5000/") 
+set_env(key = 'SQLALCHEMY_DATABASE_URI', default = "postgresql://localhost/recordtrac")
 set_env(key = 'ENVIRONMENT', default="LOCAL")
-set_env(key = 'DEFAULT_OWNER_REASON', default = 'The reason the default owner gets assigned a request' )
-set_env(key = 'DEFAULT_OWNER_EMAIL', default = 'citystaff@city.gov')
-set_env(key = 'SQLALCHEMY_DATABASE_URI', default = "postgresql://localhost/publicrecords")
-# If you set up Sendgrid or another e-mail service:
-set_env(key = 'DEFAULT_MAIL_SENDER', default = 'appemail@app.com') 
-set_env(key = 'MAIL_USERNAME', default='Oakland Public Records')
-set_env(key = 'MAIL_PASSWORD', default = "")
-# For app logins
-set_env(key = 'ADMIN_PASSWORD', default = "NotSoSecretPassword")
-# Flask app secret key
-set_env(key = 'SECRET_KEY', default = "NotSoSecretKey")
-# For Scribd uploads...
-set_env(key = 'SCRIBD_API_KEY', default = "")
-set_env(key = 'SCRIBD_API_SECRET', default = "")
-set_env(key = 'HOST_URL', default = 'https://www.scribd.com/doc/')
-set_env(key = 'AKISMET_KEY', default = "")
-set_env(key = 'SENDGRID_MONTHLY_LIMIT', default = None)
-set_env(key = 'LIST_OF_ADMINS', default = "")
-set_env(key = 'RECAPTCHA_PUBLIC_KEY', default = "")
-set_env(key = 'RECAPTCHA_PRIVATE_KEY', default = "")
+# The default records liaison, to whom requests get routed to if no department is selected:
+set_env(key = 'DEFAULT_OWNER_EMAIL', default = 'recordtrac@postcode.io')
+set_env(key = 'DEFAULT_OWNER_REASON', default = 'Open government coordinator' )
+
+set_env(key = 'HOST_URL', default = 'https://www.scribd.com/doc/') # Where the documents/record uploads are hosted
+set_env(key = 'AGENCY_NAME', default = 'Your agency name') # e.g. City of Oakland
+set_env(key = 'SECRET_KEY', default = 'Change this to something super secret') # Flask application's secret key
+
+# The number of days an agency has (determined by law or policy) to fulfill a request
+# Currently due dates and overdue status is only showed to logged in agency staff
+set_env(key = 'DAYS_TO_FULFILL', default = '10')
+set_env(key = 'DAYS_AFTER_EXTENSION', default = '14')
+set_env(key = 'DAYS_UNTIL_OVERDUE', default = '2') 
+
+
+# Set rest of the variables that don't have defaults:
+envvars = [
+			'DEFAULT_MAIL_SENDER', # The e-mail address used as the FROM field for all notifications
+			'MAIL_USERNAME', # The SendGrid username
+			'MAIL_PASSWORD', # The SendGrid password
+			'SENDGRID_MONTHLY_LIMIT', # Your SendGrid Monthly Limit
+			'LIST_OF_ADMINS', # Defines who has admin access (/admin) with a comma delimited list of e-mail addresses. i.e. 'richa@codeforamerica.org,cris@codeforamerica.org'
+			'SECRET_KEY', # Flask app secret key
+			'SCRIBD_API_KEY',
+			'SCRIBD_API_SECRET',
+			'AKISMET_KEY', # Used for spam filtering
+			'RECAPTCHA_PUBLIC_KEY',
+			'RECAPTCHA_PRIVATE_KEY',
+			'DEV_EMAIL', # Used for local e-mail testing if set
+			'GOOGLE_FEEDBACK_FORM_ID', # The form ID that the feedback tab is hooked up to,
+			'STAFF_URL', # The path/URL at which a csv containing staff data lives. If this is not set, no one will be able to log into RecordTrac
+			'LIAISONS_URL', # The path/URL at which a csv containing liaisons/department data lives. If this is not set, initial request routing will always be directed to the default owner
+			'LOGO_ON_WHITE_URL', # The path/URL at which a logo (on a white background) of the agency is hosted. (.png or .jpg)
+			'LOGO_ON_BLACK_URL' # The path/URL at which a logo (on a black background) of the agency is hosted. (.png or .jpg)
+			,
+			]
+for envvar in envvars:
+	set_env(key = envvar)
+
 
 # Initialize database
 db = SQLAlchemy(app)
+

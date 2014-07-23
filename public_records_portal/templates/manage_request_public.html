@@ -7,7 +7,7 @@
 {% endblock public_note %}
 
 {% block status %}
-  {% set status = ( req | get_status('public') ) %}
+  {% set status = req.solid_status() %}
   {% include '_manage_requests_status.html' %}
 {% endblock status %}
 

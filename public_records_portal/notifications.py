@@ -6,17 +6,23 @@ from db_helpers import *
 from departments import *
 import sendgrid
 from flask import render_template
+import helpers
+import logging
 
 # Set flags:
 
 send_emails = False
 test = "[TEST] "
+
 if app.config['ENVIRONMENT'] == 'PRODUCTION':
 	send_emails = True
 	test = ""
+elif 'DEV_EMAIL' in app.config:
+	send_emails = True
 
 ### @export "generate_prr_emails"
 def generate_prr_emails(request_id, notification_type, user_id = None):
+	app.logger.info("\n\n Generating e-mails for request with ID: %s, notification type: %s, and user ID: %s" %(request_id, notification_type, user_id))
 	app_url = app.config['APPLICATION_URL'] 
 	# Define the e-mail template:
 	template = "generic_email.html" 
@@ -29,12 +35,14 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 	include_unsubscribe_link = True
 	unfollow_link = None 
 	for recipient_type in recipient_types:
+		# Skip anyone that has unsubscribed
 		if user_id and (recipient_type == "Requester" or recipient_type == "Subscriber"):
 			subscriber = get_subscriber(request_id = request_id, user_id = user_id)
 			should_notify = get_attribute(attribute = "should_notify", obj = subscriber)
 			if should_notify == False:
-				print "Person unsubscribed, no notification sent."
+				app.logger.info("\n\nSubscriber %s unsubscribed, no notification sent." % subscriber.id)
 				continue
+		# Set up the e-mail
 		page = "%srequest/%s" %(app_url,request_id) # The request URL 
 		if "Staff" in recipient_type:
 			page = "%scity/request/%s" %(app_url,request_id)
@@ -52,12 +60,12 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 						unfollow_link = unfollow_link + recipient
 					send_prr_email(page = page, recipients = [recipient], subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link, unfollow_link = unfollow_link)
 			else:
-				print "Can't send an e-mail out if no user exists."
+				app.logger.debug("\n\n No user ID provided")
 		elif recipient_type == "Subscribers":
 			subscribers = get_attribute(attribute = "subscribers", obj_id = request_id, obj_type = "Request")
 			for subscriber in subscribers:
 				if subscriber.should_notify == False:
-					print "Person unsubscribed, no notification sent."
+					app.logger.info("\n\n Subscriber %s unsubscribed" % subscriber.id)
 					continue
 				recipient = get_attribute(attribute = "email", obj_id = subscriber.user_id, obj_type = "User")
 				if recipient:
@@ -68,24 +76,27 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 			recipients = []
 			participants = get_attribute(attribute = "owners", obj_id = request_id, obj_type = "Request")
 			for participant in participants:
-				recipient = get_attribute(attribute = "email", obj_id = participant.user_id, obj_type = "User")
-				if recipient:
-					recipients.append(recipient)
+				if participant.active: # Only send an e-mail if they are active in the request
+					recipient = get_attribute(attribute = "email", obj_id = participant.user_id, obj_type = "User")
+					if recipient:
+						recipients.append(recipient)
 			send_prr_email(page = page, recipients = recipients, subject = email_subject, template = template, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = False, unfollow_link = unfollow_link)
+			app.logger.info("\n\nRecipients: %s" % recipients)
 		else:
-			print recipient_type
-			print "Not a valid recipient type"
+			app.logger.info("Not a valid recipient type: %s" % recipient_type)
 
 ### @export "send_prr_email"
 def send_prr_email(page, recipients, subject, template, include_unsubscribe_link = True, cc_everyone = False, password = None, unfollow_link = None):
+	app.logger.info("\n\nAttempting to send an e-mail to %s with subject %s, referencing page %s and template %s" % (recipients, subject, page, template))
 	if recipients:
 		if send_emails:
 			try:
-				send_email(body = render_template(template, unfollow_link = unfollow_link, logo_url = "%sstatic/images/CityTree_logo_green.jpg" %(app.config['APPLICATION_URL'] ), page = page, password = password), recipients = recipients, subject = subject, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = cc_everyone)
-			except:
-				print "E-mail was not sent."
+				send_email(body = render_template(template, unfollow_link = unfollow_link, page = page, password = password), recipients = recipients, subject = subject, include_unsubscribe_link = include_unsubscribe_link, cc_everyone = cc_everyone)
+				app.logger.info("\n\n E-mail sent successfully!")
+			except Exception, e:
+				app.logger.info("\n\nThere was an error sending the e-mail: %s" % e)
 		else:
-			print "%s to %s with subject %s" % (render_template(template, page = page), recipients, subject)
+			app.logger.info("\n\n E-mail flag turned off, no e-mails sent.")
 
 ### @export "send_email"
 def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_everyone = False):
@@ -96,6 +107,8 @@ def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_ev
 	message = sendgrid.Message(sender, subject, plaintext, html)
 	if not include_unsubscribe_link:
 		message.add_filter_setting("subscriptiontrack", "enable", 0)
+	if 'DEV_EMAIL' in app.config:
+		recipients = [app.config['DEV_EMAIL']]
 	if cc_everyone: # Not being used for now
 		message.add_to(recipients[0])
 		for recipient in recipients:
@@ -106,7 +119,18 @@ def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_ev
 			# if should_notify(recipient):
 				message.add_to(recipient)
 	message.add_bcc(sender)
-	mail.web.send(message)
+	if send_emails:
+		app.logger.info("\n\n Attempting to send e-mail with body: %s, subject: %s, to %s" %(body, subject, recipients))
+		try:
+			status = mail.web.send(message)
+			if status == False:
+				app.logger.info("\n\nSendgrid did not deliver e-mail.")
+			return status
+		except Exception, e:
+			app.logger.error("\n\nNo e-mail was sent, error: %s" % e)
+			return False
+	app.logger.info("\n\nNo e-mail was sent, probably because you're in a non-production environment.")
+	return False
 
 ### @export "due_date"
 def due_date(date_obj, extended = None, format = True):
@@ -119,22 +143,12 @@ def due_date(date_obj, extended = None, format = True):
 		date_obj = datetime.strptime(date_obj, "%Y-%m-%dT%H:%M:%S.%f")
 	due_date = date_obj + timedelta(days = days_to_fulfill)
 	if format:
-		return format_date(due_date.date())
-	return due_date.date()
-
-### @export "is_due_soon"
-def is_due_soon(date_obj, extended = None):
-	current_date = datetime.now().date()
-	due = due_date(date_obj = date_obj, extended = extended, format = False)
-	num_days = 2
-	if not (current_date >= due): # if not overdue
-		if (current_date + timedelta(days = num_days)) >= due:
-			return True, due
-	return False, due
+		return format_date(due_date)
+	return due_date
 
 ### @export "is_overdue"
 def is_overdue(date_obj, extended = None):
-	current_date = datetime.now().date()
+	current_date = datetime.now()
 	due = due_date(date_obj = date_obj, extended = extended, format = False)
 	if (current_date >= due):
 		return True, due
@@ -152,20 +166,17 @@ def notify_due():
 	email_json = open(os.path.join(app.root_path, 'static/json/emails.json'))
 	json_data = json.load(email_json)
 	for req in requests:
-		if "Closed" not in req.status:
+		status = req.solid_status
+		if status != "closed":
 			# Check if it is due in 2 days
-			due_soon, date_due = is_due_soon(req.date_created, req.extended) 
-			if due_soon:
+			if status == "due soon":
 				change_request_status(req.id, "Due soon")
 				email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Notification types"]["Request due"])
+			elif status == "overdue":
+				change_request_status(req.id, "Overdue")
+				email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Notification types"]["Request overdue"]["Subject"])
 			else:
-				# Otherwise, check if it is overdue
-				overdue, date_due = is_overdue(req.date_created, req.extended)
-				if overdue:
-					change_request_status(req.id, "Overdue")
-					email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Notification types"]["Request overdue"]["Subject"])
-				else:
-					continue
+				continue
 			recipients = get_staff_recipients(req)
 			app_url = app.config['APPLICATION_URL']
 			page = "%scity/request/%s" %(app_url,req.id)
@@ -176,11 +187,12 @@ def notify_due():
 ### @export "get_staff_recipients"
 def get_staff_recipients(request):
 	recipients = []
-	owner_email = get_owner_data(request.id, attributes=["email"])[0]
-	recipients.append(owner_email)
+	owner_email = request.point_person().user.email
+	if owner_email:
+		recipients.append(owner_email)
 	# Look up the department for the request, and get the contacts and backup:
-	dept = get_dept_by_request(request)
-	if dept:
+	dept = request.department_name()
+	if dept != "N/A":
 		contact_email = get_contact_by_dept(dept)
 		if contact_email and contact_email not in recipients:
 			recipients.append(contact_email)
@@ -207,6 +219,8 @@ def should_notify(user_email):
 ### @export "format_date"
 def format_date(obj):
 	""" Take a datetime object and return it in format Jun 12, 2013 """
-	return obj.strftime('%b %d, %Y')
+	if not obj:
+		return None
+	return helpers.localize(obj).strftime('%b %d, %Y')
 
 

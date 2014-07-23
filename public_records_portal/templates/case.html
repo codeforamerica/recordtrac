@@ -20,7 +20,7 @@
     <a href="#" 
       onclick="
         window.open(
-          'http://twitter.com/intent/tweet?text=Requested from the City of Oakland:&amp;via=RecordTrac&amp;url=http://records.oaklandnet.com/request/{{req.id}}', 
+          'http://twitter.com/intent/tweet?text=Requested from {{config['AGENCY_NAME']}}:&amp;via=RecordTrac&amp;url={{config['APPLICATION_URL']}}request/{{req.id}}', 
           'facebook-share-dialog', 
           'width=550,height=350'); 
         return false;">
@@ -31,7 +31,7 @@
     <a href="#" 
       onclick="
         window.open(
-          'https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Frecords.oaklandnet.com%2Frequest%2F{{req.id}}', 
+          'https://www.facebook.com/sharer/sharer.php?u={{config['APPLICATION_URL']}}request/{{req.id}}', 
           'facebook-share-dialog', 
           'width=626,height=436'); 
         return false;">
@@ -53,7 +53,8 @@
           <div id = "request-container">
             <!-- request area -->
             <div class="row-fluid">
-              <h3 class="control-widget">Request <span class="muted">#{{req.id}}</span></h3>{% block clarify_request %}{% endblock clarify_request %}{% block public_note %}{% endblock public_note %}
+              <h3 class="control-widget">Request <span class="muted">#{{req.id}}</span></h3>
+              {% block clarify_request %}{% endblock clarify_request %}{% block public_note %}{% endblock public_note %}
                
               <p class="lead" truncateable="250"> {{ req.text | new_lines }} </p>
             </div>
@@ -140,8 +141,16 @@
             </div>
             {% endfor %}
           {% else %}<!--added an if then to check to see if any responses exist - if no then show text here for the "if any response exists" above -->
-            <div class="row-fluid">
-              <p id="no-records"><br><i>No records uploaded yet.</i></p>
+            <div class = "row-fluid"> 
+              <br>
+              {% set requester = req.requester() %}
+              {% if requester %}
+                  {% set email = requester.user.email %}
+              {% endif %}
+              {% if not email %}
+                <p id="no-email"><i>Requester did not provide an e-mail address. <i class="icon-question-sign" title= "If a clarification is needed and no alternate contact information has been provided, it may not be possible to respond to this request."></i></i></p>
+              {% endif %}
+              <p id="no-records"><i>No records uploaded yet.</i></p>
             </div>
           {% endif %}
         </div>
@@ -175,7 +184,7 @@
       {% endblock sidebar %}
 
       {% block request_dates %}
-        <div class="muted text-center">Created: {{ req.date_created | date }}</div>
+        <div class="muted text-center">Received: {{ (req.date_received or req.date_created) | date }}</div>
       {% endblock request_dates %}
 
       {% block follow %}

@@ -1,112 +1,263 @@
 <!-- This template is show all cases in the system. -->
-
 {% extends "base.html" %}
-{% block title %}{{title}}{% endblock title %}
-{% block head %} 
 
-{% endblock head %}
+{% block title %}
+  {{ title }} &#45; RecordTrac
+{% endblock title %}
+
 {% block custom_css_links %}
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/all_requests.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/all_requests_noresults.css') }}">
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery.dataTables.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.min.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.min.css') 
+  }}">
+       <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui-1.10.4.custom.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui.css') }}">
 {% endblock custom_css_links %}
+
+{% block custom_script_links %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/underscore-min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/backbone-min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/moment.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-select.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/custom.bootstrap-select.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-ui-1.10.4.custom.min.js') }}"></script> 
+    <script type="text/javascript" src="{{ url_for('static', filename='js/date_picker.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/requests.js') }}"></script>
+{% endblock custom_script_links %}
+
 {% block container %}
+  <input type="hidden" id="user_id" value="{{user_id}}">
   <div class="row-fluid">
+    <div class="span11 offset1">
 
-    <div class="span8 offset1">
-      <div id="exploreTitle" class="row-fluid">
-        <h3>Explore <span class="badge"> {{total_requests_count}}</span> requests and counting</h3>
-        <a href="/new" class="btn btn-primary btn-large pull-right">Request new record</a>
-      </div>
+      {# 'Explore' and 'Request new' button. #}
       <div class="row-fluid">
-        <p class="intro_text">RecordTrac makes every public records request available to the public, including messages or documents uploaded by city staff. Search through current and past requests. You may find what you need!</p>
+        <div class="span9">
+          <div id="exploreTitle">
+            <h3>Explore <span class="badge">{{total_requests_count}}</span> requests and counting</h3>
+            <a href="/new" class="btn btn-primary btn-large pull-right">Request new record</a>
+          </div>
+        </div>
       </div>
-      <div>
-        {% block datatable %}
-          <table cellpadding="0" cellspacing="0" border="0" id="allrequestTable" class="data-table table">
-            <caption>All request table</caption>
-            <thead>
-              <tr>
-                <th class="status" scope="col"></th>
-                <th scope="col">#</th>
-                <th scope="col">Received</th>
-                <th scope="col">Request</th>
-                <th scope="col">Department</th>
-                <th scope="col">Point of Contact</th>
-                <th style='display:none;' scope="col"></th>
-                {% block city_tableheader %}{% endblock city_tableheader %}
-              </tr>
-            </thead>
-            <tbody>
-              {% for request in record_requests %}
+
+      {# Blurb about what RecordTrac does. #}
+      <div class="row-fluid">
+        <div class="span9">
+          <p class="intro_text">RecordTrac makes every public records request available to the public, including messages or documents uploaded by agency staff. Search through current and past requests. You may find what you need!</p>
+        </div>
+      </div>
+
+      {# Search results table. #}
+      <div class="row-fluid">
+        <div class="span3 well search_style">
+          
+          <div id="search_field_container"></div>
+          <script type="text/template" id="search_field_template">
+            <h5>Search</h5>
+            <div class="indent">
+              <input id = "search_term" type="search" placeholder="I'd like to find..." value="<%- search_term %>">
+            </div>
+          </script>
+    
+            <div id="sidebar_container"></div>
+            <script type="text/template" id="sidebar_template">                                         
+              <h4 class="underline">ADVANCED FILTER</h4>
                 {% if user_id %}
-                
-                  <tr>
-                    
-                {% else %}
-                
-                  <tr >
-                    
+                  <h5>My Requests</h5>
+                  <div class="indent">
+                    <label class="checkbox">
+                      <input 
+                         type="checkbox"
+                         id="mine_as_poc"
+                         <% if (mine_as_poc) { %>
+                           checked
+                         <% } %> >
+                      <em>as Point of Contact</em>
+                    </label>
+                    <label class="checkbox">
+                      <input 
+                        type="checkbox"
+                        id="mine_as_helper"
+                        <% if (mine_as_helper) { %>
+                          checked
+                        <% } %> >
+                      <em>as Helper</em>
+                    </label>
+                  </div>
+                {% endif %}
+
+                <h5>Status</h5>
+                <div class="indent" style="padding-bottom: 15px;">
+                {% if user_id %}
+                  <label class="checkbox">
+                    <input type="checkbox"
+                           id="open" 
+                           <% if (open == 'true' || open == true) { %>
+                             checked
+                           <% } %> >
+                    <em class="open_style">Open</em>
+                  </label>
+                  <label class="checkbox">
+                    <input type="checkbox"
+                           id="due_soon" 
+                           <% if (due_soon == 'true' || due_soon == true) { %>
+                             checked
+                           <% } %> >
+                    <em class="duesoon_style">Due Soon</em>
+                  </label>
+                  <label class="checkbox">
+                    <input type="checkbox"
+                           id="overdue" 
+                           <% if (overdue == 'true' || overdue == true) { %>
+                             checked
+                           <% } %> >
+                    <em class="overdue_style">Overdue</em>
+                  </label>
                   {% endif %}
-                  {% block status_view %}{{ request.status }}{% endblock status_view %}
-                    {{ request.display_text | safe }}
-                    {% block city_tabledata %}{% endblock city_tabledata %}
-                  </tr>
-              
-              {% endfor %}
-                
-            </tbody>
-          </table>
-        {% endblock datatable %}
-      </div>
-    </div>
+                  <label class="checkbox">
+                    <input type="checkbox"
+                           id="closed" 
+                           <% if (closed == 'true' || closed == true) { %>
+                             checked
+                           <% } %> >
+                    <em class="closed_style">Closed</em>
+                  </label>
+                </div>
+              </div>
+            </script>
 
-    <div class="span3">
-      {% block sidebar %}
-        <div class="well r_sidebar r_sidebar-fixed">
-          <h4>View <small class="count"> {{ record_requests | count }} of {{total_requests_count}} shown</small></h4>
+            <div id="request_date_container"></div>
+            {% if user_id %}
+            <div id="due_date_container"></div>
+            {% endif %}
+            <script type="text/template" id="date_filter_template">
+              <div class="date_filter">
+                <h5><%- title %></h5>
+                <a class="all_dates">All Dates</a>
+                <div class="control-group indent">
+                  <input type="text" 
+                         class="span5 min_field" 
+                         name="request_received_begin"
+                         value="<%- min_value %>" > 
+                  <input type="text" 
+                         class="span5 max_field" 
+                         name="request_received_end"
+                         value="<%- max_value %>" > 
+                </div>
+              </div>
+            </script>
+            <div id="requester_name_container"></div>
+            <script type="text/template" id="requester_name_template">
+            {% if user_id %}
+                <h5>Requester Name</h5>
+                <div class="indent">
+                  <input id="requester_name" type="search" placeholder="Enter name" value="<%- requester_name %>">
+                </div>
+            {% endif %} 
+            </script>
 
-          <form name="filterPublic" class="form-horizontal" id="filterPublic" method="get" action="/requests">
-            <fieldset>
-              <label class="checkbox">
-                <input type="checkbox" title="open_requests_checkbox" value="open" name="status" id= "status" 
-                {% if open_requests %} checked {% endif %}>
-                Open requests
-              </label>
-              <div class="row-fluid">
-                <select class="span12 selectpicker" title="select_department" id = "department" name = "department">
-                  <!-- <option selected="{{dept_selected}}"> -->
-                  <option value = "all">All departments</option>
+            <div id="department_selector_container"></div>
+            <script type="text/template" id="department_selector_template">
+              <h5>Department</h5>
+              <div class="row-fluid indent">
+                <select class="span10">
+                  <% if (department) { %>
+                    <option selected><%= department %></option>
+                  <% } %>
+                  <option value="All departments">All departments</option>
                   {% for department in departments %}
-                    {% if dept_selected == department %}
-                    <option selected = "selected">{{department}}</option>
-                    {% else %}
                     <option>{{department}}</option>
-                    {% endif %}
                   {% endfor %}
                 </select>
               </div>
-              <div class="row-fluid">
-                <div id="viewSubmit" class="span6 offset3">
-                  <button type="submit" title="update_table_button" class="btn btn-primary input-block-level">Update table</button>
-                </div>
-              </div>
-            </fieldset>
-          </form>
-        </div>
-      {% endblock sidebar %}
-    </div>
+            </script>
+          </div>
+     
+          <div class="span8" id="search_results_container"></div>
+          <script type="text/template" id="search_results_template">
+            <table id="requests">
+              <thead id="headings">
+                <tr>
+                  <th class="status" style="width: 3%"></th>
+                  <th id="id" class="sortable" style="width: 4%">#</th>
+                  <th id="date_created" class="sortable" style="width: 12%">Received</th>
+                  <th id="text" class="sortable" style="width: 25%">Request</th>
+                  <th style="width: 15%">Department</th>
+                  <th style="width: 15%">Point of Contact</th>
+                  {% if user_id %}
+                    <th id="due_date" class="sortable"  style="width: 12%">Due</th>
+                    <th style="width: 14%">Requester</th>
+                  {% endif %}
+                </tr>
+              </thead>
+              <tbody>
+              <% if (requests.length > 0) { %>
+                <% _.each(requests, function(request) { %>                
+                  <tr>
+                    <td style="width: 3%" class="status <%= request.solid_status %>">
+                      <% if ( request.solid_status === "closed" ) { %>
+                        <i class="icon-archive icon-light"></i>
+                      <% } %>
+                    </td>
+                    <td style="width: 4%"><%- request.id %></td>
+                    <td style="width: 12%"><%- moment(request.date_created).format("MMM Do, YYYY") %></td>
+                    <td style = "width: 25%">
+                    {% if user_id %}
+                      <a href="/city/request/<%= request.id %>">
+                    {% else %}
+                      <a href="/request/<%= request.id %>">
+                    {% endif %}
 
+
+                    <% if ( request.text.length > 140 ) { %>
+                        <% text = request.text.substring(0, 140).trim() + "..." %>
+                    <% } else { %>
+                        <% text = request.text %>
+                    <% } %>
+                    <% if (request.solid_status ==="due soon") { %>
+                        <span style = "background-color: #FB991B" class="label label-warning">due soon</span> 
+                     <% } else if (request.solid_status === "overdue" ) { %>
+                        <span style = "background-color: #CA1A1A" class="label label-important">overdue</span> 
+                    <% } %>
+                    <%- text %>
+
+                    </a>
+                    </td>
+                    <td style="width: 15%"><%- request.department %></td>                    
+                    <td style="width: 15%"><%- request.contact_name %></td>
+                    {% if user_id %}
+                    <td style="width: 12%"><%- request.due_date %></td>
+                    <td style="width: 14%"><%- request.requester %></td>
+                    {% endif %}
+                  </tr>
+                <% } ); %>
+              <% } else { %>
+              <td></td><td></td><td></td><td></td><td>No matching records found</td><td></td><td></td><td></td>
+          <% } %>
+
+              </tbody>
+            </table>
+
+          <div class="pull-left pagination">
+            <ul>
+              <li>Showing <%- start_index %> to <%- end_index %> of <%- num_results %> entries</li>
+            </ul>
+          </div>
+            
+          <div class="pull-right pagination">
+            <% if (page_number > 1) { %>
+              <ul>
+                <li class="prev"><a href="javascript:void(0)">Previous</a></li>
+              </ul>
+            <% } %>   
+            <% if (more_results) { %>
+              <ul>
+                <li class="next"><a href="javascript:void(0)">Next</a></li>
+              </ul>
+            <% } %>
+          </div>
+        </script>      
+      </div>
   </div>
-{% endblock container%}
-
-{% block custom_script_links %}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.dataTables.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/DT_bootstrap.js') }}"></script>
-
-  <!-- filter select -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-select.min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/custom.bootstrap-select.js') }}"></script>
-{% endblock custom_script_links %}
+{% endblock container %}

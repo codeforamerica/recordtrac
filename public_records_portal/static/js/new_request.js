@@ -1,5 +1,6 @@
 /* add a request form found at /new */
 $(document).ready(function(){
+
   /* validates add a request form */
   $("#submitRequest").validate({
       rules: {
@@ -27,17 +28,19 @@ $(document).ready(function(){
               value: '',
               text: ''
           }));
- /* Initialize the select element with data from doctypes.json */
-  $.getJSON("static/json/doctypes.json", function(data) {
-      $.each(data, function (i, line) {
-        var department = line['DEPARTMENT'];
-        var doc_type = line['DOC_TYPE'];
+ /* Initialize the select element with department data */
+  $.getJSON("api/departments", function(data) {
+      var departments_data = data['objects']
+      $.each(departments_data, function (i, line) {
           $('#inputDepartment').append($("<option/>", {
-              value: department,
-              text: department + " - " + doc_type
+              value: line['department'],
+              text: line['department'] 
           }));
 
   });
+
+
+
   /* Initialize the combobox */
   $('.combobox').combobox(); 
 

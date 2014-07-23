@@ -9,10 +9,38 @@
 		color: #333;
 	}
 
-/* hide table caption */
-	caption {
-		display: none;
+	table {
+		margin: 0 auto;
+		clear: both;
+		width: 100%;
 	}
+
+	table thead th {
+		padding: 3px 18px 3px 10px;
+		border-bottom: 1px solid black;
+		font-weight: bold;
+	}
+
+	table thead th.sortable {
+		cursor: pointer;
+		*cursor: hand;
+	}
+
+	table thead th.sortable:hover {
+		color:#17b292;
+	}
+
+	table tfoot th {
+		padding: 3px 18px 3px 10px;
+		border-top: 1px solid black;
+		font-weight: bold;
+	}
+
+	table td {
+		padding: 3px 10px;
+	}
+
+
 
 /* breathing room for filter count */
 	small.count {
@@ -34,12 +62,7 @@
 		margin-bottom: 1em;
 		margin-top: 1em;
 	}
-	#allrequestTable_filter label {
-		margin-bottom: 1em;
-		margin-top: 0.5em;
-		font-weight: bold;
-		font-size: 17.5px;
-	}
+
 	#allrequestTable_info {
 	margin-left: 1.75em;
 	}
@@ -78,42 +101,6 @@ td.status {
 	color: white;
 }
 
-#allrequestTable tbody tr:hover, #allrequestTable tbody tr.highlighted {
-	background-color: rgba(23,178,146, .3);
-	cursor: pointer;
-}
-
-table.dataTable thead th.status {
-	padding-left: 1px !important;
-	padding-right: 1px !important;
-	width: 2% !important;
-}
-
-table.dataTable tbody td.status {
-	padding-left: 1px !important;
-	padding-right: 1px !important;
-	width: 2% !important;
-
-	text-align: center;
-	vertical-align: middle;
-}
-
-table.dataTable tbody td.closed {
-	background-color: #2a2b2b;
-}
-
-table.dataTable tbody td.open {
-	background-color: #2688AD;
-}
-
-table.dataTable tbody td.soon {
-	background-color: #FB991B;
-}
-
-table.dataTable tbody td.overdue {
-	background-color: #CA1A1A;
-}
-
 .intro_text {
 	margin-bottom: 2%;
 }
@@ -121,4 +108,126 @@ table.dataTable tbody td.overdue {
 /* allows the "Request new record" button appear inline with Explore header */
 h3 {
 	display: inline;
+}
+
+/*
+ * Fresh styles for the requests table are below. Things are in the process of being
+ * ported.
+ */
+
+#search label {
+  font-weight: bold;
+  font-size: 17.5px;
+  display: inline;
+}
+
+#requests th, #requests td {
+    text-align: left;
+	  vertical-align: middle;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#requests thead tr {
+    border-bottom: 1px solid #808080;
+}
+
+#requests tbody tr {
+    border-bottom: 1px solid #DDD;
+}
+
+#requests tbody tr:hover {
+	  background-color: rgba(23,178,146, .3);
+}
+
+#requests .status {
+    padding: 5px;
+	  width: 14px;
+}
+
+#requests .status.closed {
+    background-color: #2a2b2b;
+}
+
+#requests .status.open {
+    background-color: #2688AD;
+}
+
+#requests .status.soon {
+    background-color: #FB991B;
+}
+
+#requests .status.overdue {
+    background-color: #CA1A1A;
+}
+
+/* sidebar search styling */
+
+.underline {
+	border-bottom: 1px solid gray;
+	padding-bottom: 7px;
+}
+.indent {
+	margin-left: 10px;
+}
+.search_style h5 {
+	margin: 15px 0px 3px;
+}
+.status{
+  padding-bottom: 15px;
+}
+.status input[type=radio]{
+  margin-left: 0;
+}
+.all_style{
+  border-left: 8px solid #bbb;
+  padding-left: 5px;
+  margin-left: 5px;
+}
+.overdue_style{
+	border-left: 8px solid red;
+	padding-left: 5px;
+	margin-left: 5px;
+}
+.duesoon_style{
+	border-left: 8px solid orange;
+	padding-left: 5px;
+	margin-left: 5px;
+}
+.open_style{
+	border-left: 8px solid #2688AD;
+	padding-left: 5px;
+	margin-left: 5px;
+}
+.closed_style{
+	border-left: 8px solid black;
+	padding-left: 5px;
+	margin-left: 5px;
+}
+
+/* Icon glips for sortalbe and sorted columns. */
+.sortable:after {
+  font-family: FontAwesome;
+  padding-left: 5px;
+}
+   
+.sortable:after {
+  content: "\f0dc";
+}
+
+.sortable.desc:after {
+  content: "\f0dd";
+}
+
+.sortable.asc:after {
+  content: "\f0de";
+}
+
+/* Date picker's! */
+.date_filter h5, .date_filter .all_dates {
+  display: inline;
+}
+
+.date_filter .max_field {
+  margin-left: 20px;
 }

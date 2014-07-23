@@ -19,9 +19,9 @@
       <div class="row-fluid">
         <div class="span8">
           <h3>Request a new record</h3>
-          <p class="intro_text">Use RecordTrac to request copies of specific documents, photos, emails, texts, audio recordings, electronic information and data in the City’s databases. If you need general information on City services, try <a href="http://answers.oaklandnet.com">Oakland Answers</a>.</p>
+          <p class="intro_text">Use RecordTrac to request copies of specific documents, photos, emails, texts, audio recordings, electronic information and data in the {{config['AGENCY_NAME']}}'s databases.</p>
 
-          <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="on"novalidate="novalidate">
+          <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="off"novalidate="novalidate">
             <fieldset>
 
               <p class="lead">What are you trying to find?</p>
@@ -36,7 +36,7 @@
 
                 </div>
               </div>
-              {% if doc_types %}
+              {% if routing_available %}
               <p class="lead">Select a department or document type <small class="department_optional">(optional)</small></p>
               <div class="control-group">
                   <select class ="combobox input-block-level" id="inputDepartment" title="select_department" name="request_department" type="text"></select>
@@ -80,7 +80,7 @@
         <div class="well r_sidebar r_sidebar-fixed hidden-phone">
           <h4>Example</h4>
           <!-- needs to be hooked up to prr_help.json PLEASE DELETE THIS COMMENT WHEN DONE -->
-            <p class="example">I need a copy of all of Mayor Jean Quan’s emails sent to City Administrator Santana between July 30, 2013-August 8, 2013.</p><p class="example">The emails should contain the words “Art+Soul festival” or  “Art + Soul Oakland.”</p>
+            <p class="example">I need a copy of the Mayor’s emails sent to the Department of Public Works between July 30, 2013 and August 8, 2013.</p><p class="example">The emails should contain the words “bridge project” or “bridge development”.</p>
           <h4>Tips</h4>
             <ul>
               <li>Don't reveal personal information, like your social security number or home address.</li>
