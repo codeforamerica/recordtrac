@@ -9,7 +9,8 @@ install:
 - pip install -r requirements.txt --use-mirrors
 
 before_script:
-- psql -c 'create database myapp_test;' -U postgres
+- psql -c 'create database publicrecords;' -U postgres
+- python travis_db_setup.py
 
-script:  
+script:
 - python tests.py
