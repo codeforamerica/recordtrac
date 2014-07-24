@@ -22,7 +22,7 @@ import urllib
 
 ### @export "add_resource"
 def add_resource(resource, request_body, current_user_id = None):
-	fields = request_body.form
+	fields = request_body
 	if "extension" in resource:
 		return request_extension(int(fields['request_id']), fields.getlist('extend_reason'), current_user_id)
 	if "note" in resource:
@@ -50,12 +50,8 @@ def add_resource(resource, request_body, current_user_id = None):
 
 ### @export "update_resource"
 def update_resource(resource, request_body):
-	fields = request_body.form
-	if "QA_delete" in resource:
-		remove_obj("QA", int(fields['qa_id']))
-	elif "qa" in resource:
-		return answer_a_question(int(fields['qa_id']), fields['answer_text'])
-	elif "owner" in resource:
+	fields = request_body
+	if "owner" in resource:
 		if "reason_unassigned" in fields:
 			return remove_staff_participant(owner_id = fields['owner_id'], reason = fields['reason_unassigned'])
 		else:
@@ -89,8 +85,8 @@ def request_extension(request_id, extension_reasons, user_id):
 	return add_note(request_id = request_id, text = text, user_id = user_id)
 
 ### @export "add_note"
-def add_note(request_id, text, user_id):
-	if not text or text == "":
+def add_note(request_id, text, user_id, passed_spam_filter = False):
+	if not text or text == "" or (not user_id and not passed_spam_filter):
 		return False
 	note_id = create_note(request_id = request_id, text = text, user_id = user_id)
 	if note_id:
@@ -146,9 +142,9 @@ def add_link(request_id, url, description, user_id):
 	return False
 
 ### @export "make_request"			
-def make_request(text, email = None, user_id = None, phone = None, alias = None, department = None, passed_recaptcha = False, offline_submission_type = None, date_received = None):
+def make_request(text, email = None, user_id = None, phone = None, alias = None, department = None, passed_spam_filter = False, offline_submission_type = None, date_received = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
-	if (app.config['ENVIRONMENT'] == 'PRODUCTION') and (not passed_recaptcha) and is_spam(text): 
+	if (not user_id) and (not passed_spam_filter): 
 		return None, False
 	request_id = find_request(text)
 	if request_id: # Same request already exists
@@ -198,12 +194,15 @@ def ask_a_question(request_id, owner_id, question):
 	return False
 
 ### @export "answer_a_question"
-def answer_a_question(qa_id, answer, subscriber_id = None):
+def answer_a_question(qa_id, answer, subscriber_id = None, passed_spam_filter = False):
 	""" A requester can answer a question city staff asked them about their request."""
-	request_id = create_answer(qa_id, subscriber_id, answer)
-	# We aren't changing the request status if someone's answered a question anymore, but we could
-	# change_request_status(request_id, "Pending")
-	generate_prr_emails(request_id = request_id, notification_type = "Question answered")
+	if (not answer) or (answer == "") or (not passed_spam_filter):
+		return False
+	else:
+		request_id = create_answer(qa_id, subscriber_id, answer)
+		# We aren't changing the request status if someone's answered a question anymore, but we could change_request_status(request_id, "Pending")
+		generate_prr_emails(request_id = request_id, notification_type = "Question answered")
+		return True
 
 ### @export "open_request"	
 def open_request(request_id):

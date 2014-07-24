@@ -12,13 +12,13 @@
       {{ message }}
     </div>
     <div id="recaptcha" class="row-fluid">
-      <form name="input" action="/recaptcha" method="POST">
+      <form name="input" action="/recaptcha_note" method="POST">
         <fieldset>
            <script type="text/javascript"
-               src="http://www.google.com/recaptcha/api/challenge?k={{public_key}}">
+               src="http://www.google.com/recaptcha/api/challenge?k={{config['RECAPTCHA_PUBLIC_KEY']}}">
             </script>
             <noscript>
-               <iframe src="http://www.google.com/recaptcha/api/noscript?k={{public_key}}"
+               <iframe src="http://www.google.com/recaptcha/api/noscript?k={{config['RECAPTCHA_PUBLIC_KEY']}}"
                    height="300" width="500" frameborder="0"></iframe><br>
                <textarea id = "recaptcha_challenge_field" name="recaptcha_challenge_field" rows="3" cols="40">
                </textarea>
@@ -26,11 +26,8 @@
                    value="manual_challenge">
             </noscript>
             {% if form %}
-            	<input type = "hidden" name = "request_text" value = "{{form.request_text}}"/>
-          	<input type="hidden"name = "request_alias" value = "{{form.request_alias}}"/>
-          	<input type = "hidden" name = "request_phone" value = "{{form.request_phone}}"/>
-          	<input type="hidden" name="request_department" value = "{{form.request_department}}"/>
-          	<input type="hidden" name="request_email" value="{{form.request_email}}" />
+            	<input type="hidden" name="note_text" value="{{form.note_text}}" />
+              <input type="hidden" name="request_id" value="{{form.request_id}}"/>
           	{% endif %}
 
           <button type="submit" class="btn btn-primary" value="Submit">Submit my request</button>

@@ -94,8 +94,8 @@ routing = {
 	'tutorial':{
 		'url': '/tutorial'
 	},
-	'recaptcha':{
-		'url': '/recaptcha',
+	'recaptcha_templatetype':{
+		'url': '/recaptcha_<string:templatetype>',
 		'methods':['GET', 'POST']
 	},
 	'landing':{

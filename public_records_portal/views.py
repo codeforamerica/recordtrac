@@ -35,12 +35,6 @@ browser_id = BrowserID()
 browser_id.user_loader(get_user)
 browser_id.init_app(app)
 
-# Set flags:
-
-check_for_spam = False
-if app.config['ENVIRONMENT'] == 'PRODUCTION':
-	check_for_spam = True
-
 # Submitting a new request
 def new_request(passed_recaptcha = False, data = None):
 	user_id = get_user_id()
@@ -53,8 +47,8 @@ def new_request(passed_recaptcha = False, data = None):
 			return render_template('error.html', message = "You cannot submit an empty request.")
 		if email == "" and 'ignore_email' not in data and not passed_recaptcha:
 			return render_template('missing_email.html', form = data, user_id = get_user_id())
-		if check_for_spam and is_spam(request_text) and not passed_recaptcha:
-			return render_template('recaptcha.html', form = data, message = "Hmm, your request looks like spam. To submit your request, type the numbers or letters you see in the field below.", public_key = app.config['RECAPTCHA_PUBLIC_KEY'])
+		if not passed_recaptcha and (not user_id and is_spam(comment = request_text, user_ip = request.remote_addr, user_agent = request.headers.get('User-Agent'))):
+			return render_template('recaptcha_request.html', form = data, message = "Hmm, your request looks like spam. To submit your request, type the numbers or letters you see in the field below.")
 
 		alias = None
 		phone = None
@@ -75,7 +69,7 @@ def new_request(passed_recaptcha = False, data = None):
 				except ValueError:
 					return render_template('error.html', message = "Please use the datepicker to select a date.")
 		app.logger.info("\n\n Date received: %s" % date_received)
-		request_id, is_new = make_request(text = request_text, email = email, user_id = user_id, alias = alias, phone = phone, passed_recaptcha = passed_recaptcha, department = data['request_department'], offline_submission_type = offline_submission_type, date_received = date_received)
+		request_id, is_new = make_request(text = request_text, email = email, user_id = user_id, alias = alias, phone = phone, passed_spam_filter = True, department = data['request_department'], offline_submission_type = offline_submission_type, date_received = date_received)
 		if is_new:
 			return redirect(url_for('show_request_for_x', request_id = request_id, audience = 'new'))
 		if not request_id:
@@ -198,7 +192,7 @@ def edit_case(request_id):
 @login_required
 def add_a_resource(resource):
 	if request.method == 'POST':
-		resource_id = add_resource(resource = resource, request_body = request, current_user_id = current_user.id)
+		resource_id = add_resource(resource = resource, request_body = request.form, current_user_id = current_user.id)
 		if type(resource_id) == int or str(resource_id).isdigit():
 			app.logger.info("\n\nSuccessfully added resource: %s with id: %s" % (resource, resource_id))
 			return redirect(url_for('show_request_for_x', audience='city', request_id = request.form['request_id']))
@@ -210,21 +204,34 @@ def add_a_resource(resource):
 			return render_template('help_with_uploads.html', message = resource_id)
 	return render_template('error.html', message = "You can only update requests from a request page!")
 
-def public_add_a_resource(resource):
-	if request.method == 'POST':
-		if 'note' in resource or 'subscriber' in resource: 
-			resource_id = add_resource(resource = resource, request_body = request, current_user_id = None)
+def public_add_a_resource(resource, passed_recaptcha = False, data = None):
+	if (data or request.method == 'POST') and ('note' in resource or 'subscriber' in resource):
+			if not data:
+					data = request.form.copy()
+			if 'note' in resource:
+				if not passed_recaptcha and is_spam(comment = data['note_text'], user_ip = request.remote_addr, user_agent = request.headers.get('User-Agent')):
+					return render_template('recaptcha_note.html', form = data, message = "Hmm, your note looks like spam. To submit your note, type the numbers or letters you see in the field below.")
+				resource_id = prr.add_note(request_id = data['request_id'], text = data['note_text'], user_id = None, passed_spam_filter = True)
+			else:
+				resource_id = prr.add_resource(resource = resource, request_body = data, current_user_id = None)
 			if type(resource_id) == int:
-				request_id = request.form['request_id']
+				request_id = data['request_id']
 				audience = 'public'
 				if 'subscriber' in resource:
 					audience = 'follower'
 				return redirect(url_for('show_request_for_x', audience=audience, request_id = request_id))
 	return render_template('error.html')
 
-def update_a_resource(resource):
-	if request.method == 'POST':
-		update_resource(resource, request)
+def update_a_resource(resource, passed_recaptcha = False, data = None):
+	if (data or request.method == 'POST'):
+		if not data:
+			data = request.form.copy()
+		if 'qa' in resource:
+			if not passed_recaptcha and is_spam(comment = data['answer_text'], user_ip = request.remote_addr, user_agent = request.headers.get('User-Agent')):
+				return render_template('recaptcha_answer.html', form = data, message = "Hmm, your answer looks like spam. To submit your answer, type the numbers or letters you see in the fiel dbelow.")
+			prr.answer_a_question(qa_id = int(data['qa_id']), answer = data['answer_text'], passed_spam_filter = True)
+		else:
+			update_resource(resource, request)			
 		if current_user.is_anonymous() == False:
 			return redirect(url_for('show_request_for_x', audience='city', request_id = request.form['request_id']))
 		else:
@@ -544,8 +551,9 @@ def is_safe_url(target):
 		ref_url.netloc == test_url.netloc
 
 
-def recaptcha():
+def recaptcha_templatetype(templatetype):
 	if request.method == 'POST':
+		template = "recaptcha_" + templatetype + ".html"
 		response = captcha.submit(
 			request.form['recaptcha_challenge_field'],
 			request.form['recaptcha_response_field'],
@@ -554,9 +562,15 @@ def recaptcha():
 			)
 		if not response.is_valid:
 			message = "Invalid. Please try again."
-			return render_template('recaptcha.html', message = message, public_key = app.config['RECAPTCHA_PUBLIC_KEY'], form = request.form)
+			return render_template(template, message = message, form = request.form)
 		else:
-			return new_request(passed_recaptcha = True, data = request.form)
+			if templatetype == "note":
+				return public_add_a_resource(passed_recaptcha = True, data = request.form, resource = "note")
+			elif templatetype == "answer":
+				app.logger.info("Template type is answer!")
+				return update_a_resource(passed_recaptcha = True, data = request.form, resource = "qa")
+			elif templatetype == "request":
+				return new_request(passed_recaptcha = True, data = request.form)
 	else:
 		app.logger.info("\n\nAttempted access to recaptcha not via POST")
 		return render_template('error.html', message = "You don't need to be here.")
