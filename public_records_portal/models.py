@@ -251,7 +251,7 @@ class Owner(db.Model):
 		self.date_updated = self.date_created
 		self.is_point_person = is_point_person
 	def __repr__(self):
-		return '<Owner %r>' %self.user_id
+		return '<Owner %r>' %self.id
 
 ### @export "Subscriber"
 class Subscriber(db.Model): 
