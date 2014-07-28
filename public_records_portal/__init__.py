@@ -39,10 +39,6 @@ set_env(key = 'DAYS_TO_FULFILL', default = '10')
 set_env(key = 'DAYS_AFTER_EXTENSION', default = '14')
 set_env(key = 'DAYS_UNTIL_OVERDUE', default = '2') 
 
-# For testing
-set_env(key = 'TESTING', default = 'False')
-
-
 # Set rest of the variables that don't have defaults:
 envvars = [
 			'DEFAULT_MAIL_SENDER', # The e-mail address used as the FROM field for all notifications
@@ -62,7 +58,8 @@ envvars = [
 			'STAFF_URL', # The path/URL at which a csv containing staff data lives. If this is not set, no one will be able to log into RecordTrac
 			'LIAISONS_URL', # The path/URL at which a csv containing liaisons/department data lives. If this is not set, initial request routing will always be directed to the default owner
 			'LOGO_ON_WHITE_URL', # The path/URL at which a logo (on a white background) of the agency is hosted. (.png or .jpg)
-			'LOGO_ON_BLACK_URL' # The path/URL at which a logo (on a black background) of the agency is hosted. (.png or .jpg)
+			'LOGO_ON_BLACK_URL', # The path/URL at which a logo (on a black background) of the agency is hosted. (.png or .jpg)
+			'TESTING'
 			,
 			]
 for envvar in envvars:
