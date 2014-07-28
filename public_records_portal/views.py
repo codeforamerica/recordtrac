@@ -54,6 +54,9 @@ def new_request(passed_recaptcha = False, data = None):
 		phone = None
 		offline_submission_type = None
 		date_received = None
+		department = None
+		if 'department' in data:
+			department = data['request_department']
 		if 'request_alias' in data:
 			alias = data['request_alias']
 		if 'request_phone' in data:
@@ -68,8 +71,7 @@ def new_request(passed_recaptcha = False, data = None):
 					date_received = date_received + timedelta(hours = 7) # This is somewhat of a hack, but we need to get this back in UTC (+7 hours offset from Pacific Time) time but still treat it as a 'naive' datetime object
 				except ValueError:
 					return render_template('error.html', message = "Please use the datepicker to select a date.")
-		app.logger.info("\n\n Date received: %s" % date_received)
-		request_id, is_new = make_request(text = request_text, email = email, user_id = user_id, alias = alias, phone = phone, passed_spam_filter = True, department = data['request_department'], offline_submission_type = offline_submission_type, date_received = date_received)
+		request_id, is_new = make_request(text = request_text, email = email, user_id = user_id, alias = alias, phone = phone, passed_spam_filter = True, department = department, offline_submission_type = offline_submission_type, date_received = date_received)
 		if is_new:
 			return redirect(url_for('show_request_for_x', request_id = request_id, audience = 'new'))
 		if not request_id:
@@ -98,8 +100,7 @@ def index():
 		return landing()
 
 def landing():
-	viz_data_freq, viz_data_time = get_viz_data()
-	return render_template('landing.html', viz_data_freq = json.dumps(viz_data_freq), viz_data_time = json.dumps(viz_data_time), user_id = get_user_id())
+	return render_template('landing.html', user_id = get_user_id())
 
 def viz():
 	viz_data_freq, viz_data_time = get_viz_data()
@@ -454,59 +455,6 @@ def tutorial():
 	app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
 	return render_template('tutorial.html', user_id = user_id)
 
-def login(email=None, password=None):
-	if request.method == 'POST':
-		email = request.form['email']
-		password = request.form['password']
-		user_to_login = authenticate_login(email, password)
-		if user_to_login:
-			login_user(user_to_login)
-			redirect_url = get_redirect_target()
-			if 'temporary_login' in redirect_url: # Redirect to update password
-				return render_template('update_password.html', user_id = get_user_id())
-			if 'login' in redirect_url or 'logout' in redirect_url:
-				return redirect(url_for('index'))
-			if "city" not in redirect_url:
-					redirect_url = redirect_url.replace("/request/", "/city/request/")
-			return redirect(redirect_url)
-		else:
-			app.logger.info("\n\nLogin failed (due to incorrect e-mail/password combo) for email: %s." % email)
-			return render_template('error.html', message = "That e-mail/ password combo didn't work. You can always <a href='/reset_password'>reset your password</a>.")
-		app.logger.info("\n\nLogin failed for email: %s." % email)
-		return render_template('error.html', message="Something went wrong.", user_id = get_user_id())
-	else:
-		user_id = get_user_id()
-		if user_id:
-			return render_template('generic.html', message = 'You are already logged in. If you wish to log in as another user, first log out by clicking your name in the upper-right corner of this page and clicking Logout.', user_id = user_id)
-		else:
-			return render_template('generic.html', message = "If you work for the %s and are trying to log into RecordTrac, please log in by clicking City login in the upper-right corner of this page." % app.config['AGENCY_NAME'])
-
-def reset_password(email=None):
-	after_reset = False
-	reset_success = False
-	if request.method == 'POST':
-		after_reset = True
-		email = request.form['email']
-		password = set_random_password(email)
-		if password:
-			send_prr_email(page = app.config['APPLICATION_URL'], recipients = [email], subject = "Your temporary password", template = "password_email.html", include_unsubscribe_link = False, password = password)
-			reset_success = True
-			app.logger.info("\n\nPassword reset sent for email: %s." % email)
-		else:
-			app.logger.info("\n\nPassword reset attempted and denied for email: %s." % email)
-	return render_template('reset_password.html', after_reset = after_reset, reset_success = reset_success)
-
-
-@login_required
-def update_password(password=None):
-	if request.method == 'POST':
-		if set_password(current_user, request.form['password']):
-			return index()
-		app.logger.info("\n\nFailure updating password for user %s" % current_user.id)
-		return render_template('error.html', message = "Something went wrong updating your password.")
-	else:
-		app.logger.info("\n\nSuccessfully updated password for user %s" % current_user.id)
-		return render_template('update_password.html', user_id = current_user.id)
 
 def staff_card(user_id):
 	return render_template('staff_card.html', uid = user_id)
