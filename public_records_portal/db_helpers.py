@@ -350,40 +350,6 @@ def remove_staff_participant(owner_id, reason = None):
 	return owner_id
 
 
-### @export "authenticate_login"
-def authenticate_login(email, password):
-	if email:
-		user = create_or_return_user(email=email, not_id = True)
-		if user.check_password(password):
-			return user
-		if user.password == password: # Hash it
-			user.set_password(password)
-			db.session.add(user)
-			db.session.commit()
-			return user
-	return None
-
-### @export "set_random_password"
-def set_random_password(email):
-	user = User.query.filter(User.email == func.lower(email)).first()
-	if not user or not user.department: # Must be a user with an assigned department
-		return None # This is only for existing staff users, not a way to create a user, which we're not allowing yet.
-	password = uuid.uuid4().hex
-	user.set_password(password)
-	db.session.add(user)
-	db.session.commit()
-	return password
-
-### @export "set_password"
-def set_password(user, password):
-	try:
-		user.set_password(password)
-		db.session.add(user)
-		db.session.commit()
-		return True
-	except:
-		return False
-
 ### @export "update_subscriber"
 def update_subscriber(request_id, alias, phone):
 	""" Update a subscriber for a given request with the name and phone number provided. """
@@ -395,56 +361,3 @@ def update_subscriber(request_id, alias, phone):
 	db.session.commit()
 	app.logger.info("\n\nUpdated subscriber for request %s with alias: %s and phone: %s" % (request_id, alias, phone))
 
-### @export "get_viz_data"
-def get_viz_data():
-	viz_data = Visualization.query.get(1).content
-	viz_time_data = Visualization.query.get(2).content
-	viz_fastest_time_data = Visualization.query.get(3).content
-	return json.loads(viz_data), json.loads(viz_fastest_time_data)
-
-def create_viz_data():
-	depts_freq = []
-	depts_response_time = []
-	for d in Department.query.all():
-		department = d.name
-		line, response_line = {}, {}
-		line['department'], response_line['department'] = department, department
-		line['freq'] = (db.session.query(Request).filter(Request.department_id == d.id)).count()
-		avg_response_time = get_avg_response_time(department)
-		if avg_response_time:
-			response_line['time'] = avg_response_time
-			depts_response_time.append(response_line)
-		depts_freq.append(line)
-	# Only display top 5 departments:
-	depts_freq.sort(key = lambda x:x['freq'], reverse = True)
-	depts_response_fastest_time = list(depts_response_time)
-	depts_response_time.sort(key = lambda x:x['time'], reverse = True)
-	depts_response_fastest_time.sort(key = lambda x:x['time']) 
-	del depts_freq[5:]
-	del depts_response_time[5:]
-	del depts_response_fastest_time[5:]
-	viz = Visualization.query.get(1)
-	viz2 = Visualization.query.get(2)
-	viz3 = Visualization.query.get(3)
-	if viz:
-		viz.content = json.dumps(depts_freq)
-		viz.date_updated = datetime.now().isoformat()
-	else:
-		viz = Visualization(type_viz = 'freq', content = json.dumps(depts_freq))
-	if viz2:
-		viz2.content = json.dumps(depts_response_time)
-		viz2.type_viz = 'time'
-		viz2.date_updated = datetime.now().isoformat()
-	else:
-		viz2 = Visualization(type_viz = 'time', content = json.dumps(depts_response_time))
-	if viz3:
-		viz3.content = json.dumps(depts_response_fastest_time)
-		viz3.type_viz = "fastest_time"
-		viz3.date_updated = datetime.now().isoformat()
-	else:
-		viz3 = Visualization(type_viz = 'fastest_time', content = json.dumps(depts_response_fastest_time))
-	db.session.add(viz)
-	db.session.add(viz2)
-	db.session.add(viz3)
-	db.session.commit()
-	
