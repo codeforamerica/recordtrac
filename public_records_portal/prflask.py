@@ -148,15 +148,8 @@ routing = {
 		'url': '/requests',
 		'methods': ['GET', 'POST']
 	},
-	'update_password':{
-		'url': '/update_password',
-		'methods': ['GET', 'POST']
-	},
 	'logout':{
 		'url': '/logout'
-	},
-	'login':{
-		'url': '/login', 'methods': ['GET', 'POST']
 	},
 	'add_a_resource':{
 		'url': '/add_a_<string:resource>',
@@ -179,10 +172,6 @@ routing = {
 	},
 	'is_public_record':{
 		'url': '/is_public_record',
-		'methods': ['POST']
-	},
-	'reset_password':{
-		'url': '/reset_password',
 		'methods': ['POST']
 	},
 	'well_known_status': {
