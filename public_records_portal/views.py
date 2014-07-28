@@ -37,7 +37,6 @@ browser_id.init_app(app)
 
 # Submitting a new request
 def new_request(passed_recaptcha = False, data = None):
-	user_id = get_user_id()
 	if data or request.method == 'POST':
 		if not data and not passed_recaptcha:
 			data = request.form.copy()
@@ -46,8 +45,8 @@ def new_request(passed_recaptcha = False, data = None):
 		if request_text == "":
 			return render_template('error.html', message = "You cannot submit an empty request.")
 		if email == "" and 'ignore_email' not in data and not passed_recaptcha:
-			return render_template('missing_email.html', form = data, user_id = get_user_id())
-		if not passed_recaptcha and (not user_id and is_spam(comment = request_text, user_ip = request.remote_addr, user_agent = request.headers.get('User-Agent'))):
+			return render_template('missing_email.html', form = data)
+		if not passed_recaptcha and (not current_user.is_authenticated() and is_spam(comment = request_text, user_ip = request.remote_addr, user_agent = request.headers.get('User-Agent'))):
 			return render_template('recaptcha_request.html', form = data, message = "Hmm, your request looks like spam. To submit your request, type the numbers or letters you see in the field below.")
 
 		alias = None
@@ -71,7 +70,7 @@ def new_request(passed_recaptcha = False, data = None):
 					date_received = date_received + timedelta(hours = 7) # This is somewhat of a hack, but we need to get this back in UTC (+7 hours offset from Pacific Time) time but still treat it as a 'naive' datetime object
 				except ValueError:
 					return render_template('error.html', message = "Please use the datepicker to select a date.")
-		request_id, is_new = make_request(text = request_text, email = email, user_id = user_id, alias = alias, phone = phone, passed_spam_filter = True, department = department, offline_submission_type = offline_submission_type, date_received = date_received)
+		request_id, is_new = make_request(text = request_text, email = email, alias = alias, phone = phone, passed_spam_filter = True, department = department, offline_submission_type = offline_submission_type, date_received = date_received)
 		if is_new:
 			return redirect(url_for('show_request_for_x', request_id = request_id, audience = 'new'))
 		if not request_id:
@@ -82,16 +81,14 @@ def new_request(passed_recaptcha = False, data = None):
 		routing_available = False
 		if 'LIAISONS_URL' in app.config:
 			routing_available = True
-		if user_id:
-			return render_template('offline_request.html', routing_available = routing_available, user_id = user_id)
+		if current_user.is_authenticated():
+			return render_template('offline_request.html', routing_available = routing_available)
 		else:
-			return render_template('new_request.html', routing_available = routing_available, user_id = user_id)
+			return render_template('new_request.html', routing_available = routing_available)
 
+@login_required
 def to_csv():
-	if get_user_id():
-		return Response(csv_export.export(), mimetype='text/csv')
-	else:
-		return render_template('error.html', message = "You must be logged in to do this.")
+	return Response(csv_export.export(), mimetype='text/csv')
 
 def index():
 	if current_user.is_anonymous() == False:
@@ -100,7 +97,7 @@ def index():
 		return landing()
 
 def landing():
-	return render_template('landing.html', user_id = get_user_id())
+	return render_template('landing.html')
 
 def viz():
 	viz_data_freq, viz_data_time = get_viz_data()
@@ -129,7 +126,7 @@ def show_response(request_id):
 	req = get_obj("Request", request_id)
 	if not req:
 		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
-	return render_template("response.html", req = req, user_id = get_user_id())
+	return render_template("response.html", req = req)
 
 def track(request_id = None):
 	if request.method == 'POST':
@@ -155,18 +152,17 @@ def unfollow(request_id, email):
 		return render_template('error.html', message = "Unfollowing this request was unsuccessful. You probably weren't following it to begin with.")
 
 def show_request(request_id, template = None):
-	current_user_id = get_user_id()
 	req = get_obj("Request", request_id)
 	if not req:
 		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
 	if template:
-		if "city" in template and not current_user_id:
+		if "city" in template and not current_user.is_authenticated():
 			return render_template('alpha.html')			
 	else:
 		template = "manage_request_public.html"
 	if req.status and "Closed" in req.status and template != "manage_request_feedback.html":
 		template = "closed.html"
-	return render_template(template, req = req, user_id = get_user_id())
+	return render_template(template, req = req)
 
 def staff_to_json():
 	users = User.query.filter(User.is_staff == True).all()
@@ -188,12 +184,12 @@ def docs():
 @login_required
 def edit_case(request_id):
 	req = get_obj("Request", request_id)
-	return render_template("edit_case.html", req = req, user_id = get_user_id())
+	return render_template("edit_case.html", req = req)
 
 @login_required
 def add_a_resource(resource):
 	if request.method == 'POST':
-		resource_id = add_resource(resource = resource, request_body = request.form, current_user_id = current_user.id)
+		resource_id = add_resource(resource = resource, request_body = request.form, current_user_id = get_user_id())
 		if type(resource_id) == int or str(resource_id).isdigit():
 			app.logger.info("\n\nSuccessfully added resource: %s with id: %s" % (resource, resource_id))
 			return redirect(url_for('show_request_for_x', audience='city', request_id = request.form['request_id']))
@@ -245,32 +241,10 @@ def close(request_id = None):
 	if request.method == 'POST':
 		template = 'closed.html'
 		request_id = request.form['request_id']
-		close_request(request_id = request_id, reason = request.form['close_reason'], user_id = current_user.id)
+		close_request(request_id = request_id, reason = request.form['close_reason'], user_id = get_user_id())
 		return show_request(request_id, template= template)
 	return render_template('error.html', message = "You can only close from a requests page!")
 
-# Shows all public records requests that have been made.
-@timeout(seconds=25)
-def requests():
-	app.logger.debug("Processing requests.")
-	try:
-		departments = [d.name for d in Department.query.all()]
-		user_id = get_user_id()
-		total_requests_count = get_count("Request")
-		template = 'all_requests.html'
-
-		return render_template(template,
-				   user_id = user_id,
-				   title = "All Requests",
-				   departments = departments,
-				   total_requests_count = total_requests_count)
-	except Exception, message:
-		app.logger.info("\n\n%s" % message)
-		if "Too long" in message:
-			message = "Loading requests is taking a while. Try exploring with more restricted search options."
-		else: 
-			message = "Something went wrong loading the requests. We're looking into it!"
-		return render_template('error.html', message = message, user_id = get_user_id())
 
 def filter_department(department_name, results):
 	app.logger.info("\n\nDepartment filter:%s." % department_name)
@@ -446,14 +420,14 @@ def fetch_requests():
 
 def any_page(page):
 	try:
-		return render_template('%s.html' %(page), user_id = get_user_id())
+		return render_template('%s.html' %(page))
 	except:
-		return render_template('error.html', message = "%s totally doesn't exist." %(page), user_id = get_user_id())
+		return render_template('error.html', message = "%s totally doesn't exist." %(page))
 
 def tutorial():
 	user_id = get_user_id()
 	app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
-	return render_template('tutorial.html', user_id = user_id)
+	return render_template('tutorial.html')
 
 
 def staff_card(user_id):
@@ -464,10 +438,9 @@ def logout():
 	return index()
 
 def get_user_id():
-	if current_user.is_anonymous() == False:
+	if current_user.is_authenticated():
 		return current_user.id
 	return None
-
 # Used as AJAX POST endpoint to check if new request text contains certain keyword
 # See new_requests.(html/js)
 def is_public_record():

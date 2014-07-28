@@ -72,7 +72,7 @@
             <a class="brand " href="/landing" ><img src="/static/images/City-Tree-w--name-shite-vers-3.png" alt="City of Oakland tree"/> <span class="bootstro" data-bootstro-title="Welcome" data-bootstro-content="{{"Welcome" | tutorial }}" data-bootstro-step="0" data-bootstro-placement="bottom" data-bootstro-width="50%" data-bootstro-html="true"><strong>RecordTrac</strong><small id="beta" class="text-warning"><em> beta</em></small></span></a>
             <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
               <ul class="nav tabs">
-                {% if user_id %}
+                {% if current_user.is_authenticated() %}
                 <li><a href="/new">New request</a></li>
                 <li><a href="/requests">All requests</a></li>
                 <li class="bootstro" data-bootstro-title="Tutorial" data-bootstro-content="{{"Back to Tutorial" | tutorial }}" data-bootstro-step="10" data-bootstro-placement="bottom" data-bootstro-width="50%" data-bootstro-html="true"><a href="/tutorial">Tutorial</a></li>
@@ -86,7 +86,7 @@
               </ul>
             </div>
             <!-- Login area -->
-            {% if user_id %}
+            {% if current_user.is_authenticated() %}
     
             <ul class="nav pull-right">
               <li>
