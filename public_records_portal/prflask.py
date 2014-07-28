@@ -144,6 +144,9 @@ routing = {
 		'url': '/custom/request',
 		'methods': ['GET', 'POST']
 	},
+	'requests':{
+		'url': '/requests'
+	},
 	'logout':{
 		'url': '/logout'
 	},

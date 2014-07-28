@@ -271,6 +271,9 @@ def filter_search_term(search_input, results):
 		results = results.filter("to_tsvector(text) @@ to_tsquery('%s')" % search_query)
 	return results
 
+def requests():
+	return render_template("all_requests.html")
+	
 def fetch_requests():
 	"""
 	Ultra-custom API endpoint for serving up requests.
