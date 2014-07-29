@@ -1,83 +1,69 @@
-RecordTrac 
-==============
+#RecordTrac
+This is the home page for documentation for the **RecordTrac** application.
 
-This is a portal to manage and display public record requests, built by the Code for America 2013 Oakland team. The project is currently being piloted with [the City of Oakland](http://www2.oaklandnet.com/Government/o/CityAdministration/PublicRecordsRequest/index.htm), but hopefully extensible to other municipalities. Our docs are available [here](http://codeforamerica.github.io/public-records/docs/1.0.0/). We'd love your feedback. E-mail us at oakland at codeforamerica dot org or [open an issue](https://github.com/codeforamerica/public-records/issues?state=open) if you have any questions.
+For help contact **oakland|@|codeforamerica.org**
 
-## Installation
+##What is RecordTrac?
+![RecordTrac](https://github.com/codeforamerica/recordtrac/raw/readme/readme/generic_request.png "RecordTrac")  
+RecordTrac is a public record request management tool for government agencies.  This web application allows government employees manage, respond to, and fulfill incoming requests.  It also provides a quick, simple way for individuals to submit public record requests. RecordTrac displays all requests and responsive documents so that members of the public may find what they need without submitting additional public record requests.
 
-We recommend you use Vagrant to set up RecordTrac locally. Thanks to @vzvenyach for putting together instructions, which we've slightly modified and can be found here: https://github.com/postcode/recordtrac-vagrant
+##How to create a new RecordTrac app for your agency
+* [Groundwork](http://codeforamerica.github.io/public-records/docs/1.0.0/groundwork.html)
+* [Best Practices](http://codeforamerica.github.io/public-records/docs/1.0.0/best-practices.html)
+* [Redeploy](http://codeforamerica.github.io/public-records/docs/1.0.0/redeploy.html)
 
-Otherwise, feel free to set up per instructions below.
+##Technical details
+RecordTrac is primarily a Python application built on a backend Flask framework and a frontend Bootstrap framework.
 
-### Mac OS X Pre-requisites
+RecordTrac is compatible with most modern browsers, including Internet Explorer 8 and above.
 
-This application requires [Postgres](http://www.postgresapp.com/) and Xcode developer tools to be installed.
+###Platform pieces
+* [Flask 0.10](http://flask.pocoo.org/) is used as the backend Python framework.
+* [Bootstrap 2.3.2](http://getbootstrap.com/2.3.2) is used as the frontend HTML/CSS/JS framework.
+* [Postgres 9.3.0](http://www.postgresapp.com/) is used to manage the database.
+* [Python 2.7.5](http://www.python.org/getit) is used as the foundational programming language.
 
-    /Applications/Postgres.app/Contents/MacOS/bin/psql
-    CREATE DATABASE recordtrac;
+###Plugins
+* [Font Awesome 3.2.1](http://fortawesome.github.io/Font-Awesome) is used to render all the icons on the site.
+* A number of Javascript libraries like [Backbone.js 1.1.2](http://backbonejs.org/#) are used, primarily for the search function.
 
-### Ubuntu Pre-requisites
+###Service dependencies
+* [SendGrid](http://sendgrid.com/) is used for all email notifications about requests.
+* [Askimet](http://akismet.com/) is used as a spam filter.
+* [Captcha](http://www.captcha.net/) is used to allow requesters to override the spam filter if necessary.
+* [Mozilla Persona](https://login.persona.org/) is used to manage user authentication and password management.
 
-Install Postgres, Python, and other required packages.
+###Feature backlog
+Issues and feature backlog are tracked through [GitHub issues](https://github.com/codeforamerica/recordtrac/issues).
 
-    sudo apt-get update
-    sudo apt-get install -y git
-    sudo apt-get install -y postgresql-9.1 postgresql-server-dev-9.1 python-dev
-    sudo apt-get install -y python-pip
+##Developers
 
-### Postgres & Python
+###API Documentation
+* [API](http://codeforamerica.github.io/public-records/docs/1.0.0/api.html)
 
-If you are using a standard Postgres installation or from [Homebrew](http://mxcl.github.com/homebrew/) you can also use:
+###Source Code
+* [Source Code](https://github.com/codeforamerica/recordtrac)
+* [Issue Tracker](https://github.com/codeforamerica/recordtrac/issues)
 
-    sudo -u postgres createuser -P -s -e testuser
-    sudo -u postgres createdb recordtrac
+###Developer Documentation
+* [Db Helpers](http://codeforamerica.github.io/public-records/docs/1.0.0/db-helpers.html)
+* [Departments](http://codeforamerica.github.io/public-records/docs/1.0.0/departments.html)
+* [Models](http://codeforamerica.github.io/public-records/docs/1.0.0/models.html)
+* [Notifications](http://codeforamerica.github.io/public-records/docs/1.0.0/notifications.html)
+* [PRR](http://codeforamerica.github.io/public-records/docs/1.0.0/prr.html)
 
-In a new window:
+##How to use RecordTrac... as a requester
+* [Search for a record](#)
+* [Make a new request](#)
 
-    git clone git://github.com/postcode/recordtrac.git
-    cd recordtrac
-    sudo pip install -r requirements.txt
-    cp .env.example .env
-    sed -i 's/localhost/testuser\:testpwd\@localhost/g' .env
+##How to use RecordTrac... as an agency employee
+* [Search for a record](#)
+* [Make a new request](#)
+* [Respond to a request](#)
+* [Manage your request list](#)
+* [Admin](#)
 
-Update relevant fields in .env.
-
-    vi .env
-
-### Other Accounts
-
-To use e-mail, sign up for a free account with SendGrid and provide the username and password in `MAIL_USERNAME` and `MAIL_PASSWORD`. We assume your monthly email limit is 40,000 sends (Sendgrid's Bronze account level), but you can change this by setting a `SENDGRID_MONTHLY_LIMIT` int value in settings.env.
-
-To be able to catch spammy input, sign up for a free account with [Akismet](http://akismet.com/plans/) and provide the application URL and Akismet key in `APPLICATION_URL` and `AKISMET_KEY`.
-
-## Run locally
-
-If creating the database for the first time, run:
-
-    foreman run python db_setup.py
-
-There are two external data sources the application depends upon: staff directory information (stored in public_records_portal/static/json/directory.json) and information about the departments within the agency (stored in public_records_portal/static/json/departments.json). The data provided is from the City of Oakland, but you should update these files to meet your needs.
-
-To seed the application with user data (as provided in the above two files), requests and responses, run:
-
-    foreman run python db_seed.py
-
-To use the application locally, exit out of python and run:
-
-    foreman start
-
-
-You should see something similar to:
-
-    2013-05-06 12:16:53 [1776] [INFO] Starting gunicorn 0.17.4
-    2013-05-06 12:16:53 [1776] [INFO] Listening at: http://127.0.0.1:5000 (1776)
-    2013-05-06 12:16:53 [1776] [INFO] Using worker: sync
-    2013-05-06 12:16:53 [1779] [INFO] Booting worker with pid: 1779
-    2013-05-06 12:16:53 [1780] [INFO] Booting worker with pid: 1780
-
-Navigate to the url (in this case, http://127.0.0.1:5000) in your browser.
-
-You can now login with any e-mail address and the password 'admin'.
-
-
-<!-- [![Build Status](https://travis-ci.org/codeforamerica/public-records.png?branch=master)](https://travis-ci.org/codeforamerica/public-records) -->
+##About
+* [Why was RecordTrac built?](http://codeforamerica.github.io/public-records/docs/1.0.0/about.html#_why_was_recordtrac_built)
+* [Design Principles](http://codeforamerica.github.io/public-records/docs/1.0.0/about.html#_design_principles)
+* [Research and references](http://codeforamerica.github.io/public-records/docs/1.0.0/about.html#_research_and_references)
