@@ -9,9 +9,9 @@ RecordTrac is a public record request management tool for government agencies.  
 
 
 ##How to create a new RecordTrac app for your agency
-* [Groundwork](https://github.com/codeforamerica/recordtrac/blob/readme/readme/redeploy.md)
-* [Best Practices](http://codeforamerica.github.io/public-records/docs/1.0.0/best-practices.html)
-* [Redeploy](http://codeforamerica.github.io/public-records/docs/1.0.0/redeploy.html)
+* [Groundwork](https://github.com/codeforamerica/recordtrac/blob/readme/readme/redeploy.md#groundwork)
+* [Best Practices](https://github.com/codeforamerica/recordtrac/blob/readme/readme/redeploy.md#best-practices)
+* [Redeploy](https://github.com/codeforamerica/recordtrac/blob/readme/readme/redeploy.md#redeploy)
 
 ##Technical details
 RecordTrac is primarily a Python application built on a backend Flask framework and a frontend Bootstrap framework.
