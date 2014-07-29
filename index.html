@@ -1,0 +1,273 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<style>
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    color: #737373;
+    background-color: white;
+    margin: 10px 13px 10px 13px;
+}
+table {
+	margin: 10px 0 15px 0;
+	border-collapse: collapse;
+}
+td,th {	
+	border: 1px solid #ddd;
+	padding: 3px 10px;
+}
+th {
+	padding: 5px 10px;	
+}
+
+a {
+    color: #0069d6;
+}
+a:hover {
+    color: #0050a3;
+    text-decoration: none;
+}
+a img {
+    border: none;
+}
+p {
+    margin-bottom: 9px;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #404040;
+    line-height: 36px;
+}
+h1 {
+    margin-bottom: 18px;
+    font-size: 30px;
+}
+h2 {
+    font-size: 24px;
+}
+h3 {
+    font-size: 18px;
+}
+h4 {
+    font-size: 16px;
+}
+h5 {
+    font-size: 14px;
+}
+h6 {
+    font-size: 13px;
+}
+hr {
+    margin: 0 0 19px;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+}
+blockquote {
+    padding: 13px 13px 21px 15px;
+    margin-bottom: 18px;
+    font-family:georgia,serif;
+    font-style: italic;
+}
+blockquote:before {
+    content:"\201C";
+    font-size:40px;
+    margin-left:-10px;
+    font-family:georgia,serif;
+    color:#eee;
+}
+blockquote p {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 18px;
+    margin-bottom: 0;
+    font-style: italic;
+}
+code, pre {
+    font-family: Monaco, Andale Mono, Courier New, monospace;
+}
+code {
+    background-color: #fee9cc;
+    color: rgba(0, 0, 0, 0.75);
+    padding: 1px 3px;
+    font-size: 12px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+pre {
+    display: block;
+    padding: 14px;
+    margin: 0 0 18px;
+    line-height: 16px;
+    font-size: 11px;
+    border: 1px solid #d9d9d9;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+pre code {
+    background-color: #fff;
+    color:#737373;
+    font-size: 11px;
+    padding: 0;
+}
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+* {
+	-webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:10px auto;
+    }
+}
+@media print {
+	body,code,pre code,h1,h2,h3,h4,h5,h6 {
+		color: black;
+	}
+	table, pre {
+		page-break-inside: avoid;
+	}
+}
+</style>
+<title>RecordTrac</title>
+
+</head>
+<body>
+<h1>RecordTrac</h1>
+
+<p>This is the home page for documentation for the <strong>RecordTrac</strong> application.</p>
+
+<p>For help contact <strong>oakland |@| codeforamerica.org</strong></p>
+
+<h2>What is RecordTrac?</h2>
+
+<p>RecordTrac is a public record request management tool for government agencies.  This web application allows government employees manage, respond to, and fulfill incoming requests.  It also provides a quick, simple way for individuals to submit public record requests. RecordTrac displays all requests and responsive documents so that members of the public may find what they need without submitting additional public record requests.<br/>
+<img src="https://github.com/codeforamerica/recordtrac/raw/readme/readme/generic_request.png" title="RecordTrac" alt="RecordTrac" /></p>
+
+<h2>How to create a new RecordTrac app for your agency</h2>
+
+<ul>
+<li><a href="https://github.com/codeforamerica/recordtrac/blob/readme/readme/redeploy.md">Groundwork</a></li>
+<li><a href="http://codeforamerica.github.io/public-records/docs/1.0.0/best-practices.html">Best Practices</a></li>
+<li><a href="http://codeforamerica.github.io/public-records/docs/1.0.0/redeploy.html">Redeploy</a></li>
+</ul>
+
+
+<h2>Technical details</h2>
+
+<p>RecordTrac is primarily a Python application built on a backend Flask framework and a frontend Bootstrap framework.</p>
+
+<p>RecordTrac is compatible with most modern browsers, including Internet Explorer 8 and above.</p>
+
+<h3>Platform pieces</h3>
+
+<ul>
+<li><a href="http://flask.pocoo.org/">Flask 0.10</a> is used as the backend Python framework.</li>
+<li><a href="http://getbootstrap.com/2.3.2">Bootstrap 2.3.2</a> is used as the frontend HTML/CSS/JS framework.</li>
+<li><a href="http://www.postgresapp.com/">Postgres 9.3.0</a> is used to manage the database.</li>
+<li><a href="http://www.python.org/getit">Python 2.7.5</a> is used as the foundational programming language.</li>
+</ul>
+
+
+<h3>Plugins</h3>
+
+<ul>
+<li><a href="http://fortawesome.github.io/Font-Awesome">Font Awesome 3.2.1</a> is used to render all the icons on the site.</li>
+<li>A number of Javascript libraries like <a href="http://backbonejs.org/#">Backbone.js 1.1.2</a> are used, primarily for the search function.</li>
+</ul>
+
+
+<h3>Service dependencies</h3>
+
+<ul>
+<li><a href="http://sendgrid.com/">SendGrid</a> is used for all email notifications about requests.</li>
+<li><a href="http://akismet.com/">Askimet</a> is used as a spam filter.</li>
+<li><a href="http://www.captcha.net/">Captcha</a> is used to allow requesters to override the spam filter if necessary.</li>
+<li><a href="https://login.persona.org/">Mozilla Persona</a> is used to manage user authentication and password management.</li>
+</ul>
+
+
+<h3>Feature backlog</h3>
+
+<p>Issues and feature backlog are tracked through <a href="https://github.com/codeforamerica/recordtrac/issues">GitHub issues</a>.</p>
+
+<h2>Developers</h2>
+
+<h3>API Documentation</h3>
+
+<ul>
+<li><a href="http://codeforamerica.github.io/public-records/docs/1.0.0/api.html">API</a></li>
+</ul>
+
+
+<h3>Source Code</h3>
+
+<ul>
+<li><a href="https://github.com/codeforamerica/recordtrac">Source Code</a></li>
+<li><a href="https://github.com/codeforamerica/recordtrac/issues">Issue Tracker</a></li>
+</ul>
+
+
+<h3>Developer Documentation</h3>
+
+<ul>
+<li><a href="http://codeforamerica.github.io/public-records/docs/1.0.0/db-helpers.html">Db Helpers</a></li>
+<li><a href="http://codeforamerica.github.io/public-records/docs/1.0.0/departments.html">Departments</a></li>
+<li><a href="http://codeforamerica.github.io/public-records/docs/1.0.0/models.html">Models</a></li>
+<li><a href="http://codeforamerica.github.io/public-records/docs/1.0.0/notifications.html">Notifications</a></li>
+<li><a href="http://codeforamerica.github.io/public-records/docs/1.0.0/prr.html">PRR</a></li>
+</ul>
+
+
+<h2>How to use RecordTrac... as a requester</h2>
+
+<ul>
+<li><a href="#">Search for a record</a></li>
+<li><a href="#">Make a new request</a></li>
+</ul>
+
+
+<h2>How to use RecordTrac... as an agency employee</h2>
+
+<ul>
+<li><a href="#">Search for a record</a></li>
+<li><a href="#">Make a new request</a></li>
+<li><a href="#">Respond to a request</a></li>
+<li><a href="#">Manage your request list</a></li>
+<li><a href="#">Admin</a></li>
+</ul>
+
+
+<h2>About</h2>
+
+<ul>
+<li><a href="http://codeforamerica.github.io/public-records/docs/1.0.0/about.html#_why_was_recordtrac_built">Why was RecordTrac built?</a></li>
+<li><a href="http://codeforamerica.github.io/public-records/docs/1.0.0/about.html#_design_principles">Design Principles</a></li>
+<li><a href="http://codeforamerica.github.io/public-records/docs/1.0.0/about.html#_research_and_references">Research and references</a></li>
+</ul>
+
+</body>
+</html>
