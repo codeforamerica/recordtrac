@@ -1,7 +1,7 @@
 #RecordTrac
 This is the home page for documentation for the **RecordTrac** application.
 
-For help contact **oakland|@|codeforamerica.org**
+For help contact **oakland |@| codeforamerica.org**
 
 ##What is RecordTrac?
 RecordTrac is a public record request management tool for government agencies.
