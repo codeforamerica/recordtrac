@@ -9,7 +9,7 @@ RecordTrac is a public record request management tool for government agencies.  
 
 
 ##How to create a new RecordTrac app for your agency
-* [Groundwork](http://codeforamerica.github.io/public-records/docs/1.0.0/groundwork.html)
+* [Groundwork](https://github.com/codeforamerica/recordtrac/blob/readme/readme/redeploy.md)
 * [Best Practices](http://codeforamerica.github.io/public-records/docs/1.0.0/best-practices.html)
 * [Redeploy](http://codeforamerica.github.io/public-records/docs/1.0.0/redeploy.html)
 

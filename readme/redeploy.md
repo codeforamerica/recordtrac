@@ -1,22 +1,45 @@
-RecordTrac 
-==============
+#How to create a new RecordTrac app for your agency 
 
-This is a portal to manage and display public record requests, built by the Code for America 2013 Oakland team. The project is currently being piloted with [the City of Oakland](http://www2.oaklandnet.com/Government/o/CityAdministration/PublicRecordsRequest/index.htm), but hopefully extensible to other municipalities. Our docs are available [here](http://codeforamerica.github.io/public-records/docs/1.0.0/). We'd love your feedback. E-mail us at oakland at codeforamerica dot org or [open an issue](https://github.com/codeforamerica/public-records/issues?state=open) if you have any questions.
 
-## Installation
+## Groundwork
+To redeploy RecordTrac, you need support from key stakeholders _within_ government. The administrator or elected official in charge of overseeing public records request must agree to use this system, and instruct their colleagues to do so. 
 
-We recommend you use Vagrant to set up RecordTrac locally. Thanks to @vzvenyach for putting together instructions, which we've slightly modified and can be found here: https://github.com/postcode/recordtrac-vagrant
+RecordTrac assumes there is a contact for a given municipality or department within the municipality to handle public records requests. If a government agency has no process at all in place, but is interested in using the system, they could start with one ‘champion’ that is knowledgeable about who has access to different records. The champion can then route requests to the proper parties within government who may have the documents or information a requester needs. 
+
+## Best Practices
+RecordTrac is flexible and could complement almost any governmental agency's process for fulfilling records requests. There are however, best practices a governmental agency should adopt to really leverage the power of RecordTrac. Here is a good starting set:
+
+* Track all public records requests through RecordTrac, even if you originally received it over the phone, by email, fax, or mail. 
+
+* Don't reveal sensitive information in your message or upload documents that haven't been thoroughly redacted. Everything you do on the site is immediately viewable to the public.
+
+* Upload scanned copies of the [redacted] records to RecordTrac. This prevents you from answering the same public records request multiple times. It provides proof you responded to the request.
+
+* Communicate with everyone through RecordTrac. (Only take conversations offline if it involves confidential or sensitive information.) 
+
+* Make your messages or the documents you upload understood by everyone--not just the requester. You can do this by doing the following:
+	* Explain all acronyms used.
+	* Give each uploaded document a unique name.  
+	* If you have to enter a request on behalf of a member of the public, describe the request and/or include a copy of it in your response.  
+
+* Review requests no later than two business days after you receive them.
+
+## Redeploy
+
+### Installation
+
+We recommend you use Vagrant to set up RecordTrac locally. Thanks to @vzvenyach for putting together instructions, which we've slightly modified and can be found here: <https://github.com/postcode/recordtrac-vagrant>
 
 Otherwise, feel free to set up per instructions below.
 
-### Mac OS X Pre-requisites
+#### Mac OS X Pre-requisites
 
 This application requires [Postgres](http://www.postgresapp.com/) and Xcode developer tools to be installed.
 
     /Applications/Postgres.app/Contents/MacOS/bin/psql
     CREATE DATABASE recordtrac;
 
-### Ubuntu Pre-requisites
+#### Ubuntu Pre-requisites
 
 Install Postgres, Python, and other required packages.
 
@@ -25,7 +48,7 @@ Install Postgres, Python, and other required packages.
     sudo apt-get install -y postgresql-9.1 postgresql-server-dev-9.1 python-dev
     sudo apt-get install -y python-pip
 
-### Postgres & Python
+#### Postgres & Python
 
 If you are using a standard Postgres installation or from [Homebrew](http://mxcl.github.com/homebrew/) you can also use:
 
@@ -44,13 +67,13 @@ Update relevant fields in .env.
 
     vi .env
 
-### Other Accounts
+#### Other Accounts
 
 To use e-mail, sign up for a free account with SendGrid and provide the username and password in `MAIL_USERNAME` and `MAIL_PASSWORD`. We assume your monthly email limit is 40,000 sends (Sendgrid's Bronze account level), but you can change this by setting a `SENDGRID_MONTHLY_LIMIT` int value in settings.env.
 
 To be able to catch spammy input, sign up for a free account with [Akismet](http://akismet.com/plans/) and provide the application URL and Akismet key in `APPLICATION_URL` and `AKISMET_KEY`.
 
-## Run locally
+### Run locally
 
 If creating the database for the first time, run:
 
