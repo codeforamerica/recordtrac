@@ -246,7 +246,7 @@ def update_a_resource(resource, passed_recaptcha = False, data = None):
 				return render_template('recaptcha_answer.html', form = data, message = "Hmm, your answer looks like spam. To submit your answer, type the numbers or letters you see in the fiel dbelow.")
 			prr.answer_a_question(qa_id = int(data['qa_id']), answer = data['answer_text'], passed_spam_filter = True)
 		else:
-			update_resource(resource, request)			
+			update_resource(resource, data)			
 		if current_user.is_anonymous() == False:
 			return redirect(url_for('show_request_for_city', request_id = request.form['request_id']))
 		else:

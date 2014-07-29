@@ -32,16 +32,6 @@ class PublicRecordsTestCase(unittest.TestCase):
 
 	def tearDown(self):
 		models.db.session.remove()
-		models.db.drop_all()
-
-	# def test_route_request(self):
-	# 	self.login()
-	# 	reason = self.random_content('reason')
-	# 	fields = dict(request_id = 5, owner_email = "richa@codeforamerica.org", owner_reason = reason)
-	# 	page = self.submit_generic(fields = fields, endpoint = "update_a_owner")
-	# 	self.logout()
-	# 	assert reason in page.data
-
 
 	# def test_index_logged_out(self):
 	# 	page = self.app.get('/', follow_redirects= True)
@@ -96,8 +86,7 @@ class PublicRecordsTestCase(unittest.TestCase):
 		link_url = 'http://www.google.com'
 		fields = dict(request_id = 1, record_description = link_description, link_url = link_url)
 		page = self.submit_generic(fields = fields, endpoint = "add_a_record")
-		# self.logout()
-		print page.data
+		self.logout()
 		assert link_description in page.data
 
 	def test_close_request(self):
@@ -116,15 +105,15 @@ class PublicRecordsTestCase(unittest.TestCase):
 		page2 = self.submit_request('richa@richa.com', request)
 		assert 'Your request is the same as' in page2.data
 
+	def test_reroute_owner(self):
+		self.submit_request(text= self.random_content('request'), email = 'richa@richa.com')
+		self.login()
+		reroute_reason = self.random_content('reroute reason')
+		fields = dict(request_id = 1, owner_reason = reroute_reason, owner_email = "cris@codeforamerica.org")
+		page = self.submit_generic(fields = fields, endpoint = "update_a_owner")
+		self.logout()
+		assert reroute_reason in page.data
 
-
-	# def test_reroute_owner(self):
-	# 	self.login()
-	# 	reroute_reason = self.random_content('reroute reason')
-	# 	fields = dict(request_id = 5, owner_reason = reroute_reason, owner_email = "richa@codeforamerica.org")
-	# 	page = self.submit_generic(fields = fields, endpoint = "update_a_owner")
-	# 	self.logout()
-	# 	assert reroute_reason in page.data
 
 	def submit_request(self, email, text):
 		return self.app.post('/new', data=dict(
