@@ -26,12 +26,13 @@ class PublicRecordsTestCase(unittest.TestCase):
 		# resp = c.get('/someurl')
 
 	def setUp(self):
-		# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/junkdb'
+		models.db.drop_all() # Start with a fresh database
 		self.app = app.test_client()
 		models.db.create_all()
 
 	def tearDown(self):
 		models.db.session.remove()
+		models.db.drop_all() # Clear out this session
 
 	# def test_index_logged_out(self):
 	# 	page = self.app.get('/', follow_redirects= True)
@@ -70,14 +71,15 @@ class PublicRecordsTestCase(unittest.TestCase):
 	# 	self.logout()
 	# 	assert note_text in page.data
 
-	# def test_add_offline_doc(self):
-	# 	self.login()
-	# 	record_description = self.random_content('record description')
-	# 	record_access = self.random_content('record access')
-	# 	fields = dict(request_id = 5, record_description = record_description, record_access = record_access)
-	# 	page = self.submit_generic(fields = fields, endpoint = "add_a_record")
-	# 	self.logout()
-	# 	assert record_access in page.data
+	def test_add_offline_doc(self):
+		self.login()
+		self.submit_request(text=self.random_content('request'), email = 'richa@richa.com')
+		record_description = self.random_content('record description')
+		record_access = self.random_content('record access')
+		fields = dict(request_id = 1, record_description = record_description, record_access = record_access)
+		page = self.submit_generic(fields = fields, endpoint = "add_a_record")
+		self.logout()
+		assert record_access in page.data
 
 	def test_add_link(self):
 		self.login()
