@@ -33,9 +33,14 @@ def add_resource(resource, request_body, current_user_id = None):
 		if 'record_access' in fields and fields['record_access'] != "":
 			return add_offline_record(int(fields['request_id']), fields['record_description'], fields['record_access'], current_user_id)
 		elif 'link_url' in fields and fields['link_url'] != "":
-			return add_link(int(fields['request_id']), fields['link_url'], fields['record_description'], current_user_id)
+			return add_link(request_id = int(fields['request_id']), url = fields['link_url'], description = fields['record_description'], user_id = current_user_id)
 		else:
-			return upload_record(int(fields['request_id']), request.files['record'], fields['record_description'], current_user_id)
+			document = None
+			try:
+				document = request.files['record']
+			except:
+				app.logger.info("\n\nNo file passed in")
+			return upload_record(request_id = int(fields['request_id']), document = document, description = fields['record_description'], user_id = current_user_id)
 	elif "qa" in resource:
 		return ask_a_question(request_id = int(fields['request_id']), user_id = current_user_id, question = fields['question_text'])
 	elif "owner" in resource:
@@ -102,10 +107,10 @@ def add_note(request_id, text, user_id = None, passed_spam_filter = False):
 
 
 ### @export "upload_record"
-def upload_record(request_id, file, description, user_id):
+def upload_record(request_id, description, user_id, document = None):
 	""" Creates a record with upload/download attributes """
 	try:
-		doc_id, filename = scribd_helpers.upload_file(file = file, request_id = request_id)
+		doc_id, filename = scribd_helpers.upload_file(document = document, request_id = request_id)
 	except:
 		return "The upload timed out, please try again."
 	if doc_id == False:
