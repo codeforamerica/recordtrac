@@ -59,7 +59,7 @@ envvars = [
 			'LIAISONS_URL', # The path/URL at which a csv containing liaisons/department data lives. If this is not set, initial request routing will always be directed to the default owner
 			'LOGO_ON_WHITE_URL', # The path/URL at which a logo (on a white background) of the agency is hosted. (.png or .jpg)
 			'LOGO_ON_BLACK_URL', # The path/URL at which a logo (on a black background) of the agency is hosted. (.png or .jpg)
-			'TESTING'
+			'TESTING' # Set if you are running tests. Primarily used to ignore @login_requireds when running tests.
 			,
 			]
 for envvar in envvars:
