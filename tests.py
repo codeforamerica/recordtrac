@@ -23,7 +23,6 @@ class PublicRecordsTestCase(unittest.TestCase):
 			with c.session_transaction() as sess:
 				sess['user_id'] = 1
 				sess['_fresh'] = True # http://pythonhosted.org/Flask-Login/#fresh-logins
-		# resp = c.get('/someurl')
 
 	def setUp(self):
 		models.db.drop_all() # Start with a fresh database
@@ -34,12 +33,6 @@ class PublicRecordsTestCase(unittest.TestCase):
 		models.db.session.remove()
 		models.db.drop_all() # Clear out this session
 
-	# def test_index_logged_out(self):
-	# 	page = self.app.get('/', follow_redirects= True)
-	# 	assert 'Submit a Request' in page.data
-
-
-
 	def test_submit_request(self):
 		request = self.random_content('request')
 		page = self.submit_request(text= request,email = 'richa@richa.com')
@@ -49,13 +42,18 @@ class PublicRecordsTestCase(unittest.TestCase):
 		page = self.app.get('/new')
 		assert 'Request a new record' in page.data
 
-	# def test_ask_question(self):
-	# 	self.login()
-	# 	question = self.random_content('question')
-	# 	fields = dict(request_id = 5, question_text = question)
-	# 	page = self.submit_generic(fields = fields, endpoint = "add_a_qa")
-	# 	self.logout()
-	# 	assert question in page.data
+	def test_ask_question(self):
+		question = self.random_content('question')
+		page = self.ask_question(question)
+		assert question in page.data
+
+	def ask_question(self, question):
+		self.submit_request(text=self.random_content('request'), email = 'richa@richa.com')
+		self.login()
+		fields = dict(request_id = 1, question_text = question)
+		page = self.submit_generic(fields = fields, endpoint = "add_a_qa")
+		self.logout()
+		return page
 
 	# def test_answer_question(self):
 	# 	answer = self.random_content('answer')
