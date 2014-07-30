@@ -63,13 +63,21 @@ class PublicRecordsTestCase(unittest.TestCase):
 	# 	page = self.submit_generic(fields = fields, endpoint = "update_a_qa")
 	# 	assert answer in page.data
 
-	# def test_add_note(self):
-	# 	self.login()
-	# 	note_text = self.random_content('note')
-	# 	fields = dict(request_id = 5, note_text = note_text)
-	# 	page = self.submit_generic(fields = fields, endpoint = "add_a_note")
-	# 	self.logout()
-	# 	assert note_text in page.data
+	def test_add_note(self):
+		self.login()
+		self.submit_request(text=self.random_content('request'), email = 'richa@richa.com')
+		note_text = self.random_content('note')
+		fields = dict(request_id = 1, note_text = note_text)
+		page = self.submit_generic(fields = fields, endpoint = "add_a_note")
+		self.logout()
+		assert note_text in page.data
+
+	def test_public_add_note(self):
+		self.submit_request(text=self.random_content('request'), email = 'richa@richa.com')
+		note_text = self.random_content('note')
+		fields = dict(request_id = 1, note_text = note_text)
+		page = self.submit_generic(fields = fields, endpoint = "public_add_a_note")
+		assert note_text in page.data
 
 	def test_add_offline_doc(self):
 		self.login()
