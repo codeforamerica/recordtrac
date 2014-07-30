@@ -6,6 +6,7 @@ For help contact **oakland |@| codeforamerica.org**
 ##What is RecordTrac?
 RecordTrac is a public record request management tool for government agencies.  This web application allows government employees manage, respond to, and fulfill incoming requests.  It also provides a quick, simple way for individuals to submit public record requests. RecordTrac displays all requests and responsive documents so that members of the public may find what they need without submitting additional public record requests.  
 ![RecordTrac](https://github.com/codeforamerica/recordtrac/raw/readme/readme/generic_request.png "RecordTrac")  
+You can view a live version of [RecordTrac in the City of Oakland](http://records.oaklandnet.com).
 
 
 ##How to create a new RecordTrac app for your agency
