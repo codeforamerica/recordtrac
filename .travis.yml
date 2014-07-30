@@ -5,7 +5,7 @@ env:
 - TESTING=true
 
 install: 
-- pip install -r requirements.txt
+- sudo pip install -r requirements.txt
 
 before_script:
 - psql -c 'create database recordtrac;' -U postgres
