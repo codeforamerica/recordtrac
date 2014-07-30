@@ -37,7 +37,7 @@ def add_resource(resource, request_body, current_user_id = None):
 		else:
 			return upload_record(int(fields['request_id']), request.files['record'], fields['record_description'], current_user_id)
 	elif "qa" in resource:
-		return ask_a_question(int(fields['request_id']), current_user_id, fields['question_text'])
+		return ask_a_question(request_id = int(fields['request_id']), user_id = current_user_id, question = fields['question_text'])
 	elif "owner" in resource:
 		participant_id, new = add_staff_participant(request_id = fields['request_id'], email = fields['owner_email'], reason = fields['owner_reason'])
 		if new:
@@ -180,16 +180,16 @@ def add_subscriber(request_id, email):
 	return False
 
 ### @export "ask_a_question"	
-def ask_a_question(request_id, owner_id, question):
+def ask_a_question(request_id, user_id, question):
 	""" City staff can ask a question about a request they are confused about."""
 	req = get_obj("Request", request_id)
-	qa_id = create_QA(request_id = request_id, question = question, owner_id = owner_id)
+	qa_id = create_QA(request_id = request_id, question = question, user_id = user_id)
 	if qa_id:
 		change_request_status(request_id, "Pending")
 		requester = req.requester()
 		if requester:
 			generate_prr_emails(request_id, notification_type = "Question asked", user_id = requester.user_id)
-		add_staff_participant(request_id = request_id, user_id = get_attribute(attribute = "user_id", obj_id = owner_id, obj_type = "Owner"))
+		add_staff_participant(request_id = request_id, user_id = user_id)
 		return qa_id
 	return False
 
