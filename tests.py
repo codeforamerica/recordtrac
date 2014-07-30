@@ -15,15 +15,6 @@ class PublicRecordsTestCase(unittest.TestCase):
 			assert flask.request.path == '/requests'
 			assert flask.request.args['closed'] == 'false'
 
-	def logout(self):
-		return self.app.post('/logout')
-
-	def login(self):
-		with app.test_client() as c:
-			with c.session_transaction() as sess:
-				sess['user_id'] = 1
-				sess['_fresh'] = True # http://pythonhosted.org/Flask-Login/#fresh-logins
-
 	def setUp(self):
 		models.db.drop_all() # Start with a fresh database
 		self.app = app.test_client()
@@ -49,25 +40,22 @@ class PublicRecordsTestCase(unittest.TestCase):
 
 	def ask_question(self, question):
 		self.submit_request(text=self.random_content('request'), email = 'richa@richa.com')
-		self.login()
 		fields = dict(request_id = 1, question_text = question)
 		page = self.submit_generic(fields = fields, endpoint = "add_a_qa")
-		self.logout()
 		return page
 
-	# def test_answer_question(self):
-	# 	answer = self.random_content('answer')
-	# 	fields = dict(request_id = 5, qa_id = 15, user_id = 2, answer_text = answer)
-	# 	page = self.submit_generic(fields = fields, endpoint = "update_a_qa")
-	# 	assert answer in page.data
+	def test_answer_question(self):
+		self.ask_question(self.random_content('question'))
+		answer = self.random_content('answer')
+		fields = dict(request_id = 1, qa_id = 1, user_id = 1, answer_text = answer)
+		page = self.submit_generic(fields = fields, endpoint = "update_a_qa")
+		assert answer in page.data
 
 	def test_add_note(self):
-		self.login()
 		self.submit_request(text=self.random_content('request'), email = 'richa@richa.com')
 		note_text = self.random_content('note')
 		fields = dict(request_id = 1, note_text = note_text)
 		page = self.submit_generic(fields = fields, endpoint = "add_a_note")
-		self.logout()
 		assert note_text in page.data
 
 	def test_public_add_note(self):
@@ -78,33 +66,27 @@ class PublicRecordsTestCase(unittest.TestCase):
 		assert note_text in page.data
 
 	def test_add_offline_doc(self):
-		self.login()
 		self.submit_request(text=self.random_content('request'), email = 'richa@richa.com')
 		record_description = self.random_content('record description')
 		record_access = self.random_content('record access')
 		fields = dict(request_id = 1, record_description = record_description, record_access = record_access)
 		page = self.submit_generic(fields = fields, endpoint = "add_a_record")
-		self.logout()
 		assert record_access in page.data
 
 	def test_add_link(self):
-		self.login()
 		self.submit_request(text=self.random_content('request'), email = 'richa@richa.com')
 		link_description = self.random_content('link description')
 		link_url = 'http://www.google.com'
 		fields = dict(request_id = 1, record_description = link_description, link_url = link_url)
 		page = self.submit_generic(fields = fields, endpoint = "add_a_record")
-		self.logout()
 		assert link_description in page.data
 
 	def test_close_request(self):
 		request = self.random_content('request')
 		self.submit_request(text= request,email = 'richa@richa.com')
-		self.login()
 		close_reason = self.random_content('close reason')
 		fields = dict(request_id = 1, close_reason = close_reason)
 		page = self.submit_generic(fields = fields, endpoint = "close")
-		self.logout()
 		assert close_reason in page.data
 
 	def test_submit_duplicate_request(self):
@@ -115,11 +97,9 @@ class PublicRecordsTestCase(unittest.TestCase):
 
 	def test_reroute_owner(self):
 		self.submit_request(text= self.random_content('request'), email = 'richa@richa.com')
-		self.login()
 		reroute_reason = self.random_content('reroute reason')
 		fields = dict(request_id = 1, owner_reason = reroute_reason, owner_email = "cris@codeforamerica.org")
 		page = self.submit_generic(fields = fields, endpoint = "update_a_owner")
-		self.logout()
 		assert reroute_reason in page.data
 
 
