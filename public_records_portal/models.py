@@ -220,11 +220,11 @@ class QA(db.Model):
 	owner_id = db.Column(db.Integer, db.ForeignKey('user.id')) # Actually just a user ID
 	subscriber_id = db.Column(db.Integer, db.ForeignKey('user.id')) # Actually just a user ID
 	date_created = db.Column(db.DateTime)
-	def __init__(self, request_id, question, owner_id = None):
+	def __init__(self, request_id, question, user_id = None):
 		self.question = question
 		self.request_id = request_id
 		self.date_created = datetime.now().isoformat()
-		self.owner_id = owner_id
+		self.owner_id = user_id
 	def __repr__(self):
 		return "<QA Q: %r A: %r>" %(self.question, self.answer)
 
