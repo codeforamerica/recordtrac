@@ -26,7 +26,7 @@ def add_resource(resource, request_body, current_user_id = None):
 	if "extension" in resource:
 		return request_extension(int(fields['request_id']), fields.getlist('extend_reason'), current_user_id)
 	if "note" in resource:
-		return add_note(int(fields['request_id']), fields['note_text'], current_user_id)
+		return add_note(request_id = int(fields['request_id']), text = fields['note_text'], user_id = current_user_id, passed_spam_filter = True) # Bypass spam filter because they are logged in.
 	elif "record" in resource:
 		if fields['record_description'] == "":
 			return "When uploading a record, please fill out the 'summary' field."
@@ -85,8 +85,8 @@ def request_extension(request_id, extension_reasons, user_id):
 	return add_note(request_id = request_id, text = text, user_id = user_id)
 
 ### @export "add_note"
-def add_note(request_id, text, user_id, passed_spam_filter = False):
-	if not text or text == "" or (not user_id and not passed_spam_filter):
+def add_note(request_id, text, user_id = None, passed_spam_filter = False):
+	if not text or text == "" or (not passed_spam_filter):
 		return False
 	note_id = create_note(request_id = request_id, text = text, user_id = user_id)
 	if note_id:
