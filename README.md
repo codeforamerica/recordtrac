@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/codeforamerica/recordtrac.png?branch=master)](https://travis-ci.org/codeforamerica/recordtrac)
+
 RecordTrac 
 ==============
 
