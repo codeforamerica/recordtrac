@@ -25,6 +25,13 @@ RecordTrac is flexible and could complement almost any governmental agency's pro
 * Review requests no later than two business days after you receive them.
 
 ## Redeploy
+RecordTrac is an open source project, and we'd love for you to use it yourself!
+
+**EDIT**  Following this documentation, a semi-technical user — someone with experience using a terminal or command prompt — who has an idea of what kind of survey they would like to run should be able to get CityVoice up and running in a relatively short amount of time (less than a day).  **EDIT** 
+
+Using the recommended deployment instructions below, the tech cost (hosting and other services) should run you about $100 per month.
+
+If you have problems using RecordTrac, please open an issue here on GitHub and let us know what problems or difficulties you encountered in as much detail as you can.
 
 ### Installation
 
