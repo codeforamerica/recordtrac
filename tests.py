@@ -90,7 +90,7 @@ class PublicRecordsTestCase(unittest.TestCase):
 	def test_add_link(self):
 		request_id = self.submit_request(text=self.random_content('request'), email = 'richa@richa.com')
 		link_description = self.random_content('link description')
-		link_url = 'http://www.google.com'
+		link_url = 'http://www.codeforamerica.org'
 		fields = dict(request_id = request_id, record_description = link_description, link_url = link_url)
 		page = self.submit_generic(fields = fields, endpoint = "add_a_record")
 		assert link_description in page.data
