@@ -442,7 +442,7 @@ def fetch_requests():
 	response = anyjson.serialize(matches)
 	return Response(response, mimetype = "application/json")
 
-@app.route("/page")
+@app.route("/<page>")
 def any_page(page):
 	try:
 		return render_template('%s.html' %(page))
