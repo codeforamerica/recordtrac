@@ -9,10 +9,10 @@
     <title>{% block title %}{% endblock title%}</title>
     <style>
         p.lead { color: blue; }
-        /* the links wont be bold in IE8 unless the shim is working */
+        /* the lead text will be blue in IE8 unless the shim is working */
     </style>
     <!-- HTML5 shim for IE backwards compatibility -->
-    <!--[if lt IE 9] >
+    <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap.min.css') }}">
