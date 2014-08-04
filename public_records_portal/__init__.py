@@ -13,6 +13,8 @@ from flask.ext.sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.debug = True
 
+
+
 # Set environment variables
 def set_env(key, default = None):
 	if key in environ:
@@ -23,7 +25,6 @@ def set_env(key, default = None):
 # UPDATES TO THESE DEFAULTS SHOULD OCCUR IN YOUR .env FILE.
 
 set_env(key = 'APPLICATION_URL', default = "http://127.0.0.1:5000/") 
-set_env(key = 'SQLALCHEMY_DATABASE_URI', default = "postgresql://localhost/recordtrac")
 set_env(key = 'ENVIRONMENT', default="LOCAL")
 # The default records liaison, to whom requests get routed to if no department is selected:
 set_env(key = 'DEFAULT_OWNER_EMAIL', default = 'recordtrac@postcode.io')
@@ -65,6 +66,8 @@ envvars = [
 for envvar in envvars:
 	set_env(key = envvar)
 
+# Database gets set slightly differently, to support difference between Flask and Heroku naming:
+app.config['SQLALCHEMY_DATABASE_URI'] = environ['DATABASE_URL'] 
 
 # Initialize database
 db = SQLAlchemy(app)
