@@ -2,8 +2,7 @@ python:
 - "2.7"
 
 env:
-- TESTING=true
-- DATABASE_URL=postgresql://localhost/recordtrac
+- TESTING=true DATABASE_URL=postgresql://localhost/recordtrac
 
 install: 
 - sudo pip install -r requirements.txt
