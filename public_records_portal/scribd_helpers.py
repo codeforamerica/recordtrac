@@ -5,10 +5,14 @@ from werkzeug import secure_filename
 import tempfile
 from db_helpers import *
 
-# Set flags:
-upload_to_scribd = False
-if app.config['ENVIRONMENT'] != 'LOCAL':
-    upload_to_scribd = True
+
+def should_upload():
+    if app.config['ENVIRONMENT'] != 'LOCAL':
+        return True
+    elif 'UPLOAD_DOCS' in app.config:
+        return True
+    return False
+
 
 # These are the extensions that can be uploaded to Scribd.com:
 ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff']
@@ -17,14 +21,14 @@ ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'o
 def progress(bytes_sent, bytes_total):
     app.logger.info("Scribd upload in progress: %s of %s (%s%%)" % (bytes_sent, bytes_total, bytes_sent*100/bytes_total))
 
-def upload(file, filename, API_KEY, API_SECRET, description):
+def upload(document, filename, API_KEY, API_SECRET, description):
     # Configure the Scribd API.
     scribd.config(API_KEY, API_SECRET)
     doc_id = None
     try:
         # Upload the document from a file.
         doc = scribd.api_user.upload(
-            targetfile = file,
+            targetfile = document,
             name = filename,
             progress_callback=progress,
             req_buffer = tempfile.TemporaryFile()
@@ -38,7 +42,7 @@ def upload(file, filename, API_KEY, API_SECRET, description):
         return err.strerror
 
 def get_scribd_download_url(doc_id, record_id = None):
-    if not upload_to_scribd:
+    if not should_upload():
         return None
 	API_KEY = app.config['SCRIBD_API_KEY']
 	API_SECRET = app.config['SCRIBD_API_SECRET']
@@ -89,16 +93,16 @@ def update_descriptions(API_KEY, API_SECRET):
 
 
 @timeout(seconds=20)
-def upload_file(file, request_id): 
+def upload_file(document, request_id): 
 # Uploads file to scribd.com and returns doc ID. File can be accessed at scribd.com/doc/id
-    if file:
-        allowed = allowed_file(file.filename)
+    if not should_upload():
+        return '1', None # Don't need to do real uploads locally
+    if document:
+        allowed = allowed_file(document.filename)
         if allowed[0]:
-            filename = secure_filename(file.filename)
-            if not upload_to_scribd:
-                return '1', filename # Don't need to do real uploads locally
+            filename = secure_filename(document.filename)
             link_back = app.config['APPLICATION_URL'] + 'request/' + str(request_id)
-            doc_id = upload(file = file, filename = filename, API_KEY = app.config['SCRIBD_API_KEY'], API_SECRET = app.config['SCRIBD_API_SECRET'], description = "This document was uploaded via RecordTrac in response to a public records request for the %s. You can view the original request here: %s" % (app.config['AGENCY_NAME'], link_back))
+            doc_id = upload(document = document, filename = filename, API_KEY = app.config['SCRIBD_API_KEY'], API_SECRET = app.config['SCRIBD_API_SECRET'], description = "This document was uploaded via RecordTrac in response to a public records request for the %s. You can view the original request here: %s" % (app.config['AGENCY_NAME'], link_back))
             return doc_id, filename
         else:
             return allowed # Returns false and extension

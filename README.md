@@ -1,4 +1,5 @@
-#RecordTrac
+
+#RecordTrac [![Build Status](https://travis-ci.org/codeforamerica/recordtrac.png?branch=master)](https://travis-ci.org/codeforamerica/recordtrac)
 This is the home page for documentation for the **RecordTrac** application.
 
 For help contact **oakland |@| codeforamerica.org**

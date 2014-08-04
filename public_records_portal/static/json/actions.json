@@ -50,7 +50,7 @@
     "Upload a document": 
         {
             "What":"Upload a record stored on your computer.", 
-            "Who":"The record will be sent to Scribd.com and the public will be able to read and download it here.",
+            "Who":"The record will be uploaded to the web and the public will be able to read and download it here.",
             "Action":"We’ll notify the requester via email of the document."
         },
     "Describe hard copies": 
@@ -93,13 +93,13 @@
             },
         "Fulfilled - Information Redacted": 
             {
-                "What":"We released all of the requested documents. Personal information, such as home addresses, telephone numbers, and credit card numbers, were removed from the documents to protect the privacy or identity of another individual (Government Code Section 6254(c)).",
+                "What":"We released all of the requested documents. Personal information, such as home addresses, telephone numbers, and credit card numbers, were removed from the documents to protect the privacy or identity of another individual.",
                 "Who":"",
                 "Action":""
             },
         "Fulfilled - Identity of Citizens Making Complaints Removed": 
             {
-                "What":"We released all of the requested documents. We removed information identifying private citizens who made complaints to government (City of San Jose v. Superior Court (1999) 74 Cal.App.4th 1008, 1020.)).",
+                "What":"We released all of the requested documents. We removed information identifying private citizens who made complaints to government.",
                 "Who":"",
                 "Action":""
             },
@@ -118,31 +118,31 @@
             },
         "Contact Another Government Agency": 
             {
-                "What":"We don't have the records you requested. We suggest you submit a public records request to Alameda County or the state of California.",
+                "What":"We don't have the records you requested. We suggest you submit a public records request to the County or the State.",
                 "Who":"",
                 "Action":""
             },
         "Can Not Release - Personal Records": 
             {
-                "What":"We cannot upload the documents you requested. The California Public Records Act prohibits the City from releasing an individual’s employment, medical, or similar files to protect their privacy (Government Code Section 6254(c)).",
+                "What":"We cannot upload the documents you requested. We are prohibited from releasing an individual’s employment, medical, or similar files to protect their privacy.",
                 "Who":"",
                 "Action":""
             },
         "Can Not Release - Ongoing Litigation": 
             {
-                "What":"We cannot upload the documents you requested. The California Public Records Act prohibits the City from releasing records related to an on-going litigation (Government Code Section 6254(b)).",
+                "What":"We cannot upload the documents you requested. We are prohibited from releasing records related to an on-going litigation.",
                 "Who":"",
                 "Action":""
             },
         "Can Not Release - Investigative Records": 
             {
-                "What":"We cannot upload the documents you requested. The California Public Records Act prohibits the City from releasing investigative records for crimes committed or police incident reports, rap sheets, and arrest records (Government Code Section 6254(f)).",
+                "What":"We cannot upload the documents you requested. We are prohibited from releasing investigative records for crimes committed or police incident reports, rap sheets, and arrest records.",
                 "Who":"",
                 "Action":""
             },
         "Can Not Release - Attorney-Client Privilege": 
             {
-                "What":"We cannot upload the documents you requested. The California Public Records Act prohibits the City from releasing communications between an attorney and his or her clients (Government Code Section 6254(k).",
+                "What":"We cannot upload the documents you requested. We are prohibited from releasing communications between an attorney and his or her clients",
                 "Who":"",
                 "Action":""
             },
@@ -166,25 +166,25 @@
         },
             "Extension - Large Amount": 
                 {
-                    "What":"Additional time is required to answer your public records request. We need to search for, collect, or examine a large number of records (Government Code Section 6253(c)(2)).",
+                    "What":"Additional time is required to answer your public records request. We need to search for, collect, or examine a large number of records.",
                     "Who":"",
                     "Action":""
                 },
             "Extension - Separate Facility": 
                 {
-                    "What":"Additional time is required to answer your public records request. We need to search for and collect the requested records from a separate facility or set of facilities (Government Code Section 6253(c)(1)).",
+                    "What":"Additional time is required to answer your public records request. We need to search for and collect the requested records from a separate facility or set of facilities.",
                     "Who":"",
                     "Action":""
                 },
             "Extension - Another Agency": 
                 {
-                    "What":"Additional time is required to answer your public records request. We need to consult with another agency before we are able to deliver your record (Government Code Section 6253(c)(3)).",
+                    "What":"Additional time is required to answer your public records request. We need to consult with another agency before we are able to deliver your record.",
                     "Who":"",
                     "Action":""
                 },
             "Extension - Data": 
                 {
-                    "What":"Additional time is required to answer your public records request. We need to compile data or create a computer report to extract data (Government Code Section 6253(c)(4)).",
+                    "What":"Additional time is required to answer your public records request. We need to compile data or create a computer report to extract data.",
                     "Who":"",
                     "Action":""
                 }

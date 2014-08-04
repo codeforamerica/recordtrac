@@ -145,9 +145,9 @@ def update_obj(attribute, val, obj_type = None, obj_id = None, obj = None):
 	return False
 
 ### @export "create_QA"
-def create_QA(request_id, question, owner_id):
+def create_QA(request_id, question, user_id):
 	""" Create a QA object and return the ID. """
-	qa = QA(request_id = request_id, question = question, owner_id = owner_id)
+	qa = QA(request_id = request_id, question = question, user_id = user_id)
 	db.session.add(qa)
 	db.session.commit()
 	return qa.id
