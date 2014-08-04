@@ -3,6 +3,7 @@ python:
 
 env:
 - TESTING=true
+- DATABASE_URL=postgresql://localhost/recordtrac
 
 install: 
 - sudo pip install -r requirements.txt
