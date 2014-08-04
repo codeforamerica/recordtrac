@@ -201,6 +201,9 @@ def remove_obj(obj_type, obj_id):
 ### @export "create_answer"
 def create_answer(qa_id, subscriber_id, answer):
 	qa = get_obj("QA", qa_id)
+	if not qa:
+		app.logger.info("\n\nQA with id: %s does not exist" % (qa_id))
+		return None
 	qa.subscriber_id = subscriber_id
 	qa.answer = answer
 	db.session.add(qa)
