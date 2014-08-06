@@ -20,10 +20,18 @@
 		margin-top: -5px;
 		margin-right: 10px;
 	}
+
 	/* tabs */
 	ul.nav.tabs {
-		margin-top: 5px;
+		font-size: 16px;
 	}
+	ul.nav.tabs li.active {
+		border-bottom: 2px solid #17B292;
+	}
+	ul.nav.tabs li.active a {
+		padding-bottom: 4px;
+	}
+
 	/* login/logout area */
 	ul.nav.pull-right {
 		margin-top: 5px;
