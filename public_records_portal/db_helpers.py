@@ -153,9 +153,9 @@ def create_QA(request_id, question, user_id):
 	return qa.id
 
 ### @export "create_request"
-def create_request(text, user_id, department = None, offline_submission_type = None, date_received = None):
+def create_request(text, user_id, offline_submission_type = None, date_received = None):
 	""" Create a Request object and return the ID. """
-	req = Request(text = text, creator_id = user_id, department = department, offline_submission_type = offline_submission_type, date_received = date_received)
+	req = Request(text = text, creator_id = user_id, offline_submission_type = offline_submission_type, date_received = date_received)
 	db.session.add(req)
 	db.session.commit()
 	req.set_due_date()
