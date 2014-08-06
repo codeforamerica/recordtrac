@@ -54,10 +54,14 @@
               <input class ="input-block-level" type="text" class="span2" id="datepicker" name="date_received" > 
               </div>
               {% if routing_available %}
-              <p class="lead">Select a department <small class="department_optional">(optional)</small></p>
+              <p class="lead">Select a department<small class="department_optional"> (optional)</small></p>
               <div class="control-group">
-                  <select class ="combobox input-block-level" id="inputDepartment" title="select_department" name="request_department" type="text"></select>
-                {{ help("deptPopover-content", "Enter department or document type") }}
+                  <select id="inputDepartment" title="select_department" name="request_department" type="text">
+                    <option value=""></option>
+                    {% for department in departments %}
+                      <option value="{{department.name}}">{{department.name}}</option>
+                    {% endfor %}
+                  </select>
               </div>
               {% endif %}
 
