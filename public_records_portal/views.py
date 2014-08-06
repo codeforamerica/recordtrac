@@ -294,7 +294,7 @@ def filter_search_term(search_input, results):
 
 @app.route("/requests")
 def requests():
-	return render_template("all_requests.html")
+	return render_template("all_requests.html", total_requests_count = get_count("Request"))
 
 @app.route("/custom/request", methods = ["GET", "POST"])
 def fetch_requests():
@@ -345,17 +345,25 @@ def fetch_requests():
 		if str(request.args.get('overdue')).lower() == 'true':
 			status_filters.append(Request.overdue)
 
-		# Where am I the Point of Contact?
-		if str(request.args.get('mine_as_poc')).lower() == 'true':
-				results = results.filter(Request.id == Owner.request_id) \
-								 .filter(Owner.user_id == user_id) \
-								 .filter(Owner.is_point_person == True)
 
-		# Where am I just a Helper?
-		if str(request.args.get('mine_as_helper')).lower() == 'true':
+		# PoC and Helper filters
+		if str(request.args.get('mine_as_poc')).lower() == 'true': 
+			if str(request.args.get('mine_as_helper')).lower() == 'true':
+				# Where am I the Point of Contact *or* the Helper?
 				results = results.filter(Request.id == Owner.request_id) \
 								 .filter(Owner.user_id == user_id) \
 								 .filter(Owner.active == True)
+			else:
+				# Where am I the Point of Contact only?
+				results = results.filter(Request.id == Owner.request_id) \
+								 .filter(Owner.user_id == user_id) \
+								 .filter(Owner.is_point_person == True)
+		elif str(request.args.get('mine_as_helper')).lower() == 'true':
+				# Where am I a Helper only?
+				results = results.filter(Request.id == Owner.request_id) \
+								 .filter(Owner.user_id == user_id) \
+								 .filter(Owner.active == True) \
+								 .filter(Owner.is_point_person == False)
 		# Filter based on requester name
 		requester_name = request.args.get('requester_name')
 		if requester_name and requester_name != "":
