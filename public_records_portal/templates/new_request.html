@@ -32,15 +32,19 @@
                   <textarea id="requestTextarea" name="request_text" rows="3" class="input-block-level" placeholder="Describe your request. Be as specific as possible."></textarea>
                   {{ help("requestPopover-content", "Enter records request") }}
                 </div>
-                <div id="not_public_record">
+<!--                 <div id="not_public_record">
 
-                </div>
+                </div> -->
               </div>
               {% if routing_available %}
-              <p class="lead">Select a department or document type <small class="department_optional">(optional)</small></p>
+              <p class="lead">Select a department<small class="department_optional"> (optional)</small></p>
               <div class="control-group">
-                  <select class ="combobox input-block-level" id="inputDepartment" title="select_department" name="request_department" type="text"></select>
-                {{ help("deptPopover-content", "Enter department or document type") }}
+                  <select id="inputDepartment" title="select_department" name="request_department" type="text">
+                    <option value=""></option>
+                    {% for department in departments %}
+                      <option  value="{{department.name}}">{{department.name}}</option>
+                    {% endfor %}
+                  </select>
               </div>
               {% endif %}
 
