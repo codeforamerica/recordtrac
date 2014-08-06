@@ -29,11 +29,11 @@ RecordTrac is an open source project, and we'd love for you to use it yourself!
 
 **EDIT**  Following this documentation, a semi-technical user — someone with experience using a terminal or command prompt — who has an idea of what kind of survey they would like to run should be able to get CityVoice up and running in a relatively short amount of time (less than a day).  **EDIT** 
 
-Using the recommended deployment instructions below, the tech cost (hosting and other services) should run you about $100 per month.
+Using the recommended deployment instructions below, the technical operating costs (hosting and other services) should total about $100 per month.  
 
 If you have problems using RecordTrac, please open an issue here on GitHub and let us know what problems or difficulties you encountered in as much detail as you can.
 
-### Installation
+### Local Installation
 
 We recommend you use Vagrant to set up RecordTrac locally. Thanks to @vzvenyach for putting together instructions, which we've slightly modified and can be found here: <https://github.com/postcode/recordtrac-vagrant>
 
@@ -80,7 +80,7 @@ To use e-mail, sign up for a free account with SendGrid and provide the username
 
 To be able to catch spammy input, sign up for a free account with [Akismet](http://akismet.com/plans/) and provide the application URL and Akismet key in `APPLICATION_URL` and `AKISMET_KEY`.
 
-### Run locally
+#### Run locally
 
 If creating the database for the first time, run:
 
@@ -107,7 +107,9 @@ You should see something similar to:
 
 Navigate to the url (in this case, http://127.0.0.1:5000) in your browser.
 
-You can now login with any e-mail address and the password 'admin'.
+**EDIT**You can now login with any e-mail address and the password 'admin'.**EDIT**
 
+### Hosted Installation
+**TBD**
 
 <!-- [![Build Status](https://travis-ci.org/codeforamerica/public-records.png?branch=master)](https://travis-ci.org/codeforamerica/public-records) -->
