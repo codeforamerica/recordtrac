@@ -14,7 +14,7 @@
      }
      h4.participantRow-title {
           color: #17B292;
-          border-radius: 10px;
+          border-radius: 5px;
           padding: 5px;
           margin-bottom: 0px;
      }
@@ -35,7 +35,7 @@
           padding-right: 3px;
      }
     .unassignPopover {
-        border-radius: 10px;
+        border-radius: 5px;
         padding: 3px;
         margin-bottom: 0px;
         margin-left: -5px;
@@ -46,10 +46,11 @@
       *cursor: hand;
       background-color: rgba(23,178,146, .3);
       color: #555;
-      border-radius: 10px;
+      border-radius: 5px;
       padding: 3px;
       margin-bottom: 0px;
   }
+
      /*i.icon-arrow-right:hover {
           color: #888;
      }
