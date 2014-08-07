@@ -79,6 +79,11 @@
        padding: 2px;
      }
 
+/* Contact info area */
+     #no_email {
+      padding-right: 5px;
+     }
+
 /* Bottom Responses*/
      .response-wrapper {
        border-bottom: 1px solid #ccc;
