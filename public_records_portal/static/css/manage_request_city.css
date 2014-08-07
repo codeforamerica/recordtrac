@@ -9,6 +9,9 @@
      a#contactinfoPopoverRoute {
           color: #666;
      }
+     div.row-fluid.participantRow-poc{
+          padding-top: 3px;
+     }
      h4.participantRow-title {
           color: #17B292;
           border-radius: 10px;
@@ -24,11 +27,18 @@
           padding-left: 5px;
           padding-right: 5px;
      }    
+    
      i.icon-arrow-right, i.icon-plus {
           padding-right: 3px;
           } 
      i.icon-user {
           padding-right: 3px;
+     }
+    .unassignPopover {
+        border-radius: 10px;
+        padding: 3px;
+        margin-bottom: 0px;
+        margin-left: -5px;
      }
     .unassignPopover:hover {
       background-color:#17b292;
@@ -37,7 +47,7 @@
       background-color: rgba(23,178,146, .3);
       color: #555;
       border-radius: 10px;
-      padding: 5px;
+      padding: 3px;
       margin-bottom: 0px;
   }
      /*i.icon-arrow-right:hover {
@@ -77,6 +87,11 @@
      }
      .qa .qa-answer {
        padding: 2px;
+     }
+
+/* Contact info area */
+     #no_email {
+      padding-right: 5px;
      }
 
 /* Bottom Responses*/

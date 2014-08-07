@@ -39,7 +39,7 @@
               {% if routing_available %}
               <p class="lead">Select a department<small class="department_optional"> (optional)</small></p>
               <div class="control-group">
-                  <select id="inputDepartment" title="select_department" name="request_department" type="text">
+                  <select id="inputDepartment" class="input-block-level" title="select_department" name="request_department" type="text">
                     <option value=""></option>
                     {% for department in departments %}
                       <option  value="{{department.name}}">{{department.name}}</option>
@@ -69,7 +69,7 @@
 
               <div id="requestButton" class="control-group">
                 <div>
-                  <button type="submit" title="submit_request_button" class="btn btn-primary">Submit my request</button>
+                  <button type="submit" title="submit_request_button" class="btn btn-primary btn-large input-block-level">Submit my request</button>
                 </div>
               </div>
 
