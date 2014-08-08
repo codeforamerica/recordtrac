@@ -10,7 +10,7 @@ manager = APIManager(app, flask_sqlalchemy_db=db)
 
 
 # The endpoints created are /api/object, e.g. publicrecordsareawesome.com/api/request/
-manager.create_api(models.Request, methods=['GET'], results_per_page = 10, allow_functions = True)
+manager.create_api(models.Request, methods=['GET'], results_per_page = 10, allow_functions = True, include_columns=['date_created', 'date_received', 'department', 'id', 'notes', 'offline_submission_type', 'owners', 'qas', 'records', 'status', 'status_updated', 'text'])
 # manager.create_api(models.Owner, methods=['GET'], results_per_page = 10, allow_functions = True)
 manager.create_api(models.Note, methods=['GET'], results_per_page = 10, allow_functions = True)
 manager.create_api(models.Record, methods=['GET'], results_per_page = 10, allow_functions = True)
@@ -48,7 +48,6 @@ class RequestView(AdminView):
 	column_list = ('id', 'text', 'date_created', 'status') # The fields the admin can view
 	column_searchable_list = ('status', 'text') # The fields the admin can search a request by
 	form_excluded_columns = ('date_created', 'extended', 'status', 'status_updated', 'current_owner') # The fields the admin cannot edit.
-	column_labels = dict(department_obj = "Department")
 
 class RecordView(AdminView):
 	can_create = False

@@ -57,7 +57,7 @@ def new_request(passed_recaptcha = False, data = None):
 		offline_submission_type = None
 		date_received = None
 		department = None
-		if 'department' in data:
+		if 'request_department' in data:
 			department = data['request_department']
 		if 'request_alias' in data:
 			alias = data['request_alias']
@@ -81,13 +81,15 @@ def new_request(passed_recaptcha = False, data = None):
 		app.logger.info("\n\nDuplicate request entered: %s" % request_text)
 		return render_template('error.html', message = "Your request is the same as /request/%s" % request_id)
 	else:
+		departments = None
 		routing_available = False
 		if 'LIAISONS_URL' in app.config:
 			routing_available = True
+			departments = db.session.query(Department).all()
 		if current_user.is_authenticated():
-			return render_template('offline_request.html', routing_available = routing_available)
+			return render_template('offline_request.html', routing_available = routing_available, departments = departments)
 		else:
-			return render_template('new_request.html', routing_available = routing_available)
+			return render_template('new_request.html', routing_available = routing_available, departments = departments)
 
 @app.route("/export")
 @login_required
@@ -292,7 +294,7 @@ def filter_search_term(search_input, results):
 
 @app.route("/requests")
 def requests():
-	return render_template("all_requests.html")
+	return render_template("all_requests.html", total_requests_count = get_count("Request"))
 
 @app.route("/custom/request", methods = ["GET", "POST"])
 def fetch_requests():
@@ -343,17 +345,25 @@ def fetch_requests():
 		if str(request.args.get('overdue')).lower() == 'true':
 			status_filters.append(Request.overdue)
 
-		# Where am I the Point of Contact?
-		if str(request.args.get('mine_as_poc')).lower() == 'true':
-				results = results.filter(Request.id == Owner.request_id) \
-								 .filter(Owner.user_id == user_id) \
-								 .filter(Owner.is_point_person == True)
 
-		# Where am I just a Helper?
-		if str(request.args.get('mine_as_helper')).lower() == 'true':
+		# PoC and Helper filters
+		if str(request.args.get('mine_as_poc')).lower() == 'true': 
+			if str(request.args.get('mine_as_helper')).lower() == 'true':
+				# Where am I the Point of Contact *or* the Helper?
 				results = results.filter(Request.id == Owner.request_id) \
 								 .filter(Owner.user_id == user_id) \
 								 .filter(Owner.active == True)
+			else:
+				# Where am I the Point of Contact only?
+				results = results.filter(Request.id == Owner.request_id) \
+								 .filter(Owner.user_id == user_id) \
+								 .filter(Owner.is_point_person == True)
+		elif str(request.args.get('mine_as_helper')).lower() == 'true':
+				# Where am I a Helper only?
+				results = results.filter(Request.id == Owner.request_id) \
+								 .filter(Owner.user_id == user_id) \
+								 .filter(Owner.active == True) \
+								 .filter(Owner.is_point_person == False)
 		# Filter based on requester name
 		requester_name = request.args.get('requester_name')
 		if requester_name and requester_name != "":
