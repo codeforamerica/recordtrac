@@ -1,4 +1,4 @@
-/* add a request form found at /new */
+ add a request form found at /new */
 $(document).ready(function(){
 
   /* validates add a request form */
@@ -17,32 +17,6 @@ $(document).ready(function(){
         .closest('.control-group').removeClass('error').addClass('success');
         }
     });
-
-  /* 
-  typeahead for department that is now a dropdown as well using combobox:
-  https://github.com/danielfarrell/bootstrap-combobox/
-  */
-
-  /* First entry is an empty one */
- $('#inputDepartment').append($("<option/>", {
-              value: '',
-              text: ''
-          }));
- /* Initialize the select element with department data */
-  $.getJSON("api/departments", function(data) {
-      var departments_data = data['objects']
-      $.each(departments_data, function (i, line) {
-          $('#inputDepartment').append($("<option/>", {
-              value: line['department'],
-              text: line['department'] 
-          }));
-
-  });
-
-
-
-  /* Initialize the combobox */
-  $('.combobox').combobox(); 
 
 
 /* help text popover */
@@ -105,4 +79,4 @@ $('#requestTextarea').on('blur', function() {
     });
   })
 });
-/* End of .blur functionality */
+/* End of .blur functionality 

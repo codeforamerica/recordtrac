@@ -26,18 +26,23 @@ def add_resource(resource, request_body, current_user_id = None):
 	if "extension" in resource:
 		return request_extension(int(fields['request_id']), fields.getlist('extend_reason'), current_user_id)
 	if "note" in resource:
-		return add_note(int(fields['request_id']), fields['note_text'], current_user_id)
+		return add_note(request_id = int(fields['request_id']), text = fields['note_text'], user_id = current_user_id, passed_spam_filter = True) # Bypass spam filter because they are logged in.
 	elif "record" in resource:
 		if fields['record_description'] == "":
 			return "When uploading a record, please fill out the 'summary' field."
 		if 'record_access' in fields and fields['record_access'] != "":
 			return add_offline_record(int(fields['request_id']), fields['record_description'], fields['record_access'], current_user_id)
 		elif 'link_url' in fields and fields['link_url'] != "":
-			return add_link(int(fields['request_id']), fields['link_url'], fields['record_description'], current_user_id)
+			return add_link(request_id = int(fields['request_id']), url = fields['link_url'], description = fields['record_description'], user_id = current_user_id)
 		else:
-			return upload_record(int(fields['request_id']), request.files['record'], fields['record_description'], current_user_id)
+			document = None
+			try:
+				document = request.files['record']
+			except:
+				app.logger.info("\n\nNo file passed in")
+			return upload_record(request_id = int(fields['request_id']), document = document, description = fields['record_description'], user_id = current_user_id)
 	elif "qa" in resource:
-		return ask_a_question(int(fields['request_id']), current_user_id, fields['question_text'])
+		return ask_a_question(request_id = int(fields['request_id']), user_id = current_user_id, question = fields['question_text'])
 	elif "owner" in resource:
 		participant_id, new = add_staff_participant(request_id = fields['request_id'], email = fields['owner_email'], reason = fields['owner_reason'])
 		if new:
@@ -85,8 +90,8 @@ def request_extension(request_id, extension_reasons, user_id):
 	return add_note(request_id = request_id, text = text, user_id = user_id)
 
 ### @export "add_note"
-def add_note(request_id, text, user_id, passed_spam_filter = False):
-	if not text or text == "" or (not user_id and not passed_spam_filter):
+def add_note(request_id, text, user_id = None, passed_spam_filter = False):
+	if not text or text == "" or (not passed_spam_filter):
 		return False
 	note_id = create_note(request_id = request_id, text = text, user_id = user_id)
 	if note_id:
@@ -102,10 +107,10 @@ def add_note(request_id, text, user_id, passed_spam_filter = False):
 
 
 ### @export "upload_record"
-def upload_record(request_id, file, description, user_id):
+def upload_record(request_id, description, user_id, document = None):
 	""" Creates a record with upload/download attributes """
 	try:
-		doc_id, filename = scribd_helpers.upload_file(file = file, request_id = request_id)
+		doc_id, filename = scribd_helpers.upload_file(document = document, request_id = request_id)
 	except:
 		return "The upload timed out, please try again."
 	if doc_id == False:
@@ -144,7 +149,7 @@ def add_link(request_id, url, description, user_id):
 ### @export "make_request"			
 def make_request(text, email = None, user_id = None, phone = None, alias = None, department = None, passed_spam_filter = False, offline_submission_type = None, date_received = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
-	if (not user_id) and (not passed_spam_filter): 
+	if not passed_spam_filter: 
 		return None, False
 	request_id = find_request(text)
 	if request_id: # Same request already exists
@@ -160,7 +165,7 @@ def make_request(text, email = None, user_id = None, phone = None, alias = None,
 		else:
 			app.logger.info("%s is not a valid department" %(department))
 			department = None
-	request_id = create_request(text = text, user_id = user_id, department = department, offline_submission_type = offline_submission_type, date_received = date_received) # Actually create the Request object
+	request_id = create_request(text = text, user_id = user_id, offline_submission_type = offline_submission_type, date_received = date_received) # Actually create the Request object
 	new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email) # Assign someone to the request
 	open_request(request_id) # Set the status of the incoming request to "Open"
 	if email or alias or phone:
@@ -180,16 +185,16 @@ def add_subscriber(request_id, email):
 	return False
 
 ### @export "ask_a_question"	
-def ask_a_question(request_id, owner_id, question):
+def ask_a_question(request_id, user_id, question):
 	""" City staff can ask a question about a request they are confused about."""
 	req = get_obj("Request", request_id)
-	qa_id = create_QA(request_id = request_id, question = question, owner_id = owner_id)
+	qa_id = create_QA(request_id = request_id, question = question, user_id = user_id)
 	if qa_id:
 		change_request_status(request_id, "Pending")
 		requester = req.requester()
 		if requester:
 			generate_prr_emails(request_id, notification_type = "Question asked", user_id = requester.user_id)
-		add_staff_participant(request_id = request_id, user_id = get_attribute(attribute = "user_id", obj_id = owner_id, obj_type = "Owner"))
+		add_staff_participant(request_id = request_id, user_id = user_id)
 		return qa_id
 	return False
 

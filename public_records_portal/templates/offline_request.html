@@ -38,9 +38,11 @@
 
                 </div>
               </div>
-              <p class="lead">Format received <small class="format_received"></small></p>
+              <p class="lead">Receipt information <small class="format_received"></small></p>
               <div class="control-group">
-                  <select class="form-control" id="inputFormat" title="format_received" name="format_received">
+                <label for="inputFormat">Format received</label>
+                <div class="spacer">
+                  <select class="form-control input-block-level" id="inputFormat" title="format_received" name="format_received">
                       <option value="Fax">Fax</option>
                       <option value="Phone">Phone</option>
                       <option value="Email">Email</option>
@@ -48,16 +50,22 @@
                       <option value="In-person">In-person</option>
                       <option value="Text message">Text message</option>
                   </select>
+                </div>
+                <label for="date_received">Date received</label>
+                <div class="spacer">
+                  <input class ="input-block-level" type="text" class="span2" id="datepicker" name="date_received" > 
+                </div>
               </div>
-              <p class="lead">Date received <small class="department_optional"></small></p>
-              <div class = "control-group">
-              <input class ="input-block-level" type="text" class="span2" id="datepicker" name="date_received" > 
-              </div>
+
               {% if routing_available %}
-              <p class="lead">Select a department <small class="department_optional">(optional)</small></p>
+              <p class="lead">Select a department<small class="department_optional"> (optional)</small></p>
               <div class="control-group">
-                  <select class ="combobox input-block-level" id="inputDepartment" title="select_department" name="request_department" type="text"></select>
-                {{ help("deptPopover-content", "Enter department or document type") }}
+                  <select id="inputDepartment" class="input-block-level" title="select_department" name="request_department" type="text">
+                    <option value=""></option>
+                    {% for department in departments %}
+                      <option value="{{department.name}}">{{department.name}}</option>
+                    {% endfor %}
+                  </select>
               </div>
               {% endif %}
 
@@ -82,7 +90,7 @@
 
               <div id="requestButton" class="control-group">
                 <div>
-                  <button type="submit" title="submit_request_button" class="btn btn-primary">Submit my request</button>
+                  <button type="submit" title="submit_request_button" class="btn btn-primary btn-large input-block-level">Submit request</button>
                 </div>
               </div>
 

@@ -35,9 +35,11 @@ browser_id = BrowserID()
 browser_id.user_loader(get_user)
 browser_id.init_app(app)
 
+
+
 # Submitting a new request
+@app.route("/new", methods=["GET", "POST"])
 def new_request(passed_recaptcha = False, data = None):
-	user_id = get_user_id()
 	if data or request.method == 'POST':
 		if not data and not passed_recaptcha:
 			data = request.form.copy()
@@ -46,14 +48,17 @@ def new_request(passed_recaptcha = False, data = None):
 		if request_text == "":
 			return render_template('error.html', message = "You cannot submit an empty request.")
 		if email == "" and 'ignore_email' not in data and not passed_recaptcha:
-			return render_template('missing_email.html', form = data, user_id = get_user_id())
-		if not passed_recaptcha and (not user_id and is_spam(comment = request_text, user_ip = request.remote_addr, user_agent = request.headers.get('User-Agent'))):
+			return render_template('missing_email.html', form = data)
+		if not passed_recaptcha and (is_spam(comment = request_text, user_ip = request.remote_addr, user_agent = request.headers.get('User-Agent'))):
 			return render_template('recaptcha_request.html', form = data, message = "Hmm, your request looks like spam. To submit your request, type the numbers or letters you see in the field below.")
 
 		alias = None
 		phone = None
 		offline_submission_type = None
 		date_received = None
+		department = None
+		if 'request_department' in data:
+			department = data['request_department']
 		if 'request_alias' in data:
 			alias = data['request_alias']
 		if 'request_phone' in data:
@@ -68,8 +73,7 @@ def new_request(passed_recaptcha = False, data = None):
 					date_received = date_received + timedelta(hours = 7) # This is somewhat of a hack, but we need to get this back in UTC (+7 hours offset from Pacific Time) time but still treat it as a 'naive' datetime object
 				except ValueError:
 					return render_template('error.html', message = "Please use the datepicker to select a date.")
-		app.logger.info("\n\n Date received: %s" % date_received)
-		request_id, is_new = make_request(text = request_text, email = email, user_id = user_id, alias = alias, phone = phone, passed_spam_filter = True, department = data['request_department'], offline_submission_type = offline_submission_type, date_received = date_received)
+		request_id, is_new = make_request(text = request_text, email = email, alias = alias, phone = phone, passed_spam_filter = True, department = department, offline_submission_type = offline_submission_type, date_received = date_received)
 		if is_new:
 			return redirect(url_for('show_request_for_x', request_id = request_id, audience = 'new'))
 		if not request_id:
@@ -77,33 +81,35 @@ def new_request(passed_recaptcha = False, data = None):
 		app.logger.info("\n\nDuplicate request entered: %s" % request_text)
 		return render_template('error.html', message = "Your request is the same as /request/%s" % request_id)
 	else:
+		departments = None
 		routing_available = False
 		if 'LIAISONS_URL' in app.config:
 			routing_available = True
-		if user_id:
-			return render_template('offline_request.html', routing_available = routing_available, user_id = user_id)
+			departments = db.session.query(Department).all()
+		if current_user.is_authenticated():
+			return render_template('offline_request.html', routing_available = routing_available, departments = departments)
 		else:
-			return render_template('new_request.html', routing_available = routing_available, user_id = user_id)
+			return render_template('new_request.html', routing_available = routing_available, departments = departments)
 
+@app.route("/export")
+@login_required
 def to_csv():
-	if get_user_id():
-		return Response(csv_export.export(), mimetype='text/csv')
-	else:
-		return render_template('error.html', message = "You must be logged in to do this.")
+	return Response(csv_export.export(), mimetype='text/csv')
 
+@app.route("/", methods = ["GET", "POST"])
 def index():
 	if current_user.is_anonymous() == False:
 		return redirect(url_for('requests'))
 	else:
 		return landing()
 
+@app.route("/landing")
 def landing():
-	viz_data_freq, viz_data_time = get_viz_data()
-	return render_template('landing.html', viz_data_freq = json.dumps(viz_data_freq), viz_data_time = json.dumps(viz_data_time), user_id = get_user_id())
+	return render_template('landing.html')
 
-def viz():
-	viz_data_freq, viz_data_time = get_viz_data()
-	return render_template('viz.html', viz_data_freq = json.dumps(viz_data_freq), viz_data_time = json.dumps(viz_data_time))
+@login_manager.unauthorized_handler
+def unauthorized():
+    return render_template("alpha.html")
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -118,18 +124,27 @@ def explain_all_actions():
 	return render_template('actions.html', actions = actions)
 
 # Returns a view of the case based on the audience. Currently views exist for city staff or general public.
+@app.route("/<string:audience>/request/<int:request_id>")
 def show_request_for_x(audience, request_id):
-	if "city" in audience and current_user.is_anonymous():
-		return render_template('alpha.html')
+	if "city" in audience:
+		return show_request_for_city(request_id = request_id)
 	return show_request(request_id = request_id, template = "manage_request_%s.html" %(audience))
 show_request_for_x.methods = ['GET', 'POST']
 
+
+@app.route("/city/request/<int:request_id>")
+@login_required
+def show_request_for_city(request_id):
+	return show_request(request_id = request_id, template = "manage_request_city.html")
+
+@app.route("/response/<int:request_id>")
 def show_response(request_id):
 	req = get_obj("Request", request_id)
 	if not req:
 		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
-	return render_template("response.html", req = req, user_id = get_user_id())
+	return render_template("response.html", req = req)
 
+@app.route("/track", methods = ["POST"])
 def track(request_id = None):
 	if request.method == 'POST':
 		if not request_id:
@@ -142,6 +157,7 @@ def track(request_id = None):
 	else:
 		return render_template("track.html")
 
+@app.route("/unfollow/<int:request_id>/<string:email>")
 def unfollow(request_id, email):
 	success = False
 	user_id = create_or_return_user(email.lower())
@@ -153,20 +169,16 @@ def unfollow(request_id, email):
 	else:
 		return render_template('error.html', message = "Unfollowing this request was unsuccessful. You probably weren't following it to begin with.")
 
-def show_request(request_id, template = None):
-	current_user_id = get_user_id()
+@app.route("/request/<int:request_id>")
+def show_request(request_id, template = "manage_request_public.html"):
 	req = get_obj("Request", request_id)
 	if not req:
 		return render_template('error.html', message = "A request with ID %s does not exist." % request_id)
-	if template:
-		if "city" in template and not current_user_id:
-			return render_template('alpha.html')			
-	else:
-		template = "manage_request_public.html"
 	if req.status and "Closed" in req.status and template != "manage_request_feedback.html":
 		template = "closed.html"
-	return render_template(template, req = req, user_id = get_user_id())
+	return render_template(template, req = req)
 
+@app.route("/api/staff")
 def staff_to_json():
 	users = User.query.filter(User.is_staff == True).all()
 	staff_data = []
@@ -174,6 +186,7 @@ def staff_to_json():
 		staff_data.append({'alias': u.alias, 'email': u.email})
 	return jsonify(**{'objects': staff_data})
 
+@app.route("/api/departments")
 def departments_to_json():
 	departments = Department.query.all()
 	department_data = []
@@ -184,18 +197,20 @@ def departments_to_json():
 def docs():
 	return redirect('http://codeforamerica.github.io/public-records/docs/1.0.0')
 
+@app.route("/edit/request/<int:request_id>")
 @login_required
 def edit_case(request_id):
 	req = get_obj("Request", request_id)
-	return render_template("edit_case.html", req = req, user_id = get_user_id())
+	return render_template("edit_case.html", req = req)
 
+@app.route("/add_a_<string:resource>", methods = ["GET", "POST"])
 @login_required
 def add_a_resource(resource):
 	if request.method == 'POST':
-		resource_id = add_resource(resource = resource, request_body = request.form, current_user_id = current_user.id)
+		resource_id = add_resource(resource = resource, request_body = request.form, current_user_id = get_user_id())
 		if type(resource_id) == int or str(resource_id).isdigit():
 			app.logger.info("\n\nSuccessfully added resource: %s with id: %s" % (resource, resource_id))
-			return redirect(url_for('show_request_for_x', audience='city', request_id = request.form['request_id']))
+			return redirect(url_for('show_request_for_city', request_id = request.form['request_id']))
 		elif resource_id == False:
 			app.logger.info("\n\nThere was an issue with adding resource: %s" % resource)
 			return render_template('error.html')
@@ -204,6 +219,7 @@ def add_a_resource(resource):
 			return render_template('help_with_uploads.html', message = resource_id)
 	return render_template('error.html', message = "You can only update requests from a request page!")
 
+@app.route("/public_add_a_<string:resource>", methods = ["GET", "POST"])
 def public_add_a_resource(resource, passed_recaptcha = False, data = None):
 	if (data or request.method == 'POST') and ('note' in resource or 'subscriber' in resource):
 			if not data:
@@ -211,7 +227,7 @@ def public_add_a_resource(resource, passed_recaptcha = False, data = None):
 			if 'note' in resource:
 				if not passed_recaptcha and is_spam(comment = data['note_text'], user_ip = request.remote_addr, user_agent = request.headers.get('User-Agent')):
 					return render_template('recaptcha_note.html', form = data, message = "Hmm, your note looks like spam. To submit your note, type the numbers or letters you see in the field below.")
-				resource_id = prr.add_note(request_id = data['request_id'], text = data['note_text'], user_id = None, passed_spam_filter = True)
+				resource_id = prr.add_note(request_id = data['request_id'], text = data['note_text'], passed_spam_filter = True)
 			else:
 				resource_id = prr.add_resource(resource = resource, request_body = data, current_user_id = None)
 			if type(resource_id) == int:
@@ -222,6 +238,7 @@ def public_add_a_resource(resource, passed_recaptcha = False, data = None):
 				return redirect(url_for('show_request_for_x', audience=audience, request_id = request_id))
 	return render_template('error.html')
 
+@app.route("/update_a_<string:resource>", methods = ["GET", "POST"])
 def update_a_resource(resource, passed_recaptcha = False, data = None):
 	if (data or request.method == 'POST'):
 		if not data:
@@ -231,45 +248,24 @@ def update_a_resource(resource, passed_recaptcha = False, data = None):
 				return render_template('recaptcha_answer.html', form = data, message = "Hmm, your answer looks like spam. To submit your answer, type the numbers or letters you see in the fiel dbelow.")
 			prr.answer_a_question(qa_id = int(data['qa_id']), answer = data['answer_text'], passed_spam_filter = True)
 		else:
-			update_resource(resource, request)			
+			update_resource(resource, data)			
 		if current_user.is_anonymous() == False:
-			return redirect(url_for('show_request_for_x', audience='city', request_id = request.form['request_id']))
+			return redirect(url_for('show_request_for_city', request_id = request.form['request_id']))
 		else:
 			return redirect(url_for('show_request', request_id = request.form['request_id']))
 	return render_template('error.html', message = "You can only update requests from a request page!")
 
 # Closing is specific to a case, so this only gets called from a case (that only city staff have a view of)
+@app.route("/close", methods = ["GET", "POST"])
 @login_required
 def close(request_id = None):
 	if request.method == 'POST':
 		template = 'closed.html'
 		request_id = request.form['request_id']
-		close_request(request_id = request_id, reason = request.form['close_reason'], user_id = current_user.id)
+		close_request(request_id = request_id, reason = request.form['close_reason'], user_id = get_user_id())
 		return show_request(request_id, template= template)
 	return render_template('error.html', message = "You can only close from a requests page!")
 
-# Shows all public records requests that have been made.
-@timeout(seconds=25)
-def requests():
-	app.logger.debug("Processing requests.")
-	try:
-		departments = [d.name for d in Department.query.all()]
-		user_id = get_user_id()
-		total_requests_count = get_count("Request")
-		template = 'all_requests.html'
-
-		return render_template(template,
-				   user_id = user_id,
-				   title = "All Requests",
-				   departments = departments,
-				   total_requests_count = total_requests_count)
-	except Exception, message:
-		app.logger.info("\n\n%s" % message)
-		if "Too long" in message:
-			message = "Loading requests is taking a while. Try exploring with more restricted search options."
-		else: 
-			message = "Something went wrong loading the requests. We're looking into it!"
-		return render_template('error.html', message = message, user_id = get_user_id())
 
 def filter_department(department_name, results):
 	app.logger.info("\n\nDepartment filter:%s." % department_name)
@@ -296,6 +292,11 @@ def filter_search_term(search_input, results):
 		results = results.filter("to_tsvector(text) @@ to_tsquery('%s')" % search_query)
 	return results
 
+@app.route("/requests")
+def requests():
+	return render_template("all_requests.html", total_requests_count = get_count("Request"))
+
+@app.route("/custom/request", methods = ["GET", "POST"])
 def fetch_requests():
 	"""
 	Ultra-custom API endpoint for serving up requests.
@@ -344,17 +345,25 @@ def fetch_requests():
 		if str(request.args.get('overdue')).lower() == 'true':
 			status_filters.append(Request.overdue)
 
-		# Where am I the Point of Contact?
-		if str(request.args.get('mine_as_poc')).lower() == 'true':
-				results = results.filter(Request.id == Owner.request_id) \
-								 .filter(Owner.user_id == user_id) \
-								 .filter(Owner.is_point_person == True)
 
-		# Where am I just a Helper?
-		if str(request.args.get('mine_as_helper')).lower() == 'true':
+		# PoC and Helper filters
+		if str(request.args.get('mine_as_poc')).lower() == 'true': 
+			if str(request.args.get('mine_as_helper')).lower() == 'true':
+				# Where am I the Point of Contact *or* the Helper?
 				results = results.filter(Request.id == Owner.request_id) \
 								 .filter(Owner.user_id == user_id) \
 								 .filter(Owner.active == True)
+			else:
+				# Where am I the Point of Contact only?
+				results = results.filter(Request.id == Owner.request_id) \
+								 .filter(Owner.user_id == user_id) \
+								 .filter(Owner.is_point_person == True)
+		elif str(request.args.get('mine_as_helper')).lower() == 'true':
+				# Where am I a Helper only?
+				results = results.filter(Request.id == Owner.request_id) \
+								 .filter(Owner.user_id == user_id) \
+								 .filter(Owner.active == True) \
+								 .filter(Owner.is_point_person == False)
 		# Filter based on requester name
 		requester_name = request.args.get('requester_name')
 		if requester_name and requester_name != "":
@@ -443,85 +452,36 @@ def fetch_requests():
 	response = anyjson.serialize(matches)
 	return Response(response, mimetype = "application/json")
 
+@app.route("/<page>")
 def any_page(page):
 	try:
-		return render_template('%s.html' %(page), user_id = get_user_id())
+		return render_template('%s.html' %(page))
 	except:
-		return render_template('error.html', message = "%s totally doesn't exist." %(page), user_id = get_user_id())
+		return render_template('error.html', message = "%s totally doesn't exist." %(page))
 
 def tutorial():
 	user_id = get_user_id()
 	app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
-	return render_template('tutorial.html', user_id = user_id)
+	return render_template('tutorial.html')
 
-def login(email=None, password=None):
-	if request.method == 'POST':
-		email = request.form['email']
-		password = request.form['password']
-		user_to_login = authenticate_login(email, password)
-		if user_to_login:
-			login_user(user_to_login)
-			redirect_url = get_redirect_target()
-			if 'temporary_login' in redirect_url: # Redirect to update password
-				return render_template('update_password.html', user_id = get_user_id())
-			if 'login' in redirect_url or 'logout' in redirect_url:
-				return redirect(url_for('index'))
-			if "city" not in redirect_url:
-					redirect_url = redirect_url.replace("/request/", "/city/request/")
-			return redirect(redirect_url)
-		else:
-			app.logger.info("\n\nLogin failed (due to incorrect e-mail/password combo) for email: %s." % email)
-			return render_template('error.html', message = "That e-mail/ password combo didn't work. You can always <a href='/reset_password'>reset your password</a>.")
-		app.logger.info("\n\nLogin failed for email: %s." % email)
-		return render_template('error.html', message="Something went wrong.", user_id = get_user_id())
-	else:
-		user_id = get_user_id()
-		if user_id:
-			return render_template('generic.html', message = 'You are already logged in. If you wish to log in as another user, first log out by clicking your name in the upper-right corner of this page and clicking Logout.', user_id = user_id)
-		else:
-			return render_template('generic.html', message = "If you work for the %s and are trying to log into RecordTrac, please log in by clicking City login in the upper-right corner of this page." % app.config['AGENCY_NAME'])
-
-def reset_password(email=None):
-	after_reset = False
-	reset_success = False
-	if request.method == 'POST':
-		after_reset = True
-		email = request.form['email']
-		password = set_random_password(email)
-		if password:
-			send_prr_email(page = app.config['APPLICATION_URL'], recipients = [email], subject = "Your temporary password", template = "password_email.html", include_unsubscribe_link = False, password = password)
-			reset_success = True
-			app.logger.info("\n\nPassword reset sent for email: %s." % email)
-		else:
-			app.logger.info("\n\nPassword reset attempted and denied for email: %s." % email)
-	return render_template('reset_password.html', after_reset = after_reset, reset_success = reset_success)
-
-
-@login_required
-def update_password(password=None):
-	if request.method == 'POST':
-		if set_password(current_user, request.form['password']):
-			return index()
-		app.logger.info("\n\nFailure updating password for user %s" % current_user.id)
-		return render_template('error.html', message = "Something went wrong updating your password.")
-	else:
-		app.logger.info("\n\nSuccessfully updated password for user %s" % current_user.id)
-		return render_template('update_password.html', user_id = current_user.id)
-
+@app.route("/staff_card/<int:user_id>")
 def staff_card(user_id):
 	return render_template('staff_card.html', uid = user_id)
 
+@app.route("/logout")
+@login_required
 def logout():
 	logout_user()
 	return index()
 
 def get_user_id():
-	if current_user.is_anonymous() == False:
+	if current_user.is_authenticated():
 		return current_user.id
 	return None
 
 # Used as AJAX POST endpoint to check if new request text contains certain keyword
 # See new_requests.(html/js)
+@app.route("/is_public_record", methods = ["POST"])
 def is_public_record():
 	request_text = request.form['request_text']
 	not_records_filepath = os.path.join(app.root_path, 'static/json/notcityrecords.json')
@@ -551,6 +511,7 @@ def is_safe_url(target):
 		ref_url.netloc == test_url.netloc
 
 
+@app.route("/recaptcha_<string:templatetype>", methods = ["GET", "POST"])
 def recaptcha_templatetype(templatetype):
 	if request.method == 'POST':
 		template = "recaptcha_" + templatetype + ".html"
@@ -575,6 +536,7 @@ def recaptcha_templatetype(templatetype):
 		app.logger.info("\n\nAttempted access to recaptcha not via POST")
 		return render_template('error.html', message = "You don't need to be here.")
 
+@app.route("/.well-known/status", methods = ["GET"])
 def well_known_status():
 	'''
 	'''

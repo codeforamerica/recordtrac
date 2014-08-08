@@ -6,7 +6,7 @@
     </h3>
   </div>
 
-  {% if (user_id and status == 'closed') %}
+  {% if current_user.is_authenticated() and status == 'closed' %}
     <div class="r_sidebar_banner r_sidebar-fixed hidden-phone hidden-tablet">
       <form name="reopen_request" class="form-inline" id="question" method="post" action="/update_a_request_reopen">
         <input type="hidden" name="request_id" value="{{ req.id }}"/>
@@ -16,3 +16,5 @@
   {% endif %}
 
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
+
+

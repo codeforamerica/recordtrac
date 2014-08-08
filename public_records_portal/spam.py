@@ -1,10 +1,12 @@
 from public_records_portal import app
 import akismet
 import logging
-
+from flask.ext.login import current_user
 
 def check_for_spam():
-	if app.config['ENVIRONMENT'] == 'PRODUCTION':
+	if current_user.is_authenticated(): # Spam filter is currently implemented to prevent bot spamming, so if someone is logged in they have already verified they are human
+		return False
+	if app.config['ENVIRONMENT'] == 'PRODUCTION': # This only needs to work in production, unless a local config variable is set to indicate otherwise
 		return True
 	elif 'CHECK_FOR_SPAM' in app.config:
 		return True

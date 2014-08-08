@@ -2,8 +2,8 @@
 
 /* bigger font for FAQ */
 ul {
-	font-size: 18px;
-	margin-left: 0px;
+	/*font-size: 18px;*/
+	margin-left: 3em;
 }
 
 /* bold for table legend */
@@ -38,5 +38,9 @@ p.table-legend-explanation:first-child {
 }
 
 .bottombreathe {
+	padding-bottom: 1%;
+}
+
+.footerbreathe {
 	padding-bottom: 5%;
 }

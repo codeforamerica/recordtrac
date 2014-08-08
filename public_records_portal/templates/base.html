@@ -64,7 +64,7 @@
             <a class="brand" href="/landing"><img id="logo_nav" src="{{config['LOGO_ON_BLACK_URL']}}" alt="{{config['AGENCY_NAME']}} logo" width="35" height="35"/><strong> RecordTrac</strong><small id="beta" class="text-warning"></small></a>
             <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
               
-                {% if user_id %}
+                {% if current_user.is_authenticated() %}
                   <ul class="nav tabs">
                     <li><a href="/new">New request</a></li>
                     <li><a href="/requests">All requests</a></li>
