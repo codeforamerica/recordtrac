@@ -187,11 +187,15 @@ html, body {
 	min-height: 100%;
 	height: auto !important;
 	height: 100%;
-	margin: 0 auto -50px; /* the bottom margin is the negative value of the footer's height */
+	margin: 0 auto -5em; /* the bottom margin is the negative value of the footer's height */
 }
 .footer, .push {
-	height: 50px; /* .push must be the same height as .footer */
+	height: 5em; /* .push must be the same height as .footer */
+	margin-bottom: 0px; /* custom: added to fix the Bootstrap well margins */
 }
+/*#footer p.text-center {
+	margin-bottom: 5px;
+}*/
 
 
 /* REQUESTS VIZ CSS --- */
