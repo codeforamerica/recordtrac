@@ -25,183 +25,193 @@
 {% block container %}
 
   <div class="row-fluid">
-    <div class="span11 offset1">   
-              <div class="row-fluid">
-                  <div class="span9">
-                      <div id="exploreTitle">
-                        <h3>Explore <span class="badge">{{total_requests_count}}</span> requests and counting</h3>
-                        <a href="/new" class="btn btn-primary btn-large pull-right">Request new record</a>
-                      </div>
-                  </div>
-              </div>
+    <div class="span11 offset1">  
 
-              <div class="row-fluid">
-                <div class="span9">
-                  <p class="intro_text">RecordTrac makes every public records request available to the public, including messages or documents uploaded by agency staff. Search through current and past requests. You may find what you need!</p>
-                </div>
+      <div class="row-fluid">
+          <div class="span9">
+              <div id="exploreTitle">
+                <h3>Explore <span class="badge">{{total_requests_count}}</span> requests and counting</h3>
+                <a href="/new" class="btn btn-primary btn-large pull-right">Request new record</a>
               </div>
+          </div>
+      </div>
 
-              <form id ="all_requests_form" name="all_requests" action="/requests" method="POST"> 
-                <h5>Search</h5>
+      <div class="row-fluid">
+        <div class="span9">
+          <p class="intro_text">RecordTrac makes every public records request available to the public, including messages or documents uploaded by agency staff. Search through current and past requests. You may find what you need!</p>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="span3">
+
+          <form id ="all_requests_form" name="all_requests" action="/requests" method="POST"> 
+            <h5>Search</h5>
+            <div class="indent">
+              <input name = "search_term" type="search" placeholder="I'd like to find...">
+            </div>
+                                          
+            <h4 class="underline">ADVANCED FILTER</h4>
+            {% if current_user.is_authenticated() %}
+                <h5>My Requests</h5>
                 <div class="indent">
-                  <input name = "search_term" type="search" placeholder="I'd like to find...">
+                    <label class="checkbox">
+                      <input type="checkbox" name="mine_as_poc" {% if mine_as_poc %} checked {% endif %} />
+                      <em>as Point of Contact</em>
+                    </label>
+                    <label class="checkbox">
+                      <input type="checkbox" name="mine_as_helper" {% if mine_as_helper %} checked {% endif %} />
+                      <em>as Helper</em>
+                    </label>
                 </div>
-                                              
-                <h4 class="underline">ADVANCED FILTER</h4>
-                {% if current_user.is_authenticated() %}
-                    <h5>My Requests</h5>
-                    <div class="indent">
-                        <label class="checkbox">
-                          <input type="checkbox" name="mine_as_poc" {% if mine_as_poc %} checked {% endif %} />
-                          <em>as Point of Contact</em>
-                        </label>
-                        <label class="checkbox">
-                          <input type="checkbox" name="mine_as_helper" {% if mine_as_helper %} checked {% endif %} />
-                          <em>as Helper</em>
-                        </label>
-                    </div>
-                {% endif %}
+            {% endif %}
 
-                <h5>Status</h5>
-                <div class="indent" style="padding-bottom: 15px;">
-                  {% if current_user.is_authenticated() %}
-                    <label class="checkbox">
-                      <input type="checkbox" name="is_open" {% if is_open %} checked {% endif %} />
-                      <em class="open_style">Open</em>
-                    </label>
-                    <label class="checkbox">
-                      <input type="checkbox" name="due_soon" {% if due_soon %} checked {% endif %} />
-                      <em class="duesoon_style">Due Soon</em>
-                    </label>
-                    <label class="checkbox">
-                      <input type="checkbox" name="overdue" {% if overdue %} checked {% endif %} />
-                      <em class="overdue_style">Overdue</em>
-                    </label>
+            <h5>Status</h5>
+            <div class="indent" style="padding-bottom: 15px;">
+              {% if current_user.is_authenticated() %}
+                <label class="checkbox">
+                  <input type="checkbox" name="is_open" {% if is_open %} checked {% endif %} />
+                  <em class="open_style">Open</em>
+                </label>
+                <label class="checkbox">
+                  <input type="checkbox" name="due_soon" {% if due_soon %} checked {% endif %} />
+                  <em class="duesoon_style">Due Soon</em>
+                </label>
+                <label class="checkbox">
+                  <input type="checkbox" name="overdue" {% if overdue %} checked {% endif %} />
+                  <em class="overdue_style">Overdue</em>
+                </label>
+                {% endif %}
+                <label class="checkbox">
+                  <input type="checkbox" name="is_closed" {% if is_closed %} checked {% endif %} /> 
+                  <em class="closed_style">Closed</em>
+                </label>
+            </div>
+          
+            <div class="control-group indent">
+              <h5>Date received</h5>
+                <input type="date" 
+                       name="min_date_received"
+                       value="{{ min_date_received }}" > 
+                <input type="date" 
+                       name="max_date_received"
+                       value="{{ max_date_received }}" > 
+            </div>
+
+            {% if current_user.is_authenticated() %}
+              <div class="control-group indent">
+                <h5>Due date</h5>
+                  <input type="date" 
+                         name="min_due_date"
+                         value="{{ min_due_date }}" > 
+                  <input type="date" 
+                         name="max_due_date"
+                         value="{{ max_due_date }}" > 
+              </div>
+                <h5>Requester Name</h5>
+                <div class="indent">
+                  <input name="requester_name" type="search" placeholder="Enter name" value="">
+                </div>
+            {% endif %} 
+
+            <h5>Department</h5>
+            <div class="row-fluid indent">
+                <select name = "department" class="span10">
+                  <option value="All departments">All departments</option>
+                  {% for department in departments %}
+                    <option>{{department}}</option>
+                  {% endfor %}
+                </select>
+            </div>
+
+            <input type="submit" value="Submit">
+
+          </form>
+        </div>
+
+        <div class="span8">
+   
+          <table id="requests">
+              <thead id="headings">
+                  <tr>
+                      <th class="status" style="width: 3%"></th>
+                      <th class="sortable" style="width: 4%">
+                        <button type="submit" onclick="return insertInput('id');">#</button>
+                      </th>
+                      <th class="sortable" style="width: 12%">
+                        <button type="submit" onclick="return insertInput('date_received');">Received</button>
+                      </th>
+                      <th class="sortable" style="width: 25%">
+                        <button type="submit" onclick="return insertInput('text');">Request</button>
+                      </th>
+                      <th style="width: 15%">Department</th>
+                      <th style="width: 15%">Point of Contact</th>
+                      {% if current_user.is_authenticated() %}
+                        <th class="sortable"  style="width: 12%">
+                          <button type="submit" onclick="return insertInput('due_date');">Due</button>
+                        </th>
+                        <th style="width: 14%">Requester</th>
+                      {% endif %}
+                  </tr>
+              </thead>
+              <tbody>
+              {% for request in requests %}              
+                  <tr>
+                    <td style="width: 3%" class="status {{request.solid_status}}">
+                      {% if request.solid_status == "closed"  %}
+                        <i class="icon-archive icon-light"></i>
+                      {% endif %}
+                    </td>
+                    <td style="width: 4%">{{request.id}}</td>
+                    <td style="width: 12%">{{request.date_received}}</td>
+                    <td style = "width: 25%">
+                    {% if current_user.is_authenticated() %}
+                      <a href="/city/request/{{request.id}}">
+                    {% else %}
+                      <a href="/request/{{request.id}}">
                     {% endif %}
-                    <label class="checkbox">
-                      <input type="checkbox" name="is_closed" {% if is_closed %} checked {% endif %} /> 
-                      <em class="closed_style">Closed</em>
-                    </label>
-                </div>
-              
-                <div class="control-group indent">
-                  <h5>Date received</h5>
-                    <input type="date" 
-                           name="min_date_received"
-                           value="{{ min_date_received }}" > 
-                    <input type="date" 
-                           name="max_date_received"
-                           value="{{ max_date_received }}" > 
-                </div>
 
-   
-                {% if current_user.is_authenticated() %}
+                    {% set text = request.text %}
+                    {% if request.solid_status == "due soon" %}
+                        <span style = "background-color: #FB991B" class="label label-warning">due soon</span> 
+                    {% elif request.solid_status == "overdue" %}
+                        <span style = "background-color: #CA1A1A" class="label label-important">overdue</span> 
+                    {% endif %}
+                    {{ text }}
 
-                  <div class="control-group indent">
-                  <h5>Due date</h5>
-                    <input type="date" 
-                           name="min_due_date"
-                           value="{{ min_due_date }}" > 
-                    <input type="date" 
-                           name="max_due_date"
-                           value="{{ max_due_date }}" > 
-                  </div>
-                      <h5>Requester Name</h5>
-                      <div class="indent">
-                        <input name="requester_name" type="search" placeholder="Enter name" value="">
-                  </div>
-                {% endif %} 
+                    </a>
+                    </td>
+                    <td style="width: 15%">{{request.department}}</td>                    
+                    <td style="width: 15%">{{request.contact_name}}</td>
+                    {% if current_user.is_authenticated() %}
+                    <td style="width: 12%">{{request.due_date }}</td>
+                    <td style="width: 14%">{{request.requester}}</td>
+                    {% endif %}
+                  </tr>
+              {% endfor %}
+              </tbody>
+          </table> 
 
-                <h5>Department</h5>
-                <div class="row-fluid indent">
-                    <select name = "department" class="span10">
-                      <option value="All departments">All departments</option>
-                      {% for department in departments %}
-                        <option>{{department}}</option>
-                      {% endfor %}
-                    </select>
-                </div>
-                <input type="submit" value="Submit">
+          <div class="pull-left pagination">
+            <ul>
+              <li>Showing {{ start_index }} to {{ end_index }} of {{ num_results }} entries</li>
+            </ul>
+          </div>
 
-   
-                <table id="requests">
-                    <thead id="headings">
-                        <tr>
-                            <th class="status" style="width: 3%"></th>
-                            <th class="sortable" style="width: 4%">
-                              <button type="submit" onclick="return insertInput('id');">#</button>
-                            </th>
-                            <th class="sortable" style="width: 12%">
-                              <button type="submit" onclick="return insertInput('date_received');">Received</button>
-                            </th>
-                            <th class="sortable" style="width: 25%">
-                              <button type="submit" onclick="return insertInput('text');">Request</button>
-                            </th>
-                            <th style="width: 15%">Department</th>
-                            <th style="width: 15%">Point of Contact</th>
-                            {% if current_user.is_authenticated() %}
-                              <th class="sortable"  style="width: 12%">
-                                <button type="submit" onclick="return insertInput('due_date');">Due</button>
-                              </th>
-                              <th style="width: 14%">Requester</th>
-                            {% endif %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for request in requests %}              
-                        <tr>
-                          <td style="width: 3%" class="status {{request.solid_status}}">
-                            {% if request.solid_status == "closed"  %}
-                              <i class="icon-archive icon-light"></i>
-                            {% endif %}
-                          </td>
-                          <td style="width: 4%">{{request.id}}</td>
-                          <td style="width: 12%">{{request.date_received}}</td>
-                          <td style = "width: 25%">
-                          {% if current_user.is_authenticated() %}
-                            <a href="/city/request/{{request.id}}">
-                          {% else %}
-                            <a href="/request/{{request.id}}">
-                          {% endif %}
+          {% if page_number > 1 %}
+              <ul>
+                <button type="submit" onclick="return pageNumber(-1);">Previous</button>
+              </ul>
+          {% endif %}
 
-                          {% set text = request.text %}
-                          {% if request.solid_status == "due soon" %}
-                              <span style = "background-color: #FB991B" class="label label-warning">due soon</span> 
-                          {% elif request.solid_status == "overdue" %}
-                              <span style = "background-color: #CA1A1A" class="label label-important">overdue</span> 
-                          {% endif %}
-                          {{ text }}
-
-                          </a>
-                          </td>
-                          <td style="width: 15%">{{request.department}}</td>                    
-                          <td style="width: 15%">{{request.contact_name}}</td>
-                          {% if current_user.is_authenticated() %}
-                          <td style="width: 12%">{{request.due_date }}</td>
-                          <td style="width: 14%">{{request.requester}}</td>
-                          {% endif %}
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table> 
-
-                <div class="pull-left pagination">
-                  <ul>
-                    <li>Showing {{ start_index }} to {{ end_index }} of {{ num_results }} entries</li>
-                  </ul>
-                </div>
-
-                {% if page_number > 1 %}
-                    <ul>
-                      <button type="submit" onclick="return pageNumber(-1);">Previous</button>
-                    </ul>
-                {% endif %}
-                {% if more_results %}
-                  <ul>
-                    <button type="submit" onclick="return pageNumber(1);">Next</button>
-                  </ul>
-                {% endif %}
-        </form>  
+          {% if more_results %}
+            <ul>
+              <button type="submit" onclick="return pageNumber(1);">Next</button>
+            </ul>
+          {% endif %}
+        </div>
+      </div>
+          
     </div>
   </div>
 
