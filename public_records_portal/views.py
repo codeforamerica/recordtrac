@@ -292,108 +292,54 @@ def filter_search_term(search_input, results):
 		results = results.filter("to_tsvector(text) @@ to_tsquery('%s')" % search_query)
 	return results
 
-@app.route("/requests")
+def get_filter_value(filters_map, filter_name):
+	if filter_name in filters_map:
+		return filters_map[filter_name]
+	else:
+		return None
+
+@app.route("/requests", methods = ["GET", "POST"])
 def requests():
-	return render_template("all_requests.html", total_requests_count = get_count("Request"))
 
-@app.route("/custom/request", methods = ["GET", "POST"])
-def fetch_requests():
-	"""
-	Ultra-custom API endpoint for serving up requests.
-	Supports limit, search, and page parameters and returns json with an object that
-	has a list of results in the 'objects' field.
-	"""
 	user_id = get_user_id()
-	results = db.session.query(Request)
+	data = request.form.copy()
 
-	# Filters!
-	results = filter_department(department_name = request.args.get('department'), results = results)
-	results = filter_search_term(search_input = request.args.get('search_term'), results = results)
+	filters_map = request.form
 
-	# Accumulate status filters
-	status_filters = []
+	# Declare all filter variables
+	department = get_filter_value(filters_map, 'department') or "All departments"
+	is_open = get_filter_value(filters_map, 'is_open') 
+	is_closed = get_filter_value(filters_map, 'is_closed') 
+	due_soon = get_filter_value(filters_map, 'due_soon') 
+	overdue = get_filter_value(filters_map, 'overdue') 
+	mine_as_poc = get_filter_value(filters_map, 'mine_as_poc') 
+	mine_as_helper = get_filter_value(filters_map, 'mine_as_helper') 
+	sort_column = get_filter_value(filters_map, 'sort_column') or 'id'
+	sort_direction = get_filter_value(filters_map, 'sort_direction') or 'asc'
+	search_term = get_filter_value(filters_map, 'search_term')
+	min_due_date = get_filter_value(filters_map, 'min_due_date')
+	max_due_date = get_filter_value(filters_map, 'max_due_date')
+	min_date_received = get_filter_value(filters_map, 'min_date_received')
+	max_date_received = get_filter_value(filters_map, 'max_date_received')
+	requester_name = get_filter_value(filters_map, 'requester_name')
+	page_number = int(get_filter_value(filters_map, 'page_number') or '1')
+	sort_date_received = get_filter_value(filters_map, 'sort_date_received')
+	sort_text = get_filter_value(filters_map, 'sort_text')
 
-	if str(request.args.get('open')).lower() == 'true':
-		status_filters.append(Request.open)
+	if request.method != 'POST': # Set certain defaults
+		is_open = "on"
+		is_closed = None
+		due_soon = "on"
+		overdue = "on"
+		mine_as_poc = "on"
+		mine_as_helper = "on"
 
-	if str(request.args.get('closed')).lower() == 'true':
-		status_filters.append(Request.closed)
-
-	date_format = '%m/%d/%Y'
-
-	min_request_date = request.args.get('min_request_date')
-	max_request_date = request.args.get('max_request_date')
-	if min_request_date and max_request_date:
-		min_request_date = datetime.strptime(min_request_date, date_format)
-		max_request_date = datetime.strptime(max_request_date, date_format)
-		results = results.filter(and_(Request.date_created >= min_request_date, Request.date_created <= max_request_date))
-		app.logger.info('Request Date Bounding. Min: {0}, Max: {1}'.format(min_request_date, max_request_date))
-
-	min_due_date = request.args.get('min_due_date')
-	max_due_date = request.args.get('max_due_date')
-	if min_due_date and max_due_date:
-		min_due_date = datetime.strptime(min_due_date, date_format)
-		max_due_date = datetime.strptime(max_due_date, date_format)
-		results = results.filter(and_(Request.due_date >= min_due_date, Request.due_date <= max_due_date))
-		app.logger.info('Due Date Bounding. Min: {0}, Max: {1}'.format(min_due_date, max_due_date))
-
-	# Filters for agency staff only:
-	if user_id:
-		if str(request.args.get('due_soon')).lower() == 'true':
-			status_filters.append(Request.due_soon)
-
-		if str(request.args.get('overdue')).lower() == 'true':
-			status_filters.append(Request.overdue)
-
-
-		# PoC and Helper filters
-		if str(request.args.get('mine_as_poc')).lower() == 'true': 
-			if str(request.args.get('mine_as_helper')).lower() == 'true':
-				# Where am I the Point of Contact *or* the Helper?
-				results = results.filter(Request.id == Owner.request_id) \
-								 .filter(Owner.user_id == user_id) \
-								 .filter(Owner.active == True)
-			else:
-				# Where am I the Point of Contact only?
-				results = results.filter(Request.id == Owner.request_id) \
-								 .filter(Owner.user_id == user_id) \
-								 .filter(Owner.is_point_person == True)
-		elif str(request.args.get('mine_as_helper')).lower() == 'true':
-				# Where am I a Helper only?
-				results = results.filter(Request.id == Owner.request_id) \
-								 .filter(Owner.user_id == user_id) \
-								 .filter(Owner.active == True) \
-								 .filter(Owner.is_point_person == False)
-		# Filter based on requester name
-		requester_name = request.args.get('requester_name')
-		if requester_name and requester_name != "":
-			results = results.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % requester_name.lower()))
-			
-	# Apply the set of status filters to the query.
-	# Using 'or', they're non-exclusive!
-	results = results.filter(or_(*status_filters))
-
-	app.logger.info(status_filters)
-	app.logger.info(str(results.statement.compile(dialect=postgresql.dialect())))
-
-	sort_by = request.args.get('sort_column') 
-
-	if sort_by and sort_by != '':
-		ascending = request.args.get('sort_direction')
-		app.logger.info("Sort Direction: %s" % ascending)
-		app.logger.info("Sort Column: %s" % sort_by)
-		if ascending == "asc":
-			results = results.order_by((getattr(Request, sort_by)).asc())
-		else:
-			results = results.order_by((getattr(Request, sort_by)).desc())
-	results = results.order_by(Request.id.desc())
-
-	page_number = int(request.args.get('page_number') or 1)
-	limit = int(request.args.get('limit') or 15)
-	offset = limit * (page_number - 1)
-	app.logger.info("Page Number: {0}, Limit: {1}, Offset: {2}".format(page_number, limit, offset))
+	results = get_results_by_filters(department = department, is_open = is_open, is_closed = is_closed, due_soon = due_soon, overdue = overdue, mine_as_poc = mine_as_poc, mine_as_helper = mine_as_helper, sort_column = sort_column, sort_direction = sort_direction, search_term = search_term, min_due_date = min_due_date, max_due_date = max_due_date, min_date_received = min_date_received, max_date_received = max_date_received, requester_name = requester_name, page_number = page_number, user_id = user_id)
 
 	# Execute query
+	limit = 15
+	offset = limit * (page_number - 1)
+	app.logger.info("Page Number: {0}, Limit: {1}, Offset: {2}".format(page_number, limit, offset))
 	more_results = False
 	num_results = results.count()
 	start_index = 0
@@ -410,15 +356,15 @@ def fetch_requests():
 			end_index = num_results
 
 	results = results.limit(limit).offset(offset).all()
+	requests = prepare_request_fields(results = results)
+	return render_template("all_requests_less_js.html", total_requests_count = get_count("Request"), requests = requests, departments = db.session.query(Department).all(), department = department, is_open = is_open, is_closed = is_closed, due_soon = due_soon, overdue = overdue, mine_as_poc = mine_as_poc, mine_as_helper = mine_as_helper, sort_column = sort_column, sort_direction = sort_direction, search_term = search_term, min_due_date = min_due_date, max_due_date = max_due_date, min_date_received = min_date_received, max_date_received = max_date_received, requester_name = requester_name, page_number = page_number, more_results = more_results, num_results = num_results, start_index = start_index, end_index = end_index)
 
-	# TODO(cj@postcode.io): This map is pretty kludgy, we should be detecting columns and auto
-	# magically making them fields in the JSON objects we return.
-
+def prepare_request_fields(results):
 	if current_user.is_anonymous():
-		results = map(lambda r: {     
+		return map(lambda r: {     
 			  "id":           r.id, \
 			  "text":         helpers.clean_text(r.text), \
-			  "date_created": helpers.date(r.date_received or r.date_created), \
+			  "date_received": helpers.date(r.date_received or r.date_created), \
 			  "department":   r.department_name(), \
 			  "status":       r.status, \
 			  # The following two attributes are defined as model methods,
@@ -427,10 +373,10 @@ def fetch_requests():
 			  "solid_status": r.solid_status()
 			   }, results)
 	else:
-		results = map(lambda r: {     
+		return map(lambda r: {     
 			  "id":           r.id, \
 			  "text":         helpers.clean_text(r.text), \
-			  "date_created": helpers.date(r.date_received or r.date_created), \
+			  "date_received": helpers.date(r.date_received or r.date_created), \
 			  "department":   r.department_name(), \
 			  "requester":    r.requester_name(), \
 			  "due_date":     format_date(r.due_date), \
@@ -442,15 +388,85 @@ def fetch_requests():
 			   }, results)
 
 
-	matches = {
-		"objects": 		results,
-		"num_results": 	num_results,
-		"more_results": more_results,
-		"start_index": 	start_index,
-		"end_index": 	end_index
-		}
-	response = anyjson.serialize(matches)
-	return Response(response, mimetype = "application/json")
+def get_results_by_filters(department, is_open, is_closed, due_soon, overdue, mine_as_poc, mine_as_helper, sort_column, sort_direction, search_term, min_due_date, max_due_date, min_date_received, max_date_received, requester_name, page_number, user_id):
+	# Initialize query
+	results = db.session.query(Request)
+
+	# Set filters on the query
+
+	results = filter_department(department_name = department, results = results)
+	results = filter_search_term(search_input = search_term, results = results)
+
+	# Accumulate status filters
+	status_filters = []
+
+	if str(is_open).lower() == 'on':
+		status_filters.append(Request.open)
+
+	if str(is_closed).lower() == 'on':
+		status_filters.append(Request.closed)
+
+	date_format = '%Y-%m-%d'
+
+
+	if min_date_received and max_date_received and min_date_received != "" and max_date_received != "":
+		min_date_received = datetime.strptime(min_date_received, date_format)
+		max_date_received = datetime.strptime(max_date_received, date_format)
+		results = results.filter(and_(Request.date_created >= min_date_received, Request.date_created <= max_date_received))
+		app.logger.info('Request Date Bounding. Min: {0}, Max: {1}'.format(min_date_received, max_date_received))
+
+	if min_due_date and max_due_date and min_due_date != "" and max_due_date != "":
+		min_due_date = datetime.strptime(min_due_date, date_format)
+		max_due_date = datetime.strptime(max_due_date, date_format)
+		results = results.filter(and_(Request.due_date >= min_due_date, Request.due_date <= max_due_date))
+		app.logger.info('Due Date Bounding. Min: {0}, Max: {1}'.format(min_due_date, max_due_date))
+
+	# Filters for agency staff only:
+	if user_id:
+		if str(due_soon).lower() == 'on':
+			status_filters.append(Request.due_soon)
+
+		if str(overdue).lower() == 'on':
+			status_filters.append(Request.overdue)
+
+
+		# PoC and Helper filters
+		if str(mine_as_poc).lower() == 'on': 
+			if str(mine_as_helper).lower() == 'on':
+				# Where am I the Point of Contact *or* the Helper?
+				results = results.filter(Request.id == Owner.request_id) \
+								 .filter(Owner.user_id == user_id) \
+								 .filter(Owner.active == True)
+			else:
+				# Where am I the Point of Contact only?
+				results = results.filter(Request.id == Owner.request_id) \
+								 .filter(Owner.user_id == user_id) \
+								 .filter(Owner.is_point_person == True)
+		elif str(mine_as_helper).lower() == 'on':
+				# Where am I a Helper only?
+				results = results.filter(Request.id == Owner.request_id) \
+								 .filter(Owner.user_id == user_id) \
+								 .filter(Owner.active == True) \
+								 .filter(Owner.is_point_person == False)
+		# Filter based on requester name
+		requester_name = requester_name
+		if requester_name and requester_name != "":
+			results = results.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % requester_name.lower()))
+			
+	# Apply the set of status filters to the query.
+	# Using 'or', they're non-exclusive!
+	results = results.filter(or_(*status_filters))
+
+	if sort_column:
+		app.logger.info("Sort Direction: %s" % sort_direction)
+		app.logger.info("Sort Column: %s" % sort_column)
+		if sort_direction == "desc":
+			results = results.order_by((getattr(Request, sort_column)).desc())
+		else:
+			results = results.order_by((getattr(Request, sort_column)).asc())
+
+	return results.order_by(Request.id.desc())
+
 
 @app.route("/<page>")
 def any_page(page):
