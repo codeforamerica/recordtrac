@@ -323,8 +323,6 @@ def requests():
 	max_date_received = get_filter_value(filters_map, 'max_date_received')
 	requester_name = get_filter_value(filters_map, 'requester_name')
 	page_number = int(get_filter_value(filters_map, 'page_number') or '1')
-	sort_date_received = get_filter_value(filters_map, 'sort_date_received')
-	sort_text = get_filter_value(filters_map, 'sort_text')
 
 	if request.method != 'POST': # Set certain defaults
 		is_open = "on"
