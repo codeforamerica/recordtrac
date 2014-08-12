@@ -1,18 +1,5 @@
 /* Table initialisation */
 $(document).ready(function() {
-  // Takes in an array of objects and produces an array of arrays
-  // that are formatted how datatables expects.
-  function filter_for_datatables ( rows )
-  {
-    var a = $.map( rows, function ( row ) {
-      // jQuery seems to flatten arrays that come out of map(), so this wacky double
-      // nesting is needed to work around it.
-      return [ [ "", row["id"], row["date_created"], row["text"], row["department"], "hello" ] ]
-    })
-    return a
-  }
-
-	});
 
 	/* adds placeholder text for search box */
 	$('.dataTables_filter label input').attr( {
