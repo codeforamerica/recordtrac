@@ -300,7 +300,7 @@ def get_filter_value(filters_map, filter_name):
 
 @app.route("/old_requests")
 def old_requests():
-	return render_template("all_requests.html")
+	return render_template("all_requests.html", departments = db.session.query(Department).all())
 
 @app.route("/requests", methods = ["GET", "POST"])
 def fetch_requests(output_results_only = False, filters_map = None, date_format = '%Y-%m-%d', checkbox_value = 'on'):

@@ -30,7 +30,7 @@ Backbone.history.start({pushState: true})
       min_date_received:   "",
       max_date_received:   "",
       requester_name:     "",
-      department:         "",
+      department:         "All departments",
       page_number:        1,
       more_results:       false,
       start_index:        0,
