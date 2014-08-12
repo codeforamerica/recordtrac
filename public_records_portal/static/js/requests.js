@@ -16,8 +16,8 @@ Backbone.history.start({pushState: true})
 
   Query = Backbone.Model.extend({
     defaults: {
-      open:               true,
-      closed:             false,
+      is_open:            true,
+      is_closed:          false,
       due_soon:           true,
       overdue:            true,
       mine_as_poc:        true,
@@ -27,16 +27,16 @@ Backbone.history.start({pushState: true})
       search_term:        "",
       min_due_date:       "",
       max_due_date:       "",
-      min_request_date:   "",
-      max_request_date:   "",
+      min_date_received:   "",
+      max_date_received:   "",
       requester_name:     "",
       department:         "",
       page_number:        1,
       more_results:       false,
       start_index:        0,
       end_index:          0,
-      filters:            ['closed', 'sort_column', 'sort_direction', 'min_request_date', 'max_request_date', 'department', 'page_number', 'search_term'],
-      staff_only_filters: ['open', 'due_soon', 'overdue', 'mine_as_poc', 'mine_as_helper', 'min_due_date', 'max_due_date', 'requester_name']
+      filters:            ['is_closed', 'sort_column', 'sort_direction', 'min_date_received', 'max_date_received', 'department', 'page_number', 'search_term'],
+      staff_only_filters: ['is_open', 'due_soon', 'overdue', 'mine_as_poc', 'mine_as_helper', 'min_due_date', 'max_due_date', 'requester_name']
     },
 
     toggle: function(attribute_name) {
@@ -156,10 +156,10 @@ Backbone.history.start({pushState: true})
     events: {
       "click #mine_as_poc":    "toggle_mine_as_poc",
       "click #mine_as_helper": "toggle_mine_as_helper",
-      "click #open":           "toggle_open",
+      "click #is_open":        "toggle_is_open",
       "click #due_soon":       "toggle_due_soon",
       "click #overdue":        "toggle_overdue",
-      "click #closed":         "toggle_closed"
+      "click #is_closed":      "toggle_is_closed"
     },
 
     toggle_mine_as_poc: function() {
@@ -170,8 +170,8 @@ Backbone.history.start({pushState: true})
       this.model.toggle('mine_as_helper');
     },
 
-    toggle_open: function() {
-      this.model.toggle("open");
+    toggle_is_open: function() {
+      this.model.toggle("is_open");
     },
 
     toggle_due_soon: function() {
@@ -182,8 +182,8 @@ Backbone.history.start({pushState: true})
       this.model.toggle("overdue");
     },
 
-    toggle_closed: function() {
-      this.model.toggle('closed');
+    toggle_is_closed: function() {
+      this.model.toggle('is_closed');
     }
   });
 
@@ -379,11 +379,11 @@ Backbone.history.start({pushState: true})
     model: query
   });
 
-  var request_date = new DateFilter({
-    el: $("#request_date_container"),
+  var date_received = new DateFilter({
+    el: $("#date_received_container"),
     model: query,
-    min_field: 'min_request_date',
-    max_field: 'max_request_date',
+    min_field: 'min_date_received',
+    max_field: 'max_date_received',
     title: 'Request Date'
   });
 
