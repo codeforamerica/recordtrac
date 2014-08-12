@@ -99,7 +99,7 @@ def to_csv():
 @app.route("/", methods = ["GET", "POST"])
 def index():
 	if current_user.is_anonymous() == False:
-		return redirect(url_for('requests'))
+		return redirect(url_for('fetch_requests'))
 	else:
 		return landing()
 
@@ -298,41 +298,57 @@ def get_filter_value(filters_map, filter_name):
 	else:
 		return None
 
+@app.route("/old_requests")
+def old_requests():
+	return render_template("all_requests.html")
+
 @app.route("/requests", methods = ["GET", "POST"])
-def requests():
+def fetch_requests(output_results_only = False, filters_map = None, date_format = '%Y-%m-%d', checkbox_value = 'on'):
 
 	user_id = get_user_id()
 	data = request.form.copy()
 
-	filters_map = request.form
+	if not filters_map:
+		filters_map = request.form
 
-	# Declare all filter variables
-	department = get_filter_value(filters_map, 'department') or "All departments"
-	is_open = get_filter_value(filters_map, 'is_open') 
-	is_closed = get_filter_value(filters_map, 'is_closed') 
-	due_soon = get_filter_value(filters_map, 'due_soon') 
-	overdue = get_filter_value(filters_map, 'overdue') 
-	mine_as_poc = get_filter_value(filters_map, 'mine_as_poc') 
-	mine_as_helper = get_filter_value(filters_map, 'mine_as_helper') 
-	sort_column = get_filter_value(filters_map, 'sort_column') or 'id'
-	sort_direction = get_filter_value(filters_map, 'sort_direction') or 'asc'
-	search_term = get_filter_value(filters_map, 'search_term')
-	min_due_date = get_filter_value(filters_map, 'min_due_date')
-	max_due_date = get_filter_value(filters_map, 'max_due_date')
-	min_date_received = get_filter_value(filters_map, 'min_date_received')
-	max_date_received = get_filter_value(filters_map, 'max_date_received')
-	requester_name = get_filter_value(filters_map, 'requester_name')
-	page_number = int(get_filter_value(filters_map, 'page_number') or '1')
+	# Set defaults 
+	is_open = checkbox_value
+	is_closed = None
+	due_soon = checkbox_value
+	overdue = checkbox_value
+	mine_as_poc = checkbox_value
+	mine_as_helper = checkbox_value
+	department = "All departments"
+	sort_column = "id"
+	sort_direction = "asc"
+	min_due_date = None
+	max_due_date = None
+	min_date_received = None
+	max_date_received = None
+	requester_name = None 
+	page_number = 1
+	search_term = None
 
-	if request.method != 'POST': # Set certain defaults
-		is_open = "on"
-		is_closed = None
-		due_soon = "on"
-		overdue = "on"
-		mine_as_poc = "on"
-		mine_as_helper = "on"
+	if request.method == "POST" or output_results_only == True:
+		department = get_filter_value(filters_map, 'department') or "All departments"
+		is_open = str(get_filter_value(filters_map, 'is_open')).lower()
+		is_closed = str(get_filter_value(filters_map, 'is_closed')).lower()
+		due_soon = str(get_filter_value(filters_map, 'due_soon')).lower()
+		overdue = str(get_filter_value(filters_map, 'overdue')).lower()
+		mine_as_poc = str(get_filter_value(filters_map, 'mine_as_poc')).lower()
+		mine_as_helper = str(get_filter_value(filters_map, 'mine_as_helper')).lower()
+		sort_column = get_filter_value(filters_map, 'sort_column') or 'id'
+		sort_direction = get_filter_value(filters_map, 'sort_direction') or 'asc'
+		search_term = get_filter_value(filters_map, 'search_term')
+		min_due_date = get_filter_value(filters_map, 'min_due_date')
+		max_due_date = get_filter_value(filters_map, 'max_due_date')
+		min_date_received = get_filter_value(filters_map, 'min_date_received')
+		max_date_received = get_filter_value(filters_map, 'max_date_received')
+		requester_name = get_filter_value(filters_map, 'requester_name')
+		page_number = int(get_filter_value(filters_map, 'page_number') or '1')
 
-	results = get_results_by_filters(department = department, is_open = is_open, is_closed = is_closed, due_soon = due_soon, overdue = overdue, mine_as_poc = mine_as_poc, mine_as_helper = mine_as_helper, sort_column = sort_column, sort_direction = sort_direction, search_term = search_term, min_due_date = min_due_date, max_due_date = max_due_date, min_date_received = min_date_received, max_date_received = max_date_received, requester_name = requester_name, page_number = page_number, user_id = user_id)
+
+	results = get_results_by_filters(department = department, is_open = is_open, is_closed = is_closed, due_soon = due_soon, overdue = overdue, mine_as_poc = mine_as_poc, mine_as_helper = mine_as_helper, sort_column = sort_column, sort_direction = sort_direction, search_term = search_term, min_due_date = min_due_date, max_due_date = max_due_date, min_date_received = min_date_received, max_date_received = max_date_received, requester_name = requester_name, page_number = page_number, user_id = user_id, date_format = date_format, checkbox_value = checkbox_value)
 
 	# Execute query
 	limit = 15
@@ -355,7 +371,28 @@ def requests():
 
 	results = results.limit(limit).offset(offset).all()
 	requests = prepare_request_fields(results = results)
+	if output_results_only == True:
+		return requests, num_results, more_results, start_index, end_index
+
 	return render_template("all_requests_less_js.html", total_requests_count = get_count("Request"), requests = requests, departments = db.session.query(Department).all(), department = department, is_open = is_open, is_closed = is_closed, due_soon = due_soon, overdue = overdue, mine_as_poc = mine_as_poc, mine_as_helper = mine_as_helper, sort_column = sort_column, sort_direction = sort_direction, search_term = search_term, min_due_date = min_due_date, max_due_date = max_due_date, min_date_received = min_date_received, max_date_received = max_date_received, requester_name = requester_name, page_number = page_number, more_results = more_results, num_results = num_results, start_index = start_index, end_index = end_index)
+
+@app.route("/custom/request", methods = ["GET", "POST"])
+def json_requests():
+	"""
+	Ultra-custom API endpoint for serving up requests.
+	Supports limit, search, and page parameters and returns json with an object that
+	has a list of results in the 'objects' field.
+	"""
+	objects, num_results, more_results, start_index, end_index = fetch_requests(output_results_only = True, filters_map = request.args, date_format = '%m/%d/%Y', checkbox_value = 'true')
+	matches = {
+		"objects": 		objects,
+		"num_results": 	num_results,
+		"more_results": more_results,
+		"start_index": 	start_index,
+		"end_index": 	end_index
+		}
+	response = anyjson.serialize(matches)
+	return Response(response, mimetype = "application/json")
 
 def prepare_request_fields(results):
 	if current_user.is_anonymous():
@@ -386,7 +423,7 @@ def prepare_request_fields(results):
 			   }, results)
 
 
-def get_results_by_filters(department, is_open, is_closed, due_soon, overdue, mine_as_poc, mine_as_helper, sort_column, sort_direction, search_term, min_due_date, max_due_date, min_date_received, max_date_received, requester_name, page_number, user_id):
+def get_results_by_filters(department, is_open, is_closed, due_soon, overdue, mine_as_poc, mine_as_helper, sort_column, sort_direction, search_term, min_due_date, max_due_date, min_date_received, max_date_received, requester_name, page_number, user_id, date_format, checkbox_value):
 	# Initialize query
 	results = db.session.query(Request)
 
@@ -398,39 +435,36 @@ def get_results_by_filters(department, is_open, is_closed, due_soon, overdue, mi
 	# Accumulate status filters
 	status_filters = []
 
-	if str(is_open).lower() == 'on':
+	if is_open == checkbox_value:
 		status_filters.append(Request.open)
 
-	if str(is_closed).lower() == 'on':
+	if is_closed == checkbox_value:
 		status_filters.append(Request.closed)
-
-	date_format = '%Y-%m-%d'
-
 
 	if min_date_received and max_date_received and min_date_received != "" and max_date_received != "":
 		min_date_received = datetime.strptime(min_date_received, date_format)
-		max_date_received = datetime.strptime(max_date_received, date_format)
-		results = results.filter(and_(Request.date_created >= min_date_received, Request.date_created <= max_date_received))
+		max_date_received = datetime.strptime(max_date_received, date_format) + timedelta(hours = 23, minutes = 59) 
+		results = results.filter(and_(Request.date_received >= min_date_received, Request.date_received <= max_date_received))
 		app.logger.info('Request Date Bounding. Min: {0}, Max: {1}'.format(min_date_received, max_date_received))
 
 	if min_due_date and max_due_date and min_due_date != "" and max_due_date != "":
 		min_due_date = datetime.strptime(min_due_date, date_format)
-		max_due_date = datetime.strptime(max_due_date, date_format)
+		max_due_date = datetime.strptime(max_due_date, date_format) + timedelta(hours = 23, minutes = 59)  
 		results = results.filter(and_(Request.due_date >= min_due_date, Request.due_date <= max_due_date))
 		app.logger.info('Due Date Bounding. Min: {0}, Max: {1}'.format(min_due_date, max_due_date))
 
 	# Filters for agency staff only:
 	if user_id:
-		if str(due_soon).lower() == 'on':
+		if due_soon == checkbox_value:
 			status_filters.append(Request.due_soon)
 
-		if str(overdue).lower() == 'on':
+		if overdue == checkbox_value:
 			status_filters.append(Request.overdue)
 
 
 		# PoC and Helper filters
-		if str(mine_as_poc).lower() == 'on': 
-			if str(mine_as_helper).lower() == 'on':
+		if mine_as_poc == checkbox_value: 
+			if mine_as_helper == checkbox_value:
 				# Where am I the Point of Contact *or* the Helper?
 				results = results.filter(Request.id == Owner.request_id) \
 								 .filter(Owner.user_id == user_id) \
@@ -440,7 +474,7 @@ def get_results_by_filters(department, is_open, is_closed, due_soon, overdue, mi
 				results = results.filter(Request.id == Owner.request_id) \
 								 .filter(Owner.user_id == user_id) \
 								 .filter(Owner.is_point_person == True)
-		elif str(mine_as_helper).lower() == 'on':
+		elif mine_as_helper == checkbox_value:
 				# Where am I a Helper only?
 				results = results.filter(Request.id == Owner.request_id) \
 								 .filter(Owner.user_id == user_id) \
