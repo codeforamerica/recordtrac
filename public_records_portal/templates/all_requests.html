@@ -29,20 +29,23 @@
   <div class="row-fluid">
     <div class="span11 offset1">
 
-      {# 'Explore' and 'Request new' button. #}
+      {# 'Explore'  #}
       <div class="row-fluid">
         <div class="span9">
           <div id="exploreTitle">
             <h3>Explore <span class="badge">{{total_requests_count}}</span> requests and counting</h3>
-            <a href="/new" class="btn btn-primary btn-large pull-right">Request new record</a>
+            <!-- <a href="/new" class="btn btn-primary btn-large pull-right">Request new record</a> -->
           </div>
         </div>
       </div>
 
-      {# Blurb about what RecordTrac does. #}
-      <div class="row-fluid">
+      {# Blurb about what RecordTrac does and 'Request new' button.#}
+      <div class="row-fluid blurb">
         <div class="span9">
-          <p class="intro_text">RecordTrac makes every public records request available to the public, including messages or documents uploaded by agency staff. Search through current and past requests. You may find what you need!</p>
+          <p class="intro_text">RecordTrac makes every public records request available to the public, including messages or documents uploaded by agency staff.  Search through current and past requests.  You may find what you need!</p>
+        </div>
+        <div class="span3">
+          <a href="/new" class="btn btn-primary btn-large">Request new record</a>
         </div>
       </div>
 
