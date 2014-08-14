@@ -96,20 +96,29 @@ class PublicRecordsTestCase(unittest.TestCase):
 		assert link_description in page.data
 	# ---
 
+	# Tests for managing a request:
+
 	def test_close_request(self):
-		request = self.random_content('request')
-		self.submit_request(text= request,email = 'richa@richa.com')
+		request_id = self.submit_request(text = self.random_content('request'), email = 'richa@richa.com')
 		close_reason = self.random_content('close reason')
-		fields = dict(request_id = 1, close_reason = close_reason)
-		page = self.submit_generic(fields = fields, endpoint = "close")
+		page = self.submit_generic(fields = dict(request_id = request_id, close_reason = close_reason), endpoint = "close")
 		assert close_reason in page.data
 
 	def test_reroute_owner(self):
 		request_id = self.submit_request(text= self.random_content('request'), email = 'richa@richa.com')
 		reroute_reason = self.random_content('reroute reason')
-		fields = dict(request_id = request_id, owner_reason = reroute_reason, owner_email = "cris@codeforamerica.org")
-		page = self.submit_generic(fields = fields, endpoint = "update_a_owner")
+		page = self.submit_generic(fields = dict(request_id = request_id, owner_reason = reroute_reason, owner_email = "cris@codeforamerica.org"), endpoint = "update_a_owner")
 		assert reroute_reason in page.data
+
+	def test_extend_request(self):
+		request_id = self.submit_request(text = self.random_content('request'), email = 'richa@codeforamerica.org')
+		extend_reason = self.random_content('extend reason')
+		page = self.submit_generic(fields = dict(request_id = request_id, extend_reason = [extend_reason]), endpoint = "add_a_extension")
+		assert extend_reason in page.data
+
+	# ---
+
+	# add test for unassigning someone
 
 
 	def submit_request(self, email, text):
