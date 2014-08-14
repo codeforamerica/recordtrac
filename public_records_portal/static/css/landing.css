@@ -34,13 +34,15 @@
 
 
 /* brand area */
-	img[id="logo_landing"] {
+	#logo_landing {
 		/*display: inline-block;
 		margin-top: -1.5em;
 		margin-right: 1em;*/
 		float: right;
 		margin-top: 2.25em;
 		margin-bottom: 1em;
+		width: 130px;
+
 	}
 	/*h3 {
 		margin-top: 1em;
@@ -68,6 +70,19 @@ img[alt="request,track,explore"] {
 	margin-top: 1em;
 	/* aligns image with content */
 	padding-left: 35px;
+}
+
+.left-image {
+	width: 75px;
+	height: 95px;
+}
+.center-image {
+	width: 100px;
+	height: 91px;
+}
+.right-image {
+	width: 150px;
+	height: 90px;
 }
 
 /*div.span4 {
