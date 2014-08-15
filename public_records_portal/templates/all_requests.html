@@ -39,7 +39,7 @@
         </div>
       </div>
 
-      {# Blurb about what RecordTrac does and 'Request new' button.#}
+      {# Blurb about what RecordTrac does and 'Request new' button #}
       <div class="row-fluid blurb">
         <div class="span9">
           <p class="intro_text">RecordTrac makes every public records request available to the public, including messages or documents uploaded by agency staff.  Search through current and past requests.  You may find what you need!</p>
@@ -49,29 +49,30 @@
         </div>
       </div>
 
-      {# Search results table. #}
+      {# Search and results table #}
       <div class="row-fluid">
-        <div class="span3 well search_style">
-          
-          <div id="search_field_container"></div>
-          <script type="text/template" id="search_field_template">
-            <h4 class="underline">SEARCH</h4>
-            <h5>Request text</h5>
-            <div class="indent">
-              <input id="search_term" class="input-block-level" type="search" placeholder="I'd like to find..." value="<%- search_term %>">
-            </div>
-          </script>
-
-          <div id="requester_name_container"></div>
-          <script type="text/template" id="requester_name_template">
-          {% if current_user.is_authenticated() %}
-              <h5>Requester name</h5>
+        <div class="span3">
+          <div class="well search_style"> <!-- start of search and filter area -->
+            
+            <div id="search_field_container"></div>
+            <script type="text/template" id="search_field_template">
+              <h4 class="underline">SEARCH</h4>
+              <h5>Request text</h5>
               <div class="indent">
-                <input id="requester_name" class="input-block-level" type="search" placeholder="Enter name" value="<%- requester_name %>">
+                <input id="search_term" class="input-block-level" type="search" placeholder="I'd like to find..." value="<%- search_term %>">
               </div>
-          {% endif %} 
-          </script>
-    
+            </script>
+
+            <div id="requester_name_container"></div>
+            <script type="text/template" id="requester_name_template">
+            {% if current_user.is_authenticated() %}
+                <h5>Requester name</h5>
+                <div class="indent">
+                  <input id="requester_name" class="input-block-level" type="search" placeholder="Enter name" value="<%- requester_name %>">
+                </div>
+            {% endif %} 
+            </script>
+      
             <div id="sidebar_container"></div>
             <script type="text/template" id="sidebar_template">                                         
               <h4 class="underline">ADVANCED FILTER</h4>
@@ -159,13 +160,13 @@
                 </div>
               </div>
             </script>
-            
+              
 
             <div id="department_selector_container"></div>
             <script type="text/template" id="department_selector_template">
               <h5>Department</h5>
               <div class="row-fluid indent">
-                <select class="span10">
+                <select class="input-block-level">
                   <% if (department) { %>
                     <option selected><%= department %></option>
                   <% } %>
@@ -176,9 +177,16 @@
                 </select>
               </div>
             </script>
-          </div>
+
+          </div> <!-- end of search and filter area -->
+          <p class="text-center">
+            <a href="#"> <i class="icon-download"></i> Export data</a>
+          </p>
+        </div>
+        
      
-          <div class="span8" id="search_results_container"></div>
+        <div class="span8"> <!-- start of search results table -->
+          <div id="search_results_container"></div>
           <script type="text/template" id="search_results_template">
             <table id="requests">
               <thead id="headings">
@@ -242,7 +250,9 @@
 
               </tbody>
             </table>
+        </div> {# end of search results table #}
 
+        <div class="row-fluid">
           <div class="pull-left pagination">
             <ul>
               <li>Showing <%- start_index %> to <%- end_index %> of <%- num_results %> entries</li>
@@ -261,7 +271,12 @@
               </ul>
             <% } %>
           </div>
-        </script>      
+        </div>
+
+          </script>
+
+
       </div>
+    </div>
   </div>
 {% endblock container %}

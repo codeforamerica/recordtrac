@@ -178,6 +178,9 @@ h3 {
 .search_style h5 {
 	margin: 15px 0px 3px;
 }
+.search_style {
+	margin-bottom: 10px;
+}
 .status{
   padding-bottom: 15px;
 }
