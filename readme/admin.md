@@ -4,15 +4,39 @@
 
 RecordTrac’s administrative controls allows the users to:
 
-* [Edit or remove request text](https://github.com/codeforamerica/recordtrac/blob/readme/readme/admin.md)
-* Remove a record
-* Edit or remove the text of a note
-* Edit or remove a question
-* Edit or remove an answer
-* Add or remove a Public Records Request (PRR) liaison
+* [Edit or remove request text](https://github.com/codeforamerica/recordtrac/blob/readme/readme/admin.md#how-to-remove-or-edit-a-request)
+* [Remove a record](https://github.com/codeforamerica/recordtrac/blob/readme/readme/admin.md#how-to-remove-a-record)
+* [Edit or remove the text of a note](https://github.com/codeforamerica/recordtrac/blob/readme/readme/admin.md#how-to-remove-or-edit-a-note)
+* [Edit or remove a question or answer](https://github.com/codeforamerica/recordtrac/blob/readme/readme/admin.md#how-to-remove-or-edit-a-question-and-answer-exchange)
+* [Add or remove a Public Records Request (PRR) liaison](https://github.com/codeforamerica/recordtrac/blob/readme/readme/admin.md#how-to-change-the-official-public-records-request-prr-liaison-for-a-department)
+* [Update your RecordTrac website text](https://github.com/codeforamerica/recordtrac/blob/readme/readme/admin.md#updating-website-copy)
 
 The administrative controls allows the user to permanently delete records, requests, and notes from the database. Because of this, administrative access should be restricted to a small number of users. 
 
+
+## Best Practices
+
+Content should only be removed or edited if sensitive or confidential information is revealed. If this happens, you should:
+
+* Save a copy of the original message. (This will have to be done outside of RecordTrac. There is no way to hide a message from public view.) 
+* Edit the message to indicate why it needs to be removed. 
+* Notify the requester why their post or answer was removed.
+* Provide guidance to the requester on how they can get the record they need. 
+
+If a staff member enters information incorrectly, simply add a note explaining the mistake. 
+
+If a member of the public enters incorrect information,  the requester (or a staff member) can add a note correcting the mistake. 
+
+Sometimes it’s necessary to create a new request. If a new request must be created, we suggest you do the following:
+
+* Create a new request with the proper information.
+* In the old request, include a note explaining what is wrong with it and a link to the new request.
+* Close out the old request.
+* In the new request, reference and/or provide a link to the old request. 
+
+Although RecordTrac has a spam filter, every once in a while it may receive spam. When confronted with spam, close the request with a note indicating why it is not a public records request.  If there is a large amount of spam requests, it is appropriate to simply remove the spam. 
+
+If a record needs to be removed. It not only has to be deleted on RecordTrac, it has to be removed from Scribd as well. 
 
 ## How to Remove or Edit a Request
 
@@ -96,7 +120,7 @@ Clicking on the pencil icon will allow you to edit the text of the question and 
 
 image::admin_edit_qa.png[]
 
-### How to Change the official Public Records Request (PRR) liaison for a department
+## How to Change the official Public Records Request (PRR) liaison for a department
 
 To change the Public Record Request (PRR) liaision, or the individual responsible for responding for responding to public records requests for a particular department, visit records.oaklandnet.com/admin/userview.
 
@@ -125,7 +149,7 @@ You can delete a user by clicking on the trashcan icon.
 
 image::admin_delete_user.png[]
 
-## Updating Website Copy
+## Updating Website Text
 
 The web copy is not managed through the admin section. To update the copy on the website, the .json files or HTML templates must be modified. 
 
@@ -169,26 +193,3 @@ The number next to SendGrid is the percentage of its email quota the application
 
 The dependencies section lists the web applications used by RecordTrac. Askismet is the spam filter. Scribd is where all uploaded documents are hosted. SendGrid sends out the email notifications and Postgres is where all of the data is stored. 
 
-## Best Practices
-
-Content should only be removed or edited if sensitive or confidential information is revealed. If this happens, you should:
-
-* Save a copy of the original message. (This will have to be done outside of RecordTrac. There is no way to hide a message from public view.) 
-* Edit the message to indicate why it needs to be removed. 
-* Notify the requester why their post or answer was removed.
-* Provide guidance to the requester on how they can get the record they need. 
-
-If a staff member enters information incorrectly, simply add a note explaining the mistake. 
-
-If a member of the public enters incorrect information,  the requester (or a staff member) can add a note correcting the mistake. 
-
-Sometimes it’s necessary to create a new request. If a new request must be created, we suggest you do the following:
-
-* Create a new request with the proper information.
-* In the old request, include a note explaining what is wrong with it and a link to the new request.
-* Close out the old request.
-* In the new request, reference and/or provide a link to the old request. 
-
-Although RecordTrac has a spam filter, every once in a while it may receive spam. When confronted with spam, close the request with a note indicating why it is not a public records request.  If there is a large amount of spam requests, it is appropriate to simply remove the spam. 
-
-If a record needs to be removed. It not only has to be deleted on RecordTrac, it has to be removed from Scribd as well. 
