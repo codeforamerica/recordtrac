@@ -42,15 +42,15 @@
         </div>
       </div>
 
+    <form id ="all_requests_form" name="all_requests" action="/requests" method="POST"> 
       <div class="row-fluid" style="padding-bottom: 5%;">
         <div class="span3" style="padding-top: 45px;">
           
           <button class="btn btn-primary input-block-level" type="submit" value="Submit">Find</button>
 
-          <form id ="all_requests_form" name="all_requests" action="/requests" method="POST"> 
             <h5>Search request text</h5>
             <div>
-              <input class="input-block-level" name="search_term" type="search" placeholder="I'd like to find...">
+              <input class="input-block-level" name="search_term" type="search" value="{{search_term or ''}}" placeholder="I'd like to find...">
             </div>
                                           
             <!-- <h4 class="underline">ADVANCED FILTER</h4> -->
@@ -116,16 +116,19 @@
               </div>
                 <h5>Requester name</h5>
                 <div>
-                  <input class="input-block-level" name="requester_name" type="search" placeholder="Enter name" value="">
+                  <input class="input-block-level" name="requester_name" type="search" placeholder="Enter name" value="{{requester_name or ''}}">
                 </div>
             {% endif %} 
 
             <h5>Department</h5>
             <div class="row-fluid">
-                <select name="department" class="input-block-level">
-                  <option value="All departments">All departments</option>
+                <select name="departments_selected" class="selectpicker span10" multiple data-selected-text-format="count" data-size="5">
                   {% for department in departments %}
-                    <option>{{department}}</option>
+                    {% if departments_selected and department.name in departments_selected %}
+                      <option selected>{{department.name}}</option>
+                    {% else %}
+                      <option>{{department.name}}</option>
+                    {% endif %}
                   {% endfor %}
                 </select>
             </div>

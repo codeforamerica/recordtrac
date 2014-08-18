@@ -267,12 +267,17 @@ def close(request_id = None):
 	return render_template('error.html', message = "You can only close from a requests page!")
 
 
-def filter_department(department_name, results):
-	app.logger.info("\n\nDepartment filter:%s." % department_name)
-	if department_name and department_name != "All departments":
-		department = Department.query.filter_by(name = department_name).first()
-		if department:
-			results = results.filter(Request.department_id == department.id)
+def filter_department(departments_selected, results):
+	if departments_selected:
+		app.logger.info("\n\nDepartment filters:%s." % departments_selected)
+		department_ids = []
+		for department_name in departments_selected:
+			if department_name and department_name != "All departments":
+				department = Department.query.filter_by(name = department_name).first()
+				if department:
+					department_ids.append(department.id)
+		if department_ids:
+			results = results.filter(Request.department_id.in_(department_ids))
 		else:
 			# Just return an empty query set
 			results = results.filter(Request.department_id < 0)
@@ -292,15 +297,18 @@ def filter_search_term(search_input, results):
 		results = results.filter("to_tsvector(text) @@ to_tsquery('%s')" % search_query)
 	return results
 
-def get_filter_value(filters_map, filter_name):
+def get_filter_value(filters_map, filter_name, is_list = False):
 	if filter_name in filters_map:
-		return filters_map[filter_name]
+		if is_list:
+			return filters_map.getlist(filter_name)
+		else:
+			return filters_map[filter_name]
 	else:
 		return None
 
 @app.route("/old_requests")
 def old_requests():
-	return render_template("all_requests.html", departments = db.session.query(Department).all())
+	return render_template("all_requests.html", departments = db.session.query(Department).all(), total_requests_count = get_count("Request"))
 
 @app.route("/requests", methods = ["GET", "POST"])
 def fetch_requests(output_results_only = False, filters_map = None, date_format = '%Y-%m-%d', checkbox_value = 'on'):
@@ -318,7 +326,7 @@ def fetch_requests(output_results_only = False, filters_map = None, date_format 
 	overdue = checkbox_value
 	mine_as_poc = checkbox_value
 	mine_as_helper = checkbox_value
-	department = "All departments"
+	departments_selected = []
 	sort_column = "id"
 	sort_direction = "asc"
 	min_due_date = None
@@ -330,7 +338,7 @@ def fetch_requests(output_results_only = False, filters_map = None, date_format 
 	search_term = None
 
 	if request.method == "POST" or output_results_only == True:
-		department = get_filter_value(filters_map, 'department') or "All departments"
+		departments_selected = get_filter_value(filters_map, 'departments_selected', True)
 		is_open = str(get_filter_value(filters_map, 'is_open')).lower()
 		is_closed = str(get_filter_value(filters_map, 'is_closed')).lower()
 		due_soon = str(get_filter_value(filters_map, 'due_soon')).lower()
@@ -348,7 +356,7 @@ def fetch_requests(output_results_only = False, filters_map = None, date_format 
 		page_number = int(get_filter_value(filters_map, 'page_number') or '1')
 
 
-	results = get_results_by_filters(department = department, is_open = is_open, is_closed = is_closed, due_soon = due_soon, overdue = overdue, mine_as_poc = mine_as_poc, mine_as_helper = mine_as_helper, sort_column = sort_column, sort_direction = sort_direction, search_term = search_term, min_due_date = min_due_date, max_due_date = max_due_date, min_date_received = min_date_received, max_date_received = max_date_received, requester_name = requester_name, page_number = page_number, user_id = user_id, date_format = date_format, checkbox_value = checkbox_value)
+	results = get_results_by_filters(departments_selected = departments_selected, is_open = is_open, is_closed = is_closed, due_soon = due_soon, overdue = overdue, mine_as_poc = mine_as_poc, mine_as_helper = mine_as_helper, sort_column = sort_column, sort_direction = sort_direction, search_term = search_term, min_due_date = min_due_date, max_due_date = max_due_date, min_date_received = min_date_received, max_date_received = max_date_received, requester_name = requester_name, page_number = page_number, user_id = user_id, date_format = date_format, checkbox_value = checkbox_value)
 
 	# Execute query
 	limit = 15
@@ -374,7 +382,7 @@ def fetch_requests(output_results_only = False, filters_map = None, date_format 
 	if output_results_only == True:
 		return requests, num_results, more_results, start_index, end_index
 
-	return render_template("all_requests_less_js.html", total_requests_count = get_count("Request"), requests = requests, departments = db.session.query(Department).all(), department = department, is_open = is_open, is_closed = is_closed, due_soon = due_soon, overdue = overdue, mine_as_poc = mine_as_poc, mine_as_helper = mine_as_helper, sort_column = sort_column, sort_direction = sort_direction, search_term = search_term, min_due_date = min_due_date, max_due_date = max_due_date, min_date_received = min_date_received, max_date_received = max_date_received, requester_name = requester_name, page_number = page_number, more_results = more_results, num_results = num_results, start_index = start_index, end_index = end_index)
+	return render_template("all_requests_less_js.html", total_requests_count = get_count("Request"), requests = requests, departments = db.session.query(Department).all(), departments_selected = departments_selected, is_open = is_open, is_closed = is_closed, due_soon = due_soon, overdue = overdue, mine_as_poc = mine_as_poc, mine_as_helper = mine_as_helper, sort_column = sort_column, sort_direction = sort_direction, search_term = search_term, min_due_date = min_due_date, max_due_date = max_due_date, min_date_received = min_date_received, max_date_received = max_date_received, requester_name = requester_name, page_number = page_number, more_results = more_results, num_results = num_results, start_index = start_index, end_index = end_index)
 
 @app.route("/custom/request", methods = ["GET", "POST"])
 def json_requests():
@@ -423,13 +431,13 @@ def prepare_request_fields(results):
 			   }, results)
 
 
-def get_results_by_filters(department, is_open, is_closed, due_soon, overdue, mine_as_poc, mine_as_helper, sort_column, sort_direction, search_term, min_due_date, max_due_date, min_date_received, max_date_received, requester_name, page_number, user_id, date_format, checkbox_value):
+def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, overdue, mine_as_poc, mine_as_helper, sort_column, sort_direction, search_term, min_due_date, max_due_date, min_date_received, max_date_received, requester_name, page_number, user_id, date_format, checkbox_value):
 	# Initialize query
 	results = db.session.query(Request)
 
 	# Set filters on the query
 
-	results = filter_department(department_name = department, results = results)
+	results = filter_department(departments_selected = departments_selected, results = results)
 	results = filter_search_term(search_input = search_term, results = results)
 
 	# Accumulate status filters
