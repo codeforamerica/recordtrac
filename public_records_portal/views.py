@@ -99,7 +99,7 @@ def to_csv():
 @app.route("/", methods = ["GET", "POST"])
 def index():
 	if current_user.is_anonymous() == False:
-		return redirect(url_for('fetch_requests'))
+		return redirect(url_for('display_all_requests'))
 	else:
 		return landing()
 
@@ -312,6 +312,7 @@ def get_filter_value(filters_map, filter_name, is_list = False, is_boolean = Fal
 
 @app.route("/view_requests")
 def display_all_requests(methods = ["GET"]):
+	""" Dynamically load requests page depending on browser. """
 	browser = request.user_agent.browser
 	version = request.user_agent.version and int(request.user_agent.version.split('.')[0])
 	platform = request.user_agent.platform
@@ -330,11 +331,11 @@ def display_all_requests(methods = ["GET"]):
 			return fetch_requests()
 	return backbone_requests()
 
-@app.route("/backbone_requests")
+@app.route("/view_requests_backbone")
 def backbone_requests():
 	return render_template("all_requests.html", departments = db.session.query(Department).all(), total_requests_count = get_count("Request"))
 
-@app.route("/new_requests", methods = ["GET", "POST"])
+@app.route("/requests", methods = ["GET", "POST"])
 def fetch_requests(output_results_only = False, filters_map = None, date_format = '%Y-%m-%d', checkbox_value = 'on'):
 
 	user_id = get_user_id()
