@@ -62,7 +62,7 @@ Issues and feature backlog are tracked through [GitHub issues](https://github.co
 * [Make a new request](#)
 * [Respond to a request](#)
 * [Manage your request list](#)
-* [Admin](#)
+* [Admin](docs/admin.adoc)
 
 ##About
 * [Why was RecordTrac built?](http://codeforamerica.github.io/public-records/docs/1.0.0/about.html#_why_was_recordtrac_built)
