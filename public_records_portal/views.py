@@ -297,10 +297,12 @@ def filter_search_term(search_input, results):
 		results = results.filter("to_tsvector(text) @@ to_tsquery('%s')" % search_query)
 	return results
 
-def get_filter_value(filters_map, filter_name, is_list = False):
+def get_filter_value(filters_map, filter_name, is_list = False, is_boolean = False):
 	if filter_name in filters_map:
 		if is_list:
 			return filters_map.getlist(filter_name)
+		elif is_boolean:
+			return str(filters_map[filter_name]).lower()
 		else:
 			return filters_map[filter_name]
 	else:
@@ -338,13 +340,13 @@ def fetch_requests(output_results_only = False, filters_map = None, date_format 
 	search_term = None
 
 	if request.method == "POST" or output_results_only == True:
-		departments_selected = get_filter_value(filters_map, 'departments_selected', True)
-		is_open = str(get_filter_value(filters_map, 'is_open')).lower()
-		is_closed = str(get_filter_value(filters_map, 'is_closed')).lower()
-		due_soon = str(get_filter_value(filters_map, 'due_soon')).lower()
-		overdue = str(get_filter_value(filters_map, 'overdue')).lower()
-		mine_as_poc = str(get_filter_value(filters_map, 'mine_as_poc')).lower()
-		mine_as_helper = str(get_filter_value(filters_map, 'mine_as_helper')).lower()
+		departments_selected = get_filter_value(filters_map = filters_map, filter_name = 'departments_selected', is_list = True)
+		is_open = get_filter_value(filters_map = filters_map, filter_name = 'is_open', is_boolean = True)
+		is_closed = get_filter_value(filters_map = filters_map, filter_name = 'is_closed', is_boolean = True)
+		due_soon = get_filter_value(filters_map = filters_map, filter_name = 'due_soon', is_boolean = True)
+		overdue = get_filter_value(filters_map = filters_map, filter_name = 'overdue', is_boolean = True)
+		mine_as_poc = get_filter_value(filters_map = filters_map, filter_name = 'mine_as_poc', is_boolean = True)
+		mine_as_helper = get_filter_value(filters_map = filters_map, filter_name = 'mine_as_helper', is_boolean = True)
 		sort_column = get_filter_value(filters_map, 'sort_column') or 'id'
 		sort_direction = get_filter_value(filters_map, 'sort_direction') or 'asc'
 		search_term = get_filter_value(filters_map, 'search_term')
