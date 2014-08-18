@@ -268,11 +268,11 @@ def close(request_id = None):
 
 
 def filter_department(departments_selected, results):
-	if departments_selected and departments_selected:
+	if departments_selected and 'All departments' not in departments_selected:
 		app.logger.info("\n\nDepartment filters:%s." % departments_selected)
 		department_ids = []
 		for department_name in departments_selected:
-			if department_name and department_name != "All departments":
+			if department_name:
 				department = Department.query.filter_by(name = department_name).first()
 				if department:
 					department_ids.append(department.id)
@@ -310,11 +310,31 @@ def get_filter_value(filters_map, filter_name, is_list = False, is_boolean = Fal
 			return val
 	return None
 
-@app.route("/old_requests")
-def old_requests():
+@app.route("/view_requests")
+def display_all_requests(methods = ["GET"]):
+	browser = request.user_agent.browser
+	version = request.user_agent.version and int(request.user_agent.version.split('.')[0])
+	platform = request.user_agent.platform
+	uas = request.user_agent.string
+ 
+	if browser and version:
+		if (browser == 'msie' and version < 9) \
+		or (browser == 'firefox' and version < 4) \
+		or (platform == 'android' and browser == 'safari' and version < 534) \
+		or (platform == 'iphone' and browser == 'safari' and version < 7000) \
+		or ((platform == 'macos' or platform == 'windows') and browser == 'safari' and not re.search('Mobile', uas) and version < 534) \
+		or (re.search('iPad', uas) and browser == 'safari' and version < 7000) \
+		or (platform == 'windows' and re.search('Windows Phone OS', uas)) \
+		or (browser == 'opera') \
+		or (re.search('BlackBerry', uas)):
+			return fetch_requests()
+	return backbone_requests()
+
+@app.route("/backbone_requests")
+def backbone_requests():
 	return render_template("all_requests.html", departments = db.session.query(Department).all(), total_requests_count = get_count("Request"))
 
-@app.route("/requests", methods = ["GET", "POST"])
+@app.route("/new_requests", methods = ["GET", "POST"])
 def fetch_requests(output_results_only = False, filters_map = None, date_format = '%Y-%m-%d', checkbox_value = 'on'):
 
 	user_id = get_user_id()
