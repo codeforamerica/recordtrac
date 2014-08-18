@@ -1,4 +1,3 @@
- add a request form found at /new */
 $(document).ready(function(){
 
   /* validates add a request form */
