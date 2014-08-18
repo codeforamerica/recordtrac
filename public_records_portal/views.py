@@ -340,7 +340,7 @@ def fetch_requests(output_results_only = False, filters_map = None, date_format 
 	search_term = None
 
 	if request.method == "POST" or output_results_only == True:
-		departments_selected = get_filter_value(filters_map = filters_map, filter_name = 'departments_selected', is_list = True)
+		departments_selected = get_filter_value(filters_map = filters_map, filter_name = 'departments_selected', is_list = True) or [get_filter_value(filters_map, 'department')]
 		is_open = get_filter_value(filters_map = filters_map, filter_name = 'is_open', is_boolean = True)
 		is_closed = get_filter_value(filters_map = filters_map, filter_name = 'is_closed', is_boolean = True)
 		due_soon = get_filter_value(filters_map = filters_map, filter_name = 'due_soon', is_boolean = True)
