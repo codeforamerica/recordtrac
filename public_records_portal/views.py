@@ -268,7 +268,7 @@ def close(request_id = None):
 
 
 def filter_department(departments_selected, results):
-	if departments_selected:
+	if departments_selected and departments_selected:
 		app.logger.info("\n\nDepartment filters:%s." % departments_selected)
 		department_ids = []
 		for department_name in departments_selected:
@@ -299,14 +299,16 @@ def filter_search_term(search_input, results):
 
 def get_filter_value(filters_map, filter_name, is_list = False, is_boolean = False):
 	if filter_name in filters_map:
-		if is_list:
+		val = filters_map[filter_name]
+		if filter_name == 'department' and val:
+			return [val]
+		elif is_list:
 			return filters_map.getlist(filter_name)
 		elif is_boolean:
-			return str(filters_map[filter_name]).lower()
+			return str(val.lower())
 		else:
-			return filters_map[filter_name]
-	else:
-		return None
+			return val
+	return None
 
 @app.route("/old_requests")
 def old_requests():
@@ -340,7 +342,7 @@ def fetch_requests(output_results_only = False, filters_map = None, date_format 
 	search_term = None
 
 	if request.method == "POST" or output_results_only == True:
-		departments_selected = get_filter_value(filters_map = filters_map, filter_name = 'departments_selected', is_list = True) or [get_filter_value(filters_map, 'department')]
+		departments_selected = get_filter_value(filters_map = filters_map, filter_name = 'departments_selected', is_list = True) or get_filter_value(filters_map, 'department')
 		is_open = get_filter_value(filters_map = filters_map, filter_name = 'is_open', is_boolean = True)
 		is_closed = get_filter_value(filters_map = filters_map, filter_name = 'is_closed', is_boolean = True)
 		due_soon = get_filter_value(filters_map = filters_map, filter_name = 'due_soon', is_boolean = True)
