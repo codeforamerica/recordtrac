@@ -28,24 +28,32 @@ This template provides the header, footer, and envelope info for all pages excep
     <!--     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/select2.css') }}"> -->
 
   <!-- modernizr -->
-  <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/modernizr-latest-min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/modernizr-latest-min.js') }}"></script>
 
   <!-- google analytics -->
     <!-- for later: guide to add event-driven analytics http://www.sitepoint.com/google-analytics-track-javascript-ajax-events/ -->
-  <script>
+    <script>
 
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-41730935-1', 'herokuapp.com');
-  ga('send', 'pageview');
-  </script>
+    ga('create', 'UA-41730935-1', 'herokuapp.com');
+    ga('send', 'pageview');
+    </script>
+
   <!-- auth_script requires jquery and Mozilla's 'include.js' shim -->
-  <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.10.1.min.js') }}"></script> 
-  <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/include.js') }}"></script>
-  <script type="text/javascript">{{ auth_script|safe }}</script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.10.1.min.js') }}"></script> 
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/include.js') }}"></script>
+    <script type="text/javascript">{{ auth_script|safe }}</script>
+
+  <!-- IE8 shim for CSS3 pseudo classes like :hover -->
+    <script type="text/javascript" src="[JS library]"></script>
+    <!--[if (gte IE 6)&(lte IE 8)]>
+      <script type="text/javascript" src="selectivizr.js"></script>
+      <noscript><link rel="stylesheet" href="[fallback css]" /></noscript>
+    <![endif]-->
 
   </head>
   
