@@ -108,7 +108,7 @@ image::admin_qa.png[]
 A description of the fields in the table displayed can be found below:
 
 * ID: Unique ID assigned to each request.
-* Question: Entire text of the question asked by city staff.
+* Question: Entire text of the question asked by agency staff.
 * Answer: Entire response of question provided by member of the public. 
 * Date Created: The date the exchange was created
 
@@ -126,13 +126,13 @@ To change the Public Record Request (PRR) liaision, or the individual responsibl
 
 image::admin_prr_liaison.png[]
 
-You will see a  list of all employees contained in the official city directory. 
+You will see a  list of all employees contained in the official agency directory. 
 
 A description of the fields in the table displayed can be found below:
 
-* Contact for: Listing of departments the city employee is the PRR liaison for. 
-* Back-up for: Listing of departments the city employee is a backup for. 
-* Alias: Name of city employee.
+* Contact for: Listing of departments the agency employee is the PRR liaison for. 
+* Back-up for: Listing of departments the agnecy employee is a backup for. 
+* Alias: Name of agency employee.
 
 Clicking on the trashcan icon permanently deletes the user. 
 
@@ -155,41 +155,34 @@ The web copy is not managed through the admin section. To update the copy on the
 
 The copy for the web application can be found in the following .json files:
 
-* Action.json describes the actions a member of the public can take to submit a request, as well as the actions to be taken by a city employee. The text from this file is used for the website's copy. It tells users what will happen when they use a particular feature and who will be able to view the messages or documents uploaded. 
+**update**
+
+* Action.json describes the actions a member of the public can take to submit a request, as well as the actions to be taken by a agency employee. The text from this file is used for the website's copy. It tells users what will happen when they use a particular feature and who will be able to view the messages or documents uploaded. 
 * Notcityrecords.json: When a member of the public types in a particular word or phrase pertaining to a record not possessed by the City of Oakland while submitting a request, a message pops up explaining to the user they need to contact another municipality. This file keeps track of all the phrases and messages.
 * Prr_help.json: This is the copy displayed on the "New Request" page. It includes tips for submitting a public records request, as well as three examples of public records requests. 
 * Tutorial.json: The copy for the tutorial can be found here. 
+
+**update**
 
 All of the HTML files are stored in the templates folder. The names of the files are pretty self-explanatory, and it is simple to find the file that corresponds to each webpage. For example to edit the About page at http://records.oaklandnet.com/about, you must modify the 'about.html' file. 
 
 
 ## Changing Passwords
 
-Passwords are not managed through the admin section. City employees are able to change their own passwords, if they do the following:
-
-Go to http://records.oaklandnet.com/reset_password[records.oaklandnet.com/reset_password].
+Passwords are not managed through the admin section. Agency employees are required to manage their own passwords directly through the Mozilla Persona sign-in.
 
 image::reset_password.png[]
 
-A temporary password will be sent via email.
-
-Use the temporary password to log into the system.
-
-Go to http://records.oaklandnet.com/update_password to change your password.
-
-image::update_password.png[]
-
-Once you click the green “Update” button your password will change. 
 
 ## Checking Status of RecordTrac
 
 image::app_status.png[]
 
-Developers at Code for America created a quick way for adminstrators to check on the status of the application. Visit http://records.oaklandnet.com/.well-known/status[records.oaklandnet.com/.well-known/status] to get a quick confirmation of whether the app is working.
+There is a quick way for adminstrators to check on the status of the application. Visit http://records.oaklandnet.com/.well-known/status[records.oaklandnet.com/.well-known/status] to get a quick confirmation of whether the app is working.
 
 If the status is 'ok,' it means the app is working properly and users should not encounter any problems.
 
-The number next to SendGrid is the percentage of its email quota the application has used this month. If it is close to 100, then the City is close to hitting its email quotas for the month and may be charged for each additional email. 
+The number next to SendGrid is the percentage of its email quota the application has used this month. If it is close to 100, then the agency is close to hitting its email quotas for the month and may be charged for each additional email. 
 
-The dependencies section lists the web applications used by RecordTrac. Askismet is the spam filter. Scribd is where all uploaded documents are hosted. SendGrid sends out the email notifications and Postgres is where all of the data is stored. 
+The dependencies section lists additional web applications used by RecordTrac. Askismet is the spam filter. Scribd is where all uploaded documents are hosted. SendGrid sends out the email notifications and Postgres is where all of the data is stored. 
 
