@@ -19,6 +19,8 @@ The table displays the following information:
 * Due: This shows the date the request is due.  The date is calculated from an admin-configured response time. 
 * Requester: The requester's name, if provided by the requester.  If no name was provided, it will display as "N/A".
 
+### Manage your request list
+The default view shows those requests which are likely to have the most relevance to the responder.  It shows those requests with which the responder is tagged as either the Point of Contact or as a Helper and automatically hides completed (closed) requests.  Use the search, filter, and sort options to change the view or search for more requests.
 
 ### Search options
 
@@ -69,7 +71,140 @@ If the receipt date is different than the submission date, agency staff may alte
 *NOTE: This does not alter the creation date, which is stored elsewhere.*
 
 ## Respond to a request
-## Manage your request list
+= How to respond to a public records request using RecordTrac
+A responder is typically an employee of a governmental agency.
+:toc:
+:source-highlighter: pygments
+
+link:index.html[back to index page]
+
+### Change the Point of Contact for a Request
+
+image::change_point_of_contact.png[]
+
+An agency employee can send the request to another individual in the official directory if their department is unable to fulfill it. The agency employee will be alerted via email and will become the new point of contact for this request.
+
+### Add a Helper
+
+image::add_helper.png[]
+
+Sometimes more than one person is needed to fulfill a request or it involves multiple departments. Click on 'Helpers' to notify additional staff of this request. The staff member will be alerted via email that they are expected to respond to this request. The helpers will be able to add documents and send messages to the requester via RecordTrac. 
+
+### Ask a Question
+
+image::ask_question.png[]
+
+An agency employee can ask questions about this particular records request. The requester will be notified via email of this question. The question will be posted online for everyone to view.
+
+### Upload a Record
+
+image::upload_record.png[]
+
+Documents stored on a computer can be uploaded. The requester will be notified via email every time a record is uploaded. The documents will be posted online for everyone to view.
+
+You must name every record you upload.  
+
+Records are displayed online via Scribd. Supported file types are the following:
+'txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff'
+
+### Add a Link to Another Website
+
+image::add_link.png[]
+
+An agency employee can respond to a request by providing a link to where the document or information is stored online. The requester will be notified via email about this link. This web address will be posted online for everyone to view.
+
+You must name each link you post.  
+
+
+### Add An Offline Record
+
+image::offline_record.png[]
+
+Some records cannot be uploaded to the website and requesters will have to be told when and where to pick up copies of it. The requester will be notified via email about this message. This message will be posted online for everyone to view.
+
+You must provide a name for the instructions you post. 
+
+Below is an example of a posted message:
+
+image::offline_record_example.png[]
+
+### Add a Note
+
+image::add_note.png[]
+
+Updates can be provided to the requester through the "Add a Note" feature. The requester will be notified via email. The message will be posted online for everyone to view.
+
+### Request an Extension
+*NOTE: Extensions may not apply to all agencies.*
+
+image::extend_request.png[]
+
+Notify a requester if additional time is needed to fulfill their public records request. Select from one of the reasons to extend a request and edit the message. The due date of the request changes, giving the staff member a set number of additional calendar days to respond to the request. The message is posted online and the requester is notified via email. _An extension can only be requested once._ The extension date is calculated from an admin-configured response time.
+
+### Closing a Request
+
+image::close_request.png[]
+
+To close out a request, staff can edit a message already provided to them. An email is then sent to the requester notifying them the request is closed. The status of the request will also change. 
+
+Example list of reasons a request can be closed.  These may vary between agencies:
+
+* Fulfilled: "We released all of the requested documents."
+* Fulfilled - Private Documents Not Uploaded: "We cannot upload your document online. The records contains sensitive information only you can view."
+* Fulfilled - Information Redacted: "We released all of the requested documents. Personal information, such as home addresses, telephone numbers, and credit card numbers, were removed from the documents to protect the privacy or identity of another individual. 
+* Not a public records request: "This is not a public records request. For more general information please contact..."
+* Record Does Not Exist: "The record you asked for does not exist."
+* Contact another agency: "We don't have the records you requested. We suggest you submit a public records request to..."
+* Can not release - Personal records: "We cannot upload the documents you requested. We are prohibited from releasing an individual’s employment, medical, or similar files to protect their privacy."
+* Can not release - Ongoing litigation: "We cannot upload the documents you requested. We are prohibited from releasing records related to an on-going litigation."
+* Can not release - Investigative records: "We cannot upload the documents you requested. We are prohibited from releasing investigative records for crimes committed or police incident reports, rap sheets, and arrest records."
+* Requester not interested:"The person who submitted this request determined they no longer need the record.",
+* Unable to contact the requester: "We closed this request after we were unable to contact the requester to determine what they needed."
+
+
+### Re-Open a Request
+
+image::reopen_request.png[]
+
+Allows you to re-open a request after it is closed. This makes it possible for you to send more messages and upload additional records.
+
+### Responses
+
+image::responses.png[]
+
+All responses are displayed in chronological order. Each response includes the time it was uploaded and who uploaded the document or sent the message. 
+
+#### What is Unique to the Agency View
+
+There are two views in RecordTrac: the agency employee view and the public view. 
+
+image::city_url.png[]
+
+Agency employees are the only users able to upload records, extend a request, close a request, and correspond with the requester through RecordTrac. 
+
+Only agency employees can view:
+
+* A requester's name
+* A requester's phone number
+* A particular request's due date. This information is hidden from the public.
+* Whether a request is overdue or due soon. Members of the public are only able to tell whether a request is open or closed.
+
+#### Email Notifications
+
+The Point of Contact and Helpers for a request recieve an email notification when:
+
+* They are assigned a request
+* A requester sends a note through RecordTrac
+* Requester responds to a question
+* A request is "due" in two days (also sent to the department or agency's backup)
+* A request is overdue
+
+### Tutorial
+
+RecordTrac's tutorial shows agency employees how to successfully manage a public records request with RecordTrac. The tutorial was created to quickly on-board new employees who are responsible for fulfilling public records requests. Only agency staff who are logged into RecordTrac are able to view the tutorial. 
+
+You can view the tutorial by going to http://records.oaklandnet.com/tutorial[records.oaklandnet.com/tutorial].  
+
 ## [Admin](/admin.md)
 
 
