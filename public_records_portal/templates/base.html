@@ -139,7 +139,8 @@ This template provides the header, footer, and envelope info for all pages excep
         </div>
       {% endblock feedback %}
     {% endif %}
-
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.placeholder.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/placeholder.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.validate.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/custom.js') }}"></script>
