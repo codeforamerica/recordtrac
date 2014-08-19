@@ -87,7 +87,7 @@ def request_extension(request_id, extension_reasons, user_id):
 	for reason in extension_reasons:
 		text = text + reason + "</br>"
 	add_staff_participant(request_id = request_id, user_id = user_id)
-	return add_note(request_id = request_id, text = text, user_id = user_id)
+	return add_note(request_id = request_id, text = text, user_id = user_id, passed_spam_filter = True) # Bypass spam filter because they are logged in.
 
 ### @export "add_note"
 def add_note(request_id, text, user_id = None, passed_spam_filter = False):
