@@ -4,7 +4,7 @@
 
 RecordTrac’s administrative controls allows the users to:
 
-* [Edit or remove request text](https://github.com/codeforamerica/recordtrac/blob/readme/readme/admin.md#how-to-remove-or-edit-a-request)
+* [Edit or remove request text](#how-to-remove-or-edit-a-request)
 * [Remove a record](https://github.com/codeforamerica/recordtrac/blob/readme/readme/admin.md#how-to-remove-a-record)
 * [Edit or remove the text of a note](https://github.com/codeforamerica/recordtrac/blob/readme/readme/admin.md#how-to-remove-or-edit-a-note)
 * [Edit or remove a question or answer](https://github.com/codeforamerica/recordtrac/blob/readme/readme/admin.md#how-to-remove-or-edit-a-question-and-answer-exchange)
