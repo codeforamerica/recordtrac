@@ -117,3 +117,7 @@ currently have to click on button */
 // $(document).ready(function() {
 //   $('#allrequestTable').dataTable();
 // } );
+
+// IE8 shims
+// placeholder text
+$('input, textarea').placeholder();
