@@ -36,7 +36,6 @@ browser_id.user_loader(get_user)
 browser_id.init_app(app)
 
 
-
 # Submitting a new request
 @app.route("/new", methods=["GET", "POST"])
 def new_request(passed_recaptcha = False, data = None):
@@ -310,14 +309,11 @@ def get_filter_value(filters_map, filter_name, is_list = False, is_boolean = Fal
 			return val
 	return None
 
-@app.route("/view_requests")
-def display_all_requests(methods = ["GET"]):
-	""" Dynamically load requests page depending on browser. """
+def is_supported_browser():
 	browser = request.user_agent.browser
 	version = request.user_agent.version and int(request.user_agent.version.split('.')[0])
 	platform = request.user_agent.platform
 	uas = request.user_agent.string
- 
 	if browser and version:
 		if (browser == 'msie' and version < 9) \
 		or (browser == 'firefox' and version < 4) \
@@ -328,8 +324,16 @@ def display_all_requests(methods = ["GET"]):
 		or (platform == 'windows' and re.search('Windows Phone OS', uas)) \
 		or (browser == 'opera') \
 		or (re.search('BlackBerry', uas)):
-			return no_backbone_requests()
-	return backbone_requests()
+			return False
+	return True
+
+@app.route("/view_requests")
+def display_all_requests(methods = ["GET"]):
+	""" Dynamically load requests page depending on browser. """ 
+	if is_supported_browser():
+		return backbone_requests()
+	else:
+		return no_backbone_requests()
 
 @app.route("/view_requests_backbone")
 def backbone_requests():
@@ -345,10 +349,12 @@ def fetch_requests(output_results_only = False, filters_map = None, date_format 
 	user_id = get_user_id()
 
 	if not filters_map:
-		if request.args: # This means someone submitted a URL with the arguments. Need to figure out how to handle this case gracefully. i.e. what if they did this but are on IE8?
-			return backbone_requests()
-		else:
-			filters_map = request.form
+		if request.args: 
+			if is_supported_browser():
+				return backbone_requests()
+			else: # Clear URL
+				return redirect(url_for('fetch_requests'))
+		filters_map = request.form
 
 	# Set defaults 
 	is_open = checkbox_value
