@@ -470,6 +470,9 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 
 	if is_open == checkbox_value:
 		status_filters.append(Request.open)
+		if not user_id:
+			status_filters.append(Request.due_soon)
+			status_filters.append(Request.overdue)
 
 	if is_closed == checkbox_value:
 		status_filters.append(Request.closed)
@@ -480,20 +483,21 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 		results = results.filter(and_(Request.date_received >= min_date_received, Request.date_received <= max_date_received))
 		app.logger.info('Request Date Bounding. Min: {0}, Max: {1}'.format(min_date_received, max_date_received))
 
-	if min_due_date and max_due_date and min_due_date != "" and max_due_date != "":
-		min_due_date = datetime.strptime(min_due_date, date_format)
-		max_due_date = datetime.strptime(max_due_date, date_format) + timedelta(hours = 23, minutes = 59)  
-		results = results.filter(and_(Request.due_date >= min_due_date, Request.due_date <= max_due_date))
-		app.logger.info('Due Date Bounding. Min: {0}, Max: {1}'.format(min_due_date, max_due_date))
 
 	# Filters for agency staff only:
 	if user_id:
+
 		if due_soon == checkbox_value:
 			status_filters.append(Request.due_soon)
 
 		if overdue == checkbox_value:
 			status_filters.append(Request.overdue)
 
+		if min_due_date and max_due_date and min_due_date != "" and max_due_date != "":
+			min_due_date = datetime.strptime(min_due_date, date_format)
+			max_due_date = datetime.strptime(max_due_date, date_format) + timedelta(hours = 23, minutes = 59)  
+			results = results.filter(and_(Request.due_date >= min_due_date, Request.due_date <= max_due_date))
+			app.logger.info('Due Date Bounding. Min: {0}, Max: {1}'.format(min_due_date, max_due_date))
 
 		# PoC and Helper filters
 		if mine_as_poc == checkbox_value: 
