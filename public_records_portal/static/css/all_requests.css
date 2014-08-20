@@ -5,6 +5,11 @@
 	padding-bottom: 1em;
 }
 
+/* export data area */
+	p.text-center a:hover {
+		text-decoration: none;
+	}
+
 /* remove styling from request text link */
 	td a {
 		color: #333;
