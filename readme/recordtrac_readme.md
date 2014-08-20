@@ -1,19 +1,17 @@
-
-#RecordTrac [![Build Status](https://travis-ci.org/codeforamerica/recordtrac.png?branch=master)](https://travis-ci.org/codeforamerica/recordtrac)
+#RecordTrac
 This is the home page for documentation for the **RecordTrac** application.
 
 For help contact **oakland |@| codeforamerica.org**
 
 ##What is RecordTrac?
-RecordTrac is a public record request management tool for government agencies.  This web application allows government employees manage, respond to, and fulfill incoming requests.  It also provides a quick, simple way for individuals to submit public record requests. RecordTrac displays all requests and responsive documents so that members of the public may find what they need without submitting additional public record requests.  
+RecordTrac is a public record request management tool for government agencies.
 ![RecordTrac](https://github.com/codeforamerica/recordtrac/raw/readme/readme/generic_request.png "RecordTrac")  
-You can view a live version of [RecordTrac in the City of Oakland](http://records.oaklandnet.com).
-
+This web application allows government employees manage, respond to, and fulfill incoming requests.  It also provides a quick, simple way for individuals to submit public record requests. RecordTrac displays all requests and responsive documents so that members of the public may find what they need without submitting additional public record requests.
 
 ##How to create a new RecordTrac app for your agency
-* [Groundwork](https://github.com/codeforamerica/recordtrac/blob/readme/readme/redeploy.md#groundwork)
-* [Best Practices](https://github.com/codeforamerica/recordtrac/blob/readme/readme/redeploy.md#best-practices)
-* [Redeploy](https://github.com/codeforamerica/recordtrac/blob/readme/readme/redeploy.md#redeploy)
+* [Groundwork](/redeploy.md)
+* [Best Practices](/redeploy.md#best-practices)
+* [Redeploy](/redeploy.md#redeploy)
 
 ##Technical details
 RecordTrac is primarily a Python application built on a backend Flask framework and a frontend Bootstrap framework.
@@ -56,15 +54,15 @@ Issues and feature backlog are tracked through [GitHub issues](https://github.co
 * [PRR](http://codeforamerica.github.io/public-records/docs/1.0.0/prr.html)
 
 ##How to use RecordTrac... as a requester
-* [Search for a record](#)
-* [Make a new request](#)
+* [Search for a record](/requester.md)
+* [Make a new request](/requester.md#make-a-request)
 
 ##How to use RecordTrac... as an agency employee
-* [Search for a record](#)
-* [Make a new request](#)
-* [Respond to a request](#)
-* [Manage your request list](#)
-* [Admin](#)
+* [Search for a record](/responder.md)
+* [Manage your request list](/responder.md#manage-your-request-list)
+* [Make a new request](/responder.md#make-a-new-request)
+* [Respond to a request](/responder.md#respond-to-a-request)
+* [Admin](/admin.md)
 
 ##About
 * [Why was RecordTrac built?](http://codeforamerica.github.io/public-records/docs/1.0.0/about.html#_why_was_recordtrac_built)
