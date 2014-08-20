@@ -100,8 +100,7 @@
 
                 <h5>Status</h5>
                 <div class="indent" style="padding-bottom: 15px;">
-                {% if current_user.is_authenticated() %}
-                  <label class="checkbox">
+                <label class="checkbox">
                     <input type="checkbox"
                            id="is_open" 
                            <% if (is_open == 'true' || is_open == true) { %>
@@ -109,6 +108,7 @@
                            <% } %> >
                     <em class="open_style">Open</em>
                   </label>
+                {% if current_user.is_authenticated() %}
                   <label class="checkbox">
                     <input type="checkbox"
                            id="due_soon" 
