@@ -328,12 +328,16 @@ def display_all_requests(methods = ["GET"]):
 		or (platform == 'windows' and re.search('Windows Phone OS', uas)) \
 		or (browser == 'opera') \
 		or (re.search('BlackBerry', uas)):
-			return fetch_requests()
+			return no_backbone_requests()
 	return backbone_requests()
 
 @app.route("/view_requests_backbone")
 def backbone_requests():
 	return render_template("all_requests.html", departments = db.session.query(Department).all(), total_requests_count = get_count("Request"))
+
+@app.route("/view_requests_no_backbone")
+def no_backbone_requests():
+	return fetch_requests()
 
 @app.route("/requests", methods = ["GET", "POST"])
 def fetch_requests(output_results_only = False, filters_map = None, date_format = '%Y-%m-%d', checkbox_value = 'on'):
