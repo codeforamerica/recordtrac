@@ -343,10 +343,12 @@ def no_backbone_requests():
 def fetch_requests(output_results_only = False, filters_map = None, date_format = '%Y-%m-%d', checkbox_value = 'on'):
 
 	user_id = get_user_id()
-	data = request.form.copy()
 
 	if not filters_map:
-		filters_map = request.form
+		if request.args: # This means someone submitted a URL with the arguments. Need to figure out how to handle this case gracefully. i.e. what if they did this but are on IE8?
+			return backbone_requests()
+		else:
+			filters_map = request.form
 
 	# Set defaults 
 	is_open = checkbox_value
