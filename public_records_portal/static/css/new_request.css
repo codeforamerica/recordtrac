@@ -1,5 +1,10 @@
 /* custom css for new_request.html and child templates */
 
+/* all popovers fit size to content */
+	.helpPopover {
+		width: 200px !important;
+	}
+
 /* increase size of intro text */
 	p.intro_text {
 		font-size: 16px;

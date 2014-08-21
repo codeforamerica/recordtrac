@@ -103,10 +103,7 @@ label.error {
 		text-align: left ;
 	}
 
-/* all popovers fit size to content */
-	.helpPopover {
-		width: 200px !important;
-	}
+
 
 
 
