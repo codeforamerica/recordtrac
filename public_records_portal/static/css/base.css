@@ -64,49 +64,6 @@
 }
 
 
-
-/* logout button */
-	input.btn-link {
-		text-shadow: none;
-		color: #999;
-		font-size: small;
-	}
-
-	input.btn-link:hover {
-		color: #17B292;
-		text-decoration: none;
-	}
-
-/* name in navbar */
-	p.navbar-text {
-		color: #eee !important;
-	}
-
-/* login dropdown */
-	form#loginForm.form-horizontal {
-		margin-bottom: 10px;
-	}
-
-	form#loginForm.form-horizontal input.input-medium {
-		margin-bottom: 10px;
-	}
-
-	li.dropdown.open div.dropdown-menu {
-		padding-bottom: 5px !important;
-	}
-
-	li.dropdown.open div.dropdown-menu a {
-		padding-left: 17%;
-	}
-
-	li.dropdown.open div.dropdown-menu.active a {
-		background-color: transparent;
-	}
-
-
-
-
-
 /* validation style */
 /*label.valid {
   width: 24px;
@@ -137,9 +94,9 @@ label.error {
 }*/
 
 /* make login form appear inline */
-	form#loginForm.navbar-form.pull-right {
+	/*form#loginForm.navbar-form.pull-right {
 		margin-top: 0.5em;
-	}
+	}*/
 
 /* all infotips appear as superscript */
 	.icon-info-sign {
@@ -171,10 +128,7 @@ label.error {
 	margin-bottom: 10%;
 }
 
-/* gives the create request button a bit of breathing room */
-#requestButton {
-	margin-bottom: 20%;
-}
+
 
 /* ----- Sticky Footer ----- by Ryan Fait http://ryanfait.com/sticky-footer/ ----- */
 * {

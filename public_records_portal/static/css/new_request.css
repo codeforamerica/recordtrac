@@ -66,3 +66,8 @@ line-height: 1.25;
 	margin-top: 4.25em;
 	/*margin-right: 3em;*/
 }
+
+/* gives the create request button a bit of breathing room */
+#requestButton {
+	margin-bottom: 20%;
+}
