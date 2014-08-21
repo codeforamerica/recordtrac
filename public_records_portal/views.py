@@ -343,7 +343,7 @@ def backbone_requests():
 def no_backbone_requests():
 	return fetch_requests()
 
-@app.route("/requests", methods = ["GET", "POST"])
+@app.route("/requests", methods = ["GET"])
 def fetch_requests(output_results_only = False, filters_map = None, date_format = '%Y-%m-%d', checkbox_value = 'on'):
 
 	user_id = get_user_id()
@@ -353,8 +353,9 @@ def fetch_requests(output_results_only = False, filters_map = None, date_format 
 			if is_supported_browser():
 				return backbone_requests()
 			else: # Clear URL
-				return redirect(url_for('fetch_requests'))
-		filters_map = request.form
+				filters_map = request.args
+		else:
+			filters_map = request.form
 
 	# Set defaults 
 	is_open = checkbox_value
@@ -374,7 +375,7 @@ def fetch_requests(output_results_only = False, filters_map = None, date_format 
 	page_number = 1
 	search_term = None
 
-	if request.method == "POST" or output_results_only == True:
+	if filters_map:
 		departments_selected = get_filter_value(filters_map = filters_map, filter_name = 'departments_selected', is_list = True) or get_filter_value(filters_map, 'department')
 		is_open = get_filter_value(filters_map = filters_map, filter_name = 'is_open', is_boolean = True)
 		is_closed = get_filter_value(filters_map = filters_map, filter_name = 'is_closed', is_boolean = True)
