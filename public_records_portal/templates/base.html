@@ -44,14 +44,14 @@ This template provides the header, footer, and envelope info for all pages excep
     </script>
 
   <!-- auth_script requires jquery and Mozilla's 'include.js' shim -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.10.1.min.js') }}"></script> 
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.11.1.min.js') }}"></script> 
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/include.js') }}"></script>
     <script type="text/javascript">{{ auth_script|safe }}</script>
 
   <!-- IE8 shim for CSS3 pseudo classes like :hover -->
-    <script type="text/javascript" src="[JS library]"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.11.1.min.js') }}"></script>
     <!--[if (gte IE 6)&(lte IE 8)]>
-      <script type="text/javascript" src="selectivizr.js"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/selectivizr-min.js') }}"></script>
       <noscript><link rel="stylesheet" href="[fallback css]" /></noscript>
     <![endif]-->
 
