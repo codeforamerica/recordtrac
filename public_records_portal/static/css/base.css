@@ -93,11 +93,6 @@ label.error {
 	color: #606060  ;
 }*/
 
-/* make login form appear inline */
-	/*form#loginForm.navbar-form.pull-right {
-		margin-top: 0.5em;
-	}*/
-
 /* all infotips appear as superscript */
 	.icon-info-sign {
 		vertical-align: super;
