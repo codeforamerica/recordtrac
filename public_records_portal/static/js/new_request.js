@@ -18,41 +18,41 @@ $(document).ready(function(){
     });
 
 
-/* help text popover */
-  $('#requestTextarea').popover({
-      trigger: 'focus',
-      html : true,
-      content: function() {
-        return $("#requestPopover-content").html();
-      }
-  });
+  /* help text popover */
+    $('#requestTextarea').popover({
+        trigger: 'focus',
+        html : true,
+        content: function() {
+          return $("#requestPopover-content").html();
+        }
+    });
 
-  $('#inputEmail').popover({
-      trigger: 'focus',
-      html : true,
-      content: function() {
-        return $("#emailPopover-content").html();
-      }
-  });
+    $('#inputEmail').popover({
+        trigger: 'focus',
+        html : true,
+        content: function() {
+          return $("#emailPopover-content").html();
+        }
+    });
 
-  $('#inputName').popover({
-      trigger: 'focus',
-      html : true,
-      content: function() {
-        return $("#namePopover-content").html();
-      }
-  });
+    $('#inputName').popover({
+        trigger: 'focus',
+        html : true,
+        content: function() {
+          return $("#namePopover-content").html();
+        }
+    });
 
-  $('#inputPhone').popover({
-      trigger: 'focus',
-      html : true,
-      content: function() {
-        return $("#phonePopover-content").html();
-      }
-  });
+    $('#inputPhone').popover({
+        trigger: 'focus',
+        html : true,
+        content: function() {
+          return $("#phonePopover-content").html();
+        }
+    });
 
 
-});
+
 /* End of .ready functionality */
 
 
@@ -78,4 +78,4 @@ $('#requestTextarea').on('blur', function() {
     });
   })
 });
-/* End of .blur functionality 
+// /* End of .blur functionality 
