@@ -113,15 +113,6 @@ label.error {
 		width: 200px !important;
 	}
 
-/* pull history popover back into view */
-/*#historyPopover {
-	margin-right: 20%;
-}*/
-
-/* gives the responses a bit more white space between */
-.response {
-	padding-top: 2%;
-}
 
 /* gives the close button a bit of breathing room */
 #closeRequest {
