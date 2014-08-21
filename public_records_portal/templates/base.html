@@ -48,15 +48,18 @@ This template provides the header, footer, and envelope info for all pages excep
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/include.js') }}"></script>
     <script type="text/javascript">{{ auth_script|safe }}</script>
 
-  <!-- IE8 shim for CSS3 pseudo classes like :hover -->
+  <!-- IE8 polyfill for CSS3 pseudo classes like :hover -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.11.1.min.js') }}"></script>
     <!--[if (gte IE 6)&(lte IE 8)]>
       <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/selectivizr-min.js') }}"></script>
       <noscript><link rel="stylesheet" href="[fallback css]" /></noscript>
     <![endif]-->
 
-  <!-- transform and other prefixes shim -->
+  <!-- transform and other prefixes polyfill -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/css3finalize/4.0.0/jquery.css3finalize.min.js"></script>
+
+  <!-- REM unit polyfill -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/rem.min.js') }}"></script>
     
   </head>
   
