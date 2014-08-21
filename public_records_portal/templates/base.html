@@ -158,7 +158,10 @@ This template provides the header, footer, and envelope info for all pages excep
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.validate.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/custom.js') }}"></script>
+    <!-- CSS3 media queries polyfill -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/css3-mediaqueries.js') }}"></script>
+    <!-- accessibility element tag polyfill -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/accessifyhtml5.min.js') }}"></script>
 
     {% block custom_script_links %}      
     {% endblock custom_script_links %}  
