@@ -76,6 +76,4 @@ $('#requestTextarea').on('blur', function() {
         $div.removeClass('alert').removeClass('alert-error');
       }
     });
-  })
-});
-/* End of .blur functionality 
+  });
