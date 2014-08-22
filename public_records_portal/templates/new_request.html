@@ -14,8 +14,9 @@
 {% endblock custom_css_links %}
 {% block container %}
   <div class="row-fluid">
-
-    <div class="span7 offset1">
+  <div class="span11 offset1">
+    <div class="row-fluid">
+    <div class="span8">
       <div class="row-fluid">
         <div class="span8">
           <h3>Request a new record</h3>
@@ -79,7 +80,8 @@
       </div>
     </div>
 
-    <div class="span3">
+    <div class="span4">
+      <div class="row-fluid">
       {% block sidebar %}
         <div class="well r_sidebar hidden-phone">
           <h4>Example</h4>
@@ -95,7 +97,10 @@
         </div>
       {% endblock sidebar %}
     </div>
+  </div>
 
+  </div>
+  </div>
   </div>
 {% endblock container %}
 
