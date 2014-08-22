@@ -62,7 +62,7 @@ Issues and feature backlog are tracked through [GitHub issues](https://github.co
 * [Manage your request list](/readme/responder.md#manage-your-request-list)
 * [Make a new request](/readme/responder.md#make-a-new-request)
 * [Respond to a request](/readme/responder.md#respond-to-a-request)
-* [Admin](/admin.md)
+* [Admin](/readme/admin.md)
 
 ##About
 * [Why was RecordTrac built?](/readme/about.md#why-was-recordtrac-built)
