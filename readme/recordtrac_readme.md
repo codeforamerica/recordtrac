@@ -9,7 +9,7 @@ RecordTrac is a public record request management tool for government agencies.
 This web application allows government employees manage, respond to, and fulfill incoming requests.  It also provides a quick, simple way for individuals to submit public record requests. RecordTrac displays all requests and responsive documents so that members of the public may find what they need without submitting additional public record requests.
 
 ##How to create a new RecordTrac app for your agency
-* [Groundwork](/redeploy.md)
+* [Groundwork](/readme/redeploy.md)
 * [Best Practices](/redeploy.md#best-practices)
 * [Redeploy](/redeploy.md#redeploy)
 
