@@ -4,10 +4,6 @@ div.input-append {
   width: 530px;
 }
 
-form#closeRequest.form-horizontal {
-  margin-bottom: 1px;
-}
-
 h3.control-widget {
   display: inline !important;
 }

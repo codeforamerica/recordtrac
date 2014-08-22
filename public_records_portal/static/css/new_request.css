@@ -1,5 +1,10 @@
 /* custom css for new_request.html and child templates */
 
+/* all popovers fit size to content */
+	.helpPopover {
+		width: 200px !important;
+	}
+
 /* increase size of intro text */
 	p.intro_text {
 		font-size: 16px;
@@ -65,4 +70,9 @@ line-height: 1.25;
 .r_sidebar {
 	margin-top: 4.25em;
 	/*margin-right: 3em;*/
+}
+
+/* gives the create request button a bit of breathing room */
+#requestButton {
+	margin-bottom: 20%;
 }
