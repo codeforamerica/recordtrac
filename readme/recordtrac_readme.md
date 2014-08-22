@@ -10,8 +10,8 @@ This web application allows government employees manage, respond to, and fulfill
 
 ##How to create a new RecordTrac app for your agency
 * [Groundwork](/readme/redeploy.md)
-* [Best Practices](/redeploy.md#best-practices)
-* [Redeploy](/redeploy.md#redeploy)
+* [Best Practices](/readme/redeploy.md#best-practices)
+* [Redeploy](/readme/redeploy.md#redeploy)
 
 ##Technical details
 RecordTrac is primarily a Python application built on a backend Flask framework and a frontend Bootstrap framework.
@@ -54,17 +54,17 @@ Issues and feature backlog are tracked through [GitHub issues](https://github.co
 * [PRR](http://codeforamerica.github.io/public-records/docs/1.0.0/prr.html)
 
 ##How to use RecordTrac... as a requester
-* [Search for a record](/requester.md)
-* [Make a new request](/requester.md#make-a-request)
+* [Search for a record](/readme/requester.md)
+* [Make a new request](/readme/requester.md#make-a-request)
 
 ##How to use RecordTrac... as an agency employee
-* [Search for a record](/responder.md)
-* [Manage your request list](/responder.md#manage-your-request-list)
-* [Make a new request](/responder.md#make-a-new-request)
-* [Respond to a request](/responder.md#respond-to-a-request)
+* [Search for a record](/readme/responder.md)
+* [Manage your request list](/readme/responder.md#manage-your-request-list)
+* [Make a new request](/readme/responder.md#make-a-new-request)
+* [Respond to a request](/readme/responder.md#respond-to-a-request)
 * [Admin](/admin.md)
 
 ##About
-* [Why was RecordTrac built?](/about.md#why-was-recordtrac-built)
-* [Design principles](/about.md#design-principles)
-* [Research and references](/about.md#research-and-references)
+* [Why was RecordTrac built?](/readme/about.md#why-was-recordtrac-built)
+* [Design principles](/readme/about.md#design-principles)
+* [Research and references](/readme/about.md#research-and-references)
