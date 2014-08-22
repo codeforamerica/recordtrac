@@ -65,6 +65,6 @@ Issues and feature backlog are tracked through [GitHub issues](https://github.co
 * [Admin](/admin.md)
 
 ##About
-* [Why was RecordTrac built?](http://codeforamerica.github.io/public-records/docs/1.0.0/about.html#_why_was_recordtrac_built)
-* [Design Principles](http://codeforamerica.github.io/public-records/docs/1.0.0/about.html#_design_principles)
-* [Research and references](http://codeforamerica.github.io/public-records/docs/1.0.0/about.html#_research_and_references)
+* [Why was RecordTrac built?](/about.md#why-was-recordtrac-built)
+* [Design principles](/about.md#design-principles)
+* [Research and references](/about.md#research-and-references)
