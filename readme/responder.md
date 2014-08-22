@@ -205,7 +205,7 @@ RecordTrac's tutorial shows agency employees how to successfully manage a public
 
 You can view the tutorial by going to http://records.oaklandnet.com/tutorial[records.oaklandnet.com/tutorial].  
 
-## [Admin](/admin.md)
+## [Admin](/readme/admin.md)
 
 
 
