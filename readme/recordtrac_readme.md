@@ -40,18 +40,26 @@ Issues and feature backlog are tracked through [GitHub issues](https://github.co
 ##Developers
 
 ###API Documentation
-* [API](http://codeforamerica.github.io/public-records/docs/1.0.0/api.html)
+**UPDATE LINKS AND CONTENT IN LINKS**
+
+* [API](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/api.html)
+
+**UPDATE LINKS AND CONTENT IN LINKS**
 
 ###Source Code
 * [Source Code](https://github.com/codeforamerica/recordtrac)
 * [Issue Tracker](https://github.com/codeforamerica/recordtrac/issues)
 
 ###Developer Documentation
-* [Db Helpers](http://codeforamerica.github.io/public-records/docs/1.0.0/db-helpers.html)
-* [Departments](http://codeforamerica.github.io/public-records/docs/1.0.0/departments.html)
-* [Models](http://codeforamerica.github.io/public-records/docs/1.0.0/models.html)
-* [Notifications](http://codeforamerica.github.io/public-records/docs/1.0.0/notifications.html)
-* [PRR](http://codeforamerica.github.io/public-records/docs/1.0.0/prr.html)
+**UPDATE LINKS AND CONTENT IN LINKS**
+
+* [Db Helpers](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/db-helpers.html)
+* [Departments](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/departments.html)
+* [Models](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/models.html)
+* [Notifications](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/notifications.html)
+* [PRR](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/prr.html)
+
+**UPDATE LINKS AND CONTENT IN LINKS**
 
 ##How to use RecordTrac... as a requester
 * [Search for a record](/readme/requester.md)
