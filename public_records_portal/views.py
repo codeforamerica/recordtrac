@@ -494,10 +494,13 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 		status_filters.append(Request.closed)
 
 	if min_date_received and max_date_received and min_date_received != "" and max_date_received != "":
-		min_date_received = datetime.strptime(min_date_received, date_format)
-		max_date_received = datetime.strptime(max_date_received, date_format) + timedelta(hours = 23, minutes = 59) 
-		results = results.filter(and_(Request.date_received >= min_date_received, Request.date_received <= max_date_received))
-		app.logger.info('Request Date Bounding. Min: {0}, Max: {1}'.format(min_date_received, max_date_received))
+		try:
+			min_date_received = datetime.strptime(min_date_received, date_format)
+			max_date_received = datetime.strptime(max_date_received, date_format) + timedelta(hours = 23, minutes = 59) 
+			results = results.filter(and_(Request.date_received >= min_date_received, Request.date_received <= max_date_received))
+			app.logger.info('Request Date Bounding. Min: {0}, Max: {1}'.format(min_date_received, max_date_received))
+		except:
+			app.logger.info('There was an error parsing the request date filters. Received Min: {0}, Max {1}'.format(min_date_received, max_date_received))
 
 
 	# Filters for agency staff only:
@@ -510,10 +513,13 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 			status_filters.append(Request.overdue)
 
 		if min_due_date and max_due_date and min_due_date != "" and max_due_date != "":
-			min_due_date = datetime.strptime(min_due_date, date_format)
-			max_due_date = datetime.strptime(max_due_date, date_format) + timedelta(hours = 23, minutes = 59)  
-			results = results.filter(and_(Request.due_date >= min_due_date, Request.due_date <= max_due_date))
-			app.logger.info('Due Date Bounding. Min: {0}, Max: {1}'.format(min_due_date, max_due_date))
+			try:
+				min_due_date = datetime.strptime(min_due_date, date_format)
+				max_due_date = datetime.strptime(max_due_date, date_format) + timedelta(hours = 23, minutes = 59)  
+				results = results.filter(and_(Request.due_date >= min_due_date, Request.due_date <= max_due_date))
+				app.logger.info('Due Date Bounding. Min: {0}, Max: {1}'.format(min_due_date, max_due_date))
+			except:
+				app.logger.info('There was an error parsing the due date filters. Due Date Min: {0}, Max {1}'.format(min_due_date, max_due_date))
 
 		# PoC and Helper filters
 		if mine_as_poc == checkbox_value: 
