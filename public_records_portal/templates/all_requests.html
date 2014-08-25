@@ -177,11 +177,13 @@
 
           </div>
 
-          <div class="row-fluid">
-            <p class="text-center">
-              <a href="/export"> <i class="icon-download"></i> Export data</a>
-            </p>
-          </div>
+          {% if current_user.is_authenticated() %}
+              <div class="row-fluid">
+                <p class="text-center" style="padding-top: 2em;">
+                  <a href="/export"> <i class="icon-download"></i> Export data</a>
+                </p>
+              </div>
+          {% endif %}
 
         </div>
      
