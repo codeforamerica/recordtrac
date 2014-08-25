@@ -134,7 +134,10 @@ show_request_for_x.methods = ['GET', 'POST']
 @app.route("/city/request/<int:request_id>")
 @login_required
 def show_request_for_city(request_id):
-	return show_request(request_id = request_id, template = "manage_request_city.html")
+	if is_supported_browser():
+		return show_request(request_id = request_id, template = "manage_request_city.html")
+	else:
+		return show_request(request_id = request_id, template = "manage_request_city_less_js.html")
 
 @app.route("/response/<int:request_id>")
 def show_response(request_id):
