@@ -50,7 +50,7 @@ Agency staff can also sort the requests by:
 * Due date
 
 ## Make a new request
-Agency staff can submit a message to the agency  requesting a public record. 
+Agency staff can create a request on behalf of a requester. 
 
 image::new_request.png[]
 
@@ -59,6 +59,7 @@ image::new_request.png[]
 * Requesters are able to enter the department they want the request sent to or the type of document they need. 
 * The department or document type field is used to select which person initially receives the request. 
 * If a department is not selected, the request is automatically routed to an agency employee who will route it for the requester. 
+
 
 ### Responder-specific fields
 

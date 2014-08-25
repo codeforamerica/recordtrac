@@ -31,9 +31,20 @@ RecordTrac is an open source project, and we'd love for you to use it yourself!
 
 Using the recommended deployment instructions below, the technical operating costs (hosting and other services) should total about $100 per month.  
 
-If you have problems using RecordTrac, please open an issue here on GitHub and let us know what problems or difficulties you encountered in as much detail as you can.
+If you have problems using RecordTrac, please [open an issue on GitHub](https://github.com/codeforamerica/recordtrac/issues) and let us know what problems or difficulties you encountered in as much detail as you can.
 
-### Local Installation
+### Starting information
+To start, here is the basic starting information you'll need:
+
+* Agency logo: 
+You'll need to be able to link to your agency's logo via url to communicate this application is an official agency website.
+
+
+* Email copy:  The email language can be updated in generic_email.html and new_reqeusts_email.html.
+
+The installation uses a generic set of defaults for email and website copy.  To change these to better reflect your agency's laws and policies, see the [technical documentation](/readme/readme/recordtrac_readme.md).
+
+### Local installation
 
 We recommend you use Vagrant to set up RecordTrac locally. Thanks to @vzvenyach for putting together instructions, which we've slightly modified and can be found here: <https://github.com/postcode/recordtrac-vagrant>
 

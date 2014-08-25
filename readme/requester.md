@@ -55,7 +55,7 @@ image::new_request.png[]
 
 A requester is sent a confirmation email after they submit their request and when a question is asked by an agency employee.
 
-Both requesters and subscribers receive email notifications when:
+Both requesters *and* subscribers receive email notifications when:
 
 * A record is added by am agency employee (This happens every time a record is uploaded. The requester will receive multiple emails if more than one record is uploaded.) 
 * A note is added by an agency employee
@@ -74,11 +74,15 @@ image::answer_question.png[]
 
 A requester can respond to a question asked by an agency employee. This field only appears when an agency staff member asks a question.  Once the requester answers a question, an email is sent to the Point of Contact and Helpers (the individuals responsible for responding to a request). 
 
-## Subscribe to someone else's request
+## Subscribe and unsubscribe to a request
 
+###Subscribe to someone else's request
 image::subscribe.png[]
 
 If an individual is interested in the outcome of a particular request, they can subscribe to a request. They will receive email updates every time a response is added to the particular request and when it's closed.
+
+###Unsubscribe from a request
+**INSERT CONTENT**
 
 ## Share a request via Twitter or Facebook
 

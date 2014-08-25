@@ -120,34 +120,6 @@ Clicking on the pencil icon will allow you to edit the text of the question and 
 
 image::admin_edit_qa.png[]
 
-## How to Change the official Public Records Request (PRR) liaison for a department
-
-To change the Public Record Request (PRR) liaision, or the individual responsible for responding for responding to public records requests for a particular department, visit records.oaklandnet.com/admin/userview.
-
-image::admin_prr_liaison.png[]
-
-You will see a  list of all employees contained in the official agency directory. 
-
-A description of the fields in the table displayed can be found below:
-
-* Contact for: Listing of departments the agency employee is the PRR liaison for. 
-* Back-up for: Listing of departments the agnecy employee is a backup for. 
-* Alias: Name of agency employee.
-
-Clicking on the trashcan icon permanently deletes the user. 
-
-
-To edit the user’s information, click on the pencil icon. You then have the opportunity to edit the user's name, email address, phone number, and which department they are the contact or backup for. 
-
-image::admin_edit_prr_liaison.png[]
-
-Enter one of the department names in the “Contact for” or “Backup For” field. If a user is responsible for multiple departments, separate the department names with a comma.
-
-You can find a list of departments **insert explanation here**
-
-You can delete a user by clicking on the trashcan icon.
-
-image::admin_delete_user.png[]
 
 ## Updating Website Text
 

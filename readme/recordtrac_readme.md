@@ -1,17 +1,24 @@
 #RecordTrac
 This is the home page for documentation for the **RecordTrac** application.
 
-For help contact **oakland |@| codeforamerica.org**
+* [What is RecordTrac](/readme/readme/recordtrac_readme.md#what-is-recordtrac)
+* [How to create a new RecordTrac app](/readme/readme/recordtrac_readme.md#what-is-recordtrac)
+* [Technical details and developer documentation](/readme/readme/recordtrac_readme.md#what-is-recordtrac)
+* [How to use RecordTrac](/readme/readme/recordtrac_readme.md#what-is-recordtrac)
+
+For help contact **info |@| codeforamerica.org**
 
 ##What is RecordTrac?
 RecordTrac is a public record request management tool for government agencies.
 ![RecordTrac](https://github.com/codeforamerica/recordtrac/raw/readme/readme/generic_request.png "RecordTrac")  
 This web application allows government employees manage, respond to, and fulfill incoming requests.  It also provides a quick, simple way for individuals to submit public record requests. RecordTrac displays all requests and responsive documents so that members of the public may find what they need without submitting additional public record requests.
 
-##How to create a new RecordTrac app for your agency
-* [Groundwork](/readme/redeploy.md)
-* [Best Practices](/readme/redeploy.md#best-practices)
-* [Redeploy](/readme/redeploy.md#redeploy)
+[More about RecordTrac...](/readme/readme/about.md)
+
+##[How to create a new RecordTrac app for your agency](/readme/redeploy.md)
+* Groundwork
+* Best Practices
+* Redeploy
 
 ##Technical details
 RecordTrac is primarily a Python application built on a backend Flask framework and a frontend Bootstrap framework.
@@ -37,7 +44,8 @@ RecordTrac is compatible with most modern browsers, including Internet Explorer 
 ###Feature backlog
 Issues and feature backlog are tracked through [GitHub issues](https://github.com/codeforamerica/recordtrac/issues).
 
-##Developers
+**ROLL DEVELOPER DOCS INTO TECHNICAL DETAILS**
+##Developer documentation
 
 ###API Documentation
 **UPDATE LINKS AND CONTENT IN LINKS**
@@ -61,6 +69,7 @@ Issues and feature backlog are tracked through [GitHub issues](https://github.co
 
 **UPDATE LINKS AND CONTENT IN LINKS**
 
+**ROLL THIS INTO TECHNICAL DETAILS**
 ##How to use RecordTrac... as a requester
 * [Search for a record](/readme/requester.md)
 * [Make a new request](/readme/requester.md#make-a-request)
@@ -72,7 +81,3 @@ Issues and feature backlog are tracked through [GitHub issues](https://github.co
 * [Respond to a request](/readme/responder.md#respond-to-a-request)
 * [Admin](/readme/admin.md)
 
-##About
-* [Why was RecordTrac built?](/readme/about.md#why-was-recordtrac-built)
-* [Design principles](/readme/about.md#design-principles)
-* [Research and references](/readme/about.md#research-and-references)
