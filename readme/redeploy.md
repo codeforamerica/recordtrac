@@ -34,56 +34,69 @@ Using the recommended deployment instructions below, the technical operating cos
 If you have problems using RecordTrac, please [open an issue on GitHub](https://github.com/codeforamerica/recordtrac/issues) and let us know what problems or difficulties you encountered in as much detail as you can.
 
 ### Starting information
-To start, here is the basic starting information you'll need:
+To start, here is the minimum information you'll need to supply to get a development environment running:
 
-* Agency logo: 
-You'll need to be able to link to your agency's logo via url to communicate this application is an official agency website.
+* Database
+Use Heroku's Postgres add-on to set up a database, and run 'heroku pg:promote HEROKU_POSTGRESQL_???_URL'.
+
+Technically, that is all you need to get an instance of RecordTrac running with the supplied defaults. But to get a minimum *production* environment running, here's what you need to set:
+
+* Agency name
+Set AGENCY_NAME to the name of your agency, which is used across the site (i.e. "City of Oakland").
+
+* Agency logos (LOGO_ON_WHITE_URL, LOGO_ON_BLACK_URL): 
+These logos are used across the site but appear blank if none are supplied. While not technically required, it is strongly encouraged as they help communicate this application is an official agency website.
+
+* Default point of contact (DEFAULT_OWNER_EMAIL):
+This will be the person that gets contacted about new requests if a department is not selected by the requester, or if no liaisons information is supplied to the application. It is a required field.
+
+* Default point of contact's title (DEFAULT_OWNER_REASON):
+This gets displayed as the reason a request was routed to the default point of contact, and can be simply set to that staff's title/ position within the agency.
+
+* Users
+In order for agency staff to log into RecordTrac, RecordTrac must have access to a list of staff provided via a CSV hosted at the STAFF_URL. An example csv can be found here: https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/staff.csv. 
+
+* Records liaisons
+In order for RecordTrac to route a request to the appropriate contact, a list of liaisons must be provided via a CSV hosted at LIAISONS_URL. An example csv can be found here: https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/liaisons.csv
+
+* Application URL:
+This is the URL you will host RecordTrac on, i.e. records.youragency.gov. It is used in e-mail communication and to generate links automatically, so it must be accurate. This can also be the Heroku URL to start. It is a required field.
+
+* E-mail notifications
+Set DEFAULT_MAIL_SENDER to the e-mail address that shows up in the 'To' field, set MAIL_USERNAME to the SendGrid username you choose, and MAIL_PASSWORD to the SendGrid password. 
+
+* Document hosting
+By default, HOST_URL is set to point to Scribd, but if you decide to host documents internally, you would update this field. If using Scribd, you will need to set SCRIBD_API_KEY and SCRIBD_API_SECRET after setting up a Scribd developer account.
+
+* Spam 
+After setting up Recaptcha and Akismet accounts, update the AKISMET_KEY, RECAPTCHA_PUBLIC_KEY, and RECAPTCHA_PRIVATE_KEY, accordingly.
+
+* Environment
+The ENVIRONMENT field must be set to "PRODUCTION" in Heroku once the application is ready to go live. 
 
 
-* Email copy:  The email language can be updated in generic_email.html and new_reqeusts_email.html.
+### Additional information 
 
-The installation uses a generic set of defaults for email and website copy.  To change these to better reflect your agency's laws and policies, see the [technical documentation](/readme/readme/recordtrac_readme.md).
+Here is additional functionality that is not *required* for a functional instance of RecordTrac, but may be useful.
+
+* Admin list:
+This will enable access to the admin panel of the application. Set LIST_OF_ADMINS with a comma separated list of e-mail addresses, i.e. "person1@agency.gov,person2@agency.gov".  
+
+* Due dates and extensions
+You can update these variables to reflect your agency's policy. By default, the due date is calculated 10 days from date of submission (DAYS_TO_FULFILL), extended 14 additional days (DAYS_AFTER_EXTENSION) if the request is extended, and notifications for requests that are due soon are calculated 2 days until they are due (DAYS_UNTIL_OVERDUE).
+
+* Secret key
+The Flask application requires a SECRET_KEY to be set - though a not-so-secret one is provided by default, you can randomly generate a key here: [update].
+
+* Feedback form
+You can hook the application up to a Google feedback form by setting the GOOGLE_FEEDBACK_FORM_ID to the form ID corresponding to a Google spreadsheet. 
+
+
+The installation uses a generic set of defaults for email and website copy.  To change these to better reflect your agency's laws and policies, see the [technical documentation](/readme/readme/recordtrac_readme.md). [UPDATE: or link to "Updating Website Text" in Admin section]
 
 ### Local installation
 
-We recommend you use Vagrant to set up RecordTrac locally. Thanks to @vzvenyach for putting together instructions, which we've slightly modified and can be found here: <https://github.com/postcode/recordtrac-vagrant>
-
-Otherwise, feel free to set up per instructions below.
-
-#### Mac OS X Pre-requisites
-
-This application requires [Postgres](http://www.postgresapp.com/) and Xcode developer tools to be installed.
-
-    /Applications/Postgres.app/Contents/MacOS/bin/psql
-    CREATE DATABASE recordtrac;
-
-#### Ubuntu Pre-requisites
-
-Install Postgres, Python, and other required packages.
-
-    sudo apt-get update
-    sudo apt-get install -y git
-    sudo apt-get install -y postgresql-9.1 postgresql-server-dev-9.1 python-dev
-    sudo apt-get install -y python-pip
-
-#### Postgres & Python
-
-If you are using a standard Postgres installation or from [Homebrew](http://mxcl.github.com/homebrew/) you can also use:
-
-    sudo -u postgres createuser -P -s -e testuser
-    sudo -u postgres createdb recordtrac
-
-In a new window:
-
-    git clone git://github.com/postcode/recordtrac.git
-    cd recordtrac
-    sudo pip install -r requirements.txt
-    cp .env.example .env
-    sed -i 's/localhost/testuser\:testpwd\@localhost/g' .env
-
-Update relevant fields in .env.
-
-    vi .env
+Instructions for local installation can be found here (UPDATE).
 
 #### Other Accounts
 
@@ -91,36 +104,5 @@ To use e-mail, sign up for a free account with SendGrid and provide the username
 
 To be able to catch spammy input, sign up for a free account with [Akismet](http://akismet.com/plans/) and provide the application URL and Akismet key in `APPLICATION_URL` and `AKISMET_KEY`.
 
-#### Run locally
-
-If creating the database for the first time, run:
-
-    foreman run python db_setup.py
-
-There are two external data sources the application depends upon: staff directory information (stored in public_records_portal/static/json/directory.json) and information about the departments within the agency (stored in public_records_portal/static/json/departments.json). The data provided is from the City of Oakland, but you should update these files to meet your needs.
-
-To seed the application with user data (as provided in the above two files), requests and responses, run:
-
-    foreman run python db_seed.py
-
-To use the application locally, exit out of python and run:
-
-    foreman start
-
-
-You should see something similar to:
-
-    2013-05-06 12:16:53 [1776] [INFO] Starting gunicorn 0.17.4
-    2013-05-06 12:16:53 [1776] [INFO] Listening at: http://127.0.0.1:5000 (1776)
-    2013-05-06 12:16:53 [1776] [INFO] Using worker: sync
-    2013-05-06 12:16:53 [1779] [INFO] Booting worker with pid: 1779
-    2013-05-06 12:16:53 [1780] [INFO] Booting worker with pid: 1780
-
-Navigate to the url (in this case, http://127.0.0.1:5000) in your browser.
-
-**EDIT**You can now login with any e-mail address and the password 'admin'.**EDIT**
-
-### Hosted Installation
-**TBD**
 
 <!-- [![Build Status](https://travis-ci.org/codeforamerica/public-records.png?branch=master)](https://travis-ci.org/codeforamerica/public-records) -->
