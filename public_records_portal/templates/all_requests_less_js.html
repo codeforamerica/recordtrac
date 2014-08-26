@@ -25,11 +25,11 @@
 
 {% block container %}
 
-  <div class="row-fluid">
+  <div class="row-fluid" >
     <div class="span11 offset1">  
 
       <div class="row-fluid">
-          <div class="span9">
+          <div class="span11">
               <div id="exploreTitle">
                 <h3>Explore <span class="badge">{{total_requests_count}}</span> requests and counting</h3>
                 <a href="/new" class="btn btn-primary btn-large pull-right">Request new record</a>
@@ -45,17 +45,17 @@
 
     <form id ="all_requests_form" name="all_requests" action="/requests" method="GET"> 
       <div class="row-fluid" style="padding-bottom: 5%;">
-        <div class="span3" style="padding-top: 45px;">
-          
-          <button class="btn btn-primary input-block-level" type="submit" value="Submit">Find</button>
-
+        <div class="span4">
+          <div class="well well-small" style="padding-bottom: 3.5em;">              
             <h5>Search request text</h5>
             <div>
-              <input class="input-block-level" name="search_term" type="search" value="{{search_term or ''}}" placeholder="I'd like to find...">
+              <input class="span12" name="search_term" type="search" value="{{search_term or ''}}" placeholder="I'd like to find...">
             </div>
-                                          
-            <!-- <h4 class="underline">ADVANCED FILTER</h4> -->
-            {% if current_user.is_authenticated() %}
+            
+            <div class="row-fluid">                     
+              <!-- <h4 class="underline">ADVANCED FILTER</h4> -->
+              {% if current_user.is_authenticated() %}
+              <div class="span6">
                 <h5>My requests</h5>
                 <div class="indent">
                     <label class="checkbox">
@@ -67,40 +67,44 @@
                       <em>as Helper</em>
                     </label>
                 </div>
-            {% endif %}
+              </div>
+              {% endif %}
 
-            <h5>Status</h5>
-            <div class="indent" style="padding-bottom: 15px;">
-                <label class="checkbox">
-                  <input type="checkbox" name="is_open" {% if is_open %} checked {% endif %} />
-                  <em class="open_style">Open</em>
-                </label>
-              {% if current_user.is_authenticated() %}
-                <label class="checkbox">
-                  <input type="checkbox" name="due_soon" {% if due_soon %} checked {% endif %} />
-                  <em class="duesoon_style">Due Soon</em>
-                </label>
-                <label class="checkbox">
-                  <input type="checkbox" name="overdue" {% if overdue %} checked {% endif %} />
-                  <em class="overdue_style">Overdue</em>
-                </label>
-                {% endif %}
-                <label class="checkbox">
-                  <input type="checkbox" name="is_closed" {% if is_closed %} checked {% endif %} /> 
-                  <em class="closed_style">Closed</em>
-                </label>
+              <div class="span6">
+                <h5>Status</h5>
+                <div class="indent">
+                  <label class="checkbox">
+                    <input type="checkbox" name="is_open" {% if is_open %} checked {% endif %} />
+                    <em class="open_style">Open</em>
+                  </label>
+                {% if current_user.is_authenticated() %}
+                  <label class="checkbox">
+                    <input type="checkbox" name="due_soon" {% if due_soon %} checked {% endif %} />
+                    <em class="duesoon_style">Due Soon</em>
+                  </label>
+                  <label class="checkbox">
+                    <input type="checkbox" name="overdue" {% if overdue %} checked {% endif %} />
+                    <em class="overdue_style">Overdue</em>
+                  </label>
+                  {% endif %}
+                  <label class="checkbox">
+                    <input type="checkbox" name="is_closed" {% if is_closed %} checked {% endif %} /> 
+                    <em class="closed_style">Closed</em>
+                  </label>
+                </div>
+              </div>
             </div>
-          
+            
             <h5>Date received</h5>
             <div class="control-group">
-                <input type="date" 
-                       name="min_date_received"
-                       value="{{ min_date_received }}"
-                       class="input-block-level" > 
-                <input type="date" 
-                       name="max_date_received"
-                       value="{{ max_date_received }}"
-                       class="input-block-level" > 
+              <input type="date" 
+                     name="min_date_received"
+                     value="{{ min_date_received }}"
+                     class="span12" > 
+              <input type="date" 
+                     name="max_date_received"
+                     value="{{ max_date_received }}"
+                     class="span12" > 
             </div>
 
             {% if current_user.is_authenticated() %}
@@ -109,21 +113,21 @@
                   <input type="date" 
                          name="min_due_date"
                          value="{{ min_due_date }}"
-                         class="input-block-level" > 
+                         class="span12" > 
                   <input type="date" 
                          name="max_due_date"
                          value="{{ max_due_date }}"
-                         class="input-block-level" > 
+                         class="span12" > 
               </div>
-                <h5>Requester name</h5>
-                <div>
-                  <input class="input-block-level" name="requester_name" type="search" placeholder="Enter name" value="{{requester_name or ''}}">
-                </div>
+              <h5>Requester name</h5>
+              <div>
+                <input class="span12" name="requester_name" type="search" placeholder="Enter name" value="{{requester_name or ''}}">
+              </div>
             {% endif %} 
 
             <h5>Department</h5>
-            <div class="row-fluid">
-                <select name="departments_selected" class="selectpicker span10" multiple data-selected-text-format="count" data-size="5">
+            <div class="control-group">
+                <select name="departments_selected" class="selectpicker span12" multiple data-selected-text-format="count" data-size="5">
                   {% for department in departments %}
                     {% if departments_selected and department.name in departments_selected %}
                       <option selected>{{department.name}}</option>
@@ -134,19 +138,20 @@
                 </select>
             </div>
 
-            <button class="btn btn-primary input-block-level" type="submit" value="Submit">Find</button>
+            <button class="btn btn-primary span12" style="margin-left: 0px;" type="submit" value="Submit">Find</button>
+          </div>
 
-            {% if current_user.is_authenticated() %}
-              <div class="row-fluid">
-                <p class="text-center" style="padding-top: 2em;">
-                  <a href="/export"> <i class="icon-download"></i> Export data</a>
-                </p>
-              </div>
-            {% endif %}
+          {% if current_user.is_authenticated() %}
+            <div class="row-fluid">
+              <p class="text-center">
+                <a href="/export"> <i class="icon-download"></i> Export data</a>
+              </p>
+            </div>
+          {% endif %}
 
         </div>
 
-        <div class="span8">
+        <div class="span7">
    
           <table id="requests">
               <thead id="headings">
@@ -223,10 +228,10 @@
             </ul>
           </div>
 
-          
         </div>
       </div>
-          </form>
+    </form>
+
     </div>
   </div>
 
