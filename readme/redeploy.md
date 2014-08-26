@@ -57,10 +57,7 @@ Set `AGENCY_NAME` to the name of your agency, which is used across the site (ex.
 `DEFAULT_OWNER_REASON` gets displayed as the reason a request was routed to the default point of contact, and can be simply set to that staff's title/ position within the agency.
 
 * **Users**
-In order for agency staff to log into RecordTrac, RecordTrac must have access to a list of staff provided via a CSV hosted at the `STAFF_URL`. It must be a [delimiter]-separated file with name, email, department name, and phone number columns - in that order. 
-
-![Smaller icon](/readme/images/staff-csv.png "Title here")
-
+In order for agency staff to log into RecordTrac, RecordTrac must have access to a list of staff provided via a CSV hosted at the `STAFF_URL`. It must be a [delimiter]-separated file with name, email, department name, and phone number columns - in that order. ![Staff csv](/readme/images/staff-csv.png "staff csv")
 An example csv can be found here: <https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/staff.csv>. 
 
 * Records liaisons
