@@ -1,17 +1,24 @@
 #RecordTrac
 This is the home page for documentation for the **RecordTrac** application.
 
-For help contact **oakland |@| codeforamerica.org**
+* [What is RecordTrac](/readme/readme/recordtrac_readme.md#what-is-recordtrac)
+* [How to create a new RecordTrac app](/readme/readme/recordtrac_readme.md#what-is-recordtrac)
+* [Technical details and developer documentation](/readme/readme/recordtrac_readme.md#what-is-recordtrac)
+* [How to use RecordTrac](/readme/readme/recordtrac_readme.md#what-is-recordtrac)
+
+For help contact **info |@| codeforamerica.org**
 
 ##What is RecordTrac?
 RecordTrac is a public record request management tool for government agencies.
 ![RecordTrac](https://github.com/codeforamerica/recordtrac/raw/readme/readme/generic_request.png "RecordTrac")  
 This web application allows government employees manage, respond to, and fulfill incoming requests.  It also provides a quick, simple way for individuals to submit public record requests. RecordTrac displays all requests and responsive documents so that members of the public may find what they need without submitting additional public record requests.
 
-##How to create a new RecordTrac app for your agency
-* [Groundwork](/redeploy.md)
-* [Best Practices](/redeploy.md#best-practices)
-* [Redeploy](/redeploy.md#redeploy)
+[More about RecordTrac...](/readme/readme/about.md)
+
+##[How to create a new RecordTrac app for your agency](/readme/redeploy.md)
+* Groundwork
+* Best Practices
+* Redeploy
 
 ##Technical details
 RecordTrac is primarily a Python application built on a backend Flask framework and a frontend Bootstrap framework.
@@ -37,34 +44,40 @@ RecordTrac is compatible with most modern browsers, including Internet Explorer 
 ###Feature backlog
 Issues and feature backlog are tracked through [GitHub issues](https://github.com/codeforamerica/recordtrac/issues).
 
-##Developers
+**ROLL DEVELOPER DOCS INTO TECHNICAL DETAILS**
+##Developer documentation
 
 ###API Documentation
-* [API](http://codeforamerica.github.io/public-records/docs/1.0.0/api.html)
+**UPDATE LINKS AND CONTENT IN LINKS**
+
+* [API](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/api.html)
+
+**UPDATE LINKS AND CONTENT IN LINKS**
 
 ###Source Code
 * [Source Code](https://github.com/codeforamerica/recordtrac)
 * [Issue Tracker](https://github.com/codeforamerica/recordtrac/issues)
 
 ###Developer Documentation
-* [Db Helpers](http://codeforamerica.github.io/public-records/docs/1.0.0/db-helpers.html)
-* [Departments](http://codeforamerica.github.io/public-records/docs/1.0.0/departments.html)
-* [Models](http://codeforamerica.github.io/public-records/docs/1.0.0/models.html)
-* [Notifications](http://codeforamerica.github.io/public-records/docs/1.0.0/notifications.html)
-* [PRR](http://codeforamerica.github.io/public-records/docs/1.0.0/prr.html)
+**UPDATE LINKS AND CONTENT IN LINKS**
 
+* [Db Helpers](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/db-helpers.html)
+* [Departments](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/departments.html)
+* [Models](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/models.html)
+* [Notifications](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/notifications.html)
+* [PRR](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/prr.html)
+
+**UPDATE LINKS AND CONTENT IN LINKS**
+
+**ROLL THIS INTO TECHNICAL DETAILS**
 ##How to use RecordTrac... as a requester
-* [Search for a record](/requester.md)
-* [Make a new request](/requester.md#make-a-request)
+* [Search for a record](/readme/requester.md)
+* [Make a new request](/readme/requester.md#make-a-request)
 
 ##How to use RecordTrac... as an agency employee
-* [Search for a record](/responder.md)
-* [Manage your request list](/responder.md#manage-your-request-list)
-* [Make a new request](/responder.md#make-a-new-request)
-* [Respond to a request](/responder.md#respond-to-a-request)
-* [Admin](/admin.md)
+* [Search for a record](/readme/responder.md)
+* [Manage your request list](/readme/responder.md#manage-your-request-list)
+* [Make a new request](/readme/responder.md#make-a-new-request)
+* [Respond to a request](/readme/responder.md#respond-to-a-request)
+* [Admin](/readme/admin.md)
 
-##About
-* [Why was RecordTrac built?](http://codeforamerica.github.io/public-records/docs/1.0.0/about.html#_why_was_recordtrac_built)
-* [Design Principles](http://codeforamerica.github.io/public-records/docs/1.0.0/about.html#_design_principles)
-* [Research and references](http://codeforamerica.github.io/public-records/docs/1.0.0/about.html#_research_and_references)

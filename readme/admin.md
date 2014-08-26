@@ -9,7 +9,7 @@ RecordTrac’s administrative controls allows the users to:
 * [Edit or remove the text of a note](#how-to-remove-or-edit-a-note)
 * [Edit or remove a question or answer](#how-to-remove-or-edit-a-question-and-answer-exchange)
 * [Add or remove a Public Records Request (PRR) liaison](#how-to-change-the-official-public-records-request-prr-liaison-for-a-department)
-* [Update your RecordTrac website text](#updating-website-copy)
+* [Update your RecordTrac website text](#updating-website-text)
 
 The administrative controls allows the user to permanently delete records, requests, and notes from the database. Because of this, administrative access should be restricted to a small number of users. 
 
@@ -120,34 +120,6 @@ Clicking on the pencil icon will allow you to edit the text of the question and 
 
 image::admin_edit_qa.png[]
 
-## How to Change the official Public Records Request (PRR) liaison for a department
-
-To change the Public Record Request (PRR) liaision, or the individual responsible for responding for responding to public records requests for a particular department, visit records.oaklandnet.com/admin/userview.
-
-image::admin_prr_liaison.png[]
-
-You will see a  list of all employees contained in the official agency directory. 
-
-A description of the fields in the table displayed can be found below:
-
-* Contact for: Listing of departments the agency employee is the PRR liaison for. 
-* Back-up for: Listing of departments the agnecy employee is a backup for. 
-* Alias: Name of agency employee.
-
-Clicking on the trashcan icon permanently deletes the user. 
-
-
-To edit the user’s information, click on the pencil icon. You then have the opportunity to edit the user's name, email address, phone number, and which department they are the contact or backup for. 
-
-image::admin_edit_prr_liaison.png[]
-
-Enter one of the department names in the “Contact for” or “Backup For” field. If a user is responsible for multiple departments, separate the department names with a comma.
-
-You can find a list of departments **insert explanation here**
-
-You can delete a user by clicking on the trashcan icon.
-
-image::admin_delete_user.png[]
 
 ## Updating Website Text
 
@@ -155,14 +127,14 @@ The web copy is not managed through the admin section. To update the copy on the
 
 The copy for the web application can be found in the following .json files:
 
-**update**
+**EDIT**
 
 * Action.json describes the actions a member of the public can take to submit a request, as well as the actions to be taken by a agency employee. The text from this file is used for the website's copy. It tells users what will happen when they use a particular feature and who will be able to view the messages or documents uploaded. 
 * Notcityrecords.json: When a member of the public types in a particular word or phrase pertaining to a record not possessed by the City of Oakland while submitting a request, a message pops up explaining to the user they need to contact another municipality. This file keeps track of all the phrases and messages.
 * Prr_help.json: This is the copy displayed on the "New Request" page. It includes tips for submitting a public records request, as well as three examples of public records requests. 
 * Tutorial.json: The copy for the tutorial can be found here. 
 
-**update**
+**EDIT**
 
 All of the HTML files are stored in the templates folder. The names of the files are pretty self-explanatory, and it is simple to find the file that corresponds to each webpage. For example to edit the About page at http://records.oaklandnet.com/about, you must modify the 'about.html' file. 
 
@@ -178,7 +150,7 @@ image::reset_password.png[]
 
 image::app_status.png[]
 
-There is a quick way for adminstrators to check on the status of the application. Visit http://records.oaklandnet.com/.well-known/status[records.oaklandnet.com/.well-known/status] to get a quick confirmation of whether the app is working.
+There is a quick way for adminstrators to check on the status of the application. Visit **EDIT [http://records.oaklandnet.com/.well-known/status](records.oaklandnet.com/.well-known/status) to get a quick confirmation of whether the app is working. EDIT**
 
 If the status is 'ok,' it means the app is working properly and users should not encounter any problems.
 
