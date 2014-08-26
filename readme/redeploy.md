@@ -35,6 +35,8 @@ If you have problems using RecordTrac, please [open an issue on GitHub](https://
 
 ### Initial Setup
 
+**THERE ARE SOME INTERIM STEPS BEFORE CREATING A DATABASE**
+
 ### Deploy RecordTrac
 To start, here is the minimum information you'll need to supply to get a development environment running:
 
@@ -56,50 +58,50 @@ Set `AGENCY_NAME` to the name of your agency, which is used across the site (ex.
 * **Default point of contact's title**:
 `DEFAULT_OWNER_REASON` gets displayed as the reason a request was routed to the default point of contact, and can be simply set to that staff's title/ position within the agency.
 
-* **Users**
+* **Users**:
 In order for agency staff to log into RecordTrac, RecordTrac must have access to a list of staff provided via a CSV hosted at the `STAFF_URL`. It must be a [delimiter]-separated file with name, email, department name, and phone number columns - in that order. Here's an [example csv](https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/staff.csv). ![Staff csv](/readme/images/staff-csv.png "staff csv")
 
-* Records liaisons
-In order for RecordTrac to route a request to the appropriate contact, a list of liaisons must be provided via a CSV hosted at LIAISONS_URL. An example csv can be found here: https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/liaisons.csv
+* **Records liaisons**:
+In order for RecordTrac to route a request to the appropriate contact, a list of liaisons must be provided via a CSV hosted at `LIAISONS_URL`. Here's an [example csv](https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/liaisons.csv). ![Liaisons csv](/readme/images/liaisons-csv.png "liaisons csv")
 
-* Application URL:
-This is the URL you will host RecordTrac on, i.e. records.youragency.gov. It is used in e-mail communication and to generate links automatically, so it must be accurate. This can also be the Heroku URL to start. It is a required field.
+* **Application URL**:
+This is the URL you will host RecordTrac on, ex. `APPLICATION_URL=records.youragency.gov`. It is used in e-mail communication and to generate links automatically, so it must be accurate. This can also be the Heroku URL to start. It is a required field.
 
-* E-mail notifications
-Set DEFAULT_MAIL_SENDER to the e-mail address that shows up in the 'To' field, set MAIL_USERNAME to the SendGrid username you choose, and MAIL_PASSWORD to the SendGrid password. 
+* **Document hosting**:
+By default, `HOST_URL` is set to point to Scribd, but if you decide to host documents internally, you would update this field. If using Scribd, you will need to set `SCRIBD_API_KEY` and `SCRIBD_API_SECRET` after setting up a Scribd developer account.
 
-* Document hosting
-By default, HOST_URL is set to point to Scribd, but if you decide to host documents internally, you would update this field. If using Scribd, you will need to set SCRIBD_API_KEY and SCRIBD_API_SECRET after setting up a Scribd developer account.
+* **E-mail notifications**:
+Set `DEFAULT_MAIL_SENDER` to the e-mail address that shows up in the 'To' field, set `MAIL_USERNAME` to the SendGrid username you choose, and `MAIL_PASSWORD` to the SendGrid password. 
 
-* Spam 
-After setting up Recaptcha and Akismet accounts, update the AKISMET_KEY, RECAPTCHA_PUBLIC_KEY, and RECAPTCHA_PRIVATE_KEY, accordingly.
+* **Spam**:
+After setting up Recaptcha and Akismet accounts, update the `AKISMET_KEY`, `RECAPTCHA_PUBLIC_KEY`, and `RECAPTCHA_PRIVATE_KEY`, accordingly.
 
-* Environment
-The ENVIRONMENT field must be set to "PRODUCTION" in Heroku once the application is ready to go live. 
+* **Environment**:
+The `ENVIRONMENT` field must be set to `ENVIRONMENT='PRODUCTION'` in Heroku once the application is ready to go live. 
 
 
 ### Additional Setup 
 
 Here is additional functionality that is not *required* for a functional instance of RecordTrac, but may be useful.
 
-* Admin list:
-This will enable access to the admin panel of the application. Set LIST_OF_ADMINS with a comma separated list of e-mail addresses, i.e. "person1@agency.gov,person2@agency.gov".  
+* **Admin list**:
+This will enable access to the admin panel of the application. Set `LIST_OF_ADMINS` with a comma separated list of e-mail addresses, i.e. "person1@agency.gov,person2@agency.gov".  
 
-* Due dates and extensions
-You can update these variables to reflect your agency's policy. By default, the due date is calculated 10 days from date of submission (DAYS_TO_FULFILL), extended 14 additional days (DAYS_AFTER_EXTENSION) if the request is extended, and notifications for requests that are due soon are calculated 2 days until they are due (DAYS_UNTIL_OVERDUE).
+* **Due dates and extensions**:
+You can update these variables to reflect your agency's policy. By default, the due date is calculated 10 days from date of submission (`DAYS_TO_FULFILL`), extended 14 additional days if the request is extended (`DAYS_AFTER_EXTENSION`), and notifications for requests that are due soon are calculated 2 days until they are due (`DAYS_UNTIL_OVERDUE`).
 
-* Secret key
-The Flask application requires a SECRET_KEY to be set - though a not-so-secret one is provided by default, you can randomly generate a key here: [update].
+* **Secret key**:
+The Flask application requires a `SECRET_KEY` to be set - though a not-so-secret one is provided by default, you can randomly generate a key here: **[update]**.
 
-* Feedback form
-You can hook the application up to a Google feedback form by setting the GOOGLE_FEEDBACK_FORM_ID to the form ID corresponding to a Google spreadsheet. 
+* **Feedback form**:
+You can hook the application up to a Google feedback form by setting the `GOOGLE_FEEDBACK_FORM_ID` to the form ID corresponding to a Google spreadsheet. 
 
 
-The installation uses a generic set of defaults for email and website copy.  To change these to better reflect your agency's laws and policies, see the [technical documentation](/readme/readme/recordtrac_readme.md). [UPDATE: or link to "Updating Website Text" in Admin section]
+The installation uses a generic set of defaults for email and website copy.  To change these to better reflect your agency's laws and policies, see the [technical documentation](/readme/readme/recordtrac_readme.md). **[UPDATE: or link to "Updating Website Text" in Admin section]**
 
 ### Local installation
 
-Instructions for local installation can be found here (UPDATE).
+Instructions for local installation can be found here **(UPDATE)**.
 
 #### Other Accounts
 
