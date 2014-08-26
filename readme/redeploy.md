@@ -59,7 +59,7 @@ Set `AGENCY_NAME` to the name of your agency, which is used across the site (ex.
 * **Users**
 In order for agency staff to log into RecordTrac, RecordTrac must have access to a list of staff provided via a CSV hosted at the `STAFF_URL`. It must be a [delimiter]-separated file with name, email, department name, and phone number columns - in that order. 
 
-![Smaller icon](/readme/readme/images/staff-csv.png "Title here")
+![Smaller icon](/readme/images/staff-csv.png "Title here")
 
 An example csv can be found here: <https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/staff.csv>. 
 
