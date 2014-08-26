@@ -33,28 +33,35 @@ Using the recommended deployment instructions below, the technical operating cos
 
 If you have problems using RecordTrac, please [open an issue on GitHub](https://github.com/codeforamerica/recordtrac/issues) and let us know what problems or difficulties you encountered in as much detail as you can.
 
-### Starting information
+### Initial Setup
+
+### Deploy RecordTrac
 To start, here is the minimum information you'll need to supply to get a development environment running:
 
-* Database
-Use Heroku's Postgres add-on to set up a database, and run 'heroku pg:promote HEROKU_POSTGRESQL_???_URL'.
+#### Create a database
+Use Heroku's Postgres add-on to set up a database, and run `heroku pg:promote HEROKU_POSTGRESQL_???_URL`.
 
-Technically, that is all you need to get an instance of RecordTrac running with the supplied defaults. But to get a minimum *production* environment running, here's what you need to set:
+Technically, that is all you need to get an instance of RecordTrac running with the supplied defaults. But to get a minimum *production* environment running, here's what you need to set the following additional parameters.
 
-* Agency name
-Set AGENCY_NAME to the name of your agency, which is used across the site (i.e. "City of Oakland").
+#### Set environment variables
+* **Agency name**): 
+Set `AGENCY_NAME` to the name of your agency, which is used across the site (ex. "City of Oakland").
 
-* Agency logos (LOGO_ON_WHITE_URL, LOGO_ON_BLACK_URL): 
-These logos are used across the site but appear blank if none are supplied. While not technically required, it is strongly encouraged as they help communicate this application is an official agency website.
+* **Agency logos**: 
+`LOGO_ON_WHITE_URL`, `LOGO_ON_BLACK_URL` are used across the site but appear blank if none are supplied. The "LOGO_ON_WHITE" is used for general in-page representation, primarily the landing page.  The "LOGO_ON_BLACK" is used for the navbar.  We recommend using an image with a transparent background.  While these logos are not technically required, it is strongly encouraged as they help communicate this application is an official agency website.  
 
-* Default point of contact (DEFAULT_OWNER_EMAIL):
-This will be the person that gets contacted about new requests if a department is not selected by the requester, or if no liaisons information is supplied to the application. It is a required field.
+* **Default point of contact**:
+`DEFAULT_OWNER_EMAI`L will be the person that gets contacted about new requests if a department is not selected by the requester, or if no liaisons information is supplied to the application. It is a required field.
 
-* Default point of contact's title (DEFAULT_OWNER_REASON):
-This gets displayed as the reason a request was routed to the default point of contact, and can be simply set to that staff's title/ position within the agency.
+* **Default point of contact's title**:
+`DEFAULT_OWNER_REASON` gets displayed as the reason a request was routed to the default point of contact, and can be simply set to that staff's title/ position within the agency.
 
-* Users
-In order for agency staff to log into RecordTrac, RecordTrac must have access to a list of staff provided via a CSV hosted at the STAFF_URL. An example csv can be found here: https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/staff.csv. 
+* **Users**
+In order for agency staff to log into RecordTrac, RecordTrac must have access to a list of staff provided via a CSV hosted at the `STAFF_URL`. It must be a [delimiter]-separated file with name, email, department name, and phone number columns - in that order. 
+
+![Smaller icon](/readme/readme/images/staff-csv.png "Title here")
+
+An example csv can be found here: <https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/staff.csv>. 
 
 * Records liaisons
 In order for RecordTrac to route a request to the appropriate contact, a list of liaisons must be provided via a CSV hosted at LIAISONS_URL. An example csv can be found here: https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/liaisons.csv
@@ -75,7 +82,7 @@ After setting up Recaptcha and Akismet accounts, update the AKISMET_KEY, RECAPTC
 The ENVIRONMENT field must be set to "PRODUCTION" in Heroku once the application is ready to go live. 
 
 
-### Additional information 
+### Additional Setup 
 
 Here is additional functionality that is not *required* for a functional instance of RecordTrac, but may be useful.
 
