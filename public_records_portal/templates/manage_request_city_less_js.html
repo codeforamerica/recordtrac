@@ -44,12 +44,83 @@
 
 {% block clarify_request %}
   <!-- ask a question -->
-  {% include '_ask_question.html' %}
+  <form name="ask_question" id="question" class="form-inline" style="margin: 10px 0px 15px 0px;" method="post" action="/add_a_qa" autocomplete="on">
+    <input type="hidden" name="request_id" value="{{ req.id }}"/>
+    <fieldset>
+      <label>Ask a question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+      <textarea id="questionTextarea"  name="question_text" class="input-xlarge" placeholder="Ask the requester a question" required/></textarea> 
+      <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
+    </fieldset>
+  </form>
 {% endblock clarify_request %}
 
-{% block response_actions %}
-  {% include '_response_widget.html' %}
-{% endblock response_actions %}
+{% block response_actions_lessjs %}
+  <h3 style="margin-top:40px;">Response actions</h3>
+  <!-- upload a record -->
+  <form name="input_doc" style="margin-top: 10px;" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data">
+    <input type="hidden" name="request_id" value="{{ req.id }}"/>
+    <fieldset>
+      <legend>Add a record</legend>
+      <div class="row-fluid">
+        <!-- name of record -->
+        <div class="control-group">
+          <label class="control-label" for="recordSummary">Name of record</label>
+          <div class="controls">
+            <textarea class="input-xxlarge" rows="1" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of the record" required /></textarea>
+          </div>
+        </div>
+        <!-- upload a record -->
+        <div class="control-group">
+          <label class="control-label">Upload a record <span id="recordTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Upload a document" | explain_action}}" ><small><i class="icon-info-sign"></i></small></span></label>
+          <div class="row-fluid">
+            <div class="controls">
+              <div class="fileupload fileupload-new" data-provides="fileupload">
+                <div class="input-append">
+                  <div class="uneditable-input span3">
+                    <i class="icon-file fileupload-exists"></i>
+                    <span class="fileupload-preview" />
+                  </div>
+                  <span class="btn btn-file">
+                    <span class="fileupload-new">Select file</span>
+                    <span class="fileupload-exists">Change</span>
+                    <input type="file" name="record" />
+                  </span>
+                  <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- link to a record -->
+        <div class="control-group">
+          <label class="control-label">Or provide a link to a record <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a link" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></label>
+          <div class="row-fluid">
+            <div class="controls">
+              <input type="text" name="link_url" id="inputUrl" class="input-xxlarge"/>
+              <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
+            </div>
+          </div>
+        </div>
+        <!-- offline record -->
+        <div class="control-group button-margin">
+          <label class="control-label">Or indicate how the record can be accessed offline <span id="offlinedocTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Describe hard copies" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></label>
+          <div class="row-fluid">
+            <div class="controls">
+              <textarea class="input-xxlarge" id="offlineDoc_textarea" name="record_access" rows="3" placeholder="How can the requester get this record?  Ex. 'Sent via mail on a CD', 'Print out awaiting requester at City Clerk desk'" ></textarea>
+            </div>
+          </div>
+        </div>
+        <!-- submission -->
+        <div class="control-group">
+          <div class="controls">
+            <button type="submit" class="btn btn-primary">Add record</button>
+          </div>
+        </div>
+
+      </div>
+    </fieldset>
+  </form>
+{% endblock response_actions_lessjs %}
 
 {% block sidebar %}
 
