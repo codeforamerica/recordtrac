@@ -11,6 +11,7 @@ from public_records_portal import db, app
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
 import re
+from validate_email import validate_email
 
 
 ### @export "User"
@@ -47,7 +48,8 @@ class User(db.Model):
 			return self.phone
 		return "N/A"
 	def __init__(self, email=None, alias = None, phone=None, department = None, contact_for=None, backup_for=None, is_staff = False):
-		self.email = email
+		if email and validate_email(email):
+			self.email = email
 		self.alias = alias
 		if phone and phone != "":
 			self.phone = phone

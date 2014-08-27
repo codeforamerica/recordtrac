@@ -64,49 +64,6 @@
 }
 
 
-
-/* logout button */
-	input.btn-link {
-		text-shadow: none;
-		color: #999;
-		font-size: small;
-	}
-
-	input.btn-link:hover {
-		color: #17B292;
-		text-decoration: none;
-	}
-
-/* name in navbar */
-	p.navbar-text {
-		color: #eee !important;
-	}
-
-/* login dropdown */
-	form#loginForm.form-horizontal {
-		margin-bottom: 10px;
-	}
-
-	form#loginForm.form-horizontal input.input-medium {
-		margin-bottom: 10px;
-	}
-
-	li.dropdown.open div.dropdown-menu {
-		padding-bottom: 5px !important;
-	}
-
-	li.dropdown.open div.dropdown-menu a {
-		padding-left: 17%;
-	}
-
-	li.dropdown.open div.dropdown-menu.active a {
-		background-color: transparent;
-	}
-
-
-
-
-
 /* validation style */
 /*label.valid {
   width: 24px;
@@ -136,11 +93,6 @@ label.error {
 	color: #606060  ;
 }*/
 
-/* make login form appear inline */
-	form#loginForm.navbar-form.pull-right {
-		margin-top: 0.5em;
-	}
-
 /* all infotips appear as superscript */
 	.icon-info-sign {
 		vertical-align: super;
@@ -151,30 +103,9 @@ label.error {
 		text-align: left ;
 	}
 
-/* all popovers fit size to content */
-	.helpPopover {
-		width: 200px !important;
-	}
 
-/* pull history popover back into view */
-/*#historyPopover {
-	margin-right: 20%;
-}*/
 
-/* gives the responses a bit more white space between */
-.response {
-	padding-top: 2%;
-}
 
-/* gives the close button a bit of breathing room */
-#closeRequest {
-	margin-bottom: 10%;
-}
-
-/* gives the create request button a bit of breathing room */
-#requestButton {
-	margin-bottom: 20%;
-}
 
 /* ----- Sticky Footer ----- by Ryan Fait http://ryanfait.com/sticky-footer/ ----- */
 * {
@@ -193,67 +124,7 @@ html, body {
 	height: 5em; /* .push must be the same height as .footer */
 	margin-bottom: 0px; /* custom: added to fix the Bootstrap well margins */
 }
-/*#footer p.text-center {
-	margin-bottom: 5px;
-}*/
 
 
-/* REQUESTS VIZ CSS --- */
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
 
-.bar {
-  fill: #999;
-}
-
-.bar:hover {
-  fill: #FB991B ;
-}
-
-.no-line.axis path {
-  display: none;
-}
-
-.axis text {
-  font-size: 12px;
-  text-anchor: left;
-}
-
-.no-line.axis {
-  width: 50px;
-  overflow: hidden;
-}
-
-.d3-tip {
-  line-height: 1;
-  font-weight: bold;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  border-radius: 2px;
-}
-
-/* Creates a small triangle extender for the tooltip */
-.d3-tip:after {
-  box-sizing: border-box;
-  display: inline;
-  font-size: 10px;
-  width: 100%;
-  line-height: 1;
-  color: rgba(0, 0, 0, 0.8);
-  content: "\25BC";
-  position: absolute;
-  text-align: center;
-}
-
-/* Style northward tooltips differently */
-.d3-tip.n:after {
-  margin: -2px 0 0 0;
-  top: 100%;
-  left: 0;
-}
 

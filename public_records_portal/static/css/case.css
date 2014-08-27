@@ -5,6 +5,11 @@
           font-style: italic;
      }*/
 
+/* gives the responses a bit more white space between */
+.response {
+  padding-top: 2%;
+}
+
 /* bottom margin for page */
      #responses-container, #participant-container {
           margin-bottom: 5em;

@@ -36,7 +36,6 @@ browser_id.user_loader(get_user)
 browser_id.init_app(app)
 
 
-
 # Submitting a new request
 @app.route("/new", methods=["GET", "POST"])
 def new_request(passed_recaptcha = False, data = None):
@@ -135,7 +134,10 @@ show_request_for_x.methods = ['GET', 'POST']
 @app.route("/city/request/<int:request_id>")
 @login_required
 def show_request_for_city(request_id):
-	return show_request(request_id = request_id, template = "manage_request_city.html")
+	if is_supported_browser():
+		return show_request(request_id = request_id, template = "manage_request_city.html")
+	else:
+		return show_request(request_id = request_id, template = "manage_request_city_less_js.html")
 
 @app.route("/response/<int:request_id>")
 def show_response(request_id):
@@ -310,14 +312,11 @@ def get_filter_value(filters_map, filter_name, is_list = False, is_boolean = Fal
 			return val
 	return None
 
-@app.route("/view_requests")
-def display_all_requests(methods = ["GET"]):
-	""" Dynamically load requests page depending on browser. """
+def is_supported_browser():
 	browser = request.user_agent.browser
 	version = request.user_agent.version and int(request.user_agent.version.split('.')[0])
 	platform = request.user_agent.platform
 	uas = request.user_agent.string
- 
 	if browser and version:
 		if (browser == 'msie' and version < 9) \
 		or (browser == 'firefox' and version < 4) \
@@ -328,21 +327,38 @@ def display_all_requests(methods = ["GET"]):
 		or (platform == 'windows' and re.search('Windows Phone OS', uas)) \
 		or (browser == 'opera') \
 		or (re.search('BlackBerry', uas)):
-			return fetch_requests()
-	return backbone_requests()
+			return False
+	return True
+
+@app.route("/view_requests")
+def display_all_requests(methods = ["GET"]):
+	""" Dynamically load requests page depending on browser. """ 
+	if is_supported_browser():
+		return backbone_requests()
+	else:
+		return no_backbone_requests()
 
 @app.route("/view_requests_backbone")
 def backbone_requests():
 	return render_template("all_requests.html", departments = db.session.query(Department).all(), total_requests_count = get_count("Request"))
 
-@app.route("/requests", methods = ["GET", "POST"])
+@app.route("/view_requests_no_backbone")
+def no_backbone_requests():
+	return fetch_requests()
+
+@app.route("/requests", methods = ["GET"])
 def fetch_requests(output_results_only = False, filters_map = None, date_format = '%Y-%m-%d', checkbox_value = 'on'):
 
 	user_id = get_user_id()
-	data = request.form.copy()
 
 	if not filters_map:
-		filters_map = request.form
+		if request.args: 
+			if is_supported_browser():
+				return backbone_requests()
+			else: # Clear URL
+				filters_map = request.args
+		else:
+			filters_map = request.form
 
 	# Set defaults 
 	is_open = checkbox_value
@@ -362,7 +378,7 @@ def fetch_requests(output_results_only = False, filters_map = None, date_format 
 	page_number = 1
 	search_term = None
 
-	if request.method == "POST" or output_results_only == True:
+	if filters_map:
 		departments_selected = get_filter_value(filters_map = filters_map, filter_name = 'departments_selected', is_list = True) or get_filter_value(filters_map, 'department')
 		is_open = get_filter_value(filters_map = filters_map, filter_name = 'is_open', is_boolean = True)
 		is_closed = get_filter_value(filters_map = filters_map, filter_name = 'is_closed', is_boolean = True)
@@ -470,30 +486,40 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 
 	if is_open == checkbox_value:
 		status_filters.append(Request.open)
+		if not user_id:
+			status_filters.append(Request.due_soon)
+			status_filters.append(Request.overdue)
 
 	if is_closed == checkbox_value:
 		status_filters.append(Request.closed)
 
 	if min_date_received and max_date_received and min_date_received != "" and max_date_received != "":
-		min_date_received = datetime.strptime(min_date_received, date_format)
-		max_date_received = datetime.strptime(max_date_received, date_format) + timedelta(hours = 23, minutes = 59) 
-		results = results.filter(and_(Request.date_received >= min_date_received, Request.date_received <= max_date_received))
-		app.logger.info('Request Date Bounding. Min: {0}, Max: {1}'.format(min_date_received, max_date_received))
+		try:
+			min_date_received = datetime.strptime(min_date_received, date_format)
+			max_date_received = datetime.strptime(max_date_received, date_format) + timedelta(hours = 23, minutes = 59) 
+			results = results.filter(and_(Request.date_received >= min_date_received, Request.date_received <= max_date_received))
+			app.logger.info('Request Date Bounding. Min: {0}, Max: {1}'.format(min_date_received, max_date_received))
+		except:
+			app.logger.info('There was an error parsing the request date filters. Received Min: {0}, Max {1}'.format(min_date_received, max_date_received))
 
-	if min_due_date and max_due_date and min_due_date != "" and max_due_date != "":
-		min_due_date = datetime.strptime(min_due_date, date_format)
-		max_due_date = datetime.strptime(max_due_date, date_format) + timedelta(hours = 23, minutes = 59)  
-		results = results.filter(and_(Request.due_date >= min_due_date, Request.due_date <= max_due_date))
-		app.logger.info('Due Date Bounding. Min: {0}, Max: {1}'.format(min_due_date, max_due_date))
 
 	# Filters for agency staff only:
 	if user_id:
+
 		if due_soon == checkbox_value:
 			status_filters.append(Request.due_soon)
 
 		if overdue == checkbox_value:
 			status_filters.append(Request.overdue)
 
+		if min_due_date and max_due_date and min_due_date != "" and max_due_date != "":
+			try:
+				min_due_date = datetime.strptime(min_due_date, date_format)
+				max_due_date = datetime.strptime(max_due_date, date_format) + timedelta(hours = 23, minutes = 59)  
+				results = results.filter(and_(Request.due_date >= min_due_date, Request.due_date <= max_due_date))
+				app.logger.info('Due Date Bounding. Min: {0}, Max: {1}'.format(min_due_date, max_due_date))
+			except:
+				app.logger.info('There was an error parsing the due date filters. Due Date Min: {0}, Max {1}'.format(min_due_date, max_due_date))
 
 		# PoC and Helper filters
 		if mine_as_poc == checkbox_value: 

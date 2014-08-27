@@ -67,22 +67,22 @@ class NoteView(AdminView):
 	column_list = ('request_id', 'text', 'date_created')
 	form_excluded_columns = ('date_created')
 
-class UserView(AdminView):
-	can_create = True
-	can_edit = True
-	column_list = ('id', 'contact_for', 'backup_for', 'alias', 'email', 'department', 'is_staff')
-	column_searchable_list = ('contact_for', 'alias', 'email')
-	form_excluded_columns = ('date_created', 'password')
+# class UserView(AdminView):
+# 	can_create = True
+# 	can_edit = True
+# 	column_list = ('id', 'contact_for', 'backup_for', 'alias', 'email', 'department', 'is_staff')
+# 	column_searchable_list = ('contact_for', 'alias', 'email')
+# 	form_excluded_columns = ('date_created', 'password')
 
-class DepartmentView(AdminView):
-	can_create = True
-	can_edit = True
-	column_list = ('id', 'name', 'date_created', 'date_updated')
+# class DepartmentView(AdminView):
+# 	can_create = True
+# 	can_edit = True
+# 	column_list = ('id', 'name', 'date_created', 'date_updated')
 
 
 admin.add_view(RequestView(Request, db.session))
 admin.add_view(RecordView(Record, db.session))
 admin.add_view(NoteView(Note, db.session))
 admin.add_view(QAView(QA, db.session))
-admin.add_view(UserView(User, db.session))
-admin.add_view(DepartmentView(Department, db.session))
+# admin.add_view(UserView(User, db.session))
+# admin.add_view(DepartmentView(Department, db.session))

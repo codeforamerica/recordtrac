@@ -1,5 +1,5 @@
 
-  <div class="request-status-well well well-small r_sidebar_banner r_sidebar-fixed {{ status }}">
+  <div class="request-status-well well well-small r_sidebar_banner {{ status }}">
     <h3 id="status-text">
       {% if status == 'closed' %}<i class="icon-archive"></i>{% endif%}
       {{ status }}
@@ -7,7 +7,7 @@
   </div>
 
   {% if current_user.is_authenticated() and status == 'closed' %}
-    <div class="r_sidebar_banner r_sidebar-fixed hidden-phone hidden-tablet">
+    <div class="r_sidebar_banner hidden-phone hidden-tablet">
       <form name="reopen_request" class="form-inline" id="question" method="post" action="/update_a_request_reopen">
         <input type="hidden" name="request_id" value="{{ req.id }}"/>
         <button id="reopenRequest" class="btn btn-primary btn-block" type="submit">Reopen request</button>
