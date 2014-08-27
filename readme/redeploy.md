@@ -74,7 +74,7 @@ The `APPLICATION_URL` specifies where you will host RecordTrac on, e.g. `records
 By default, `HOST_URL` is set to point to Scribd, but if you decide to host documents internally, you would update this field. If using Scribd, you will need to set `SCRIBD_API_KEY` and `SCRIBD_API_SECRET` after setting up a Scribd developer account.
 
 * **E-mail notifications**:
-Sign up for a free account with [SendGrid](https://sendgrid.com/user/signup). Set `DEFAULT_MAIL_SENDER` to the e-mail address that you would like to show up in the 'To' field (i.e. records-donotreply@agency.gov), set `MAIL_USERNAME` to the SendGrid username you choose, and `MAIL_PASSWORD` to the SendGrid password. 
+Sign up for a free account with [SendGrid](https://sendgrid.com/user/signup). Set `DEFAULT_MAIL_SENDER` to the e-mail address that you would like to show up in the 'To' field (e.g. `records-donotreply@agency.gov`), set `MAIL_USERNAME` to the SendGrid username you choose, and `MAIL_PASSWORD` to the SendGrid password. 
 
 We assume your monthly email limit is 40,000 sends (Sendgrid's Bronze account level), but you can change this by setting the `SENDGRID_MONTHLY_LIMIT`.
 
