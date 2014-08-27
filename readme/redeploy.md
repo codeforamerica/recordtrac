@@ -68,7 +68,7 @@ In order for RecordTrac to route a request to the appropriate contact, a list of
 * Please note that you will have to name your fields according to the examples provided for the staff and liaisons CSV. Once the environment variables are set in Heroku, run `python db_users.py` from the Heroku command line to populate the database with this information.
 
 * **Application URL**:
-This is the URL you will host RecordTrac on, ex. `APPLICATION_URL=records.youragency.gov`. It is used in e-mail communication and to generate links automatically, so it must be accurate. This can also be the Heroku provided URL to start. It is a required field.
+The `APPLICATION_URL` specifies where you will host RecordTrac on, e.g. `records.youragency.gov`. It is used in e-mail communication and to generate links automatically, so it must be accurate. This can also be the Heroku provided URL to start. It is a required field.
 
 * **Document hosting**:
 By default, `HOST_URL` is set to point to Scribd, but if you decide to host documents internally, you would update this field. If using Scribd, you will need to set `SCRIBD_API_KEY` and `SCRIBD_API_SECRET` after setting up a Scribd developer account.
