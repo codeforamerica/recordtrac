@@ -46,6 +46,7 @@ If you have problems using RecordTrac, please [open an issue on GitHub](https://
 Technically, that is all you need to get an instance of RecordTrac running with the supplied defaults. But to get a minimum *production-ready* environment running, here's the information you'll need to provide:
 
 #### Set environment variables
+
 * **Agency name**: 
 Set `AGENCY_NAME` to the name of your agency, which is used across the site (ex. "City of Oakland").
 
@@ -73,7 +74,9 @@ This is the URL you will host RecordTrac on, ex. `APPLICATION_URL=records.yourag
 By default, `HOST_URL` is set to point to Scribd, but if you decide to host documents internally, you would update this field. If using Scribd, you will need to set `SCRIBD_API_KEY` and `SCRIBD_API_SECRET` after setting up a Scribd developer account.
 
 * **E-mail notifications**:
-Set `DEFAULT_MAIL_SENDER` to the e-mail address that shows up in the 'To' field, set `MAIL_USERNAME` to the SendGrid username you choose, and `MAIL_PASSWORD` to the SendGrid password. 
+Sign up for a free account with [SendGrid](https://sendgrid.com/user/signup). Set `DEFAULT_MAIL_SENDER` to the e-mail address that you would like to show up in the 'To' field (i.e. records-donotreply@agency.gov), set `MAIL_USERNAME` to the SendGrid username you choose, and `MAIL_PASSWORD` to the SendGrid password. 
+
+We assume your monthly email limit is 40,000 sends (Sendgrid's Bronze account level), but you can change this by updating the `SENDGRID_MONTHLY_LIMIT`.
 
 * **Environment**:
 The `ENVIRONMENT` field must be set to `ENVIRONMENT='PRODUCTION'` in Heroku once the application is ready to go live. 
@@ -96,7 +99,7 @@ This will enable access to the admin panel of the application. Set `LIST_OF_ADMI
 You can update these variables to reflect your agency's policy. By default, the due date is calculated 10 days from date of submission (`DAYS_TO_FULFILL`), extended 14 additional days if the request is extended (`DAYS_AFTER_EXTENSION`), and notifications for requests that are due soon are calculated 2 days until they are due (`DAYS_UNTIL_OVERDUE`).
 
 * **Spam**:
-After setting up Recaptcha and Akismet accounts, update the `AKISMET_KEY`, `RECAPTCHA_PUBLIC_KEY`, and `RECAPTCHA_PRIVATE_KEY`, accordingly.
+After setting up Recaptcha and [Akismet](http://akismet.com/plans/) accounts, update the `AKISMET_KEY`, `RECAPTCHA_PUBLIC_KEY`, and `RECAPTCHA_PRIVATE_KEY`, accordingly.
 
 * **Secret key**:
 The Flask application requires a `SECRET_KEY` to be set - though a not-so-secret one is provided by default, you can randomly generate a key here: **[update]**.
@@ -107,15 +110,13 @@ You can hook the application up to a Google feedback form by setting the `GOOGLE
 
 The installation uses a generic set of defaults for email and website copy.  To change these to better reflect your agency's laws and policies, see the [technical documentation](/readme/readme/recordtrac_readme.md). **[UPDATE: or link to "Updating Website Text" in Admin section]**
 
+* A complete list of environment variables used in the application can be found in public_records_portal/__init__.py.
+
 ### Local installation
 
 Instructions for local installation can be found here **(UPDATE)**.
 
-#### Other Accounts
 
-To use e-mail, sign up for a free account with SendGrid and provide the username and password in `MAIL_USERNAME` and `MAIL_PASSWORD`. We assume your monthly email limit is 40,000 sends (Sendgrid's Bronze account level), but you can change this by setting a `SENDGRID_MONTHLY_LIMIT` int value in settings.env.
-
-To be able to catch spammy input, sign up for a free account with [Akismet](http://akismet.com/plans/) and provide the application URL and Akismet key in `APPLICATION_URL` and `AKISMET_KEY`.
 
 
 <!-- [![Build Status](https://travis-ci.org/codeforamerica/public-records.png?branch=master)](https://travis-ci.org/codeforamerica/public-records) -->
