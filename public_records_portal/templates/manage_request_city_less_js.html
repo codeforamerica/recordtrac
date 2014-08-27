@@ -241,10 +241,8 @@
   <div class="b_sidebar">
     <div class="row-fluid participantRow">
 
-        <a data-placement="left" href="#" id="reroutePopover"><div class="popover-container"><h4 class="participantRow-title">Point of Contact <span class="pull-right"><small><i class="icon-arrow-right"></i></small><i class="icon-user"></i></span></h4>
-        </div></a>
-
-        {% include '_reroute.html' %}
+        <div class="popover-container"><h4 class="participantRow-title">Point of Contact <span class="pull-right"><small><i class="icon-arrow-right"></i></small><i class="icon-user"></i></span></h4>
+        </div>
 
     </div>
     <div class="row-fluid participantRow-poc">
@@ -252,9 +250,7 @@
     </div>
 
     <div class="row-fluid participantRow">   
-      <a data-placement="left" href="#" id="notifyPopover"><div class="popover-container participantRow-helpers"><h4 class="participantRow-title">Helpers<span class="pull-right"><small><i class="icon-plus"></i></small><i class="icon-group"></i></span></h4></div></a>
-      {% include '_add_person.html' %}
-      
+      <div class="popover-container participantRow-helpers"><h4 class="participantRow-title">Helpers<span class="pull-right"><small><i class="icon-plus"></i></small><i class="icon-group"></i></span></h4></div>  
     </div>
     <div class="row-fluid participantRow-participants">
       {% include '_staff_participants.html' %}
@@ -263,13 +259,44 @@
       {% include '_history.html' %}
     </div>
 
+    <form id="rerouteForm" class="form-inline" method ="post" action="/update_a_owner">
+      <fieldset>
+        <label>Reroute</label>
+        <div class="control-group">
+          <div class="controls">
+            <input type="hidden" name="request_id" value="{{ req.id }}"/>
+            <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
+            <input id="rerouteReason" type="text" name="owner_reason" placeholder="Say why." required />
+            <button id="rerouteButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+
+    <form id="notifyForm" class="form-inline" method ="post" action="/add_a_owner">
+      <fieldset>
+      <label>Add helper</label>
+      <div class="control-group">
+        <div class="controls">
+          <input type="hidden" name="request_id" value="{{ req.id }}"/>
+          <input id="notifyEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
+          <input id="notifyReason" type="text" name="owner_reason" placeholder="Say why." required />
+          <button id="notifyButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
+        </div>
+      </div>
+    </form>
+
+
   </div>
+
 {% endblock sidebar %}
 
 {% block request_dates %}
   {{super()}}
   <div class="text-center">Due: <span class="label">{{ req.due_date | date }}</span></div>
 {% endblock request_dates %}
+
+
 
 {% block follow %}{% endblock follow %}
 
