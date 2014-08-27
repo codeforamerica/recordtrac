@@ -60,12 +60,12 @@ Set `AGENCY_NAME` to the name of your agency, which is used across the site (ex.
 `DEFAULT_OWNER_REASON` gets displayed as the reason a request was routed to the default point of contact, and can be simply set to that staff's title/ position within the agency.
 
 * **Users**:
-In order for agency staff to log into RecordTrac, RecordTrac must have access to a list of staff provided via a CSV hosted at the `STAFF_URL`. It must be a [delimiter]-separated file with name, email, department name, and phone number columns - in that order. Here's an [example csv](https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/staff.csv). ![Staff csv](/readme/images/staff-csv.png "staff csv")
+In order for agency staff to log into RecordTrac, RecordTrac must have access to a list of staff provided via a comma-separated file hosted at the `STAFF_URL`. Here's an [example csv](https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/staff.csv). ![Staff csv](/readme/images/staff-csv.png "staff csv")
 
 * **Records liaisons**:
 In order for RecordTrac to route a request to the appropriate contact, a list of liaisons must be provided via a CSV hosted at `LIAISONS_URL`. Here's an [example csv](https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/liaisons.csv). ![Liaisons csv](/readme/images/liaisons-csv.png "liaisons csv") 
 
-* Please note that you will have to name your fields according to the examples provided for the staff and liaisons CSV. Once the environment variables are set in Heroku, run `python db_users.py` from the Heroku command line to populate the database with this information.
+* Please note that you will have to name your fields according to the examples provided for the staff and liaisons CSV, but the order does not matter. Once the environment variables are set in Heroku, run `python db_users.py` from the Heroku command line to populate the database with this information.
 
 * **Application URL**:
 The `APPLICATION_URL` specifies where you will host RecordTrac on, e.g. `records.youragency.gov`. It is used in e-mail communication and to generate links automatically, so it must be accurate. This can also be the Heroku provided URL to start. It is a required field.
@@ -89,7 +89,7 @@ To enable cron jobs, use Heroku add-ons to add a scheduler.
 To keep staff data up to date, we recommend maintaining the CSVs (outside of the RecordTrac application), which the application will simply pull from. The task that pulls data from the CSVs to RecordTrac is 'python db_users.py', and can be set as frequently as you'd like. To send e-mail notifications to staff for when a request is due soon or overdue, set up a task 'python send_notifications.py' that runs nightly.
 
 * **Admin list**:
-This will enable access to the admin panel of the application. Set `LIST_OF_ADMINS` with a comma separated list of e-mail addresses, i.e. "person1@agency.gov,person2@agency.gov".  
+This will enable access to the admin panel of the application. Set `LIST_OF_ADMINS` with a comma separated list of e-mail addresses, e.g. `person1@agency.gov,person2@agency.gov`.  
 
 * **Due dates and extensions**:
 You can update these variables to reflect your agency's policy. By default, the due date is calculated 10 days from date of submission (`DAYS_TO_FULFILL`), extended 14 additional days if the request is extended (`DAYS_AFTER_EXTENSION`), and notifications for requests that are due soon are calculated 2 days until they are due (`DAYS_UNTIL_OVERDUE`).
