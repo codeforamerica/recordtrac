@@ -39,6 +39,7 @@ set_env(key = 'SECRET_KEY', default = 'Change this to something super secret') #
 set_env(key = 'DAYS_TO_FULFILL', default = '10')
 set_env(key = 'DAYS_AFTER_EXTENSION', default = '14')
 set_env(key = 'DAYS_UNTIL_OVERDUE', default = '2') 
+set_env(key = 'UTC_OFFSET', default = '7') # Pacific time
 
 # Set rest of the variables that don't have defaults:
 envvars = [
