@@ -65,8 +65,6 @@ The `APPLICATION_URL` specifies where you will host RecordTrac on, e.g. `records
 * **Environment**:
 The `ENVIRONMENT` field must be set to `PRODUCTION` once the application is ready to go live. This will enable e-mail notifications, spam filters, and document uploads to Scribd.
 
-	*NOTE: RecordTrac will not send out any emails until this is set.* 
-
 
 #### Set up additional services
 * **Spam**:
@@ -82,12 +80,12 @@ By default, `HOST_URL` is set to point to Scribd, but if you decide to host docu
 * **Users**:
 In order for agency staff to log into RecordTrac, RecordTrac must have access to a list of staff provided via a comma-separated file hosted at the `STAFF_URL`. Here's an [example csv](https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/staff.csv). ![Staff csv](/readme/images/staff-csv.png "staff csv")
 
-	*NOTE: You will have to name your fields according to the example provided, but the order does not matter.*
+	**NOTE: You will have to name your fields according to the example provided, but the order does not matter.**
 
 * **Records liaisons**:
 In order for RecordTrac to route a request to the appropriate contact, a list of liaisons must be provided via a comma-separated file hosted at `LIAISONS_URL`. Here's an [example csv](https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/liaisons.csv). ![Liaisons csv](/readme/images/liaisons-csv.png "liaisons csv")
 
-	*NOTE: You will have to name your fields according to the example provided, but the order does not matter.*
+	**NOTE: You will have to name your fields according to the example provided, but the order does not matter.**
 
  Once the environment variables are set in Heroku, run `python db_users.py` from the Heroku command line to populate the database with this information.
 
@@ -98,20 +96,24 @@ Here is additional functionality that is not *required* for a functional instanc
 
 * **Cron jobs**:
 To enable cron jobs, use Heroku add-ons to add a scheduler.
-To keep staff data up to date, we recommend maintaining the CSVs (outside of the RecordTrac application), which the application will simply pull from. The task that pulls data from the CSVs to RecordTrac is 'python db_users.py', and can be set as frequently as you'd like. To send e-mail notifications to staff for when a request is due soon or overdue, set up a task 'python send_notifications.py' that runs nightly.
+To keep staff data up to date, we recommend maintaining the CSVs (outside of the RecordTrac application), which the application will simply pull from. The task that pulls data from the CSVs to RecordTrac is `python db_users.py`, and can be set as frequently as you'd like. To send e-mail notifications to staff for when a request is due soon or overdue, set up a task `python send_notifications.py` that runs nightly.
 
 * **Admin list**:
 This will enable access to the admin panel of the application. Set `LIST_OF_ADMINS` with a comma separated list of e-mail addresses, e.g. `person1@agency.gov,person2@agency.gov`.  
 
-* **Due dates and extensions**:
+* **Extensions**:
+By default, RecordTrac allows agency staff to extend the request's due date.  If your agency does not allow extensions, they must be manually disabled by removing the relevant code in `_response_widget.html` and `manage_request_city.html`.
+
+* **Due dates and extension times**:
 You can update these variables to reflect your agency's policy. By default, the due date is calculated 10 days from date of submission (`DAYS_TO_FULFILL`), extended 14 additional days if the request is extended (`DAYS_AFTER_EXTENSION`), and notifications for requests that are due soon are calculated 2 days until they are due (`DAYS_UNTIL_OVERDUE`).
 
 * **Secret key**:
-The Flask application requires a `SECRET_KEY` to be set - though a not-so-secret one is provided by default, you can randomly generate a key here: **[update]**.
+The Flask application requires a `SECRET_KEY` to be set - though a not-so-secret one is provided by default, you can randomly generate a key [here](randomkeygen.com).
 
 * **Feedback form**:
 You can hook the application up to a Google feedback form by setting the `GOOGLE_FEEDBACK_FORM_ID` to the form ID corresponding to a Google spreadsheet. 
 
+### Updating website copy
 
 The installation uses a generic set of defaults for email and website copy.  To change these to better reflect your agency's laws and policies, see the [technical documentation](/readme/readme/recordtrac_readme.md). **[UPDATE: or link to "Updating Website Text" in Admin section]**
 
