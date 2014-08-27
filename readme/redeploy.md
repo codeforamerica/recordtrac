@@ -76,7 +76,7 @@ By default, `HOST_URL` is set to point to Scribd, but if you decide to host docu
 * **E-mail notifications**:
 Sign up for a free account with [SendGrid](https://sendgrid.com/user/signup). Set `DEFAULT_MAIL_SENDER` to the e-mail address that you would like to show up in the 'To' field (i.e. records-donotreply@agency.gov), set `MAIL_USERNAME` to the SendGrid username you choose, and `MAIL_PASSWORD` to the SendGrid password. 
 
-We assume your monthly email limit is 40,000 sends (Sendgrid's Bronze account level), but you can change this by updating the `SENDGRID_MONTHLY_LIMIT`.
+We assume your monthly email limit is 40,000 sends (Sendgrid's Bronze account level), but you can change this by setting the `SENDGRID_MONTHLY_LIMIT`.
 
 * **Environment**:
 The `ENVIRONMENT` field must be set to `ENVIRONMENT='PRODUCTION'` in Heroku once the application is ready to go live. 
