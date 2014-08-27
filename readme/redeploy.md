@@ -74,9 +74,7 @@ The `APPLICATION_URL` specifies where you will host RecordTrac on, e.g. `records
 By default, `HOST_URL` is set to point to Scribd, but if you decide to host documents internally, you would update this field. If using Scribd, you will need to set `SCRIBD_API_KEY` and `SCRIBD_API_SECRET` after setting up a Scribd developer account.
 
 * **E-mail notifications**:
-Sign up for a free account with [SendGrid](https://sendgrid.com/user/signup). Set `DEFAULT_MAIL_SENDER` to the e-mail address that you would like to show up in the 'To' field (e.g. `records-donotreply@agency.gov`), set `MAIL_USERNAME` to the SendGrid username you choose, and `MAIL_PASSWORD` to the SendGrid password. 
-
-We assume your monthly email limit is 40,000 sends (Sendgrid's Bronze account level), but you can change this by setting the `SENDGRID_MONTHLY_LIMIT`.
+Sign up for a free account with [SendGrid](https://sendgrid.com/user/signup). Set `DEFAULT_MAIL_SENDER` to the e-mail address that you would like to show up in the 'To' field (e.g. `records-donotreply@agency.gov`), set `MAIL_USERNAME` to the SendGrid username you choose, and `MAIL_PASSWORD` to the SendGrid password. We assume your monthly email limit is 40,000 sends (Sendgrid's Bronze account level), but you can change this by setting the `SENDGRID_MONTHLY_LIMIT`.
 
 * **Environment**:
 The `ENVIRONMENT` field must be set to `PRODUCTION` once the application is ready to go live. 
@@ -88,9 +86,7 @@ Here is additional functionality that is not *required* for a functional instanc
 
 * **Cron jobs**:
 To enable cron jobs, use Heroku add-ons to add a scheduler.
-To keep staff data up to date, we recommend maintaining the CSVs (outside of the RecordTrac application), which the application will simply pull from. The task that pulls data from the CSVs to RecordTrac is 'python db_users.py', and can be set as frequently as you'd like. 
-
-To send e-mail notifications to staff for when a request is due soon or overdue, set up a task 'python send_notifications.py' that runs nightly.
+To keep staff data up to date, we recommend maintaining the CSVs (outside of the RecordTrac application), which the application will simply pull from. The task that pulls data from the CSVs to RecordTrac is 'python db_users.py', and can be set as frequently as you'd like. To send e-mail notifications to staff for when a request is due soon or overdue, set up a task 'python send_notifications.py' that runs nightly.
 
 * **Admin list**:
 This will enable access to the admin panel of the application. Set `LIST_OF_ADMINS` with a comma separated list of e-mail addresses, i.e. "person1@agency.gov,person2@agency.gov".  
@@ -110,7 +106,7 @@ You can hook the application up to a Google feedback form by setting the `GOOGLE
 
 The installation uses a generic set of defaults for email and website copy.  To change these to better reflect your agency's laws and policies, see the [technical documentation](/readme/readme/recordtrac_readme.md). **[UPDATE: or link to "Updating Website Text" in Admin section]**
 
-* A complete list of environment variables used in the application can be found in public_records_portal/__init__.py.
+A complete list of environment variables used in the application can be found in `public_records_portal/__init__.py`.
 
 ### Local installation
 
