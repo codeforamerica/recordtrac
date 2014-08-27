@@ -79,7 +79,7 @@ Sign up for a free account with [SendGrid](https://sendgrid.com/user/signup). Se
 We assume your monthly email limit is 40,000 sends (Sendgrid's Bronze account level), but you can change this by setting the `SENDGRID_MONTHLY_LIMIT`.
 
 * **Environment**:
-The `ENVIRONMENT` field must be set to `ENVIRONMENT='PRODUCTION'` in Heroku once the application is ready to go live. 
+The `ENVIRONMENT` field must be set to `PRODUCTION` once the application is ready to go live. 
 
 
 ### Additional Setup 
