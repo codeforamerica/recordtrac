@@ -3,7 +3,6 @@ from public_records_portal import app
 import os
 import json
 from db_helpers import *
-from departments import *
 import sendgrid
 from flask import render_template
 import helpers
