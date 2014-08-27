@@ -45,7 +45,7 @@ If you have problems using RecordTrac, please [open an issue on GitHub](https://
 
 Technically, that is all you need to get an instance of RecordTrac running with the supplied defaults. But to get a minimum *production-ready* environment running, here's the information you'll need to provide:
 
-#### Set environment variables
+#### Set basic environment variables
 
 * **Agency name**: 
 Set `AGENCY_NAME` to the name of your agency, which is used across the site (ex. "City of Oakland").
@@ -59,29 +59,37 @@ Set `AGENCY_NAME` to the name of your agency, which is used across the site (ex.
 * **Default point of contact's title**:
 `DEFAULT_OWNER_REASON` gets displayed as the reason a request was routed to the default point of contact, and can be simply set to that staff's title/ position within the agency.
 
-* **Users**:
-In order for agency staff to log into RecordTrac, RecordTrac must have access to a list of staff provided via a comma-separated file hosted at the `STAFF_URL`. Here's an [example csv](https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/staff.csv). ![Staff csv](/readme/images/staff-csv.png "staff csv")
-
-	*NOTE: that you will have to name your fields according to the example provided, but the order does not matter.*
-
-* **Records liaisons**:
-In order for RecordTrac to route a request to the appropriate contact, a list of liaisons must be provided via a comma-separated file hosted at `LIAISONS_URL`. Here's an [example csv](https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/liaisons.csv). ![Liaisons csv](/readme/images/liaisons-csv.png "liaisons csv")
-
-	*NOTE: that you will have to name your fields according to the example provided, but the order does not matter.*
-
- Once the environment variables are set in Heroku, run `python db_users.py` from the Heroku command line to populate the database with this information.*
-
 * **Application URL**:
 The `APPLICATION_URL` specifies where you will host RecordTrac on, e.g. `records.youragency.gov`. It is used in e-mail communication and to generate links automatically, so it must be accurate. This can also be the Heroku provided URL to start. It is a required field.
 
-* **Document hosting**:
-By default, `HOST_URL` is set to point to Scribd, but if you decide to host documents internally, you would update this field. If using Scribd, you will need to set `SCRIBD_API_KEY` and `SCRIBD_API_SECRET` after setting up a Scribd developer account.
+* **Environment**:
+The `ENVIRONMENT` field must be set to `PRODUCTION` once the application is ready to go live. This will enable e-mail notifications, spam filters, and document uploads to Scribd.
+
+	*NOTE: RecordTrac will not send out any emails until this is set.* 
+
+
+#### Set up additional services
+* **Spam**:
+After setting up Recaptcha and [Akismet](http://akismet.com/plans/) accounts, update the `AKISMET_KEY`, `RECAPTCHA_PUBLIC_KEY`, and `RECAPTCHA_PRIVATE_KEY`, accordingly.
 
 * **E-mail notifications**:
 Sign up for a free account with [SendGrid](https://sendgrid.com/user/signup). Set `DEFAULT_MAIL_SENDER` to the e-mail address that you would like to show up in the 'To' field (e.g. `records-donotreply@agency.gov`), set `MAIL_USERNAME` to the SendGrid username you choose, and `MAIL_PASSWORD` to the SendGrid password. We assume your monthly email limit is 40,000 sends (Sendgrid's Bronze account level), but you can change this by setting the `SENDGRID_MONTHLY_LIMIT`.
 
-* **Environment**:
-The `ENVIRONMENT` field must be set to `PRODUCTION` once the application is ready to go live. 
+* **Document hosting**:
+By default, `HOST_URL` is set to point to Scribd, but if you decide to host documents internally, you would update this field. If using Scribd, you will need to set `SCRIBD_API_KEY` and `SCRIBD_API_SECRET` after setting up a Scribd developer account.
+
+#### Connect your agency's staff data
+* **Users**:
+In order for agency staff to log into RecordTrac, RecordTrac must have access to a list of staff provided via a comma-separated file hosted at the `STAFF_URL`. Here's an [example csv](https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/staff.csv). ![Staff csv](/readme/images/staff-csv.png "staff csv")
+
+	*NOTE: You will have to name your fields according to the example provided, but the order does not matter.*
+
+* **Records liaisons**:
+In order for RecordTrac to route a request to the appropriate contact, a list of liaisons must be provided via a comma-separated file hosted at `LIAISONS_URL`. Here's an [example csv](https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/liaisons.csv). ![Liaisons csv](/readme/images/liaisons-csv.png "liaisons csv")
+
+	*NOTE: You will have to name your fields according to the example provided, but the order does not matter.*
+
+ Once the environment variables are set in Heroku, run `python db_users.py` from the Heroku command line to populate the database with this information.
 
 
 ### Additional Setup 
@@ -97,9 +105,6 @@ This will enable access to the admin panel of the application. Set `LIST_OF_ADMI
 
 * **Due dates and extensions**:
 You can update these variables to reflect your agency's policy. By default, the due date is calculated 10 days from date of submission (`DAYS_TO_FULFILL`), extended 14 additional days if the request is extended (`DAYS_AFTER_EXTENSION`), and notifications for requests that are due soon are calculated 2 days until they are due (`DAYS_UNTIL_OVERDUE`).
-
-* **Spam**:
-After setting up Recaptcha and [Akismet](http://akismet.com/plans/) accounts, update the `AKISMET_KEY`, `RECAPTCHA_PUBLIC_KEY`, and `RECAPTCHA_PRIVATE_KEY`, accordingly.
 
 * **Secret key**:
 The Flask application requires a `SECRET_KEY` to be set - though a not-so-secret one is provided by default, you can randomly generate a key here: **[update]**.
