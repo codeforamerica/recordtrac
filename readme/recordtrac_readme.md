@@ -10,7 +10,7 @@ For help contact **info |@| codeforamerica.org**
 
 ##What is RecordTrac?
 RecordTrac is a public record request management tool for government agencies.
-![RecordTrac](https://github.com/codeforamerica/recordtrac/raw/readme/readme/generic_request.png "RecordTrac")  
+![RecordTrac](/readme/images/generic_request.png "RecordTrac")  
 This web application allows government employees manage, respond to, and fulfill incoming requests.  It also provides a quick, simple way for individuals to submit public record requests. RecordTrac displays all requests and responsive documents so that members of the public may find what they need without submitting additional public record requests.
 
 [More about RecordTrac...](/readme/readme/about.md)
