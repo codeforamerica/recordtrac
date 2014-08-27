@@ -145,18 +145,17 @@
   </form>
 
   <!-- Extension -->
-  {% if False %} <!--  if req.extended-->
+  {% if req.extended %}
   {% else %}
   <form name="extend_request" class="form-horizontal" id="extension" method="post" action="/add_a_extension">
     <input type="hidden" name="request_id" value="{{ req.id }}"/>
-    <input type="hidden" name="extend_reason"/>
     <fieldset>
-      <legend>Request extension</legend>
+      <legend>Extend request</legend>
       <div class="row-fluid">
         <div class="control-group">
           <label class="control-label">Reason <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Request an extension"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
           <div class="controls">
-            <select id="extend_reasons" name="extend_reasons" class="selectpicker" multiple required data-selected-text-format="count">
+            <select id="extend_reason" name="extend_reason" class="selectpicker" multiple required data-selected-text-format="count">
               <option value="{{"Extension - Large Amount" | explain_action("What")}}">Large amount</option>
               <option value="{{"Extension - Separate Facility" | explain_action("What")}}">Separate facility</option>
               <option value="{{"Extension - Another Agency" | explain_action("What")}}">Another agency</option>
@@ -194,9 +193,8 @@
   <!-- Close request -->
   <form name="close" class="form-horizontal" id="closeRequest" method="post" action="/close">
     <input type="hidden" name="request_id" value="{{ req.id }}"/>
-    <input type="hidden" name="close_reason"/>
     <fieldset>
-      <legend>Close this request</legend>
+      <legend>Close request</legend>
       <div class="row-fluid">
         <div class="control-group">
           <label class="control-label">Reason <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>

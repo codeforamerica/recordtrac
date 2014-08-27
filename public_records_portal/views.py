@@ -264,7 +264,13 @@ def close(request_id = None):
 	if request.method == 'POST':
 		template = 'closed.html'
 		request_id = request.form['request_id']
-		close_request(request_id = request_id, reason = request.form['close_reason'], user_id = get_user_id())
+		reason = ""
+		if 'close_reason' in request.form:
+			reason = request.form['close_reason']
+		elif 'close_reasons' in request.form:
+			for close_reason in request.form.getlist('close_reasons'):
+				reason += close_reason + " "
+		close_request(request_id = request_id, reason = reason, user_id = get_user_id())
 		return show_request(request_id, template= template)
 	return render_template('error.html', message = "You can only close from a requests page!")
 
