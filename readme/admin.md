@@ -8,7 +8,6 @@ RecordTrac’s administrative controls allows the users to:
 * [Remove a record](#how-to-remove-a-record)
 * [Edit or remove the text of a note](#how-to-remove-or-edit-a-note)
 * [Edit or remove a question or answer](#how-to-remove-or-edit-a-question-and-answer-exchange)
-* [Add or remove a Public Records Request (PRR) liaison](#how-to-change-the-official-public-records-request-prr-liaison-for-a-department)
 * [Update your RecordTrac website text](#updating-website-text)
 
 The administrative controls allows the user to permanently delete records, requests, and notes from the database. Because of this, administrative access should be restricted to a small number of users. 
