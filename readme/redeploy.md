@@ -35,15 +35,15 @@ If you have problems using RecordTrac, please [open an issue on GitHub](https://
 
 ### Initial Setup
 
-**THERE ARE SOME INTERIM STEPS BEFORE CREATING A DATABASE**
+**THERE ARE SOME INTERIM STEPS BEFORE CREATING A DATABASE** (Heroku install, create Heroku app, clone RecordTrac database, push to Heroku)
 
-### Deploy RecordTrac
-To start, here is the minimum information you'll need to supply to get a development environment running:
+### Deploy RecordTrac on Heroku
 
 #### Create a database
-Use Heroku's Postgres add-on to set up a database, and run `heroku pg:promote HEROKU_POSTGRESQL_???_URL`.
+* Use Heroku's add-ons to set up a 'Heroku Postgres' database. 
+* Access the Heroku command line by running `heroku run bash`, and create the database tables by running `python db_setup.py`. Additionally, if this is a development environment, you can opt to seed the database by running `python db_seed.py`
 
-Technically, that is all you need to get an instance of RecordTrac running with the supplied defaults. But to get a minimum *production* environment running, here's what you need to set the following additional parameters.
+Technically, that is all you need to get an instance of RecordTrac running with the supplied defaults. But to get a minimum *production* environment running, here's the information you'll need to provide:
 
 #### Set environment variables
 * **Agency name**): 
@@ -53,7 +53,7 @@ Set `AGENCY_NAME` to the name of your agency, which is used across the site (ex.
 `LOGO_ON_WHITE_URL`, `LOGO_ON_BLACK_URL` are used across the site but appear blank if none are supplied. The "LOGO_ON_WHITE" is used for general in-page representation, primarily the landing page.  The "LOGO_ON_BLACK" is used for the navbar.  We recommend using an image with a transparent background.  While these logos are not technically required, it is strongly encouraged as they help communicate this application is an official agency website.  
 
 * **Default point of contact**:
-`DEFAULT_OWNER_EMAI`L will be the person that gets contacted about new requests if a department is not selected by the requester, or if no liaisons information is supplied to the application. It is a required field.
+`DEFAULT_OWNER_EMAIL` will be the person that gets contacted about new requests if a department is not selected by the requester, or if no liaisons information is supplied to the application. It is a required field.
 
 * **Default point of contact's title**:
 `DEFAULT_OWNER_REASON` gets displayed as the reason a request was routed to the default point of contact, and can be simply set to that staff's title/ position within the agency.
@@ -63,6 +63,8 @@ In order for agency staff to log into RecordTrac, RecordTrac must have access to
 
 * **Records liaisons**:
 In order for RecordTrac to route a request to the appropriate contact, a list of liaisons must be provided via a CSV hosted at `LIAISONS_URL`. Here's an [example csv](https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/liaisons.csv). ![Liaisons csv](/readme/images/liaisons-csv.png "liaisons csv")
+
+* Please note that after setting the `STAFF_URL` and `LIAISONS_URL` in Heroku, you will need to run `python db_users.py` from the Heroku command line.
 
 * **Application URL**:
 This is the URL you will host RecordTrac on, ex. `APPLICATION_URL=records.youragency.gov`. It is used in e-mail communication and to generate links automatically, so it must be accurate. This can also be the Heroku URL to start. It is a required field.
@@ -83,6 +85,12 @@ The `ENVIRONMENT` field must be set to `ENVIRONMENT='PRODUCTION'` in Heroku once
 ### Additional Setup 
 
 Here is additional functionality that is not *required* for a functional instance of RecordTrac, but may be useful.
+
+* **Cron jobs**:
+To enable cron jobs, use Heroku add-ons to add a scheduler.
+To keep staff data up to date, we recommend maintaining the CSVs (outside of the RecordTrac application), which the application will simply pull from. The task that pulls data from the CSVs to RecordTrac is 'python db_users.py', and can be set as frequently as you'd like. 
+
+To send e-mail notifications to staff for when a request is due soon or overdue, set up a task 'python send_notifications.py' that runs nightly.
 
 * **Admin list**:
 This will enable access to the admin panel of the application. Set `LIST_OF_ADMINS` with a comma separated list of e-mail addresses, i.e. "person1@agency.gov,person2@agency.gov".  
