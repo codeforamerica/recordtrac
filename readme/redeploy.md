@@ -40,7 +40,7 @@ If you have problems using RecordTrac, please [open an issue on GitHub](https://
 ### Deploy RecordTrac on Heroku
 
 #### Create a database
-* Use Heroku's add-ons to set up a 'Heroku Postgres' database. 
+* Use Heroku's add-ons to set up a 'Heroku Postgres' database. **ADD A LINK TO HEROKU ADD-ON FOR THIS**
 * Access the Heroku command line by running `heroku run bash`, and create the database tables by running `python db_setup.py`. 
 
 Technically, that is all you need to get an instance of RecordTrac running with the supplied defaults. But to get a minimum *production-ready* environment running, here's the information you'll need to provide:
@@ -62,10 +62,14 @@ Set `AGENCY_NAME` to the name of your agency, which is used across the site (ex.
 * **Users**:
 In order for agency staff to log into RecordTrac, RecordTrac must have access to a list of staff provided via a comma-separated file hosted at the `STAFF_URL`. Here's an [example csv](https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/staff.csv). ![Staff csv](/readme/images/staff-csv.png "staff csv")
 
-* **Records liaisons**:
-In order for RecordTrac to route a request to the appropriate contact, a list of liaisons must be provided via a CSV hosted at `LIAISONS_URL`. Here's an [example csv](https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/liaisons.csv). ![Liaisons csv](/readme/images/liaisons-csv.png "liaisons csv") 
+	*NOTE: that you will have to name your fields according to the example provided, but the order does not matter.*
 
-* Please note that you will have to name your fields according to the examples provided for the staff and liaisons CSV, but the order does not matter. Once the environment variables are set in Heroku, run `python db_users.py` from the Heroku command line to populate the database with this information.
+* **Records liaisons**:
+In order for RecordTrac to route a request to the appropriate contact, a list of liaisons must be provided via a comma-separated file hosted at `LIAISONS_URL`. Here's an [example csv](https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/liaisons.csv). ![Liaisons csv](/readme/images/liaisons-csv.png "liaisons csv")
+
+	*NOTE: that you will have to name your fields according to the example provided, but the order does not matter.*
+
+ Once the environment variables are set in Heroku, run `python db_users.py` from the Heroku command line to populate the database with this information.*
 
 * **Application URL**:
 The `APPLICATION_URL` specifies where you will host RecordTrac on, e.g. `records.youragency.gov`. It is used in e-mail communication and to generate links automatically, so it must be accurate. This can also be the Heroku provided URL to start. It is a required field.
