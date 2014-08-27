@@ -1,4 +1,3 @@
-<!-- This template is for testing purposes. -->
 
 {% extends "case.html" %}
 {% block title %}Request {{ req.id }}{% endblock %}
@@ -12,6 +11,7 @@
 
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.min.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/_response_widget.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-fileupload.css') }}">
 {% endblock custom_css_links %}
 
 {% block requester_info %}
@@ -55,6 +55,8 @@
 {% endblock clarify_request %}
 
 {% block response_actions_lessjs %}
+
+
   <h3 style="margin-top:40px;">Response actions</h3>
   <!-- upload a record -->
   <form name="input_doc" style="margin-top: 2em;" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data">
@@ -283,9 +285,6 @@
   
   <!-- Listed in case instead of manage_request_city for truncation -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/manage_request_city.js') }}"></script>
-  
-  <!-- For response_widget partial -->
-  <script type="text/javascript" src="{{ url_for('static', filename='js/_response_widget.js') }}"></script>
    
   <!-- For file uploads -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-fileupload.js') }}"></script>
