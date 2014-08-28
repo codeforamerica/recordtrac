@@ -3,14 +3,11 @@
 {% block title %}Request {{ req.id }}{% endblock %}
 {% block custom_css_links %}
     <!-- used for the extension and close request multi-select boxes in city view -->
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/manage_request_city.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/_response_widget.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/manage_request_city_less_js.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bottom_sidebar.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
-
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.min.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/_response_widget.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-fileupload.css') }}">
 {% endblock custom_css_links %}
 
@@ -225,7 +222,7 @@
   <div class="b_sidebar">
     <div class="row-fluid participantRow">
 
-        <div class="popover-container"><h4 class="participantRow-title">Point of Contact <span class="pull-right"><small><i class="icon-arrow-right"></i></small><i class="icon-user"></i></span></h4>
+        <div><h4 class="participantRow-title" style="color: #333333;">Point of Contact </h4>
         </div>
 
     </div>
@@ -234,10 +231,33 @@
     </div>
 
     <div class="row-fluid participantRow">   
-      <div class="popover-container participantRow-helpers"><h4 class="participantRow-title">Helpers<span class="pull-right"><small><i class="icon-plus"></i></small><i class="icon-group"></i></span></h4></div>  
+      <div class="participantRow-helpers"><h4 class="participantRow-title">Helpers</h4></div>  
     </div>
     <div class="row-fluid participantRow-participants">
-      {% include '_staff_participants.html' %}
+      {% for owner in req.owners %}
+        {% if owner.active %}
+          {% set participant = (owner | display_staff_participant(req)) %} 
+          {% if participant %}
+            {% if current_user.is_authenticated() %}
+              <div data-placement="left" class="unassignPopover">
+                <div>
+                  {{ participant }}
+                  <form id="rerouteForm" class="form-inline" method ="post" action="/update_a_owner">
+                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                        <input type="hidden" name="owner_id" value="{{ owner.id }}"/>
+                        <input type="text" class="input-small" name="reason_unassigned" value="Task complete" required />
+                        <button id="unassignButton" class="btn btn-mini" type="submit"> <i class="icon-envelope"> </i> Remove</button>
+                  </form>
+                </div> 
+                
+            {% else %}
+              <div>
+                {{ participant }}
+              </div>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
     </div>
     <div class="row-fluid participantRow-history">
       {% include '_history.html' %}
@@ -245,29 +265,21 @@
 
     <form id="rerouteForm" class="form-inline" method ="post" action="/update_a_owner">
       <fieldset>
-        <label>Reroute</label>
-        <div class="control-group">
-          <div class="controls">
-            <input type="hidden" name="request_id" value="{{ req.id }}"/>
-            <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
-            <input id="rerouteReason" type="text" name="owner_reason" placeholder="Say why." required />
-            <button id="rerouteButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
-          </div>
-        </div>
+        <label>Change point of contact</label>
+          <input type="hidden" name="request_id" value="{{ req.id }}"/>
+          <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
+          <input id="rerouteReason" type="text" name="owner_reason" placeholder="Say why." required />
+          <button id="rerouteButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
       </fieldset>
     </form>
 
     <form id="notifyForm" class="form-inline" method ="post" action="/add_a_owner">
       <fieldset>
       <label>Add helper</label>
-      <div class="control-group">
-        <div class="controls">
-          <input type="hidden" name="request_id" value="{{ req.id }}"/>
-          <input id="notifyEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
-          <input id="notifyReason" type="text" name="owner_reason" placeholder="Say why." required />
-          <button id="notifyButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
-        </div>
-      </div>
+        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+        <input id="notifyEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
+        <input id="notifyReason" type="text" name="owner_reason" placeholder="Say why." required />
+        <button id="notifyButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
     </form>
 
 
