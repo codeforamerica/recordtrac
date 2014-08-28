@@ -249,7 +249,7 @@
               
                 <div>
                   {{ participant }}
-                  <form id="rerouteForm" class="form-inline" method ="post" action="/update_a_owner">
+                  <form id="unassignForm" class="form-inline" method ="post" action="/update_a_owner">
                         <input type="hidden" name="request_id" value="{{ req.id }}"/>
                         <input type="hidden" name="owner_id" value="{{ owner.id }}"/>
                         <input type="text" class="span8" name="reason_unassigned" value="Task complete" required />
