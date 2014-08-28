@@ -270,8 +270,8 @@
     <form id="notifyForm" class="form-inline" method ="post" action="/add_a_owner">
       <fieldset>
         <input type="hidden" name="request_id" value="{{ req.id }}"/>
-        <input id="notifyEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
-        <input id="notifyReason" type="text" name="owner_reason" placeholder="Say why." required />
+        <input id="notifyEmail" class="input-block-level" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
+        <input id="notifyReason" class="input-block-level" type="text" name="owner_reason" placeholder="Say why." required />
         <button id="notifyButton" class="btn input-block-level" type="submit"> <i class="icon-envelope"> </i> Add a helper</button>
     </form>
 
