@@ -52,8 +52,6 @@
 {% endblock clarify_request %}
 
 {% block response_actions_lessjs %}
-
-
   <h3 style="margin-top:40px;">Response actions</h3>
   <!-- upload a record -->
   <form name="input_doc" style="margin-top: 2em;" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data">
@@ -207,7 +205,6 @@
       </div>
     </fieldset>
   </form>
-
 {% endblock response_actions_lessjs %}
 
 {% block sidebar %}
@@ -230,6 +227,16 @@
         {% include '_contact_popover.html' %}
     </div>
 
+    <form id="rerouteForm" class="form-inline" method ="post" action="/update_a_owner">
+      <fieldset>
+        <!-- <label>Change point of contact</label> -->
+          <input type="hidden" name="request_id" value="{{ req.id }}"/>
+          <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
+          <input id="rerouteReason" type="text" name="owner_reason" placeholder="Say why." required />
+          <button id="rerouteButton" class="btn input-block-level" type="submit"> <i class="icon-envelope"> </i> Change point of contact</button>
+      </fieldset>
+    </form>
+
     <div class="row-fluid participantRow">   
       <div class="participantRow-helpers"><h4 class="participantRow-title">Helpers</h4></div>  
     </div>
@@ -239,13 +246,13 @@
           {% set participant = (owner | display_staff_participant(req)) %} 
           {% if participant %}
             {% if current_user.is_authenticated() %}
-              <div data-placement="left" class="unassignPopover">
+              
                 <div>
                   {{ participant }}
                   <form id="rerouteForm" class="form-inline" method ="post" action="/update_a_owner">
                         <input type="hidden" name="request_id" value="{{ req.id }}"/>
                         <input type="hidden" name="owner_id" value="{{ owner.id }}"/>
-                        <input type="text" class="input-small" name="reason_unassigned" value="Task complete" required />
+                        <input type="text" class="span8" name="reason_unassigned" value="Task complete" required />
                         <button id="unassignButton" class="btn btn-mini" type="submit"> <i class="icon-envelope"> </i> Remove</button>
                   </form>
                 </div> 
@@ -259,28 +266,22 @@
         {% endif %}
       {% endfor %}
     </div>
+
+    <form id="notifyForm" class="form-inline" method ="post" action="/add_a_owner">
+      <fieldset>
+        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+        <input id="notifyEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
+        <input id="notifyReason" type="text" name="owner_reason" placeholder="Say why." required />
+        <button id="notifyButton" class="btn input-block-level" type="submit"> <i class="icon-envelope"> </i> Add a helper</button>
+    </form>
+
     <div class="row-fluid participantRow-history">
       {% include '_history.html' %}
     </div>
 
-    <form id="rerouteForm" class="form-inline" method ="post" action="/update_a_owner">
-      <fieldset>
-        <label>Change point of contact</label>
-          <input type="hidden" name="request_id" value="{{ req.id }}"/>
-          <input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
-          <input id="rerouteReason" type="text" name="owner_reason" placeholder="Say why." required />
-          <button id="rerouteButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
-      </fieldset>
-    </form>
+    
 
-    <form id="notifyForm" class="form-inline" method ="post" action="/add_a_owner">
-      <fieldset>
-      <label>Add helper</label>
-        <input type="hidden" name="request_id" value="{{ req.id }}"/>
-        <input id="notifyEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
-        <input id="notifyReason" type="text" name="owner_reason" placeholder="Say why." required />
-        <button id="notifyButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
-    </form>
+    
 
 
   </div>

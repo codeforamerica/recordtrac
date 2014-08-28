@@ -1,5 +1,10 @@
 /* custom css for manage_request_city.html and child templates */
 
+/* a bit of space between helpers */
+    #rerouteForm {
+        margin-bottom: 10px;
+    }
+
 /* _ask_question.html */
      #control-question {
           margin-bottom: 0.5em;
