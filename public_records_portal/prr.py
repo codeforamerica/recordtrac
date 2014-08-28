@@ -1,7 +1,9 @@
-""" 
-.. module:: prr
-	:synopsis: Things one can do relating to a public records request.
-.. modlueauthor:: Richa Agarwal <richa@codeforamerica.org>
+"""
+    public_records_portal.prr
+    ~~~~~~~~~~~~~~~~
+
+    Implements functions specific to managing or creating a public records request.
+
 """
 
 from public_records_portal import app, db_helpers
@@ -9,12 +11,12 @@ import os, time, json
 from flask import Flask, request
 from flask.ext.login import current_user
 from datetime import datetime, timedelta
+from db_helpers import find_request, create_request, get_obj, add_staff_participant, update_obj, get_attribute, change_request_status, create_or_return_user, create_subscriber, create_record, create_note, create_QA, create_answer
 from models import *
 from ResponsePresenter import ResponsePresenter
 from RequestPresenter import RequestPresenter
 from notifications import generate_prr_emails
 import scribd_helpers
-from db_helpers import *
 from spam import is_spam
 import logging
 import csv
@@ -298,13 +300,6 @@ def set_directory_fields():
 	else:
 		app.logger.info("\n\n Please add an environment variable for where to find department liaison data for your agency.")
 
-			
-### @export "last_note"
-def last_note(request_id):
-	notes = get_attribute(attribute = "notes", obj_id = request_id, obj_type = "Request")
-	if notes:
-		return notes[0]
-	return None
 
 ### @export "close_request"
 def close_request(request_id, reason = "", user_id = None):

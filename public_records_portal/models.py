@@ -1,3 +1,11 @@
+"""
+    public_records_portal.models
+    ~~~~~~~~~~~~~~~~
+
+    Defines RecordTrac's database schema, and implements helper functions.
+
+"""
+
 from flask.ext.sqlalchemy import SQLAlchemy, sqlalchemy
 from flask.ext.login import current_user
 

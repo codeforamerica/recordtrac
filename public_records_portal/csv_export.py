@@ -1,3 +1,11 @@
+"""
+    public_records_portal.csv_export
+    ~~~~~~~~~~~~~~~~
+
+    Implements an export to CSV function (for staff only) for relevant database fields.
+
+"""
+
 from public_records_portal import models, db
 import csv
 

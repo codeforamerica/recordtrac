@@ -1,6 +1,15 @@
-from public_records_portal import models, scribd_helpers
-from models import Record, Note
+"""
+    public_records_portal.RequestPresenter
+    ~~~~~~~~~~~~~~~~
 
+    Returns the html needed for the 'Response' portion of the case page.
+
+"""
+
+
+
+from models import Record, Note
+import scribd_helpers
 
 class ResponsePresenter:
 	def __init__(self, record = None, note = None):

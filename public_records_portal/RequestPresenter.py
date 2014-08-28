@@ -1,3 +1,12 @@
+"""
+    public_records_portal.RequestPresenter
+    ~~~~~~~~~~~~~~~~
+
+    Returns the html needed for the 'Request' portion of the case page.
+
+"""
+
+
 from public_records_portal import models
 from models import Note, QA
 from db_helpers import get_obj

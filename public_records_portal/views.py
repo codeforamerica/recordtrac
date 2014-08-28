@@ -1,13 +1,17 @@
-"""Contains all functions that render templates/html for the app.
 """
+    public_records_portal.views
+    ~~~~~~~~~~~~~~~~
+
+    Implements functions that render the Jinja (http://jinja.pocoo.org/) templates/html for RecordTrac.
+
+"""
+
 
 from flask import render_template, request, redirect, url_for, jsonify
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
 from flaskext.browserid import BrowserID
-from public_records_portal import app
-from filters import *
+from public_records_portal import app, db, models
 from prr import add_resource, update_resource, make_request, close_request
-from db_helpers import *
 from db_helpers import get_user_by_id # finds a user by their id
 from db_helpers import get_user # finds a user based on BrowserID response
 import os, json
@@ -24,6 +28,10 @@ import anyjson
 import helpers
 import csv_export
 from datetime import datetime, timedelta
+from filters import *
+import re
+from db_helpers import get_count, get_obj
+from sqlalchemy import func, not_, and_, or_
 
 # Initialize login
 
@@ -84,7 +92,7 @@ def new_request(passed_recaptcha = False, data = None):
 		routing_available = False
 		if 'LIAISONS_URL' in app.config:
 			routing_available = True
-			departments = db.session.query(Department).all()
+			departments = db.session.query(models.Department).all()
 		if current_user.is_authenticated():
 			return render_template('offline_request.html', routing_available = routing_available, departments = departments)
 		else:
@@ -182,7 +190,7 @@ def show_request(request_id, template = "manage_request_public.html"):
 
 @app.route("/api/staff")
 def staff_to_json():
-	users = User.query.filter(User.is_staff == True).all()
+	users = models.User.query.filter(models.User.is_staff == True).all()
 	staff_data = []
 	for u in users:
 		staff_data.append({'alias': u.alias, 'email': u.email})
@@ -190,7 +198,7 @@ def staff_to_json():
 
 @app.route("/api/departments")
 def departments_to_json():
-	departments = Department.query.all()
+	departments = models.Department.query.all()
 	department_data = []
 	for d in departments:
 		department_data.append({'department': d.name})
@@ -275,14 +283,14 @@ def filter_department(departments_selected, results):
 		department_ids = []
 		for department_name in departments_selected:
 			if department_name:
-				department = Department.query.filter_by(name = department_name).first()
+				department = models.Department.query.filter_by(name = department_name).first()
 				if department:
 					department_ids.append(department.id)
 		if department_ids:
-			results = results.filter(Request.department_id.in_(department_ids))
+			results = results.filter(models.Request.department_id.in_(department_ids))
 		else:
 			# Just return an empty query set
-			results = results.filter(Request.department_id < 0)
+			results = results.filter(models.Request.department_id < 0)
 	return results
 
 def filter_search_term(search_input, results):
@@ -340,7 +348,7 @@ def display_all_requests(methods = ["GET"]):
 
 @app.route("/view_requests_backbone")
 def backbone_requests():
-	return render_template("all_requests.html", departments = db.session.query(Department).all(), total_requests_count = get_count("Request"))
+	return render_template("all_requests.html", departments = db.session.query(models.Department).all(), total_requests_count = get_count("Request"))
 
 @app.route("/view_requests_no_backbone")
 def no_backbone_requests():
@@ -423,7 +431,7 @@ def fetch_requests(output_results_only = False, filters_map = None, date_format 
 	if output_results_only == True:
 		return requests, num_results, more_results, start_index, end_index
 
-	return render_template("all_requests_less_js.html", total_requests_count = get_count("Request"), requests = requests, departments = db.session.query(Department).all(), departments_selected = departments_selected, is_open = is_open, is_closed = is_closed, due_soon = due_soon, overdue = overdue, mine_as_poc = mine_as_poc, mine_as_helper = mine_as_helper, sort_column = sort_column, sort_direction = sort_direction, search_term = search_term, min_due_date = min_due_date, max_due_date = max_due_date, min_date_received = min_date_received, max_date_received = max_date_received, requester_name = requester_name, page_number = page_number, more_results = more_results, num_results = num_results, start_index = start_index, end_index = end_index)
+	return render_template("all_requests_less_js.html", total_requests_count = get_count("Request"), requests = requests, departments = db.session.query(models.Department).all(), departments_selected = departments_selected, is_open = is_open, is_closed = is_closed, due_soon = due_soon, overdue = overdue, mine_as_poc = mine_as_poc, mine_as_helper = mine_as_helper, sort_column = sort_column, sort_direction = sort_direction, search_term = search_term, min_due_date = min_due_date, max_due_date = max_due_date, min_date_received = min_date_received, max_date_received = max_date_received, requester_name = requester_name, page_number = page_number, more_results = more_results, num_results = num_results, start_index = start_index, end_index = end_index)
 
 @app.route("/custom/request", methods = ["GET", "POST"])
 def json_requests():
@@ -474,7 +482,7 @@ def prepare_request_fields(results):
 
 def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, overdue, mine_as_poc, mine_as_helper, sort_column, sort_direction, search_term, min_due_date, max_due_date, min_date_received, max_date_received, requester_name, page_number, user_id, date_format, checkbox_value):
 	# Initialize query
-	results = db.session.query(Request)
+	results = db.session.query(models.Request)
 
 	# Set filters on the query
 
@@ -485,19 +493,19 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 	status_filters = []
 
 	if is_open == checkbox_value:
-		status_filters.append(Request.open)
+		status_filters.append(models.Request.open)
 		if not user_id:
-			status_filters.append(Request.due_soon)
-			status_filters.append(Request.overdue)
+			status_filters.append(models.Request.due_soon)
+			status_filters.append(models.Request.overdue)
 
 	if is_closed == checkbox_value:
-		status_filters.append(Request.closed)
+		status_filters.append(models.Request.closed)
 
 	if min_date_received and max_date_received and min_date_received != "" and max_date_received != "":
 		try:
 			min_date_received = datetime.strptime(min_date_received, date_format)
 			max_date_received = datetime.strptime(max_date_received, date_format) + timedelta(hours = 23, minutes = 59) 
-			results = results.filter(and_(Request.date_received >= min_date_received, Request.date_received <= max_date_received))
+			results = results.filter(and_(models.Request.date_received >= min_date_received, models.Request.date_received <= max_date_received))
 			app.logger.info('Request Date Bounding. Min: {0}, Max: {1}'.format(min_date_received, max_date_received))
 		except:
 			app.logger.info('There was an error parsing the request date filters. Received Min: {0}, Max {1}'.format(min_date_received, max_date_received))
@@ -507,16 +515,16 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 	if user_id:
 
 		if due_soon == checkbox_value:
-			status_filters.append(Request.due_soon)
+			status_filters.append(models.Request.due_soon)
 
 		if overdue == checkbox_value:
-			status_filters.append(Request.overdue)
+			status_filters.append(models.Request.overdue)
 
 		if min_due_date and max_due_date and min_due_date != "" and max_due_date != "":
 			try:
 				min_due_date = datetime.strptime(min_due_date, date_format)
 				max_due_date = datetime.strptime(max_due_date, date_format) + timedelta(hours = 23, minutes = 59)  
-				results = results.filter(and_(Request.due_date >= min_due_date, Request.due_date <= max_due_date))
+				results = results.filter(and_(models.Request.due_date >= min_due_date, models.Request.due_date <= max_due_date))
 				app.logger.info('Due Date Bounding. Min: {0}, Max: {1}'.format(min_due_date, max_due_date))
 			except:
 				app.logger.info('There was an error parsing the due date filters. Due Date Min: {0}, Max {1}'.format(min_due_date, max_due_date))
@@ -525,24 +533,24 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 		if mine_as_poc == checkbox_value: 
 			if mine_as_helper == checkbox_value:
 				# Where am I the Point of Contact *or* the Helper?
-				results = results.filter(Request.id == Owner.request_id) \
-								 .filter(Owner.user_id == user_id) \
-								 .filter(Owner.active == True)
+				results = results.filter(models.Request.id == models.Owner.request_id) \
+								 .filter(models.Owner.user_id == user_id) \
+								 .filter(models.Owner.active == True)
 			else:
 				# Where am I the Point of Contact only?
-				results = results.filter(Request.id == Owner.request_id) \
-								 .filter(Owner.user_id == user_id) \
-								 .filter(Owner.is_point_person == True)
+				results = results.filter(models.Request.id == models.Owner.request_id) \
+								 .filter(models.Owner.user_id == user_id) \
+								 .filter(models.Owner.is_point_person == True)
 		elif mine_as_helper == checkbox_value:
 				# Where am I a Helper only?
-				results = results.filter(Request.id == Owner.request_id) \
-								 .filter(Owner.user_id == user_id) \
-								 .filter(Owner.active == True) \
-								 .filter(Owner.is_point_person == False)
+				results = results.filter(models.Request.id == Owner.request_id) \
+								 .filter(models.Owner.user_id == user_id) \
+								 .filter(models.Owner.active == True) \
+								 .filter(models.Owner.is_point_person == False)
 		# Filter based on requester name
 		requester_name = requester_name
 		if requester_name and requester_name != "":
-			results = results.join(Subscriber, Request.subscribers).join(User).filter(func.lower(User.alias).like("%%%s%%" % requester_name.lower()))
+			results = results.join(models.Subscriber, models.Request.subscribers).join(models.User).filter(func.lower(models.User.alias).like("%%%s%%" % requester_name.lower()))
 			
 	# Apply the set of status filters to the query.
 	# Using 'or', they're non-exclusive!
@@ -552,11 +560,11 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 		app.logger.info("Sort Direction: %s" % sort_direction)
 		app.logger.info("Sort Column: %s" % sort_column)
 		if sort_direction == "desc":
-			results = results.order_by((getattr(Request, sort_column)).desc())
+			results = results.order_by((getattr(models.Request, sort_column)).desc())
 		else:
-			results = results.order_by((getattr(Request, sort_column)).asc())
+			results = results.order_by((getattr(models.Request, sort_column)).asc())
 
-	return results.order_by(Request.id.desc())
+	return results.order_by(models.Request.id.desc())
 
 
 @app.route("/<page>")

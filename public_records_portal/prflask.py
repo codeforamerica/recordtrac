@@ -1,3 +1,13 @@
+"""
+    public_records_portal.prflask
+    ~~~~~~~~~~~~~~~~
+
+    Sets up API and admin endpoints for the RecordTrac flask application.
+
+"""
+
+
+
 from public_records_portal import app, models, db, views
 from views import * # Import all the functions that render templates
 from flask.ext.restless import APIManager
@@ -68,7 +78,7 @@ class NoteView(AdminView):
 	form_excluded_columns = ('date_created')
 
 
-admin.add_view(RequestView(Request, db.session))
-admin.add_view(RecordView(Record, db.session))
-admin.add_view(NoteView(Note, db.session))
-admin.add_view(QAView(QA, db.session))
+admin.add_view(RequestView(models.Request, db.session))
+admin.add_view(RecordView(models.Record, db.session))
+admin.add_view(NoteView(models.Note, db.session))
+admin.add_view(QAView(models.QA, db.session))

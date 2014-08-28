@@ -2,7 +2,6 @@ from public_records_portal import app, gravatar, prr, notifications, helpers, sc
 # Register your filter here!
 
 app.jinja_env.filters['get_scribd_download_url'] = scribd_helpers.get_scribd_download_url
-app.jinja_env.filters['last_note'] = prr.last_note
 app.jinja_env.filters['due_date'] = notifications.due_date
 app.jinja_env.filters['get_obj'] = db_helpers.get_obj
 app.jinja_env.filters['get_objs'] = db_helpers.get_objs

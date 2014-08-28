@@ -1,9 +1,17 @@
+"""
+    public_records_portal.scribd_helpers
+    ~~~~~~~~~~~~~~~~
+
+    Implements functions to interact with Scribd API for RecordTrac
+
+"""
+
+
 import scribd
 from public_records_portal import app, models
 from timeout import timeout
 from werkzeug import secure_filename
 import tempfile
-from db_helpers import *
 
 
 def should_upload():

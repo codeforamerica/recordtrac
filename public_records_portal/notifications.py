@@ -1,3 +1,14 @@
+"""
+    public_records_portal.notifications
+    ~~~~~~~~~~~~~~~~
+
+    Implements e-mail notifications for RecordTrac. SendGrid (https://sendgrid.com/) is a dependency, and the following environment variables need to be set in order for this to work: MAIL_USERNAME, MAIL_PASSWORD, and DEFAULT_MAIL_SENDER.
+
+"""
+
+
+
+
 from datetime import datetime, timedelta
 from public_records_portal import app
 import os

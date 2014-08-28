@@ -1,3 +1,12 @@
+"""
+    public_records_portal.spam
+    ~~~~~~~~~~~~~~~~
+
+    Implements spam filters used on RecordTrac's forms that don't require login. Akismet is a dependency (https://akismet.com) and the following environment variables need to be set in order for this to work: AKISMET_KEY, APPLICATION_URL
+
+"""
+
+
 from public_records_portal import app
 import akismet
 import logging

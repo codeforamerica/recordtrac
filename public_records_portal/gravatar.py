@@ -1,3 +1,13 @@
+"""
+    public_records_portal.gravatar
+    ~~~~~~~~~~~~~~~~
+
+    Implements gravatar helper functions
+
+"""
+
+
+
 # import code for encoding urls and generating md5 hashes
 import urllib, hashlib
  

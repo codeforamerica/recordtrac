@@ -310,13 +310,6 @@ def find_request(text):
 		return req.id
 	return None
 
-### @export "find_owner"
-def find_owner(request_id, user_id):
-	owner = Owner.query.filter_by(request_id = request_id, user_id = user_id).first() 
-	if owner:
-		return owner.id
-	return None
-
 
 ### @export "add_staff_participant"
 def add_staff_participant(request_id, is_point_person = False, email = None, user_id = None, reason = None):

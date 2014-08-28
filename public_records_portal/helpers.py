@@ -1,3 +1,11 @@
+"""
+    public_records_portal.helpers
+    ~~~~~~~~~~~~~~~~
+
+    Implements various helper functions for RecordTrac
+
+"""
+
 from datetime import datetime, timedelta
 import os
 from public_records_portal import app
@@ -5,11 +13,10 @@ import json
 from jinja2 import Markup
 from db_helpers import *
 import notifications
-import akismet
 import pytz
 
 def localize(datetime_str):
-	tz = pytz.timezone("US/Pacific") # This should eventually be set dynamically
+	tz = pytz.timezone(app.config['TIMEZONE'])
 	return datetime_str.replace(tzinfo=pytz.utc).astimezone(tz) # This appears to work in Heroku but not locally
 
 def date_granular(timestamp):

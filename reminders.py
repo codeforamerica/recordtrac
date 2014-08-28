@@ -1,2 +1,0 @@
-from public_records_portal.notifications import notify_due
-notify_due()
