@@ -113,7 +113,7 @@ By default, `HOST_URL` is set to point to Scribd, but if you decide to host docu
 
 #### Connect your agency's staff data
 * **Users**:
-In order for agency staff to log into RecordTrac, RecordTrac must have access to a list of staff provided via a comma-separated file hosted at the `STAFF_URL`. Here's an [example csv](https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/staff.csv). ![Staff csv](/readme/images/staff-csv.png "staff csv")  **update screenshot**
+In order for agency staff to log into RecordTrac, RecordTrac must have access to a list of staff provided via a comma-separated file hosted at the `STAFF_URL`. Here's an [example csv](https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/staff.csv). ![staff_csv](/readme/images/staff_csv.png "staff_csv")
 
 	**NOTE: You will have to name your fields according to the example provided, but the order does not matter.**
 
