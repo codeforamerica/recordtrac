@@ -51,11 +51,11 @@ A description of the fields in the table displayed can be found below:
 
 Clicking on the trashcan icon permanently deletes an entire request.
 
-image::admin_delete_request.png[]
+![admin_delete_request](/readme/images/admin_delete_request.png "admin_delete_request")
 
 Clicking on the pencil icon will allow you to edit a request. 
 
-image::admin_edit_request.png[]
+![admin_edit_request](/readme/images/admin_edit_request.png "admin_edit_request")
 
 ## How to Remove a Record
 
@@ -75,13 +75,13 @@ A description of the fields in the table displayed can be found below:
 
 Click on the trashcan icon to permanently delete the record from RecordTrac. You must also delete the record from the hosted location.  For example, if you are using Scribd, it must be deleted from the Scribd account.  
 
-image::admin_delete_record.png[]
+![admin_delete_record](/readme/images/admin_delete_record.png "admin_delete_record")
 
 ## How to Remove or Edit a Note
 
 To edit or remove a note, visit `[records.youragency.gov]/admin/noteview`.
 
-image::admin_note.png[]
+![admin_note](/readme/images/admin_note.png "admin_note")
 
 A description of the fields in the table displayed can be found below:
 
@@ -91,17 +91,17 @@ A description of the fields in the table displayed can be found below:
 
 Click on the trashcan icon to permanently delete the note from RecordTrac. 
 
-image::admin_delete_note.png[]
+![admin_delete_note](/readme/images/admin_delete_note.png "admin_delete_note")
 
 Clicking on the pencil icon will allow you to edit the text of a note.
 
-image::admin_edit_note.png[]
+![admin_edit_note](/readme/images/admin_edit_note.png "admin_edit_note")
 
 ## How to Remove or Edit a Question and Answer Exchange
 
 To remove posted questions and/or answers, navigate to the "Q A" tab.
 
-image::admin_qa.png[]
+![admin_qa](/readme/images/admin_qa.png "admin_qa")
 
 A description of the fields in the table displayed can be found below:
 
@@ -112,11 +112,11 @@ A description of the fields in the table displayed can be found below:
 
 Clicking on the trashcan icon permanently deletes the entire question and answer exchange.
 
-image::admin_delete_qa.png[]
+![admin_delete_qa](/readme/images/admin_delete_qa.png "admin_delete_qa")
 
 Clicking on the pencil icon will allow you to edit the text of the question and answer exchange. 
 
-image::admin_edit_qa.png[]
+![admin_edit_qa](/readme/images/admin_edit_qa.png "admin_edit_qa")
 
 
 ## Updating Website Text
@@ -127,8 +127,6 @@ The web copy is not managed through the admin interface. To update the copy on t
 ## Changing Passwords
 
 Passwords are not managed through the admin section. Agency employees are required to manage their own passwords directly through the Mozilla Persona sign-in.
-
-image::reset_password.png[]
 
 
 ## Checking Status of RecordTrac
