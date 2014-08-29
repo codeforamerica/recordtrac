@@ -1,5 +1,5 @@
 import os
-from public_records_portal import app, prflask, models, prr
+from public_records_portal import app, prflask, models, prr, db_helpers
 import unittest
 import random, string
 import tempfile
@@ -110,15 +110,32 @@ class PublicRecordsTestCase(unittest.TestCase):
 		page = self.submit_generic(fields = dict(request_id = request_id, owner_reason = reroute_reason, owner_email = "cris@codeforamerica.org"), endpoint = "update_a_owner")
 		assert reroute_reason in page.data
 
+	def test_add_helper(self):
+		request_id = self.submit_request(text= self.random_content('request'), email = 'richa@richa.com')
+		add_reason = self.random_content('reroute reason')
+		page = self.submit_generic(fields = dict(request_id = request_id, owner_reason = add_reason, owner_email = "richa@codeforamerica.org"), endpoint = "add_a_owner")
+		assert add_reason in page.data
+
+	def add_helper(self, email = "anon@codeforamerica.org", add_reason = None):
+		if not add_reason:
+			add_reason = self.random_content('add reason')
+		request_id = self.submit_request(text= self.random_content('request'), email = 'richa@richa.com')
+		owner_id, is_new = db_helpers.add_staff_participant(request_id = request_id, email = email, reason = add_reason)
+		return owner_id, request_id
+
+	def test_remove_helper(self):
+		owner_id, request_id = self.add_helper()
+		remove_reason = self.random_content('remove reason')
+		app.logger.info("\n\n Removing Owner id: %s for reason: %s" % (owner_id, remove_reason))
+		page = self.submit_generic(fields = dict(reason_unassigned = remove_reason, owner_id = owner_id, request_id = request_id), endpoint = "update_a_owner")
+		print page.data
+		assert remove_reason in page.data
+
 	def test_extend_request(self):
 		request_id = self.submit_request(text = self.random_content('request'), email = 'richa@codeforamerica.org')
 		extend_reason = self.random_content('extend reason')
 		page = self.submit_generic(fields = dict(request_id = request_id, extend_reason = [extend_reason]), endpoint = "add_a_extension")
 		assert extend_reason in page.data
-
-	# ---
-
-	# add test for unassigning someone
 
 
 	def submit_request(self, email, text):
