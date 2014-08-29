@@ -89,7 +89,9 @@ Set `AGENCY_NAME` to the name of your agency, which is used across the site (ex.
 `LOGO_ON_WHITE_URL`, `LOGO_ON_BLACK_URL` are used across the site but appear blank if none are supplied. The "LOGO_ON_WHITE" is used for general in-page representation, primarily the landing page.  The "LOGO_ON_BLACK" is used for the navbar.  We recommend using an image with a transparent background.  While these logos are not technically required, it is strongly encouraged as they help communicate this application is an official agency website.  
 
 	Here are example images of both:
+	
 	![LOGO_ON_WHITE](/public_records_portal/static/examples/logo.png "LOGO_ON_WHITE")
+	
 	![LOGO_ON_BLACK](/public_records_portal/static/examples/logo_black.png "LOGO_ON_BLACK")
 
 * **Default point of contact**:
