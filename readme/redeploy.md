@@ -33,8 +33,6 @@ Using the recommended deployment instructions below, the technical operating cos
 
 If you have problems using RecordTrac, please [open an issue on GitHub](https://github.com/codeforamerica/recordtrac/issues) and let us know what problems or difficulties you encountered in as much detail as you can.
 
-### Initial Setup
-
 ### Deploying on Heroku
 
 To follow the below instructions, you will first need to [install the Heroku toolbelt](https://toolbelt.heroku.com/) on your computer.
@@ -52,26 +50,14 @@ Go into the repo folder:
 Create a Heroku app:
 
     $ heroku create
-    
-Set the secret token:
-
-    $ heroku config:set SECRET_TOKEN=`python -c 'import uuid; print uuid.uuid4()'`
-
 
 Next, push the code to Heroku:
 
     $ git push heroku master
 
-Migrate the database:
+Add an additional web dyno so that the app is responsive:
 
-    $ heroku run rake db:migrate
-
-Load the locations and questions:
-
-    $ heroku run rake import:locations
-    $ heroku run rake import:questions
-
-Add an additional web dyno so that the app never sleeps (this is necessary so the app always answers when people call in):
+*NOTE: This is strongly recommended for a production-ready deployment.*
 
 	$ heroku ps:scale web=2
 	
@@ -115,13 +101,13 @@ The `ENVIRONMENT` field must be set to `PRODUCTION` once the application is read
 
 #### Set up additional services
 * **Spam**:
-After setting up Recaptcha and [Akismet](http://akismet.com/plans/) accounts, update the `AKISMET_KEY`, `RECAPTCHA_PUBLIC_KEY`, and `RECAPTCHA_PRIVATE_KEY`, accordingly.
+Set up [Recaptcha](http://www.google.com/recaptcha/intro/) and [Akismet](http://akismet.com/plans/) accounts, then update the `AKISMET_KEY`, `RECAPTCHA_PUBLIC_KEY`, and `RECAPTCHA_PRIVATE_KEY`, accordingly.
 
 * **E-mail notifications**:
-Sign up for a free account with [SendGrid](https://sendgrid.com/user/signup). Set `DEFAULT_MAIL_SENDER` to the e-mail address that you would like to show up in the 'To' field (e.g. `records-donotreply@agency.gov`), set `MAIL_USERNAME` to the SendGrid username you choose, and `MAIL_PASSWORD` to the SendGrid password. We assume your monthly email limit is 40,000 sends (Sendgrid's Bronze account level), but you can change this by setting the `SENDGRID_MONTHLY_LIMIT`.
+Sign up for an account with [SendGrid](https://sendgrid.com/user/signup). Set `DEFAULT_MAIL_SENDER` to the e-mail address that you would like to show up in the 'To' field (e.g. `records-donotreply@agency.gov`), set `MAIL_USERNAME` to the SendGrid username you choose, and `MAIL_PASSWORD` to the SendGrid password. We assume your monthly email limit is 40,000 sends (Sendgrid's Bronze account level), but you can change this by setting the `SENDGRID_MONTHLY_LIMIT`.
 
 * **Document hosting**:
-By default, `HOST_URL` is set to point to Scribd, but if you decide to host documents internally, you would update this field. If using Scribd, you will need to set `SCRIBD_API_KEY` and `SCRIBD_API_SECRET` after setting up a Scribd developer account.
+By default, `HOST_URL` is set to point to Scribd, but if you decide to host documents internally, you would update this field. If using Scribd, you will need to set `SCRIBD_API_KEY` and `SCRIBD_API_SECRET` after setting up a [Scribd developer account](http://www.scribd.com/developers).
 
 #### Connect your agency's staff data
 * **Users**:
