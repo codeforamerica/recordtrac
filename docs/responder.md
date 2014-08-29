@@ -2,13 +2,13 @@
 
 ## Search for a record
 
-RecordTrac displays all current and past records requests at http://records.oaklandnet.com/requests[records.oaklandnet.com/requests]. 
+RecordTrac displays all current and past records requests at `records.[youragency].gov/requests`. 
 
 ![staff_table](/docs/images/staff_table.png "staff_table")
 
 The table displays the following information:
 
-* '#': Each request is assigned a unique number. You can easily track requests with this number by visiting `records.[youragency].gov/requests]`.
+* '#': Each request is assigned a unique number. You can easily track requests with this number by visiting `records.[youragency].gov/track]`.
 * Received: This shows the date the request was received.  If a request wasn't originally submitted through RecordTrac, it may take agency employees a day or two to enter it into the system.
 * Request: This is the message sent to the agency by a member of the public. Sometimes agnecy employees will enter a request on behalf of an individual. If the requested document contains confidential information that may violate the security or privacy of a requester, the public will only see a short description of the document.
 * Department: The agency department where the point of contact works. Multiple departments may be involved in one request, but the Point of Contact's department will only be displayed. 
