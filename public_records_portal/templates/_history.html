@@ -20,7 +20,7 @@
       <tr>
         <td>{{ alias }}</td>
         <td><i class="icon-plus-sign"></i></td>
-        <td>{{ owner.date_created | date }}</td>
+        <td>{{ owner.date_updated | date }}</td>
         <td>{{ owner.reason or "N/A" }}</td>
       </tr>
        {% if not owner.active %}
