@@ -242,6 +242,3 @@ You should see something similar to:
 Navigate to the url (in this case, http://127.0.0.1:5000) in your browser.
 
 You can now login with any e-mail address and the password 'admin'..
-
-
-<!-- [![Build Status](https://travis-ci.org/codeforamerica/public-records.png?branch=master)](https://travis-ci.org/codeforamerica/public-records) -->
