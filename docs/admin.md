@@ -121,7 +121,7 @@ Clicking on the pencil icon will allow you to edit the text of the question and 
 
 ## Updating Website Text
 
-The web copy is not managed through the admin interface. To update the copy on the website, the .json files or HTML templates must be modified.  See the [redeploy documentation](/redeploy.md) for more detailed instructions.
+The web copy is not managed through the admin interface. To update the copy on the website, the .json files or HTML templates must be modified.  See the [redeploy documentation](/docs/redeploy.md) for more detailed instructions.
 
 
 ## Changing Passwords
