@@ -40,7 +40,7 @@ If a record needs to be removed. It not only has to be deleted on RecordTrac, it
 
 To remove or edit a request, visit `[records.youragency.gov]/admin/requestview`. 
 
-![admin_edit_request](/readme/images/admin_edit_request.png "admin_edit_request")
+![admin_edit_request](/readme/images/admin_request.png "admin_edit_request")
 
 A description of the fields in the table displayed can be found below:
 
