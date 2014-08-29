@@ -2,13 +2,13 @@
 
 ## Search for a record
 
-RecordTrac displays all current and past records requests at http://records.oaklandnet.com/requests[records.oaklandnet.com/requests]. 
+RecordTrac displays all current and past records requests at `records.[youragency].gov/requests`. 
 
-![staff_table](/readme/images/staff_table.png "staff_table")
+![staff_table](/docs/images/staff_table.png "staff_table")
 
 The table displays the following information:
 
-* '#': Each request is assigned a unique number. You can easily track requests with this number by visiting `records.[youragency].gov/requests]`.
+* '#': Each request is assigned a unique number. You can easily track requests with this number by visiting `records.[youragency].gov/track]`.
 * Received: This shows the date the request was received.  If a request wasn't originally submitted through RecordTrac, it may take agency employees a day or two to enter it into the system.
 * Request: This is the message sent to the agency by a member of the public. Sometimes agnecy employees will enter a request on behalf of an individual. If the requested document contains confidential information that may violate the security or privacy of a requester, the public will only see a short description of the document.
 * Department: The agency department where the point of contact works. Multiple departments may be involved in one request, but the Point of Contact's department will only be displayed. 
@@ -22,7 +22,7 @@ The table displays the following information:
 ### Manage your request list
 The default view shows those requests which are likely to have the most relevance to the responder.  It shows those requests with which the responder is tagged as either the Point of Contact or as a Helper and automatically hides completed (closed) requests.  Use the search, filter, and sort options to change the view or search for more requests.
 
-![staff_filter](/readme/images/staff_filter.png "staff_filter")
+![staff_filter](/docs/images/staff_filter.png "staff_filter")
 
 ### Search options
 
@@ -52,7 +52,7 @@ Agency staff can also sort the requests by:
 ## Make a new request
 Agency staff can create a request on behalf of a requester. 
 
-![staff_new_request](/readme/images/staff_new_request.png "staff_new_request")
+![staff_new_request](/docs/images/staff_new_request.png "staff_new_request")
 
 * Some contact information is optional, although we strongly encourage the requester to provide an email address as this is the only way they can receive status updates on their request. 
 * There is no limit to the amount of text a requester can put in the request field.
@@ -63,7 +63,7 @@ Agency staff can create a request on behalf of a requester.
 
 ### Responder-specific fields
 
-![receipt_information](/readme/images/receipt_information.png "receipt_information")
+![receipt_information](/docs/images/receipt_information.png "receipt_information")
 
 Most municipalities allow an individual to submit a public records request any way they please, including by mail, fax, and over the phone.
 
@@ -76,25 +76,25 @@ Responders are typically employees of a governmental agency.
 
 ### Change the Point of Contact for a Request
 
-![change_point_of_contact](/readme/images/change_point_of_contact.png "change_point_of_contact")
+![change_point_of_contact](/docs/images/change_point_of_contact.png "change_point_of_contact")
 
 An agency employee can send the request to another individual in the official directory if their department is unable to fulfill it. The agency employee will be alerted via email and will become the new point of contact for this request.
 
 ### Add a Helper
 
-![add_helper](/readme/images/add_helper.png "add_helper")
+![add_helper](/docs/images/add_helper.png "add_helper")
 
 Sometimes more than one person is needed to fulfill a request or it involves multiple departments. Click on 'Helpers' to notify additional staff of this request. The staff member will be alerted via email that they are expected to respond to this request. The helpers will be able to add documents and send messages to the requester via RecordTrac. 
 
 ### Ask a Question
 
-![ask_question](/readme/images/ask_question.png "ask_question")
+![ask_question](/docs/images/ask_question.png "ask_question")
 
 An agency employee can ask questions about this particular records request. The requester will be notified via email of this question. The question will be posted online for everyone to view.
 
 ### Upload a Record
 
-![upload_record](/readme/images/upload_record.png "upload_record")
+![upload_record](/docs/images/upload_record.png "upload_record")
 
 Documents stored on a computer can be uploaded. The requester will be notified via email every time a record is uploaded. The documents will be posted online for everyone to view.
 
@@ -105,7 +105,7 @@ Records are displayed online via Scribd. Supported file types are the following:
 
 ### Add a Link to Another Website
 
-![add_link](/readme/images/add_link.png "add_link")
+![add_link](/docs/images/add_link.png "add_link")
 
 An agency employee can respond to a request by providing a link to where the document or information is stored online. The requester will be notified via email about this link. This web address will be posted online for everyone to view.
 
@@ -114,7 +114,7 @@ You must name each link you post.
 
 ### Add An Offline Record
 
-![offline_record](/readme/images/offline_record.png "offline_record")
+![offline_record](/docs/images/offline_record.png "offline_record")
 
 Some records cannot be uploaded to the website and requesters will have to be told when and where to pick up copies of it. The requester will be notified via email about this message. This message will be posted online for everyone to view.
 
@@ -122,24 +122,24 @@ You must provide a name for the instructions you post.
 
 Below is an example of a posted message:
 
-![offline_record_example](/readme/images/offline_record_example.png "offline_record_example")
+![offline_record_example](/docs/images/offline_record_example.png "offline_record_example")
 
 ### Add a Note
 
-![add_note](/readme/images/add_note.png "add_note")
+![add_note](/docs/images/add_note.png "add_note")
 
 Updates can be provided to the requester through the "Add a Note" feature. The requester will be notified via email. The message will be posted online for everyone to view.
 
 ### Request an Extension
 *NOTE: Extensions may not apply to all agencies.*
 
-![extend_request](/readme/images/extend_request.png "extend_request")
+![extend_request](/docs/images/extend_request.png "extend_request")
 
 Notify a requester if additional time is needed to fulfill their public records request. Select from one of the reasons to extend a request and edit the message. The due date of the request changes, giving the staff member a set number of additional calendar days to respond to the request. The message is posted online and the requester is notified via email. _An extension can only be requested once._ The extension date is calculated from an admin-configured response time.
 
 ### Closing a Request
 
-![close_request](/readme/images/close_request.png "close_request")
+![close_request](/docs/images/close_request.png "close_request")
 
 To close out a request, staff can edit a message already provided to them. An email is then sent to the requester notifying them the request is closed. The status of the request will also change. 
 
@@ -160,13 +160,13 @@ Example list of reasons a request can be closed.  These may vary between agencie
 
 ### Re-Open a Request
 
-![reopen_request](/readme/images/reopen_request.png "reopen_request")
+![reopen_request](/docs/images/reopen_request.png "reopen_request")
 
 Allows you to re-open a request after it is closed. This makes it possible for you to send more messages and upload additional records.
 
 ### Responses
 
-![responses](/readme/images/responses.png "responses")
+![responses](/docs/images/responses.png "responses")
 
 All responses are displayed in chronological order. Each response includes the time it was uploaded and who uploaded the document or sent the message. 
 
@@ -198,7 +198,7 @@ The Point of Contact and Helpers for a request recieve an email notification whe
 RecordTrac's tutorial shows agency employees how to successfully manage a public records request with RecordTrac. The tutorial was created to quickly on-board new employees who are responsible for fulfilling public records requests. Only agency staff who are logged into RecordTrac are able to view the tutorial.
 You can view the tutorial by going to `records.[youragency].gov/tutorial`.  
 
-## [Admin](/readme/admin.md)
+## [Admin](/docs/admin.md)
 
 
 

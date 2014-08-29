@@ -86,7 +86,7 @@ Technically, that is all you need to get an instance of RecordTrac running with 
 Set `AGENCY_NAME` to the name of your agency, which is used across the site (ex. "City of Oakland").
 
 * **Agency logos**: 
-`LOGO_ON_WHITE_URL`, `LOGO_ON_BLACK_URL` are used across the site but appear blank if none are supplied. The "LOGO_ON_WHITE" is used for general in-page representation, primarily the landing page.  The "LOGO_ON_BLACK" is used for the navbar.  We recommend using an image with a transparent background.  While these logos are not technically required, it is strongly encouraged as they help communicate this application is an official agency website.  
+`LOGO_ON_WHITE_URL`, `LOGO_ON_BLACK_URL` are used across the site but appear blank if none are supplied. The "LOGO_ON_WHITE" is used for general in-page representation, primarily the landing page.  The "LOGO_ON_BLACK" is used for the navbar.  We recommend using an image with a transparent background.  While these logos are not technically required, it is strongly encouraged as they help communicate this application is an official agency website.  Here's an example image of [LOGO_ON_WHITE](/public_records_portal/static/examples/logo.png "LOGO_ON_WHITE") and [LOGO_ON_BLACK](/public_records_portal/static/examples/logo_black.png "LOGO_ON_BLACK").  
 
 * **Default point of contact**:
 `DEFAULT_OWNER_EMAIL` will be the person that gets contacted about new requests if a department is not selected by the requester, or if no liaisons information is supplied to the application. It is a required field.

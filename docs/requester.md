@@ -4,7 +4,7 @@
 
 RecordTrac displays all current and past records requests at http://records.oaklandnet.com/requests[records.oaklandnet.com/requests]. 
 
-![public_table](/readme/images/public_table.png "public_table")
+![public_table](/docs/images/public_table.png "public_table")
 
 The table displays the following information:
 
@@ -21,7 +21,7 @@ Members of the public are able to search all requests by:
 
 * Original request text
 
-![public_filter](/readme/images/public_filter.png "public_filter")
+![public_filter](/docs/images/public_filter.png "public_filter")
 
 
 ### Filter and sort
@@ -41,7 +41,7 @@ Members of the public can also sort the requests by:
 ## Make a Request
 Members of the public can submit a message to the agency  requesting a public record. 
 
-![new_request](/readme/images/new_request.png "new_request")
+![new_request](/docs/images/new_request.png "new_request")
 
 * Some contact information is optional, although we strongly encourage the requester to provide an email address as this is the only way they can receive status updates on their request. 
 * There is no limit to the amount of text a requester can put in the request field.
@@ -64,31 +64,31 @@ Both requesters *and* subscribers receive email notifications when:
 
 ### Add a Note
 
-![public_note](/readme/images/public_note.png "public_note")
+![public_note](/docs/images/public_note.png "public_note")
 
 The requester can add a note if they need to provide additional information to the agency about their public records request.  Once a note is added, an email is sent to the Point of Contact and Helpers (the individuals responsible for responding to a request).  This encourages all communication to occur within RecordTrac. 
 
 ### Answer a Question
 
-![answer_question](/readme/images/answer_question.png "answer_question")
+![answer_question](/docs/images/answer_question.png "answer_question")
 
 A requester can respond to a question asked by an agency employee. This field only appears when an agency staff member asks a question.  Once the requester answers a question, an email is sent to the Point of Contact and Helpers (the individuals responsible for responding to a request). 
 
 ## Follow and unfollow requests
 
 ###Follow someone else's request
-![subscribe](/readme/images/subscribe.png "subscribe")
+![subscribe](/docs/images/subscribe.png "subscribe")
 
 If an individual is interested in the outcome of a particular request, they can subscribe to a request. They will receive email updates every time a response is added to the particular request and when it's closed.
 
 ###Unfollow a request
 To remove yourself from following a particular request, select the "unfollow this request" option in the email notification you received when you followed the request.
 
-![unsubscribe](/readme/images/unsubscribe.png "unsubscribe")
+![unsubscribe](/docs/images/unsubscribe.png "unsubscribe")
 
 ## Share a request via Twitter or Facebook
 
-![share_request](/readme/images/share_request.png "share_request")
+![share_request](/docs/images/share_request.png "share_request")
 
 Anyone can share a request via Twitter and Facebook. 
 

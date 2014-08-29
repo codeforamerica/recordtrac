@@ -40,7 +40,7 @@ If a record needs to be removed. It not only has to be deleted on RecordTrac, it
 
 To remove or edit a request, visit `[records.youragency.gov]/admin/requestview`. 
 
-![admin_edit_request](/readme/images/admin_request.png "admin_edit_request")
+![admin_edit_request](/docs/images/admin_request.png "admin_edit_request")
 
 A description of the fields in the table displayed can be found below:
 
@@ -51,17 +51,17 @@ A description of the fields in the table displayed can be found below:
 
 Clicking on the trashcan icon permanently deletes an entire request.
 
-![admin_delete_request](/readme/images/admin_delete_request.png "admin_delete_request")
+![admin_delete_request](/docs/images/admin_delete_request.png "admin_delete_request")
 
 Clicking on the pencil icon will allow you to edit a request. 
 
-![admin_edit_request](/readme/images/admin_edit_request.png "admin_edit_request")
+![admin_edit_request](/docs/images/admin_edit_request.png "admin_edit_request")
 
 ## How to Remove a Record
 
 To remove a record, visit `[records.youragency.gov]/admin/recordreview`.
 
-![admin_remove_record](/readme/images/admin_record.png "admin_remove_record")
+![admin_remove_record](/docs/images/admin_record.png "admin_remove_record")
 
 You can only remove a record, not "edit" any of the fields.  Records include web links, uploaded electronic documents, and instructions on how to view or pick up copies of a record. 
 
@@ -75,13 +75,13 @@ A description of the fields in the table displayed can be found below:
 
 Click on the trashcan icon to permanently delete the record from RecordTrac. You must also delete the record from the hosted location.  For example, if you are using Scribd, it must be deleted from the Scribd account.  
 
-![admin_delete_record](/readme/images/admin_delete_record.png "admin_delete_record")
+![admin_delete_record](/docs/images/admin_delete_record.png "admin_delete_record")
 
 ## How to Remove or Edit a Note
 
 To edit or remove a note, visit `[records.youragency.gov]/admin/noteview`.
 
-![admin_note](/readme/images/admin_note.png "admin_note")
+![admin_note](/docs/images/admin_note.png "admin_note")
 
 A description of the fields in the table displayed can be found below:
 
@@ -91,17 +91,17 @@ A description of the fields in the table displayed can be found below:
 
 Click on the trashcan icon to permanently delete the note from RecordTrac. 
 
-![admin_delete_note](/readme/images/admin_delete_note.png "admin_delete_note")
+![admin_delete_note](/docs/images/admin_delete_note.png "admin_delete_note")
 
 Clicking on the pencil icon will allow you to edit the text of a note.
 
-![admin_edit_note](/readme/images/admin_edit_note.png "admin_edit_note")
+![admin_edit_note](/docs/images/admin_edit_note.png "admin_edit_note")
 
 ## How to Remove or Edit a Question and Answer Exchange
 
 To remove posted questions and/or answers, navigate to the "Q A" tab.
 
-![admin_qa](/readme/images/admin_qa.png "admin_qa")
+![admin_qa](/docs/images/admin_qa.png "admin_qa")
 
 A description of the fields in the table displayed can be found below:
 
@@ -112,16 +112,16 @@ A description of the fields in the table displayed can be found below:
 
 Clicking on the trashcan icon permanently deletes the entire question and answer exchange.
 
-![admin_delete_qa](/readme/images/admin_delete_qa.png "admin_delete_qa")
+![admin_delete_qa](/docs/images/admin_delete_qa.png "admin_delete_qa")
 
 Clicking on the pencil icon will allow you to edit the text of the question and answer exchange. 
 
-![admin_edit_qa](/readme/images/admin_edit_qa.png "admin_edit_qa")
+![admin_edit_qa](/docs/images/admin_edit_qa.png "admin_edit_qa")
 
 
 ## Updating Website Text
 
-The web copy is not managed through the admin interface. To update the copy on the website, the .json files or HTML templates must be modified.  See the [redeploy documentation](/readme/redeploy.md) for more detailed instructions.
+The web copy is not managed through the admin interface. To update the copy on the website, the .json files or HTML templates must be modified.  See the [redeploy documentation](/docs/redeploy.md) for more detailed instructions.
 
 
 ## Changing Passwords
@@ -131,7 +131,7 @@ Passwords are not managed through the admin section. Agency employees are requir
 
 ## Checking Status of RecordTrac
 
-![status](/readme/images/status.png "status")
+![status](/docs/images/status.png "status")
 
 There is a quick way for adminstrators to check on the status of the application. Visit `[records.youragency.gov]/.well-known/status` to get a quick confirmation of whether the app is working.
 
