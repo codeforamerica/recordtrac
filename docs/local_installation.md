@@ -41,5 +41,5 @@ Navigate to the url (in this case, http://127.0.0.1:5000) in your browser.
 
 #### Additional configuration
 
-For further information on configuring RecordTrac, refer to our [redeployment documentation](https://github.com/codeforamerica/recordtrac/blob/readme/docs/redeploy.md).
+For further information on configuring RecordTrac, refer to our [redeployment documentation](https://github.com/codeforamerica/recordtrac/blob/readme/docs/redeploy.md#redeploy).
 
