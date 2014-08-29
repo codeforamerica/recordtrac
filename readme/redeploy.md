@@ -63,18 +63,12 @@ Next, push the code to Heroku:
 
     $ git push heroku master
 
-Add an additional web dyno so that the app is responsive:
-
-*NOTE: This is strongly recommended for a production-ready deployment.*
-
-	$ heroku ps:scale web=2
-	
-**THERE ARE SOME INTERIM STEPS BEFORE CREATING A DATABASE** (Heroku install, create Heroku app, clone RecordTrac database, push to Heroku)
-
-### Deploy RecordTrac on Heroku
 
 #### Create a database
-* Use Heroku's add-ons to set up a 'Heroku Postgres' database. **ADD A LINK TO HEROKU ADD-ON FOR THIS**
+Create the postgres database:
+
+	$ heroku addons:add heroku-postgresql
+
 
 Access the Heroku command line:
 
@@ -119,7 +113,7 @@ By default, `HOST_URL` is set to point to Scribd, but if you decide to host docu
 
 #### Connect your agency's staff data
 * **Users**:
-In order for agency staff to log into RecordTrac, RecordTrac must have access to a list of staff provided via a comma-separated file hosted at the `STAFF_URL`. Here's an [example csv](https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/staff.csv). ![Staff csv](/readme/images/staff-csv.png "staff csv")
+In order for agency staff to log into RecordTrac, RecordTrac must have access to a list of staff provided via a comma-separated file hosted at the `STAFF_URL`. Here's an [example csv](https://github.com/codeforamerica/recordtrac/blob/master/public_records_portal/static/examples/staff.csv). ![Staff csv](/readme/images/staff-csv.png "staff csv")  **update screenshot**
 
 	**NOTE: You will have to name your fields according to the example provided, but the order does not matter.**
 
@@ -154,7 +148,9 @@ The Flask application requires a `SECRET_KEY` to be set - though a not-so-secret
 * **Feedback form**:
 You can hook the application up to a Google feedback form by setting the `GOOGLE_FEEDBACK_FORM_ID` to the form ID corresponding to a Google spreadsheet. 
 
-A complete list of environment variables used in the application can be found in `/public_records_portal/__init__.py`.
+A complete list of environment variables used in the application can be found in `/public_records_portal/__init__.py`. These must be configured in Heroku either via the command line (See examples [here](https://devcenter.heroku.com/articles/config-vars)) or their web interface in `dashboard.heroku.com/apps/[yourappname]/settings`
+
+Add an additional [web dyno](https://www.heroku.com/pricing) so that the app is responsive to users.
 
 ### Updating website copy
 
@@ -162,10 +158,8 @@ The installation uses a generic set of defaults for email and website copy.  To 
 
 Most of the copy for RecordTrac can be found in the following .json files:
 
-* **Action.json**: These describe the actions a member of the public can take to submit a request, as well as the actions to be taken by a agency employee. The text from this file is used for the website's copy. It tells users what will happen when they use a particular feature and who will be able to view the messages or documents uploaded. 
-* **Notcityrecords.json**: When a member of the public types in a particular word or phrase pertaining to a record not possessed by the City of Oakland while submitting a request, a message pops up explaining to the user they need to contact another municipality. This file keeps track of all the phrases and messages.
-* **Prr_help.json**: This is the copy displayed on the "New Request" page. It includes tips for submitting a public records request, as well as three examples of public records requests. 
-* Tutorial.json: The copy for the tutorial can be found here. 
+* **Actions.json**: These describe the actions a member of the public can take to submit a request, as well as the actions to be taken by a agency employee. The text from this file is used for the website's copy. It tells users what will happen when they use a particular feature and who will be able to view the messages or documents uploaded. 
+* **Emails.json**: This houses the subject lines for the email notifications that RecordTrac sends out.
 
 All of the HTML files are stored in the `/public_records_portal/templates` folder. The names of the files are mostly self-explanatory. For example to edit the About page at http://records.oaklandnet.com/about, you must modify the 'about.html' file. 
 
@@ -173,11 +167,81 @@ All of the HTML files are stored in the `/public_records_portal/templates` folde
 
 We recommend RecordTrac URL uses a subdomain for the official agency website, i.e. `records.[youragency].gov`.  After the domain is secured through the agency, you can link the URL to RecordTrac through [Heroku](https://dashboard.heroku.com/apps/).  Choose the RecordTrac application, select Settings > Domains.
 
-### Local installation
+## Local installation
 
-Instructions for local installation can be found here **(UPDATE)**.
+We recommend you use Vagrant to set up RecordTrac locally. Thanks to @vzvenyach for putting together instructions, which we've slightly modified and can be found here: https://github.com/postcode/recordtrac-vagrant
+
+Otherwise, feel free to set up per instructions below.
+
+#### Mac OS X Pre-requisites
+
+This application requires [Postgres](http://www.postgresapp.com/) and Xcode developer tools to be installed.
+
+    /Applications/Postgres.app/Contents/MacOS/bin/psql
+    CREATE DATABASE recordtrac;
+
+#### Ubuntu Pre-requisites
+
+Install Postgres, Python, and other required packages.
+
+    sudo apt-get update
+    sudo apt-get install -y git
+    sudo apt-get install -y postgresql-9.1 postgresql-server-dev-9.1 python-dev
+    sudo apt-get install -y python-pip
+
+#### Postgres & Python
+
+If you are using a standard Postgres installation or from [Homebrew](http://mxcl.github.com/homebrew/) you can also use:
+
+    sudo -u postgres createuser -P -s -e testuser
+    sudo -u postgres createdb recordtrac
+
+In a new window:
+
+    git clone git://github.com/postcode/recordtrac.git
+    cd recordtrac
+    sudo pip install -r requirements.txt
+    cp .env.example .env
+    sed -i 's/localhost/testuser\:testpwd\@localhost/g' .env
+
+Update relevant fields in .env.
+
+    vi .env
+
+#### Other Accounts
+
+To use e-mail, sign up for a free account with SendGrid and provide the username and password in `MAIL_USERNAME` and `MAIL_PASSWORD`. We assume your monthly email limit is 40,000 sends (Sendgrid's Bronze account level), but you can change this by setting a `SENDGRID_MONTHLY_LIMIT` int value in settings.env.
+
+To be able to catch spammy input, sign up for a free account with [Akismet](http://akismet.com/plans/) and provide the application URL and Akismet key in `APPLICATION_URL` and `AKISMET_KEY`.
+
+### Run locally
+
+If creating the database for the first time, run:
+
+    foreman run python db_setup.py
+
+There are two external data sources the application depends upon: staff directory information (stored in public_records_portal/static/json/directory.json) and information about the departments within the agency (stored in public_records_portal/static/json/departments.json). The data provided is from the City of Oakland, but you should update these files to meet your needs.
+
+To seed the application with user data (as provided in the above two files), requests and responses, run:
+
+    foreman run python db_seed.py
+
+To use the application locally, exit out of python and run:
+
+    foreman start
 
 
+You should see something similar to:
+
+    2013-05-06 12:16:53 [1776] [INFO] Starting gunicorn 0.17.4
+    2013-05-06 12:16:53 [1776] [INFO] Listening at: http://127.0.0.1:5000 (1776)
+    2013-05-06 12:16:53 [1776] [INFO] Using worker: sync
+    2013-05-06 12:16:53 [1779] [INFO] Booting worker with pid: 1779
+    2013-05-06 12:16:53 [1780] [INFO] Booting worker with pid: 1780
+
+Navigate to the url (in this case, http://127.0.0.1:5000) in your browser.
+
+You can now login with any e-mail address and the password 'admin'..
 
 
 <!-- [![Build Status](https://travis-ci.org/codeforamerica/public-records.png?branch=master)](https://travis-ci.org/codeforamerica/public-records) -->
