@@ -326,6 +326,9 @@ def add_staff_participant(request_id, is_point_person = False, email = None, use
 	else:
 		if is_point_person and not participant.is_point_person:
 			participant.is_point_person = True
+			participant.date_updated = datetime.now().isoformat()
+			if reason: # Update the reason
+				participant.reason = reason 
 			app.logger.info("\n\nStaff participant with owner ID: %s is now the point of contact for request %s" %(participant.id, request_id))
 		else:
 			is_new = False
