@@ -27,7 +27,16 @@ RecordTrac is flexible and could complement almost any governmental agency's pro
 ## Redeploy
 RecordTrac is an open source project, and we'd love for you to use it yourself!
 
-**EDIT**  Following this documentation, a semi-technical user — someone with experience using a terminal or command prompt — who has an idea of what kind of survey they would like to run should be able to get CityVoice up and running in a relatively short amount of time (less than a day).  **EDIT** 
+It's worth repeating here that the processes RecordTrac supports - managing public record requests - are a core agency function.  RecordTrac should be deployed only under an agency's explicit approval and direct guidance.  There are two types of skills required to redeploy RecordTrac:
+
+*  An agency employee with a policy or legal background who can translate the appropriate laws for RecordTrac.
+*  A semi-technical user — someone with experience using a terminal or command prompt - should be able to get RecordTrac up and running in a relatively short amount of time (less than a day).
+
+
+To maintain RecordTrac after the initial deployment, an agency will also need people with the following skills:
+
+*   Python development, mid-level
+*   Front end development (HTML, CSS, JavaScript), low-level
 
 Using the recommended deployment instructions below, the technical operating costs (hosting and other services) should total about $100 per month.  
 
