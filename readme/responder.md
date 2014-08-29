@@ -22,14 +22,14 @@ The table displays the following information:
 ### Manage your request list
 The default view shows those requests which are likely to have the most relevance to the responder.  It shows those requests with which the responder is tagged as either the Point of Contact or as a Helper and automatically hides completed (closed) requests.  Use the search, filter, and sort options to change the view or search for more requests.
 
+![staff_filter](/readme/images/staff_filter.png "staff_filter")
+
 ### Search options
 
 Agency staff are able to search all requests by:
 
 * Original request text
 * Requester's name
-
-![staff_filter](/readme/images/staff_filter.png "staff_filter")
 
 
 ### Filter and sort
