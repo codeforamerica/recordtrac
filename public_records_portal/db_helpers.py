@@ -343,6 +343,7 @@ def remove_staff_participant(owner_id, reason = None):
 	participant.reason_unassigned = reason
 	db.session.add(participant)
 	db.session.commit()
+	app.logger.info("\n\n Staff participant with owner ID: %s has been removed for following reason %s" %(owner_id, reason))
 	return owner_id
 
 
