@@ -278,27 +278,31 @@ def get_responses_chronologically(req):
 def set_directory_fields():
 	# Set basic user data
 	if 'STAFF_URL' in app.config:
-
-		# This gets run at regular internals via cron_jobs.py in order to keep the staff user list up to date. Before users are added/updated, ALL users get reset to 'inactive', and then only the ones in the current CSV are set to active. 
+		# This gets run at regular internals via db_users.py in order to keep the staff user list up to date. Before users are added/updated, ALL users get reset to 'inactive', and then only the ones in the current CSV are set to active. 
 		for user in User.query.filter(User.is_staff == True).all():
 			update_user(user = user, is_staff = False)
 		csvfile = urllib.urlopen(app.config['STAFF_URL'])
 		dictreader = csv.DictReader(csvfile, delimiter=',')
 		for row in dictreader:
 			create_or_return_user(email = row['email'].lower(), alias = row['name'], phone = row['phone number'], department = row['department name'], is_staff = True)
+		# Set liaisons data (who is a PRR liaison for what department)
+		if 'LIAISONS_URL' in app.config:
+			csvfile = urllib.urlopen(app.config['LIAISONS_URL'])
+			dictreader = csv.DictReader(csvfile, delimiter=',')
+			for row in dictreader:
+				user = create_or_return_user(email = row['PRR liaison'], contact_for = row['department name'])
+				if row['PRR backup'] != "":
+					user = create_or_return_user(email = row['PRR backup'], backup_for = row['department name'])
+		else:
+			app.logger.info("\n\n Please update the config variable LIAISONS_URL for where to find department liaison data for your agency.")
 	else:
-		app.logger.info("\n\n Please add an environment variable for where to find csv data on the users in your agency.")
+		app.logger.info("\n\n Please update the config variable STAFF_URL for where to find csv data on the users in your agency.") 
+		if 'DEFAULT_OWNER_EMAIL' in app.config and 'DEFAULT_OWNER_REASON' in app.config:
+			create_or_return_user(email = app.config['DEFAULT_OWNER_EMAIL'].lower(), alias = app.config['DEFAULT_OWNER_EMAIL'], department = app.config['DEFAULT_OWNER_REASON'], is_staff = True)
+			app.logger.info("\n\n Creating a single user from DEFAULT_OWNER_EMAIL and DEFAULT_OWNER_REASON for now. You may log in with %s" %(app.config['DEFAULT_OWNER_EMAIL']))
+		else:
+			app.logger.info("\n\n Unable to create any users. No one will be able to log in.")
 
-	# Set liaisons data (who is a PRR liaison for what department)
-	if 'LIAISONS_URL' in app.config:
-		csvfile = urllib.urlopen(app.config['LIAISONS_URL'])
-		dictreader = csv.DictReader(csvfile, delimiter=',')
-		for row in dictreader:
-			user = create_or_return_user(email = row['PRR liaison'], contact_for = row['department name'])
-			if row['PRR backup'] != "":
-				user = create_or_return_user(email = row['PRR backup'], backup_for = row['department name'])
-	else:
-		app.logger.info("\n\n Please add an environment variable for where to find department liaison data for your agency.")
 
 
 ### @export "close_request"
