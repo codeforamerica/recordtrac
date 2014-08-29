@@ -27,18 +27,17 @@ RecordTrac is flexible and could complement almost any governmental agency's pro
 ## Redeploy
 RecordTrac is an open source project, and we'd love for you to use it yourself!
 
-It's worth repeating here that the processes RecordTrac supports - managing public record requests - are a core agency function.  RecordTrac should be deployed only under an agency's explicit approval and direct guidance.  There are two types of skills required to redeploy RecordTrac:
+It's worth repeating here (see [Groundwork](/groundwork) above) that the processes RecordTrac supports - managing public record requests - are a core agency function.  RecordTrac should be deployed only under an agency's explicit approval and direct guidance.  There are two types of skills required to redeploy RecordTrac:
 
-*  An agency employee with a policy or legal background who can translate the appropriate laws for RecordTrac.
+*  An agency employee with a policy or legal background - someone who can translate the appropriate laws for RecordTrac.  This may likely be someone in the Clerk's or Attorney's office who already has knowledge of how the agency deals with public records.  For instance, RecordTrac needs to know how long the agency has to respond to a request.
 *  A semi-technical user — someone with experience using a terminal or command prompt - should be able to get RecordTrac up and running in a relatively short amount of time (less than a day).
 
-
-To maintain RecordTrac after the initial deployment, an agency will also need people with the following skills:
+After the initial deployment, RecordTrac will need ongoing maintenance. This can be done by the agnecy itself or through a qualified contractor(s).  Here are the recommended skills:
 
 *   Python development, mid-level
 *   Front end development (HTML, CSS, JavaScript), low-level
 
-Using the recommended deployment instructions below, the technical operating costs (hosting and other services) should total about $100 per month.  
+Using the recommended deployment instructions below, the technical operating costs (hosting and other services) should total about $100 per month.  Maintenance service costs are in addition to the technical costs, and may depend on location and skill. 
 
 If you have problems using RecordTrac, please [open an issue on GitHub](https://github.com/codeforamerica/recordtrac/issues) and let us know what problems or difficulties you encountered in as much detail as you can.
 
