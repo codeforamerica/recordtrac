@@ -122,15 +122,15 @@ In order for RecordTrac to route a request to the appropriate contact, a list of
 
 	**NOTE: You will have to name your fields according to the example provided, but the order does not matter.**
 
- Once the environment variables are set in Heroku, run `python db_users.py` from the Heroku command line to populate the database with this information.
+ Once the environment variables are set in Heroku, run `python db_users.py` from the Heroku command line to populate the database with this information. If you do not wish to connect your staff data at this time, you can still run `python db_users.py` and it will create a user with the provided `DEFAULT_OWNER_EMAIL` and `DEFAULT_OWNER_REASON`.
 
 
 ### Additional Setup 
 
 Here is additional functionality that is not *required* for a functional instance of RecordTrac, but may be useful.
 
-* **Cron jobs**:
-To enable cron jobs, use Heroku add-ons to add a scheduler.
+* **Schedule tasks**:
+To schedule tasks, use Heroku add-ons to add a scheduler.
 To keep staff data up to date, we recommend maintaining the CSVs (outside of the RecordTrac application), which the application will simply pull from. The task that pulls data from the CSVs to RecordTrac is `python db_users.py`, and can be set as frequently as you'd like. To send e-mail notifications to staff for when a request is due soon or overdue, set up a task `python send_notifications.py` that runs nightly.
 
 * **Admin list**:
