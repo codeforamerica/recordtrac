@@ -134,7 +134,7 @@ image::reset_password.png[]
 
 ## Checking Status of RecordTrac
 
-![status](/images/status.png "status")
+![status](/readme/images/status.png "status")
 
 There is a quick way for adminstrators to check on the status of the application. Visit `[records.youragency.gov]/.well-known/status` to get a quick confirmation of whether the app is working.
 
