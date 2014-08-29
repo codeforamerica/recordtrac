@@ -17,7 +17,6 @@ The administrative controls allows the user to permanently delete records, reque
 
 Content should only be removed or edited if sensitive or confidential information is revealed. If this happens, you should:
 
-* Save a copy of the original message. (This will have to be done outside of RecordTrac. There is no way to hide a message from public view.) 
 * Edit the message to indicate why it needs to be removed. 
 * Notify the requester why their post or answer was removed.
 * Provide guidance to the requester on how they can get the record they need. 
@@ -39,9 +38,9 @@ If a record needs to be removed. It not only has to be deleted on RecordTrac, it
 
 ## How to Remove or Edit a Request
 
-To remove or edit a request, visit records.oaklandnet.com/admin/requestview. 
+To remove or edit a request, visit `[records.youragency.gov]/admin/requestview`. 
 
-image::admin_request.png[]
+![admin_edit_request](/readme/images/admin_edit_request.png "admin_edit_request")
 
 A description of the fields in the table displayed can be found below:
 
@@ -60,9 +59,9 @@ image::admin_edit_request.png[]
 
 ## How to Remove a Record
 
-To remove a record, visit records.oaklandnet.com/admin/recordreview.
+To remove a record, visit `[records.youragency.gov]/admin/recordreview`.
 
-image::admin_record.png[]
+![admin_remove_record](/readme/images/admin_remove_record.png "admin_remove_record")
 
 You can only remove a record, not "edit" any of the fields.  Records include web links, uploaded electronic documents, and instructions on how to view or pick up copies of a record. 
 
@@ -80,7 +79,7 @@ image::admin_delete_record.png[]
 
 ## How to Remove or Edit a Note
 
-To edit or remove a note, visit records.oaklandnet.com/admin/noteview.
+To edit or remove a note, visit `[records.youragency.gov]/admin/noteview`.
 
 image::admin_note.png[]
 
@@ -122,7 +121,7 @@ image::admin_edit_qa.png[]
 
 ## Updating Website Text
 
-The web copy is not managed through the admin interface. To update the copy on the website, the .json files or HTML templates must be modified.  See the [technical documentation](/readme/redeploy.md) for more detailed instructions.
+The web copy is not managed through the admin interface. To update the copy on the website, the .json files or HTML templates must be modified.  See the [redeploy documentation](/readme/redeploy.md) for more detailed instructions.
 
 
 ## Changing Passwords
