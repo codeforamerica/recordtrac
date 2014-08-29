@@ -32,6 +32,7 @@ from filters import *
 import re
 from db_helpers import get_count, get_obj
 from sqlalchemy import func, not_, and_, or_
+import pytz
 
 # Initialize login
 
@@ -77,7 +78,10 @@ def new_request(passed_recaptcha = False, data = None):
 			if date_received != "":
 				try:
 					date_received = datetime.strptime(date_received, '%m/%d/%Y') 
-					date_received = date_received + timedelta(hours = int(app.config['UTC_OFFSET'])) # This is somewhat of a hack, but we need to get this back in UTC time but still treat it as a 'naive' datetime object
+					tz = pytz.timezone(app.config['TIMEZONE'])
+					offset = tz.utcoffset(datetime.now())
+					offset = (offset.days * 86400 + offset.seconds) / 3600
+					date_received = date_received - timedelta(hours = offset) # This is somewhat of a hack, but we need to get this back in UTC time but still treat it as a 'naive' datetime object
 				except ValueError:
 					return render_template('error.html', message = "Please use the datepicker to select a date.")
 		request_id, is_new = make_request(text = request_text, email = email, alias = alias, phone = phone, passed_spam_filter = True, department = department, offline_submission_type = offline_submission_type, date_received = date_received)
