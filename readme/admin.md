@@ -122,20 +122,7 @@ image::admin_edit_qa.png[]
 
 ## Updating Website Text
 
-The web copy is not managed through the admin section. To update the copy on the website, the .json files or HTML templates must be modified. 
-
-The copy for the web application can be found in the following .json files:
-
-**EDIT**
-
-* Action.json describes the actions a member of the public can take to submit a request, as well as the actions to be taken by a agency employee. The text from this file is used for the website's copy. It tells users what will happen when they use a particular feature and who will be able to view the messages or documents uploaded. 
-* Notcityrecords.json: When a member of the public types in a particular word or phrase pertaining to a record not possessed by the City of Oakland while submitting a request, a message pops up explaining to the user they need to contact another municipality. This file keeps track of all the phrases and messages.
-* Prr_help.json: This is the copy displayed on the "New Request" page. It includes tips for submitting a public records request, as well as three examples of public records requests. 
-* Tutorial.json: The copy for the tutorial can be found here. 
-
-**EDIT**
-
-All of the HTML files are stored in the templates folder. The names of the files are pretty self-explanatory, and it is simple to find the file that corresponds to each webpage. For example to edit the About page at http://records.oaklandnet.com/about, you must modify the 'about.html' file. 
+The web copy is not managed through the admin interface. To update the copy on the website, the .json files or HTML templates must be modified.  See the [technical documentation](/readme/redeploy.md) for more detailed instructions.
 
 
 ## Changing Passwords
@@ -147,9 +134,9 @@ image::reset_password.png[]
 
 ## Checking Status of RecordTrac
 
-image::app_status.png[]
+![status](readme/images/status.png "status")
 
-There is a quick way for adminstrators to check on the status of the application. Visit **EDIT [http://records.oaklandnet.com/.well-known/status](records.oaklandnet.com/.well-known/status) to get a quick confirmation of whether the app is working. EDIT**
+There is a quick way for adminstrators to check on the status of the application. Visit `[records.youragency.gov]/.well-known/status` to get a quick confirmation of whether the app is working.
 
 If the status is 'ok,' it means the app is working properly and users should not encounter any problems.
 

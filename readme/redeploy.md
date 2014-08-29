@@ -35,13 +35,60 @@ If you have problems using RecordTrac, please [open an issue on GitHub](https://
 
 ### Initial Setup
 
+### Deploying on Heroku
+
+To follow the below instructions, you will first need to [install the Heroku toolbelt](https://toolbelt.heroku.com/) on your computer.
+
+Below are example instructions for deploying to Heroku. The process will be similar for other platforms (e.g., Amazon EC2, Red Hat OpenShift).
+
+First, clone the application:
+
+	$ git clone git@github.com:codeforamerica/recordtrac.git
+
+Go into the repo folder:
+
+    $ cd recordtrac
+
+Create a Heroku app:
+
+    $ heroku create
+    
+Set the secret token:
+
+    $ heroku config:set SECRET_TOKEN=`python -c 'import uuid; print uuid.uuid4()'`
+
+
+Next, push the code to Heroku:
+
+    $ git push heroku master
+
+Migrate the database:
+
+    $ heroku run rake db:migrate
+
+Load the locations and questions:
+
+    $ heroku run rake import:locations
+    $ heroku run rake import:questions
+
+Add an additional web dyno so that the app never sleeps (this is necessary so the app always answers when people call in):
+
+	$ heroku ps:scale web=2
+	
 **THERE ARE SOME INTERIM STEPS BEFORE CREATING A DATABASE** (Heroku install, create Heroku app, clone RecordTrac database, push to Heroku)
 
 ### Deploy RecordTrac on Heroku
 
 #### Create a database
 * Use Heroku's add-ons to set up a 'Heroku Postgres' database. **ADD A LINK TO HEROKU ADD-ON FOR THIS**
-* Access the Heroku command line by running `heroku run bash`, and create the database tables by running `python db_setup.py`. 
+
+Access the Heroku command line:
+
+	$ heroku run bash
+ 
+Create the database tables:
+
+	$ python db_setup.py
 
 Technically, that is all you need to get an instance of RecordTrac running with the supplied defaults. But to get a minimum *production-ready* environment running, here's the information you'll need to provide:
 
@@ -113,11 +160,21 @@ The Flask application requires a `SECRET_KEY` to be set - though a not-so-secret
 * **Feedback form**:
 You can hook the application up to a Google feedback form by setting the `GOOGLE_FEEDBACK_FORM_ID` to the form ID corresponding to a Google spreadsheet. 
 
+A complete list of environment variables used in the application can be found in `/public_records_portal/__init__.py`.
+
 ### Updating website copy
 
-The installation uses a generic set of defaults for email and website copy.  To change these to better reflect your agency's laws and policies, see the [technical documentation](/readme/readme/recordtrac_readme.md). **[UPDATE: or link to "Updating Website Text" in Admin section]**
+The installation uses a generic set of defaults for email and website copy.  To change these to better reflect your agency's laws and policies, update the copy through the .json files or HTML templates must be modified. 
 
-A complete list of environment variables used in the application can be found in `public_records_portal/__init__.py`.
+Most of the copy for RecordTrac can be found in the following .json files:
+
+* **Action.json**: These describe the actions a member of the public can take to submit a request, as well as the actions to be taken by a agency employee. The text from this file is used for the website's copy. It tells users what will happen when they use a particular feature and who will be able to view the messages or documents uploaded. 
+* **Notcityrecords.json**: When a member of the public types in a particular word or phrase pertaining to a record not possessed by the City of Oakland while submitting a request, a message pops up explaining to the user they need to contact another municipality. This file keeps track of all the phrases and messages.
+* **Prr_help.json**: This is the copy displayed on the "New Request" page. It includes tips for submitting a public records request, as well as three examples of public records requests. 
+* Tutorial.json: The copy for the tutorial can be found here. 
+
+All of the HTML files are stored in the `/public_records_portal/templates` folder. The names of the files are mostly self-explanatory. For example to edit the About page at http://records.oaklandnet.com/about, you must modify the 'about.html' file. 
+
 
 ### Local installation
 
