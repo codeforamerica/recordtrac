@@ -1,10 +1,10 @@
 #RecordTrac
 This is the home page for documentation for the **RecordTrac** application.
 
-* [What is RecordTrac](/readme/readme/recordtrac_readme.md#what-is-recordtrac)
-* [How to create a new RecordTrac app](/readme/readme/recordtrac_readme.md#what-is-recordtrac)
-* [Technical details and developer documentation](/readme/readme/recordtrac_readme.md#what-is-recordtrac)
-* [How to use RecordTrac](/readme/readme/recordtrac_readme.md#what-is-recordtrac)
+* [What is RecordTrac](/docs/recordtrac_readme.md#what-is-recordtrac)
+* [How to create a new RecordTrac app](/docs/recordtrac_readme.md#what-is-recordtrac)
+* [Technical details and developer documentation](/docs/recordtrac_readme.md#what-is-recordtrac)
+* [How to use RecordTrac](/docs/recordtrac_readme.md#what-is-recordtrac)
 
 For help contact [Code for America](http://www.codeforamerica.org/apps/recordtrac)
 
@@ -13,9 +13,9 @@ RecordTrac is a public record request management tool for government agencies.
 ![RecordTrac](/docs/images/generic_request.png "RecordTrac")  
 This web application allows government employees manage, respond to, and fulfill incoming requests.  It also provides a quick, simple way for individuals to submit public record requests. RecordTrac displays all requests and responsive documents so that members of the public may find what they need without submitting additional public record requests.
 
-[More about RecordTrac...](/readme/readme/about.md)
+[More about RecordTrac...](/docs/about.md)
 
-##[How to create a new RecordTrac app for your agency](/readme/redeploy.md)
+##[How to create a new RecordTrac app for your agency](/docs/redeploy.md)
 * Groundwork
 * Best Practices
 * Redeploy
@@ -71,13 +71,13 @@ Issues and feature backlog are tracked through [GitHub issues](https://github.co
 
 **ROLL THIS INTO TECHNICAL DETAILS**
 ##How to use RecordTrac... as a requester
-* [Search for a record](/readme/requester.md)
-* [Make a new request](/readme/requester.md#make-a-request)
+* [Search for a record](/docs/requester.md)
+* [Make a new request](/docs/requester.md#make-a-request)
 
 ##How to use RecordTrac... as an agency employee
-* [Search for a record](/readme/responder.md)
-* [Manage your request list](/readme/responder.md#manage-your-request-list)
-* [Make a new request](/readme/responder.md#make-a-new-request)
-* [Respond to a request](/readme/responder.md#respond-to-a-request)
-* [Admin](/readme/admin.md)
+* [Search for a record](/docs/responder.md)
+* [Manage your request list](/docs/responder.md#manage-your-request-list)
+* [Make a new request](/docs/responder.md#make-a-new-request)
+* [Respond to a request](/docs/responder.md#respond-to-a-request)
+* [Admin](/docs/admin.md)
 
