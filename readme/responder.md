@@ -4,7 +4,7 @@
 
 RecordTrac displays all current and past records requests at http://records.oaklandnet.com/requests[records.oaklandnet.com/requests]. 
 
-image::public_table.png[]
+![public_table](/readme/images/public_table.png "public_table")
 
 The table displays the following information:
 
@@ -29,7 +29,7 @@ Agency staff are able to search all requests by:
 * Original request text
 * Requester's name
 
-image::public_filter.png[]
+![public_filter](/readme/images/public_filter.png "public_filter")
 
 
 ### Filter and sort
@@ -52,7 +52,7 @@ Agency staff can also sort the requests by:
 ## Make a new request
 Agency staff can create a request on behalf of a requester. 
 
-image::new_request.png[]
+![new_request](/readme/images/new_request.png "new_request")
 
 * Some contact information is optional, although we strongly encourage the requester to provide an email address as this is the only way they can receive status updates on their request. 
 * There is no limit to the amount of text a requester can put in the request field.
@@ -63,7 +63,7 @@ image::new_request.png[]
 
 ### Responder-specific fields
 
-image::receipt_information.png[]
+![receipt_information](/readme/images/receipt_information.png "receipt_information")
 
 Most municipalities allow an individual to submit a public records request any way they please, including by mail, fax, and over the phone.
 
@@ -72,34 +72,29 @@ If the receipt date is different than the submission date, agency staff may alte
 *NOTE: This does not alter the creation date, which is stored elsewhere.*
 
 ## Respond to a request
-= How to respond to a public records request using RecordTrac
-A responder is typically an employee of a governmental agency.
-:toc:
-:source-highlighter: pygments
-
-link:index.html[back to index page]
+Responders are typically employees of a governmental agency.
 
 ### Change the Point of Contact for a Request
 
-image::change_point_of_contact.png[]
+![change_point_of_contact](/readme/images/change_point_of_contact.png "change_point_of_contact")
 
 An agency employee can send the request to another individual in the official directory if their department is unable to fulfill it. The agency employee will be alerted via email and will become the new point of contact for this request.
 
 ### Add a Helper
 
-image::add_helper.png[]
+![add_helper](/readme/images/add_helper.png "add_helper")
 
 Sometimes more than one person is needed to fulfill a request or it involves multiple departments. Click on 'Helpers' to notify additional staff of this request. The staff member will be alerted via email that they are expected to respond to this request. The helpers will be able to add documents and send messages to the requester via RecordTrac. 
 
 ### Ask a Question
 
-image::ask_question.png[]
+![ask_question](/readme/images/ask_question.png "ask_question")
 
 An agency employee can ask questions about this particular records request. The requester will be notified via email of this question. The question will be posted online for everyone to view.
 
 ### Upload a Record
 
-image::upload_record.png[]
+![upload_record](/readme/images/upload_record.png "upload_record")
 
 Documents stored on a computer can be uploaded. The requester will be notified via email every time a record is uploaded. The documents will be posted online for everyone to view.
 
@@ -110,7 +105,7 @@ Records are displayed online via Scribd. Supported file types are the following:
 
 ### Add a Link to Another Website
 
-image::add_link.png[]
+![add_link](/readme/images/add_link.png "add_link")
 
 An agency employee can respond to a request by providing a link to where the document or information is stored online. The requester will be notified via email about this link. This web address will be posted online for everyone to view.
 
@@ -119,7 +114,7 @@ You must name each link you post.
 
 ### Add An Offline Record
 
-image::offline_record.png[]
+![offline_record](/readme/images/offline_record.png "offline_record")
 
 Some records cannot be uploaded to the website and requesters will have to be told when and where to pick up copies of it. The requester will be notified via email about this message. This message will be posted online for everyone to view.
 
@@ -127,24 +122,24 @@ You must provide a name for the instructions you post.
 
 Below is an example of a posted message:
 
-image::offline_record_example.png[]
+![offline_record_example](/readme/images/offline_record_example.png "offline_record_example")
 
 ### Add a Note
 
-image::add_note.png[]
+![add_note](/readme/images/add_note.png "add_note")
 
 Updates can be provided to the requester through the "Add a Note" feature. The requester will be notified via email. The message will be posted online for everyone to view.
 
 ### Request an Extension
 *NOTE: Extensions may not apply to all agencies.*
 
-image::extend_request.png[]
+![extend_request](/readme/images/extend_request.png "extend_request")
 
 Notify a requester if additional time is needed to fulfill their public records request. Select from one of the reasons to extend a request and edit the message. The due date of the request changes, giving the staff member a set number of additional calendar days to respond to the request. The message is posted online and the requester is notified via email. _An extension can only be requested once._ The extension date is calculated from an admin-configured response time.
 
 ### Closing a Request
 
-image::close_request.png[]
+![close_request](/readme/images/close_request.png "close_request")
 
 To close out a request, staff can edit a message already provided to them. An email is then sent to the requester notifying them the request is closed. The status of the request will also change. 
 
@@ -165,13 +160,13 @@ Example list of reasons a request can be closed.  These may vary between agencie
 
 ### Re-Open a Request
 
-image::reopen_request.png[]
+![reopen_request](/readme/images/reopen_request.png "reopen_request")
 
 Allows you to re-open a request after it is closed. This makes it possible for you to send more messages and upload additional records.
 
 ### Responses
 
-image::responses.png[]
+![responses](/readme/images/responses.png "responses")
 
 All responses are displayed in chronological order. Each response includes the time it was uploaded and who uploaded the document or sent the message. 
 
@@ -179,7 +174,7 @@ All responses are displayed in chronological order. Each response includes the t
 
 There are two views in RecordTrac: the agency employee view and the public view. 
 
-image::city_url.png[]
+![city_url](/readme/images/city_url.png "city_url")
 
 Agency employees are the only users able to upload records, extend a request, close a request, and correspond with the requester through RecordTrac. 
 
