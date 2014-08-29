@@ -169,6 +169,9 @@ Most of the copy for RecordTrac can be found in the following .json files:
 
 All of the HTML files are stored in the `/public_records_portal/templates` folder. The names of the files are mostly self-explanatory. For example to edit the About page at http://records.oaklandnet.com/about, you must modify the 'about.html' file. 
 
+### Updating public URL
+
+We recommend RecordTrac URL uses a subdomain for the official agency website, i.e. `records.[youragency].gov`.  After the domain is secured through the agency, you can link the URL to RecordTrac through [Heroku](https://dashboard.heroku.com/apps/).  Choose the RecordTrac application, select Settings > Domains.
 
 ### Local installation
 

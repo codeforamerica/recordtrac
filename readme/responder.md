@@ -4,11 +4,11 @@
 
 RecordTrac displays all current and past records requests at http://records.oaklandnet.com/requests[records.oaklandnet.com/requests]. 
 
-![public_table](/readme/images/public_table.png "public_table")
+![staff_table](/readme/images/staff_table.png "staff_table")
 
 The table displays the following information:
 
-* '#': Each request is assigned a unique number. You can easily track requests with this number by visiting **update** http://records.oaklandnet.com/requests[records.oaklandnet.com/track].**update**
+* '#': Each request is assigned a unique number. You can easily track requests with this number by visiting `records.[youragency].gov/requests]`.
 * Received: This shows the date the request was received.  If a request wasn't originally submitted through RecordTrac, it may take agency employees a day or two to enter it into the system.
 * Request: This is the message sent to the agency by a member of the public. Sometimes agnecy employees will enter a request on behalf of an individual. If the requested document contains confidential information that may violate the security or privacy of a requester, the public will only see a short description of the document.
 * Department: The agency department where the point of contact works. Multiple departments may be involved in one request, but the Point of Contact's department will only be displayed. 
@@ -29,7 +29,7 @@ Agency staff are able to search all requests by:
 * Original request text
 * Requester's name
 
-![public_filter](/readme/images/public_filter.png "public_filter")
+![staff_filter](/readme/images/staff_filter.png "staff_filter")
 
 
 ### Filter and sort
@@ -52,7 +52,7 @@ Agency staff can also sort the requests by:
 ## Make a new request
 Agency staff can create a request on behalf of a requester. 
 
-![new_request](/readme/images/new_request.png "new_request")
+![staff_new_request](/readme/images/staff_new_request.png "staff_new_request")
 
 * Some contact information is optional, although we strongly encourage the requester to provide an email address as this is the only way they can receive status updates on their request. 
 * There is no limit to the amount of text a requester can put in the request field.
@@ -174,8 +174,6 @@ All responses are displayed in chronological order. Each response includes the t
 
 There are two views in RecordTrac: the agency employee view and the public view. 
 
-![city_url](/readme/images/city_url.png "city_url")
-
 Agency employees are the only users able to upload records, extend a request, close a request, and correspond with the requester through RecordTrac. 
 
 Only agency employees can view:
@@ -197,9 +195,8 @@ The Point of Contact and Helpers for a request recieve an email notification whe
 
 ### Tutorial
 
-RecordTrac's tutorial shows agency employees how to successfully manage a public records request with RecordTrac. The tutorial was created to quickly on-board new employees who are responsible for fulfilling public records requests. Only agency staff who are logged into RecordTrac are able to view the tutorial. 
-
-You can view the tutorial by going to http://records.oaklandnet.com/tutorial[records.oaklandnet.com/tutorial].  
+RecordTrac's tutorial shows agency employees how to successfully manage a public records request with RecordTrac. The tutorial was created to quickly on-board new employees who are responsible for fulfilling public records requests. Only agency staff who are logged into RecordTrac are able to view the tutorial.
+You can view the tutorial by going to `records.[youragency].gov/tutorial`.  
 
 ## [Admin](/readme/admin.md)
 
