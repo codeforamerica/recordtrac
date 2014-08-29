@@ -61,7 +61,7 @@ image::admin_edit_request.png[]
 
 To remove a record, visit `[records.youragency.gov]/admin/recordreview`.
 
-![admin_remove_record](/readme/images/admin_remove_record.png "admin_remove_record")
+![admin_remove_record](/readme/images/admin_record.png "admin_remove_record")
 
 You can only remove a record, not "edit" any of the fields.  Records include web links, uploaded electronic documents, and instructions on how to view or pick up copies of a record. 
 
