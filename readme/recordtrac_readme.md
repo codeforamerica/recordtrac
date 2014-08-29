@@ -6,7 +6,7 @@ This is the home page for documentation for the **RecordTrac** application.
 * [Technical details and developer documentation](/readme/readme/recordtrac_readme.md#what-is-recordtrac)
 * [How to use RecordTrac](/readme/readme/recordtrac_readme.md#what-is-recordtrac)
 
-For help contact **info |@| codeforamerica.org**
+For help contact [Code for America](http://www.codeforamerica.org/apps/recordtrac)
 
 ##What is RecordTrac?
 RecordTrac is a public record request management tool for government agencies.

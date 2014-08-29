@@ -32,12 +32,12 @@ It's worth repeating here (see [Groundwork](/groundwork) above) that the process
 *  An agency employee with a policy or legal background - someone who can translate the appropriate laws for RecordTrac.  This may likely be someone in the Clerk's or Attorney's office who already has knowledge of how the agency deals with public records.  For instance, RecordTrac needs to know how long the agency has to respond to a request.
 *  A semi-technical user — someone with experience using a terminal or command prompt - should be able to get RecordTrac up and running in a relatively short amount of time (less than a day).
 
-After the initial deployment, RecordTrac will need ongoing maintenance. This can be done by the agnecy itself or through a qualified contractor(s).  Here are the recommended skills:
+After the initial deployment, RecordTrac will need ongoing maintenance. This can be done by the agency itself or through a qualified contractor(s).  Here are the recommended skills:
 
-*   Python development, mid-level
-*   Front end development (HTML, CSS, JavaScript), low-level
+*   Python development
+*   Front end development (HTML, CSS, JavaScript)
 
-Using the recommended deployment instructions below, the technical operating costs (hosting and other services) should total about $100 per month.  Maintenance service costs are in addition to the technical costs, and may depend on location and skill. 
+Using the recommended deployment instructions below, the hosting and third-party services should total about $100 per month.  Maintenance service costs are in addition to the hosting costs, and may depend on location and skill. 
 
 If you have problems using RecordTrac, please [open an issue on GitHub](https://github.com/codeforamerica/recordtrac/issues) and let us know what problems or difficulties you encountered in as much detail as you can.
 
