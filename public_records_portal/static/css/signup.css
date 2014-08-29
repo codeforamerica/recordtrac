@@ -18,7 +18,17 @@
 	background-image: linear-gradient(to bottom, #FFFFFF 0%, #009ce6 50%);*/
 }
 
-#intro h1, p {
+h1 a {
+	color: white;
+	display: inline-block;
+}
+
+h1 a:hover {
+	color: white;
+	text-decoration: none;
+}
+
+#intro p {
 	color: black;
 	font-family: 'Lato'; 
 }
@@ -29,11 +39,18 @@
 	min-height: 100% !important;
 }
 
-#intro img {
+img#flagtag_white {
 	margin-bottom: 3em;
 	display: block;
     margin-left: auto;
     margin-right: auto;
+    
+}
+
+img#rtlogo {
+	padding-right: 0.25em;
+    padding-bottom: 0.25em;
+    display: inline-block;
 }
 
 #maincontainer { 
