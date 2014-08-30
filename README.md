@@ -1,85 +1,85 @@
-[![Build Status](https://travis-ci.org/codeforamerica/recordtrac.png?branch=master)](https://travis-ci.org/codeforamerica/recordtrac)
+#RecordTrac
+This is the home page for documentation for the **RecordTrac** application.
 
-RecordTrac 
-==============
+* [What is RecordTrac](/docs/recordtrac_readme.md#what-is-recordtrac)
+* [How to create a new RecordTrac app](/docs/recordtrac_readme.md#what-is-recordtrac)
+* [Technical details and developer documentation](/docs/recordtrac_readme.md#what-is-recordtrac)
+* [How to use RecordTrac](/docs/recordtrac_readme.md#what-is-recordtrac)
 
-This is a portal to manage and display public record requests, built by the Code for America 2013 Oakland team. The project is currently being piloted with [the City of Oakland](http://www2.oaklandnet.com/Government/o/CityAdministration/PublicRecordsRequest/index.htm), but hopefully extensible to other municipalities. Our docs are available [here](http://codeforamerica.github.io/public-records/docs/1.0.0/). We'd love your feedback. E-mail us at oakland at codeforamerica dot org or [open an issue](https://github.com/codeforamerica/public-records/issues?state=open) if you have any questions.
+For help contact [Code for America](http://www.codeforamerica.org/apps/recordtrac)
 
-## Installation
+##What is RecordTrac?
+RecordTrac is a public record request management tool for government agencies.
+![RecordTrac](/docs/images/generic_request.png "RecordTrac")  
+This web application allows government employees manage, respond to, and fulfill incoming requests.  It also provides a quick, simple way for individuals to submit public record requests. RecordTrac displays all requests and responsive documents so that members of the public may find what they need without submitting additional public record requests.
 
-We recommend you use Vagrant to set up RecordTrac locally. Thanks to @vzvenyach for putting together instructions, which we've slightly modified and can be found here: https://github.com/postcode/recordtrac-vagrant
+[More about RecordTrac...](/docs/about.md)
 
-Otherwise, feel free to set up per instructions below.
+##[How to create a new RecordTrac app for your agency](/docs/redeploy.md)
+* Groundwork
+* Best Practices
+* Redeploy on Heroku
 
-### Mac OS X Pre-requisites
+##[How to install and run RecordTrac locally](/docs/local_installation.md)
 
-This application requires [Postgres](http://www.postgresapp.com/) and Xcode developer tools to be installed.
+##Technical details
+RecordTrac is primarily a Python application built on a backend Flask framework and a frontend Bootstrap framework.
 
-    /Applications/Postgres.app/Contents/MacOS/bin/psql
-    CREATE DATABASE recordtrac;
+RecordTrac is compatible with most modern browsers, including Internet Explorer 8 and above.
 
-### Ubuntu Pre-requisites
+###Platform pieces
+* [Flask 0.10](http://flask.pocoo.org/) is used as the backend Python framework.
+* [Bootstrap 2.3.2](http://getbootstrap.com/2.3.2) is used as the frontend HTML/CSS/JS framework.
+* [Postgres 9.3.0](http://www.postgresapp.com/) is used to manage the database.
+* [Python 2.7.5](http://www.python.org/getit) is used as the foundational programming language.
 
-Install Postgres, Python, and other required packages.
+###Plugins
+* [Font Awesome 3.2.1](http://fortawesome.github.io/Font-Awesome) is used to render all the icons on the site.
+* A number of Javascript libraries like [Backbone.js 1.1.2](http://backbonejs.org/#) are used, primarily for the search function.
 
-    sudo apt-get update
-    sudo apt-get install -y git
-    sudo apt-get install -y postgresql-9.1 postgresql-server-dev-9.1 python-dev
-    sudo apt-get install -y python-pip
+###Service dependencies
+* [SendGrid](http://sendgrid.com/) is used for all email notifications about requests.
+* [Askimet](http://akismet.com/) is used as a spam filter.
+* [Captcha](http://www.captcha.net/) is used to allow requesters to override the spam filter if necessary.
+* [Mozilla Persona](https://login.persona.org/) is used to manage user authentication and password management.
 
-### Postgres & Python
+###Feature backlog
+Issues and feature backlog are tracked through [GitHub issues](https://github.com/codeforamerica/recordtrac/issues).
 
-If you are using a standard Postgres installation or from [Homebrew](http://mxcl.github.com/homebrew/) you can also use:
+**ROLL DEVELOPER DOCS INTO TECHNICAL DETAILS**
+##Developer documentation
 
-    sudo -u postgres createuser -P -s -e testuser
-    sudo -u postgres createdb recordtrac
+###API Documentation
+**UPDATE LINKS AND CONTENT IN LINKS**
 
-In a new window:
+* [API](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/api.html)
 
-    git clone git://github.com/postcode/recordtrac.git
-    cd recordtrac
-    sudo pip install -r requirements.txt
-    cp .env.example .env
-    sed -i 's/localhost/testuser\:testpwd\@localhost/g' .env
+**UPDATE LINKS AND CONTENT IN LINKS**
 
-Update relevant fields in .env.
+###Source Code
+* [Source Code](https://github.com/codeforamerica/recordtrac)
+* [Issue Tracker](https://github.com/codeforamerica/recordtrac/issues)
 
-    vi .env
+###Developer Documentation
+**UPDATE LINKS AND CONTENT IN LINKS**
 
-### Other Accounts
+* [Db Helpers](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/db-helpers.html)
+* [Departments](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/departments.html)
+* [Models](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/models.html)
+* [Notifications](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/notifications.html)
+* [PRR](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/prr.html)
 
-To use e-mail, sign up for a free account with SendGrid and provide the username and password in `MAIL_USERNAME` and `MAIL_PASSWORD`. We assume your monthly email limit is 40,000 sends (Sendgrid's Bronze account level), but you can change this by setting a `SENDGRID_MONTHLY_LIMIT` int value in settings.env.
+**UPDATE LINKS AND CONTENT IN LINKS**
 
-To be able to catch spammy input, sign up for a free account with [Akismet](http://akismet.com/plans/) and provide the application URL and Akismet key in `APPLICATION_URL` and `AKISMET_KEY`.
+**ROLL THIS INTO TECHNICAL DETAILS**
+##How to use RecordTrac... as a requester
+* [Search for a record](/docs/requester.md)
+* [Make a new request](/docs/requester.md#make-a-request)
 
-## Run locally
+##How to use RecordTrac... as an agency employee
+* [Search for a record](/docs/responder.md)
+* [Manage your request list](/docs/responder.md#manage-your-request-list)
+* [Make a new request](/docs/responder.md#make-a-new-request)
+* [Respond to a request](/docs/responder.md#respond-to-a-request)
+* [Admin](/docs/admin.md)
 
-If creating the database for the first time, run:
-
-    foreman run python db_setup.py
-
-There are two external data sources the application depends upon: staff directory information (stored in public_records_portal/static/json/directory.json) and information about the departments within the agency (stored in public_records_portal/static/json/departments.json). The data provided is from the City of Oakland, but you should update these files to meet your needs.
-
-To seed the application with user data (as provided in the above two files), requests and responses, run:
-
-    foreman run python db_seed.py
-
-To use the application locally, exit out of python and run:
-
-    foreman start
-
-
-You should see something similar to:
-
-    2013-05-06 12:16:53 [1776] [INFO] Starting gunicorn 0.17.4
-    2013-05-06 12:16:53 [1776] [INFO] Listening at: http://127.0.0.1:5000 (1776)
-    2013-05-06 12:16:53 [1776] [INFO] Using worker: sync
-    2013-05-06 12:16:53 [1779] [INFO] Booting worker with pid: 1779
-    2013-05-06 12:16:53 [1780] [INFO] Booting worker with pid: 1780
-
-Navigate to the url (in this case, http://127.0.0.1:5000) in your browser.
-
-You can now login with any e-mail address and the password 'admin'.
-
-
-<!-- [![Build Status](https://travis-ci.org/codeforamerica/public-records.png?branch=master)](https://travis-ci.org/codeforamerica/public-records) -->
