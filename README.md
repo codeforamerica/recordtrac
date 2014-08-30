@@ -2,7 +2,7 @@
 This is the home page for documentation for the **RecordTrac** application.
 
 * [What is RecordTrac](#what-is-recordtrac)
-* [How to create a new RecordTrac app](#How-to-create-a-new-RecordTrac-app-for-your-agency)
+* [How to create a new RecordTrac app](#how-to-create-a-new-recordtrac-app-for-your-agency)
 * [Technical details and developer documentation](#technical-details)
 * [How to use RecordTrac](#how-to-use-recordtrac-as-a-requester)
 
