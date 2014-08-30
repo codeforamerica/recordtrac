@@ -1,10 +1,10 @@
 #RecordTrac
 This is the home page for documentation for the **RecordTrac** application.
 
-* [What is RecordTrac](/docs/recordtrac_readme.md#what-is-recordtrac)
-* [How to create a new RecordTrac app](/docs/recordtrac_readme.md#what-is-recordtrac)
-* [Technical details and developer documentation](/docs/recordtrac_readme.md#what-is-recordtrac)
-* [How to use RecordTrac](/docs/recordtrac_readme.md#what-is-recordtrac)
+* [What is RecordTrac](#what-is-recordtrac)
+* [How to create a new RecordTrac app](#How-to-create-a-new-RecordTrac-app-for-your-agency)
+* [Technical details and developer documentation](#technical-details)
+* [How to use RecordTrac](#how-to-use-recordtrac-as-a-requester)
 
 For help contact [Code for America](http://www.codeforamerica.org/apps/recordtrac)
 
