@@ -20,7 +20,7 @@ This web application allows government employees manage, respond to, and fulfill
 * Best Practices
 * Redeploy on Heroku
 
-##[How to install and run RecordTrac locally](/docs/local_installation.md)
+###To create a development environment, you can  [install RecordTrac locally](/docs/local_installation.md).
 
 ##Technical details
 RecordTrac is primarily a Python application built on a backend Flask framework and a frontend Bootstrap framework.
