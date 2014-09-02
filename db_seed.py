@@ -1,4 +1,4 @@
-from public_records_portal import prr, db_helpers, departments, db, models
+from public_records_portal import prr, db_helpers, db, models
 from public_records_portal.prflask import app
 import os, random, string, json
 from datetime import datetime, timedelta
