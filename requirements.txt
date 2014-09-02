@@ -19,4 +19,4 @@ pytz==2012d
 anyjson
 newrelic
 git+https://github.com/garbados/flask-browserid.git
-validate-email==1.2
+validate_email==1.2
