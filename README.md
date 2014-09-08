@@ -46,7 +46,7 @@ RecordTrac is compatible with most modern browsers, including Internet Explorer 
 ###Feature backlog
 Issues and feature backlog are tracked through [GitHub issues](https://github.com/codeforamerica/recordtrac/issues).
 
-###Source Code and developer documentation
+###Developer documentation
 * [Browse full source code on GitHub](https://github.com/codeforamerica/recordtrac)
 * [Technical docs](http://codeforamerica.github.io/recordtrac/docs/2.0.0/technical-docs.html)
 
