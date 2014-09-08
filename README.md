@@ -46,32 +46,10 @@ RecordTrac is compatible with most modern browsers, including Internet Explorer 
 ###Feature backlog
 Issues and feature backlog are tracked through [GitHub issues](https://github.com/codeforamerica/recordtrac/issues).
 
-**ROLL DEVELOPER DOCS INTO TECHNICAL DETAILS**
-##Developer documentation
+###Source Code and developer documentation
+* [Browse full source code on GitHub](https://github.com/codeforamerica/recordtrac)
+* [Technical docs](http://codeforamerica.github.io/recordtrac/docs/2.0.0/technical-docs.html)
 
-###API Documentation
-**UPDATE LINKS AND CONTENT IN LINKS**
-
-* [API](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/api.html)
-
-**UPDATE LINKS AND CONTENT IN LINKS**
-
-###Source Code
-* [Source Code](https://github.com/codeforamerica/recordtrac)
-* [Issue Tracker](https://github.com/codeforamerica/recordtrac/issues)
-
-###Developer Documentation
-**UPDATE LINKS AND CONTENT IN LINKS**
-
-* [Db Helpers](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/db-helpers.html)
-* [Departments](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/departments.html)
-* [Models](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/models.html)
-* [Notifications](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/notifications.html)
-* [PRR](https://github.com/codeforamerica/recordtrac/blob/gh-pages/docs/1.0.0/prr.html)
-
-**UPDATE LINKS AND CONTENT IN LINKS**
-
-**ROLL THIS INTO TECHNICAL DETAILS**
 ##How to use RecordTrac... as a requester
 * [Search for a record](/docs/requester.md)
 * [Make a new request](/docs/requester.md#make-a-request)
