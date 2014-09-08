@@ -1,0 +1,67 @@
+{
+  "owners": [
+    {
+      "reason": "She is the open government coordinator", 
+      "date_created": "2013-06-12T16:59:19.569128", 
+      "request_id": 1, 
+      "id": 1, 
+      "user_id": 2
+    }, 
+    {
+      "reason": "Closed request.", 
+      "date_created": "2013-06-25T00:03:04.755757", 
+      "request_id": 1, 
+      "id": 14, 
+      "user_id": 6
+    }, 
+    {
+      "reason": "He's the PRR liaison", 
+      "date_created": "2013-06-13T21:56:13.163716", 
+      "request_id": 1, 
+      "id": 5, 
+      "user_id": 19
+    }
+  ], 
+  "records": [
+    {
+      "id": 3, 
+      "user_id": 6, 
+      "date_created": "2013-06-25T00:02:23.329666", 
+      "access": null, 
+      "request_id": 1, 
+      "download_url": null, 
+      "description": "Resolution 84208 CMS", 
+      "doc_id": null, 
+      "url": "http://oakland.legistar.com/LegislationDetail.aspx?ID=1283701&GUID=32C352ED-A6F4-4933-AA84-0CD72419ABDA&Options=ID|Text|&Search=84208", 
+      "filename": null
+    }
+  ], 
+  "creator_id": null, 
+  "date_created": "2013-06-12T16:59:18.998278", 
+  "department": null, 
+  "qas": [], 
+  "current_owner": 14, 
+  "extended": null, 
+  "notes": [
+    {
+      "date_created": "2013-06-25T00:02:55.982495", 
+      "request_id": 1, 
+      "text": "Sent the resolution and a link online for more information.", 
+      "id": 3, 
+      "user_id": 6
+    }
+  ], 
+  "text": "I need a copy of the resolution declaring February 23, 2013 Open Data Day in the City of Oakland.", 
+  "id": 1, 
+  "status": "Closed. Fulfilled", 
+  "subscribers": [
+    {
+      "owner_id": null, 
+      "date_created": "2013-06-12T16:59:20.203865", 
+      "request_id": 1, 
+      "id": 1, 
+      "user_id": 1
+    }
+  ], 
+  "status_updated": "2013-06-25T00:03:04.932147"
+}
