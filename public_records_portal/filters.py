@@ -1,3 +1,12 @@
+"""
+    public_records_portal.filters
+    ~~~~~~~~~~~~~~~~
+
+    Registers Jinja filters for the Flask application
+
+"""
+
+
 from public_records_portal import app, gravatar, prr, notifications, helpers, scribd_helpers, db_helpers
 # Register your filter here!
 
