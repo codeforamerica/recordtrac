@@ -3,7 +3,7 @@
 We recommend you use a virtual environment to set up RecordTrac locally. More details can be found in [this howto](https://github.com/codeforamerica/howto/blob/master/Python-Virtualenv.md).
 
 
-This application requires [PostgreSQL](http://www.postgresapp.com/). For help getting started with PostgreSQL and creating a database, you can refer to [this howto](https://github.com/codeforamerica/howto/blob/master/PostgreSQL.md). Name your database 'recordtrac'.
+This application requires [PostgreSQL](http://www.postgresql.org/). For help getting started with PostgreSQL and creating a database, you can refer to [this howto](https://github.com/codeforamerica/howto/blob/master/PostgreSQL.md). Name your database 'recordtrac'.
 
 Inside your virtual environment:
 
