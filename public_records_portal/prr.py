@@ -11,7 +11,7 @@ import os, time, json
 from flask import Flask, request
 from flask.ext.login import current_user
 from datetime import datetime, timedelta
-from db_helpers import find_request, create_request, get_obj, add_staff_participant, remove_staff_participant, update_obj, get_attribute, change_request_status, create_or_return_user, create_subscriber, create_record, create_note, create_QA, create_answer
+from db_helpers import find_request, create_request, get_obj, add_staff_participant, remove_staff_participant, update_obj, get_attribute, change_request_status, create_or_return_user, create_subscriber, create_record, create_note, create_QA, create_answer, update_user
 from models import *
 from ResponsePresenter import ResponsePresenter
 from RequestPresenter import RequestPresenter
