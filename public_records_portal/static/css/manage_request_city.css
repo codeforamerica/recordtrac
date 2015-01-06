@@ -1,0 +1,137 @@
+/* custom css for manage_request_city.html and child templates */
+
+/* _ask_question.html */
+     #control-question {
+          margin-bottom: 0.5em;
+     }
+
+/* PoC and Helper area */
+     a#contactinfoPopoverRoute {
+          color: #666;
+     }
+     div.row-fluid.participantRow-poc{
+          padding-top: 3px;
+     }
+     h4.participantRow-title {
+          color: #17B292;
+          border-radius: 5px;
+          padding: 5px;
+          margin-bottom: 0px;
+     }
+     h4.participantRow-title:hover {
+          background-color: rgba(23,178,146, .3);
+          color: #555;
+          /*color: #1CDBB4;*/
+     }
+     div.participantRow-participants, div.participantRow-poc, div.participantRow-history {
+          padding-left: 5px;
+          padding-right: 5px;
+     }    
+    
+     i.icon-arrow-right, i.icon-plus {
+          padding-right: 3px;
+          } 
+     i.icon-user {
+          padding-right: 3px;
+     }
+    .unassignPopover {
+        border-radius: 5px;
+        padding: 3px;
+        margin-bottom: 0px;
+        margin-left: -5px;
+     }
+    .unassignPopover:hover {
+      background-color:#17b292;
+      cursor: pointer;
+      *cursor: hand;
+      background-color: rgba(23,178,146, .3);
+      color: #555;
+      border-radius: 5px;
+      padding: 3px;
+      margin-bottom: 0px;
+     }
+
+     /*i.icon-arrow-right:hover {
+          color: #888;
+     }
+     h4.partcipantRow-title {
+          display: inline;
+     }*/
+     /*h4.partcipantRow-title:hover {
+          color: #00bb94;
+          background-color: rgba(23,178,146, .3);
+     }*/
+     #reroutePopover:hover, #notifyPopover:hover{
+          text-decoration: none;
+     }
+     /*div.participantRow-helpers {
+          margin-top: 0.5em;
+     }
+     div.participantRow-history {
+          margin-top: 0.5em;
+          margin-bottom: 1em;
+     }*/
+
+
+
+/* Top Reponses (request area) */
+     .response.qa, .response.note {
+       padding: 7px 5px;
+       background-color: #fff;
+       margin-bottom: 7px;
+       border-radius: 3px;
+       box-shadow: inset 0px 0px 5px #ccc;
+     }
+     .qa .qa-question {
+       padding: 2px;
+       background-color: rgba(176, 233, 255, 0.61);
+     }
+     .qa .qa-answer {
+       padding: 2px;
+     }
+
+/* Contact info area */
+     #no_email {
+      padding-right: 5px;
+     }
+
+/* Bottom Responses*/
+     .response-wrapper {
+       border-bottom: 1px solid #ccc;
+       margin-bottom: 10px;
+       padding-top: 10px;
+     }
+     .response-wrapper:last-child {
+       border-bottom: none;
+     }
+     .less, .more {
+       color: #17B292;
+     }
+     .less:hover, .more:hover {
+       cursor: hand;
+       cursor: pointer;
+     }
+
+/* Request status*/
+     .request-status-well {
+       text-align: center;
+       color: #fff;
+       padding: 0;
+     }
+
+     .request-status-well.open {
+       background-color: #2688AD;
+     }
+
+     .request-status-well.soon {
+       background-color: #FB991B;
+     }
+
+     .request-status-well.overdue {
+       background-color: #CA1A1A;
+     }
+
+     .request-status-well.closed {
+       background-color: #2a2b2b;
+     }
+

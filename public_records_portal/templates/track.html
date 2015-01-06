@@ -1,0 +1,51 @@
+<!-- This template is for the landing page. -->
+
+{% extends "base.html" %}
+{% block title %}Track{% endblock title %}
+
+{% block custom_css_links %}
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/track.css') }}">
+{% endblock custom_css_links %}
+
+{% block container %}
+	<div class="row-fluid">
+
+    <div class="span7 offset1">
+      <div class="row-fluid">
+        <div class="span8">
+          <h3>Track a request</h3>
+          <p class="intro_text">Use the tracking tool to find a specific request. If you would prefer to browse all existing requests, you can <a href="/view_requests">explore here</a>.</p>
+
+          <form name="input" class="form-horizontal" id="submitTrack" method="post" action="/track" autocomplete="on" >
+            <fieldset>
+
+              <p class="lead">Enter your tracking number</p>
+
+              <div class="control-group">
+                <div >
+                  <input class="" name="request_id" type="number" id="request_id" placeholder="12345" required/>
+                </div>
+              </div>
+
+              
+              <div id="trackButton" class="control-group">
+                <div>
+                  <button type="submit" class="btn btn-primary">Find my request</button>
+                </div>
+              </div>
+
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    
+
+  </div>
+
+{% endblock container %}
+
+{% block custom_script_links %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/track.js') }}"></script>
+{% endblock custom_script_links %}

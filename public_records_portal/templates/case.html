@@ -1,0 +1,229 @@
+<!-- This template houses the baseline case information (request, documents, status, etc.) only. -->
+
+{% extends "base.html" %}
+{% block title %}Request{% endblock title %}
+
+{% block custom_css_links %}
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/manage_request_city.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/_response_widget.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bottom_sidebar.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
+{% endblock custom_css_links %}
+
+{% block container %}
+<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+<!-- social media section -->
+  <div id="floating_media" class="text-center">
+
+    <!-- share on twitter -->
+    <a href="#" 
+      onclick="
+        window.open(
+          'http://twitter.com/intent/tweet?text=Requested from {{config['AGENCY_NAME']}}:&amp;via=RecordTrac&amp;url={{config['APPLICATION_URL']}}request/{{req.id}}', 
+          'facebook-share-dialog', 
+          'width=550,height=350'); 
+        return false;">
+      <i class="icon-twitter icon-large"> </i>
+    </a>
+
+    <!-- share on facebook -->
+    <a href="#" 
+      onclick="
+        window.open(
+          'https://www.facebook.com/sharer/sharer.php?u={{config['APPLICATION_URL']}}request/{{req.id}}', 
+          'facebook-share-dialog', 
+          'width=626,height=436'); 
+        return false;">
+      <i class="icon-facebook icon-large"> </i>
+    </a>
+  </div>
+
+<!-- main content -->
+  <div class="row-fluid">
+    <div class="span8">
+      {% block banner %}{{super()}}{% endblock banner %}
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="span7 offset1">
+      {% block well %}
+        <div class="well">
+          {% block request %}
+          <div id = "request-container">
+            <!-- request area -->
+            <div class="row-fluid">
+              <h3 class="control-widget">Request <span class="muted">#{{req.id}}</span></h3>
+              {% block clarify_request %}{% endblock clarify_request %}{% block public_note %}{% endblock public_note %}
+               
+              <p class="lead" truncateable="250"> {{ req.text | new_lines }} </p>
+            </div>
+            <div id="proxyrequester_info" class="row-fluid">
+              {% block proxyrequester_info %}
+                <small>
+                  {% if req.creator_id %}
+                    <span>This request was submitted on behalf of the requester by {{ "alias"| get_attribute(req.creator_id, "User") }}.</span>
+                  {% endif %}
+                </small>
+              {% endblock proxyrequester_info %}
+            </div>
+            <div>
+            <!-- shows any existing Q&A or public notes -->
+            {% set request_data = ( req | get_request_data_chronologically ) %}
+
+              {% for response in request_data %}
+                {% set icon = response.get_icon() %}
+                <div class="row-fluid response">
+                  <div class="span1 text-left">
+                    <i class="{{icon}}"></i>
+                  </div>
+                  <div class="span9">
+                    <p truncateable="175">
+                     {{ response.display_text() | safe }}
+                   </p>
+                  </div>
+                  <div class="span2 text-right request-date">
+                    <div class = "timestampPopoverContainer">
+                      <div class="row-fluid">
+                        <span class="timestampPopover" onmouseover="">{{ response.date() | date_granular }}</span>
+                        <div class = "hide">
+                         {% include '_timestamp.html' %}
+                       </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+                {% if request_data | length > 1 %}
+                  <!-- SHOW/HIDE button; js is in case.js -->
+                  <div class="case-show-all show"><i class="icon-chevron-down"></i> See all <i class="icon-chevron-down"></i></div>
+                {% endif %}
+              </div>
+          </div>
+          {% endblock request %}
+        </div>
+      {% endblock well %}
+      {% block requester_info %}{% endblock requester_info %}
+
+      {% block responses_container %}
+        <div id="responses-container" class="row-fluid">
+          <h3 class="control-widget">Response</h3>
+          {% block response_actions %}{% endblock response_actions %}
+          <!-- shows all existing responses (links, documents, offline docs, notes) -->
+          {% set responses = ( req | get_responses_chronologically ) %}
+          {% if responses %}
+            {% for response in responses %}
+              {% set uid = response.uid() %}
+              {% set staff = ("User" | get_obj(uid)) %}
+              {% set icon = response.get_icon() %}
+              <div class="row-fluid response-wrapper">
+                <div class="span1 text-left">
+                  <i class="{{icon}}"></i>
+                </div>
+                <div class="span9">
+                  <p class="expandable" truncateable="200">
+                   {{ response.display_text() | safe }} - <a href="/staff_card/{{uid}}"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias or staff.email }}</span></a>
+                 </p>
+                </div>
+                <div class="span2 text-right response-date">
+                  <!-- <div class="row-fluid">
+                    <a href="/staff_card/{{uid}}" data-placement="right" data-toggle="popover" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias or staff.email }}</span></a>
+                  </div> -->
+                  <div class = "timestampPopoverContainer">
+                    <div class="row-fluid">
+                     <span class="timestampPopover" onmouseover="">{{ response.date() | date_granular }}</span>
+                      <div class = "hide">
+                       {% include '_timestamp.html' %}
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+            {% endfor %}
+          {% else %}<!--added an if then to check to see if any responses exist - if no then show text here for the "if any response exists" above -->
+            <div class = "row-fluid"> 
+              <br>
+              {% set requester = req.requester() %}
+              {% if requester %}
+                  {% set email = requester.user.email %}
+              {% endif %}
+              {% if not email %}
+                <p id="no-email"><i>Requester did not provide an e-mail address. <i class="icon-question-sign" title= "If a clarification is needed and no alternate contact information has been provided, it may not be possible to respond to this request."></i></i></p>
+              {% endif %}
+              <p id="no-records"><i>No records uploaded yet.</i></p>
+            </div>
+          {% endif %}
+          {% block response_actions_lessjs %}{% endblock response_actions_lessjs %}
+        </div>
+      {% endblock responses_container %}
+    </div>
+
+    <div id="participant-container" class="span3">
+      {% block sidebar %}
+
+        {% block status %}{% endblock status %}
+
+        <div class="b_sidebar">
+          <div class="row-fluid participantRow">
+              <h4 class="case_participantRow">Point of Contact</h4>
+              {% include '_contact_popover.html' %}
+          </div>
+          <div class="row-fluid participantRow">
+              <h4 class="case_participantRow">Helpers</h4>
+              {% include '_staff_participants.html' %}
+          </div>
+          <div class="row-fluid">
+            <div class="participantRow-history">
+              {% include '_history.html' %}
+            </div>
+
+          </div>
+
+
+
+        </div>
+      {% endblock sidebar %}
+
+      {% block request_dates %}
+        <div class="muted text-center">Received: {{ (req.date_received or req.date_created) | date }}</div>
+      {% endblock request_dates %}
+
+      {% block follow %}
+        <form name="folow" id="follow" method="post" action="/public_add_a_subscriber">
+          <input type="hidden" name="request_id" value= "{{req.id}}"/>
+          <!-- <fieldset> -->
+            <div class="row-fluid follow">
+              <div class="span10 offset2">
+                <div class="input-append">
+                  <input id="followRequest" name="follow_email" class="span6" placeholder="yourname@email.com" type="email">
+                  <button id="followRequest-button" class="btn" type="submit">Follow</button>
+                </div>
+                <div id="whatisfollow"><span id="recordTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="Enter your email here and we will send you updates for this request." ><small><i class="icon-question-sign"></i></i></small></span></div>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+      {% endblock follow %}
+    </div>
+
+  </div>
+
+
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/social_media.css') }}">
+
+
+{% endblock container %}
+
+
+{% block custom_script_links %}
+  <!-- Listed in case instead of manage_request_city for truncation!!! -->
+  <script type="text/javascript" src="{{ url_for('static', filename='js/manage_request_city.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/case.js') }}"></script>
+
+  <!-- For response_widget partial -->
+  <script type="text/javascript" src="{{ url_for('static', filename='js/_response_widget.js') }}"></script>
+
+  <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.ellipsis.js') }}"></script>
+{% endblock custom_script_links %}
+
+

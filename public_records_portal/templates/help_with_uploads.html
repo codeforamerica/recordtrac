@@ -1,0 +1,13 @@
+{% extends "error.html" %}
+{% block error_specific %}
+{{ super() }}
+  <p>
+  If you're having trouble uploading the record from our interface, or the file extension you are trying to upload is not supported*, we recommend uploading directly to the city's open data portal [instructions to come]. It is best to upload csv and other data files to the open data portal. After doing so, you can provide a link to the record instead of uploading it. 
+</p>
+<p>
+  If you are trying to upload emails from Outlook, we recommend saving it as a .txt file and uploading that.
+</p>
+<small>*Supported file types are: </br>
+	'txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff'
+</small>
+{% endblock error_specific %}

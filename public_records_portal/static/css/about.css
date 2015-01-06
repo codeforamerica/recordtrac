@@ -1,0 +1,46 @@
+/* custom css for about.html */
+
+/* bigger font for FAQ */
+ul {
+	/*font-size: 18px;*/
+	margin-left: 3em;
+}
+
+/* bold for table legend */
+p.table-legend {
+	font-weight: bold;
+	margin-top: 1em;
+}
+
+/* room for explanation text */
+p.table-legend-explanation {
+	padding-left: 3em;
+}
+p.table-legend-explanation:first-child {
+	margin-top: 1em;
+}
+
+
+#about_image {
+	margin-top: 2%;
+	margin-bottom: 2%;
+}
+
+/*img[alt="City of Oakland"] {
+	margin-left: 5%;
+}*/
+
+#about_image i {
+	margin-left: 5%;
+	margin-right: 5%;
+	margin-top: 20%;
+	line-height: 0.2em;
+}
+
+.bottombreathe {
+	padding-bottom: 1%;
+}
+
+.footerbreathe {
+	padding-bottom: 5%;
+}

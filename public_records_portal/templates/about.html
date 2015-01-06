@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}{{title}}{% endblock title %}
+
+{% block container %}
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/about.css') }}">
+<div class="row-fluid">
+	<div class="span10 offset1">
+		
+		<div class="row-fluid">
+			<div class="bottombreathe">
+				<h2 id="about">About RecordTrac</h2>
+				<p class="lead">RecordTrac is a quick, simple way for you to submit a public records request to {{config['AGENCY_NAME']}}.</p>  
+				<p><strong>Every message or record uploaded on this site is completely public. </strong> This makes easier to understand what happens to every request.</p>
+			</div>
+			<div class="bottombreathe">
+				<h4 id="what">What is RecordTrac?</h4>
+				<p>RecordTrac is a quick, simple way for individuals to submit public record requests to a governmental agency. The web application also allows government employees manage, respond to, and fulfill incoming requests. By displaying all records requests and responsive documents, members of the public may find what they need without having to create a new public record request.</p>
+			</div>
+			<div class="bottombreathe">
+				<h4 id="documents">Why aren't all documents uploaded on RecordTrac?</h4>
+				<p>{{config['AGENCY_NAME']}} will not publicly release records or information that violates your right to privacy. This also includes records that will compromise your safety or the completion of a law enforcement investigation.</p>
+
+				<p>For example, many police reports contain sensitive information that can only be sent to the individuals directly involved in the crime or incident, and will not be released through RecordTrac. You will, however, better understand the number and types of records requests processed, even when the record itself cannot be uploaded due to sensitive data.</p>   
+			</div>	
+			<div class="bottombreathe">	
+				<h4 id="why">History of RecordTrac</h4>
+
+				<div class="row-fluid">
+					<div id="about_image" class="span10">
+						<img src="{{ url_for('static', filename = 'images/CityTree_logo_green.png')}}" alt="City of Oakland logo" width="100" height="100"/>
+						<i class="icon-plus icon-3x text-center muted"></i>
+						<img src="{{ url_for('static', filename='images/CfA_logo.png') }}" width="20%" alt="Code for America"/>
+					</div>
+				</div>
+
+				<p>The 2013 Code for America fellows created RecordTrac with the City of Oakland. As public records requests became larger and more complex, city employees found coordinating a response to be difficult. The old software system no longer met their needs and many requests remained untracked.</p>
+				<p>Members of the public complained they didn’t understand what happened after they submitted their requests and it took too long to get the records they needed.</p>
+				<p>By making everything completely transparent, you can know your request is fulfilled.</p>
+			</div>
+
+			<div class="footerbreathe">
+				<h4 id="why">I'd like to know more about how to...</h4>
+				<ul>
+					<li><a href="https://github.com/codeforamerica/recordtrac/blob/readme/readme/redeploy.md">Create a RecordTrac for your own agency</a></li>
+					<li><a href="https://github.com/codeforamerica/recordtrac/blob/readme/readme/redeploy.md#technical-details">Review the technical details</a></li>
+					<li><a href="https://github.com/codeforamerica/recordtrac/blob/readme/readme/recordtrac_readme.md#how-to-use-recordtrac-as-a-requester">Learn to create a request</a></li>
+					<li><a href="https://github.com/codeforamerica/recordtrac/blob/readme/readme/recordtrac_readme.md#how-to-use-recordtrac-as-an-agency-employee">Learn to manage requests</a></li>
+				</ul>
+				<p>For more information, please see the <a href="https://github.com/codeforamerica/recordtrac/blob/readme/recordtrac_readme.md">full documentation</a> for the RecordTrac application.</p>
+			</div>
+			
+		</div>
+	</div>
+</div>
+{% endblock container %}
+
+

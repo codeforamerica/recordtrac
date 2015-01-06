@@ -1,0 +1,246 @@
+/* custom css for all_requests.html and child templates */
+
+/* top area */
+.blurb {
+	padding-bottom: 1em;
+}
+
+/* export data area */
+	p.text-center a:hover {
+		text-decoration: none;
+	}
+
+/* remove styling from request text link */
+	td a {
+		color: #333;
+	}
+	td a:hover {
+		text-decoration: none;
+		color: #333;
+	}
+
+	table {
+		margin: 0 auto;
+		clear: both;
+		/*width: 100%;*/
+	}
+
+	table thead th {
+		padding: 3px 18px 3px 10px;
+		border-bottom: 1px solid black;
+		font-weight: bold;
+	}
+
+	table thead th.sortable {
+		cursor: pointer;
+		*cursor: hand;
+	}
+
+	table thead th.sortable:hover {
+		color:#17b292;
+	}
+
+	table tfoot th {
+		padding: 3px 18px 3px 10px;
+		border-top: 1px solid black;
+		font-weight: bold;
+	}
+
+	table td {
+		padding: 3px 10px;
+	}
+
+
+
+/* breathing room for filter count */
+	small.count {
+		margin-left: 1em;
+	}
+
+/* bottom margin for table */
+	#allrequestTable_wrapper {
+		margin-bottom: 5em;
+	}
+	#viewSubmit {
+		/*margin-bottom: 5em;*/
+	}
+
+/* request table # of records left margin adjustment */
+	#allrequestTable_length label {
+	/*margin: 0 0 0 1.75em;*/
+		margin-left: 1.75em;
+		margin-bottom: 1em;
+		margin-top: 1em;
+	}
+
+	#allrequestTable_info {
+	margin-left: 1.75em;
+	}
+
+/* indent table length dropdown */
+	select[name="allrequestTable_length"] {
+		margin-left: 0.25em;
+	}
+
+/* change counter to green background */
+	span.badge {
+		background-color: #17b292;
+	}
+
+/* increase size of intro text */
+	p.intro_text {
+		font-size: 16px;
+	}
+
+/* bottom margin under title area */
+	#exploreTitle {
+		margin-bottom: 1em;
+	}
+
+/* adds breathing room for filter form submit button */
+	#viewSubmit {
+		margin-top: 2em;
+	}
+
+/* removes bottom margin for filter form */
+	#filterPublic {
+		margin-bottom: 0px;
+	}
+
+td.status {
+	color: white;
+}
+
+.intro_text {
+	margin-bottom: 2%;
+}
+
+/* allows the "Request new record" button appear inline with Explore header */
+h3 {
+	display: inline;
+}
+
+/*
+ * Fresh styles for the requests table are below. Things are in the process of being
+ * ported.
+ */
+
+#search label {
+  font-weight: bold;
+  font-size: 17.5px;
+  display: inline;
+}
+
+#requests th, #requests td {
+    text-align: left;
+	  vertical-align: middle;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#requests thead tr {
+    border-bottom: 1px solid #808080;
+}
+
+#requests tbody tr {
+    border-bottom: 1px solid #DDD;
+}
+
+#requests tbody tr:hover {
+	  background-color: rgba(23,178,146, .3);
+}
+
+#requests .status {
+    padding: 5px;
+	  width: 14px;
+}
+
+#requests .status.closed {
+    background-color: #2a2b2b;
+}
+
+#requests .status.open {
+    background-color: #2688AD;
+}
+
+#requests .status.soon {
+    background-color: #FB991B;
+}
+
+#requests .status.overdue {
+    background-color: #CA1A1A;
+}
+
+/* sidebar search styling */
+
+.underline {
+	border-bottom: 1px solid gray;
+	padding-bottom: 7px;
+}
+.indent {
+	margin-left: 10px;
+}
+.search_style h5 {
+	margin: 15px 0px 3px;
+}
+.search_style {
+	margin-bottom: 10px;
+}
+.status{
+  padding-bottom: 15px;
+}
+.status input[type=radio]{
+  margin-left: 0;
+}
+.all_style{
+  border-left: 8px solid #bbb;
+  padding-left: 5px;
+  margin-left: 5px;
+}
+.overdue_style{
+	border-left: 8px solid red;
+	padding-left: 5px;
+	margin-left: 5px;
+}
+.duesoon_style{
+	border-left: 8px solid orange;
+	padding-left: 5px;
+	margin-left: 5px;
+}
+.open_style{
+	border-left: 8px solid #2688AD;
+	padding-left: 5px;
+	margin-left: 5px;
+}
+.closed_style{
+	border-left: 8px solid black;
+	padding-left: 5px;
+	margin-left: 5px;
+}
+
+/* Icon glips for sortalbe and sorted columns. */
+.sortable:after {
+  font-family: FontAwesome;
+  padding-left: 5px;
+}
+   
+.sortable:after {
+  content: "\f0dc";
+}
+
+.sortable.desc:after {
+  content: "\f0dd";
+}
+
+.sortable.asc:after {
+  content: "\f0de";
+}
+
+/* Date picker's! */
+.date_filter h5, .date_filter .all_dates {
+  display: inline;
+}
+
+.date_filter .max_field {
+  margin-left: 20px;
+}

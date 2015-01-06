@@ -1,0 +1,177 @@
+/* custom css for landing.html and child templates */
+
+/* disclaimer */
+#disclaimer {
+	margin-bottom: 1em;
+	margin-top: 1em;
+}
+
+/* data header */
+#recent-requests {
+	margin-top:20px;
+	margin-bottom:30px;
+	}
+
+/* breathing room for landing footer */
+#footer {
+	padding-bottom: 2em;
+}
+
+
+/*hover states for images */
+	.round_link {
+	border-radius: 20px;
+	margin-bottom: 10%;
+	padding-top: 5%;
+	padding-bottom: 5%;
+	}
+
+	.round_link:hover {
+		background-color: rgba(23,178,146, .3);
+		color: #555;
+		text-decoration: none;
+	}
+
+
+/* brand area */
+	#logo_landing {
+		/*display: inline-block;
+		margin-top: -1.5em;
+		margin-right: 1em;*/
+		float: right;
+		margin-top: 2.25em;
+		margin-bottom: 1em;
+		width: 130px;
+
+	}
+	/*h3 {
+		margin-top: 1em;
+	}*/
+
+/* expore, request, track content */
+	h4.text-center.text-title {
+		font-size: 18px;
+		margin-bottom: 0.25em;
+		margin-top: 1em;
+		color: #333;
+	}
+	p.text-center.text-body {
+		font-size: 16px;
+		color: #333;
+	}
+
+h1 {
+	color: #17b292;
+	margin-top: 1em;
+	/*display: inline-block;*/
+}
+
+img[alt="request,track,explore"] {
+	margin-top: 1em;
+	/* aligns image with content */
+	padding-left: 35px;
+}
+
+.left-image {
+	width: 75px;
+	height: 95px;
+}
+.center-image {
+	width: 100px;
+	height: 91px;
+}
+.right-image {
+	width: 150px;
+	height: 90px;
+}
+
+/*div.span4 {
+	margin-top: 1em;
+}*/
+
+p.text-title {
+	margin-bottom: 0px;
+}
+
+#seedata {
+	margin-top: 1em;
+	margin-bottom: 3em;
+}
+
+#startmeup {
+	margin-bottom: 1em;
+}
+
+.center-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#request-count {
+	background-color: #17b292;
+}
+
+/*i.icon-arrow-right {
+	padding-left: 2px;
+	font-size: 12pt;
+}*/
+
+/* REQUESTS VIZ CSS --- */
+	/*.axis path,
+	.axis line {
+	  fill: none;
+	  stroke: #000;
+	  shape-rendering: crispEdges;
+	}
+
+	.bar {
+	  fill: #999;
+	}
+
+	.bar:hover {
+	  fill: #FB991B ;
+	}
+
+	.no-line.axis path {
+	  display: none;
+	}
+
+	.axis text {
+	  font-size: 12px;
+	  text-anchor: left;
+	}
+
+	.no-line.axis {
+	  width: 50px;
+	  overflow: hidden;
+	}
+
+	.d3-tip {
+	  line-height: 1;
+	  font-weight: bold;
+	  padding: 12px;
+	  background: rgba(0, 0, 0, 0.8);
+	  color: #fff;
+	  border-radius: 2px;
+	}*/
+
+	/* Creates a small triangle extender for the tooltip */
+	/*.d3-tip:after {
+	  box-sizing: border-box;
+	  display: inline;
+	  font-size: 10px;
+	  width: 100%;
+	  line-height: 1;
+	  color: rgba(0, 0, 0, 0.8);
+	  content: "\25BC";
+	  position: absolute;
+	  text-align: center;
+	}*/
+
+	/* Style northward tooltips differently */
+	/*.d3-tip.n:after {
+	  margin: -2px 0 0 0;
+	  top: 100%;
+	  left: 0;
+	}*/

@@ -1,0 +1,166 @@
+{#
+This template provides the header, footer, and envelope info for all pages except signup.
+#}<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title%}</title>
+    <!-- HTML5 shim for IE backwards compatibility -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-responsive.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/BootSwatchr6.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/font-awesome.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/feedback.css') }}">
+    <!-- Favicon -->
+    <link rel="icon" type="image/ico" href="{{ url_for('static', filename='images/favicon.ico') }}"/>
+
+    {% block custom_css_links %}
+
+    {% endblock custom_css_links %}
+
+  <!-- modernizr -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/modernizr-latest-min.js') }}"></script>
+
+  <!-- google analytics -->
+    <!-- for later: guide to add event-driven analytics http://www.sitepoint.com/google-analytics-track-javascript-ajax-events/ -->
+    <script>
+
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-41730935-1', 'herokuapp.com');
+    ga('send', 'pageview');
+    </script>
+
+  <!-- auth_script requires jquery and Mozilla's 'include.js' shim -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.11.1.min.js') }}"></script> 
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/include.js') }}"></script>
+    <script type="text/javascript">{{ auth_script|safe }}</script>
+
+  <!-- IE8 polyfill for CSS3 pseudo classes like :hover -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.11.1.min.js') }}"></script>
+    <!--[if (gte IE 6)&(lte IE 8)]>
+      <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/selectivizr-min.js') }}"></script>
+      <noscript><link rel="stylesheet" href="[fallback css]" /></noscript>
+    <![endif]-->
+
+  <!-- transform and other prefixes polyfill -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/css3finalize/4.0.0/jquery.css3finalize.min.js"></script>
+
+  <!-- REM unit polyfill -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/rem.min.js') }}"></script>
+    
+  </head>
+  
+  <body>
+    <div class="wrapper">
+      <div class="navbar navbar-inverse">
+        <div class="navbar-inner">
+          <div class="container">
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
+            <!-- Be sure to leave the brand out there if you want it shown -->
+            <a class="brand" href="/landing"><img id="logo_nav" src="{{config['LOGO_ON_BLACK_URL']}}" alt="{{config['AGENCY_NAME']}} logo" width="35" height="35"/><strong> RecordTrac</strong><small id="beta" class="text-warning"></small></a>
+            <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
+              
+                {% if current_user.is_authenticated() %}
+                  <ul class="nav tabs">
+                    <li><a href="/new">New request</a></li>
+                    <li><a href="/view_requests">All requests</a></li>
+                    <li><a href="/track">Track</a></li>
+                    <!-- <li><a href="/tutorial">Tutorial</a></li> -->
+                    <!-- <li><a href="/admin">Admin</a></li> -->
+                    <li><a href="/about">About</a></li>
+                  </ul>
+                  <ul class="nav pull-right">
+                    <li><button id="browserid-logout" class="btn">{{config['AGENCY_NAME']}} Logout</button></li>
+                  </ul>
+                {% else %}
+                  <ul class="nav tabs">
+                    <li><a href="/new">New request</a></li>
+                    <li><a href="/view_requests">Explore requests</a></li>
+                    <li><a href="/track">Track</a></li>
+                    <li><a href="/about">About</a></li>
+                  </ul>
+                  <ul class="nav pull-right">
+                    <li><button id="browserid-login" class="btn">{{config['AGENCY_NAME']}} Login</button></li>
+                  </ul>
+                {% endif %}
+            </div>
+          
+
+            <!-- Everything you want hidden at 940px or less, place within here -->
+            <div class="nav-collapse collapse">
+              <!-- .nav, .navbar-search, .navbar-form, etc -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="container-fluid">
+        {% block container %}
+          <div class="row-fluid">
+            <div class="span10">
+              {% block banner %}
+
+              {% endblock banner%}
+            </div>
+          </div>
+          
+        {% endblock container %}
+      </div>
+
+
+
+      <div class="push"></div>
+    </div>
+      
+<!-- Footer is separate on landing page -->      
+    {% block footer %}
+      <div id="footer" class="well well-small footer">
+        <p class="text-center">For more information about this application or instructions on how to get the app for <em>your</em> agency, <a href="https://github.com/codeforamerica/recordtrac" target="_blank"> view project info and documentation</a>.</p>
+        <p class="text-center">Made by the <a href="http://www.codeforamerica.org/apps/recordtrac/" target="_blank">Code for America 2013 Fellows</a> with the City of Oakland</p>
+      </div>
+    {% endblock footer %}
+
+    {% if 'GOOGLE_FEEDBACK_FORM_ID' in config %}
+      {% block feedback %}
+      <!-- gforms feedback tab -->
+          <h5 class="text-center hidden-phone" ><a id="floating_link" href="#feedbackModal" data-toggle="modal" class="bootstro" data-bootstro-title="Feedback" data-bootstro-content="{{"Feedback" | tutorial }}" data-bootstro-step="9" data-bootstro-placement="right" data-bootstro-width="50%"> Feedback</a></h5>
+         
+        <!-- Modal for feedback -->
+        <div id="feedbackModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+          <div class="modal-body">
+            <iframe title="feedback_form" src="https://docs.google.com/forms/d/{{config['GOOGLE_FEEDBACK_FORM_ID']}}/viewform?embedded=true" width="500" height="390" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+          </div>
+        </div>
+      {% endblock feedback %}
+    {% endif %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.placeholder.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/placeholder.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.validate.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/custom.js') }}"></script>
+    <!-- CSS3 media queries polyfill -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/css3-mediaqueries.js') }}"></script>
+    <!-- accessibility element tag polyfill -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/accessifyhtml5.min.js') }}"></script>
+
+    {% block custom_script_links %}      
+    {% endblock custom_script_links %}  
+  </body>
+</html>

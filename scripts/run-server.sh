@@ -1,0 +1,2 @@
+cd ..
+foreman start

@@ -1,0 +1,130 @@
+/* custom css for base.html and child templates */
+
+/* larger logout link */
+	input#logout_form.btn.btn-link {
+		font-size: 16px;
+		font-weight: bold;
+	}
+	#logoutForm {
+		margin-bottom: 0px;
+	}
+
+/* scoot navbar start to the right */
+	a.brand {
+		margin-left: 5% !important;
+	}
+
+/* navbar layout tweaks due to insertion of Oakland tree logo */
+	/* tree logo */
+	img[id="logo_nav"] {
+		margin-top: -5px;
+		margin-right: 10px;
+	}
+
+	/* tabs */
+	ul.nav.tabs {
+		font-size: 16px;
+	}
+	ul.nav.tabs li.active {
+		border-bottom: 2px solid #17B292;
+	}
+	ul.nav.tabs li.active a {
+		padding-bottom: 4px;
+	}
+
+/* brand orange beta tag in navbar */
+	#beta {
+		color: #FB991B;
+	}
+
+/* placeholder title green */
+	a.brand {
+		color: #17B292 !important;
+	}
+
+/* some bootstrap stuff to create responsive container */
+	.container {
+		margin-left: 0;
+	}
+
+	.navbar-inner {	
+	  -webkit-border-radius: 0;
+	  -moz-border-radius: 0;
+	  border-radius: 0;
+	}
+
+	.footer {
+	  -webkit-border-radius: 0;
+	  -moz-border-radius: 0;
+	  border-radius: 0;
+	}
+
+#rerouteForm {
+	margin: 0 0 0px;
+}
+
+
+/* validation style */
+/*label.valid {
+  width: 24px;
+  height: 24px;
+  background: url(../images/valid.png) center center no-repeat;
+  display: inline-block;
+  text-indent: -9999px;
+}*/
+label.error {
+  font-weight: bold;
+  color: red;
+  padding: 2px 8px;
+  margin-top: 2px;
+}
+
+/* tighter paragraphs in contact hover, request date */
+.tight_paragraph {
+	margin-bottom: 0;
+}
+
+/* new request form field explanations */
+/*.request_field_explanation {
+	margin-left: 5%;
+	vertical-align: top;
+	display: inline-block;
+	max-width: 600px;
+	color: #606060  ;
+}*/
+
+/* all infotips appear as superscript */
+	.icon-info-sign {
+		vertical-align: super;
+	}
+
+/* tooltip text, left-aligned */
+	.tooltip-inner {
+		text-align: left ;
+	}
+
+
+
+
+
+/* ----- Sticky Footer ----- by Ryan Fait http://ryanfait.com/sticky-footer/ ----- */
+* {
+	margin: 0;
+}
+html, body {
+	height: 100%;
+}
+.wrapper {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -5em; /* the bottom margin is the negative value of the footer's height */
+}
+.footer, .push {
+	height: 5em; /* .push must be the same height as .footer */
+	margin-bottom: 0px; /* custom: added to fix the Bootstrap well margins */
+}
+
+
+
+

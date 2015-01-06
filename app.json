@@ -1,0 +1,10 @@
+{
+  "name": "RecordTrac",
+  "description": "Manage and display public record requests",
+  "website": "https://github.com/codeforamerica/recordtrac",
+  "success_url": "/",
+  "addons": ["heroku-postgresql:hobby-dev"],
+  "env": {
+    "ENVIRONMENT": "PRODUCTION"
+  }
+}
