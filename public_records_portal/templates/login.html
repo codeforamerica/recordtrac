@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block container %}
+<div class="row-fluid">
+    <div class="span10">
+		{% block banner %}
+			{{ super() }}
+		{% endblock banner %}
+		<div class="span8 offset1 intro_text">
+			<form name="input" class="form-horizontal" id="submitRequest" method="post" action="/login_action" autocomplete="off" novalidate="novalidate">
+				<input class="input-block-level" title="email_address" name="email_address" type="text" id="emailAddress" placeholder="Your email address" />
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock container %}

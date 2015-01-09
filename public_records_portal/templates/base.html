@@ -41,7 +41,7 @@ This template provides the header, footer, and envelope info for all pages excep
     </script>
 
   <!-- auth_script requires jquery and Mozilla's 'include.js' shim -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.11.1.min.js') }}"></script> 
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.11.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/include.js') }}"></script>
     <script type="text/javascript">{{ auth_script|safe }}</script>
 
@@ -57,9 +57,11 @@ This template provides the header, footer, and envelope info for all pages excep
 
   <!-- REM unit polyfill -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/rem.min.js') }}"></script>
-    
+
+    <script type='text/javascript' src="{{ url_for('static', filename='js/plugins/d3.v3.min.js') }}" charset="utf-8"></script>
+
   </head>
-  
+
   <body>
     <div class="wrapper">
       <div class="navbar navbar-inverse">
@@ -74,14 +76,15 @@ This template provides the header, footer, and envelope info for all pages excep
             <!-- Be sure to leave the brand out there if you want it shown -->
             <a class="brand" href="/landing"><img id="logo_nav" src="{{config['LOGO_ON_BLACK_URL']}}" alt="{{config['AGENCY_NAME']}} logo" width="35" height="35"/><strong> RecordTrac</strong><small id="beta" class="text-warning"></small></a>
             <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
-              
+
                 {% if current_user.is_authenticated() %}
                   <ul class="nav tabs">
                     <li><a href="/new">New request</a></li>
                     <li><a href="/view_requests">All requests</a></li>
                     <li><a href="/track">Track</a></li>
                     <!-- <li><a href="/tutorial">Tutorial</a></li> -->
-                    <!-- <li><a href="/admin">Admin</a></li> -->
+                    <li><a href="/admin">Admin</a></li>
+                    <li><a href="/report">Report</a></li>
                     <li><a href="/about">About</a></li>
                   </ul>
                   <ul class="nav pull-right">
@@ -95,11 +98,12 @@ This template provides the header, footer, and envelope info for all pages excep
                     <li><a href="/about">About</a></li>
                   </ul>
                   <ul class="nav pull-right">
-                    <li><button id="browserid-login" class="btn">{{config['AGENCY_NAME']}} Login</button></li>
+                    <!--<li><button id="browserid-login" class="btn">{{config['AGENCY_NAME']}} Login</button></li>-->
+                    <li><a href="/login" >{{config['AGENCY_NAME']}} Login</a></li>
                   </ul>
                 {% endif %}
             </div>
-          
+
 
             <!-- Everything you want hidden at 940px or less, place within here -->
             <div class="nav-collapse collapse">
@@ -117,7 +121,7 @@ This template provides the header, footer, and envelope info for all pages excep
               {% endblock banner%}
             </div>
           </div>
-          
+
         {% endblock container %}
       </div>
 
@@ -125,8 +129,8 @@ This template provides the header, footer, and envelope info for all pages excep
 
       <div class="push"></div>
     </div>
-      
-<!-- Footer is separate on landing page -->      
+
+<!-- Footer is separate on landing page -->
     {% block footer %}
       <div id="footer" class="well well-small footer">
         <p class="text-center">For more information about this application or instructions on how to get the app for <em>your</em> agency, <a href="https://github.com/codeforamerica/recordtrac" target="_blank"> view project info and documentation</a>.</p>
@@ -138,7 +142,7 @@ This template provides the header, footer, and envelope info for all pages excep
       {% block feedback %}
       <!-- gforms feedback tab -->
           <h5 class="text-center hidden-phone" ><a id="floating_link" href="#feedbackModal" data-toggle="modal" class="bootstro" data-bootstro-title="Feedback" data-bootstro-content="{{"Feedback" | tutorial }}" data-bootstro-step="9" data-bootstro-placement="right" data-bootstro-width="50%"> Feedback</a></h5>
-         
+
         <!-- Modal for feedback -->
         <div id="feedbackModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel" aria-hidden="true">
           <div class="modal-header">
@@ -160,7 +164,7 @@ This template provides the header, footer, and envelope info for all pages excep
     <!-- accessibility element tag polyfill -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/accessifyhtml5.min.js') }}"></script>
 
-    {% block custom_script_links %}      
-    {% endblock custom_script_links %}  
+    {% block custom_script_links %}
+    {% endblock custom_script_links %}
   </body>
 </html>

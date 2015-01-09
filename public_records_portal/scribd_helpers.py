@@ -7,6 +7,7 @@
 """
 
 
+import os
 import scribd
 from public_records_portal import app, models
 from timeout import timeout
@@ -30,6 +31,7 @@ def progress(bytes_sent, bytes_total):
     app.logger.info("Scribd upload in progress: %s of %s (%s%%)" % (bytes_sent, bytes_total, bytes_sent*100/bytes_total))
 
 def upload(document, filename, API_KEY, API_SECRET, description):
+    app.logger.info("\n\nuploading file")
     # Configure the Scribd API.
     scribd.config(API_KEY, API_SECRET)
     doc_id = None
@@ -100,21 +102,44 @@ def update_descriptions(API_KEY, API_SECRET):
 
 
 
-@timeout(seconds=20)
+#@timeout(seconds=20)
 def upload_file(document, request_id): 
 # Uploads file to scribd.com and returns doc ID. File can be accessed at scribd.com/doc/id
+    app.logger.info("\n\nscribd upload file")
     if not should_upload():
+        app.logger.info("\n\nshoud not upload file")
         return '1', None # Don't need to do real uploads locally
     if document:
+        app.logger.info("\n\nbegin file upload")
         allowed = allowed_file(document.filename)
+        app.logger.info("\n\n%s is allowed: %s" %(document.filename, allowed[0]))
         if allowed[0]:
             filename = secure_filename(document.filename)
+            app.logger.info("\n\nfilename after secure_filename: %s" %(filename))
             link_back = app.config['APPLICATION_URL'] + 'request/' + str(request_id)
-            doc_id = upload(document = document, filename = filename, API_KEY = app.config['SCRIBD_API_KEY'], API_SECRET = app.config['SCRIBD_API_SECRET'], description = "This document was uploaded via RecordTrac in response to a public records request for the %s. You can view the original request here: %s" % (app.config['AGENCY_NAME'], link_back))
-            return doc_id, filename
+            app.logger.info("\n\nlink_back: %s" %(link_back));
+            #doc_id = upload(document = document, filename = filename, API_KEY = app.config['SCRIBD_API_KEY'], API_SECRET = app.config['SCRIBD_API_SECRET'], description = "This document was uploaded via RecordTrac in response to a public records request for the %s. You can view the original request here: %s" % (app.config['AGENCY_NAME'], link_back))
+            #return doc_id, filename
+            
+            upload_path = upload_file_locally(document, filename, request_id)
+            return upload_path, filename
+            
         else:
             return allowed # Returns false and extension
     return None, None
+    
+def upload_file_locally(document, filename, request_id):
+    app.logger.info("\n\nuploading file locally")
+    app.logger.info("\n\n%s" %(document))
+    
+    upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    app.logger.info("\n\nupload path: %s" %(upload_path))
+    
+    document.save(upload_path)
+    app.logger.info("\n\nfile uploaded to local successfully")
+    
+    return upload_path
+
 
 ### @export "allowed_file"
 def allowed_file(filename):

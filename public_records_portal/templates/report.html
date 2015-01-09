@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block container %}
+
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/d3pie.min.js') }}"></script>
+
+<div class="row-fluid">
+    <div class="span10">
+		{% block banner %}
+			{{ super() }}
+		{% endblock banner %}
+
+		<div id="report_div"></div>
+
+		<script type="text/javascript">
+
+            function draw_piechart(report_data) {
+				/*
+				console.log("drawing piechart");
+				console.log("report data:" + report_data);
+
+				var width = 400;
+				var height = 400;
+				var radius = height / 2;
+
+				var color = d3.scale.category20c();
+				var vis = d3.select('#report_div').append("svg:svg").data([report_data]).attr("width", width).attr("height", height).append("svg:g").attr("transform", "translate(" + radius + "," + radius + ")");
+				var pie = d3.layout.pie().value(function(d) {
+				    console.log("report data value: " + d.value);
+				    return d.value;
+				});
+				var arc = d3.svg.arc().outerRadius(radius);
+				var arcs = vis.selectAll("g.slice").data(pie).enter().append("svg.g").attr("class", "slice");
+				arcs.append("svg:path").attr("fill", function(d, i) {
+				    console.log("color: " + color(i));
+				    return color(i);
+				}).attr("d", function (d) {
+				    console.log(arc(d));
+				    return arc(d);
+				});
+				arcs.append("svg:text").attr("transform", function(d) {
+				    d.innerRadius = 0;
+				    d.outerRadius = radius;
+				    return "translate(" + arc.centroid(d) + ")";
+				}).attr("text-anchor", "middle").text(function(d, i) {
+				    console.log("report data label: " + report_data[i].label);
+				    return report_data[i].label;
+				});
+
+				console.log("finished drawing piechart");
+				*/
+
+				var pie = new d3pie("report_div", {
+					header: {
+						title: {
+							text: "Request Due pie chart"
+						}
+					},
+					data: {
+						content: report_data
+					},
+					callbacks: {
+					    onClickSegment: function(a) {
+					        alert("callback event: " + a.data.callback);
+					    }
+					}
+				});
+            }
+
+            $.ajax({
+                type : "GET",
+                contentType: "application/json; charset=utf-8",
+                url: "/api/report/overdue",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    div_name = "report_div";
+                    draw_piechart(data.data);
+                },
+                error: function(result) {
+                	alert(result);
+                }
+            });
+
+		</script>
+
+	</div>
+</div>
+{% endblock container %}

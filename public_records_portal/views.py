@@ -7,7 +7,7 @@
 """
 
 
-from flask import render_template, request, redirect, url_for, jsonify
+from flask import render_template, request, redirect, url_for, jsonify, send_from_directory
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
 from flaskext.browserid import BrowserID
 from public_records_portal import app, db, models
@@ -35,6 +35,8 @@ from sqlalchemy import func, not_, and_, or_
 import pytz
 
 # Initialize login
+app.logger.info("\n\nInitialize login.")
+app.logger.info("\n\nEnvironment is %s" % app.config['ENVIRONMENT'])
 
 login_manager = LoginManager()
 login_manager.user_loader(get_user_by_id)
@@ -120,6 +122,7 @@ def landing():
 
 @login_manager.unauthorized_handler
 def unauthorized():
+    app.logger.info("\n\nuser is unauthorized.")
     return render_template("alpha.html")
 
 @app.errorhandler(404)
@@ -712,3 +715,69 @@ def well_known_status():
 		return jsonify(response)
 	
 	return jsonify(response)
+
+@app.route("/login")
+def prepare_login():
+    app.logger.info("\n\nloading login page")
+    return render_template('login.html')
+    
+@app.route("/login_action", methods=["POST"])
+def login_action(data = None):
+    app.logger.info("\n\nperforming login action")
+    data = request.form.copy()
+    email = data['email_address']
+    user = find_user(email)
+    if user:
+        login_user(user)
+        
+    return landing()
+    
+def find_user(email):
+    return models.User.query.filter(models.User.email == email).filter(models.User.is_staff == True).first()
+    
+@app.route("/attachments/<string:resource>", methods = ["GET"])
+def get_attachments(resource):
+    app.logger.info("\n\ngetting attachment file")
+    return send_from_directory(app.config["UPLOAD_FOLDER"], resource, as_attachment=True)
+    
+@app.route("/api/report/<string:report_type>", methods = ["GET"])
+def get_report_jsons(report_type):
+    app.logger.info("\n\ngenerating report data")
+    
+    if not report_type:
+        response = {
+            "status" : "failed: unregonized request."
+        }
+        return jsonify(response)
+    
+    if report_type == "overdue":
+        try:
+            overdue_request = models.Request.query.filter(models.Request.overdue == True).all()
+            notdue_request = models.Request.query.filter(models.Request.overdue == False).all()
+            response = {
+                "status" : "ok",
+                "data" : [
+                    {"label" : "Over Due", "value" : len(overdue_request), "callback" : "overdue"},
+                    {"label" : "Not Due", "value" : len(notdue_request), "callback" : "notdue"}
+                ]
+            }
+        
+        except Exception, e:
+            response = {
+                "status" : "failed",
+                "data" : "fail to find overdue request"
+            }
+        return jsonify(response)
+    else: 
+        response = {
+            "status" : "failed",
+            "data" : "unregonized request"
+        }
+        return jsonify(response)
+    
+@app.route("/report")
+@login_required
+def report():
+    overdue_request = models.Request.query.filter(models.Request.overdue == True).all()
+    app.logger.info("\n\nOverdue Requests %s" %(len(overdue_request)))
+    return render_template('report.html')

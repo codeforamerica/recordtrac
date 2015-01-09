@@ -30,6 +30,7 @@ def add_resource(resource, request_body, current_user_id = None):
 	if "note" in resource:
 		return add_note(request_id = int(fields['request_id']), text = fields['note_text'], user_id = current_user_id, passed_spam_filter = True) # Bypass spam filter because they are logged in.
 	elif "record" in resource:
+		app.logger.info("\n\ninside add_resource method")
 		if fields['record_description'] == "":
 			return "When uploading a record, please fill out the 'summary' field."
 		if 'record_access' in fields and fields['record_access'] != "":
@@ -37,6 +38,7 @@ def add_resource(resource, request_body, current_user_id = None):
 		elif 'link_url' in fields and fields['link_url'] != "":
 			return add_link(request_id = int(fields['request_id']), url = fields['link_url'], description = fields['record_description'], user_id = current_user_id)
 		else:
+			app.logger.info("\n\neverything else...")
 			document = None
 			try:
 				document = request.files['record']
@@ -111,15 +113,19 @@ def add_note(request_id, text, user_id = None, passed_spam_filter = False):
 ### @export "upload_record"
 def upload_record(request_id, description, user_id, document = None):
 	""" Creates a record with upload/download attributes """
+	app.logger.info("\n\nBegins Upload_record method")
 	try:
+		# doc_id is upload_path
 		doc_id, filename = scribd_helpers.upload_file(document = document, request_id = request_id)
 	except:
 		return "The upload timed out, please try again."
 	if doc_id == False:
 		return "Extension type '%s' is not allowed." % filename
 	else:
-		if str(doc_id).isdigit():
-			record_id = create_record(doc_id = doc_id, request_id = request_id, user_id = user_id, description = description, filename = filename, url = app.config['HOST_URL'] + doc_id)
+		#if str(doc_id).isdigit():
+		if doc_id:
+			#record_id = create_record(doc_id = doc_id, request_id = request_id, user_id = user_id, description = description, filename = filename, url = app.config['HOST_URL'] + doc_id)
+			record_id = create_record(doc_id = None, request_id = request_id, user_id = user_id, description = description, filename = filename, url = app.config['HOST_URL'] + doc_id)
 			change_request_status(request_id, "A response has been added.")
 			generate_prr_emails(request_id = request_id, notification_type = "City response added")
 			add_staff_participant(request_id = request_id, user_id = user_id)
