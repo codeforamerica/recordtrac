@@ -33,49 +33,49 @@ class HomeView(AdminIndexView):
     def home(self):
         return self.render('admin.html')
     def is_accessible(self):
-		if current_user.is_authenticated():
-			if 'LIST_OF_ADMINS' in app.config:
-				admins = app.config['LIST_OF_ADMINS'].split(",")
-				if current_user.email.lower() in admins:
-					return True
-		return False
+        if current_user.is_authenticated():
+            if 'LIST_OF_ADMINS' in app.config:
+                admins = app.config['LIST_OF_ADMINS'].split(",")
+                if current_user.email.lower() in admins:
+                    return True
+        return False
 
 # Create Admin
 admin = Admin(app, name='RecordTrac Admin', url='/admin', index_view = HomeView(name='Home'))
 
 class AdminView(ModelView):
     def is_accessible(self):
-    	if current_user.is_authenticated():
-    		if 'LIST_OF_ADMINS' in app.config:
-				admins = app.config['LIST_OF_ADMINS'].split(",")
-				if current_user.email.lower() in admins:
-					return True
+        if current_user.is_authenticated():
+            if 'LIST_OF_ADMINS' in app.config:
+                admins = app.config['LIST_OF_ADMINS'].split(",")
+                if current_user.email.lower() in admins:
+                    return True
         return False
 
 class RequestView(AdminView):
-	can_create = False
-	can_edit = True
-	column_list = ('id', 'text', 'date_created', 'status') # The fields the admin can view
-	column_searchable_list = ('status', 'text') # The fields the admin can search a request by
-	form_excluded_columns = ('date_created', 'extended', 'status', 'status_updated', 'current_owner') # The fields the admin cannot edit.
+    can_create = False
+    can_edit = True
+    column_list = ('id', 'text', 'date_created', 'status') # The fields the admin can view
+    column_searchable_list = ('status', 'text') # The fields the admin can search a request by
+    form_excluded_columns = ('date_created', 'extended', 'status', 'status_updated', 'current_owner') # The fields the admin cannot edit.
 
 class RecordView(AdminView):
-	can_create = False
-	column_searchable_list = ('description', 'filename', 'url', 'download_url', 'access')
-	column_list = ('request_id', 'description', 'filename', 'url', 'download_url', 'access')
-	can_edit = False
+    can_create = False
+    column_searchable_list = ('description', 'filename', 'url', 'download_url', 'access')
+    column_list = ('request_id', 'description', 'filename', 'url', 'download_url', 'access')
+    can_edit = False
 
 class QAView(AdminView):
-	can_create = False
-	can_edit = True
-	column_list = ('request_id', 'question', 'answer', 'date_created')
-	form_excluded_columns = ('date_created')
+    can_create = False
+    can_edit = True
+    column_list = ('request_id', 'question', 'answer', 'date_created')
+    form_excluded_columns = ('date_created')
 
 class NoteView(AdminView):
-	can_create = False
-	can_edit = True
-	column_list = ('request_id', 'text', 'date_created')
-	form_excluded_columns = ('date_created')
+    can_create = False
+    can_edit = True
+    column_list = ('request_id', 'text', 'date_created')
+    form_excluded_columns = ('date_created')
 
 
 admin.add_view(RequestView(models.Request, db.session))
