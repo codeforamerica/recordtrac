@@ -13,6 +13,7 @@ from views import * # Import all the functions that render templates
 from flask.ext.restless import APIManager
 from flask.ext.admin import Admin, expose, BaseView, AdminIndexView
 from flask.ext.admin.contrib.sqlamodel import ModelView
+from jinja2 import contextfunction
 
 
 # Create API
@@ -77,8 +78,20 @@ class NoteView(AdminView):
     column_list = ('request_id', 'text', 'date_created')
     form_excluded_columns = ('date_created')
 
+class UsersView(AdminView):
+    can_create = True
+    can_edit = True
+    column_list = ('alias', 'email', 'department', 'phone', 'is_staff')
+    form_excluded_columns = ('date_created', 'password', 'contact_for', 'backup_for')
+
+    @contextfunction
+    def get_list_value(self, context, model, name):
+        if name == 'department':
+            return model.current_department.name
+        return super(LiasonView, self).get_list_value(context, model, name)
 
 admin.add_view(RequestView(models.Request, db.session))
 admin.add_view(RecordView(models.Record, db.session))
 admin.add_view(NoteView(models.Note, db.session))
 admin.add_view(QAView(models.QA, db.session))
+admin.add_view(UsersView(models.User, db.session))

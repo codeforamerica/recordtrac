@@ -32,7 +32,7 @@ class User(db.Model):
 	date_created = db.Column(db.DateTime)
 	password = db.Column(db.String(255))
 	department = db.Column(Integer, ForeignKey("department.id"))
-	current_department = relationship("Department", foreign_keys = [department], uselist = False)
+	current_department = relationship("Department", foreign_keys = [department], lazy = 'joined', uselist = False)
 	contact_for = db.Column(db.String()) # comma separated list
 	backup_for = db.Column(db.String()) # comma separated list
 	owners = relationship("Owner")
