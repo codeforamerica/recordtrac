@@ -78,7 +78,7 @@ class NoteView(AdminView):
     column_list = ('request_id', 'text', 'date_created')
     form_excluded_columns = ('date_created')
 
-class UsersView(AdminView):
+class UserView(AdminView):
     can_create = True
     can_edit = True
     column_list = ('alias', 'email', 'current_department', 'phone', 'is_staff')
@@ -88,4 +88,4 @@ admin.add_view(RequestView(models.Request, db.session))
 admin.add_view(RecordView(models.Record, db.session))
 admin.add_view(NoteView(models.Note, db.session))
 admin.add_view(QAView(models.QA, db.session))
-admin.add_view(UsersView(models.User, db.session))
+admin.add_view(UserView(models.User, db.session))
