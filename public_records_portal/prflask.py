@@ -83,6 +83,8 @@ class UserView(AdminView):
     can_create = True
     can_edit = True
     column_list = ('alias', 'email', 'current_department', 'phone', 'is_staff')
+    column_labels = dict(alias='Name', current_department='Department', phone='Phone #')
+    column_descriptions = dict(is_staff='Determines whether the user can log in and edit data through this interface.')
     form_excluded_columns = ('date_created', 'password', 'contact_for', 'backup_for')
 
 admin.add_view(RequestView(models.Request, db.session))
