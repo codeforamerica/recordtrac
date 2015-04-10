@@ -81,14 +81,8 @@ class NoteView(AdminView):
 class UsersView(AdminView):
     can_create = True
     can_edit = True
-    column_list = ('alias', 'email', 'department', 'phone', 'is_staff')
+    column_list = ('alias', 'email', 'current_department', 'phone', 'is_staff')
     form_excluded_columns = ('date_created', 'password', 'contact_for', 'backup_for')
-
-    @contextfunction
-    def get_list_value(self, context, model, name):
-        if name == 'department':
-            return model.current_department.name
-        return super(LiasonView, self).get_list_value(context, model, name)
 
 admin.add_view(RequestView(models.Request, db.session))
 admin.add_view(RecordView(models.Record, db.session))
