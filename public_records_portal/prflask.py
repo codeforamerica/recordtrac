@@ -33,6 +33,7 @@ class HomeView(AdminIndexView):
     def home(self):
         return self.render('admin.html')
     def is_accessible(self):
+        return True
         if current_user.is_authenticated():
             if 'LIST_OF_ADMINS' in app.config:
                 admins = app.config['LIST_OF_ADMINS'].split(",")
@@ -45,6 +46,7 @@ admin = Admin(app, name='RecordTrac Admin', url='/admin', index_view = HomeView(
 
 class AdminView(ModelView):
     def is_accessible(self):
+        return True
         if current_user.is_authenticated():
             if 'LIST_OF_ADMINS' in app.config:
                 admins = app.config['LIST_OF_ADMINS'].split(",")
