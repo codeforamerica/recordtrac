@@ -101,7 +101,7 @@ class Department(db.Model):
 		return self.name or "N/A"
 
 ### @export "Request"
-class Request(db.Model): 
+class Request(db.Model):
 # The public records request
 	__tablename__ = 'request'
 	id = db.Column(db.Integer, primary_key =True)
@@ -142,7 +142,7 @@ class Request(db.Model):
 			self.due_date = self.date_received + timedelta(days = int(app.config['DAYS_TO_FULFILL']))
 
 	def extension(self):
-		self.extended = True 
+		self.extended = True
 		self.due_date = self.due_date + timedelta(days = int(app.config['DAYS_AFTER_EXTENSION']))
 	def point_person(self):
 		for o in self.owners:
@@ -154,7 +154,7 @@ class Request(db.Model):
 		for o in self.owners:
 			all_owners.append(o.user.get_alias())
 		return all_owners
-		
+
 	def requester(self):
 		if self.subscribers:
 			return self.subscribers[0] or None # The first subscriber is always the requester
@@ -207,11 +207,11 @@ class Request(db.Model):
 	def due_soon(self):
 			two_days = datetime.now() + timedelta(days = 2)
 			return and_(self.due_date < two_days, self.due_date > datetime.now(), ~self.closed)
- 
+
 	@hybrid_property
 	def overdue(self):
 			return and_(self.due_date < datetime.now(), ~self.closed)
-	
+
 	@hybrid_property
 	def closed(self):
 			return Request.status.ilike("%closed%")
@@ -236,7 +236,7 @@ class QA(db.Model):
 		return "<QA Q: %r A: %r>" %(self.question, self.answer)
 
 ### @export "Owner"
-class Owner(db.Model): 
+class Owner(db.Model):
 # A member of city staff assigned to a particular request, that may or may not upload records towards that request.
 	__tablename__ = 'owner'
 	id = db.Column(db.Integer, primary_key =True)
@@ -261,7 +261,7 @@ class Owner(db.Model):
 		return '<Owner %r>' %self.id
 
 ### @export "Subscriber"
-class Subscriber(db.Model): 
+class Subscriber(db.Model):
 # A person subscribed to a request, who may or may not have created the request, and may or may not own a part of the request.
 	__tablename__ = 'subscriber'
 	id = db.Column(db.Integer, primary_key = True)
@@ -287,7 +287,7 @@ class Record(db.Model):
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id')) # The user who uploaded the record, right now only city staff can
 	doc_id = db.Column(db.Integer) # The document ID. Currently using Scribd API to upload documents.
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id')) # The request this record was uploaded for
-	description = db.Column(db.String(400)) # A short description of what the record is. 
+	description = db.Column(db.String(400)) # A short description of what the record is.
 	filename = db.Column(db.String(400)) # The original name of the file being uploaded.
 	url = db.Column(db.String()) # Where it exists on the internet.
 	download_url = db.Column(db.String()) # Where it can be downloaded on the internet.
