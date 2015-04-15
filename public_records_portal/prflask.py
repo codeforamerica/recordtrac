@@ -87,8 +87,15 @@ class UserView(AdminView):
     column_descriptions = dict(is_staff='Determines whether the user can log in and edit data through this interface.')
     form_excluded_columns = ('date_created', 'password', 'contact_for', 'backup_for')
 
+class DepartmentView(AdminView):
+    can_create = True
+    can_edit = True
+    column_list = ('name', 'primary_contact', 'backup_contact')
+    form_excluded_columns = ('date_created', 'date_updated')
+
 admin.add_view(RequestView(models.Request, db.session))
 admin.add_view(RecordView(models.Record, db.session))
 admin.add_view(NoteView(models.Note, db.session))
 admin.add_view(QAView(models.QA, db.session))
 admin.add_view(UserView(models.User, db.session))
+admin.add_view(DepartmentView(models.Department, db.session))

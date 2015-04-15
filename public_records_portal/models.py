@@ -31,13 +31,16 @@ class User(db.Model):
 	phone = db.Column(db.String())
 	date_created = db.Column(db.DateTime)
 	password = db.Column(db.String(255))
-	department = db.Column(Integer, ForeignKey("department.id"))
-	current_department = relationship("Department", foreign_keys = [department], lazy = 'joined', uselist = False)
+	department_id = db.Column(Integer, ForeignKey("department.id", use_alter=True, name="fk_department"))
 	contact_for = db.Column(db.String()) # comma separated list
 	backup_for = db.Column(db.String()) # comma separated list
 	owners = relationship("Owner")
 	subscribers = relationship("Subscriber")
 	is_staff = db.Column(db.Boolean, default = False) # Is this user an active agency member?
+
+	current_department = relationship("Department",
+		foreign_keys=[department_id],
+		lazy='joined', uselist=False)
 
 	def is_authenticated(self):
 		return True
@@ -88,9 +91,21 @@ class Department(db.Model):
 	date_created = db.Column(db.DateTime)
 	date_updated = db.Column(db.DateTime)
 	name = db.Column(db.String(), unique=True)
-	users = relationship("User") # The list of users in this department
+	users = relationship("User", foreign_keys=[User.department_id], post_update=True) # The list of users in this department
 	requests = relationship("Request", order_by = "Request.date_created.asc()") # The list of requests currently associated with this department
-	def __init__(self, name):
+
+	primary_contact_id = db.Column(Integer, ForeignKey("user.id"))
+	backup_contact_id = db.Column(Integer, ForeignKey("user.id"))
+	primary_contact = relationship(User,
+		foreign_keys=[primary_contact_id],
+		primaryjoin=(primary_contact_id == User.id),
+		uselist=False, post_update=True)
+	backup_contact = relationship(User,
+		foreign_keys=[backup_contact_id],
+		primaryjoin=(backup_contact_id == User.id),
+		uselist=False, post_update=True)
+
+	def __init__(self, name=''):
 		self.name = name
 		self.date_created = datetime.now().isoformat()
 	def __repr__(self):
