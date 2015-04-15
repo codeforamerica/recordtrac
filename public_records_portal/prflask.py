@@ -13,6 +13,7 @@ from views import * # Import all the functions that render templates
 from flask.ext.restless import APIManager
 from flask.ext.admin import Admin, expose, BaseView, AdminIndexView
 from flask.ext.admin.contrib.sqlamodel import ModelView
+from jinja2.filters import do_mark_safe
 
 
 # Create API
@@ -91,7 +92,13 @@ class DepartmentView(AdminView):
     can_create = True
     can_edit = True
     column_list = ('name', 'primary_contact', 'backup_contact')
+    column_descriptions = dict(backup_contact='Note that if you want to assign a user that does not yet exist as the primary or backup contact for this department, you must <a href="/admin/userview/new/?url=%2Fadmin%2Fdepartmentview%2Fnew%2F">create the user</a> first.')
+
+    form_columns = column_list
     form_excluded_columns = ('date_created', 'date_updated')
+    form_args = dict(backup_contact={
+        'description': do_mark_safe(column_descriptions['backup_contact'])
+    })
 
 admin.add_view(RequestView(models.Request, db.session))
 admin.add_view(RecordView(models.Record, db.session))
