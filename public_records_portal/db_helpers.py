@@ -1,4 +1,4 @@
-""" 
+"""
 .. module:: db_helpers
 	:synopsis: Functions that interact with the Postgres database via Flask-SQLAlchemy
 .. modlueauthor:: Richa Agarwal <richa@codeforamerica.org>
@@ -14,7 +14,7 @@ from sqlalchemy.dialects import postgresql
 import uuid
 import json
 import os
-import logging 
+import logging
 
 
 ### @export "get_subscriber"
@@ -328,7 +328,7 @@ def add_staff_participant(request_id, is_point_person = False, email = None, use
 			participant.is_point_person = True
 			participant.date_updated = datetime.now().isoformat()
 			if reason: # Update the reason
-				participant.reason = reason 
+				participant.reason = reason
 			app.logger.info("\n\nStaff participant with owner ID: %s is now the point of contact for request %s" %(participant.id, request_id))
 		else:
 			is_new = False

@@ -61,7 +61,7 @@ class PublicRecordsTestCase(unittest.TestCase):
 		page = self.submit_generic(fields = fields, endpoint = "public_add_a_note")
 		assert note_text in page.data
 
-	# Tests for adding a record: 
+	# Tests for adding a record:
 	# ---
 
 	# This doesn't test Scribd, but tests the rest of the workflow:
@@ -71,7 +71,7 @@ class PublicRecordsTestCase(unittest.TestCase):
 		fields = dict(request_id = request_id, record_description = record_description)
 		page = self.submit_generic(fields = fields, endpoint = "add_a_record")
 		assert record_description in page.data
-		
+
 	def test_add_note(self):
 		request_id = self.submit_request(text=self.random_content('request'), email = 'richa@richa.com')
 		note_text = self.random_content('note')
