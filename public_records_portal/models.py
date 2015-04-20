@@ -66,7 +66,7 @@ class User(db.Model):
 			self.phone = phone
 		self.date_created = datetime.now().isoformat()
 		if department and department != "":
-			self.department = department
+			self.department_id = department
 		if contact_for and contact_for != "":
 			self.contact_for = contact_for
 		if backup_for and backup_for != "":

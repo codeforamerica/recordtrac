@@ -28,8 +28,8 @@ class RequestPresenter:
 			if self.staff:
 				if self.staff.email:
 					self.staff_email = self.staff.email
-				if self.staff.department:
-					self.staff_department = self.staff.department
+				if self.staff.department_id:
+					self.staff_department = self.staff.department_id
 				if self.staff.phone:
 					self.staff_phone = self.staff.phone
 				if self.staff.alias:

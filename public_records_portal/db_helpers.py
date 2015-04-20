@@ -264,9 +264,9 @@ def update_user(user, alias = None, phone = None, department = None, contact_for
 		if type(department) != int and not department.isdigit():
 			d = Department.query.filter_by(name = department).first()
 			if d:
-				user.department = d.id
+				user.department_id = d.id
 		else:
-			user.department = department
+			user.department_id = department
 	if contact_for:
 		if user.contact_for and contact_for not in user.contact_for:
 			contact_for = user.contact_for + "," + contact_for
