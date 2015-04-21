@@ -1,4 +1,15 @@
 {% extends 'admin/master.html' %}
+
+{% block main_menu %}
+    {{ super() }}
+    <ul class="nav pull-right">
+      <li>
+        <a href="/export" data-toggle="tooltip" data-placement="bottom" title="Right click and save file&hellip;">
+            <i class="icon-download"></i> Export Records</a>
+      </li>
+    </ul>
+{% endblock %}
+
 {% block body %}
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/admin.css') }}">
 
