@@ -105,7 +105,12 @@ def new_request(passed_recaptcha = False, data = None):
 @app.route("/export")
 @login_required
 def to_csv():
-	return Response(csv_export.export(), mimetype='text/csv')
+	filename = request.form.get('filename', 'records.csv')
+	return Response(csv_export.export(),
+		mimetype='text/csv',
+		headers = {
+			'Content-Disposition': 'attachment; filename="%s"' % (filename,)
+		})
 
 @app.route("/", methods = ["GET", "POST"])
 def index():
