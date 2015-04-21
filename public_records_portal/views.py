@@ -77,7 +77,7 @@ def new_request(passed_recaptcha = False, data = None):
 			date_received = data['date_received']
 			if date_received != "":
 				try:
-					date_received = datetime.strptime(date_received, '%m/%d/%Y') 
+					date_received = datetime.strptime(date_received, '%m/%d/%Y')
 					tz = pytz.timezone(app.config['TIMEZONE'])
 					offset = tz.utcoffset(datetime.now())
 					offset = (offset.days * 86400 + offset.seconds) / 3600
@@ -267,7 +267,7 @@ def update_a_resource(resource, passed_recaptcha = False, data = None):
 				return render_template('recaptcha_answer.html', form = data, message = "Hmm, your answer looks like spam. To submit your answer, type the numbers or letters you see in the fiel dbelow.")
 			prr.answer_a_question(qa_id = int(data['qa_id']), answer = data['answer_text'], passed_spam_filter = True)
 		else:
-			update_resource(resource, data)			
+			update_resource(resource, data)
 		if current_user.is_anonymous() == False:
 			return redirect(url_for('show_request_for_city', request_id = request.form['request_id']))
 		else:
@@ -317,7 +317,7 @@ def filter_search_term(search_input, results):
 		search_query = ""
 		if num_terms > 1:
 			for x in range(num_terms - 1):
-				search_query = search_query + search_terms[x] + ' & ' 
+				search_query = search_query + search_terms[x] + ' & '
 		search_query = search_query + search_terms[num_terms - 1] + ":*" # Catch substrings
 		results = results.filter("to_tsvector(text) @@ to_tsquery('%s')" % search_query)
 	return results
@@ -355,7 +355,7 @@ def is_supported_browser():
 
 @app.route("/view_requests")
 def display_all_requests(methods = ["GET"]):
-	""" Dynamically load requests page depending on browser. """ 
+	""" Dynamically load requests page depending on browser. """
 	if is_supported_browser():
 		return backbone_requests()
 	else:
@@ -375,7 +375,7 @@ def fetch_requests(output_results_only = False, filters_map = None, date_format 
 	user_id = get_user_id()
 
 	if not filters_map:
-		if request.args: 
+		if request.args:
 			if is_supported_browser():
 				return backbone_requests()
 			else: # Clear URL
@@ -383,7 +383,7 @@ def fetch_requests(output_results_only = False, filters_map = None, date_format 
 		else:
 			filters_map = request.form
 
-	# Set defaults 
+	# Set defaults
 	is_open = checkbox_value
 	is_closed = None
 	due_soon = checkbox_value
@@ -397,7 +397,7 @@ def fetch_requests(output_results_only = False, filters_map = None, date_format 
 	max_due_date = None
 	min_date_received = None
 	max_date_received = None
-	requester_name = None 
+	requester_name = None
 	page_number = 1
 	search_term = None
 
@@ -468,7 +468,7 @@ def json_requests():
 
 def prepare_request_fields(results):
 	if current_user.is_anonymous():
-		return map(lambda r: {     
+		return map(lambda r: {
 			  "id":           r.id, \
 			  "text":         helpers.clean_text(r.text), \
 			  "date_received": helpers.date(r.date_received or r.date_created), \
@@ -480,7 +480,7 @@ def prepare_request_fields(results):
 			  "solid_status": r.solid_status()
 			   }, results)
 	else:
-		return map(lambda r: {     
+		return map(lambda r: {
 			  "id":           r.id, \
 			  "text":         helpers.clean_text(r.text), \
 			  "date_received": helpers.date(r.date_received or r.date_created), \
@@ -519,7 +519,7 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 	if min_date_received and max_date_received and min_date_received != "" and max_date_received != "":
 		try:
 			min_date_received = datetime.strptime(min_date_received, date_format)
-			max_date_received = datetime.strptime(max_date_received, date_format) + timedelta(hours = 23, minutes = 59) 
+			max_date_received = datetime.strptime(max_date_received, date_format) + timedelta(hours = 23, minutes = 59)
 			results = results.filter(and_(models.Request.date_received >= min_date_received, models.Request.date_received <= max_date_received))
 			app.logger.info('Request Date Bounding. Min: {0}, Max: {1}'.format(min_date_received, max_date_received))
 		except:
@@ -538,14 +538,14 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 		if min_due_date and max_due_date and min_due_date != "" and max_due_date != "":
 			try:
 				min_due_date = datetime.strptime(min_due_date, date_format)
-				max_due_date = datetime.strptime(max_due_date, date_format) + timedelta(hours = 23, minutes = 59)  
+				max_due_date = datetime.strptime(max_due_date, date_format) + timedelta(hours = 23, minutes = 59)
 				results = results.filter(and_(models.Request.due_date >= min_due_date, models.Request.due_date <= max_due_date))
 				app.logger.info('Due Date Bounding. Min: {0}, Max: {1}'.format(min_due_date, max_due_date))
 			except:
 				app.logger.info('There was an error parsing the due date filters. Due Date Min: {0}, Max {1}'.format(min_due_date, max_due_date))
 
 		# PoC and Helper filters
-		if mine_as_poc == checkbox_value: 
+		if mine_as_poc == checkbox_value:
 			if mine_as_helper == checkbox_value:
 				# Where am I the Point of Contact *or* the Helper?
 				results = results.filter(models.Request.id == models.Owner.request_id) \
@@ -566,7 +566,7 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 		requester_name = requester_name
 		if requester_name and requester_name != "":
 			results = results.join(models.Subscriber, models.Request.subscribers).join(models.User).filter(func.lower(models.User.alias).like("%%%s%%" % requester_name.lower()))
-			
+
 	# Apply the set of status filters to the query.
 	# Using 'or', they're non-exclusive!
 	results = results.filter(or_(*status_filters))
@@ -676,44 +676,44 @@ def well_known_status():
 		'dependencies': ['Akismet', 'Scribd', 'Sendgrid', 'Postgres'],
 		'resources': {}
 		}
-	
+
 	#
 	# Try to connect to the database and get the first user.
 	#
 	try:
 		if not get_obj('User', 1):
 			raise Exception('Failed to get the first user')
-		
+
 	except Exception, e:
 		response['status'] = 'Database fail: %s' % e
 		return jsonify(response)
-	
+
 	#
 	# Try to connect to Akismet and see if the key is valid.
 	#
 	try:
 		if not is_working_akismet_key():
 			raise Exception('Akismet reported a non-working key')
-		
+
 	except Exception, e:
 		response['status'] = 'Akismet fail: %s' % e
 		return jsonify(response)
-	
+
 	#
 	# Try to ask Sendgrid how many emails we have sent in the past month.
 	#
 	try:
 		url = 'https://sendgrid.com/api/stats.get.json?api_user=%(MAIL_USERNAME)s&api_key=%(MAIL_PASSWORD)s&days=30' % app.config
 		got = get(url)
-		
+
 		if got.status_code != 200:
 			raise Exception('HTTP status %s from Sendgrid /api/stats.get' % got.status_code)
-		
+
 		mails = sum([m['delivered'] + m['repeat_bounces'] for m in got.json()])
 		response['resources']['Sendgrid'] = 100 * float(mails) / int(app.config.get('SENDGRID_MONTHLY_LIMIT') or 40000)
-		
+
 	except Exception, e:
 		response['status'] = 'Sendgrid fail: %s' % e
 		return jsonify(response)
-	
+
 	return jsonify(response)
