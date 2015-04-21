@@ -24,6 +24,12 @@ def set_env(key, default = None):
 	elif default:
 		app.config[key] = default
 
+def set_bool_env(key, default = None):
+	if key in environ:
+		app.config[key] = environ[key].lower() in ('true', 'yes', 'on')
+	elif default is not None:
+		app.config[key] = default
+
 # UPDATES TO THESE DEFAULTS SHOULD OCCUR IN YOUR .env FILE.
 
 set_env(key = 'APPLICATION_URL', default = "http://127.0.0.1:5000/") 
@@ -43,6 +49,8 @@ set_env(key = 'DAYS_AFTER_EXTENSION', default = '14')
 set_env(key = 'DAYS_UNTIL_OVERDUE', default = '2') 
 
 set_env(key = 'TIMEZONE', default = "US/Pacific")
+
+set_bool_env(key = 'LOGIN_DISABLED', default = False)
 
 # Set rest of the variables that don't have defaults:
 envvars = [
