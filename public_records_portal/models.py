@@ -274,6 +274,8 @@ class Owner(db.Model):
 		self.is_point_person = is_point_person
 	def __repr__(self):
 		return '<Owner %r>' %self.id
+	def __str__(self):
+		return str(self.user)
 
 ### @export "Subscriber"
 class Subscriber(db.Model):
@@ -292,6 +294,8 @@ class Subscriber(db.Model):
 		self.date_created = datetime.now().isoformat()
 	def __repr__(self):
 		return '<Subscriber %r>' %self.user_id
+	def __str__(self):
+		return str(self.user)
 
 ### @export "Record"
 class Record(db.Model):
