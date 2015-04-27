@@ -8,12 +8,14 @@
 
 
 
+from datetime import date
 from public_records_portal import app, models, db, views
 from views import * # Import all the functions that render templates
 from flask.ext.restless import APIManager
 from flask.ext.admin import Admin, expose, BaseView, AdminIndexView
 from flask.ext.admin.contrib.sqla import ModelView
 from jinja2.filters import do_mark_safe
+from wtforms.validators import ValidationError
 
 
 # Create API
@@ -53,12 +55,19 @@ class AdminView(ModelView):
                     return True
         return False
 
+def postdate_check(form, field):
+    if field.data.date() > date.today():
+        raise ValidationError('This field cannot be post-dated')
+
 class RequestView(AdminView):
     can_create = False
     can_edit = True
     column_list = ('id', 'text', 'date_created', 'status') # The fields the admin can view
     column_searchable_list = ('status', 'text') # The fields the admin can search a request by
     form_excluded_columns = ('date_created', 'extended', 'status', 'status_updated', 'current_owner') # The fields the admin cannot edit.
+    form_args = dict(date_received={
+        'validators': [postdate_check]
+    })
 
 class RecordView(AdminView):
     can_create = False
