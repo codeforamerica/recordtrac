@@ -6,15 +6,15 @@ $(document).ready(function(){
         request_text: {
           required: true,
           minlength: 2
-             }
-         },
+        }
+      },
       highlight: function(element) {
         $(element).closest('.control-group').removeClass('success').addClass('error');
-        },
+      },
       success: function(element) {
         element
-        .closest('.control-group').removeClass('error').addClass('success');
-        }
+          .closest('.control-group').removeClass('error').addClass('success');
+      }
     });
 
 
