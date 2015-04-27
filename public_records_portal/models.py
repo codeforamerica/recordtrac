@@ -256,7 +256,7 @@ class Owner(db.Model):
 	__tablename__ = 'owner'
 	id = db.Column(db.Integer, primary_key =True)
 	user_id = Column(Integer, ForeignKey('user.id'))
-	user = relationship("User", uselist = False)
+	user = relationship("User", uselist = False, lazy='joined')
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
 	request = relationship("Request", foreign_keys = [request_id])
 	active = db.Column(db.Boolean, default = True) # Indicate whether they're still involved in the request or not.
@@ -284,7 +284,7 @@ class Subscriber(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
 	should_notify = db.Column(db.Boolean, default = True) # Allows a subscriber to unsubscribe
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-	user = relationship("User", uselist = False)
+	user = relationship("User", uselist = False, lazy='joined')
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
 	date_created = db.Column(db.DateTime)
 	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id')) # Not null if responsible for fulfilling a part of the request. UPDATE 6-11-2014: This isn't used. we should get rid of it.
