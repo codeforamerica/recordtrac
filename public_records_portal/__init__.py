@@ -50,8 +50,6 @@ set_env(key = 'DAYS_UNTIL_OVERDUE', default = '2')
 
 set_env(key = 'TIMEZONE', default = "US/Pacific")
 
-set_bool_env(key = 'LOGIN_DISABLED', default = False)
-
 # Set rest of the variables that don't have defaults:
 envvars = [
 			'DEFAULT_MAIL_SENDER', # The e-mail address used as the FROM field for all notifications
