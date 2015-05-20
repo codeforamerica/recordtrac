@@ -26,6 +26,8 @@ import urllib
 def add_resource(resource, request_body, current_user_id = None):
 	fields = request_body
 	if "extension" in resource:
+		if not fields.getlist('extend_reason') and not fields.getlist('extend_reasons'):
+			return "You must select a reason for the extension."
 		return request_extension(int(fields['request_id']), fields.getlist('extend_reason'), current_user_id)
 	if "note" in resource:
 		return add_note(request_id = int(fields['request_id']), text = fields['note_text'], user_id = current_user_id, passed_spam_filter = True) # Bypass spam filter because they are logged in.
