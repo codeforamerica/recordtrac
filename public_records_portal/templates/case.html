@@ -185,7 +185,9 @@
       {% endblock sidebar %}
 
       {% block request_dates %}
-        <div class="muted text-center">Received: {{ (req.date_received or req.date_created) | date }}</div>
+        {% with req_date = (req.date_received or req.date_created) %}
+        <div class="muted text-center">Received: {{ req_date | format_datetime('%b %d, %Y at %-I:%M %p') }}</div>
+        {% endwith %}
       {% endblock request_dates %}
 
       {% block follow %}

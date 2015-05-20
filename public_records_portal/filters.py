@@ -20,6 +20,7 @@ app.jinja_env.filters['get_responses_chronologically'] = prr.get_responses_chron
 app.jinja_env.filters['get_request_data_chronologically'] = prr.get_request_data_chronologically
 app.jinja_env.filters['get_gravatar_url'] = gravatar.get_gravatar_url
 app.jinja_env.filters['date'] = helpers.date
+app.jinja_env.filters['format_datetime'] = helpers.format_datetime
 app.jinja_env.filters['explain_action'] = helpers.explain_action
 app.jinja_env.filters['tutorial'] = helpers.tutorial
 app.jinja_env.filters['new_lines'] = helpers.new_lines
