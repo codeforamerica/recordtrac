@@ -17,23 +17,23 @@
   <div id="floating_media" class="text-center">
 
     <!-- share on twitter -->
-    <a href="#" 
+    <a href="#"
       onclick="
         window.open(
-          'http://twitter.com/intent/tweet?text=Requested from {{config['AGENCY_NAME']}}:&amp;via=RecordTrac&amp;url={{config['APPLICATION_URL']}}request/{{req.id}}', 
-          'facebook-share-dialog', 
-          'width=550,height=350'); 
+          'http://twitter.com/intent/tweet?text=Requested from {{config['AGENCY_NAME']}}:&amp;via=RecordTrac&amp;url={{config['APPLICATION_URL']}}request/{{req.id}}',
+          'facebook-share-dialog',
+          'width=550,height=350');
         return false;">
       <i class="icon-twitter icon-large"> </i>
     </a>
 
     <!-- share on facebook -->
-    <a href="#" 
+    <a href="#"
       onclick="
         window.open(
-          'https://www.facebook.com/sharer/sharer.php?u={{config['APPLICATION_URL']}}request/{{req.id}}', 
-          'facebook-share-dialog', 
-          'width=626,height=436'); 
+          'https://www.facebook.com/sharer/sharer.php?u={{config['APPLICATION_URL']}}request/{{req.id}}',
+          'facebook-share-dialog',
+          'width=626,height=436');
         return false;">
       <i class="icon-facebook icon-large"> </i>
     </a>
@@ -55,7 +55,7 @@
             <div class="row-fluid">
               <h3 class="control-widget">Request <span class="muted">#{{req.id}}</span></h3>
               {% block clarify_request %}{% endblock clarify_request %}{% block public_note %}{% endblock public_note %}
-               
+
               <p class="lead" truncateable="250"> {{ req.text | new_lines }} </p>
             </div>
             <div id="proxyrequester_info" class="row-fluid">
@@ -141,7 +141,7 @@
             </div>
             {% endfor %}
           {% else %}<!--added an if then to check to see if any responses exist - if no then show text here for the "if any response exists" above -->
-            <div class = "row-fluid"> 
+            <div class = "row-fluid">
               <br>
               {% set requester = req.requester() %}
               {% if requester %}
