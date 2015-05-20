@@ -475,7 +475,7 @@ def prepare_request_fields(results):
 		return map(lambda r: {
 			  "id":           r.id, \
 			  "text":         helpers.clean_text(r.text), \
-			  "date_received": helpers.date(r.date_received or r.date_created), \
+			  "date_received": helpers.format_datetime(r.date_received or r.date_created, '%b %d, %Y at %-I:%M %p'), \
 			  "department":   r.department_name(), \
 			  "status":       r.status, \
 			  # The following two attributes are defined as model methods,
