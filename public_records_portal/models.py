@@ -15,6 +15,7 @@ from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 from sqlalchemy import and_, or_
 
 from datetime import datetime, timedelta
+from pytz import utc
 from public_records_portal import db, app
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
@@ -139,7 +140,7 @@ class Request(db.Model):
 
 	def __init__(self, text, creator_id = None, offline_submission_type = None, date_received = None):
 		self.text = text
-		self.date_created = datetime.now().isoformat()
+		self.date_created = datetime.now(utc).isoformat()
 		self.creator_id = creator_id
 		self.offline_submission_type = offline_submission_type
 		if date_received and type(date_received) is datetime:
@@ -351,6 +352,6 @@ class Visualization(db.Model):
 	def __init__(self, type_viz, content):
 		self.type_viz = type_viz
 		self.content = content
-		self.date_created = datetime.now().isoformat()
+		self.date_created = datetime.now(utc).isoformat()
 	def __repr__(self):
 		return '<Visualization %r>' % self.type_viz

@@ -63,6 +63,7 @@ class RequestView(AdminView):
     can_create = False
     can_edit = True
     column_list = ('id', 'text', 'date_created', 'status') # The fields the admin can view
+    column_labels = dict(date_created='Date Created (UTC)')
     column_searchable_list = ('status', 'text') # The fields the admin can search a request by
     form_excluded_columns = ('date_created', 'extended', 'status', 'status_updated', 'current_owner') # The fields the admin cannot edit.
     form_args = dict(date_received={
