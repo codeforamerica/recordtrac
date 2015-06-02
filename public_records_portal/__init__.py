@@ -29,7 +29,7 @@ def set_env(key, default = None):
 set_env(key = 'APPLICATION_URL', default = "http://127.0.0.1:5000/") 
 set_env(key = 'ENVIRONMENT', default="LOCAL")
 # The default records liaison, to whom requests get routed to if no department is selected:
-set_env(key = 'DEFAULT_OWNER_EMAIL', default = 'recordtrac@postcode.io')
+set_env(key = 'DEFAULT_OWNER_EMAIL', default = 'recordtrac@codeforamerica.org')
 set_env(key = 'DEFAULT_OWNER_REASON', default = 'Open government coordinator' )
 
 set_env(key = 'HOST_URL', default = 'https://www.scribd.com/doc/') # Where the documents/record uploads are hosted
