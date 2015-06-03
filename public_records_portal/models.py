@@ -110,7 +110,7 @@ class Request(db.Model):
 	extended = db.Column(db.Boolean, default = False) # Has the due date been extended?
 	qas = relationship("QA", cascade="all,delete", order_by = "QA.date_created.desc()") # The list of QA units for this request
 	status_updated = db.Column(db.DateTime)
-	text = db.Column(db.String(), unique=True) # The actual request text.
+	text = db.Column(db.String(500), unique=True, nullable=False) # The actual request text.
 	owners = relationship("Owner", cascade = "all, delete", order_by="Owner.date_created.asc()")
 	subscribers = relationship("Subscriber", cascade ="all, delete") # The list of subscribers following this request.
 	records = relationship("Record", cascade="all,delete", order_by = "Record.date_created.desc()") # The list of records that have been uploaded for this request.
