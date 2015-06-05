@@ -9,7 +9,7 @@
 
 from flask import render_template, request, redirect, url_for, jsonify, send_from_directory
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
-from flaskext.browserid import BrowserID
+#from flaskext.browserid import BrowserID
 from public_records_portal import app, db, models
 from prr import add_resource, update_resource, make_request, close_request
 from db_helpers import get_user_by_id # finds a user by their id
@@ -42,9 +42,9 @@ login_manager = LoginManager()
 login_manager.user_loader(get_user_by_id)
 login_manager.init_app(app)
 
-browser_id = BrowserID()
-browser_id.user_loader(get_user)
-browser_id.init_app(app)
+#browser_id = BrowserID()
+#browser_id.user_loader(get_user)
+#browser_id.init_app(app)
 
 
 # Submitting a new request

@@ -7,13 +7,18 @@
 """
 
 import logging
+import os
 from os import environ
 from flask import Flask
+from flask.ext.dotenv import DotEnv
 from flask.ext.sqlalchemy import SQLAlchemy
 
 # Initialize Flask app 
 app = Flask(__name__)
 app.debug = True
+
+env = DotEnv()
+env.init_app(app, env_file=os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir,'.env')), verbose_mode=True)
 
 
 
@@ -21,6 +26,8 @@ app.debug = True
 def set_env(key, default = None):
 	if key in environ:
 		app.config[key] = environ[key]
+	elif key in app.config:
+		pass
 	elif default:
 		app.config[key] = default
 
@@ -71,7 +78,7 @@ for envvar in envvars:
 	set_env(key = envvar)
 
 # Database gets set slightly differently, to support difference between Flask and Heroku naming:
-app.config['SQLALCHEMY_DATABASE_URI'] = environ['DATABASE_URL'] 
+#app.config['SQLALCHEMY_DATABASE_URI'] = environ['DATABASE_URL'] 
 
 # Initialize database
 db = SQLAlchemy(app)
