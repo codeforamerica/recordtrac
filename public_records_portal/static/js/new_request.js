@@ -1,101 +1,109 @@
 $(document).ready(function(){
 
   /* validates add a request form */
-  $("#submitRequest").validate({
-      rules: {
-        request_text: {
-          required: true,
-          minlength: 2
-             }
-         },
-      highlight: function(element) {
-        $(element).closest('.control-group').removeClass('success').addClass('error');
-        },
-      success: function(element) {
-        element
-        .closest('.control-group').removeClass('error').addClass('success');
-        }
-    });
+  // $("#submitRequest").validate({
+  //   rules: {
+  //     request_text: {
+  //       required: true,
+  //       minlength: 2
+  //     },
+  //     request_format: {
+  //       required: true,
+  //     },
+  //     request_date: {
+  //       required: true,
+  //     },
+  //   },
+
+
+  //   highlight: function(element) {
+  //     $(element).closest('.control-group').removeClass('success').addClass('error');
+  //   },
+  //   success: function(element) {
+  //     element
+  //     .closest('.control-group').removeClass('error').addClass('success');
+  //   }
+  // });
 
 
   /* help text popover */
-    $('#requestTextarea').popover({
-        trigger: 'focus',
-        html : true,
-        content: function() {
-          return $("#requestPopover-content").html();
-        }
-    });
+  $('#requestTextarea').popover({
+    trigger: 'focus',
+    html : true,
+    content: function() {
+      return $("#requestPopover-content").html();
+    }
+  });
 
-    $('#inputEmail').popover({
-        trigger: 'focus',
-        html : true,
-        content: function() {
-          return $("#emailPopover-content").html();
-        }
-    });
+  $('#inputEmail').popover({
+    trigger: 'focus',
+    html : true,
+    content: function() {
+      return $("#emailPopover-content").html();
+    }
+  });
 
-    $('#inputName').popover({
-        trigger: 'focus',
-        html : true,
-        content: function() {
-          return $("#namePopover-content").html();
-        }
-    });
+  $('#inputName').popover({
+    trigger: 'focus',
+    html : true,
+    content: function() {
+      return $("#namePopover-content").html();
+    }
+  });
 
-    $('#inputPhone').popover({
-        trigger: 'focus',
-        html : true,
-        content: function() {
-          return $("#phonePopover-content").html();
-        }
-    });
+  $('#inputPhone').popover({
+    trigger: 'focus',
+    html : true,
+    content: function() {
+      return $("#phonePopover-content").html();
+    }
+  });
 
-    $('#inputAddress1').popover({
-        trigger: 'focus',
-        html : true,
-        content: function() {
-          return $("#address1Popover-content").html();
-        }
-    });
+  $('#inputAddress1').popover({
+    trigger: 'focus',
+    html : true,
+    content: function() {
+      return $("#address1Popover-content").html();
+    }
+  });
 
-    $('#inputAddress2').popover({
-        trigger: 'focus',
-        html : true,
-        content: function() {
-          return $("#address2Popover-content").html();
-        }
-    });
+  $('#inputAddress2').popover({
+    trigger: 'focus',
+    html : true,
+    content: function() {
+      return $("#address2Popover-content").html();
+    }
+  });
 
-    $('#inputCity').popover({
-        trigger: 'focus',
-        html : true,
-        content: function() {
-          return $("#cityPopover-content").html();
-        }
-    });
+  $('#inputCity').popover({
+    trigger: 'focus',
+    html : true,
+    content: function() {
+      return $("#cityPopover-content").html();
+    }
+  });
 
-    $('#inputState').popover({
-        trigger: 'focus',
-        html : true,
-        content: function() {
-          return $("#statePopover-content").html();
-        }
-    });
+  $('#inputState').popover({
+    trigger: 'focus',
+    html : true,
+    content: function() {
+      return $("#statePopover-content").html();
+    }
+  });
 
-    $('#inputZip').popover({
-        trigger: 'focus',
-        html : true,
-        content: function() {
-          return $("#zipPopover-content").html();
-        }
-    });
-
-
-/* End of .ready functionality */
+  $('#inputZip').popover({
+    trigger: 'focus',
+    html : true,
+    content: function() {
+      return $("#zipPopover-content").html();
+    }
+  });
 
 
-$('#requestTextarea').on('blur', function() {
+  /* End of .ready functionality */
+
+
+  $('#requestTextarea').on('blur', function() {
     request_text = $(this).val();
     request = $.ajax({
       url: '/is_public_record',
