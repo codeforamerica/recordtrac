@@ -51,6 +51,45 @@ $(document).ready(function(){
         }
     });
 
+    $('#inputAddress1').popover({
+        trigger: 'focus',
+        html : true,
+        content: function() {
+          return $("#address1Popover-content").html();
+        }
+    });
+
+    $('#inputAddress2').popover({
+        trigger: 'focus',
+        html : true,
+        content: function() {
+          return $("#address2Popover-content").html();
+        }
+    });
+
+    $('#inputCity').popover({
+        trigger: 'focus',
+        html : true,
+        content: function() {
+          return $("#cityPopover-content").html();
+        }
+    });
+
+    $('#inputState').popover({
+        trigger: 'focus',
+        html : true,
+        content: function() {
+          return $("#statePopover-content").html();
+        }
+    });
+
+    $('#inputZip').popover({
+        trigger: 'focus',
+        html : true,
+        content: function() {
+          return $("#zipPopover-content").html();
+        }
+    });
 
 
 /* End of .ready functionality */

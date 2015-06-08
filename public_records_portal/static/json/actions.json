@@ -22,63 +22,87 @@
     "Choose Agency":
     {
         "What": "Choose the agency that best fits the type of request you are making. If you do not know which agency to choose, ................",
-        "Who": "",
-        "Action": ""
-    },
-    "Enter email address":
-    {
-        "What":"",
-        "Who":"No one will be able to view your email address.",
-        "Action":"We'll use it to send updates about your request."
-    },
-    "Enter name":
-    {
-        "What":"",
-        "Who":"Only *agency* employees will be able to view this information.",
-        "Action":""
-    },
-    "Enter phone number":
-    {
-        "What":"",
-        "Who":"Only *agency* employees will be able to view this information.",
-        "Action":""
-    },
-    "Enter department or document type":
-    {
-        "What":"Tell us where to send your request or the type of document you need. Leave this space blank if you don't know where it should go. We'll get it to the right person.",
-        "Who":"",
-        "Action":""
-    },
-    "Upload a document":
-    {
-        "What":"Upload a record stored on your computer.",
-        "Who":"The record will be uploaded to the web and the public will be able to read and download it here.",
-        "Action":"We’ll notify the requester via email of the document."
-    },
-    "Describe hard copies":
-    {
-        "What":"Name the record you are about to upload.",
-        "Who":"We’ll post your title online and it can be viewed by the public.",
-        "Action":""
-    },
-    "Add an offline document":
-    {
-        "What":"If you can't post this record online, use this space to tell a requester when and where they can pick it up. Include any fees they may have to pay.",
-        "Who":"We’ll post your instructions online and it can be viewed by the public.",
-        "Action":"We'll notify the requester via email."
-    },
-    "Add a link":
-    {
-        "What":"Provide the web address of where a requester can find the information or documents.",
-        "Who":"The link will be posted online for the public to view.",
-        "Action":"We'll notify the requester via email."
-    },
-    "Close a request":
-    {
-        "What":"Use this feature to close out this request.",
-        "Who":"Your message will be posted online for the public to view.",
-        "Action":"We'll notify the requester via email."
-    },
+            "Who":"No one will be able to view your email address.",
+            "Action":"We'll use it to send updates about your request."
+        },
+    "Enter name": 
+        {
+            "What":"",
+            "Who":"Only *agency* employees will be able to view this information.",
+            "Action":""
+        },
+    "Enter phone number": 
+        {
+            "What":"",
+            "Who":"Only *agency* employees will be able to view this information.",
+            "Action":""
+        },
+    "Enter address1":
+        {
+            "What":"",
+            "Who":"Only *agency* employees will be able to view this information.",
+            "Action":""
+        },
+    "Enter address2":
+        {
+            "What":"",
+            "Who":"Only *agency* employees will be able to view this information.",
+            "Action":""
+        },
+    "Enter city":
+        {
+            "What":"",
+            "Who":"Only *agency* employees will be able to view this information.",
+            "Action":""
+        },
+    "Enter state":
+        {
+            "What":"",
+            "Who":"Only *agency* employees will be able to view this information.",
+            "Action":""
+        },
+    "Enter zip":
+        {
+            "What":"",
+            "Who":"Only *agency* employees will be able to view this information.",
+            "Action":""
+        },
+    "Enter department or document type": 
+        {
+            "What":"Tell us where to send your request or the type of document you need. Leave this space blank if you don't know where it should go. We'll get it to the right person.",
+            "Who":"",
+            "Action":""
+        },
+    "Upload a document": 
+        {
+            "What":"Upload a record stored on your computer.", 
+            "Who":"The record will be uploaded to the web and the public will be able to read and download it here.",
+            "Action":"We’ll notify the requester via email of the document."
+        },
+    "Describe hard copies": 
+        {
+            "What":"Name the record you are about to upload.",
+            "Who":"We’ll post your title online and it can be viewed by the public.",
+            "Action":""
+        },
+    "Add an offline document": 
+        {
+            "What":"If you can't post this record online, use this space to tell a requester when and where they can pick it up. Include any fees they may have to pay.",
+            "Who":"We’ll post your instructions online and it can be viewed by the public.",
+            "Action":"We'll notify the requester via email."
+        },
+    "Add a link": 
+        {
+            "What":"Provide the web address of where a requester can find the information or documents.",
+            "Who":"The link will be posted online for the public to view.",
+            "Action":"We'll notify the requester via email."
+        },
+    "Close a request": 
+        {
+            "What":"Use this feature to close out this request.",
+            "Who":"Your message will be posted online for the public to view.",
+            "Action":"We'll notify the requester via email."
+        },
 
     "Fulfilled":
     {

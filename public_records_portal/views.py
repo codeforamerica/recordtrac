@@ -102,7 +102,7 @@ def new_request(passed_recaptcha = False, data = None):
 		if current_user.is_authenticated():
 			return render_template('offline_request.html', routing_available = routing_available, departments = departments)
 		else:
-			return render_template('new_request.html', routing_available = routing_available, departments = departments)
+                        return render_template('offline_request.html', routing_available = routing_available, departments = departments)
 
 @app.route("/export")
 @login_required

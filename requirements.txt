@@ -20,3 +20,4 @@ anyjson
 git+https://github.com/garbados/flask-browserid.git
 validate-email==1.2
 honcho
+python-dotenv
