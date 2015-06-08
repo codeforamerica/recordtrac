@@ -1,33 +1,14 @@
 $(document).ready(function(){
-
-  /* validates add a request form */
-  $("#submitRequest").validate({
-      rules: {
-        request_text: {
-          required: true,
-          minlength: 2
-             }
-         },
-      highlight: function(element) {
-        $(element).closest('.control-group').removeClass('success').addClass('error');
-        },
-      success: function(element) {
-        element
-        .closest('.control-group').removeClass('error').addClass('success');
-        }
-    });
-
-
   /* help text popover */
-    $('#requestTextarea').popover({
+    $('#request_text').popover({
         trigger: 'focus',
         html : true,
         content: function() {
-          return $("#requestPopover-content").html();
+          return $("#requestTextPopover-content").html();
         }
     });
 
-    $('#inputEmail').popover({
+    $('#request_email').popover({
         trigger: 'focus',
         html : true,
         content: function() {
@@ -35,7 +16,7 @@ $(document).ready(function(){
         }
     });
 
-    $('#inputName').popover({
+    $('#request_name').popover({
         trigger: 'focus',
         html : true,
         content: function() {
@@ -43,7 +24,7 @@ $(document).ready(function(){
         }
     });
 
-    $('#inputPhone').popover({
+    $('#request_phone').popover({
         trigger: 'focus',
         html : true,
         content: function() {
@@ -51,23 +32,15 @@ $(document).ready(function(){
         }
     });
 
-    $('#inputAddress1').popover({
+    $('#request_address_street').popover({
         trigger: 'focus',
         html : true,
         content: function() {
-          return $("#address1Popover-content").html();
+          return $("#streetPopover-content").html();
         }
     });
 
-    $('#inputAddress2').popover({
-        trigger: 'focus',
-        html : true,
-        content: function() {
-          return $("#address2Popover-content").html();
-        }
-    });
-
-    $('#inputCity').popover({
+    $('#request_address_city').popover({
         trigger: 'focus',
         html : true,
         content: function() {
@@ -75,15 +48,7 @@ $(document).ready(function(){
         }
     });
 
-    $('#inputState').popover({
-        trigger: 'focus',
-        html : true,
-        content: function() {
-          return $("#statePopover-content").html();
-        }
-    });
-
-    $('#inputZip').popover({
+    $('#request_address_zip').popover({
         trigger: 'focus',
         html : true,
         content: function() {

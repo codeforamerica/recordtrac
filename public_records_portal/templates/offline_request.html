@@ -8,153 +8,141 @@
     <!-- used for the extension and close request multi-select boxes in city view -->
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.min.css') }}">
     <!-- used for department dropdown -->
-     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui-1.10.4.custom.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui-1.10.4.custom.min.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-combobox.css') }}"media="screen">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/new_request.css') }}">
 {% endblock custom_css_links %}
 {% block container %}
-  <div class="row-fluid">
-  <div class="span11 offset1">
     <div class="row-fluid">
-    <div class="span8">
-      <div class="row-fluid">
-        <div class="span8">
-          <h3>Create a New Request</h3>
-          <h4>Enter request details</h4>
-          <p class="intro_text">
-          Use this page to request public records that you received by phone, fax, mail, email, or in person on behalf of that resident.
-          </p>
-          <br/>
-          <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="off"novalidate="novalidate">
-            <fieldset>
-              <div class="control-group">
-                <label for="requestTextarea"><strong><i class="icon-exclamation-sign"></i> Everything in this request box will be displayed publicly. </strong></label>
-                <div >
-                  <textarea id="requestTextarea" name="request_text" rows="3" class="input-block-level" placeholder="Describe your request. Be as specific as possible."></textarea>
-                  {{ help("requestPopover-content", "Enter records request") }}
-                </div>
-                <div id="not_public_record">
+        <div class="span11 offset1">
+            <div class="row-fluid">
+                <div class="span7">
+                    <div class="row-fluid">
+                        <div class="span8">
+                            {% for message in errors %}
+                                <div class="alert alert-danger">
+                                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span8">
+                            <h3>Create a New Request</h3>
+                            <p class="intro_text">
+                                Use this page to request public records that you received by phone, fax, mail, email, or in person on behalf of a resident.
+                            </p>
+                            <br/>
+                            <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="off"novalidate="novalidate">
+                                <fieldset>
+                                    <div class="control-group">
+                                        <strong>{{ form.request_text.label }}</strong>
+                                        <div>
+                                            {{ form.request_text(rows="3", class="input-block-level", placeholder="Describe your request. Be as specific as possible.") }}
+                                            {{ help("requestTextPopover-content", "Enter records request") }}
+                                        </div>
+                                    </div>
+                                    <p class="lead">Receipt information</p>
+                                    <div class="control-group">
+                                        {{ form.request_format.label }}
+                                        <div class="spacer">
+                                            {{ form.request_format(class="input-block-level") }}
+                                        </div>
+                                        {{ form.request_date.label }}
+                                        <div class="spacer">
+                                            {{ form.request_date(class ="input-block-level") }}
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        {{ form.request_department.label(class="lead") }}
+                                        {{ form.request_department(class="input-block-level") }}
+                                    </div>
 
-                </div>
-              </div>
-              <p class="lead">Receipt information <small class="format_received"></small></p>
-              <div class="control-group">
-                <label for="inputFormat">Format received</label>
-                <div class="spacer">
-                  <select class="form-control input-block-level" id="inputFormat" title="format_received" name="format_received">
-                      <option value="Fax">Fax</option>
-                      <option value="Phone">Phone</option>
-                      <option value="Email">Email</option>
-                      <option value="Mail">Mail</option>
-                      <option value="In-person">In-person</option>
-                      <option value="Text message">Text message</option>
-                  </select>
-                </div>
-                <label for="date_received">Date received</label>
-                <div class="spacer">
-                  <input class ="input-block-level" type="text" class="span2" id="datepicker" name="date_received" > 
-                </div>
-              </div>
+                                    <p class="lead">Contact information</p>
+                                    <div class="control-group">
+                                        {{ form.request_name.label }}
+                                        <div class="spacer">
+                                            {{ form.request_name(class="input-block-level", type="text", placeholder="John Doe") }}
+                                            {{ help("namePopover-content", "Enter name") }}
 
-              {% if routing_available %}
-              <p class="lead">Select a department<small class="department_optional"> (optional)</small></p>
-              <div class="control-group">
-                  <select id="inputDepartment" class="input-block-level" title="select_department" name="request_department" type="text">
-                    <option value=""></option>
-                    {% for department in departments %}
-                      <option value="{{department.name}}">{{department.name}}</option>
-                    {% endfor %}
-                  </select>
-              </div>
-              {% endif %}
+                                        </div>
+                                        <p><strong>Please Note:</strong> At least one method of communication is required</p>
+                                        {{ form.request_email.label }}
+                                        <div class="spacer">
+                                            {{ form.request_email(class="input-block-level", type="email", placeholder="requester@email.com") }}
+                                            {{ help("emailPopover-content", "Enter email address") }}
+                                        </div>
+                                        {{ form.request_phone.label }}
+                                        <div class="spacer spacer_phone">
+                                            {{ form.request_phone(class="input-block-level", type="tel", placeholder="(555) 555-5555") }}
+                                            {{ help("phonePopover-content", "Enter phone number") }}
+                                        </div>
+                                        {{ form.request_address_street.label }}
+                                        <div class="spacer">
+                                            {{ form.request_address_street(class="input-block-level", type="text", placeholder="123 Main Street") }}
+                                            {{ help("streetPopover-content", "Enter street") }}
+                                        </div>
+                                        {{ form.request_address_city.label }}
+                                        <div class="spacer">
+                                            {{ form.request_address_city(class="input-block-level", type="text", placeholder="New York") }}
+                                            {{ help("cityPopover-content", "Enter city") }}
+                                        </div>
+                                        {{ form.request_address_state.label }}
+                                        <div class="spacer">
+                                            {{ form.request_address_state(class="input-block-level", default="33", placeholder="123 Main Street") }}
+                                            {{ help("statePopover-content", "Enter state") }}
+                                        </div>
+                                        {{ form.request_address_zip.label }}
+                                        <div class="spacer">
+                                            {{ form.request_address_zip(class="input-block-level", type="text", placeholder="12345") }}
+                                            {{ help("zipPopover-content", "Enter zip") }}
+                                        </div>
+                                    </div>
 
-              <p class="lead">Contact information</p>
-              <div class="control-group">
-                <label for="inputEmail">Requester's email</label>
-                <div class="spacer">
-                  <input class="input-block-level" title="input_email" name="request_email" type="email" id="inputEmail" placeholder="requester@email.com" />
-                  {{ help("emailPopover-content", "Enter email address") }}
-                </div>
-                <label for="inputName">Requester's name <small>(optional)</small></label>
-                <div class="spacer">
-                  <input class="input-block-level" title="input_name" name="request_alias" type="text" id="inputName" placeholder="Requester's Name" />
-                  {{ help("namePopover-content", "Enter name") }}
-                </div>
-                <label for="inputPhone">Requester's phone number <small>(optional)</small></label>
-                <div class="spacer spacer_phone">
-                  <input class="input-block-level" title="input_telephone_number" name="request_phone" type="tel" id="inputPhone" placeholder="(510) 555-1234" maxlength="14" />
-                  {{ help("phonePopover-content", "Enter phone number") }}
-                </div>
-                <label for="inputAddress1">Requester's address1</label>
-                <div class="spacer">
-                  <input class="input-block-level" title="input_address1" name="request_address1" type="text" id="inputAddress1" placeholder="Requester's Address1" />
-                  {{ help("address1Popover-content", "Enter address1") }}
-                </div>
-                <label for="inputAddress2">Requester's address2</label>
-                <div class="spacer">
-                  <input class="input-block-level" title="input_address2" name="request_address2" type="text" id="inputAddress2" placeholder="Requester's Address2" />
-                  {{ help("address2Popover-content", "Enter address2") }}
-                </div>
-                <label for="inputCity">Requester's city</label>
-                <div class="spacer">
-                  <input class="input-block-level" title="input_city" name="request_city" type="text" id="inputCity" placeholder="Requester's City" />
-                  {{ help("cityPopover-content", "Enter city") }}
-                </div>
-                <label for="inputState">Requester's state</label>
-                <div class="spacer">
-                  <input class="input-block-level" title="input_state" name="request_state" type="text" id="inputState" placeholder="Requester's State" />
-                  {{ help("statePopover-content", "Enter state") }}
-                </div>
-                <label for="inputZip">Requester's zip</label>
-                <div class="spacer">
-                  <input class="input-block-level" title="input_zip" name="request_zip" type="text" id="inputZip" placeholder="Requester's Zip" />
-                  {{ help("zipPopover-content", "Enter zip") }}
-                </div>
-              </div>
+                                    <div id="requestButton" class="control-group">
+                                        <div>
+                                            <button type="submit" title="submit_request_button" class="btn btn-primary btn-large input-block-level">Submit request</button>
+                                        </div>
+                                    </div>
 
-              <div id="requestButton" class="control-group">
-                <div>
-                  <button type="submit" title="submit_request_button" class="btn btn-primary btn-large input-block-level">Submit request</button>
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-              </div>
 
-            </fieldset>
-          </form>
+                <div class="span4">
+                    <div class="row-fluid">
+                        {% block sidebar %}
+                            <div class="well r_sidebar hidden-phone">
+                                <h4>Example</h4>
+                                <!-- needs to be hooked up to prr_help.json PLEASE DELETE THIS COMMENT WHEN DONE -->
+                                <p class="example">I need a copy of the Mayor’s emails sent to the Department of Public Works between July 30, 2013 and August 8, 2013.</p><p class="example">The emails should contain the words “bridge project” or “bridge development”.</p>
+                                <h4>Tips</h4>
+                                <ul>
+                                    <li>Don't reveal personal information, like your social security number or home address.</li>
+                                    <li>Limit your request by a date range.</li>
+                                    <li>Provide the name of the record or take a guess.</li>
+                                    <li>If you don't know the name of the record, describe the information you believe is contained in it.</li>
+                                </ul>
+                            </div>
+                        {% endblock sidebar %}
+                    </div>
+                </div>
+
+            </div>
         </div>
-      </div>
     </div>
-
-    <div class="span4">
-      <div class="row-fluid">
-      {% block sidebar %}
-        <div class="well r_sidebar hidden-phone">
-          <h4>Example</h4>
-          <!-- needs to be hooked up to prr_help.json PLEASE DELETE THIS COMMENT WHEN DONE -->
-            <p class="example">I need a copy of the Mayor’s emails sent to the Department of Public Works between July 30, 2013 and August 8, 2013.</p><p class="example">The emails should contain the words “bridge project” or “bridge development”.</p>
-          <h4>Tips</h4>
-            <ul>
-              <li>Don't reveal personal information, like your social security number or home address.</li>
-              <li>Limit your request by a date range.</li>
-              <li>Provide the name of the record or take a guess.</li>
-              <li>If you don't know the name of the record, describe the information you believe is contained in it.</li>
-            </ul>
-        </div>
-      {% endblock sidebar %}
-      </div>
-    </div>
-
-  </div>
-  </div>
-  </div>
 {% endblock container %}
 
 {% block custom_script_links %}
     <!-- used for department dropdown -->
-  <script type="text/javascript" src="{{ url_for('static', filename = 'js/plugins/bootstrap-combobox.js') }}"></script>  
-  <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-ui-1.10.4.custom.min.js') }}"></script> 
-  <script type="text/javascript" src="{{ url_for('static', filename='js/new_request.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='js/date_picker.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/plugins/bootstrap-combobox.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-ui-1.10.4.custom.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/new_request.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/date_picker.js') }}"></script>
 
 {% endblock custom_script_links %}
