@@ -147,9 +147,18 @@ def new_request(passed_recaptcha=False, data=None):
             if not (request_department and request_department.strip()):
                 errors.append("Please select a department.")
 
-            if (request_email == '') or (request_phone is None) or (
-                    (request_address_street == '' or request_address_city == '' or
-                     request_address_zip == '') is None) or (request_fax is None):
+            email_valid = (request_email != '')
+            phone_valid = (request_phone is not None)
+            fax_valid = (request_fax is not None)
+            street_valid = (request_address_street != '')
+            city_valid = (request_address_city != '')
+            state_valid = (request_address_state != '')
+            zip_valid = (request_address_zip != '')
+            address_valid = (street_valid and city_valid and state_valid and zip_valid)
+
+            print 'Email:', email_valid, 'Phone:', phone_valid, 'Fax:', fax_valid, 'Street:', street_valid, 'City:', city_valid, 'State:', state_valid, 'Zip:', zip_valid, 'Address:', address_valid
+
+            if not (email_valid or phone_valid or fax_valid or address_valid):
                 errors.append("Please enter at least one type of contact information")
             request_id, is_new = make_request(text=request_text,
                                               email=request_email,
@@ -166,11 +175,9 @@ def new_request(passed_recaptcha=False, data=None):
             if errors:
                 return render_template('offline_request.html', form=form, routing_available=routing_available,
                                        departments=departments, errors=errors)
-            if is_new:
+            else:
                 return redirect(url_for('show_request_for_x', request_id=request_id,
                                         audience='new'))
-
-            return 'Hello, World'
 
         else:
             form = NewRequestForm(request.form)
