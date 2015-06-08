@@ -21,21 +21,13 @@
     <div class="span8">
       <div class="row-fluid">
         <div class="span8">
-          {% for message in messages %}
-            <div class="alert alert-warning alter-dismissable" role="alert">
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <strong>{{ message }}</strong>
-            </div>
-          {% endfor %}
-        </div>
-        <div class="span8">
           <h3>Create a New Request</h3>
           <h4>Enter request details</h4>
           <p class="intro_text">
           Use this page to request public records that you received by phone, fax, mail, email, or in person on behalf of that resident.
           </p>
           <br/>
-          <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="off" novalidate="novalidate">
+          <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="off"novalidate="novalidate">
             <fieldset>
               <div class="control-group">
                 <label for="requestTextarea"><strong><i class="icon-exclamation-sign"></i> Everything in this request box will be displayed publicly. </strong></label>
@@ -44,6 +36,7 @@
                   {{ help("requestPopover-content", "Enter records request") }}
                 </div>
                 <div id="not_public_record">
+
                 </div>
               </div>
               <p class="lead">Receipt information <small class="format_received"></small></p>
@@ -61,7 +54,7 @@
                 </div>
                 <label for="date_received">Date received</label>
                 <div class="spacer">
-                  <input class ="input-block-level" type="text" class="span2" id="datepicker" name="date_received" >
+                  <input class ="input-block-level" type="text" class="span2" id="datepicker" name="date_received" > 
                 </div>
               </div>
 
@@ -159,8 +152,8 @@
 
 {% block custom_script_links %}
     <!-- used for department dropdown -->
-  <script type="text/javascript" src="{{ url_for('static', filename = 'js/plugins/bootstrap-combobox.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-ui-1.10.4.custom.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename = 'js/plugins/bootstrap-combobox.js') }}"></script>  
+  <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-ui-1.10.4.custom.min.js') }}"></script> 
   <script type="text/javascript" src="{{ url_for('static', filename='js/new_request.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/date_picker.js') }}"></script>
 
