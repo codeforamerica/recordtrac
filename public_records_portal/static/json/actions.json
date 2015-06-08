@@ -35,43 +35,43 @@
     {
         "What":"Please ",
         "Who":"Only *agency* employees will be able to view this information.",
-        "Action":""
+        "Action":"We'll use this to send you updates about your request."
     },
     "Enter phone number":
     {
         "What":"",
         "Who":"Only *agency* employees will be able to view this information.",
-        "Action":""
+        "Action":"We'll use this to send you updates about your request."
     },
     "Enter address1":
     {
         "What":"",
         "Who":"Only *agency* employees will be able to view this information.",
-        "Action":""
+        "Action":"We'll use this to send you updates about your request."
     },
-    "Enter address2":
+    "Enter street":
     {
         "What":"",
         "Who":"Only *agency* employees will be able to view this information.",
-        "Action":""
+        "Action":"We'll use this to send you updates about your request."
     },
     "Enter city":
     {
         "What":"",
         "Who":"Only *agency* employees will be able to view this information.",
-        "Action":""
+        "Action":"We'll use this to send you updates about your request."
     },
     "Enter state":
     {
         "What":"",
         "Who":"Only *agency* employees will be able to view this information.",
-        "Action":""
+        "Action":"We'll use this to send you updates about your request."
     },
     "Enter zip":
     {
         "What":"",
         "Who":"Only *agency* employees will be able to view this information.",
-        "Action":""
+        "Action":"We'll use this to send you updates about your request."
     },
     "Enter department or document type":
     {
