@@ -1,21 +1,21 @@
 $(document).ready(function(){
 
   /* validates add a request form */
-  $("#submitRequest").validate({
-      rules: {
-        request_text: {
-          required: true,
-          minlength: 2
-             }
-         },
-      highlight: function(element) {
-        $(element).closest('.control-group').removeClass('success').addClass('error');
-        },
-      success: function(element) {
-        element
-        .closest('.control-group').removeClass('error').addClass('success');
-        }
-    });
+  // $("#submitRequest").validate({
+  //     rules: {
+  //       request_text: {
+  //         required: true,
+  //         minlength: 2
+  //            }
+  //        },
+  //     highlight: function(element) {
+  //       $(element).closest('.control-group').removeClass('success').addClass('error');
+  //       },
+  //     success: function(element) {
+  //       element
+  //       .closest('.control-group').removeClass('error').addClass('success');
+  //       }
+  //   });
 
 
   /* help text popover */
