@@ -120,6 +120,7 @@ def new_request(passed_recaptcha=False, data=None):
             request_format = form.request_format.data
             request_date = form.request_date.data
             request_department = form.request_department.data
+            request_name = form.request_name.data
             request_email = form.request_email.data
             request_phone = form.request_phone.data
             request_fax = form.request_fax.data
@@ -147,6 +148,11 @@ def new_request(passed_recaptcha=False, data=None):
 
             if not (request_department and request_department.strip()):
                 errors.append("Please select a department.")
+
+            if not (request_name and request_name.strip()):
+                errors.append("Please enter the requester's name")
+            else:
+                alias = request_name
 
             email_valid = (request_email != '')
             phone_valid = (request_phone is not None)
