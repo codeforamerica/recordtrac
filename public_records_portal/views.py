@@ -96,6 +96,8 @@ def new_request(passed_recaptcha=False, data=None):
 
             if not (request_name and request_name.strip()):
                 errors.append("Please enter the requester's name")
+            else:
+                alias = request_name
 
             email_valid = (request_email != '')
             phone_valid = (request_phone is not None)
