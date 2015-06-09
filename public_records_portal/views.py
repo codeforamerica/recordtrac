@@ -34,6 +34,7 @@ from db_helpers import get_count, get_obj
 from sqlalchemy import func, not_, and_, or_
 from forms import OfflineRequestForm, NewRequestForm
 import pytz
+import phonenumbers
 
 # Initialize login
 app.logger.info("\n\nInitialize login.")
@@ -161,10 +162,14 @@ def new_request(passed_recaptcha=False, data=None):
             if not (email_valid or phone_valid or fax_valid or address_valid):
                 errors.append("Please enter at least one type of contact information")
 
+            phone_formatted = ""
+            if phone_valid:
+              phone_formatted = request_phone.international
+ 
             request_id, is_new = make_request(text=request_text,
                                               email=request_email,
                                               alias=alias,
-                                              phone=request_phone.international,
+                                              phone=phone_formatted,
                                               address1=request_address_street,
                                               city=request_address_city,
                                               state=request_address_state,
@@ -210,10 +215,14 @@ def new_request(passed_recaptcha=False, data=None):
                     return render_template('offline_request.html', routing_available=routing_available,
                                            departments=departments, errors=errors)
 
+                phone_formatted = ""
+                if request_phone is not None:
+                  phone_formatted = request_phone.international
+
                 request_id, is_new = make_request(text=request_text,
                                                   email=request_email,
                                                   alias=alias,
-                                                  phone=request_phone.international,
+                                                  phone=phone_formatted,
                                                   address1=request_address_street,
                                                   city=request_address_city,
                                                   state=request_address_state,
