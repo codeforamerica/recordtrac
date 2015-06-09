@@ -29,6 +29,11 @@ class User(db.Model):
 	alias = db.Column(db.String(100))
 	email = db.Column(db.String(100), unique=True)
 	phone = db.Column(db.String())
+        address1 = db.Column(db.String(500))
+        address2 = db.Column(db.String(500))
+        city = db.Column(db.String())
+        state = db.Column(db.String())
+        zipcode = db.Column(db.String())
 	date_created = db.Column(db.DateTime)
 	password = db.Column(db.String(255))
 	department = db.Column(Integer, ForeignKey("department.id"))
@@ -55,12 +60,38 @@ class User(db.Model):
 		if self.phone and self.phone != "":
 			return self.phone
 		return "N/A"
-	def __init__(self, email=None, alias = None, phone=None, department = None, contact_for=None, backup_for=None, is_staff = False):
+        def get_adddress1(self):
+                if self.address1 and self.address1 != "":
+                        return self.address1
+                return "N/A"
+        def get_city(self):
+                if self.city and self.city != "":
+                        return self.city
+                return "N/A"
+        def get_state(self):
+                if self.state and self.state != "":
+                        return self.state
+                return "N/A"
+        def get_zipcode(self):
+                if self.zipcode and self.zipcode != "": 
+                        return self.zipcode
+                return "N/A"
+	def __init__(self, email=None, alias = None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=zipcode, department = None, contact_for=None, backup_for=None, is_staff = False):
 		if email and validate_email(email):
 			self.email = email
 		self.alias = alias
 		if phone and phone != "":
 			self.phone = phone
+                if address1 and address1 != "":
+                        self.address1 = address1
+                if address2 and address2 != "":
+                        self.address2 = address2
+                if city and city != "":
+                        self.city = city
+                if state and state != "":
+                        self.state = state
+                if zipcode and  zipcode != "":
+                        self.zipcode = zipcode
 		self.date_created = datetime.now().isoformat()
 		if department and department != "":
 			self.department = department
@@ -171,6 +202,31 @@ class Request(db.Model):
 		if requester and requester.user:
 			return requester.user.get_phone()
 		return "N/A"
+        def requester_address1(self):
+                requester = self.requester()
+                if requester and requester.user:
+                        return requester.user.get_address1()
+                return "N/A"
+        def requester_address2(self):
+                requester = self.requester()
+                if requester and requester.user:
+                        return requester.user.get_address2()
+                return "N/A"
+        def requester_city(self):
+                requester = self.requester()
+                if requester and requester.user:
+                        return requester.user.get_city()
+                return "N/A"
+        def requester_state(self):
+                requester = self.requester()
+                if requester and requester.user:
+                        return requester.user.get_state()
+                return "N/A"
+        def requester_zipcode(self):
+                requester = self.requester()
+                if requester and requester.user:
+                        return requester.user.get_zipcode()
+                return "N/A"
 	def point_person_name(self):
 		point_person = self.point_person()
 		if point_person and point_person.user:

@@ -221,7 +221,7 @@ def get_user_by_id(id):
     return User.query.get(id)
 
 ### @export "create_or_return_user"
-def create_or_return_user(email=None, alias = None, phone = None, department = None, contact_for = None, backup_for = None, not_id = False, is_staff = None):
+def create_or_return_user(email=None, alias = None, phone = None, address1 = None, address2 = None, city = None, state = None, zipcode = None, department = None, contact_for = None, backup_for = None, not_id = False, is_staff = None):
 	app.logger.info("\n\nCreating or returning user...")
 	if email:
 		user = User.query.filter(User.email == func.lower(email)).first()
@@ -235,31 +235,41 @@ def create_or_return_user(email=None, alias = None, phone = None, department = N
 				db.session.commit()
 				department = d.id
 		if not user:
-			user = create_user(email = email.lower(), alias = alias, phone = phone, department = department, contact_for = contact_for, backup_for = backup_for, is_staff = is_staff)
+			user = create_user(email = email.lower(), alias = alias, phone = phone,  address1 = address1, address2 = address2, city = city, state = state, zipcode = zipcode, department = department, contact_for = contact_for, backup_for = backup_for, is_staff = is_staff)
 		else:
 			if alias or phone or department or contact_for or backup_for: # Update user if fields to update are provided
-				user = update_user(user = user, alias = alias, phone = phone, department = department, contact_for = contact_for, backup_for = backup_for, is_staff = is_staff)
+				user = update_user(user = user, alias = alias, phone = phone, address1 = address1, address2 = address2, city = city, state = state, zipcode = zipcode, department = department, contact_for = contact_for, backup_for = backup_for, is_staff = is_staff)
 		if not_id:
 			return user
 		return user.id
 	else:
-		user = create_user(alias = alias, phone = phone, is_staff = is_staff)
+		user = create_user(alias = alias, phone = phone, address1 = address1, address2 = address2, city = city, state = state, zipcode = zipcode,  is_staff = is_staff)
 		return user.id
 
 ### @export "create_user"
-def create_user(email=None, alias = None, phone = None, department = None, contact_for = None, backup_for = None, is_staff = None):
-	user = User(email = email, alias = alias, phone = phone, department = department, contact_for = contact_for, backup_for = backup_for, is_staff = is_staff)
+def create_user(email=None, alias = None, phone = None, address1 = None, address2 = None, city = None, state = None, zipcode = None, department = None, contact_for = None, backup_for = None, is_staff = None):
+	user = User(email = email, alias = alias, phone = phone,  address1 = address1, address2 = address2, city = city, state = state, zipcode = zipcode, department = department, contact_for = contact_for, backup_for = backup_for, is_staff = is_staff)
 	db.session.add(user)
 	db.session.commit()
 	app.logger.info("\n\nCreated new user, alias: %s id: %s" % (user.alias, user.id))
 	return user
 
 ### @export "update_user"
-def update_user(user, alias = None, phone = None, department = None, contact_for = None, backup_for = None, is_staff = None):
+def update_user(user, alias = None, phone = None,  address1 = None, address2 = None, city = None, state = None, zipcode = None, department = None, contact_for = None, backup_for = None, is_staff = None):
 	if alias:
 		user.alias = alias
 	if phone:
 		user.phone = phone
+        if address1:
+                user.address1 = address1
+        if address2:
+                user.address2 = address2
+        if city:
+                user.city = city
+        if state:
+                user.state = state
+        if zipcode:
+                user.zipcode = zipcode
 	if department:
 		if type(department) != int and not department.isdigit():
 			d = Department.query.filter_by(name = department).first()
