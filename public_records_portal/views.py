@@ -49,63 +49,6 @@ browser_id.init_app(app)
 
 
 # Submitting a new request
-
-# @app.route("/new", methods=["GET", "POST"])
-# def new_request(passed_recaptcha=False, data=None):
-#     if data or request.method == 'POST':
-#         if not data and not passed_recaptcha:
-#             data=request.form.copy()
-#         email=data['request_email']
-#         request_text=data['request_text']
-#         if request_text == "":
-#             return render_template('error.html', message="You cannot submit an empty request.")
-#         if email == "" and 'ignore_email' not in data and not passed_recaptcha:
-#             return render_template('missing_email.html', form=data)
-#         if not passed_recaptcha and (is_spam(comment=request_text, user_ip=request.remote_addr, user_agent=request.headers.get('User-Agent'))):
-#             return render_template('recaptcha_request.html', form=data, message="Hmm, your request looks like spam. To submit your request, type the numbers or letters you see in the field below.")
-#
-#         alias=None
-#         phone=None
-#         offline_submission_type=None
-#         date_received=None
-#         department=None
-#         if 'request_department' in data:
-#             department=data['request_department']
-#         if 'request_alias' in data:
-#             alias=data['request_alias']
-#         if 'request_phone' in data:
-#             phone=data['request_phone']
-#         if 'format_received' in data:
-#             offline_submission_type=data['format_received']
-#         if 'date_received' in data: # From the jQuery datepicker
-#             date_received=data['date_received']
-#             if date_received != "":
-#                 try:
-#                     date_received=datetime.strptime(date_received, '%m/%d/%Y')
-#                     tz=pytz.timezone(app.config['TIMEZONE'])
-#                     offset=tz.utcoffset(datetime.now())
-#                     offset=(offset.days * 86400 + offset.seconds) / 3600
-#                     date_received=date_received - timedelta(hours=offset) # This is somewhat of a hack, but we need to get this back in UTC time but still treat it as a 'naive' datetime object
-#                 except ValueError:
-#                     return render_template('error.html', message="Please use the datepicker to select a date.")
-#         request_id, is_new=make_request(text=request_text, email=email, alias=alias, phone=phone, passed_spam_filter=True, department=department, offline_submission_type=offline_submission_type, date_received=date_received)
-#         if is_new:
-#             return redirect(url_for('show_request_for_x', request_id=request_id, audience='new'))
-#         if not request_id:
-#             return render_template('error.html', message="Your request looks a lot like spam.")
-#         app.logger.info("\n\nDuplicate request entered: %s" % request_text)
-#         return render_template('error.html', message="Your request is the same as /request/%s" % request_id)
-#     else:
-#         departments=None
-#         routing_available=False
-#         if 'LIAISONS_URL' in app.config:
-#             routing_available=True
-#             departments=db.session.query(models.Department).all()
-#         if current_user.is_authenticated():
-#             return render_template('offline_request.html', routing_available=routing_available, departments=departments)
-#         else:
-#             return render_template('offline_request.html', routing_available=routing_available, departments=departments)
-
 @app.route("/new", methods=["GET", "POST"])
 def new_request(passed_recaptcha=False, data=None):
     form = None
@@ -119,6 +62,7 @@ def new_request(passed_recaptcha=False, data=None):
             request_format = form.request_format.data
             request_date = form.request_date.data
             request_department = form.request_department.data
+            request_name = form.request_name.data
             request_email = form.request_email.data
             request_phone = form.request_phone.data
             request_fax = form.request_fax.data
@@ -133,7 +77,6 @@ def new_request(passed_recaptcha=False, data=None):
 
             if not (request_format and request_format.strip()):
                 errors.append('Please choose a request format.')
-
             try:
                 tz = pytz.timezone(app.config['TIMEZONE'])
                 offset = tz.utcoffset(datetime.now())
@@ -141,11 +84,16 @@ def new_request(passed_recaptcha=False, data=None):
                 request_date = request_date - timedelta(hours = offset)
             except TypeError:
                 errors.append("Please use the datepicker to select a date.")
+                request_date = None
             except ValueError:
                 errors.append("Please use the datepicker to select a date.")
+                request_date = None
 
             if not (request_department and request_department.strip()):
                 errors.append("Please select a department.")
+
+            if not (request_name and request_name.strip()):
+                errors.append("Please enter the requester's name")
 
             email_valid = (request_email != '')
             phone_valid = (request_phone is not None)
@@ -155,8 +103,6 @@ def new_request(passed_recaptcha=False, data=None):
             state_valid = (request_address_state != '')
             zip_valid = (request_address_zip != '')
             address_valid = (street_valid and city_valid and state_valid and zip_valid)
-
-            print 'Email:', email_valid, 'Phone:', phone_valid, 'Fax:', fax_valid, 'Street:', street_valid, 'City:', city_valid, 'State:', state_valid, 'Zip:', zip_valid, 'Address:', address_valid
 
             if not (email_valid or phone_valid or fax_valid or address_valid):
                 errors.append("Please enter at least one type of contact information")
@@ -173,8 +119,12 @@ def new_request(passed_recaptcha=False, data=None):
                 errors.append("Looks like your request is the same as /request/%s" % request_id)
 
             if errors:
-                return render_template('offline_request.html', form=form, routing_available=routing_available,
-                                       departments=departments, errors=errors)
+                if request_date:
+                    return render_template('offline_request.html', form=form, date=request_date.strftime('%m/%d/%Y'),
+                                           routing_available=routing_available,
+                                           departments=departments, errors=errors)
+                return render_template('offline_request.html', form=form,
+                                       routing_available=routing_available, departments=departments, errors=errors)
             else:
                 return redirect(url_for('show_request_for_x', request_id=request_id,
                                         audience='new'))

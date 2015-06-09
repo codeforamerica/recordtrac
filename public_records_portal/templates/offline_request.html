@@ -53,7 +53,13 @@
                                         </div>
                                         {{ form.request_date.label }}
                                         <div class="spacer">
-                                            {{ form.request_date(class ="input-block-level") }}
+                                            {{ date }}
+{#                                            <script type="text/javascript">#}
+{#                                                if ("{{ date }}" !== "" ) {#}
+{#                                                  $('#request_date').val("{{ date }}")#}
+{#                                                };#}
+{#                                            </script>#}
+                                            {{ form.request_date(class ="input-block-level", value = date) }}
                                         </div>
                                     </div>
                                     <div class="control-group">
@@ -143,6 +149,20 @@
     <script type="text/javascript" src="{{ url_for('static', filename = 'js/plugins/bootstrap-combobox.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-ui-1.10.4.custom.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/new_request.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/date_picker.js') }}"></script>
+    {% if date %}
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("input[id^='request_date']").datepicker();
+                $("input[id^='request_date']").val("{{ date }}");
+            });
+        </script>
+    {% else %}
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("input[id^='request_date']").datepicker();
+                $("input[id^='request_date']").val('');
+            });
+        </script>
+    {% endif %}
 
 {% endblock custom_script_links %}
