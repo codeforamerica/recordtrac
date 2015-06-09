@@ -7,24 +7,27 @@
 """
 
 import logging
+import os
 from os import environ
 import os
 from flask import Flask
+from flask.ext.dotenv import DotEnv
 from flask.ext.sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 
-# Initialize Flask app 
+# Initialize Flask app
 app = Flask(__name__)
 app.debug = True
 
 load_dotenv(os.path.abspath(os.path.join(os.path.join(os.path.dirname(__file__), os.pardir), '.env')))
 
 
-
 # Set environment variables
 def set_env(key, default = None):
 	if key in environ:
 		app.config[key] = environ[key]
+	elif key in app.config:
+		pass
 	elif default:
 		app.config[key] = default
 

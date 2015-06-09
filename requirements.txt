@@ -6,6 +6,9 @@ Flask==0.10.1
 Flask-Admin==1.0.6
 Flask-BrowserID==0.0.4
 Flask-Cache==0.12
+Flask-DotEnv==0.0.4
+Flask-SQLAlchemy==0.16
+Flask-Restless==0.12.1
 Flask-Login==0.2.11
 Flask-Restless==0.12.1
 Flask-SQLAlchemy==0.16
@@ -35,3 +38,8 @@ validators==0.7
 Werkzeug==0.8.3
 WTForms==2.0.2
 WTForms-Components==0.9.7
+pytz==2012d
+anyjson
+newrelic
+#git+https://github.com/garbados/flask-browserid.git
+validate-email==1.2
