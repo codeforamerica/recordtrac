@@ -107,10 +107,15 @@ def new_request(passed_recaptcha=False, data=None):
 
             if not (email_valid or phone_valid or fax_valid or address_valid):
                 errors.append("Please enter at least one type of contact information")
+
             request_id, is_new = make_request(text=request_text,
                                               email=request_email,
                                               alias=alias,
-                                              phone=request_phone,
+                                              phone=request_phone.international,
+                                              address1=request_address_street,
+                                              city=request_address_city,
+                                              state=request_address_state,
+                                              zipcode=request_address_zip, 
                                               passed_spam_filter=True,
                                               department=request_department,
                                               offline_submission_type=request_format,
@@ -160,7 +165,11 @@ def new_request(passed_recaptcha=False, data=None):
                 request_id, is_new = make_request(text=request_text,
                                                   email=request_email,
                                                   alias=alias,
-                                                  phone=request_phone,
+                                                  phone=request_phone.international,
+                                                  address1=request_address_street,
+                                                  city=request_address_city,
+                                                  state=request_address_state,
+                                                  zipcode=request_address_zip,
                                                   passed_spam_filter=True,
                                                   department=department,
                                                   offline_submission_type=request_format,
