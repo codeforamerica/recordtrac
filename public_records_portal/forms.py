@@ -1,6 +1,6 @@
 __author__ = 'jcastillo'
 from flask.ext.wtf import Form
-from wtforms import StringField, SelectField, TextAreaField, DateField, SubmitField
+from wtforms import StringField, SelectField, TextAreaField, DateField, BooleanField, SubmitField
 from wtforms_components import PhoneNumberField, Email
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
 from wtforms import ValidationError
@@ -21,7 +21,7 @@ class OfflineRequestForm(Form):
         ('', ''),
         ('OCME', 'Chief Medical Examiner'), ('DOE', 'Department of Education'),
         ('DORIS', 'Department of Records and Information Services'),
-        ('DOITT', 'Info. Tech. and Telecom.'), ('OOM', 'Mayor\'s Office')],
+        ('DOITT', 'Info. Tech. and Telecom.'), ('OOM', 'Mayor\'s Office'), ('Unknown', 'I Don\'t Know')],
         validators=[DataRequired('Please choose a department')], default='')
     request_name = StringField(u'Name*', validators=[DataRequired('Please enter the requestor\'s name')])
     request_email = StringField(u'Email', validators=[Email('Please enter a valid email address')])
@@ -46,6 +46,9 @@ class OfflineRequestForm(Form):
         ('WV', 'West Virginia'), ('WI', 'Wisconsin'), ('WY', 'Wyoming')], default='NY')
     request_address_zip = StringField(u'Zip Code', validators=[
         Length(5, 5, 'Please enter the five-digit zip code')])
+    terms_of_use = BooleanField(u'I acknowledge that I have read and accepted the Terms of Use for '
+                                u'this application, as stated above',
+                                validators=[DataRequired('You must accept the terms of use')])
     request_submit = SubmitField(u'Submit Request')
 
 

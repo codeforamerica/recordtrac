@@ -71,6 +71,7 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_city = form.request_address_city.data
             request_address_state = form.request_address_state.data
             request_address_zip = form.request_address_zip.data
+            terms_of_use = form.terms_of_use.data
             alias = None
 
             if not (request_text and request_text.strip()):
@@ -78,19 +79,20 @@ def new_request(passed_recaptcha=False, data=None):
 
             if not (request_format and request_format.strip()):
                 errors.append('Please choose a request format.')
-            try:
-                print type(request_date)
-                tz = pytz.timezone(app.config['TIMEZONE'])
-                offset = tz.utcoffset(datetime.now())
-                offset = (offset.days * 86400 + offset.seconds) / 3600
-                # request_date = request_date - timedelta(hours=offset)
-            except TypeError:
+            if request_date:
+                try:
+                    tz = pytz.timezone(app.config['TIMEZONE'])
+                    offset = tz.utcoffset(datetime.now())
+                    offset = (offset.days * 86400 + offset.seconds) / 3600
+                    # request_date = request_date - timedelta(hours=offset)
+                except TypeError:
+                    errors.append("Please use the datepicker to select a date.")
+                    request_date = None
+                except ValueError:
+                    errors.append("Please use the datepicker to select a date.")
+                    request_date = None
+            else:
                 errors.append("Please use the datepicker to select a date.")
-                request_date = None
-            except ValueError:
-                errors.append("Please use the datepicker to select a date.")
-                request_date = None
-
             if not (request_department and request_department.strip()):
                 errors.append("Please select a department.")
 
@@ -98,6 +100,7 @@ def new_request(passed_recaptcha=False, data=None):
                 errors.append("Please enter the requester's name")
             else:
                 alias = request_name
+
 
             email_valid = (request_email != '')
             phone_valid = (request_phone is not None)
@@ -110,6 +113,9 @@ def new_request(passed_recaptcha=False, data=None):
 
             if not (email_valid or phone_valid or fax_valid or address_valid):
                 errors.append("Please enter at least one type of contact information")
+
+            if not terms_of_use:
+                errors.append("You must accept the Terms of Use.")
 
             phone_formatted = ""
             if phone_valid:
