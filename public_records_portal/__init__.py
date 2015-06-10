@@ -11,7 +11,7 @@ import os
 from os import environ
 import os
 from flask import Flask
-from flask.ext.dotenv import DotEnv
+# from flask.ext.dotenv import DotEnv
 from flask.ext.sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 
