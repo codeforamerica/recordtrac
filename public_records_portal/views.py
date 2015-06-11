@@ -199,19 +199,12 @@ def new_request(passed_recaptcha=False, data=None):
                                               state=request_address_state,
                                               zipcode=request_address_zip,
                                               passed_spam_filter=True,
-                                              department=request_department,
-                                              offline_submission_type=request_format,
-                                              date_received=request_date)
+                                              department=request_department)
 
             if not request_id:
                 errors.append("Looks like your request is the same as /request/%s" % request_id)
 
             if errors:
-                if request_date:
-                    print request_date
-                    return render_template('new_request.html', form=form, date=request_date.strftime('%m/%d/%Y'),
-                                           routing_available=routing_available,
-                                           departments=departments, errors=errors)
                 return render_template('new_request.html', form=form,
                                        routing_available=routing_available, departments=departments, errors=errors)
             else:
