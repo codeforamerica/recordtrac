@@ -19,26 +19,21 @@ USERAGENT = ""
 AKISMET_URL = "rest.akismet.com"
 AKISMET_PORT = 80
 
-
 class AkismetError(Exception):
-
     def __init__(self, response, statuscode):
         self.response = response
         self.statuscode = statuscode
-
     def __str__(self):
-        return repr(self.value)
+         return repr(self.value)
 
-
-def __post(request, host, path, port=80):
+def __post(request, host, path, port = 80):
     connection = httplib.HTTPConnection(host, port)
     connection.request("POST", path, request,
-                       {"User-Agent": "%s | %s/%s" % (USERAGENT, "Akistmet.py", __version__),
-                        "Content-type": "application/x-www-form-urlencoded"})
+        {"User-Agent":"%s | %s/%s" % (USERAGENT,"Akistmet.py", __version__),
+        "Content-type":"application/x-www-form-urlencoded"})
     response = connection.getresponse()
-
+    
     return response.read(), response.status
-
 
 def verify_key(key, blog):
     """Find out whether a given WordPress.com API key is valid.
@@ -47,16 +42,14 @@ def verify_key(key, blog):
         blog: URL of the front page of the site comments will be submitted to.
     Returns True if a valid key, False if invalid.
     """
-    response, status = __post(
-        "key=%s&blog=%s" % (key, blog), AKISMET_URL, "/1.1/verify-key", AKISMET_PORT)
-
+    response, status = __post("key=%s&blog=%s" % (key,blog), AKISMET_URL, "/1.1/verify-key", AKISMET_PORT)
+    
     if response == "valid":
         return True
     elif response == "invalid":
         return False
     else:
         raise AkismetError(response, status)
-
 
 def comment_check(key, blog, user_ip, user_agent, **other):
     """Submit a comment to find out whether Akismet thinks that it's spam.
@@ -70,23 +63,21 @@ def comment_check(key, blog, user_ip, user_agent, **other):
     headers sent from the client.
     More detail on what should be submitted is available at:
     http://akismet.com/development/api/
-
+    
     Returns True if spam, False if ham.  Throws an AkismetError if the server says
     anything unexpected.
     """
-
+    
     request = {'blog': blog, 'user_ip': user_ip, 'user_agent': user_agent}
     request.update(other)
-    response, status = __post(urlencode(request), "%s.%s" % (
-        key, AKISMET_URL), "/1.1/comment-check", AKISMET_PORT)
-
+    response, status = __post(urlencode(request), "%s.%s" % (key,AKISMET_URL), "/1.1/comment-check", AKISMET_PORT)
+    
     if response == "true":
         return True
     elif response == "false":
         return False
     else:
         raise AkismetError(response, status)
-
 
 def submit_spam(key, blog, user_ip, user_agent, **other):
     """Report a false negative to Akismet.
@@ -95,11 +86,9 @@ def submit_spam(key, blog, user_ip, user_agent, **other):
     """
     request = {'blog': blog, 'user_ip': user_ip, 'user_agent': user_agent}
     request.update(other)
-    response, status = __post(urlencode(request), "%s.%s" % (
-        key, AKISMET_URL), "/1.1/submit-spam", AKISMET_PORT)
+    response, status = __post(urlencode(request), "%s.%s" % (key,AKISMET_URL), "/1.1/submit-spam", AKISMET_PORT)
     if status != 200 or response != "":
         raise AkismetError(response, status)
-
 
 def submit_ham(key, blog, user_ip, user_agent, **other):
     """Report a false positive to Akismet.
@@ -108,7 +97,6 @@ def submit_ham(key, blog, user_ip, user_agent, **other):
     """
     request = {'blog': blog, 'user_ip': user_ip, 'user_agent': user_agent}
     request.update(other)
-    response, status = __post(urlencode(request), "%s.%s" % (
-        key, AKISMET_URL), "/1.1/submit-ham", AKISMET_PORT)
+    response, status = __post(urlencode(request), "%s.%s" % (key,AKISMET_URL), "/1.1/submit-ham", AKISMET_PORT)
     if status != 200 or response != "":
         raise AkismetError(response, status)
