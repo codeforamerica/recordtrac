@@ -53,15 +53,16 @@ class OfflineRequestForm(Form):
 
 
 class NewRequestForm(Form):
-    request_text = TextAreaField(u'<i class="icon-exclamation-sign"></i>Request Description*', validators=[
+    request_text = TextAreaField(u'Request Description*', validators=[
         DataRequired('The request description is required'),
         Length(1, 5000, 'Your request must be less than 5000 characters')])
-    request_department = SelectField(u'Request Department', choices=[
+    request_department = SelectField(u'Request Department*', choices=[
+        ('', ''),
         ('OCME', 'Chief Medical Examiner'), ('DOE', 'Department of Education'),
         ('DORIS', 'Department of Records and Information Services'),
-        ('DOITT', 'Info. Tech. and Telecom.'), ('OOM', 'Mayor\'s Office')],
-        validators=[DataRequired('Please choose a department')])
-    request_name = StringField(u'Name', validators=[DataRequired('Please enter the your name')])
+        ('DOITT', 'Info. Tech. and Telecom.'), ('OOM', 'Mayor\'s Office'), ('Unknown', 'I Don\'t Know')],
+        validators=[DataRequired('Please choose a department')], default='')
+    request_name = StringField(u'Name*', validators=[DataRequired('Please enter the requestor\'s name')])
     request_email = StringField(u'Email', validators=[Email('Please enter a valid email address')])
     request_phone = PhoneNumberField(u'Phone Number')
     request_fax = PhoneNumberField(u'Fax Number')
@@ -80,7 +81,10 @@ class NewRequestForm(Form):
         ('OK', 'Oklahoma'), ('OR', 'Oregon'), ('PA', 'Pennsylvania'), ('RI', 'Rhode Island'),
         ('SC', 'South Carolina'), ('SD', 'South Dakota'), ('TN', 'Tennessee'), ('TX', 'Texas'),
         ('UT', 'Utah'), ('VT', 'Vermont'), ('VA', 'Virginia'), ('WA', 'Washington'),
-        ('WV', 'West Virginia'), ('WI', 'Wisconsin'), ('WY', 'Wyoming')])
+        ('WV', 'West Virginia'), ('WI', 'Wisconsin'), ('WY', 'Wyoming')], default='NY')
     request_address_zip = StringField(u'Zip Code', validators=[
         Length(5, 5, 'Please enter the five-digit zip code')])
+    terms_of_use = BooleanField(u'I acknowledge that I have read and accepted the Terms of Use for '
+                                u'this application, as stated above',
+                                validators=[DataRequired('You must accept the terms of use')])
     request_submit = SubmitField(u'Submit Request')

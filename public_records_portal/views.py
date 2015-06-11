@@ -57,7 +57,7 @@ def new_request(passed_recaptcha=False, data=None):
     routing_available = False
     errors = []
     if request.method == 'POST':
-        if True: # Change this to current_user.is_authenticated()
+        if current_user.is_authenticated(): # Change this to current_user.is_authenticated()
             form = OfflineRequestForm(request.form)
             request_text = form.request_text.data
             request_format = form.request_format.data
@@ -101,6 +101,75 @@ def new_request(passed_recaptcha=False, data=None):
             else:
                 alias = request_name
 
+            email_valid = (request_email != '')
+            phone_valid = (request_phone is not None)
+            fax_valid = (request_fax is not None)
+            street_valid = (request_address_street != '')
+            city_valid = (request_address_city != '')
+            state_valid = (request_address_state != '')
+            zip_valid = (request_address_zip != '')
+            address_valid = (street_valid and city_valid and state_valid and zip_valid)
+
+            if not (email_valid or phone_valid or fax_valid or address_valid):
+                errors.append("Please enter at least one type of contact information")
+
+            phone_formatted = ""
+            if phone_valid:
+                phone_formatted = request_phone.international
+
+            request_id, is_new = make_request(text=request_text,
+                                              email=request_email,
+                                              alias=alias,
+                                              phone=phone_formatted,
+                                              address1=request_address_street,
+                                              city=request_address_city,
+                                              state=request_address_state,
+                                              zipcode=request_address_zip,
+                                              passed_spam_filter=True,
+                                              department=request_department,
+                                              offline_submission_type=request_format,
+                                              date_received=request_date)
+
+            if not request_id:
+                errors.append("Looks like your request is the same as /request/%s" % request_id)
+
+            if errors:
+                if request_date:
+                    print request_date
+                    return render_template('offline_request.html', form=form, date=request_date.strftime('%m/%d/%Y'),
+                                           routing_available=routing_available,
+                                           departments=departments, errors=errors)
+                return render_template('offline_request.html', form=form,
+                                       routing_available=routing_available, departments=departments, errors=errors)
+            else:
+                return redirect(url_for('show_request_for_x', request_id=request_id,
+                                        audience='new'))
+
+        else:
+            form = NewRequestForm(request.form)
+            request_text = form.request_text.data
+            request_department = form.request_department.data
+            request_name = form.request_name.data
+            request_email = form.request_email.data
+            request_phone = form.request_phone.data
+            request_fax = form.request_fax.data
+            request_address_street = form.request_address_street.data
+            request_address_city = form.request_address_city.data
+            request_address_state = form.request_address_state.data
+            request_address_zip = form.request_address_zip.data
+            terms_of_use = form.terms_of_use.data
+            alias = None
+
+            if not (request_text and request_text.strip()):
+                errors.append('Please fill out the request description.')
+
+            if not (request_department and request_department.strip()):
+                errors.append("Please select a department.")
+
+            if not (request_name and request_name.strip()):
+                errors.append("Please enter the requester's name")
+            else:
+                alias = request_name
 
             email_valid = (request_email != '')
             phone_valid = (request_phone is not None)
@@ -140,75 +209,24 @@ def new_request(passed_recaptcha=False, data=None):
             if errors:
                 if request_date:
                     print request_date
-                    return render_template('offline_request.html', form=form, date=request_date.strftime('%m/%d/%Y'),
+                    return render_template('new_request.html', form=form, date=request_date.strftime('%m/%d/%Y'),
                                            routing_available=routing_available,
                                            departments=departments, errors=errors)
-                return render_template('offline_request.html', form=form,
+                return render_template('new_request.html', form=form,
                                        routing_available=routing_available, departments=departments, errors=errors)
             else:
                 return redirect(url_for('show_request_for_x', request_id=request_id,
                                         audience='new'))
-
-        else:
-            form = NewRequestForm(request.form)
-            if form.validate_on_submit():
-                request_text = form.request_text.data
-                request_date = form.request_date.data
-                request_email = form.request_email.data
-                request_phone = form.request_phone.data
-                request_fax = form.request_fax.data
-                request_address_street = form.request_address_street.data
-                request_address_city = form.request_address_city.data
-                request_address_state = form.request_address_state.data
-                request_address_zip = form.request_address_zip.data
-
-                alias = None
-
-                try:
-                    request_date = datetime.strptime(request_date, '%m/%d/%Y')
-                    tz = pytz.timezone(app.config['TIMEZONE'])
-                    offset = tz.utcoffset(datetime.now())
-                    offset = (offset.days * 86400 + offset.seconds) / 3600
-                    request_date = request_date - timedelta(hours = offset)
-                except ValueError:
-                    errors.append("Please use the datepicker to select a date.")
-                    return render_template('offline_request.html', routing_available=routing_available,
-                                           departments=departments, errors=errors)
-
-                phone_formatted = ""
-                if request_phone is not None:
-                  phone_formatted = request_phone.international
-
-                request_id, is_new = make_request(text=request_text,
-                                                  email=request_email,
-                                                  alias=alias,
-                                                  phone=phone_formatted,
-                                                  address1=request_address_street,
-                                                  city=request_address_city,
-                                                  state=request_address_state,
-                                                  zipcode=request_address_zip,
-                                                  passed_spam_filter=True,
-                                                  department=department,
-                                                  offline_submission_type=request_format,
-                                                  date_received=request_date)
-
-                if is_new:
-                    return redirect(url_for('show_request_for_x', request_id=request_id,
-                                            audience='new'))
-                if not request_id:
-                    errors.append("Looks like your request is the same as /request/%s" % request_id)
-                    return render_template('offline_request.html', routing_available=routing_available,
-                                           departments=departments, errors=errors)
     elif request.method == 'GET':
         if 'LIAISONS_URL' in app.config:
             routing_available = True
             departments = db.session.query(models.Department).all()
         if current_user.is_authenticated():
-            form=OfflineRequestForm()
+            form = OfflineRequestForm()
             return render_template('offline_request.html', form=form, routing_available=routing_available, departments=departments)
         else:
-            form=OfflineRequestForm()
-            return render_template('offline_request.html', form=form, routing_available=routing_available, departments=departments)
+            form = NewRequestForm()
+            return render_template('new_request.html', form=form, routing_available=routing_available, departments=departments)
 
 @app.route("/export")
 @login_required

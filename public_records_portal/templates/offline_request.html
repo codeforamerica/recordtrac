@@ -82,6 +82,11 @@
 											{{ form.request_phone(class="input-block-level", type="tel", placeholder="(555) 555-5555") }}
 											{{ help("phonePopover-content", "Enter phone number") }}
                                         </div>
+                                        <p class="lead">{{ form.request_fax.label.text}}</p>
+                                        <div class="spacer spacer_phone well" style="background-color: #FFFFFF;">
+											{{ form.request_fax(class="input-block-level", type="tel", placeholder="(555) 555-5555") }}
+											{{ help("phonePopover-content", "Enter phone number") }}
+                                        </div>
                                         <p class="lead">Address</p>
                                         <div class="well" style="background-color: #FFFFFF;">
 											{{ form.request_address_street.label.text}}
