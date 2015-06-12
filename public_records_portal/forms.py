@@ -5,7 +5,10 @@ from wtforms_components import PhoneNumberField, Email
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
 from wtforms import ValidationError
 from flask.ext.login import current_user
-from flask import request
+from flask import Flask
+from flask_recaptcha import ReCaptcha
+
+app = Flask(__name__)
 
 class OfflineRequestForm(Form):
     request_text = TextAreaField(u'Request Description*', validators=[
@@ -85,6 +88,7 @@ class NewRequestForm(Form):
         ('WV', 'West Virginia'), ('WI', 'Wisconsin'), ('WY', 'Wyoming')], default='NY')
     request_address_zip = StringField(u'Zip Code', validators=[
         Length(5, 5, 'Please enter the five-digit zip code')])
+    recaptcha = ReCaptcha(app)
     terms_of_use = BooleanField(u'I acknowledge that I have read and accepted the Terms of Use for '
                                 u'this application, as stated above',
                                 validators=[DataRequired('You must accept the terms of use')])

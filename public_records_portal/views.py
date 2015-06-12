@@ -9,8 +9,9 @@
 from flask import Flask
 from flask import render_template, request, redirect, url_for, jsonify, send_from_directory
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
+from flask_recaptcha import ReCaptcha
 #from flaskext.browserid import BrowserID
-from public_records_portal import app, db, models
+from public_records_portal import app, db, models, recaptcha
 from prr import add_resource, update_resource, make_request, close_request
 from db_helpers import get_user_by_id  # finds a user by their id
 from db_helpers import get_user  # finds a user based on BrowserID response
@@ -113,9 +114,6 @@ def new_request(passed_recaptcha=False, data=None):
             if not (email_valid or phone_valid or fax_valid or address_valid):
                 errors.append("Please enter at least one type of contact information")
 
-            if not (response.is_valid):
-                errors.append("Please fill out captcha")
-
             if not data and not passed_recaptcha:
                 data = request.form.copy()
 
@@ -167,6 +165,7 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_city = form.request_address_city.data
             request_address_state = form.request_address_state.data
             request_address_zip = form.request_address_zip.data
+            request_recaptcha = recaptcha.verify()
             terms_of_use = form.terms_of_use.data
             alias = None
 
@@ -177,7 +176,7 @@ def new_request(passed_recaptcha=False, data=None):
                 errors.append("Please select a department.")
 
             if not (request_name and request_name.strip()):
-                errors.append("Please enter the requester's name")
+                errors.append("Please enter the requester's name.")
             else:
                 alias = request_name
 
@@ -191,10 +190,10 @@ def new_request(passed_recaptcha=False, data=None):
             address_valid = (street_valid and city_valid and state_valid and zip_valid)
 
             if not (email_valid or phone_valid or fax_valid or address_valid):
-                errors.append("Please enter at least one type of contact information")
+                errors.append("Please enter at least one type of contact information.")
 
-            if not (response.is_valid):
-                errors.append("Please fill out captcha")
+            if not request_recaptcha:
+                errors.append("Please complete captcha.")
 
             if not terms_of_use:
                 errors.append("You must accept the Terms of Use.")
