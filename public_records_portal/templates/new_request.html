@@ -13,6 +13,7 @@
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-combobox.css') }}"media="screen">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/new_request.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/recaptcha.css') }}">
 {% endblock custom_css_links %}
 {% block container %}
     <div class="row-fluid">
@@ -106,6 +107,11 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div id="captcha">
+                                    <form method="post" action="/submit">
+                                        {{ recaptcha }}
+                                    </form>
                                     </div>
                                     <div id="terms_of_use" class="control-group">
                                         <p class="lead">{{ form.terms_of_use.label.text }}&nbsp;{{ form.terms_of_use }}</p>

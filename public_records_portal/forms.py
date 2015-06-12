@@ -5,6 +5,8 @@ from wtforms_components import PhoneNumberField, Email
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
 from wtforms import ValidationError
 from flask.ext.login import current_user
+from recaptcha.client import captcha
+from flask import request
 
 class OfflineRequestForm(Form):
     request_text = TextAreaField(u'Request Description*', validators=[
