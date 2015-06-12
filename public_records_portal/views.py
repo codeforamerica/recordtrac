@@ -9,7 +9,6 @@
 
 from flask import render_template, request, redirect, url_for, jsonify, send_from_directory
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
-#from flaskext.browserid import BrowserID
 from public_records_portal import app, db, models
 from prr import add_resource, update_resource, make_request, close_request
 from db_helpers import get_user_by_id  # finds a user by their id
@@ -33,7 +32,7 @@ from filters import *
 import re
 from db_helpers import get_count, get_obj
 from sqlalchemy import func, not_, and_, or_
-from forms import OfflineRequestForm, NewRequestForm
+from forms import OfflineRequestForm, NewRequestForm, SignUpForm
 import pytz
 import phonenumbers
 
@@ -44,11 +43,6 @@ app.logger.info("\n\nEnvironment is %s" % app.config['ENVIRONMENT'])
 login_manager = LoginManager()
 login_manager.user_loader(get_user_by_id)
 login_manager.init_app(app)
-
-#browser_id = BrowserID()
-# browser_id.user_loader(get_user)
-# browser_id.init_app(app)
-
 
 # Submitting a new request
 @app.route("/new", methods=["GET", "POST"])
@@ -940,16 +934,32 @@ def prepare_login():
     return render_template('login.html')
 
 
-@app.route("/login_action", methods=["POST"])
+@app.route("/login_action", methods=['POST', 'GET'])
 def login_action(data=None):
-    app.logger.info("\n\nperforming login action")
-    data = request.form.copy()
-    email = data['email_address']
-    user = find_user(email)
-    if user:
-        login_user(user)
-
-    return landing()
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        user_to_login = authenticate_login(email, password)
+        if user_to_login:
+            login_user(user_to_login)
+            redirect_url = get_redirect_target()
+            if 'login' in redirect_url or 'logout' in redirect_url:
+                return redirect(url_for('index'))
+            else:
+                if "city" not in redirect_url:
+                    redirect_url = redirect_url.replace("/request/", "/city/request/")
+                return redirect(redirect_url)
+        else:
+            app.logger.info("\n\nLogin failed (due to incorrect e-mail/password combo) for email: %s." % email)
+            return render_template('error.html', message = "Your e-mail/ password combo didn't work. You can always <a href='/reset_password'>reset your password</a>.")
+        app.logger.info("\n\nLogin failed for email: %s." % email)
+        return render_template('error.html', message="Something went wrong.", user_id = get_user_id())
+    else:
+        user_id = get_user_id()
+        if user_id:
+            return render_template('generic.html', message = 'You are already logged in. If you wish to log in as another user, first log out by clicking your name in the upper-right corner of this page and clicking Logout.', user_id = user_id)
+        else:
+            return render_template('generic.html', message = "If you work for the %s and are trying to log into RecordTrac, please log in by clicking City login in the upper-right corner of this page." % app.config['AGENCY_NAME'])
 
 
 def find_user(email):
