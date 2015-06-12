@@ -21,7 +21,6 @@ from spam import is_spam, is_working_akismet_key
 from requests import get
 from time import time
 from flask.ext.cache import Cache
-from recaptcha.client import captcha
 from timeout import timeout
 from flask import jsonify, request, Response
 import anyjson
