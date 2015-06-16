@@ -126,3 +126,9 @@ class SignUpForm(Form):
         DataRequired(), EqualTo('confirm', message='Passwords must match')])
     confirm = PasswordField('Confirm Password')
     accept_tos = BooleanField('I accept the TOS', validators=[DataRequired()])
+
+
+class LoginForm(Form):
+    username = StringField('Email', validators=[DataRequired(), Length(1, 64)])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Log In')

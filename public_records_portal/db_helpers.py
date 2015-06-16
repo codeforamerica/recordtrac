@@ -75,7 +75,7 @@ def get_avg_response_time(department):
         if request.status and 'Closed' in request.status:
             if response_time:
                 response_time = response_time + \
-                    (request.status_updated - date_created).total_seconds()
+                                (request.status_updated - date_created).total_seconds()
             else:
                 response_time = (
                     request.status_updated - date_created).total_seconds()
@@ -272,6 +272,17 @@ def get_user_by_id(id):
 
 # @export "create_or_return_user"
 
+def authenticate_login(email, password):
+    if email:
+        user = create_or_return_user(email=email, not_id = True)
+        if user.check_password(password):
+            return user
+        if user.password == password: # Hash it
+            user.set_password(password)
+            db.session.add(user)
+            db.session.commit()
+            return user
+    return None
 
 def create_or_return_user(email=None, alias=None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=None, department=None, contact_for=None, backup_for=None, not_id=False, is_staff=None):
     app.logger.info("\n\nCreating or returning user...")
