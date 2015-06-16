@@ -1,6 +1,6 @@
 __author__ = 'jcastillo'
 from flask.ext.wtf import Form
-from wtforms import StringField, SelectField, TextAreaField, DateField, BooleanField, SubmitField
+from wtforms import StringField, SelectField, TextAreaField, DateField, BooleanField, PasswordField, SubmitField
 from wtforms_components import PhoneNumberField, Email
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
 from wtforms import ValidationError
@@ -120,11 +120,9 @@ class NewRequestForm(Form):
 
 
 class SignUpForm(Form):
-    username = TextField('Username', [validators.Length(min=4, max=25)])
-    email = TextField('Email Address', [validators.Length(min=6, max=35)])
-    password = PasswordField('Password', [
-        validators.Required(),
-        validators.EqualTo('confirm', message='Passwords must match')
-    ])
+    username = StringField('Username', validators=[Length(min=4, max=25)])
+    email = StringField('Email Address', validators=[Length(min=6, max=35)])
+    password = PasswordField('Password', validators=[
+        DataRequired(), EqualTo('confirm', message='Passwords must match')])
     confirm = PasswordField('Confirm Password')
-    accept_tos = BooleanField('I accept the TOS', [validators.Required()])
+    accept_tos = BooleanField('I accept the TOS', validators=[DataRequired()])
