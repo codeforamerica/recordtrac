@@ -942,11 +942,12 @@ def signup():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    form=LoginForm()
+    form = LoginForm()
     errors = []
     if request.method == 'POST':
         print form.validate_on_submit()
         if form.validate_on_submit():
+            print form.password.data
             user_to_login = authenticate_login(form.username.data, form.password.data)
             if user_to_login:
                 login_user(user_to_login )

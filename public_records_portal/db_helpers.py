@@ -273,6 +273,7 @@ def get_user_by_id(id):
 # @export "create_or_return_user"
 
 def authenticate_login(email, password):
+    print 'Password', password
     if email:
         user = create_or_return_user(email=email, not_id = True)
         if user.check_password(password):
@@ -284,7 +285,7 @@ def authenticate_login(email, password):
             return user
     return None
 
-def create_or_return_user(email=None, alias=None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=None, department=None, contact_for=None, backup_for=None, not_id=False, is_staff=None):
+def create_or_return_user(email=None, alias=None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=None, department=None, contact_for=None, backup_for=None, not_id=False, is_staff=None, password=None):
     app.logger.info("\n\nCreating or returning user...")
     if email:
         user = User.query.filter(User.email == func.lower(email)).first()
@@ -298,8 +299,13 @@ def create_or_return_user(email=None, alias=None, phone=None, address1=None, add
                 db.session.commit()
                 department = d.id
         if not user:
-            user = create_user(email=email.lower(), alias=alias, phone=phone,  address1=address1, address2=address2, city=city,
-                               state=state, zipcode=zipcode, department=department, contact_for=contact_for, backup_for=backup_for, is_staff=is_staff)
+            if not password:
+                user = create_user(email=email.lower(), alias=alias, phone=phone,  address1=address1, address2=address2, city=city,
+                               state=state, zipcode=zipcode, department=department, contact_for=contact_for, backup_for=backup_for, password='admin', is_staff=is_staff)
+            else:
+                user = create_user(email=email.lower(), alias=alias, phone=phone,  address1=address1, address2=address2, city=city,
+                               state=state, zipcode=zipcode, department=department, contact_for=contact_for, backup_for=backup_for, password=password, is_staff=is_staff)
+
         else:
             # Update user if fields to update are provided
             if alias or phone or department or contact_for or backup_for:
@@ -316,9 +322,9 @@ def create_or_return_user(email=None, alias=None, phone=None, address1=None, add
 # @export "create_user"
 
 
-def create_user(email=None, alias=None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=None, department=None, contact_for=None, backup_for=None, is_staff=None):
+def create_user(email=None, alias=None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=None, department=None, contact_for=None, backup_for=None, password=None, is_staff=None):
     user = User(email=email, alias=alias, phone=phone,  address1=address1, address2=address2, city=city, state=state,
-                zipcode=zipcode, department=department, contact_for=contact_for, backup_for=backup_for, is_staff=is_staff)
+                zipcode=zipcode, department=department, contact_for=contact_for, backup_for=backup_for, password=password, is_staff=is_staff)
     db.session.add(user)
     db.session.commit()
     app.logger.info("\n\nCreated new user, alias: %s id: %s" %

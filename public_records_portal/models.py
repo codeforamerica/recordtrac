@@ -88,7 +88,7 @@ class User(db.Model):
             return self.zipcode
         return "N/A"
 
-    def __init__(self, email=None, alias=None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=zipcode, department=None, contact_for=None, backup_for=None, is_staff=False):
+    def __init__(self, email=None, alias=None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=zipcode, department=None, contact_for=None, backup_for=None, password=None, is_staff=False):
         if email and validate_email(email):
             self.email = email
         self.alias = alias
@@ -113,9 +113,14 @@ class User(db.Model):
             self.backup_for = backup_for
         if is_staff:
             self.is_staff = is_staff
+        if password:
+            self.set_password(password)
 
     def check_password(self, password):
 		return check_password_hash(self.password, password)
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
 
     def __repr__(self):
         return '<User %r>' % self.email
