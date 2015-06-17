@@ -1,10 +1,14 @@
 __author__ = 'jcastillo'
 from flask.ext.wtf import Form
-from wtforms import StringField, SelectField, TextAreaField, DateField, BooleanField, PasswordField, SubmitField
+from wtforms import StringField, SelectField, TextAreaField, DateField, BooleanField, SubmitField
 from wtforms_components import PhoneNumberField, Email
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
 from wtforms import ValidationError
 from flask.ext.login import current_user
+from flask import Flask
+from flask_recaptcha import ReCaptcha
+
+app = Flask(__name__)
 
 class OfflineRequestForm(Form):
     request_text = TextAreaField(u'Request Description*', validators=[
@@ -84,22 +88,8 @@ class NewRequestForm(Form):
         ('WV', 'West Virginia'), ('WI', 'Wisconsin'), ('WY', 'Wyoming')], default='NY')
     request_address_zip = StringField(u'Zip Code', validators=[
         Length(5, 5, 'Please enter the five-digit zip code')])
+    recaptcha = ReCaptcha(app)
     terms_of_use = BooleanField(u'I acknowledge that I have read and accepted the Terms of Use for '
                                 u'this application, as stated above',
                                 validators=[DataRequired('You must accept the terms of use')])
     request_submit = SubmitField(u'Submit Request')
-
-
-class SignUpForm(Form):
-    username = StringField('Username', validators=[Length(min=4, max=25)])
-    email = StringField('Email Address', validators=[Length(min=6, max=35)])
-    password = PasswordField('Password', validators=[
-        DataRequired(), EqualTo('confirm', message='Passwords must match')])
-    confirm = PasswordField('Confirm Password')
-    accept_tos = BooleanField('I accept the TOS', validators=[DataRequired()])
-
-
-class LoginForm(Form):
-    username = StringField('Email', validators=[DataRequired(), Length(1, 64)])
-    password = PasswordField('Password', validators=[DataRequired()])
-    submit = SubmitField('Log In')
