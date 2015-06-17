@@ -14,15 +14,15 @@ from sqlalchemy.dialects import postgresql
 import uuid
 import json
 import os
-import logging 
+import logging
 
 
-### @export "get_subscriber"
+# @export "get_subscriber"
 def get_subscriber(request_id, user_id):
-# Returns the subscriber for a given request by user ID
-	if request_id and user_id:
-		return Subscriber.query.filter_by(user_id = user_id).filter_by(request_id = request_id).first()
-	return None
+    # Returns the subscriber for a given request by user ID
+    if request_id and user_id:
+        return Subscriber.query.filter_by(user_id=user_id).filter_by(request_id=request_id).first()
+    return None
 
 ### @export "get_count"
 def get_count(obj_type):
@@ -113,6 +113,37 @@ def put_obj(obj):
 		db.session.add(obj)
 		db.session.commit()
 		app.logger.info("\n\nCommitted object to database: %s" % obj)
+        return True
+    return False
+
+# @export "get_attribute"
+
+
+def get_attribute(attribute, obj_id=None, obj_type=None, obj=None):
+    """ Obtain the object by obj_id and obj_type if obj is not provided, and return the specified attribute for that object. """
+    if obj_id and obj_type:
+        obj = get_obj(obj_type, obj_id)
+    if obj:
+        try:
+            return getattr(obj, attribute)
+        except:
+            return None
+    return None
+
+# @export "update_obj"
+
+
+def update_obj(attribute, val, obj_type=None, obj_id=None, obj=None):
+    """ Obtain the object by obj_id and obj_type if obj is not provided, and update the specified attribute for that object. Return true if successful. """
+    app.logger.info("\n\nUpdating attribute: %s with value: %s for obj_type: %s, obj_id: %s, obj: %s" % (
+        attribute, val, obj_type, obj_id, obj))
+    if obj_id and obj_type:
+        obj = get_obj(obj_type, obj_id)
+    if obj:
+        try:
+            setattr(obj, attribute, val)
+            db.session.add(obj)
+            db.session.commit()
 		return True
 	return False
 
@@ -165,12 +196,12 @@ def create_request(text, user_id, offline_submission_type = None, date_received 
 def create_subscriber(request_id, user_id):
 	""" Create a Subscriber object and return the ID. """
 	subscriber = Subscriber.query.filter_by(request_id = request_id, user_id = user_id).first()
-	if not subscriber:
-		subscriber = Subscriber(request_id = request_id, user_id = user_id)
-		db.session.add(subscriber)
-		db.session.commit()
-		return subscriber.id, True
-	return subscriber.id, False
+    if not subscriber:
+        subscriber = Subscriber(request_id=request_id, user_id=user_id)
+        db.session.add(subscriber)
+        db.session.commit()
+        return subscriber.id, True
+    return subscriber.id, False
 
 ### @export "create_note"
 def create_note(request_id, text, user_id):
@@ -181,6 +212,20 @@ def create_note(request_id, text, user_id):
 		return note.id
 	except Exception, e:
 		app.logger.info("\n\nThere was an issue with creating a note with text: %s %s" % (text, e))
+        return None
+
+# @export "create_record"
+
+
+def create_record(request_id, user_id, description, doc_id=None, filename=None, access=None, url=None):
+    try:
+        record = Record(doc_id=doc_id, request_id=request_id, user_id=user_id,
+                        description=description, filename=filename, url=url, access=access)
+        put_obj(record)
+        return record.id
+    except Exception, e:
+        app.logger.info(
+            "\n\nThere was an issue with creating a record: %s" % e)
 		return None
 
 ### @export "create_record"
@@ -220,6 +265,21 @@ def get_user(kwargs):
 def get_user_by_id(id):
     return User.query.get(id)
 
+# @export "create_or_return_user"
+
+def authenticate_login(email, password):
+    print 'Password', password
+    if email:
+        user = create_or_return_user(email=email, not_id = True)
+        if user.check_password(password):
+            return user
+        if user.password == password: # Hash it
+            user.set_password(password)
+            db.session.add(user)
+            db.session.commit()
+            return user
+    return None
+
 ### @export "create_or_return_user"
 def create_or_return_user(email=None, alias = None, phone = None, address1 = None, address2 = None, city = None, state = None, zipcode = None, department = None, contact_for = None, backup_for = None, not_id = False, is_staff = None):
 	app.logger.info("\n\nCreating or returning user...")
@@ -235,7 +295,13 @@ def create_or_return_user(email=None, alias = None, phone = None, address1 = Non
 				db.session.commit()
 				department = d.id
 		if not user:
-			user = create_user(email = email.lower(), alias = alias, phone = phone,  address1 = address1, address2 = address2, city = city, state = state, zipcode = zipcode, department = department, contact_for = contact_for, backup_for = backup_for, is_staff = is_staff)
+            if not password:
+
+                               state=state, zipcode=zipcode, department=department, contact_for=contact_for, backup_for=backup_for, password='admin', is_staff=is_staff)
+            else:
+                user = create_user(email=email.lower(), alias=alias, phone=phone,  address1=address1, address2=address2, city=city,
+                               state=state, zipcode=zipcode, department=department, contact_for=contact_for, backup_for=backup_for, password=password, is_staff=is_staff)
+
 		else:
 			if alias or phone or department or contact_for or backup_for: # Update user if fields to update are provided
 				user = update_user(user = user, alias = alias, phone = phone, address1 = address1, address2 = address2, city = city, state = state, zipcode = zipcode, department = department, contact_for = contact_for, backup_for = backup_for, is_staff = is_staff)
@@ -244,10 +310,68 @@ def create_or_return_user(email=None, alias = None, phone = None, address1 = Non
 		return user.id
 	else:
 		user = create_user(alias = alias, phone = phone, address1 = address1, address2 = address2, city = city, state = state, zipcode = zipcode,  is_staff = is_staff)
+                           address2=address2, city=city, state=state, zipcode=zipcode,  is_staff=is_staff)
+        return user.id
+
+# @export "create_user"
+
+
+def create_user(email=None, alias=None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=None, department=None, contact_for=None, backup_for=None, password=None, is_staff=None):
+    user = User(email=email, alias=alias, phone=phone,  address1=address1, address2=address2, city=city, state=state,
+                zipcode=zipcode, department=department, contact_for=contact_for, backup_for=backup_for, password=password, is_staff=is_staff)
+    db.session.add(user)
+    db.session.commit()
+    app.logger.info("\n\nCreated new user, alias: %s id: %s" %
+                    (user.alias, user.id))
+    return user
+
+# @export "update_user"
+
+
+def update_user(user, alias=None, phone=None,  address1=None, address2=None, city=None, state=None, zipcode=None, department=None, contact_for=None, backup_for=None, is_staff=None):
+    if alias:
+        user.alias = alias
+    if phone:
+        user.phone = phone
+    if address1:
+        user.address1 = address1
+    if address2:
+        user.address2 = address2
+    if city:
+        user.city = city
+    if state:
+        user.state = state
+    if zipcode:
+        user.zipcode = zipcode
+    if department:
+        if type(department) != int and not department.isdigit():
+            d = Department.query.filter_by(name=department).first()
+            if d:
+                user.department = d.id
+        else:
+            user.department = department
+    if contact_for:
+        if user.contact_for and contact_for not in user.contact_for:
+            contact_for = user.contact_for + "," + contact_for
+        user.contact_for = contact_for
+    if backup_for:
+        if user.backup_for and backup_for not in user.backup_for:
+            backup_for = user.backup_for + "," + backup_for
+        user.backup_for = backup_for
+    if is_staff:
+        user.is_staff = is_staff
+    db.session.add(user)
+    db.session.commit()
+    app.logger.info("\n\nUpdated user %s, alias: %s phone: %s department: %s" % (
+        user.id, alias, phone, department))
 		return user.id
 
 ### @export "create_user"
 def create_user(email=None, alias = None, phone = None, address1 = None, address2 = None, city = None, state = None, zipcode = None, department = None, contact_for = None, backup_for = None, is_staff = None):
+    """ Adds a staff member to the request without assigning them as current owner. (i.e. "participant")
+    Useful for multidepartmental requests."""
+    if not user_id:
+        user_id = create_or_return_user(email=email)
 	user = User(email = email, alias = alias, phone = phone,  address1 = address1, address2 = address2, city = city, state = state, zipcode = zipcode, department = department, contact_for = contact_for, backup_for = backup_for, is_staff = is_staff)
 	db.session.add(user)
 	db.session.commit()
@@ -306,11 +430,11 @@ def create_owner(request_id, reason, email = None, user_id = None):
 
 ### @export "change_request_status"
 def change_request_status(request_id, status):
-	req = get_obj("Request", request_id)
-	req.status = status
-	req.status_updated = datetime.now().isoformat()
-	db.session.add(req)
-	app.logger.info("\n\nChanged status for request: %s to %s" % (request_id, status))
+    req = get_obj("Request", request_id)
+    req.status = status
+    req.status_updated = datetime.now().isoformat()
+    db.session.add(req)
+    app.logger.info("\n\nChanged status for request: %s to %s" %
 	db.session.commit()
 
 ### @export "find_request"
@@ -328,9 +452,9 @@ def add_staff_participant(request_id, is_point_person = False, email = None, use
 	if not user_id:
 		user_id = create_or_return_user(email = email)
 	participant = Owner.query.filter_by(request_id = request_id, user_id = user_id, active = True).first()
-	if not participant:
-		if not reason:
-			reason = "Added a response"
+    if not participant:
+        if not reason:
+            reason = "Added a response"
 		participant = Owner(request_id = request_id, user_id = user_id, reason = reason, is_point_person = is_point_person)
 		app.logger.info("\n\nStaff participant with owner ID: %s added to request %s. Is point of contact: %s" %(participant.id, request_id, is_point_person))
 	else:

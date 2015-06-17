@@ -1,16 +1,43 @@
 {% extends "base.html" %}
 
+{% block title %}Login{% endblock %}
+
+{% block custom_css_links %}
+    <!-- used for the extension and close request multi-select boxes in city view -->
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.min.css') }}">
+    <!-- used for department dropdown -->
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui-1.10.4.custom.min.css') }}">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui.css') }}">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-combobox.css') }}"media="screen">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/new_request.css') }}">
+{% endblock %}
 {% block container %}
-<div class="row-fluid">
-    <div class="span10">
-		{% block banner %}
-			{{ super() }}
-		{% endblock banner %}
-		<div class="span8 offset1 intro_text">
-			<form name="input" class="form-horizontal" id="submitRequest" method="post" action="/login_action" autocomplete="off" novalidate="novalidate">
-				<input class="input-block-level" title="email_address" name="email_address" type="text" id="emailAddress" placeholder="Your email address" />
-			</form>
+	<div class="row-fluid">
+		<div class="offset1">
+			<p class="lead">Login to OpenFOIL</p>
+			<div class="span7">
+				<div class="row-fluid">
+					{% for message in errors %}
+						<div class="alert alert-danger">
+							<a href="#" class="close" data-dismiss="alert">&times;</a>
+							{{ message }}
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+			<div class="span7">
+				<form name="login" class="form-horizontal" id="submitRequest" method="post" action="/login" autocomplete="off" novalidate="novalidate">
+					{{ form.hidden_tag() }}
+					{{ form.username.label.text }}
+					<div class="spacer">
+						{{ form.username() }}
+					</div>
+					{{ form.password.label }}
+					{{ form.password() }}
+					{{ form.submit }}
+				</form>
+			</div>
 		</div>
 	</div>
-</div>
 {% endblock container %}
