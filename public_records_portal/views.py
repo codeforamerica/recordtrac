@@ -684,7 +684,6 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
     results = db.session.query(models.Request)
 
     # Set filters on the query
-    print min_due_date
 
     results = filter_department(
         departments_selected=departments_selected, results=results)
@@ -779,12 +778,12 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
     return results.order_by(models.Request.id.desc())
 
 
-# @app.route("/<page>")
-# def any_page(page):
-#     try:
-#         return render_template('%s.html' % (page))
-#     except:
-#         return render_template('error.html', message="%s totally doesn't exist." % (page))
+@app.route("/<page>")
+def any_page(page):
+    try:
+        return render_template('%s.html' % (page))
+    except:
+        return render_template('error.html', message="%s totally doesn't exist." % (page))
 
 
 def tutorial():
@@ -928,10 +927,6 @@ def well_known_status():
 
     return jsonify(response)
 
-
-@app.route("/sign_up")
-def signup():
-    return 'Hello, World! <a href="/landing">Landing</a>'
 
 @app.route("/login")
 def prepare_login():
