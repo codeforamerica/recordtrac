@@ -114,9 +114,6 @@ class User(db.Model):
         if is_staff:
             self.is_staff = is_staff
 
-    def check_password(self, password):
-		return check_password_hash(self.password, password)
-
     def __repr__(self):
         return '<User %r>' % self.email
 
