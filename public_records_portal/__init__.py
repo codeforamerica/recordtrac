@@ -11,7 +11,6 @@ import os
 from os import environ
 import os
 from flask import Flask
-from flask_recaptcha import ReCaptcha
 # from flask.ext.dotenv import DotEnv
 from flask.ext.sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
@@ -63,8 +62,8 @@ envvars = [
 	'SCRIBD_API_KEY',
 	'SCRIBD_API_SECRET',
 	'AKISMET_KEY', # Used for spam filtering
-	'RECAPTCHA_SITE_KEY',
-	'RECAPTCHA_SECRET_KEY',
+	'RECAPTCHA_PUBLIC_KEY',
+	'RECAPTCHA_PRIVATE_KEY',
 	'DEV_EMAIL', # Used for local e-mail testing if set
 	'CHECK_FOR_SPAM', # Used to test spam locally if set
 	'GOOGLE_FEEDBACK_FORM_ID', # The form ID that the feedback tab is hooked up to,
@@ -83,6 +82,4 @@ app.config['SQLALCHEMY_DATABASE_URI'] = environ['DATABASE_URL']
 
 # Initialize database
 db = SQLAlchemy(app)
-
-recaptcha = ReCaptcha(app)
 

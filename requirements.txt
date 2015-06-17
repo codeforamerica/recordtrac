@@ -7,7 +7,6 @@ Flask-Admin==1.0.6
 Flask-BrowserID==0.0.4
 Flask-Cache==0.12
 Flask-Login==0.2.11
-Flask-ReCaptcha==0.3
 Flask-Restless==0.12.1
 Flask-SQLAlchemy==0.16
 Flask-WTF==0.8.3
@@ -34,6 +33,5 @@ SQLAlchemy-Utils==0.30.8
 validate-email==1.2
 validators==0.7
 Werkzeug==0.8.3
-wheel==0.24.0
 WTForms==2.0.2
 WTForms-Components==0.9.7

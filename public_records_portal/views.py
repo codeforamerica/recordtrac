@@ -6,12 +6,11 @@
 
 """
 
-from flask import Flask
+
 from flask import render_template, request, redirect, url_for, jsonify, send_from_directory
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
-from flask_recaptcha import ReCaptcha
 #from flaskext.browserid import BrowserID
-from public_records_portal import app, db, models, recaptcha
+from public_records_portal import app, db, models
 from prr import add_resource, update_resource, make_request, close_request
 from db_helpers import get_user_by_id  # finds a user by their id
 from db_helpers import get_user  # finds a user based on BrowserID response
@@ -22,6 +21,7 @@ from spam import is_spam, is_working_akismet_key
 from requests import get
 from time import time
 from flask.ext.cache import Cache
+from recaptcha.client import captcha
 from timeout import timeout
 from flask import jsonify, request, Response
 import anyjson
@@ -109,16 +109,9 @@ def new_request(passed_recaptcha=False, data=None):
             state_valid = (request_address_state != '')
             zip_valid = (request_address_zip != '')
             address_valid = (street_valid and city_valid and state_valid and zip_valid)
-            recaptcha_valid = (request_recaptcha != False)
 
             if not (email_valid or phone_valid or fax_valid or address_valid):
                 errors.append("Please enter at least one type of contact information")
-
-            if not data and not passed_recaptcha:
-                data = request.form.copy()
-
-            if check_for_spam and is_spam(request_text) and not passed_recaptcha:
-                return render_template('recaptcha_request.html', form = data, message = "Hmm, your request looks like spam. To submit your request, type the numbers or letters you see in the field below.", public_key = app.config['RECAPTCHA_SITE_KEY'])
 
             phone_formatted = ""
             if phone_valid:
@@ -132,7 +125,6 @@ def new_request(passed_recaptcha=False, data=None):
                                               city=request_address_city,
                                               state=request_address_state,
                                               zipcode=request_address_zip,
-                                              passed_recaptcha = passed_recaptcha,
                                               passed_spam_filter=True,
                                               department=request_department,
                                               offline_submission_type=request_format,
@@ -165,7 +157,6 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_city = form.request_address_city.data
             request_address_state = form.request_address_state.data
             request_address_zip = form.request_address_zip.data
-            request_recaptcha = recaptcha.verify()
             terms_of_use = form.terms_of_use.data
             alias = None
 
@@ -176,7 +167,7 @@ def new_request(passed_recaptcha=False, data=None):
                 errors.append("Please select a department.")
 
             if not (request_name and request_name.strip()):
-                errors.append("Please enter the requester's name.")
+                errors.append("Please enter the requester's name")
             else:
                 alias = request_name
 
@@ -190,10 +181,7 @@ def new_request(passed_recaptcha=False, data=None):
             address_valid = (street_valid and city_valid and state_valid and zip_valid)
 
             if not (email_valid or phone_valid or fax_valid or address_valid):
-                errors.append("Please enter at least one type of contact information.")
-
-            if not request_recaptcha:
-                errors.append("Please complete captcha.")
+                errors.append("Please enter at least one type of contact information")
 
             if not terms_of_use:
                 errors.append("You must accept the Terms of Use.")
@@ -212,7 +200,6 @@ def new_request(passed_recaptcha=False, data=None):
                                               zipcode=request_address_zip,
                                               passed_spam_filter=True,
                                               department=request_department)
-
 
             if not request_id:
                 errors.append("Looks like your request is the same as /request/%s" % request_id)
@@ -802,7 +789,7 @@ def recaptcha_templatetype(templatetype):
         response=captcha.submit(
             request.form['recaptcha_challenge_field'],
             request.form['recaptcha_response_field'],
-            app.config['RECAPTCHA_SECRET_KEY'],
+            app.config['RECAPTCHA_PRIVATE_KEY'],
             request.remote_addr
         )
         if not response.is_valid:
@@ -943,10 +930,3 @@ def report():
     overdue_request=models.Request.query.filter(models.Request.overdue == True).all()
     app.logger.info("\n\nOverdue Requests %s" %(len(overdue_request)))
     return render_template('report.html')
-
-@app.route("/submit", methods=["POST"])
-def submit():
-    if recaptcha.verify():
-        pass
-    else:
-        pass
