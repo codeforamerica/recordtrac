@@ -213,7 +213,6 @@ def new_request(passed_recaptcha=False, data=None):
                                               passed_spam_filter=True,
                                               department=request_department)
 
-
             if not request_id:
                 errors.append("Looks like your request is the same as /request/%s" % request_id)
 
