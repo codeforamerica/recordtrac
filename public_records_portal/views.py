@@ -9,12 +9,12 @@
 
 from flask import render_template, request, redirect, url_for, jsonify, send_from_directory
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
+#from flaskext.browserid import BrowserID
 from public_records_portal import app, db, models
 from prr import add_resource, update_resource, make_request, close_request
-from db_helpers import get_user_by_id, authenticate_login # finds a user by their id
+from db_helpers import get_user_by_id  # finds a user by their id
 from db_helpers import get_user  # finds a user based on BrowserID response
-import os
-import json
+import os, json
 from urlparse import urlparse, urljoin
 from notifications import send_prr_email, format_date
 from spam import is_spam, is_working_akismet_key
@@ -32,7 +32,7 @@ from filters import *
 import re
 from db_helpers import get_count, get_obj
 from sqlalchemy import func, not_, and_, or_
-from forms import OfflineRequestForm, NewRequestForm, SignUpForm, LoginForm
+from forms import OfflineRequestForm, NewRequestForm
 import pytz
 import phonenumbers
 
@@ -44,31 +44,35 @@ login_manager=LoginManager()
 login_manager.user_loader(get_user_by_id)
 login_manager.init_app(app)
 
+#browser_id = BrowserID()
+#browser_id.user_loader(get_user)
+#browser_id.init_app(app)
+
+
 # Submitting a new request
 @app.route("/new", methods=["GET", "POST"])
 def new_request(passed_recaptcha=False, data=None):
-    form=None
-    departments=None
-    routing_available=False
-    errors=[]
+    form = None
+    departments = None
+    routing_available = False
+    errors = []
     if request.method == 'POST':
-        # Change this to current_user.is_authenticated()
-        if current_user.is_authenticated():
-            form=OfflineRequestForm(request.form)
-            request_text=form.request_text.data
-            request_format=form.request_format.data
-            request_date=form.request_date.data
-            request_department=form.request_department.data
-            request_name=form.request_name.data
-            request_email=form.request_email.data
-            request_phone=form.request_phone.data
-            request_fax=form.request_fax.data
-            request_address_street=form.request_address_street.data
-            request_address_city=form.request_address_city.data
-            request_address_state=form.request_address_state.data
-            request_address_zip=form.request_address_zip.data
-            terms_of_use=form.terms_of_use.data
-            alias=None
+        if current_user.is_authenticated(): # Change this to current_user.is_authenticated()
+            form = OfflineRequestForm(request.form)
+            request_text = form.request_text.data
+            request_format = form.request_format.data
+            request_date = form.request_date.data
+            request_department = form.request_department.data
+            request_name = form.request_name.data
+            request_email = form.request_email.data
+            request_phone = form.request_phone.data
+            request_fax = form.request_fax.data
+            request_address_street = form.request_address_street.data
+            request_address_city = form.request_address_city.data
+            request_address_state = form.request_address_state.data
+            request_address_zip = form.request_address_zip.data
+            terms_of_use = form.terms_of_use.data
+            alias = None
 
             if not (request_text and request_text.strip()):
                 errors.append('Please fill out the request description.')
@@ -77,18 +81,16 @@ def new_request(passed_recaptcha=False, data=None):
                 errors.append('Please choose a request format.')
             if request_date:
                 try:
-                    tz=pytz.timezone(app.config['TIMEZONE'])
-                    offset=tz.utcoffset(datetime.now())
-                    offset=(offset.days * 86400 + offset.seconds) / 3600
-                    # request_date=request_date - timedelta(hours=offset)
+                    tz = pytz.timezone(app.config['TIMEZONE'])
+                    offset = tz.utcoffset(datetime.now())
+                    offset = (offset.days * 86400 + offset.seconds) / 3600
+                    # request_date = request_date - timedelta(hours=offset)
                 except TypeError:
-                    errors.append(
-                        "Please use the datepicker to select a date.")
-                    request_date=None
+                    errors.append("Please use the datepicker to select a date.")
+                    request_date = None
                 except ValueError:
-                    errors.append(
-                        "Please use the datepicker to select a date.")
-                    request_date=None
+                    errors.append("Please use the datepicker to select a date.")
+                    request_date = None
             else:
                 errors.append("Please use the datepicker to select a date.")
             if not (request_department and request_department.strip()):
@@ -97,27 +99,25 @@ def new_request(passed_recaptcha=False, data=None):
             if not (request_name and request_name.strip()):
                 errors.append("Please enter the requester's name")
             else:
-                alias=request_name
+                alias = request_name
 
-            email_valid=(request_email != '')
-            phone_valid=(request_phone is not None)
-            fax_valid=(request_fax is not None)
-            street_valid=(request_address_street != '')
-            city_valid=(request_address_city != '')
-            state_valid=(request_address_state != '')
-            zip_valid=(request_address_zip != '')
-            address_valid=(
-                street_valid and city_valid and state_valid and zip_valid)
+            email_valid = (request_email != '')
+            phone_valid = (request_phone is not None)
+            fax_valid = (request_fax is not None)
+            street_valid = (request_address_street != '')
+            city_valid = (request_address_city != '')
+            state_valid = (request_address_state != '')
+            zip_valid = (request_address_zip != '')
+            address_valid = (street_valid and city_valid and state_valid and zip_valid)
 
             if not (email_valid or phone_valid or fax_valid or address_valid):
-                errors.append(
-                    "Please enter at least one type of contact information")
+                errors.append("Please enter at least one type of contact information")
 
-            phone_formatted=""
+            phone_formatted = ""
             if phone_valid:
-                phone_formatted=request_phone.international
+                phone_formatted = request_phone.international
 
-            request_id, is_new=make_request(text=request_text,
+            request_id, is_new = make_request(text=request_text,
                                               email=request_email,
                                               alias=alias,
                                               phone=phone_formatted,
@@ -131,8 +131,7 @@ def new_request(passed_recaptcha=False, data=None):
                                               date_received=request_date)
 
             if not request_id:
-                errors.append(
-                    "Looks like your request is the same as /request/%s" % request_id)
+                errors.append("Looks like your request is the same as /request/%s" % request_id)
 
             if errors:
                 if request_date:
@@ -147,19 +146,19 @@ def new_request(passed_recaptcha=False, data=None):
                                         audience='new'))
 
         else:
-            form=NewRequestForm(request.form)
-            request_text=form.request_text.data
-            request_department=form.request_department.data
-            request_name=form.request_name.data
-            request_email=form.request_email.data
-            request_phone=form.request_phone.data
-            request_fax=form.request_fax.data
-            request_address_street=form.request_address_street.data
-            request_address_city=form.request_address_city.data
-            request_address_state=form.request_address_state.data
-            request_address_zip=form.request_address_zip.data
-            terms_of_use=form.terms_of_use.data
-            alias=None
+            form = NewRequestForm(request.form)
+            request_text = form.request_text.data
+            request_department = form.request_department.data
+            request_name = form.request_name.data
+            request_email = form.request_email.data
+            request_phone = form.request_phone.data
+            request_fax = form.request_fax.data
+            request_address_street = form.request_address_street.data
+            request_address_city = form.request_address_city.data
+            request_address_state = form.request_address_state.data
+            request_address_zip = form.request_address_zip.data
+            terms_of_use = form.terms_of_use.data
+            alias = None
 
             if not (request_text and request_text.strip()):
                 errors.append('Please fill out the request description.')
@@ -170,30 +169,28 @@ def new_request(passed_recaptcha=False, data=None):
             if not (request_name and request_name.strip()):
                 errors.append("Please enter the requester's name")
             else:
-                alias=request_name
+                alias = request_name
 
-            email_valid=(request_email != '')
-            phone_valid=(request_phone is not None)
-            fax_valid=(request_fax is not None)
-            street_valid=(request_address_street != '')
-            city_valid=(request_address_city != '')
-            state_valid=(request_address_state != '')
-            zip_valid=(request_address_zip != '')
-            address_valid=(
-                street_valid and city_valid and state_valid and zip_valid)
+            email_valid = (request_email != '')
+            phone_valid = (request_phone is not None)
+            fax_valid = (request_fax is not None)
+            street_valid = (request_address_street != '')
+            city_valid = (request_address_city != '')
+            state_valid = (request_address_state != '')
+            zip_valid = (request_address_zip != '')
+            address_valid = (street_valid and city_valid and state_valid and zip_valid)
 
             if not (email_valid or phone_valid or fax_valid or address_valid):
-                errors.append(
-                    "Please enter at least one type of contact information")
+                errors.append("Please enter at least one type of contact information")
 
             if not terms_of_use:
                 errors.append("You must accept the Terms of Use.")
 
-            phone_formatted=""
+            phone_formatted = ""
             if phone_valid:
-                phone_formatted=request_phone.international
+              phone_formatted = request_phone.international
 
-            request_id, is_new=make_request(text=request_text,
+            request_id, is_new = make_request(text=request_text,
                                               email=request_email,
                                               alias=alias,
                                               phone=phone_formatted,
@@ -202,20 +199,12 @@ def new_request(passed_recaptcha=False, data=None):
                                               state=request_address_state,
                                               zipcode=request_address_zip,
                                               passed_spam_filter=True,
-                                              department=request_department,
-                                              offline_submission_type=request_format,
-                                              date_received=request_date)
+                                              department=request_department)
 
             if not request_id:
-                errors.append(
-                    "Looks like your request is the same as /request/%s" % request_id)
+                errors.append("Looks like your request is the same as /request/%s" % request_id)
 
             if errors:
-                if request_date:
-                    print request_date
-                    return render_template('new_request.html', form=form, date=request_date.strftime('%m/%d/%Y'),
-                                           routing_available=routing_available,
-                                           departments=departments, errors=errors)
                 return render_template('new_request.html', form=form,
                                        routing_available=routing_available, departments=departments, errors=errors)
             else:
@@ -223,15 +212,14 @@ def new_request(passed_recaptcha=False, data=None):
                                         audience='new'))
     elif request.method == 'GET':
         if 'LIAISONS_URL' in app.config:
-            routing_available=True
-            departments=db.session.query(models.Department).all()
+            routing_available = True
+            departments = db.session.query(models.Department).all()
         if current_user.is_authenticated():
-            form=OfflineRequestForm()
+            form = OfflineRequestForm()
             return render_template('offline_request.html', form=form, routing_available=routing_available, departments=departments)
         else:
-            form=NewRequestForm()
+            form = NewRequestForm()
             return render_template('new_request.html', form=form, routing_available=routing_available, departments=departments)
-
 
 @app.route("/export")
 @login_required
@@ -251,36 +239,33 @@ def index():
 def landing():
     return render_template('landing.html')
 
-
 @login_manager.unauthorized_handler
 def unauthorized():
     app.logger.info("\n\nuser is unauthorized.")
     return render_template("alpha.html")
 
-
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
-
 
 def explain_all_actions():
     action_json=open(os.path.join(app.root_path, 'static/json/actions.json'))
     json_data=json.load(action_json)
     actions=[]
     for data in json_data:
-        actions.append("%s: %s" % (data, json_data[data]["What"]))
+        actions.append("%s: %s" %(data, json_data[data]["What"]))
     return render_template('actions.html', actions=actions)
 
-# Returns a view of the case based on the audience. Currently views exist
-# for city staff or general public.
+# Returns a view of the case based on the audience. Currently views exist for city staff or general public.
 
 
 @app.route("/<string:audience>/request/<int:request_id>")
 def show_request_for_x(audience, request_id):
     if "city" in audience:
         return show_request_for_city(request_id=request_id)
-    return show_request(request_id=request_id, template="manage_request_%s.html" % (audience))
+    return show_request(request_id=request_id, template="manage_request_%s.html" %(audience))
 show_request_for_x.methods=['GET', 'POST']
+
 
 
 @app.route("/city/request/<int:request_id>")
@@ -309,7 +294,7 @@ def track(request_id=None):
             audience='city'
         else:
             audience='public'
-        return redirect(url_for('show_request_for_x', audience=audience, request_id=request_id))
+        return redirect(url_for('show_request_for_x', audience= audience, request_id=request_id))
     else:
         return render_template("track.html")
 
@@ -320,8 +305,7 @@ def unfollow(request_id, email):
     user_id=create_or_return_user(email.lower())
     subscriber=get_subscriber(request_id=request_id, user_id=user_id)
     if subscriber:
-        success=update_obj(
-            attribute="should_notify", val=False, obj=subscriber)
+        success=update_obj(attribute="should_notify", val=False, obj=subscriber)
     if success:
         return show_request(request_id=request_id, template="manage_request_unfollow.html")
     else:
@@ -355,7 +339,6 @@ def departments_to_json():
         department_data.append({'department': d.name})
     return jsonify(**{'objects': department_data})
 
-
 def docs():
     return redirect('http://codeforamerica.github.io/public-records/docs/1.0.0')
 
@@ -371,19 +354,15 @@ def edit_case(request_id):
 @login_required
 def add_a_resource(resource):
     if request.method == 'POST':
-        resource_id=add_resource(
-            resource=resource, request_body=request.form, current_user_id=get_user_id())
+        resource_id=add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
         if type(resource_id) == int or str(resource_id).isdigit():
-            app.logger.info(
-                "\n\nSuccessfully added resource: %s with id: %s" % (resource, resource_id))
+            app.logger.info("\n\nSuccessfully added resource: %s with id: %s" % (resource, resource_id))
             return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
         elif resource_id == False:
-            app.logger.info(
-                "\n\nThere was an issue with adding resource: %s" % resource)
+            app.logger.info("\n\nThere was an issue with adding resource: %s" % resource)
             return render_template('error.html')
         else:
-            app.logger.info(
-                "\n\nThere was an issue with the upload: %s" % resource_id)
+            app.logger.info("\n\nThere was an issue with the upload: %s" % resource_id)
             return render_template('help_with_uploads.html', message=resource_id)
     return render_template('error.html', message="You can only update requests from a request page!")
 
@@ -396,11 +375,9 @@ def public_add_a_resource(resource, passed_recaptcha=False, data=None):
         if 'note' in resource:
             if not passed_recaptcha and is_spam(comment=data['note_text'], user_ip=request.remote_addr, user_agent=request.headers.get('User-Agent')):
                 return render_template('recaptcha_note.html', form=data, message="Hmm, your note looks like spam. To submit your note, type the numbers or letters you see in the field below.")
-            resource_id=prr.add_note(
-                request_id=data['request_id'], text=data['note_text'], passed_spam_filter=True)
+            resource_id=prr.add_note(request_id=data['request_id'], text=data['note_text'], passed_spam_filter=True)
         else:
-            resource_id=prr.add_resource(
-                resource=resource, request_body=data, current_user_id=None)
+            resource_id=prr.add_resource(resource=resource, request_body=data, current_user_id=None)
         if type(resource_id) == int:
             request_id=data['request_id']
             audience='public'
@@ -418,8 +395,7 @@ def update_a_resource(resource, passed_recaptcha=False, data=None):
         if 'qa' in resource:
             if not passed_recaptcha and is_spam(comment=data['answer_text'], user_ip=request.remote_addr, user_agent=request.headers.get('User-Agent')):
                 return render_template('recaptcha_answer.html', form=data, message="Hmm, your answer looks like spam. To submit your answer, type the numbers or letters you see in the fiel dbelow.")
-            prr.answer_a_question(
-                qa_id=int(data['qa_id']), answer=data['answer_text'], passed_spam_filter=True)
+            prr.answer_a_question(qa_id=int(data['qa_id']), answer=data['answer_text'], passed_spam_filter=True)
         else:
             update_resource(resource, data)
         if current_user.is_anonymous() == False:
@@ -428,9 +404,7 @@ def update_a_resource(resource, passed_recaptcha=False, data=None):
             return redirect(url_for('show_request', request_id=request.form['request_id']))
     return render_template('error.html', message="You can only update requests from a request page!")
 
-# Closing is specific to a case, so this only gets called from a case
-# (that only city staff have a view of)
-
+# Closing is specific to a case, so this only gets called from a case (that only city staff have a view of)
 
 @app.route("/close", methods=["GET", "POST"])
 @login_required
@@ -444,9 +418,8 @@ def close(request_id=None):
         elif 'close_reasons' in request.form:
             for close_reason in request.form.getlist('close_reasons'):
                 reason += close_reason + " "
-        close_request(
-            request_id=request_id, reason=reason, user_id=get_user_id())
-        return show_request(request_id, template=template)
+        close_request(request_id=request_id, reason=reason, user_id=get_user_id())
+        return show_request(request_id, template= template)
     return render_template('error.html', message="You can only close from a requests page!")
 
 
@@ -456,37 +429,29 @@ def filter_department(departments_selected, results):
         department_ids=[]
         for department_name in departments_selected:
             if department_name:
-                department=models.Department.query.filter_by(
-                    name=department_name).first()
+                department=models.Department.query.filter_by(name=department_name).first()
                 if department:
                     department_ids.append(department.id)
         if department_ids:
-            results=results.filter(
-                models.Request.department_id.in_(department_ids))
+            results=results.filter(models.Request.department_id.in_(department_ids))
         else:
             # Just return an empty query set
             results=results.filter(models.Request.department_id < 0)
     return results
 
-
 def filter_search_term(search_input, results):
     if search_input:
         app.logger.info("Searching for '%s'." % search_input)
-        # Get rid of leading and trailing spaces and generate a list of the
-        # search terms
-        search_terms=search_input.strip().split(" ")
+        search_terms=search_input.strip().split(" ") # Get rid of leading and trailing spaces and generate a list of the search terms
         num_terms=len(search_terms)
         # Set up the query
         search_query=""
         if num_terms > 1:
             for x in range(num_terms - 1):
                 search_query=search_query + search_terms[x] + ' & '
-        search_query=search_query + \
-            search_terms[num_terms - 1] + ":*"  # Catch substrings
-        results=results.filter(
-            "to_tsvector(text) @@ to_tsquery('%s')" % search_query)
+        search_query=search_query + search_terms[num_terms - 1] + ":*" # Catch substrings
+        results=results.filter("to_tsvector(text) @@ to_tsquery('%s')" % search_query)
     return results
-
 
 def get_filter_value(filters_map, filter_name, is_list=False, is_boolean=False):
     if filter_name in filters_map:
@@ -501,11 +466,9 @@ def get_filter_value(filters_map, filter_name, is_list=False, is_boolean=False):
             return val
     return None
 
-
 def is_supported_browser():
     browser=request.user_agent.browser
-    version=request.user_agent.version and int(
-        request.user_agent.version.split('.')[0])
+    version=request.user_agent.version and int(request.user_agent.version.split('.')[0])
     platform=request.user_agent.platform
     uas=request.user_agent.string
     if browser and version:
@@ -550,7 +513,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         if request.args:
             if is_supported_browser():
                 return backbone_requests()
-            else:  # Clear URL
+            else: # Clear URL
                 filters_map=request.args
         else:
             filters_map=request.form
@@ -574,23 +537,15 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
     search_term=None
 
     if filters_map:
-        departments_selected=get_filter_value(
-            filters_map=filters_map, filter_name='departments_selected', is_list=True) or get_filter_value(filters_map, 'department')
-        is_open=get_filter_value(
-            filters_map=filters_map, filter_name='is_open', is_boolean=True)
-        is_closed=get_filter_value(
-            filters_map=filters_map, filter_name='is_closed', is_boolean=True)
-        due_soon=get_filter_value(
-            filters_map=filters_map, filter_name='due_soon', is_boolean=True)
-        overdue=get_filter_value(
-            filters_map=filters_map, filter_name='overdue', is_boolean=True)
-        mine_as_poc=get_filter_value(
-            filters_map=filters_map, filter_name='mine_as_poc', is_boolean=True)
-        mine_as_helper=get_filter_value(
-            filters_map=filters_map, filter_name='mine_as_helper', is_boolean=True)
+        departments_selected=get_filter_value(filters_map=filters_map, filter_name='departments_selected', is_list=True) or get_filter_value(filters_map, 'department')
+        is_open=get_filter_value(filters_map=filters_map, filter_name='is_open', is_boolean=True)
+        is_closed=get_filter_value(filters_map=filters_map, filter_name='is_closed', is_boolean=True)
+        due_soon=get_filter_value(filters_map=filters_map, filter_name='due_soon', is_boolean=True)
+        overdue=get_filter_value(filters_map=filters_map, filter_name='overdue', is_boolean=True)
+        mine_as_poc=get_filter_value(filters_map=filters_map, filter_name='mine_as_poc', is_boolean=True)
+        mine_as_helper=get_filter_value(filters_map=filters_map, filter_name='mine_as_helper', is_boolean=True)
         sort_column=get_filter_value(filters_map, 'sort_column') or 'id'
-        sort_direction=get_filter_value(
-            filters_map, 'sort_direction') or 'asc'
+        sort_direction=get_filter_value(filters_map, 'sort_direction') or 'asc'
         search_term=get_filter_value(filters_map, 'search_term')
         min_due_date=get_filter_value(filters_map, 'min_due_date')
         max_due_date=get_filter_value(filters_map, 'max_due_date')
@@ -599,14 +554,13 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         requester_name=get_filter_value(filters_map, 'requester_name')
         page_number=int(get_filter_value(filters_map, 'page_number') or '1')
 
-    results=get_results_by_filters(departments_selected=departments_selected, is_open=is_open, is_closed=is_closed, due_soon=due_soon, overdue=overdue, mine_as_poc=mine_as_poc, mine_as_helper=mine_as_helper, sort_column=sort_column, sort_direction=sort_direction,
-                                     search_term=search_term, min_due_date=min_due_date, max_due_date=max_due_date, min_date_received=min_date_received, max_date_received=max_date_received, requester_name=requester_name, page_number=page_number, user_id=user_id, date_format=date_format, checkbox_value=checkbox_value)
+
+    results=get_results_by_filters(departments_selected=departments_selected, is_open=is_open, is_closed=is_closed, due_soon=due_soon, overdue=overdue, mine_as_poc=mine_as_poc, mine_as_helper=mine_as_helper, sort_column=sort_column, sort_direction=sort_direction, search_term=search_term, min_due_date=min_due_date, max_due_date=max_due_date, min_date_received=min_date_received, max_date_received=max_date_received, requester_name=requester_name, page_number=page_number, user_id=user_id, date_format=date_format, checkbox_value=checkbox_value)
 
     # Execute query
     limit=15
     offset=limit * (page_number - 1)
-    app.logger.info(
-        "Page Number: {0}, Limit: {1}, Offset: {2}".format(page_number, limit, offset))
+    app.logger.info("Page Number: {0}, Limit: {1}, Offset: {2}".format(page_number, limit, offset))
     more_results=False
     num_results=results.count()
     start_index=0
@@ -637,8 +591,7 @@ def json_requests():
     Supports limit, search, and page parameters and returns json with an object that
     has a list of results in the 'objects' field.
     """
-    objects, num_results, more_results, start_index, end_index=fetch_requests(
-        output_results_only=True, filters_map=request.args, date_format='%m/%d/%Y', checkbox_value='true')
+    objects, num_results, more_results, start_index, end_index=fetch_requests(output_results_only=True, filters_map=request.args, date_format='%m/%d/%Y', checkbox_value='true')
     matches={
         "objects":           objects,
         "num_results":      num_results,
@@ -649,14 +602,13 @@ def json_requests():
     response=anyjson.serialize(matches)
     return Response(response, mimetype="application/json")
 
-
 def prepare_request_fields(results):
     if current_user.is_anonymous():
         return map(lambda r: {
-            "id":           r.id,
-            "text":         helpers.clean_text(r.text),
-            "date_received": helpers.date(r.date_received or r.date_created),
-            "department":   r.department_name(),
+            "id":           r.id, \
+            "text":         helpers.clean_text(r.text), \
+            "date_received": helpers.date(r.date_received or r.date_created), \
+            "department":   r.department_name(), \
             "status":       r.status, \
             # The following two attributes are defined as model methods,
             # and not regular SQLAlchemy attributes.
@@ -665,12 +617,12 @@ def prepare_request_fields(results):
         }, results)
     else:
         return map(lambda r: {
-            "id":           r.id,
-            "text":         helpers.clean_text(r.text),
-            "date_received": helpers.date(r.date_received or r.date_created),
-            "department":   r.department_name(),
-            "requester":    r.requester_name(),
-            "due_date":     format_date(r.due_date),
+            "id":           r.id, \
+            "text":         helpers.clean_text(r.text), \
+            "date_received": helpers.date(r.date_received or r.date_created), \
+            "department":   r.department_name(), \
+            "requester":    r.requester_name(), \
+            "due_date":     format_date(r.due_date), \
             "status":       r.status, \
             # The following two attributes are defined as model methods,
             # and not regular SQLAlchemy attributes.
@@ -684,10 +636,8 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
     results=db.session.query(models.Request)
 
     # Set filters on the query
-    print min_due_date
 
-    results=filter_department(
-        departments_selected=departments_selected, results=results)
+    results=filter_department(departments_selected=departments_selected, results=results)
     results=filter_search_term(search_input=search_term, results=results)
 
     # Accumulate status filters
@@ -704,17 +654,13 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 
     if min_date_received and max_date_received and min_date_received != "" and max_date_received != "":
         try:
-            min_date_received=datetime.strptime(
-                min_date_received, date_format)
-            max_date_received=datetime.strptime(
-                max_date_received, date_format) + timedelta(hours=23, minutes=59)
-            results=results.filter(and_(
-                models.Request.date_received >= min_date_received, models.Request.date_received <= max_date_received))
-            app.logger.info('Request Date Bounding. Min: {0}, Max: {1}'.format(
-                min_date_received, max_date_received))
+            min_date_received=datetime.strptime(min_date_received, date_format)
+            max_date_received=datetime.strptime(max_date_received, date_format) + timedelta(hours=23, minutes=59)
+            results=results.filter(and_(models.Request.date_received >= min_date_received, models.Request.date_received <= max_date_received))
+            app.logger.info('Request Date Bounding. Min: {0}, Max: {1}'.format(min_date_received, max_date_received))
         except:
-            app.logger.info('There was an error parsing the request date filters. Received Min: {0}, Max {1}'.format(
-                min_date_received, max_date_received))
+            app.logger.info('There was an error parsing the request date filters. Received Min: {0}, Max {1}'.format(min_date_received, max_date_received))
+
 
     # Filters for agency staff only:
     if user_id:
@@ -728,15 +674,11 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
         if min_due_date and max_due_date and min_due_date != "" and max_due_date != "":
             try:
                 min_due_date=datetime.strptime(min_due_date, date_format)
-                max_due_date=datetime.strptime(
-                    max_due_date, date_format) + timedelta(hours=23, minutes=59)
-                results=results.filter(and_(
-                    models.Request.due_date >= min_due_date, models.Request.due_date <= max_due_date))
-                app.logger.info(
-                    'Due Date Bounding. Min: {0}, Max: {1}'.format(min_due_date, max_due_date))
+                max_due_date=datetime.strptime(max_due_date, date_format) + timedelta(hours=23, minutes=59)
+                results=results.filter(and_(models.Request.due_date >= min_due_date, models.Request.due_date <= max_due_date))
+                app.logger.info('Due Date Bounding. Min: {0}, Max: {1}'.format(min_due_date, max_due_date))
             except:
-                app.logger.info('There was an error parsing the due date filters. Due Date Min: {0}, Max {1}'.format(
-                    min_due_date, max_due_date))
+                app.logger.info('There was an error parsing the due date filters. Due Date Min: {0}, Max {1}'.format(min_due_date, max_due_date))
 
         # PoC and Helper filters
         if mine_as_poc == checkbox_value:
@@ -759,8 +701,7 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
         # Filter based on requester name
         requester_name=requester_name
         if requester_name and requester_name != "":
-            results=results.join(models.Subscriber, models.Request.subscribers).join(
-                models.User).filter(func.lower(models.User.alias).like("%%%s%%" % requester_name.lower()))
+            results=results.join(models.Subscriber, models.Request.subscribers).join(models.User).filter(func.lower(models.User.alias).like("%%%s%%" % requester_name.lower()))
 
     # Apply the set of status filters to the query.
     # Using 'or', they're non-exclusive!
@@ -770,22 +711,20 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
         app.logger.info("Sort Direction: %s" % sort_direction)
         app.logger.info("Sort Column: %s" % sort_column)
         if sort_direction == "desc":
-            results=results.order_by(
-                (getattr(models.Request, sort_column)).desc())
+            results=results.order_by((getattr(models.Request, sort_column)).desc())
         else:
-            results=results.order_by(
-                (getattr(models.Request, sort_column)).asc())
+            results=results.order_by((getattr(models.Request, sort_column)).asc())
 
     return results.order_by(models.Request.id.desc())
 
 
-# @app.route("/<page>")
-# def any_page(page):
-#     try:
-#         return render_template('%s.html' % (page))
-#     except:
-#         return render_template('error.html', message="%s totally doesn't exist." % (page))
 
+@app.route("/<page>")
+def any_page(page):
+    try:
+        return render_template('%s.html' %(page))
+    except:
+        return render_template('error.html', message="%s totally doesn't exist." %(page))
 
 def tutorial():
     user_id=get_user_id()
@@ -804,7 +743,6 @@ def logout():
     logout_user()
     return index()
 
-
 def get_user_id():
     if current_user.is_authenticated():
         return current_user.id
@@ -813,22 +751,19 @@ def get_user_id():
 # Used as AJAX POST endpoint to check if new request text contains certain keyword
 # See new_requests.(html/js)
 
-
 @app.route("/is_public_record", methods=["POST"])
 def is_public_record():
     request_text=request.form['request_text']
-    not_records_filepath=os.path.join(
-        app.root_path, 'static/json/notcityrecords.json')
+    not_records_filepath=os.path.join(app.root_path, 'static/json/notcityrecords.json')
     not_records_json=open(not_records_filepath)
     json_data=json.load(not_records_json)
     request_text=request_text.lower()
-    app.logger.info("Someone input %s" % (request_text))
+    app.logger.info("Someone input %s" %(request_text))
     if "birth" in request_text or "death" in request_text or "marriage" in request_text:
         return json_data["Certificate"]
     if "divorce" in request_text:
         return json_data["Divorce"]
     return ''
-
 
 def get_redirect_target():
     """ Taken from http://flask.pocoo.org/snippets/62/ """
@@ -838,13 +773,13 @@ def get_redirect_target():
         if is_safe_url(target):
             return target
 
-
 def is_safe_url(target):
     """ Taken from http://flask.pocoo.org/snippets/62/ """
     ref_url=urlparse(request.host_url)
     test_url=urlparse(urljoin(request.host_url, target))
     return test_url.scheme in ('http', 'https') and \
-        ref_url.netloc == test_url.netloc
+           ref_url.netloc == test_url.netloc
+
 
 
 @app.route("/recaptcha_<string:templatetype>", methods=["GET", "POST"])
@@ -914,13 +849,10 @@ def well_known_status():
         got=get(url)
 
         if got.status_code != 200:
-            raise Exception(
-                'HTTP status %s from Sendgrid /api/stats.get' % got.status_code)
+            raise Exception('HTTP status %s from Sendgrid /api/stats.get' % got.status_code)
 
         mails=sum([m['delivered'] + m['repeat_bounces'] for m in got.json()])
-        response['resources']['Sendgrid']=100 * \
-            float(mails) / \
-            int(app.config.get('SENDGRID_MONTHLY_LIMIT') or 40000)
+        response['resources']['Sendgrid']=100 * float(mails) / int(app.config.get('SENDGRID_MONTHLY_LIMIT') or 40000)
 
     except Exception, e:
         response['status']='Sendgrid fail: %s' % e
@@ -929,53 +861,25 @@ def well_known_status():
     return jsonify(response)
 
 
-@app.route("/sign_up", methods=['GET', 'POST'])
-def signup():
-    form = SignUpForm()
-    errors = []
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            user_to_login = authenticate_login(form.email.data, form.password.data)
-            if not user_to_login:
-                pass
-    return 'Hello, World! <a href="/landing">Landing</a>'
+@app.route("/login")
+def prepare_login():
+    app.logger.info("\n\nloading login page")
+    return render_template('login.html')
 
-@app.route("/login", methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-    errors = []
-    if request.method == 'POST':
-        print form.validate_on_submit()
-        if form.validate_on_submit():
-            print form.password.data
-            user_to_login = authenticate_login(form.username.data, form.password.data)
-            if user_to_login:
-                login_user(user_to_login )
-                redirect_url = get_redirect_target()
-                if 'login' in redirect_url or 'logout' in redirect_url:
-                    return redirect(url_for('index'))
-                else:
-                    if 'city' not in redirect_url:
-                        redirect_url = redirect_url.replace("/request", "/city/request")
-                    return redirect(redirect_url)
-            else:
-                app.logger.info("\n\nLogin failed (due to incorrect email/password combo) for email : %s" % form.username.data)
-                errors.append('Incorrect email/password combination. Please try again. If you forgot your password,'
-                              'please <a href="/reset_password">request a new password</a>.')
-                return render_template('login.html', form=form, errors=errors)
-        else:
-            errors.append('Something went wrong')
-            return render_template('login.html', form=form, errors=errors)
-    else:
-        user_id = get_user_id()
-        if user_id:
-            redirect_url = get_redirect_target()
-            return redirect(redirect_url)
-        else:
-            return render_template('login.html', form=form)
+
+@app.route("/login_action", methods=["POST"])
+def login_action(data=None):
+    app.logger.info("\n\nperforming login action")
+    data=request.form.copy()
+    email=data['email_address']
+    user=find_user(email)
+    if user:
+        login_user(user)
+
+    return landing()
 
 def find_user(email):
-    return models.User.query.filter(models.User.email == email).filter(models.User.is_staff is True).first()
+    return models.User.query.filter(models.User.email == email).filter(models.User.is_staff == True).first()
 
 
 @app.route("/attachments/<string:resource>", methods=["GET"])
@@ -990,36 +894,32 @@ def get_report_jsons(report_type):
 
     if not report_type:
         response={
-            "status": "failed: unregonized request."
+            "status" : "failed: unregonized request."
         }
         return jsonify(response)
 
     if report_type == "overdue":
         try:
-            overdue_request=models.Request.query.filter(
-                models.Request.overdue == True).all()
-            notdue_request=models.Request.query.filter(
-                models.Request.overdue == False).all()
+            overdue_request=models.Request.query.filter(models.Request.overdue == True).all()
+            notdue_request=models.Request.query.filter(models.Request.overdue == False).all()
             response={
-                "status": "ok",
-                "data": [
-                    {"label": "Over Due", "value": len(
-                        overdue_request), "callback": "overdue"},
-                    {"label": "Not Due", "value": len(
-                        notdue_request), "callback": "notdue"}
+                "status" : "ok",
+                "data" : [
+                    {"label" : "Over Due", "value" : len(overdue_request), "callback" : "overdue"},
+                    {"label" : "Not Due", "value" : len(notdue_request), "callback" : "notdue"}
                 ]
             }
 
         except Exception, e:
             response={
-                "status": "failed",
-                "data": "fail to find overdue request"
+                "status" : "failed",
+                "data" : "fail to find overdue request"
             }
         return jsonify(response)
     else:
         response={
-            "status": "failed",
-            "data": "unregonized request"
+            "status" : "failed",
+            "data" : "unregonized request"
         }
         return jsonify(response)
 
@@ -1027,7 +927,6 @@ def get_report_jsons(report_type):
 @app.route("/report")
 @login_required
 def report():
-    overdue_request=models.Request.query.filter(
-        models.Request.overdue == True).all()
-    app.logger.info("\n\nOverdue Requests %s" % (len(overdue_request)))
+    overdue_request=models.Request.query.filter(models.Request.overdue == True).all()
+    app.logger.info("\n\nOverdue Requests %s" %(len(overdue_request)))
     return render_template('report.html')
