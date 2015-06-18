@@ -27,19 +27,6 @@ This template provides the header, footer, and envelope info for all pages excep
   <!-- modernizr -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/modernizr-latest-min.js') }}"></script>
 
-  <!-- google analytics -->
-    <!-- for later: guide to add event-driven analytics http://www.sitepoint.com/google-analytics-track-javascript-ajax-events/ -->
-    <script>
-
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-41730935-1', 'herokuapp.com');
-    ga('send', 'pageview');
-    </script>
-
   <!-- auth_script requires jquery and Mozilla's 'include.js' shim -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.11.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/include.js') }}"></script>
@@ -88,7 +75,7 @@ This template provides the header, footer, and envelope info for all pages excep
                     <li><a href="/about">About</a></li>
                   </ul>
                   <ul class="nav pull-right">
-                    <li><button id="browserid-logout" class="btn">{{config['AGENCY_NAME']}} Logout</button></li>
+                    <li><a href="/logout">Logout</a></li>
                   </ul>
                 {% else %}
                   <ul class="nav tabs">
@@ -99,7 +86,7 @@ This template provides the header, footer, and envelope info for all pages excep
                   </ul>
                   <ul class="nav pull-right">
                     <!--<li><button id="browserid-login" class="btn">{{config['AGENCY_NAME']}} Login</button></li>-->
-                    <li><a href="/login" >{{config['AGENCY_NAME']}} Login</a></li>
+                    <li><a href="/login" >Login</a></li>
                   </ul>
                 {% endif %}
             </div>

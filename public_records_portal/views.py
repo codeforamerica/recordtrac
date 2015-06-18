@@ -13,7 +13,7 @@ from flask_recaptcha import ReCaptcha
 #from flaskext.browserid import BrowserID
 from public_records_portal import app, db, models, recaptcha
 from prr import add_resource, update_resource, make_request, close_request
-from db_helpers import get_user_by_id  # finds a user by their id
+from db_helpers import get_user_by_id, authenticate_login # finds a user by their id
 from db_helpers import get_user  # finds a user based on BrowserID response
 import os, json
 from urlparse import urlparse, urljoin
@@ -32,7 +32,7 @@ from filters import *
 import re
 from db_helpers import get_count, get_obj
 from sqlalchemy import func, not_, and_, or_
-from forms import OfflineRequestForm, NewRequestForm
+from forms import OfflineRequestForm, NewRequestForm, LoginForm
 import pytz
 import phonenumbers
 
@@ -873,25 +873,39 @@ def well_known_status():
     return jsonify(response)
 
 
-@app.route("/login")
-def prepare_login():
-    app.logger.info("\n\nloading login page")
-    return render_template('login.html')
-
-
-@app.route("/login_action", methods=["POST"])
-def login_action(data=None):
-    app.logger.info("\n\nperforming login action")
-    data=request.form.copy()
-    email=data['email_address']
-    user=find_user(email)
-    if user:
-        login_user(user)
-
-    return landing()
-
-def find_user(email):
-    return models.User.query.filter(models.User.email == email).filter(models.User.is_staff == True).first()
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    errors = []
+    if request.method == 'POST':
+        print form.validate_on_submit()
+        if form.validate_on_submit():
+            print form.password.data
+            user_to_login = authenticate_login(form.username.data, form.password.data)
+            if user_to_login:
+                login_user(user_to_login )
+                redirect_url = get_redirect_target()
+                if 'login' in redirect_url or 'logout' in redirect_url:
+                    return redirect(url_for('index'))
+                else:
+                    if 'city' not in redirect_url:
+                        redirect_url = redirect_url.replace("/request", "/city/request")
+                    return redirect(redirect_url)
+            else:
+                app.logger.info("\n\nLogin failed (due to incorrect email/password combo) for email : %s" % form.username.data)
+                errors.append('Incorrect email/password combination. Please try again. If you forgot your password,'
+                              'please <a href="/reset_password">request a new password</a>.')
+                return render_template('login.html', form=form, errors=errors)
+        else:
+            errors.append('Something went wrong')
+            return render_template('login.html', form=form, errors=errors)
+    else:
+        user_id = get_user_id()
+        if user_id:
+            redirect_url = get_redirect_target()
+            return redirect(redirect_url)
+        else:
+            return render_template('login.html', form=form)
 
 
 @app.route("/attachments/<string:resource>", methods=["GET"])

@@ -1,6 +1,6 @@
 __author__ = 'jcastillo'
 from flask.ext.wtf import Form
-from wtforms import StringField, SelectField, TextAreaField, DateField, BooleanField, SubmitField
+from wtforms import StringField, SelectField, TextAreaField, DateField, BooleanField, PasswordField, SubmitField
 from wtforms_components import PhoneNumberField, Email
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
 from wtforms import ValidationError
@@ -20,7 +20,8 @@ class OfflineRequestForm(Form):
                                                               ('Text Message', 'Text Message'), ('311', '311')],
                                  validators=[DataRequired('You must enter a request format')], default='')
     request_date = DateField(u'Request Date*', format='%m/%d/%Y',
-                             validators=[DataRequired('You must enter the request date')])
+                             validators=[DataRequired(
+                               'You must enter the request date')])
     request_department = SelectField(u'Request Department*', choices=[
         ('', ''),
         ('OCME', 'Chief Medical Examiner'), ('DOE', 'Department of Education'),
@@ -93,3 +94,8 @@ class NewRequestForm(Form):
                                 u'this application, as stated above',
                                 validators=[DataRequired('You must accept the terms of use')])
     request_submit = SubmitField(u'Submit Request')
+
+class LoginForm(Form):
+    username = StringField('Email', validators=[DataRequired(), Length(1, 64)])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Log In')

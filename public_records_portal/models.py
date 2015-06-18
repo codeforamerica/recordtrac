@@ -22,95 +22,119 @@ import re
 from validate_email import validate_email
 
 
-### @export "User"
+# @export "User"
 class User(db.Model):
-	__tablename__ = 'user'
-	id = db.Column(db.Integer, primary_key = True)
-	alias = db.Column(db.String(100))
-	email = db.Column(db.String(100), unique=True)
-	phone = db.Column(db.String())
-        address1 = db.Column(db.String(500))
-        address2 = db.Column(db.String(500))
-        city = db.Column(db.String())
-        state = db.Column(db.String())
-        zipcode = db.Column(db.String())
-	date_created = db.Column(db.DateTime)
-	password = db.Column(db.String(255))
-	department = db.Column(Integer, ForeignKey("department.id"))
-	current_department = relationship("Department", foreign_keys = [department], uselist = False)
-	contact_for = db.Column(db.String()) # comma separated list
-	backup_for = db.Column(db.String()) # comma separated list
-	owners = relationship("Owner")
-	subscribers = relationship("Subscriber")
-	is_staff = db.Column(db.Boolean, default = False) # Is this user an active agency member?
+    __tablename__ = 'user'
+    id = db.Column(db.Integer, primary_key=True)
+    alias = db.Column(db.String(100))
+    email = db.Column(db.String(100), unique=True)
+    phone = db.Column(db.String())
+    address1 = db.Column(db.String(500))
+    address2 = db.Column(db.String(500))
+    city = db.Column(db.String())
+    state = db.Column(db.String())
+    zipcode = db.Column(db.String())
+    date_created = db.Column(db.DateTime)
+    password = db.Column(db.String(255))
+    department = db.Column(Integer, ForeignKey("department.id"))
+    current_department = relationship(
+        "Department", foreign_keys=[department], uselist=False)
+    contact_for = db.Column(db.String())  # comma separated list
+    backup_for = db.Column(db.String())  # comma separated list
+    owners = relationship("Owner")
+    subscribers = relationship("Subscriber")
+    # Is this user an active agency member?
+    is_staff = db.Column(db.Boolean, default=False)
 
-	def is_authenticated(self):
-		return True
-	def is_active(self):
-		return True
-	def is_anonymous(self):
-		return False
-	def get_id(self):
-		return unicode(self.id)
-	def get_alias(self):
-		if self.alias and self.alias != "":
-			return self.alias
-		return "N/A"
-	def get_phone(self):
-		if self.phone and self.phone != "":
-			return self.phone
-		return "N/A"
-        def get_adddress1(self):
-                if self.address1 and self.address1 != "":
-                        return self.address1
-                return "N/A"
-        def get_city(self):
-                if self.city and self.city != "":
-                        return self.city
-                return "N/A"
-        def get_state(self):
-                if self.state and self.state != "":
-                        return self.state
-                return "N/A"
-        def get_zipcode(self):
-                if self.zipcode and self.zipcode != "": 
-                        return self.zipcode
-                return "N/A"
-	def __init__(self, email=None, alias = None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=zipcode, department = None, contact_for=None, backup_for=None, is_staff = False):
-		if email and validate_email(email):
-			self.email = email
-		self.alias = alias
-		if phone and phone != "":
-			self.phone = phone
-                if address1 and address1 != "":
-                        self.address1 = address1
-                if address2 and address2 != "":
-                        self.address2 = address2
-                if city and city != "":
-                        self.city = city
-                if state and state != "":
-                        self.state = state
-                if zipcode and  zipcode != "":
-                        self.zipcode = zipcode
-		self.date_created = datetime.now().isoformat()
-		if department and department != "":
-			self.department = department
-		if contact_for and contact_for != "":
-			self.contact_for = contact_for
-		if backup_for and backup_for != "":
-			self.backup_for = backup_for
-		if is_staff:
-			self.is_staff = is_staff
-	def __repr__(self):
-		return '<User %r>' % self.email
-	def __str__(self):
-		return self.email
-	def department_name(self):
-		if self.current_department and self.current_department.name:
-			return self.current_department.name
-		else:
-			app.logger.error("\n\nUser %s is not associated with a department." % self.email)
-			return "N/A"
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return unicode(self.id)
+
+    def get_alias(self):
+        if self.alias and self.alias != "":
+            return self.alias
+        return "N/A"
+
+    def get_phone(self):
+        if self.phone and self.phone != "":
+            return self.phone
+        return "N/A"
+
+    def get_adddress1(self):
+        if self.address1 and self.address1 != "":
+            return self.address1
+        return "N/A"
+
+    def get_city(self):
+        if self.city and self.city != "":
+            return self.city
+        return "N/A"
+
+    def get_state(self):
+        if self.state and self.state != "":
+            return self.state
+        return "N/A"
+
+    def get_zipcode(self):
+        if self.zipcode and self.zipcode != "":
+            return self.zipcode
+        return "N/A"
+
+    def __init__(self, email=None, alias=None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=zipcode, department=None, contact_for=None, backup_for=None, password=None, is_staff=False):
+        if email and validate_email(email):
+            self.email = email
+        self.alias = alias
+        if phone and phone != "":
+            self.phone = phone
+        if address1 and address1 != "":
+            self.address1 = address1
+        if address2 and address2 != "":
+            self.address2 = address2
+        if city and city != "":
+            self.city = city
+        if state and state != "":
+            self.state = state
+        if zipcode and zipcode != "":
+            self.zipcode = zipcode
+        self.date_created = datetime.now().isoformat()
+        if department and department != "":
+            self.department = department
+        if contact_for and contact_for != "":
+            self.contact_for = contact_for
+        if backup_for and backup_for != "":
+            self.backup_for = backup_for
+        if is_staff:
+            self.is_staff = is_staff
+        if password:
+            self.set_password(password)
+
+    def check_password(self, password):
+		return check_password_hash(self.password, password)
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def __repr__(self):
+        return '<User %r>' % self.email
+
+    def __str__(self):
+        return self.email
+
+    def department_name(self):
+        if self.current_department and self.current_department.name:
+            return self.current_department.name
+        else:
+            app.logger.error(
+                "\n\nUser %s is not associated with a department." % self.email)
+            return "N/A"
 
 ### @export "Department"
 class Department(db.Model):
