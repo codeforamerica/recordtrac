@@ -73,7 +73,9 @@ envvars = [
 	'LOGO_ON_WHITE_URL', # The path/URL at which a logo (on a white background) of the agency is hosted. (.png or .jpg)
 	'LOGO_ON_BLACK_URL', # The path/URL at which a logo (on a black background) of the agency is hosted. (.png or .jpg)
 	'TESTING', # Set if you are running tests. Primarily used to ignore @login_requireds when running tests.
-	'SHOULD_UPLOAD' # Set if you want to test uploading documents to the specified host (currently Scribd)
+	'SHOULD_UPLOAD', # Set if you want to test uploading documents to the specified host (currently Scribd)
+	'HTTPS_PROXY', # HTTPS Proxy for SendGrid
+	'HTTP_PROXY' # HTTP PRoxy for SendGrid
 ]
 for envvar in envvars:
 	set_env(key = envvar)
