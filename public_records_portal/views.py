@@ -73,6 +73,7 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_zip = form.request_address_zip.data
             terms_of_use = form.terms_of_use.data
             alias = None
+            zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
 
             if not (request_text and request_text.strip()):
                 errors.append('Please fill out the request description.')
@@ -107,7 +108,7 @@ def new_request(passed_recaptcha=False, data=None):
             street_valid = (request_address_street != '')
             city_valid = (request_address_city != '')
             state_valid = (request_address_state != '')
-            zip_valid = (request_address_zip != '')
+            zip_valid = (request_address_zip != '' and zip_reg_ex.match(request_address_zip))
             address_valid = (street_valid and city_valid and state_valid and zip_valid)
             recaptcha_valid = (request_recaptcha != False)
 
@@ -168,6 +169,7 @@ def new_request(passed_recaptcha=False, data=None):
             request_recaptcha = recaptcha.verify()
             terms_of_use = form.terms_of_use.data
             alias = None
+            zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
 
             if not (request_text and request_text.strip()):
                 errors.append('Please fill out the request description.')
@@ -186,7 +188,7 @@ def new_request(passed_recaptcha=False, data=None):
             street_valid = (request_address_street != '')
             city_valid = (request_address_city != '')
             state_valid = (request_address_state != '')
-            zip_valid = (request_address_zip != '')
+            zip_valid = (request_address_zip != '' and zip_reg_ex.match(request_address_zip))
             address_valid = (street_valid and city_valid and state_valid and zip_valid)
 
             if not (email_valid or phone_valid or fax_valid or address_valid):
