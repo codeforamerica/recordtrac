@@ -40,7 +40,6 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 		template = "new_request_email.html"
 	# Get information on who to send the e-mail to and with what subject line based on the notification type:
 	email_info = get_email_info(notification_type=notification_type)
-	app.logger.info(email_info)
 	email_subject = "Public Records Request %s: %s" %(request_id, email_info["Subject"])
 	recipient_types = email_info["Recipients"]
 	include_unsubscribe_link = True
@@ -111,36 +110,46 @@ def send_prr_email(page, recipients, subject, template, include_unsubscribe_link
 
 ### @export "send_email"
 def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_everyone = False):
-	mail = sendgrid.SendGridClient(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'], secure = True, **{
-	                         'proxies': {
-	                         	'https': app.config['HTTPS_PROXY'],
-	                         	'http': app.config['HTTP_PROXY']
-	                         }
-	                         })
+	sg = sendgrid.SendGridClient(app.config['MAIL_USERNAME'],
+	                             app.config['MAIL_PASSWORD'],
+	                             **{
+	                             	'proxies': {
+	                             		'https': 'https://10.152.34.66:8080/',
+	                             		'http': 'http://10.152.34.66:8080/',
+	                             	}
+	                             })
+
 	sender = app.config['DEFAULT_MAIL_SENDER']
 	plaintext = ""
 	html = body
-	message = sendgrid.Mail(ƒsender, subject, plaintext, html)
-	if not include_unsubscribe_link:
-		message.add_filter_setting("subscriptiontrack", "enable", 0)
+
+
+	message = sendgrid.Mail(sender, subject, html, plaintext)
+
+	if not include_unscubscribe_link:
+		message.add_filter('subscriptiontrack', 'enable', 0)
 	if 'DEV_EMAIL' in app.config:
-		recipients = [app.config['DEV_EMAIL']]
-	if cc_everyone: # Not being used for now
-		message.add_to(recipients[0])
-		for recipient in recipients:
-			# if should_notify(recipient):
-				message.add_cc(recipient)
+		recepients = [app.config['DEV_EMAIL']]
+	if cc_everyone:
+		pass
+		# message.add_to(recipients[0])
+		# for recipient in recipients:
+		# 	if should_notify(recipeient):
+		# 		message.add_cc(recipient)
 	else:
 		for recipient in recipients:
 			# if should_notify(recipient):
-				message.add_to(recipient)
+			message.add_to(recipient)
+
 	message.add_bcc(sender)
+
 	if send_emails:
 		app.logger.info("\n\n Attempting to send e-mail with body: %s, subject: %s, to %s" %(body, subject, recipients))
 		try:
-			status = mail.web.send(message)
+			status, msg = sg.send(message)
 			if status == False:
 				app.logger.info("\n\nSendgrid did not deliver e-mail.")
+				app.logger.info("\n\n%s." % msg)
 			return status
 		except Exception, e:
 			app.logger.error("\n\nNo e-mail was sent, error: %s" % e)

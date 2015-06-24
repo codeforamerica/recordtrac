@@ -58,6 +58,8 @@ envvars = [
 	'MAIL_USERNAME', # The SendGrid username
 	'MAIL_PASSWORD', # The SendGrid password
 	'SENDGRID_MONTHLY_LIMIT', # Your SendGrid Monthly Limit
+	'HTTPS_PROXY',
+	'HTTP_PROXY',
 	'LIST_OF_ADMINS', # Defines who has admin access (/admin) with a comma delimited list of e-mail addresses. i.e. 'richa@codeforamerica.org,cris@codeforamerica.org'
 	'SECRET_KEY', # Flask app secret key
 	'SCRIBD_API_KEY',
