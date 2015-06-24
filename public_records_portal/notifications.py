@@ -124,10 +124,10 @@ def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_ev
 	html = body
 
 
-	message = sendgrid.Mail(sender, subject, html, plaintext)
+	message = sendgrid.Mail(to=sender, subject=subject, html=html, text=plaintext, from_email=sender)
 
-	if not include_unscubscribe_link:
-		message.add_filter('subscriptiontrack', 'enable', 0)
+	# if not include_unscubscribe_link:
+		# message.add_filter('subscriptiontrack', 'enable', 0)
 	if 'DEV_EMAIL' in app.config:
 		recepients = [app.config['DEV_EMAIL']]
 	if cc_everyone:
