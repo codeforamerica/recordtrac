@@ -125,7 +125,17 @@ def new_request(passed_recaptcha=False, data=None):
             if phone_valid:
                 phone_formatted = request_phone.international
 
-            request_id, is_new = make_request(text=request_text,
+
+            if errors:
+                if request_date:
+                    print request_date
+                    return render_template('offline_request.html', form=form, date=request_date.strftime('%m/%d/%Y'),
+                                           routing_available=routing_available,
+                                           departments=departments, errors=errors)
+                return render_template('offline_request.html', form=form,
+                                       routing_available=routing_available, departments=departments, errors=errors)
+            else:
+                request_id, is_new = make_request(text=request_text,
                                               email=request_email,
                                               alias=alias,
                                               phone=phone_formatted,
@@ -137,19 +147,11 @@ def new_request(passed_recaptcha=False, data=None):
                                               department=request_department,
                                               offline_submission_type=request_format,
                                               date_received=request_date)
-
-            if not request_id:
-                errors.append("Looks like your request is the same as /request/%s" % request_id)
-
-            if errors:
-                if request_date:
-                    print request_date
-                    return render_template('offline_request.html', form=form, date=request_date.strftime('%m/%d/%Y'),
-                                           routing_available=routing_available,
-                                           departments=departments, errors=errors)
-                return render_template('offline_request.html', form=form,
+                if not request_id:
+                    errors.append("Looks like your request is the same as /request/%s" % request_id)
+                    return render_template('offline_request.html', form=form,
                                        routing_available=routing_available, departments=departments, errors=errors)
-            else:
+
                 return redirect(url_for('show_request_for_x', request_id=request_id,
                                         audience='new'))
 
@@ -203,7 +205,11 @@ def new_request(passed_recaptcha=False, data=None):
             if phone_valid:
               phone_formatted = request_phone.international
 
-            request_id, is_new = make_request(text=request_text,
+            if errors:
+                return render_template('new_request.html', form=form,
+                                       routing_available=routing_available, departments=departments, errors=errors)
+            else:
+                request_id, is_new = make_request(text=request_text,
                                               email=request_email,
                                               alias=alias,
                                               phone=phone_formatted,
@@ -213,14 +219,12 @@ def new_request(passed_recaptcha=False, data=None):
                                               zipcode=request_address_zip,
                                               passed_spam_filter=True,
                                               department=request_department)
-
-            if not request_id:
-                errors.append("Looks like your request is the same as /request/%s" % request_id)
-
-            if errors:
-                return render_template('new_request.html', form=form,
+                
+                if not request_id:
+                    errors.append("Looks like your request is the same as /request/%s" % request_id)
+                    return render_template('new_request.html', form=form,
                                        routing_available=routing_available, departments=departments, errors=errors)
-            else:
+
                 return redirect(url_for('show_request_for_x', request_id=request_id,
                                         audience='new'))
     elif request.method == 'GET':
