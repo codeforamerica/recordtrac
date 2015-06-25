@@ -131,7 +131,7 @@ notes/
 *~
 .#*
 #~#
-.env
+.env*
 
 Vagrantfile
 .vagrant/

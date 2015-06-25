@@ -58,6 +58,8 @@ envvars = [
 	'MAIL_USERNAME', # The SendGrid username
 	'MAIL_PASSWORD', # The SendGrid password
 	'SENDGRID_MONTHLY_LIMIT', # Your SendGrid Monthly Limit
+	'HTTPS_PROXY',
+	'HTTP_PROXY',
 	'LIST_OF_ADMINS', # Defines who has admin access (/admin) with a comma delimited list of e-mail addresses. i.e. 'richa@codeforamerica.org,cris@codeforamerica.org'
 	'SECRET_KEY', # Flask app secret key
 	'SCRIBD_API_KEY',
@@ -73,7 +75,9 @@ envvars = [
 	'LOGO_ON_WHITE_URL', # The path/URL at which a logo (on a white background) of the agency is hosted. (.png or .jpg)
 	'LOGO_ON_BLACK_URL', # The path/URL at which a logo (on a black background) of the agency is hosted. (.png or .jpg)
 	'TESTING', # Set if you are running tests. Primarily used to ignore @login_requireds when running tests.
-	'SHOULD_UPLOAD' # Set if you want to test uploading documents to the specified host (currently Scribd)
+	'SHOULD_UPLOAD', # Set if you want to test uploading documents to the specified host (currently Scribd)
+	'HTTPS_PROXY', # HTTPS Proxy for SendGrid
+	'HTTP_PROXY' # HTTP PRoxy for SendGrid
 ]
 for envvar in envvars:
 	set_env(key = envvar)

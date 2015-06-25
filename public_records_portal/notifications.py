@@ -33,9 +33,9 @@ elif 'DEV_EMAIL' in app.config:
 ### @export "generate_prr_emails"
 def generate_prr_emails(request_id, notification_type, user_id = None):
 	app.logger.info("\n\n Generating e-mails for request with ID: %s, notification type: %s, and user ID: %s" %(request_id, notification_type, user_id))
-	app_url = app.config['APPLICATION_URL'] 
+	app_url = app.config['APPLICATION_URL']
 	# Define the e-mail template:
-	template = "generic_email.html" 
+	template = "generic_email.html"
 	if notification_type == "Request made":
 		template = "new_request_email.html"
 	# Get information on who to send the e-mail to and with what subject line based on the notification type:
@@ -43,7 +43,7 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 	email_subject = "Public Records Request %s: %s" %(request_id, email_info["Subject"])
 	recipient_types = email_info["Recipients"]
 	include_unsubscribe_link = True
-	unfollow_link = None 
+	unfollow_link = None
 	for recipient_type in recipient_types:
 		# Skip anyone that has unsubscribed
 		if user_id and (recipient_type == "Requester" or recipient_type == "Subscriber"):
@@ -53,7 +53,7 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 				app.logger.info("\n\nSubscriber %s unsubscribed, no notification sent." % subscriber.id)
 				continue
 		# Set up the e-mail
-		page = "%srequest/%s" %(app_url,request_id) # The request URL 
+		page = "%srequest/%s" %(app_url,request_id) # The request URL
 		if "Staff" in recipient_type:
 			page = "%scity/request/%s" %(app_url,request_id)
 			include_unsubscribe_link = False # Gets excluded for city staff
@@ -110,31 +110,46 @@ def send_prr_email(page, recipients, subject, template, include_unsubscribe_link
 
 ### @export "send_email"
 def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_everyone = False):
-	mail = sendgrid.Sendgrid(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'], secure = True)
+	sg = sendgrid.SendGridClient(app.config['MAIL_USERNAME'],
+	                             app.config['MAIL_PASSWORD'],
+	                             **{
+	                             	'proxies': {
+	                             		'https': 'https://10.152.34.66:8080/',
+	                             		'http': 'http://10.152.34.66:8080/',
+	                             	}
+	                             })
+
 	sender = app.config['DEFAULT_MAIL_SENDER']
 	plaintext = ""
 	html = body
-	message = sendgrid.Message(sender, subject, plaintext, html)
-	if not include_unsubscribe_link:
-		message.add_filter_setting("subscriptiontrack", "enable", 0)
+
+
+	message = sendgrid.Mail(to=sender, subject=subject, html=html, text=plaintext, from_email=sender)
+
+	# if not include_unscubscribe_link:
+		# message.add_filter('subscriptiontrack', 'enable', 0)
 	if 'DEV_EMAIL' in app.config:
-		recipients = [app.config['DEV_EMAIL']]
-	if cc_everyone: # Not being used for now
-		message.add_to(recipients[0])
-		for recipient in recipients:
-			# if should_notify(recipient):
-				message.add_cc(recipient)
+		recepients = [app.config['DEV_EMAIL']]
+	if cc_everyone:
+		pass
+		# message.add_to(recipients[0])
+		# for recipient in recipients:
+		# 	if should_notify(recipeient):
+		# 		message.add_cc(recipient)
 	else:
 		for recipient in recipients:
 			# if should_notify(recipient):
-				message.add_to(recipient)
+			message.add_to(recipient)
+
 	message.add_bcc(sender)
+
 	if send_emails:
 		app.logger.info("\n\n Attempting to send e-mail with body: %s, subject: %s, to %s" %(body, subject, recipients))
 		try:
-			status = mail.web.send(message)
+			status, msg = sg.send(message)
 			if status == False:
 				app.logger.info("\n\nSendgrid did not deliver e-mail.")
+				app.logger.info("\n\n%s." % msg)
 			return status
 		except Exception, e:
 			app.logger.error("\n\nNo e-mail was sent, error: %s" % e)
@@ -212,7 +227,7 @@ def get_staff_recipients(request):
 	if recipients:
 		return recipients
 	else:
-		raise ValueError('No staff recipients for request %s' %(request.id)) 
+		raise ValueError('No staff recipients for request %s' %(request.id))
 
 ### @export "should_notify"
 def should_notify(user_email):
