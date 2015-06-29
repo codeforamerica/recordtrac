@@ -21,19 +21,19 @@
     },
     "Choose Agency":
     {
-        "What": "Choose the agency that best fits the type of request you are making. If you do not know which agency to choose, ................",
-        "Who":"No one will be able to view your email address.",
-        "Action":"We'll use it to send updates about your request."
+        "What": "Choose the agency that best fits the type of request you are making. If you do not know which agency to choose, please select \"I Don't Know\"",
+        "Who":"",
+        "Action":""
     },
     "Enter name":
     {
         "What":"",
         "Who":"Only *agency* employees will be able to view this information.",
-        "Action":""
+        "Action":"We will need it to respond to your request."
     },
     "Enter email address":
     {
-        "What":"Please ",
+        "What":"",
         "Who":"Only *agency* employees will be able to view this information.",
         "Action":"We'll use this to send you updates about your request."
     },
