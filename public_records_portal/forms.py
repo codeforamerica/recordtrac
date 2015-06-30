@@ -31,6 +31,12 @@ class OfflineRequestForm(Form):
     request_department = SelectField(u'Request Department*', choices=department_choices,
         validators=[DataRequired('Please choose a department')], default='')
     request_name = StringField(u'Name*', validators=[DataRequired('Please enter the requestor\'s name')])
+    permissions = SelectField(u'Privacy Options', choices=[
+                              (1, 'Name and Request Description Public'),
+                              (2, 'Only Request Description Public'),
+                              (4, 'Only Name Public'),
+                              (8, 'Everything is Private')],
+                              validators=[DataRequired('You must select a privacy option.')], default=1)
     request_email = StringField(u'Email', validators=[Email('Please enter a valid email address')])
     request_phone = PhoneNumberField(u'Phone Number')
     request_fax = PhoneNumberField(u'Fax Number')
@@ -71,6 +77,12 @@ class NewRequestForm(Form):
     request_department = SelectField(u'Request Department*', choices=department_choices,
         validators=[DataRequired('Please choose a department')], default='')
     request_name = StringField(u'Name*', validators=[DataRequired('Please enter the requestor\'s name')])
+    permissions = SelectField(u'Privacy Options', choices=[
+                              (1, 'Name and Request Description Public'),
+                              (2, 'Only Request Description Public'),
+                              (4, 'Only Name Public'),
+                              (8, 'Everything is Private')],
+                              validators=[DataRequired('You must select a privacy option.')], default=1)
     request_email = StringField(u'Email', validators=[Email('Please enter a valid email address')])
     request_phone = PhoneNumberField(u'Phone Number')
     request_fax = PhoneNumberField(u'Fax Number')
