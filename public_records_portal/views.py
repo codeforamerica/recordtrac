@@ -110,7 +110,7 @@ def new_request(passed_recaptcha=False, data=None):
             state_valid = (request_address_state != '')
             zip_valid = (request_address_zip != '' and zip_reg_ex.match(request_address_zip))
             address_valid = (street_valid and city_valid and state_valid and zip_valid)
-            # recaptcha_valid = (request_recaptcha != False)
+            recaptcha_valid = (request_recaptcha != False)
 
             if not (email_valid or phone_valid or fax_valid or address_valid):
                 errors.append("Please enter at least one type of contact information")
@@ -118,8 +118,8 @@ def new_request(passed_recaptcha=False, data=None):
             if not data and not passed_recaptcha:
                 data = request.form.copy()
 
-            # if check_for_spam and is_spam(request_text) and not passed_recaptcha:
-            #     return render_template('recaptcha_request.html', form = data, message = "Hmm, your request looks like spam. To submit your request, type the numbers or letters you see in the field below.", public_key = app.config['RECAPTCHA_SITE_KEY'])
+            if check_for_spam and is_spam(request_text) and not passed_recaptcha:
+                return render_template('recaptcha_request.html', form = data, message = "Hmm, your request looks like spam. To submit your request, type the numbers or letters you see in the field below.", public_key = app.config['RECAPTCHA_SITE_KEY'])
 
             phone_formatted = ""
             if phone_valid:
@@ -167,7 +167,7 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_city = form.request_address_city.data
             request_address_state = form.request_address_state.data
             request_address_zip = form.request_address_zip.data
-            # request_recaptcha = recaptcha.verify()
+            request_recaptcha = recaptcha.verify()
             terms_of_use = form.terms_of_use.data
             alias = None
             zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
@@ -195,8 +195,8 @@ def new_request(passed_recaptcha=False, data=None):
             if not (email_valid or phone_valid or fax_valid or address_valid):
                 errors.append("Please enter at least one type of contact information.")
 
-            # if not request_recaptcha:
-            #     errors.append("Please complete captcha.")
+            if not request_recaptcha:
+                errors.append("Please complete captcha.")
 
             if not terms_of_use:
                 errors.append("You must accept the Terms of Use.")
