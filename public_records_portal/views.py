@@ -331,11 +331,17 @@ def unfollow(request_id, email):
 @app.route("/request/<int:request_id>")
 def show_request(request_id, template="manage_request_public.html"):
     req=get_obj("Request", request_id)
+    departments_all=models.Department.query.all()
+    department_data = []
+    for d in departments_all:
+      firstUser = models.User.query.filter_by(department=d.id).first()
+      department_data.append({'name': d.name, 'email': firstUser.email})
+    users=models.User.query.filter_by(department=req.department_id).all()
     if not req:
         return render_template('error.html', message="A request with ID %s does not exist." % request_id)
     if req.status and "Closed" in req.status and template != "manage_request_feedback.html":
         template="closed.html"
-    return render_template(template, req=req)
+    return render_template(template, req=req, department_data=department_data, users=users)
 
 
 @app.route("/api/staff")
