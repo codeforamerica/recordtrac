@@ -1,4 +1,4 @@
-""" 
+"""
 .. module:: db_helpers
 	:synopsis: Functions that interact with the Postgres database via Flask-SQLAlchemy
 .. modlueauthor:: Richa Agarwal <richa@codeforamerica.org>
@@ -185,10 +185,10 @@ def create_QA(request_id, question, user_id):
 # @export "create_request"
 
 
-def create_request(text, user_id, offline_submission_type=None, date_received=None):
+def create_request(text, user_id, offline_submission_type=None, date_received=None,privacy=1):
     """ Create a Request object and return the ID. """
     req = Request(text=text, creator_id=user_id,
-                  offline_submission_type=offline_submission_type, date_received=date_received)
+                  offline_submission_type=offline_submission_type, date_received=date_received, privacy=privacy)
     db.session.add(req)
     db.session.commit()
     req.set_due_date()

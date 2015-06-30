@@ -31,7 +31,7 @@ class OfflineRequestForm(Form):
     request_department = SelectField(u'Request Department*', choices=department_choices,
         validators=[DataRequired('Please choose a department')], default='')
     request_name = StringField(u'Name*', validators=[DataRequired('Please enter the requestor\'s name')])
-    permissions = SelectField(u'Privacy Options', choices=[
+    request_privacy = SelectField(u'Privacy Options', choices=[
                               (1, 'Name and Request Description Public'),
                               (2, 'Only Request Description Public'),
                               (4, 'Only Name Public'),
@@ -77,7 +77,7 @@ class NewRequestForm(Form):
     request_department = SelectField(u'Request Department*', choices=department_choices,
         validators=[DataRequired('Please choose a department')], default='')
     request_name = StringField(u'Name*', validators=[DataRequired('Please enter the requestor\'s name')])
-    permissions = SelectField(u'Privacy Options', choices=[
+    request_privacy = SelectField(u'Privacy Options', choices=[
                               (1, 'Name and Request Description Public'),
                               (2, 'Only Request Description Public'),
                               (4, 'Only Name Public'),

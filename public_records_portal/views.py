@@ -64,6 +64,7 @@ def new_request(passed_recaptcha=False, data=None):
             request_date = form.request_date.data
             request_department = form.request_department.data
             request_name = form.request_name.data
+            request_privacy = form.request_privacy.data
             request_email = form.request_email.data
             request_phone = form.request_phone.data
             request_fax = form.request_fax.data
@@ -101,6 +102,8 @@ def new_request(passed_recaptcha=False, data=None):
                 errors.append("Please enter the requester's name")
             else:
                 alias = request_name
+            if not request_privacy:
+                errors.append("Please choose a privacy option.")
 
             email_valid = (request_email != '')
             phone_valid = (request_phone is not None)
@@ -160,6 +163,7 @@ def new_request(passed_recaptcha=False, data=None):
             request_text = form.request_text.data
             request_department = form.request_department.data
             request_name = form.request_name.data
+            request_privacy = form.request_privacy.data
             request_email = form.request_email.data
             request_phone = form.request_phone.data
             request_fax = form.request_fax.data
@@ -182,6 +186,8 @@ def new_request(passed_recaptcha=False, data=None):
                 errors.append("Please enter the requester's name.")
             else:
                 alias = request_name
+            if not request_privacy:
+                errors.append("Please choose a privacy option.")
 
             email_valid = (request_email != '')
             phone_valid = (request_phone is not None)
@@ -219,7 +225,7 @@ def new_request(passed_recaptcha=False, data=None):
                                               zipcode=request_address_zip,
                                               passed_spam_filter=True,
                                               department=request_department)
-                
+
                 if not request_id:
                     errors.append("Looks like your request is the same as /request/%s" % request_id)
                     return render_template('new_request.html', form=form,

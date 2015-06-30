@@ -155,7 +155,7 @@ def add_link(request_id, url, description, user_id):
 	return False
 
 ### @export "make_request"
-def make_request(text, email = None, user_id = None, phone = None, address1 = None, address2 = None, city = None, state = None, zipcode = None, alias = None, department = None, passed_spam_filter = False, offline_submission_type = None, date_received = None):
+def make_request(text, email = None, user_id = None, phone = None, address1 = None, address2 = None, city = None, state = None, zipcode = None, alias = None, department = None, passed_spam_filter = False, offline_submission_type = None, date_received = None, privacy = 1):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
 	if not passed_spam_filter:
 		return None, False
@@ -173,7 +173,7 @@ def make_request(text, email = None, user_id = None, phone = None, address1 = No
 		else:
 			app.logger.info("%s is not a valid department" %(department))
 			department = None
-	request_id = create_request(text = text, user_id = user_id, offline_submission_type = offline_submission_type, date_received = date_received) # Actually create the Request object
+	request_id = create_request(text = text, user_id = user_id, offline_submission_type = offline_submission_type, date_received = date_received, privacy=privacy) # Actually create the Request object
 	new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email) # Assign someone to the request
 	open_request(request_id) # Set the status of the incoming request to "Open"
 	if email or alias or phone:
