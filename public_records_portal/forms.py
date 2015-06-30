@@ -7,10 +7,16 @@ from wtforms import ValidationError
 from flask.ext.login import current_user
 from flask import Flask
 from flask_recaptcha import ReCaptcha
-
+from public_records_portal import db, models
 app = Flask(__name__)
 
 class OfflineRequestForm(Form):
+    departments = db.session.query(models.Department).all()
+    department_choices = [('','')]
+    for d in departments:
+        department_choices.append((d.name,d.name))
+    department_choices.append(('Unknown', 'I Don\'t Know'))
+    print department_choices
     request_text = TextAreaField(u'Request Description*', validators=[
         DataRequired('The request description is required'),
         Length(1, 5000, 'Your request must be less than 5000 characters')])
@@ -22,11 +28,7 @@ class OfflineRequestForm(Form):
     request_date = DateField(u'Request Date*', format='%m/%d/%Y',
                              validators=[DataRequired(
                                'You must enter the request date')])
-    request_department = SelectField(u'Request Department*', choices=[
-        ('', ''),
-        ('OCME', 'Chief Medical Examiner'), ('DOE', 'Department of Education'),
-        ('DORIS', 'Department of Records and Information Services'),
-        ('DOITT', 'Info. Tech. and Telecom.'), ('OOM', 'Mayor\'s Office'), ('Unknown', 'I Don\'t Know')],
+    request_department = SelectField(u'Request Department*', choices=department_choices,
         validators=[DataRequired('Please choose a department')], default='')
     request_name = StringField(u'Name*', validators=[DataRequired('Please enter the requestor\'s name')])
     request_email = StringField(u'Email', validators=[Email('Please enter a valid email address')])
@@ -58,14 +60,15 @@ class OfflineRequestForm(Form):
 
 
 class NewRequestForm(Form):
+    departments = db.session.query(models.Department).all()
+    department_choices = [('','')]
+    for d in departments:
+        department_choices.append((d.name,d.name))
+    department_choices.append(('Unknown', 'I Don\'t Know'))
     request_text = TextAreaField(u'Request Description*', validators=[
         DataRequired('The request description is required'),
         Length(1, 5000, 'Your request must be less than 5000 characters')])
-    request_department = SelectField(u'Request Department*', choices=[
-        ('', ''),
-        ('OCME', 'Chief Medical Examiner'), ('DOE', 'Department of Education'),
-        ('DORIS', 'Department of Records and Information Services'),
-        ('DOITT', 'Info. Tech. and Telecom.'), ('OOM', 'Mayor\'s Office'), ('Unknown', 'I Don\'t Know')],
+    request_department = SelectField(u'Request Department*', choices=department_choices,
         validators=[DataRequired('Please choose a department')], default='')
     request_name = StringField(u'Name*', validators=[DataRequired('Please enter the requestor\'s name')])
     request_email = StringField(u'Email', validators=[Email('Please enter a valid email address')])

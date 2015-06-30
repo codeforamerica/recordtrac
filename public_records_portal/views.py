@@ -230,13 +230,12 @@ def new_request(passed_recaptcha=False, data=None):
     elif request.method == 'GET':
         if 'LIAISONS_URL' in app.config:
             routing_available = True
-            departments = db.session.query(models.Department).all()
         if current_user.is_authenticated():
             form = OfflineRequestForm()
-            return render_template('offline_request.html', form=form, routing_available=routing_available, departments=departments)
+            return render_template('offline_request.html', form=form, routing_available=routing_available)
         else:
             form = NewRequestForm()
-            return render_template('new_request.html', form=form, routing_available=routing_available, departments=departments)
+            return render_template('new_request.html', form=form, routing_available=routing_available)
 
 @app.route("/export")
 @login_required
@@ -390,8 +389,6 @@ def public_add_a_resource(resource, passed_recaptcha=False, data=None):
         if not data:
             data=request.form.copy()
         if 'note' in resource:
-            if not passed_recaptcha and is_spam(comment=data['note_text'], user_ip=request.remote_addr, user_agent=request.headers.get('User-Agent')):
-                return render_template('recaptcha_note.html', form=data, message="Hmm, your note looks like spam. To submit your note, type the numbers or letters you see in the field below.")
             resource_id=prr.add_note(request_id=data['request_id'], text=data['note_text'], passed_spam_filter=True)
         else:
             resource_id=prr.add_resource(resource=resource, request_body=data, current_user_id=None)
@@ -410,8 +407,6 @@ def update_a_resource(resource, passed_recaptcha=False, data=None):
         if not data:
             data=request.form.copy()
         if 'qa' in resource:
-            if not passed_recaptcha and is_spam(comment=data['answer_text'], user_ip=request.remote_addr, user_agent=request.headers.get('User-Agent')):
-                return render_template('recaptcha_answer.html', form=data, message="Hmm, your answer looks like spam. To submit your answer, type the numbers or letters you see in the fiel dbelow.")
             prr.answer_a_question(qa_id=int(data['qa_id']), answer=data['answer_text'], passed_spam_filter=True)
         else:
             update_resource(resource, data)

@@ -51,7 +51,7 @@ This template provides the header, footer, and envelope info for all pages excep
 
   <body>
     <div class="wrapper">
-      <div class="navbar navbar-inverse">
+      <div class="navbar">
         <div class="navbar-inner">
           <div class="container">
             <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
@@ -61,7 +61,7 @@ This template provides the header, footer, and envelope info for all pages excep
               <span class="icon-bar"></span>
             </a>
             <!-- Be sure to leave the brand out there if you want it shown -->
-            <a class="brand" href="/landing"><img id="logo_nav" src="{{config['LOGO_ON_BLACK_URL']}}" alt="{{config['AGENCY_NAME']}} logo" width="35" height="35"/><strong> RecordTrac</strong><small id="beta" class="text-warning"></small></a>
+            <a class="brand" href="/landing"><img id="logo_nav" src="{{config['LOGO_ON_WHITE_URL']}}" alt="{{config['AGENCY_NAME']}} logo" width="35" height="35"/><strong> Open Gov</strong><small id="beta" class="text-warning"></small></a>
             <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
 
                 {% if current_user.is_authenticated() %}
@@ -69,8 +69,6 @@ This template provides the header, footer, and envelope info for all pages excep
                     <li><a href="/new">New request</a></li>
                     <li><a href="/view_requests">All requests</a></li>
                     <li><a href="/track">Track</a></li>
-                    <!-- <li><a href="/tutorial">Tutorial</a></li> -->
-                    <li><a href="/admin">Admin</a></li>
                     <li><a href="/report">Report</a></li>
                     <li><a href="/about">About</a></li>
                   </ul>
@@ -85,7 +83,6 @@ This template provides the header, footer, and envelope info for all pages excep
                     <li><a href="/about">About</a></li>
                   </ul>
                   <ul class="nav pull-right">
-                    <!--<li><button id="browserid-login" class="btn">{{config['AGENCY_NAME']}} Login</button></li>-->
                     <li><a href="/login" >Login</a></li>
                   </ul>
                 {% endif %}
@@ -120,8 +117,8 @@ This template provides the header, footer, and envelope info for all pages excep
 <!-- Footer is separate on landing page -->
     {% block footer %}
       <div id="footer" class="well well-small footer">
-        <p class="text-center">For more information about this application or instructions on how to get the app for <em>your</em> agency, <a href="https://github.com/codeforamerica/recordtrac" target="_blank"> view project info and documentation</a>.</p>
-        <p class="text-center">Made by the <a href="http://www.codeforamerica.org/apps/recordtrac/" target="_blank">Code for America 2013 Fellows</a> with the City of Oakland</p>
+        <p class="text-center">For more information contact the <a href="http://www.nyc.gov/html/records/html/contact/home.shtml">NYC Department of Records and Information Services</a>.<br />&copy; City of New York 2015</p>
+        <!-- <p class="text-center">Made by the <a href="http://www.codeforamerica.org/apps/recordtrac/" target="_blank">Code for America 2013 Fellows</a> with the City of Oakland</p> -->
       </div>
     {% endblock footer %}
 

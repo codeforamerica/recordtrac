@@ -127,6 +127,9 @@ websiteconfig.py
 settings.env
 notes/
 .DS_Store
+users/
+*.psd
+
 # @waltz's emacs gitignore partee pak
 *~
 .#*
