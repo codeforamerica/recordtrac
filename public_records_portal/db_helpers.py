@@ -270,10 +270,8 @@ def get_user(kwargs):
 def get_user_by_id(id):
     return User.query.get(id)
 
-# @export "create_or_return_user"
-
+# @export "create_or_return_
 def authenticate_login(email, password):
-    print 'Password', password
     if email:
         user = create_or_return_user(email=email, not_id = True)
         if user.check_password(password):

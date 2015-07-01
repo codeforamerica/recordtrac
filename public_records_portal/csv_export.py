@@ -21,7 +21,6 @@ def export():
 				text = getattr(curr,'text')
 				text = text.replace('\n', '').replace('\r', '').replace('\t', '')
 				text = text.encode('utf8')
-				# print text
 				row.append(str(text))
 				continue
 			row.append(str(getattr(curr,name)))

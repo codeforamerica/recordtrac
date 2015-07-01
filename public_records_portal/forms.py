@@ -16,7 +16,6 @@ class OfflineRequestForm(Form):
     for d in departments:
         department_choices.append((d.name,d.name))
     department_choices.append(('Unknown', 'I Don\'t Know'))
-    print department_choices
     request_text = TextAreaField(u'Request Description*', validators=[
         DataRequired('The request description is required'),
         Length(1, 5000, 'Your request must be less than 5000 characters')])

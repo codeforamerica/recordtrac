@@ -110,14 +110,19 @@ def send_prr_email(page, recipients, subject, template, include_unsubscribe_link
 
 ### @export "send_email"
 def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_everyone = False):
-	sg = sendgrid.SendGridClient(app.config['MAIL_USERNAME'],
+	if ('HTTPS_PROXY' and 'HTTP_PROXY') in app.config:
+		sg = sendgrid.SendGridClient(app.config['MAIL_USERNAME'],
 	                             app.config['MAIL_PASSWORD'],
 	                             **{
 	                             	'proxies': {
-	                             		'https': 'https://10.152.34.66:8080/',
-	                             		'http': 'http://10.152.34.66:8080/',
+	                             		'https': app.config['HTTPS_PROXY'],
+	                             		'http': app.config['HTTP_PROXY'],
 	                             	}
 	                             })
+	else:
+		sg = sendgrid.SendGridClient(app.config['MAIL_USERNAME'],
+	                             app.config['MAIL_PASSWORD'])
+
 
 	sender = app.config['DEFAULT_MAIL_SENDER']
 	plaintext = ""

@@ -149,7 +149,8 @@ def new_request(passed_recaptcha=False, data=None):
                                               passed_spam_filter=True,
                                               department=request_department,
                                               offline_submission_type=request_format,
-                                              date_received=request_date)
+                                              date_received=request_date,
+                                              privacy=request_privacy)
                 if not request_id:
                     errors.append("Looks like your request is the same as /request/%s" % request_id)
                     return render_template('offline_request.html', form=form,
@@ -224,7 +225,8 @@ def new_request(passed_recaptcha=False, data=None):
                                               state=request_address_state,
                                               zipcode=request_address_zip,
                                               passed_spam_filter=True,
-                                              department=request_department)
+                                              department=request_department,
+                                              privacy=request_privacy)
 
                 if not request_id:
                     errors.append("Looks like your request is the same as /request/%s" % request_id)

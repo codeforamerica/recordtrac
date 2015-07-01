@@ -54,8 +54,11 @@
                                         <div class="spacer">
 											{{ form.request_name(class="input-block-level", type="text", placeholder="John Doe") }}
 											{{ help("namePopover-content", "Enter name") }}
-
                                         </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <h1><small>{{ form.request_privacy.label.text }}</small></h1>
+                                        {{ form.request_privacy(class="input-block-level") }}
                                     </div>
                                     <h1><small>Contact information</small></h1>
                                     <div class="control-group">
@@ -108,9 +111,11 @@
                                         </div>
                                     </div>
                                     <div id="captcha">
+                                    {% if config['ENVIRONMENT'] != 'LOCAL' %}
                                     <form method="post" action="/submit">
                                         {{ recaptcha }}
                                     </form>
+                                    {% endif %}
                                     </div>
                                     <div id="terms_of_use" class="control-group">
                                         <p class="lead">{{ form.terms_of_use.label.text }}&nbsp;{{ form.terms_of_use }}</p>

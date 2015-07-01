@@ -290,7 +290,6 @@ def set_directory_fields():
 		csvfile = urllib.urlopen(app.config['STAFF_URL'])
 		dictreader = csv.DictReader(csvfile, delimiter=',')
 		for row in dictreader:
-			print row
 			create_or_return_user(email = row['email'].lower(), alias = row['name'], phone = row['phone number'], department = row['department name'], is_staff = True)
 		# Set liaisons data (who is a PRR liaison for what department)
 		if 'LIAISONS_URL' in app.config:
