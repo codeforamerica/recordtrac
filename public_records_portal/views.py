@@ -623,20 +623,20 @@ def json_requests():
     return Response(response, mimetype="application/json")
 
 def prepare_request_fields(results):
-    if current_user.is_anonymous():
-        return map(lambda r: {
-            "id":           r.id, \
-            "text":         helpers.clean_text(r.text), \
-            "date_received": helpers.date(r.date_received or r.date_created), \
-            "department":   r.department_name(), \
-            "status":       r.status, \
-            # The following two attributes are defined as model methods,
-            # and not regular SQLAlchemy attributes.
-            "contact_name": r.point_person_name(), \
-            "solid_status": r.solid_status()
-        }, results)
-    else:
-        return map(lambda r: {
+    # if current_user.is_anonymous():
+    #     return map(lambda r: {
+    #         "id":           r.id, \
+    #         "text":         helpers.clean_text(r.text), \
+    #         "date_received": helpers.date(r.date_received or r.date_created), \
+    #         "department":   r.department_name(), \
+    #         "status":       r.status, \
+    #         # The following two attributes are defined as model methods,
+    #         # and not regular SQLAlchemy attributes.
+    #         "contact_name": r.point_person_name(), \
+    #         "solid_status": r.solid_status()
+    #     }, results)
+    # else:
+    return map(lambda r: {
             "id":           r.id, \
             "text":         helpers.clean_text(r.text), \
             "date_received": helpers.date(r.date_received or r.date_created), \
@@ -647,7 +647,8 @@ def prepare_request_fields(results):
             # The following two attributes are defined as model methods,
             # and not regular SQLAlchemy attributes.
             "contact_name": r.point_person_name(), \
-            "solid_status": r.solid_status()
+            "solid_status": r.solid_status(), \
+            "privacy":      r.privacy
         }, results)
 
 
