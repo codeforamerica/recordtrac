@@ -1,4 +1,4 @@
-Copyright 2013-2014 Code for America and 2014 PostCode, LLC
+Copyright 2013-2014 Code for America
 
 # Affero GNU Public License 3.0
 
