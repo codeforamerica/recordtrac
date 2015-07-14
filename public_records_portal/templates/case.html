@@ -56,11 +56,11 @@
               <h3 class="control-widget">Request <span class="muted">#{{req.id}}</span></h3>
               {% block clarify_request %}{% endblock clarify_request %}{% block public_note %}{% endblock public_note %}
               {% if current_user.is_authenticated() %}
-                <p class="lead" truncateable="250"> {{ req.requester().user.alias }}</p>
+                <p class="lead" truncateable="250"> {{ req.requester().alias }}</p>
                 <p class="lead" truncateable="250"> {{ req.text | new_lines }}</p>
               {% else %}
                 {% if req.privacy == 1 %}
-                  <p class="lead" truncateable="250"> {{ req.requester().user.alias }}</p>
+                  <p class="lead" truncateable="250"> {{ req.requester().alias }}</p>
                   <p class="lead" truncateable="250"> {{ req.text | new_lines }} </p>
                 {% elif req.privacy == 2 %}
                   <p class="lead" truncateable="250"> {{ req.text | new_lines }} </p>
