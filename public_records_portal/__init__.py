@@ -77,7 +77,8 @@ envvars = [
 	'TESTING', # Set if you are running tests. Primarily used to ignore @login_requireds when running tests.
 	'SHOULD_UPLOAD', # Set if you want to test uploading documents to the specified host (currently Scribd)
 	'HTTPS_PROXY', # HTTPS Proxy for SendGrid
-	'HTTP_PROXY' # HTTP PRoxy for SendGrid
+	'HTTP_PROXY', # HTTP PRoxy for SendGrid
+	'UPLOAD_FOLDER' # Upload Folder
 ]
 for envvar in envvars:
 	set_env(key = envvar)
