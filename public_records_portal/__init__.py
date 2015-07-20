@@ -78,7 +78,8 @@ envvars = [
 	'SHOULD_UPLOAD', # Set if you want to test uploading documents to the specified host (currently Scribd)
 	'HTTPS_PROXY', # HTTPS Proxy for SendGrid
 	'HTTP_PROXY', # HTTP PRoxy for SendGrid
-	'UPLOAD_FOLDER' # Upload Folder
+	'UPLOAD_FOLDER', # Upload Folder
+        'UPLOAD_DOCS' # Upload docs locally
 ]
 for envvar in envvars:
 	set_env(key = envvar)
