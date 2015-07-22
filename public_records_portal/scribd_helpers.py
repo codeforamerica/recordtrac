@@ -13,7 +13,7 @@ from public_records_portal import app, models
 from timeout import timeout
 from werkzeug import secure_filename
 import tempfile
-
+import pyclamd
 
 def should_upload():
     if app.config['ENVIRONMENT'] != 'LOCAL':
@@ -25,7 +25,7 @@ def should_upload():
 
 # These are the extensions that can be uploaded to Scribd.com:
 ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff']
-
+clamdiagnostic = pyclamd.ClamdAgnostic()
 
 def progress(bytes_sent, bytes_total):
     app.logger.info("Scribd upload in progress: %s of %s (%s%%)" % (bytes_sent, bytes_total, bytes_sent*100/bytes_total))
@@ -136,6 +136,12 @@ def upload_file_locally(document, filename, request_id):
     app.logger.info("\n\nupload path: %s" %(upload_path))
     
     document.save(upload_path)
+
+    if clamdiagnostic.scan_file(upload_path) is not None:
+        os.remove(upload_path)
+        app.logger.info("\n\nVirus found in uploaded file, file deleted")
+        return "VIRUS_FOUND"
+
     app.logger.info("\n\nfile uploaded to local successfully")
     
     return upload_path

@@ -123,6 +123,8 @@ def upload_record(request_id, description, user_id, document = None):
 		return "Extension type '%s' is not allowed." % filename
 	else:
 		#if str(doc_id).isdigit():
+                if str(doc_id) == 'VIRUS_FOUND':
+                	return "There was a virus found in the document you uploaded." 
 		if doc_id:
 			#record_id = create_record(doc_id = doc_id, request_id = request_id, user_id = user_id, description = description, filename = filename, url = app.config['HOST_URL'] + doc_id)
 			record_id = create_record(doc_id = None, request_id = request_id, user_id = user_id, description = description, filename = filename, url = app.config['HOST_URL'] + doc_id)
