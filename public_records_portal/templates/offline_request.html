@@ -61,10 +61,18 @@
 										{{ form.request_department(class="input-block-level") }}
                                     </div>
                                     <div class="control-group">
-										<h1><small>{{ form.request_name.label.text }}</small></h1>
+										<h1><small>{{ form.request_first_name.label.text }}</small></h1>
                                         <div class="spacer">
-											{{ form.request_name(class="input-block-level", type="text", placeholder="John Doe") }}
+											{{ form.request_first_name(class="input-block-level", type="text", placeholder="John") }}
 											{{ help("namePopover-content", "Enter name") }}
+
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                                                                <h1><small>{{ form.request_last_name.label.text }}</small></h1>
+                                        <div class="spacer">
+                                                                                        {{ form.request_last_name(class="input-block-level", type="text", placeholder="Doe") }}
+                                                                                        {{ help("namePopover-content", "Enter name") }}
 
                                         </div>
                                     </div>

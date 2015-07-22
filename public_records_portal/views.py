@@ -63,7 +63,8 @@ def new_request(passed_recaptcha=False, data=None):
             request_format = form.request_format.data
             request_date = form.request_date.data
             request_department = form.request_department.data
-            request_name = form.request_name.data
+            request_first_name = form.request_first_name.data
+            request_last_name = form.request_last_name.data
             request_privacy = form.request_privacy.data
             request_email = form.request_email.data
             request_phone = form.request_phone.data
@@ -98,10 +99,12 @@ def new_request(passed_recaptcha=False, data=None):
             if not (request_department and request_department.strip()):
                 errors.append("Please select a department.")
 
-            if not (request_name and request_name.strip()):
-                errors.append("Please enter the requester's name")
+            if not (request_first_name and request_first_name.strip()):
+                errors.append("Please enter the requester's first name")
+            elif not (request_last_name and request_last_name.strip()):
+                errors.append("Please enter the requester's last name")
             else:
-                alias = request_name
+                alias = request_first_name + " " + request_last_name
             if not request_privacy:
                 errors.append("Please choose a privacy option.")
 
@@ -163,7 +166,8 @@ def new_request(passed_recaptcha=False, data=None):
             form = NewRequestForm(request.form)
             request_text = form.request_text.data
             request_department = form.request_department.data
-            request_name = form.request_name.data
+            request_first_name = form.request_first_name.data
+            request_last_name = form.request_last_name.data
             request_privacy = form.request_privacy.data
             request_email = form.request_email.data
             request_phone = form.request_phone.data
@@ -183,10 +187,12 @@ def new_request(passed_recaptcha=False, data=None):
             if not (request_department and request_department.strip()):
                 errors.append("Please select a department.")
 
-            if not (request_name and request_name.strip()):
-                errors.append("Please enter the requester's name.")
+            if not (request_first_name and request_first_name.strip()):
+                errors.append("Please enter the requester's first name.")
+            elif not (request_last_name and request_last_name.strip()):
+                errors.append("Please enter the requester's last name.")
             else:
-                alias = request_name
+                alias = request_first_name + " " + request_last_name
             if not request_privacy:
                 errors.append("Please choose a privacy option.")
 

@@ -29,7 +29,8 @@ class OfflineRequestForm(Form):
                                'You must enter the request date')])
     request_department = SelectField(u'Request Department*', choices=department_choices,
         validators=[DataRequired('Please choose a department')], default='')
-    request_name = StringField(u'Name*', validators=[DataRequired('Please enter the requestor\'s name')])
+    request_first_name = StringField(u'First Name*', validators=[DataRequired('Please enter the requestor\'s first name')])
+    request_last_name = StringField(u'Last Name*', validators=[DataRequired('Please enter the requestor\'s last name')])
     request_privacy = SelectField(u'Privacy Options', choices=[
                               (1, 'Name and Request Description Public'),
                               (2, 'Only Request Description Public'),
@@ -75,7 +76,8 @@ class NewRequestForm(Form):
         Length(1, 5000, 'Your request must be less than 5000 characters')])
     request_department = SelectField(u'Request Department*', choices=department_choices,
         validators=[DataRequired('Please choose a department')], default='')
-    request_name = StringField(u'Name*', validators=[DataRequired('Please enter the requestor\'s name')])
+    request_first_name = StringField(u'First Name*', validators=[DataRequired('Please enter the requestor\'s first name')])
+    request_last_name = StringField(u'Last Name*', validators=[DataRequired('Please enter the requestor\'s last name')])
     request_privacy = SelectField(u'Privacy Options', choices=[
                               (1, 'Name and Request Description Public'),
                               (2, 'Only Request Description Public'),
