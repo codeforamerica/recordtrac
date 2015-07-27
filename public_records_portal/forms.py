@@ -1,6 +1,6 @@
 __author__ = 'jcastillo'
 from flask.ext.wtf import Form
-from wtforms import StringField, SelectField, TextAreaField, DateField, BooleanField, PasswordField, SubmitField
+from wtforms import StringField, SelectField, TextAreaField, DateField, BooleanField, PasswordField, SubmitField, FileField
 from wtforms_components import PhoneNumberField, Email
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
 from wtforms import ValidationError
@@ -62,6 +62,8 @@ class OfflineRequestForm(Form):
     terms_of_use = BooleanField(u'I acknowledge that I have read and accepted the Terms of Use for '
                                 u'this application, as stated above',
                                 validators=[DataRequired('You must accept the terms of use')])
+    record_description = StringField(u'Attachment Description')
+    record = FileField(u'Upload attachment')
     request_submit = SubmitField(u'Submit Request')
 
 

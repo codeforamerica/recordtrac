@@ -157,7 +157,7 @@ def add_link(request_id, url, description, user_id):
 	return False
 
 ### @export "make_request"
-def make_request(text, email = None, user_id = None, phone = None, address1 = None, address2 = None, city = None, state = None, zipcode = None, alias = None, department = None, passed_spam_filter = False, offline_submission_type = None, date_received = None, privacy = 1):
+def make_request(text, email = None, user_id = None, phone = None, address1 = None, address2 = None, city = None, state = None, zipcode = None, alias = None, department = None, passed_spam_filter = False, offline_submission_type = None, date_received = None, privacy = 1, description = None, document = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
 	if not passed_spam_filter:
 		return None, False
@@ -183,6 +183,8 @@ def make_request(text, email = None, user_id = None, phone = None, address1 = No
 		subscriber_id, is_new_subscriber = create_subscriber(request_id = request_id, user_id = subscriber_user_id)
 		if subscriber_id:
 			generate_prr_emails(request_id, notification_type = "Request made", user_id = subscriber_user_id) # Send them an e-mail notification
+        if document: 
+            upload_record(request_id, description, user_id, document)
 	return request_id, True
 
 ### @export "add_subscriber"
