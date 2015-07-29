@@ -34,6 +34,8 @@ class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     alias = db.Column(db.String(100))
+    first_name = db.Column(db.String(100))
+    last_name = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True)
     phone = db.Column(db.String())
     address1 = db.Column(db.String(500))
@@ -70,6 +72,16 @@ class User(db.Model):
             return self.alias
         return "N/A"
 
+    def get_first_name(self):
+        if self.first_name and self.first_name != "":
+            return self.first_name
+        return "N/A"
+
+    def get_last_name(self):
+        if self.last_name and self.last_name != "":
+            return self.last_name
+        return "N/A"
+
     def get_phone(self):
         if self.phone and self.phone != "":
             return self.phone
@@ -95,10 +107,12 @@ class User(db.Model):
             return self.zipcode
         return "N/A"
 
-    def __init__(self, email=None, alias=None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=zipcode, department=None, contact_for=None, backup_for=None, password=None, is_staff=False):
+    def __init__(self, email=None, alias=None, first_name = None, last_name = None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=zipcode, department=None, contact_for=None, backup_for=None, password=None, is_staff=False):
         if email and validate_email(email):
             self.email = email
         self.alias = alias
+        self.first_name = first_name
+        self.last_name = last_name
         if phone and phone != "":
             self.phone = phone
         if address1 and address1 != "":
@@ -228,6 +242,18 @@ class Request(db.Model):
         requester = self.requester()
         if requester and requester.user:
             return requester.user.get_alias()
+        return "N/A"
+
+    def requester_first_name(self):
+        requester = self.requester()
+        if requester and requester.user:
+            return requester.user.get_first_name()
+        return "N/A"
+
+    def requester_last_name(self):
+        requester = self.requester()
+        if requester and requester.user:
+            return requester.user.get_last_name()
         return "N/A"
 
     def requester_phone(self):
