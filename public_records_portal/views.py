@@ -84,6 +84,12 @@ def new_request(passed_recaptcha=False, data=None):
             except:
                 app.logger.info("\n\nNo file passed in")
 
+            if document and not(record_description):
+                errors.append('Please fill out the attachment description.')
+
+            if record_description and not(document):
+                errors.append('Please select a file to upload as attachment.')
+
             if not (request_text and request_text.strip()):
                 errors.append('Please fill out the request description.')
 
@@ -198,6 +204,12 @@ def new_request(passed_recaptcha=False, data=None):
                 document = request.files['record']
             except:
                 app.logger.info("\n\nNo file passed in")
+
+            if document and not(record_description):
+                errors.append('Please fill out the attachment description.')
+
+            if record_description and not(document):
+                errors.append('Please select a file to upload as attachment.')
 
             if not (request_text and request_text.strip()):
                 errors.append('Please fill out the request description.')
