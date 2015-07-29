@@ -321,13 +321,7 @@ def create_or_return_user(email=None, alias=None, phone=None, address1=None, add
 
 
 def create_user(email=None, alias=None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=None, department=None, contact_for=None, backup_for=None, password=None, is_staff=None):
-    first_name = None
-    last_name = None
-    if alias and " " in alias:
-        nameStr = alias.split(" ")
-        first_name = nameStr[0]
-        last_name = nameStr[1]
-    user = User(email=email, alias=alias, first_name=first_name, last_name=last_name, phone=phone,  address1=address1, address2=address2, city=city, state=state,
+    user = User(email=email, alias=alias, phone=phone,  address1=address1, address2=address2, city=city, state=state,
                 zipcode=zipcode, department=department, contact_for=contact_for, backup_for=backup_for, password=password, is_staff=is_staff)
     db.session.add(user)
     db.session.commit()
