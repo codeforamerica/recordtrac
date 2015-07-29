@@ -7,9 +7,10 @@
 """
 
 
-from public_records_portal import app, gravatar, prr, notifications, helpers, db_helpers
+from public_records_portal import app, gravatar, prr, notifications, helpers, scribd_helpers, db_helpers
 # Register your filter here!
 
+app.jinja_env.filters['get_scribd_download_url'] = scribd_helpers.get_scribd_download_url
 app.jinja_env.filters['due_date'] = notifications.due_date
 app.jinja_env.filters['get_obj'] = db_helpers.get_obj
 app.jinja_env.filters['get_objs'] = db_helpers.get_objs

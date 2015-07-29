@@ -13,8 +13,6 @@
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-combobox.css') }}"media="screen">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/new_request.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-fileupload.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
 {% endblock custom_css_links %}
 {% block container %}
     <div class="row-fluid">
@@ -38,7 +36,7 @@
                                 Use this page to request public records that you received by phone, fax, mail, email, or in person on behalf of a resident.
                             </p>
                             <br/>
-                            <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="off" novalidate="novalidate" enctype="multipart/form-data">
+                            <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="off"novalidate="novalidate">
                                 <fieldset>
                                     <div class="control-group">
                                         <h1><small><i class="icon-exclamation-sign"></i>&nbsp;{{ form.request_text.label.text}}</small></h1>
@@ -47,29 +45,6 @@
 											{{ help("requestTextPopover-content", "Enter records request") }}
                                         </div>
                                     </div>
-                                    <!-- upload a record -->
-                                    <!-- name of record -->
-                                    <div class="control-group">
-                                        <h1><small>Attach documentation</small></h1>
-                                            {{ form.record_description.label.text }}
-                                            <textarea class="input-xxlarge" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of the record" required /></textarea>
-                                    </div>
-                                   <!-- upload a record -->
-                                       {{ form.record.label.text }}
-                                       <div class="fileupload fileupload-new" data-provides="fileupload">
-                                           <div class="input-append">
-                                           <!-- <div class="uneditable-input">
-                                               <i class="icon-file fileupload-exists"></i>
-                                               <span class="fileupload-preview" />
-                                               </div> -->
-                                           <span class="btn btn-file">
-                                               <span class="fileupload-new">Select file</span>
-                                               <span class="fileupload-exists">Change</span>
-                                               <input type="file" name="record" />
-                                           </span>
-                                           <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                                           </div>
-                                      </div>
                                     <div class="control-group">
 										<h1><small>{{ form.request_department.label.text}}</small></h1>
 										{{ form.request_department(class="input-block-level combobox") }}
@@ -214,6 +189,4 @@
         });
     </script>
 
-    <!-- For file uploads -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-fileupload.js') }}"></script>
 {% endblock custom_script_links %}

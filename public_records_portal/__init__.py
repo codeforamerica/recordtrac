@@ -40,7 +40,7 @@ set_env(key = 'ENVIRONMENT', default="LOCAL")
 set_env(key = 'DEFAULT_OWNER_EMAIL', default = 'recordtrac@postcode.io')
 set_env(key = 'DEFAULT_OWNER_REASON', default = 'Open government coordinator' )
 
-set_env(key = 'HOST_URL', default = 'https://127.0.0.1:5000/uploads/') # Where the documents/record uploads are hosted
+set_env(key = 'HOST_URL', default = 'https://www.scribd.com/doc/') # Where the documents/record uploads are hosted
 set_env(key = 'AGENCY_NAME', default = 'Your agency name') # e.g. City of Oakland
 set_env(key = 'SECRET_KEY', default = 'Change this to something super secret') # Flask application's secret key
 
@@ -62,6 +62,8 @@ envvars = [
 	'HTTP_PROXY',
 	'LIST_OF_ADMINS', # Defines who has admin access (/admin) with a comma delimited list of e-mail addresses. i.e. 'richa@codeforamerica.org,cris@codeforamerica.org'
 	'SECRET_KEY', # Flask app secret key
+	'SCRIBD_API_KEY',
+	'SCRIBD_API_SECRET',
 	'AKISMET_KEY', # Used for spam filtering
 	'RECAPTCHA_SITE_KEY',
 	'RECAPTCHA_SECRET_KEY',
@@ -73,7 +75,7 @@ envvars = [
 	'LOGO_ON_WHITE_URL', # The path/URL at which a logo (on a white background) of the agency is hosted. (.png or .jpg)
 	'LOGO_ON_BLACK_URL', # The path/URL at which a logo (on a black background) of the agency is hosted. (.png or .jpg)
 	'TESTING', # Set if you are running tests. Primarily used to ignore @login_requireds when running tests.
-	'SHOULD_UPLOAD', # Set if you want to test uploading documents to the specified host 
+	'SHOULD_UPLOAD', # Set if you want to test uploading documents to the specified host (currently Scribd)
 	'HTTPS_PROXY', # HTTPS Proxy for SendGrid
 	'HTTP_PROXY', # HTTP PRoxy for SendGrid
 	'UPLOAD_FOLDER', # Upload Folder

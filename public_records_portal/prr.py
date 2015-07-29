@@ -16,7 +16,7 @@ from models import *
 from ResponsePresenter import ResponsePresenter
 from RequestPresenter import RequestPresenter
 from notifications import generate_prr_emails
-import upload_helpers
+import scribd_helpers
 from spam import is_spam
 import logging
 import csv
@@ -79,6 +79,7 @@ def update_resource(resource, request_body):
 		remove_obj("Note", int(fields['response_id']))
 	elif "record_delete" in resource:
 		remove_obj("Record", int(fields['record_id']))
+		# Need to store record somewhere else and prompt them to delete from Scribd as well, if they'd like
 	else:
 		return False
 
@@ -115,7 +116,7 @@ def upload_record(request_id, description, user_id, document = None):
 	app.logger.info("\n\nBegins Upload_record method")
 	try:
 		# doc_id is upload_path
-		doc_id, filename = upload_helpers.upload_file(document = document, request_id = request_id)
+		doc_id, filename = scribd_helpers.upload_file(document = document, request_id = request_id)
 	except:
 		return "The upload timed out, please try again."
 	if doc_id == False:
@@ -156,7 +157,7 @@ def add_link(request_id, url, description, user_id):
 	return False
 
 ### @export "make_request"
-def make_request(text, email = None, user_id = None, phone = None, address1 = None, address2 = None, city = None, state = None, zipcode = None, alias = None, department = None, passed_spam_filter = False, offline_submission_type = None, date_received = None, privacy = 1, description = None, document = None):
+def make_request(text, email = None, user_id = None, phone = None, address1 = None, address2 = None, city = None, state = None, zipcode = None, alias = None, department = None, passed_spam_filter = False, offline_submission_type = None, date_received = None, privacy = 1):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
 	if not passed_spam_filter:
 		return None, False
@@ -182,8 +183,6 @@ def make_request(text, email = None, user_id = None, phone = None, address1 = No
 		subscriber_id, is_new_subscriber = create_subscriber(request_id = request_id, user_id = subscriber_user_id)
 		if subscriber_id:
 			generate_prr_emails(request_id, notification_type = "Request made", user_id = subscriber_user_id) # Send them an e-mail notification
-        if document: 
-            upload_record(request_id, description, user_id, document)
 	return request_id, True
 
 ### @export "add_subscriber"

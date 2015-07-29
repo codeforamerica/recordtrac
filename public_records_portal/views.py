@@ -18,7 +18,7 @@ from db_helpers import get_user  # finds a user based on BrowserID response
 import os, json
 from urlparse import urlparse, urljoin
 from notifications import send_prr_email, format_date
-from spam import is_spam, is_working_akismet_key, check_for_spam
+from spam import is_spam, is_working_akismet_key
 from requests import get
 from time import time
 from flask.ext.cache import Cache
@@ -75,14 +75,7 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_zip = form.request_address_zip.data
             terms_of_use = form.terms_of_use.data
             alias = None
-            document = None
             zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
-            record_description = form.record_description.data
-
-            try:
-                document = request.files['record']
-            except:
-                app.logger.info("\n\nNo file passed in")
 
             if not (request_text and request_text.strip()):
                 errors.append('Please fill out the request description.')
@@ -160,9 +153,7 @@ def new_request(passed_recaptcha=False, data=None):
                                               department=request_department,
                                               offline_submission_type=request_format,
                                               date_received=request_date,
-                                              privacy=request_privacy,
-                                              description=record_description,
-                                              document=document)
+                                              privacy=request_privacy)
                 if not request_id:
                     errors.append("Looks like your request is the same as /request/%s" % request_id)
                     return render_template('offline_request.html', form=form,
@@ -188,14 +179,7 @@ def new_request(passed_recaptcha=False, data=None):
             request_recaptcha = recaptcha.verify()
             terms_of_use = form.terms_of_use.data
             alias = None
-            document = None
             zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
-            record_description = form.record_description.data
-
-            try:
-                document = request.files['record']
-            except:
-                app.logger.info("\n\nNo file passed in")
 
             if not (request_text and request_text.strip()):
                 errors.append('Please fill out the request description.')
@@ -248,9 +232,7 @@ def new_request(passed_recaptcha=False, data=None):
                                               zipcode=request_address_zip,
                                               passed_spam_filter=True,
                                               department=request_department,
-                                              privacy=request_privacy,
-                                              description=record_description,
-                                              document=document)
+                                              privacy=request_privacy)
 
                 if not request_id:
                     errors.append("Looks like your request is the same as /request/%s" % request_id)
@@ -866,7 +848,7 @@ def well_known_status():
     response={
         'status': 'ok',
         'updated': int(time()),
-        'dependencies': ['Akismet', 'Sendgrid', 'Postgres'],
+        'dependencies': ['Akismet', 'Scribd', 'Sendgrid', 'Postgres'],
         'resources': {}
     }
 
