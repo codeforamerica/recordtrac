@@ -64,7 +64,6 @@ class PublicRecordsTestCase(unittest.TestCase):
 	# Tests for adding a record: 
 	# ---
 
-	# This doesn't test Scribd, but tests the rest of the workflow:
 	def test_upload_record(self):
 		request_id = self.submit_request(text=self.random_content('request'), email = 'richa@richa.com')
 		record_description = self.random_content('record')
