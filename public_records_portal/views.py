@@ -18,7 +18,7 @@ from db_helpers import get_user  # finds a user based on BrowserID response
 import os, json
 from urlparse import urlparse, urljoin
 from notifications import send_prr_email, format_date
-from spam import is_spam, is_working_akismet_key
+from spam import is_spam, is_working_akismet_key, check_for_spam
 from requests import get
 from time import time
 from flask.ext.cache import Cache
@@ -123,15 +123,16 @@ def new_request(passed_recaptcha=False, data=None):
             state_valid = (request_address_state != '')
             zip_valid = (request_address_zip != '' and zip_reg_ex.match(request_address_zip))
             address_valid = (street_valid and city_valid and state_valid and zip_valid)
-            recaptcha_valid = (request_recaptcha != False)
+            if app.config['ENVIRONMENT'] != 'LOCAL':
+                recaptcha_valid = (request_recaptcha != False)
 
             if not (email_valid or phone_valid or fax_valid or address_valid):
                 errors.append("Please enter at least one type of contact information")
 
-            if not data and not passed_recaptcha:
+            if app.config['ENVIRONMENT'] != 'LOCAL' and not data and not passed_recaptcha:
                 data = request.form.copy()
 
-            if check_for_spam and is_spam(request_text) and not passed_recaptcha:
+            if app.config['ENVIRONMENT'] != 'LOCAL' and check_for_spam and is_spam(request_text) and not passed_recaptcha:
                 return render_template('recaptcha_request.html', form = data, message = "Hmm, your request looks like spam. To submit your request, type the numbers or letters you see in the field below.", public_key = app.config['RECAPTCHA_SITE_KEY'])
 
             phone_formatted = ""
@@ -185,7 +186,8 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_city = form.request_address_city.data
             request_address_state = form.request_address_state.data
             request_address_zip = form.request_address_zip.data
-            request_recaptcha = recaptcha.verify()
+            if app.config['ENVIRONMENT'] != 'LOCAL' and
+                request_recaptcha = recaptcha.verify()
             terms_of_use = form.terms_of_use.data
             alias = None
             zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
@@ -217,7 +219,7 @@ def new_request(passed_recaptcha=False, data=None):
             if not (email_valid or phone_valid or fax_valid or address_valid):
                 errors.append("Please enter at least one type of contact information.")
 
-            if not request_recaptcha:
+            if app.config['ENVIRONMENT'] != 'LOCAL' and not request_recaptcha:
                 errors.append("Please complete captcha.")
 
             if not terms_of_use:
