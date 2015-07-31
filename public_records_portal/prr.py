@@ -22,6 +22,8 @@ import logging
 import csv
 import urllib
 
+agency_codes = {"Department of Records and Information Services": "860", "Office of the Chief Medical Examiner":"816","Mayor's Office":"002","Department of Education":"040","Department of Information Technology and Telecommunications":"858","DoITT/General Counse":"858", None:"000"}
+
 ### @export "add_resource"
 def add_resource(resource, request_body, current_user_id = None):
 	fields = request_body
@@ -174,7 +176,9 @@ def make_request(text, email = None, user_id = None, phone = None, address1 = No
 		else:
 			app.logger.info("%s is not a valid department" %(department))
 			department = None
-	request_id = create_request(text = text, user_id = user_id, offline_submission_type = offline_submission_type, date_received = date_received, privacy=privacy) # Actually create the Request object
+
+	id = "FOIL" + "-" + datetime.now().strftime("%Y") + "-" + agency_codes[department] + "-" + "%05d" % Request.tracking_number
+	request_id = create_request(id=id, text = text, user_id = user_id, offline_submission_type = offline_submission_type, date_received = date_received, privacy=privacy) # Actually create the Request object
 	new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email) # Assign someone to the request
 	open_request(request_id) # Set the status of the incoming request to "Open"
 	if email or alias or phone:

@@ -185,9 +185,9 @@ def create_QA(request_id, question, user_id):
 # @export "create_request"
 
 
-def create_request(text, user_id, offline_submission_type=None, date_received=None,privacy=1):
+def create_request(id, text, user_id, offline_submission_type=None, date_received=None,privacy=1):
     """ Create a Request object and return the ID. """
-    req = Request(text=text, creator_id=user_id,
+    req = Request(id=id, text=text, creator_id=user_id,
                   offline_submission_type=offline_submission_type, date_received=date_received, privacy=privacy)
     db.session.add(req)
     db.session.commit()

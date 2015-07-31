@@ -321,7 +321,7 @@ def explain_all_actions():
 # Returns a view of the case based on the audience. Currently views exist for city staff or general public.
 
 
-@app.route("/<string:audience>/request/<int:request_id>")
+@app.route("/<string:audience>/request/<string:request_id>")
 def show_request_for_x(audience, request_id):
     if "city" in audience:
         return show_request_for_city(request_id=request_id)
@@ -330,7 +330,7 @@ show_request_for_x.methods=['GET', 'POST']
 
 
 
-@app.route("/city/request/<int:request_id>")
+@app.route("/city/request/<string:request_id>")
 @login_required
 def show_request_for_city(request_id):
     if is_supported_browser():
@@ -339,7 +339,7 @@ def show_request_for_city(request_id):
         return show_request(request_id=request_id, template="manage_request_city_less_js.html")
 
 
-@app.route("/response/<int:request_id>")
+@app.route("/response/<string:request_id>")
 def show_response(request_id):
     req=get_obj("Request", request_id)
     if not req:
@@ -361,7 +361,7 @@ def track(request_id=None):
         return render_template("track.html")
 
 
-@app.route("/unfollow/<int:request_id>/<string:email>")
+@app.route("/unfollow/<string:request_id>/<string:email>")
 def unfollow(request_id, email):
     success=False
     user_id=create_or_return_user(email.lower())
@@ -374,7 +374,7 @@ def unfollow(request_id, email):
         return render_template('error.html', message="Unfollowing this request was unsuccessful. You probably weren't following it to begin with.")
 
 
-@app.route("/request/<int:request_id>")
+@app.route("/request/<string:request_id>")
 def show_request(request_id, template="manage_request_public.html"):
     req=get_obj("Request", request_id)
     departments_all=models.Department.query.all()
@@ -411,7 +411,7 @@ def docs():
     return redirect('http://codeforamerica.github.io/public-records/docs/1.0.0')
 
 
-@app.route("/edit/request/<int:request_id>")
+@app.route("/edit/request/<string:request_id>")
 @login_required
 def edit_case(request_id):
     req=get_obj("Request", request_id)
