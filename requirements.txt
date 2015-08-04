@@ -7,7 +7,6 @@ Flask-Admin==1.2.0
 Flask-BrowserID==0.0.4
 Flask-Cache==0.13.1
 Flask-Login==0.2.11
-Flask-mail==0.9.1
 Flask-ReCaptcha==0.3
 Flask-Restless==0.17.0
 Flask-SQLAlchemy==2.0
@@ -30,6 +29,7 @@ pyclamd==0.3.15
 pytz==2015.4
 recaptcha-client==1.0.6
 requests==2.7.0
+sendgrid==1.4.0
 six==1.9.0
 smtpapi==0.2.0
 SQLAlchemy==1.0.5
