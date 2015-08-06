@@ -50,19 +50,14 @@ set_env(key = 'DAYS_TO_FULFILL', default = '10')
 set_env(key = 'DAYS_AFTER_EXTENSION', default = '14')
 set_env(key = 'DAYS_UNTIL_OVERDUE', default = '2')
 
-set_env(key = 'TIMEZONE', default = "US/Eastern")
-
-set_env(key = 'MAIL_PORT', default = 587)
-
-set_env(key = 'MAIL_USE_TLS', default = True)
-
-set_env(key = 'MAIL_SERVER', default = 'email-smtp.us-east-1.amazonaws.com')
+set_env(key = 'TIMEZONE', default = "US/Pacific")
 
 # Set rest of the variables that don't have defaults:
 envvars = [
 	'DEFAULT_MAIL_SENDER', # The e-mail address used as the FROM field for all notifications
-	'MAIL_USERNAME', # Amazon Simple Email Service username
-	'MAIL_PASSWORD', # Amazon Simple Email Service password
+	'MAIL_USERNAME', # The SendGrid username
+	'MAIL_PASSWORD', # The SendGrid password
+	'SENDGRID_MONTHLY_LIMIT', # Your SendGrid Monthly Limit
 	'HTTPS_PROXY',
 	'HTTP_PROXY',
 	'LIST_OF_ADMINS', # Defines who has admin access (/admin) with a comma delimited list of e-mail addresses. i.e. 'richa@codeforamerica.org,cris@codeforamerica.org'
@@ -82,7 +77,7 @@ envvars = [
 	'HTTPS_PROXY', # HTTPS Proxy for SendGrid
 	'HTTP_PROXY', # HTTP PRoxy for SendGrid
 	'UPLOAD_FOLDER', # Upload Folder
-    'UPLOAD_DOCS' # Upload docs locally
+        'UPLOAD_DOCS' # Upload docs locally
 ]
 for envvar in envvars:
 	set_env(key = envvar)
