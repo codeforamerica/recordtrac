@@ -180,7 +180,7 @@ class Department(db.Model):
 class Request(db.Model):
 # The public records request
     __tablename__ = 'request'
-    id = db.Column(db.Integer, primary_key =True)
+    id = db.Column(db.String, primary_key =True)
     date_created = db.Column(db.DateTime)
     due_date = db.Column(db.DateTime)
     extended = db.Column(db.Boolean, default = False) # Has the due date been extended?
@@ -338,7 +338,7 @@ class QA(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     question = db.Column(db.String())
     answer = db.Column(db.String())
-    request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
+    request_id = db.Column(db.String, db.ForeignKey('request.id'))
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id')) # Actually just a user ID
     subscriber_id = db.Column(db.Integer, db.ForeignKey('user.id')) # Actually just a user ID
     date_created = db.Column(db.DateTime)
@@ -357,7 +357,7 @@ class Owner(db.Model):
     id = db.Column(db.Integer, primary_key =True)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship("User", uselist = False)
-    request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
+    request_id = db.Column(db.String, db.ForeignKey('request.id'))
     request = relationship("Request", foreign_keys = [request_id])
     active = db.Column(db.Boolean, default = True) # Indicate whether they're still involved in the request or not.
     reason = db.Column(db.String()) # Reason they were assigned
@@ -383,7 +383,7 @@ class Subscriber(db.Model):
     should_notify = db.Column(db.Boolean, default = True) # Allows a subscriber to unsubscribe
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = relationship("User", uselist = False)
-    request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
+    request_id = db.Column(db.String, db.ForeignKey('request.id'))
     date_created = db.Column(db.DateTime)
     owner_id = db.Column(db.Integer, db.ForeignKey('owner.id')) # Not null if responsible for fulfilling a part of the request. UPDATE 6-11-2014: This isn't used. we should get rid of it.
     def __init__(self, request_id, user_id, creator = False):
@@ -400,8 +400,8 @@ class Record(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     date_created = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) # The user who uploaded the record, right now only city staff can
-    doc_id = db.Column(db.Integer) # The document ID. 
-    request_id = db.Column(db.Integer, db.ForeignKey('request.id')) # The request this record was uploaded for
+    doc_id = db.Column(db.Integer) # The document ID.
+    request_id = db.Column(db.String, db.ForeignKey('request.id')) # The request this record was uploaded for
     description = db.Column(db.String(400)) # A short description of what the record is.
     filename = db.Column(db.String(400)) # The original name of the file being uploaded.
     url = db.Column(db.String()) # Where it exists on the internet.
@@ -426,7 +426,7 @@ class Note(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     date_created = db.Column(db.DateTime)
     text = db.Column(db.String())
-    request_id = db.Column(db.Integer, db.ForeignKey('request.id')) # The request it belongs to.
+    request_id = db.Column(db.String, db.ForeignKey('request.id')) # The request it belongs to.
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) # The user who wrote the note. Right now only stored for city staff - otherwise it's an anonymous/ 'requester' note.
     def __init__(self, request_id, text, user_id):
         self.text = text
