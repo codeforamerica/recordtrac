@@ -315,6 +315,12 @@ class Request(db.Model):
                         return "overdue"
                     elif (datetime.now() + timedelta(days = int(app.config['DAYS_UNTIL_OVERDUE']))) >= self.due_date:
                         return "due soon"
+                    elif (datetime.now() + timedelta(days = int(2))) >= self.due_date:
+                        return "in progress (due in 2 days)"
+                    elif (datetime.now() + timedelta(days = int(5))) >= self.due_date:
+                        return "in progress (due in 5 days)"
+                    elif (datetime.now() + timedelta(days = int(10))) >= self.due_date:
+                        return "in progress (due in 10 days)"
         return "open"
 
     @hybrid_property
