@@ -261,7 +261,8 @@ def get_request_data_chronologically(req):
 	if not req:
 		return responses
 	for i, note in enumerate(req.notes):
-		responses.append(RequestPresenter(note = note, index = i, public = public, request = req))
+		if not note.user_id:       
+			responses.append(RequestPresenter(note = note, index = i, public = public, request = req))
 	for i, qa in enumerate(req.qas):
 		responses.append(RequestPresenter(qa = qa, index = i, public = public, request = req))
 	if not responses:
