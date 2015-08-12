@@ -880,7 +880,7 @@ def well_known_status():
     response={
         'status': 'ok',
         'updated': int(time()),
-        'dependencies': ['Akismet', 'Sendgrid', 'Postgres'],
+        'dependencies': ['Akismet', 'Postgres'],
         'resources': {}
     }
 
@@ -904,23 +904,6 @@ def well_known_status():
 
     except Exception, e:
         response['status']='Akismet fail: %s' % e
-        return jsonify(response)
-
-    #
-    # Try to ask Sendgrid how many emails we have sent in the past month.
-    #
-    try:
-        url='https://sendgrid.com/api/stats.get.json?api_user=%(MAIL_USERNAME)s&api_key=%(MAIL_PASSWORD)s&days=30' % app.config
-        got=get(url)
-
-        if got.status_code != 200:
-            raise Exception('HTTP status %s from Sendgrid /api/stats.get' % got.status_code)
-
-        mails=sum([m['delivered'] + m['repeat_bounces'] for m in got.json()])
-        response['resources']['Sendgrid']=100 * float(mails) / int(app.config.get('SENDGRID_MONTHLY_LIMIT') or 40000)
-
-    except Exception, e:
-        response['status']='Sendgrid fail: %s' % e
         return jsonify(response)
 
     return jsonify(response)

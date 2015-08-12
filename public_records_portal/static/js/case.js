@@ -45,4 +45,15 @@
     }
   });
 
+  $("#days_after").change(function() {
+    selected = $(this).val();
+    if(selected === "-1") { 
+      $("#custom_due_date").show();
+    }
+    else {
+      $("#custom_due_date").hide();
+    }
+});
+
+
 })($);
