@@ -435,7 +435,7 @@ class Note(db.Model):
     text = db.Column(db.String())
     request_id = db.Column(db.String(100), db.ForeignKey('request.id')) # The request it belongs to.
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) # The user who wrote the note. Right now only stored for city staff - otherwise it's an anonymous/ 'requester' note.
-    privacy = db.Column(db.Integer, default=0x01)
+    privacy = db.Column(db.Integer, default=1)
 
     def __init__(self, request_id, text, user_id, privacy = 1):
         self.text = text

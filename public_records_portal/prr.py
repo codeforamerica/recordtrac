@@ -30,7 +30,7 @@ def add_resource(resource, request_body, current_user_id = None):
 	if "extension" in resource:
 		return request_extension(fields['request_id'], fields.getlist('extend_reason'), current_user_id)
 	if "note" in resource:
-		return add_note(request_id = fields['request_id'], text = fields['note_text'], user_id = current_user_id, passed_spam_filter = True) # Bypass spam filter because they are logged in.
+		return add_note(request_id = fields['request_id'], text = fields['note_text'], user_id = current_user_id, passed_spam_filter = True, privacy = fields['note_privacy']) # Bypass spam filter because they are logged in.
 	elif "record" in resource:
 		app.logger.info("\n\ninside add_resource method")
 		if fields['record_description'] == "":
@@ -95,10 +95,10 @@ def request_extension(request_id, extension_reasons, user_id):
 	return add_note(request_id = request_id, text = text, user_id = user_id, passed_spam_filter = True) # Bypass spam filter because they are logged in.
 
 ### @export "add_note"
-def add_note(request_id, text, user_id = None, passed_spam_filter = False):
+def add_note(request_id, text, user_id = None, passed_spam_filter = False, privacy = 1):
 	if not text or text == "" or (not passed_spam_filter):
 		return False
-	note_id = create_note(request_id = request_id, text = text, user_id = user_id, privacy = 1)
+	note_id = create_note(request_id = request_id, text = text, user_id = user_id, privacy = privacy)
 	if note_id:
 		change_request_status(request_id, "A response has been added.")
 		if user_id:
@@ -277,7 +277,10 @@ def get_responses_chronologically(req):
 		return responses
 	for note in req.notes:
 		if note.user_id:
-			responses.append(ResponsePresenter(note = note))
+			if current_user.is_anonymous()  and note.privacy == 2:
+				pass # private note
+			else:
+				responses.append(ResponsePresenter(note = note))
 	for record in req.records:
 		responses.append(ResponsePresenter(record = record))
 	if not responses:
