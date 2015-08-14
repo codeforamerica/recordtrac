@@ -11,7 +11,7 @@ from os import environ
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 
-# Initialize Flask app 
+# Initialize Flask app
 app = Flask(__name__)
 app.debug = True
 
@@ -24,9 +24,15 @@ def set_env(key, default = None):
 	elif default:
 		app.config[key] = default
 
+def set_bool_env(key, default = None):
+	if key in environ:
+		app.config[key] = environ[key].lower() in ('true', 'yes', 'on')
+	elif default is not None:
+		app.config[key] = default
+
 # UPDATES TO THESE DEFAULTS SHOULD OCCUR IN YOUR .env FILE.
 
-set_env(key = 'APPLICATION_URL', default = "http://127.0.0.1:5000/") 
+set_env(key = 'APPLICATION_URL', default = "http://127.0.0.1:5000/")
 set_env(key = 'ENVIRONMENT', default="LOCAL")
 # The default records liaison, to whom requests get routed to if no department is selected:
 set_env(key = 'DEFAULT_OWNER_EMAIL', default = 'recordtrac@codeforamerica.org')
@@ -40,7 +46,7 @@ set_env(key = 'SECRET_KEY', default = 'Change this to something super secret') #
 # Currently due dates and overdue status is only showed to logged in agency staff
 set_env(key = 'DAYS_TO_FULFILL', default = '10')
 set_env(key = 'DAYS_AFTER_EXTENSION', default = '14')
-set_env(key = 'DAYS_UNTIL_OVERDUE', default = '2') 
+set_env(key = 'DAYS_UNTIL_OVERDUE', default = '2')
 
 set_env(key = 'TIMEZONE', default = "US/Pacific")
 
@@ -71,7 +77,7 @@ for envvar in envvars:
 	set_env(key = envvar)
 
 # Database gets set slightly differently, to support difference between Flask and Heroku naming:
-app.config['SQLALCHEMY_DATABASE_URI'] = environ['DATABASE_URL'] 
+app.config['SQLALCHEMY_DATABASE_URI'] = environ['DATABASE_URL']
 
 # Initialize database
 db = SQLAlchemy(app)

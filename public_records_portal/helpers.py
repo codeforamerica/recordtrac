@@ -56,6 +56,16 @@ def date(obj):
 	except: # Not a datetime object
  		return notifications.format_date(datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f"))
 
+def format_datetime(obj, format):
+	""" Take a datetime or datetime-like object and return a formatted datetime string. """
+	if not obj:
+		return None
+	try:
+		return localize(obj).strftime(format)
+	except: # Not a datetime object
+		date_obj = datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f")
+		return localize(date_obj).strftime(format)
+
 def timestamp(obj):
 	return localize(obj).strftime('%H:%M:%S')
 

@@ -26,6 +26,8 @@ import urllib
 def add_resource(resource, request_body, current_user_id = None):
 	fields = request_body
 	if "extension" in resource:
+		if not fields.getlist('extend_reason') and not fields.getlist('extend_reasons'):
+			return "You must select a reason for the extension."
 		return request_extension(int(fields['request_id']), fields.getlist('extend_reason'), current_user_id)
 	if "note" in resource:
 		return add_note(request_id = int(fields['request_id']), text = fields['note_text'], user_id = current_user_id, passed_spam_filter = True) # Bypass spam filter because they are logged in.
@@ -148,10 +150,10 @@ def add_link(request_id, url, description, user_id):
 		return record_id
 	return False
 
-### @export "make_request"			
+### @export "make_request"
 def make_request(text, email = None, user_id = None, phone = None, alias = None, department = None, passed_spam_filter = False, offline_submission_type = None, date_received = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
-	if not passed_spam_filter: 
+	if not passed_spam_filter:
 		return None, False
 	request_id = find_request(text)
 	if request_id: # Same request already exists
@@ -177,7 +179,7 @@ def make_request(text, email = None, user_id = None, phone = None, alias = None,
 			generate_prr_emails(request_id, notification_type = "Request made", user_id = subscriber_user_id) # Send them an e-mail notification
 	return request_id, True
 
-### @export "add_subscriber"	
+### @export "add_subscriber"
 def add_subscriber(request_id, email):
 	user_id = create_or_return_user(email = email)
 	subscriber_id, is_new_subscriber = create_subscriber(request_id = request_id, user_id = user_id)
@@ -186,7 +188,7 @@ def add_subscriber(request_id, email):
 		return subscriber_id
 	return False
 
-### @export "ask_a_question"	
+### @export "ask_a_question"
 def ask_a_question(request_id, user_id, question):
 	""" City staff can ask a question about a request they are confused about."""
 	req = get_obj("Request", request_id)
@@ -211,12 +213,12 @@ def answer_a_question(qa_id, answer, subscriber_id = None, passed_spam_filter = 
 		generate_prr_emails(request_id = request_id, notification_type = "Question answered")
 		return True
 
-### @export "open_request"	
+### @export "open_request"
 def open_request(request_id):
 	change_request_status(request_id, "Open")
 
-### @export "assign_owner"	
-def assign_owner(request_id, reason, email = None): 
+### @export "assign_owner"
+def assign_owner(request_id, reason, email = None):
 	""" Called any time a new owner is assigned. This will overwrite the current owner."""
 	req = get_obj("Request", request_id)
 	past_owner_id = None
@@ -230,9 +232,9 @@ def assign_owner(request_id, reason, email = None):
 		return owner_id
 
 	app.logger.info("\n\nA new owner has been assigned: Owner: %s" % owner_id)
-	new_owner = get_obj("Owner", owner_id)	
+	new_owner = get_obj("Owner", owner_id)
 	# Update the associated department on request
-	update_obj(attribute = "department_id", val = new_owner.user.department, obj = req)
+	update_obj(attribute = "department_id", val = new_owner.user.department_id, obj = req)
 	user_id = get_attribute(attribute = "user_id", obj_id = owner_id, obj_type = "Owner")
 	# Send notifications
 	if is_new_owner:
@@ -278,7 +280,7 @@ def get_responses_chronologically(req):
 def set_directory_fields():
 	# Set basic user data
 	if 'STAFF_URL' in app.config:
-		# This gets run at regular internals via db_users.py in order to keep the staff user list up to date. Before users are added/updated, ALL users get reset to 'inactive', and then only the ones in the current CSV are set to active. 
+		# This gets run at regular internals via db_users.py in order to keep the staff user list up to date. Before users are added/updated, ALL users get reset to 'inactive', and then only the ones in the current CSV are set to active.
 		for user in User.query.filter(User.is_staff == True).all():
 			update_user(user = user, is_staff = False)
 		csvfile = urllib.urlopen(app.config['STAFF_URL'])
@@ -296,7 +298,7 @@ def set_directory_fields():
 		else:
 			app.logger.info("\n\n Please update the config variable LIAISONS_URL for where to find department liaison data for your agency.")
 	else:
-		app.logger.info("\n\n Please update the config variable STAFF_URL for where to find csv data on the users in your agency.") 
+		app.logger.info("\n\n Please update the config variable STAFF_URL for where to find csv data on the users in your agency.")
 		if 'DEFAULT_OWNER_EMAIL' in app.config and 'DEFAULT_OWNER_REASON' in app.config:
 			create_or_return_user(email = app.config['DEFAULT_OWNER_EMAIL'].lower(), alias = app.config['DEFAULT_OWNER_EMAIL'], department = app.config['DEFAULT_OWNER_REASON'], is_staff = True)
 			app.logger.info("\n\n Creating a single user from DEFAULT_OWNER_EMAIL and DEFAULT_OWNER_REASON for now. You may log in with %s" %(app.config['DEFAULT_OWNER_EMAIL']))

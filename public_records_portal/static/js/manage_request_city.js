@@ -137,7 +137,7 @@ function prepareStaffTypeahead(){
         $.each(user_data, function (i, staff) {
               emails.push(staff['email']);
               map[staff['alias'] + " - " + staff['email']] = staff['email'];
-              contacts.push(staff['alias'] + " - " + staff['email']);        
+              contacts.push(staff['alias'] + " - " + staff['email']);
        });
     });
   return { map:map, emails:emails, contacts:contacts }

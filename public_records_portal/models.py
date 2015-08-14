@@ -15,6 +15,7 @@ from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 from sqlalchemy import and_, or_
 
 from datetime import datetime, timedelta
+from pytz import utc
 from public_records_portal import db, app
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
@@ -31,13 +32,16 @@ class User(db.Model):
 	phone = db.Column(db.String())
 	date_created = db.Column(db.DateTime)
 	password = db.Column(db.String(255))
-	department = db.Column(Integer, ForeignKey("department.id"))
-	current_department = relationship("Department", foreign_keys = [department], uselist = False)
+	department_id = db.Column(Integer, ForeignKey("department.id", use_alter=True, name="fk_department"))
 	contact_for = db.Column(db.String()) # comma separated list
 	backup_for = db.Column(db.String()) # comma separated list
 	owners = relationship("Owner")
 	subscribers = relationship("Subscriber")
 	is_staff = db.Column(db.Boolean, default = False) # Is this user an active agency member?
+
+	current_department = relationship("Department",
+		foreign_keys=[department_id],
+		lazy='joined', uselist=False)
 
 	def is_authenticated(self):
 		return True
@@ -63,7 +67,7 @@ class User(db.Model):
 			self.phone = phone
 		self.date_created = datetime.now().isoformat()
 		if department and department != "":
-			self.department = department
+			self.department_id = department
 		if contact_for and contact_for != "":
 			self.contact_for = contact_for
 		if backup_for and backup_for != "":
@@ -88,9 +92,21 @@ class Department(db.Model):
 	date_created = db.Column(db.DateTime)
 	date_updated = db.Column(db.DateTime)
 	name = db.Column(db.String(), unique=True)
-	users = relationship("User") # The list of users in this department
+	users = relationship("User", foreign_keys=[User.department_id], post_update=True) # The list of users in this department
 	requests = relationship("Request", order_by = "Request.date_created.asc()") # The list of requests currently associated with this department
-	def __init__(self, name):
+
+	primary_contact_id = db.Column(Integer, ForeignKey("user.id"))
+	backup_contact_id = db.Column(Integer, ForeignKey("user.id"))
+	primary_contact = relationship(User,
+		foreign_keys=[primary_contact_id],
+		primaryjoin=(primary_contact_id == User.id),
+		uselist=False, post_update=True)
+	backup_contact = relationship(User,
+		foreign_keys=[backup_contact_id],
+		primaryjoin=(backup_contact_id == User.id),
+		uselist=False, post_update=True)
+
+	def __init__(self, name=''):
 		self.name = name
 		self.date_created = datetime.now().isoformat()
 	def __repr__(self):
@@ -101,7 +117,7 @@ class Department(db.Model):
 		return self.name or "N/A"
 
 ### @export "Request"
-class Request(db.Model): 
+class Request(db.Model):
 # The public records request
 	__tablename__ = 'request'
 	id = db.Column(db.Integer, primary_key =True)
@@ -124,7 +140,7 @@ class Request(db.Model):
 
 	def __init__(self, text, creator_id = None, offline_submission_type = None, date_received = None):
 		self.text = text
-		self.date_created = datetime.now().isoformat()
+		self.date_created = datetime.now(utc).isoformat()
 		self.creator_id = creator_id
 		self.offline_submission_type = offline_submission_type
 		if date_received and type(date_received) is datetime:
@@ -142,7 +158,7 @@ class Request(db.Model):
 			self.due_date = self.date_received + timedelta(days = int(app.config['DAYS_TO_FULFILL']))
 
 	def extension(self):
-		self.extended = True 
+		self.extended = True
 		self.due_date = self.due_date + timedelta(days = int(app.config['DAYS_AFTER_EXTENSION']))
 	def point_person(self):
 		for o in self.owners:
@@ -154,7 +170,7 @@ class Request(db.Model):
 		for o in self.owners:
 			all_owners.append(o.user.get_alias())
 		return all_owners
-		
+
 	def requester(self):
 		if self.subscribers:
 			return self.subscribers[0] or None # The first subscriber is always the requester
@@ -207,11 +223,11 @@ class Request(db.Model):
 	def due_soon(self):
 			two_days = datetime.now() + timedelta(days = 2)
 			return and_(self.due_date < two_days, self.due_date > datetime.now(), ~self.closed)
- 
+
 	@hybrid_property
 	def overdue(self):
 			return and_(self.due_date < datetime.now(), ~self.closed)
-	
+
 	@hybrid_property
 	def closed(self):
 			return Request.status.ilike("%closed%")
@@ -236,12 +252,12 @@ class QA(db.Model):
 		return "<QA Q: %r A: %r>" %(self.question, self.answer)
 
 ### @export "Owner"
-class Owner(db.Model): 
+class Owner(db.Model):
 # A member of city staff assigned to a particular request, that may or may not upload records towards that request.
 	__tablename__ = 'owner'
 	id = db.Column(db.Integer, primary_key =True)
 	user_id = Column(Integer, ForeignKey('user.id'))
-	user = relationship("User", uselist = False)
+	user = relationship("User", uselist = False, lazy='joined')
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
 	request = relationship("Request", foreign_keys = [request_id])
 	active = db.Column(db.Boolean, default = True) # Indicate whether they're still involved in the request or not.
@@ -259,15 +275,17 @@ class Owner(db.Model):
 		self.is_point_person = is_point_person
 	def __repr__(self):
 		return '<Owner %r>' %self.id
+	def __str__(self):
+		return str(self.user)
 
 ### @export "Subscriber"
-class Subscriber(db.Model): 
+class Subscriber(db.Model):
 # A person subscribed to a request, who may or may not have created the request, and may or may not own a part of the request.
 	__tablename__ = 'subscriber'
 	id = db.Column(db.Integer, primary_key = True)
 	should_notify = db.Column(db.Boolean, default = True) # Allows a subscriber to unsubscribe
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-	user = relationship("User", uselist = False)
+	user = relationship("User", uselist = False, lazy='joined')
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
 	date_created = db.Column(db.DateTime)
 	owner_id = db.Column(db.Integer, db.ForeignKey('owner.id')) # Not null if responsible for fulfilling a part of the request. UPDATE 6-11-2014: This isn't used. we should get rid of it.
@@ -277,6 +295,8 @@ class Subscriber(db.Model):
 		self.date_created = datetime.now().isoformat()
 	def __repr__(self):
 		return '<Subscriber %r>' %self.user_id
+	def __str__(self):
+		return str(self.user)
 
 ### @export "Record"
 class Record(db.Model):
@@ -287,7 +307,7 @@ class Record(db.Model):
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id')) # The user who uploaded the record, right now only city staff can
 	doc_id = db.Column(db.Integer) # The document ID. Currently using Scribd API to upload documents.
 	request_id = db.Column(db.Integer, db.ForeignKey('request.id')) # The request this record was uploaded for
-	description = db.Column(db.String(400)) # A short description of what the record is. 
+	description = db.Column(db.String(400)) # A short description of what the record is.
 	filename = db.Column(db.String(400)) # The original name of the file being uploaded.
 	url = db.Column(db.String()) # Where it exists on the internet.
 	download_url = db.Column(db.String()) # Where it can be downloaded on the internet.
@@ -332,6 +352,6 @@ class Visualization(db.Model):
 	def __init__(self, type_viz, content):
 		self.type_viz = type_viz
 		self.content = content
-		self.date_created = datetime.now().isoformat()
+		self.date_created = datetime.now(utc).isoformat()
 	def __repr__(self):
 		return '<Visualization %r>' % self.type_viz

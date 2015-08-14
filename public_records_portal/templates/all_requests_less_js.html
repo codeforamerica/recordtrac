@@ -8,7 +8,7 @@
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/all_requests.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/all_requests_noresults.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.min.css') 
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.min.css')
   }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui-1.10.4.custom.min.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui.css') }}">
@@ -17,16 +17,16 @@
 {% block custom_script_links %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-select.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/custom.bootstrap-select.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-ui-1.10.4.custom.min.js') }}"></script> 
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-ui-1.10.4.custom.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/date_picker.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/all_requests.js') }}"></script>
-  
+
 {% endblock custom_script_links %}
 
 {% block container %}
 
   <div class="row-fluid" >
-    <div class="span11 offset1">  
+    <div class="span11 offset1">
 
       <div class="row-fluid">
           <div class="span11">
@@ -43,16 +43,16 @@
         </div>
       </div>
 
-    <form id ="all_requests_form" name="all_requests" action="/requests" method="GET"> 
+    <form id ="all_requests_form" name="all_requests" action="/requests" method="GET">
       <div class="row-fluid" style="padding-bottom: 5%;">
         <div class="span4">
-          <div class="well well-small" style="padding-bottom: 3.5em;">              
+          <div class="well well-small" style="padding-bottom: 3.5em;">
             <h5>Search request text</h5>
             <div>
               <input class="span12" name="search_term" type="search" value="{{search_term or ''}}" placeholder="I'd like to find...">
             </div>
-            
-            <div class="row-fluid">                     
+
+            <div class="row-fluid">
               <!-- <h4 class="underline">ADVANCED FILTER</h4> -->
               {% if current_user.is_authenticated() %}
               <div class="span6">
@@ -88,42 +88,42 @@
                   </label>
                   {% endif %}
                   <label class="checkbox">
-                    <input type="checkbox" name="is_closed" {% if is_closed %} checked {% endif %} /> 
+                    <input type="checkbox" name="is_closed" {% if is_closed %} checked {% endif %} />
                     <em class="closed_style">Closed</em>
                   </label>
                 </div>
               </div>
             </div>
-            
+
             <h5>Date received</h5>
             <div class="control-group">
-              <input type="date" 
+              <input type="date"
                      name="min_date_received"
                      value="{{ min_date_received }}"
-                     class="span12" > 
-              <input type="date" 
+                     class="span12" >
+              <input type="date"
                      name="max_date_received"
                      value="{{ max_date_received }}"
-                     class="span12" > 
+                     class="span12" >
             </div>
 
             {% if current_user.is_authenticated() %}
               <h5>Due date</h5>
               <div class="control-group">
-                  <input type="date" 
+                  <input type="date"
                          name="min_due_date"
                          value="{{ min_due_date }}"
-                         class="span12" > 
-                  <input type="date" 
+                         class="span12" >
+                  <input type="date"
                          name="max_due_date"
                          value="{{ max_due_date }}"
-                         class="span12" > 
+                         class="span12" >
               </div>
               <h5>Requester name</h5>
               <div>
                 <input class="span12" name="requester_name" type="search" placeholder="Enter name" value="{{requester_name or ''}}">
               </div>
-            {% endif %} 
+            {% endif %}
 
             <h5>Department</h5>
             <div class="control-group">
@@ -152,7 +152,7 @@
         </div>
 
         <div class="span7">
-   
+
           <table id="requests">
               <thead id="headings">
                   <tr>
@@ -177,7 +177,7 @@
                   </tr>
               </thead>
               <tbody>
-              {% for request in requests %}              
+              {% for request in requests %}
                   <tr>
                     <td class="status {{request.solid_status}}">
                       {% if request.solid_status == "closed"  %}
@@ -185,7 +185,7 @@
                       {% endif %}
                     </td>
                     <td>{{request.id}}</td>
-                    <td>{{request.date_received}}</td>
+                    <td>{{request.date_received | format_datetime('%b %d, %Y at %-I:%M %p') }}</td>
                     <td>
                     {% if current_user.is_authenticated() %}
                       <a href="/city/request/{{request.id}}">
@@ -195,15 +195,15 @@
 
                     {% set text = request.text %}
                     {% if request.solid_status == "due soon" %}
-                        <span style = "background-color: #FB991B" class="label label-warning">due soon</span> 
+                        <span style = "background-color: #FB991B" class="label label-warning">due soon</span>
                     {% elif request.solid_status == "overdue" %}
-                        <span style = "background-color: #CA1A1A" class="label label-important">overdue</span> 
+                        <span style = "background-color: #CA1A1A" class="label label-important">overdue</span>
                     {% endif %}
                     {{ text }}
 
                     </a>
                     </td>
-                    <td>{{request.department}}</td>                    
+                    <td>{{request.department}}</td>
                     <td>{{request.contact_name}}</td>
                     {% if current_user.is_authenticated() %}
                     <td>{{request.due_date }}</td>
@@ -212,7 +212,7 @@
                   </tr>
               {% endfor %}
               </tbody>
-          </table> 
+          </table>
 
           <div class="pull-left pagination">
             <ul>
@@ -221,7 +221,7 @@
               {% endif %}
 
               <li>Showing {{ start_index }} to {{ end_index }} of {{ num_results }} entries</li>
-              
+
               {% if more_results %}
                   <button class="btn btn-small" type="submit" onclick="return pageNumber(1);">Next</button>
               {% endif %}

@@ -1,20 +1,34 @@
 $(document).ready(function(){
 
+  $.validator.addMethod('nopostdate', function(value, element) {
+    var eod = new Date();
+    var dateval = new Date(value);
+
+    eod.setHours(23, 59, 59, 999);
+    return this.optional(element) || dateval <= eod;
+  }, "This field must not be postdated.");
+
   /* validates add a request form */
   $("#submitRequest").validate({
       rules: {
         request_text: {
           required: true,
           minlength: 2
-             }
-         },
+        },
+        date_received: {
+          nopostdate: true
+        }
+      },
+      messages: {
+        date_received: "You must select a date in the past."
+      },
       highlight: function(element) {
         $(element).closest('.control-group').removeClass('success').addClass('error');
-        },
+      },
       success: function(element) {
         element
-        .closest('.control-group').removeClass('error').addClass('success');
-        }
+          .closest('.control-group').removeClass('error').addClass('success');
+      }
     });
 
 
