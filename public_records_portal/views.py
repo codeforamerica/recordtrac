@@ -44,6 +44,62 @@ browser_id = BrowserID()
 browser_id.user_loader(get_user)
 browser_id.init_app(app)
 
+@app.route("/login", methods = ["GET", "POST"])
+def login(email=None, password=None):
+	if request.method == 'POST':
+		email = request.form['email']
+		password = request.form['password']
+		user_to_login = authenticate_login(email, password)
+		if user_to_login:
+			login_user(user_to_login)
+			redirect_url = get_redirect_target()
+			if 'temporary_login' in redirect_url: # Redirect to update password
+				return render_template('update_password.html', user_id = get_user_id())
+			if 'login' in redirect_url or 'logout' in redirect_url:
+				return redirect(url_for('index'))
+			if "city" not in redirect_url:
+					redirect_url = redirect_url.replace("/request/", "/city/request/")
+			return redirect(redirect_url)
+		else:
+			app.logger.info("\n\nLogin failed (due to incorrect e-mail/password combo) for email: %s." % email)
+			return render_template('error.html', message = "That e-mail/ password combo didn't work. You can always <a href='/reset_password'>reset your password</a>.")
+		app.logger.info("\n\nLogin failed for email: %s." % email)
+		return render_template('error.html', message="Something went wrong.", user_id = get_user_id())
+	else:
+		user_id = get_user_id()
+		if user_id:
+			return render_template('generic.html', message = 'You are already logged in. If you wish to log in as another user, first log out by clicking your name in the upper-right corner of this page and clicking Logout.', user_id = user_id)
+		else:
+			return render_template('generic.html', message = "If you work for the %s and are trying to log into RecordTrac, please log in by clicking City login in the upper-right corner of this page." % app.config['AGENCY_NAME'])
+
+@app.route("/reset_password", methods = ["GET", "POST"])
+def reset_password(email=None):
+	after_reset = False
+	reset_success = False
+	if request.method == 'POST':
+		after_reset = True
+		email = request.form['email']
+		password = db_helpers.set_random_password(email)
+		if password:
+			send_prr_email(page = app.config['APPLICATION_URL'], recipients = [email], subject = "Your temporary password", template = "password_email.html", include_unsubscribe_link = False, password = password)
+			reset_success = True
+			app.logger.info("\n\nPassword reset sent for email: %s." % email)
+		else:
+			app.logger.info("\n\nPassword reset attempted and denied for email: %s." % email)
+	return render_template('reset_password.html', after_reset = after_reset, reset_success = reset_success)
+
+
+@app.route("/login_required", methods = ["GET", "POST"])
+@login_required
+def update_password(password=None):
+	if request.method == 'POST':
+		if set_password(current_user, request.form['password']):
+			return index()
+		app.logger.info("\n\nFailure updating password for user %s" % current_user.id)
+		return render_template('error.html', message = "Something went wrong updating your password.")
+	else:
+		app.logger.info("\n\nSuccessfully updated password for user %s" % current_user.id)
+		return render_template('update_password.html', user_id = current_user.id)
 
 # Submitting a new request
 @app.route("/new", methods=["GET", "POST"])

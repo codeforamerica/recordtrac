@@ -37,10 +37,7 @@ class HomeView(AdminIndexView):
         return self.render('admin.html')
     def is_accessible(self):
         if current_user.is_authenticated():
-            if 'LIST_OF_ADMINS' in app.config:
-                admins = app.config['LIST_OF_ADMINS'].split(",")
-                if current_user.email.lower() in admins:
-                    return True
+            return current_user.is_admin()
         return False
 
 # Create Admin

@@ -17,6 +17,34 @@ import os
 import logging
 
 
+
+### @export "authenticate_login"
+def authenticate_login(email, password):
+	if email:
+		user = User.query.filter_by(email = email).first()
+		if user and (user.is_staff or user.is_admin()):
+			if user.check_password(password):
+				return user
+			if user.password == password: # Hash it
+				user.set_password(password)
+				db.session.add(user)
+				db.session.commit()
+				return user
+	return None
+
+### @export "set_random_password"
+def set_random_password(email):
+	user = User.query.filter(User.email == func.lower(email)).first()
+	# Must be staff or admin to reset password
+	if user and (user.is_staff == True or user.is_admin() == True):
+		password = uuid.uuid4().hex[:10] # Limit to 10 characters
+		user.set_password(password)
+		db.session.add(user)
+		db.session.commit()
+		return password
+	return None
+
+
 ### @export "get_subscriber"
 def get_subscriber(request_id, user_id):
 # Returns the subscriber for a given request by user ID

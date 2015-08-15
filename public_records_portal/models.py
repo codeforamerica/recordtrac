@@ -84,6 +84,14 @@ class User(db.Model):
 		else:
 			app.logger.error("\n\nUser %s is not associated with a department." % self.email)
 			return "N/A"
+	def check_password(self, password):
+		return check_password_hash(self.password, password)
+	def set_password(self, password):
+		self.password = generate_password_hash(password)
+	def is_admin(self):
+		if 'LIST_OF_ADMINS' in app.config:
+			admins = app.config['LIST_OF_ADMINS'].split(",")
+	    	return self.email.lower() in admins
 
 ### @export "Department"
 class Department(db.Model):
