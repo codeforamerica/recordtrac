@@ -243,26 +243,6 @@ def new_request(passed_recaptcha=False, data=None):
             # if request_attachment_description and not(attachment):
             #     errors.append('Please select a file to upload as attachment.')
 
-            # # Check Format
-            # if not (request_format and request_format.strip()):
-            #     errors.append('You must enter the format in which the request was received')
-
-            # # Check Date
-            # if request_date:
-            #     try:
-            #         tz = pytz.timezone(app.config['TIMEZONE'])
-            #         offset = tz.utcoffset(datetime.now())
-            #         offset = (offset.days * 86400 + offset.seconds) / 3600
-            #         # request_date = request_date - timedelta(hours=offset)
-            #     except TypeError:
-            #         errors.append("Please use the datepicker to select a date.")
-            #         request_date = None
-            #     except ValueError:
-            #         errors.append("Please use the datepicker to select a date.")
-            #         request_date = None
-            # else:
-            #     errors.append("Please use the datepicker to select a date.")
-
             if not (request_agency and request_agency.strip()):
                 errors.append("Please select an agency.")
 

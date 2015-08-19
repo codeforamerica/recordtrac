@@ -48,7 +48,7 @@
                 </div>
                 <div class="control-group">
                   <h2><small>{{ form.request_summary.label.text}}</small></h2>
-                  {{ form.request_summary(class="input-block-level", placeholder="Please provide a short summary of the request") }}
+                  {{ form.request_summary(class="input-block-level", rows="2", id="request_summary", placeholder="Please provide a short summary of the request. Do not include private information - such as social security numbers or credit card information") }}
                   {# {{ help("requestSummaryPopover-content", "Enter summary of request - agency")}} #}
                 </div>
                 <div class="control-group">
@@ -85,16 +85,18 @@
                   <lead>Personal Information</lead>
                 </h2>
                 <h3><small>All information entered in this section will not be visibile to the public</small></h3>
-                <div class="spacer well" style="background-color: #FFFFFF">
-                  <div class="control-group">
-                    <h2><small>{{ form.request_first_name.label.text }}</small></h2>
-                    {{ form.request_first_name(class="input-block-level", type="text", placeholder="John") }}
-                    {# {{ help("namePopover-content", "Enter name - agency") }} #}
-                  </div>
-                  <div class="control-group">
-                    <h2><small>{{ form.request_last_name.label.text }}</small></h2>
-                    {{ form.request_last_name(class="input-block-level", type="text", placeholder="Doe") }}
-                    {# {{ help("namePopover-content", "Enter name - agency") }} #}
+                <div class="spacer" style="background-color: #FFFFFF">
+                  <div class="row-fluid">
+                    <div class="control-group span6">
+                      <h2><small>{{ form.request_first_name.label.text }}</small></h2>
+                      {{ form.request_first_name(class="input-block-level", type="text", placeholder="John") }}
+                      {# {{ help("namePopover-content", "Enter name - agency") }} #}
+                    </div>
+                    <div class="control-group span6">
+                      <h2><small>{{ form.request_last_name.label.text }}</small></h2>
+                      {{ form.request_last_name(class="input-block-level", type="text", placeholder="Doe") }}
+                      {# {{ help("namePopover-content", "Enter name - agency") }} #}
+                    </div>
                   </div>
                   <div class="control-group">
                     <h2><small>{{ form.request_role.label.text }}</small></h2>
@@ -221,6 +223,7 @@
 <script type="text/javascript">
   $(document).ready(function() {
     autosize($('#request_text'));
+    autosize($('#request_summary'));
   });
 </script>
 <!-- For file uploads -->

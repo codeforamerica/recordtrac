@@ -102,7 +102,7 @@ privacy_options = [
 class OfflineRequestForm(Form):
     request_category = SelectField(u'Category*', choices=categories, validators=[DataRequired('The request category is required')])
     request_agency = SelectField(u'Agency*', choices=agencies, validators=[DataRequired('Please select an agency')], default='')
-    request_summary = StringField(u'Summary*', validators=[DataRequired('You must enter a summary of your request'), Length(1, 250, 'Your request summary must be less than 250 characters')])
+    request_summary = TextAreaField(u'Summary*', validators=[DataRequired('You must enter a summary of your request'), Length(1, 250, 'Your request summary must be less than 250 characters')])
     request_privacy = SelectField(u'Should the request summary be public?*', choices=privacy_options, validators=[DataRequired('You must select a privacy option.')], default=1)
     request_text = TextAreaField(u'Detailed Description*', validators=[Length(1, 5000, 'The detailed description of this request must be less than 5000 characters')])
     request_attachment_description = StringField(u'Description of Attachment')
@@ -126,7 +126,7 @@ class OfflineRequestForm(Form):
 class NewRequestForm(Form):
     request_category = SelectField(u'Category*', choices=categories, validators=[DataRequired('The request category is required')])
     request_agency = SelectField(u'Agency*', choices=agencies, validators=[DataRequired('Please select an agency')], default='')
-    request_summary = StringField(u'Summary*', validators=[DataRequired('You must enter a summary of your request'), Length(1, 250, 'Your request summary must be less than 250 characters')])
+    request_summary = TextAreaField(u'Summary*', validators=[DataRequired('You must enter a summary of your request'), Length(1, 250, 'Your request summary must be less than 250 characters')])
     request_privacy = SelectField(u'Should the request summary be public?*', choices=privacy_options, validators=[DataRequired('You must select a privacy option.')], default=1)
     request_text = TextAreaField(u'Detailed Description*', validators=[Length(1, 5000, 'The detailed description of this request must be less than 5000 characters')])
     request_first_name = StringField(u'First Name*', validators=[DataRequired('Please enter the requestor\'s first name')])
