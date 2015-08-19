@@ -24,9 +24,7 @@ from validate_email import validate_email
 
 class requestPrivacy:
     PUBLIC = 0x01
-    NAME_PRIVATE = 0x02
-    REQUEST_PRIVATE = 0x04
-    PRIVATE = 0x08
+    PRIVATE = 0x02
 
 
 # @export "User"
@@ -188,7 +186,9 @@ class Request(db.Model):
     extended = db.Column(db.Boolean, default = False) # Has the due date been extended?
     qas = relationship("QA", cascade="all,delete", order_by = "QA.date_created.desc()") # The list of QA units for this request
     status_updated = db.Column(db.DateTime)
-    text = db.Column(db.String(500), unique=True, nullable=False) # The actual request text.
+    category = db.Column(db.String(500), nullable=False)
+    summary = db.Column(db.String(250), nullable=False)
+    text = db.Column(db.String(500), nullable=True) # The actual request text.
     owners = relationship("Owner", cascade = "all, delete", order_by="Owner.date_created.asc()")
     subscribers = relationship("Subscriber", cascade ="all, delete") # The list of subscribers following this request.
     records = relationship("Record", cascade="all,delete", order_by = "Record.date_created.desc()") # The list of records that have been uploaded for this request.
@@ -200,9 +200,12 @@ class Request(db.Model):
     date_received = db.Column(db.DateTime)
     offline_submission_type = db.Column(db.String())
     privacy = db.Column(db.Integer, default=0x01)
+    category
 
-    def __init__(self, id, text, creator_id = None, offline_submission_type = None, date_received = None, privacy = 1):
+    def __init__(self, id, category, summary, privacy = 1, text = None, creator_id = None, offline_submission_type = None, date_received = None):
         self.id = id
+        self.category = category
+        self.summary = summary
         self.text = text
         self.date_created = datetime.now().isoformat()
         self.creator_id = creator_id

@@ -167,21 +167,28 @@ def new_request(passed_recaptcha=False, data=None):
                 return render_template('offline_request.html', form=form,
                                        routing_available=routing_available, departments=departments, errors=errors)
             else:
-                request_id, is_new = make_request(text=request_text,
-                                              email=request_email,
-                                              alias = str(request_first_name + ' ' + request_last_name),
-                                              phone=phone_formatted,
-                                              address1=request_address_street,
-                                              city=request_address_city,
-                                              state=request_address_state,
-                                              zipcode=request_address_zip,
-                                              passed_spam_filter=True,
-                                              agency=request_agency,
-                                              offline_submission_type=request_format,
-                                              date_received=request_date,
-                                              privacy=request_privacy,
-                                              description=record_description,
-                                              document=document)
+                request_id, is_new = make_request(
+                                                  category=request_category,
+                                                  agency=request_agency,
+                                                  summary=request_summary,
+                                                  privacy=request_privacy,
+                                                  text=request_text,
+                                                  attachment=attachment,
+                                                  attachment_description=request_attachment_description,
+                                                  offline_submission_type=request_format,
+                                                  date_received=request_date,
+                                                  first_name=request_first_name,
+                                                  last_name=request_last_name,
+                                                  alias=str(request_first_name + ' ' + request_last_name),
+                                                  role=request_role,
+                                                  organization=request_organization,
+                                                  email=request_email,
+                                                  phone=request_phone,
+                                                  fax=request_fax,
+                                                  street_address=request_address_street,
+                                                  city=request_address_city,
+                                                  state=request_address_state,
+                                                  zip=request_address_zip)
                 if not request_id:
                     errors.append("Looks like your request is the same as /request/%s" % request_id)
                     return render_template('offline_request.html', form=form,
@@ -282,19 +289,24 @@ def new_request(passed_recaptcha=False, data=None):
                 return render_template('new_request.html', form=form,
                                        routing_available=routing_available, departments=departments, errors=errors)
             else:
-                request_id, is_new = make_request(text=request_text,
-                                              email=request_email,
-                                              alias=str(request_first_name + ' ' + request_last_name),
-                                              phone=phone_formatted,
-                                              address1=request_address_street,
-                                              city=request_address_city,
-                                              state=request_address_state,
-                                              zipcode=request_address_zip,
-                                              passed_spam_filter=True,
-                                              agency=request_agency,
-                                              privacy=request_privacy,
-                                              description=record_description,
-                                              document=document)
+                request_id, is_new = make_request(
+                                                  category=request_category,
+                                                  agency=request_agency,
+                                                  summary=request_summary,
+                                                  privacy=request_privacy,
+                                                  text=request_text,
+                                                  first_name=request_first_name,
+                                                  last_name=request_last_name,
+                                                  alias=str(request_first_name + ' ' + request_last_name),
+                                                  role=request_role,
+                                                  organization=request_organization,
+                                                  email=request_email,
+                                                  phone=request_phone,
+                                                  fax=request_fax,
+                                                  street_address=request_address_street,
+                                                  city=request_address_city,
+                                                  state=request_address_state,
+                                                  zip=request_address_zip)
 
                 if not request_id:
                     errors.append("Looks like your request is the same as /request/%s" % request_id)
@@ -410,9 +422,9 @@ def show_request(request_id, template="manage_request_public.html"):
     departments_all=models.Department.query.all()
     agency_data = []
     for d in departments_all:
-      firstUser = models.User.query.filter_by(agency=d.id).first()
+      firstUser = models.User.query.filter_by(department=d.id).first()
       agency_data.append({'name': d.name, 'email': firstUser.email})
-    users=models.User.query.filter_by(agency=req.agency_id).all()
+    users=models.User.query.filter_by(department=req.department_id).all()
     if not req:
         return render_template('error.html', message="A request with ID %s does not exist." % request_id)
     if req.status and "Closed" in req.status and template != "manage_request_feedback.html":
@@ -520,17 +532,17 @@ def close(request_id=None):
 def filter_agency(departments_selected, results):
     if departments_selected and 'All departments' not in departments_selected:
         app.logger.info("\n\nagency filters:%s." % departments_selected)
-        agency_ids=[]
-        for agency_name in departments_selected:
-            if agency_name:
-                agency=models.Department.query.filter_by(name=agency_name).first()
+        department_ids=[]
+        for department_name in departments_selected:
+            if department_name:
+                agency=models.Department.query.filter_by(name=department_name).first()
                 if agency:
-                    agency_ids.append(agency.id)
-        if agency_ids:
-            results=results.filter(models.Request.agency_id.in_(agency_ids))
+                    department_ids.append(agency.id)
+        if department_ids:
+            results=results.filter(models.Request.department_id.in_(department_ids))
         else:
             # Just return an empty query set
-            results=results.filter(models.Request.agency_id < 0)
+            results=results.filter(models.Request.department_id < 0)
     return results
 
 def filter_search_term(search_input, results):
@@ -702,7 +714,7 @@ def prepare_request_fields(results):
     #         "id":           r.id, \
     #         "text":         helpers.clean_text(r.text), \
     #         "date_received": helpers.date(r.date_received or r.date_created), \
-    #         "agency":   r.agency_name(), \
+    #         "agency":   r.department_name(), \
     #         "status":       r.status, \
     #         # The following two attributes are defined as model methods,
     #         # and not regular SQLAlchemy attributes.
@@ -714,7 +726,7 @@ def prepare_request_fields(results):
             "id":           r.id, \
             "text":         helpers.clean_text(r.text), \
             "date_received": helpers.date(r.date_received or r.date_created), \
-            "agency":   r.agency_name(), \
+            "agency":   r.department_name(), \
             "requester":    r.requester_name(), \
             "due_date":     format_date(r.due_date), \
             "status":       r.status, \

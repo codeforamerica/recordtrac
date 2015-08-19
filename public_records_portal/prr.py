@@ -125,7 +125,7 @@ def upload_record(request_id, description, user_id, document = None):
 	else:
 		#if str(doc_id).isdigit():
                 if str(doc_id) == 'VIRUS_FOUND':
-                	return "There was a virus found in the document you uploaded." 
+                	return "There was a virus found in the document you uploaded."
 		if doc_id:
 			#record_id = create_record(doc_id = doc_id, request_id = request_id, user_id = user_id, description = description, filename = filename, url = app.config['HOST_URL'] + doc_id)
 			record_id = create_record(doc_id = None, request_id = request_id, user_id = user_id, description = description, filename = filename, url = app.config['HOST_URL'] + doc_id)
@@ -158,36 +158,34 @@ def add_link(request_id, url, description, user_id):
 	return False
 
 ### @export "make_request"
-def make_request(text, email = None, user_id = None, phone = None, address1 = None, address2 = None, city = None, state = None, zipcode = None, alias = None, department = None, passed_spam_filter = False, offline_submission_type = None, date_received = None, privacy = 1, description = None, document = None):
+def make_request(category = None, agency = None, summary = None, privacy = None, text = None, attachment = None, attachment_description = None, offline_submission_type = None, date_received = None, first_name = None, last_name = None, alias = None, role = None, organization = None, email = None, phone = None, fax = None, street_address = None, city = None, state = None, zip = None, user_id = None):
 	""" Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
-	if not passed_spam_filter:
-		return None, False
 	request_id = find_request(text)
 	if request_id: # Same request already exists
 		return request_id, False
 	assigned_to_email = app.config['DEFAULT_OWNER_EMAIL']
 	assigned_to_reason = app.config['DEFAULT_OWNER_REASON']
-	if department:
-		app.logger.info("\n\nDepartment chosen: %s" %department)
-		prr_email = db_helpers.get_contact_by_dept(department)
+	if agency:
+		app.logger.info("\n\nDepartment chosen: %s" % agency)
+		prr_email = db_helpers.get_contact_by_dept(agency)
 		if prr_email:
 			assigned_to_email = prr_email
-			assigned_to_reason = "PRR Liaison for %s" %(department)
+			assigned_to_reason = "PRR Liaison for %s" % agency
 		else:
-			app.logger.info("%s is not a valid department" %(department))
-			department = None
+			app.logger.info("%s is not a valid department" % agency  )
+			agency = None
 
-	id = "FOIL" + "-" + datetime.now().strftime("%Y") + "-" + agency_codes[department] + "-" + "%05d" % Request.tracking_number
-	request_id = create_request(id=id, text = text, user_id = user_id, offline_submission_type = offline_submission_type, date_received = date_received, privacy=privacy) # Actually create the Request object
+	id = "FOIL" + "-" + datetime.now().strftime("%Y") + "-" + agency_codes[agency] + "-" + "%05d" % Request.tracking_number
+	request_id = create_request(id=id, category = category, summary = summary, privacy = privacy, text = text, user_id = user_id, offline_submission_type = offline_submission_type, date_received = date_received) # Actually create the Request object
 	new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email) # Assign someone to the request
 	open_request(request_id) # Set the status of the incoming request to "Open"
 	if email or alias or phone:
-		subscriber_user_id = create_or_return_user(email = email, alias = alias, phone = phone, address1 = address1, address2 = address2, city = city, state = state, zipcode = zipcode)
+		subscriber_user_id = create_or_return_user(email = email, alias = alias, phone = phone, address1 = street_address, address2 = address2, city = city, state = state, zipcode = zipcode)
 		subscriber_id, is_new_subscriber = create_subscriber(request_id = request_id, user_id = subscriber_user_id)
 		if subscriber_id:
 			generate_prr_emails(request_id, notification_type = "Request made", user_id = subscriber_user_id) # Send them an e-mail notification
-        if document: 
-            upload_record(request_id, description, user_id, document)
+        if attachment:
+            upload_record(request_id, attachment_description, user_id, attachment)
 	return request_id, True
 
 ### @export "add_subscriber"
