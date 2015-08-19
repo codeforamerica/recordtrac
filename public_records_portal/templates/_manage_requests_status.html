@@ -6,6 +6,15 @@
     </h3>
   </div>
 
+  {% if current_user.is_authenticated() and status == 'open' %}
+    <div class="r_sidebar_banner">
+      <form name="acknowledge_request" id="acknowledgeRequestForm" class="form-inline" method="post" action="/update_a_request_acknowledge">
+        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+        <button id="acknowledgeRequest" class="btn btn-primary btn-block" type="submit">Acknowledge request</button>
+      </form>
+    </div>
+  {% endif %}
+
   {% if current_user.is_authenticated() and status == 'closed' %}
     <div class="r_sidebar_banner hidden-phone hidden-tablet">
       <form name="reopen_request" class="form-inline" id="question" method="post" action="/update_a_request_reopen">

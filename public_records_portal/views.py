@@ -468,6 +468,21 @@ def update_a_resource(resource, passed_recaptcha=False, data=None):
             return redirect(url_for('show_request', request_id=request.form['request_id']))
     return render_template('error.html', message="You can only update requests from a request page!")
 
+@app.route("/acknowledge_request", methods=["GET", "POST"])
+def acknowledge_request(resource, passed_recaptcha=False, data=None):
+    if (data or request.method == 'POST'):
+        if not data:
+            data=request.form.copy()
+        if 'qa' in resource:
+            prr.answer_a_question(qa_id=int(data['qa_id']), answer=data['acknowledge_request'], passed_spam_filter=True)
+        else:
+            update_resource(resource, data)
+        if current_user.is_anonymous() == False:
+            return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
+        else:
+            return redirect(url_for('show_request', request_id=request.form['request_id']))
+    return render_template('error.html', message="You can only update requests from a request page!")
+
 # Closing is specific to a case, so this only gets called from a case (that only city staff have a view of)
 
 @app.route("/close", methods=["GET", "POST"])
