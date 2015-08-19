@@ -44,10 +44,7 @@ login_manager=LoginManager()
 login_manager.user_loader(get_user_by_id)
 login_manager.init_app(app)
 
-#browser_id = BrowserID()
-#browser_id.user_loader(get_user)
-#browser_id.init_app(app)
-
+zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
 
 # Submitting a new request
 @app.route("/new", methods=["GET", "POST"])
@@ -59,13 +56,19 @@ def new_request(passed_recaptcha=False, data=None):
     if request.method == 'POST':
         if current_user.is_authenticated(): # Change this to current_user.is_authenticated()
             form = OfflineRequestForm(request.form)
+            request_category = form.request_category.data
+            request_agency = form.request_agency.data
+            request_summary = form.request_summary.data
+            request_privacy = form.request_privacy.data
             request_text = form.request_text.data
+            request_attachment_description = form.request_attachment_description.data
+            request_attachment = form.request_attachment.data
             request_format = form.request_format.data
             request_date = form.request_date.data
-            request_department = form.request_department.data
             request_first_name = form.request_first_name.data
             request_last_name = form.request_last_name.data
-            request_privacy = form.request_privacy.data
+            request_role = form.request_role.data
+            request_organization = form.request_organization.data
             request_email = form.request_email.data
             request_phone = form.request_phone.data
             request_fax = form.request_fax.data
@@ -73,28 +76,40 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_city = form.request_address_city.data
             request_address_state = form.request_address_state.data
             request_address_zip = form.request_address_zip.data
-            terms_of_use = form.terms_of_use.data
-            alias = None
-            document = None
-            zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
-            record_description = form.record_description.data
+            request_submit = form.request_submit.data
 
+            # Check Category
+            if not (request_category and request_category.strip()):
+                errors.append('You must select a category for this request')
+
+            # Check Agency
+            if not (request_agency and request_agency.strip()):
+                errors.append('You must select an agency for this request')
+
+            # Check Summary
+            if not (request_summary and request_summary.strip()):
+                errors.append('You must enter a summary for this request')
+            elif len(request_summary) > 250:
+                errors.append('The request summary must be less than 250 characters')
+
+            # Check attachment
+            attachment = None
             try:
-                document = request.files['record']
+                attachment = request.files['request_attachment']
             except:
                 app.logger.info("\n\nNo file passed in")
 
-            if document and not(record_description):
+            if attachment and not(request_attachment_description):
                 errors.append('Please fill out the attachment description.')
 
-            if record_description and not(document):
+            if request_attachment_description and not(attachment):
                 errors.append('Please select a file to upload as attachment.')
 
-            if not (request_text and request_text.strip()):
-                errors.append('Please fill out the request description.')
-
+            # Check Format
             if not (request_format and request_format.strip()):
-                errors.append('Please choose a request format.')
+                errors.append('You must enter the format in which the request was received')
+
+            # Check Date
             if request_date:
                 try:
                     tz = pytz.timezone(app.config['TIMEZONE'])
@@ -109,8 +124,8 @@ def new_request(passed_recaptcha=False, data=None):
                     request_date = None
             else:
                 errors.append("Please use the datepicker to select a date.")
-            if not (request_department and request_department.strip()):
-                errors.append("Please select a department.")
+            if not (request_agency and request_agency.strip()):
+                errors.append("Please select a agency.")
 
             if not (request_first_name and request_first_name.strip()):
                 errors.append("Please enter the requester's first name")
@@ -129,26 +144,23 @@ def new_request(passed_recaptcha=False, data=None):
             state_valid = (request_address_state != '')
             zip_valid = (request_address_zip != '' and zip_reg_ex.match(request_address_zip))
             address_valid = (street_valid and city_valid and state_valid and zip_valid)
+
             if app.config['ENVIRONMENT'] != 'LOCAL':
                 recaptcha_valid = (request_recaptcha != False)
 
             if not (email_valid or phone_valid or fax_valid or address_valid):
                 errors.append("Please enter at least one type of contact information")
 
-            if app.config['ENVIRONMENT'] != 'LOCAL' and not data and not passed_recaptcha:
+            if not data:
                 data = request.form.copy()
 
-            if app.config['ENVIRONMENT'] != 'LOCAL' and check_for_spam and is_spam(request_text) and not passed_recaptcha:
-                return render_template('recaptcha_request.html', form = data, message = "Hmm, your request looks like spam. To submit your request, type the numbers or letters you see in the field below.", public_key = app.config['RECAPTCHA_SITE_KEY'])
-
             phone_formatted = ""
+
             if phone_valid:
                 phone_formatted = request_phone.international
 
-
             if errors:
                 if request_date:
-                    print request_date
                     return render_template('offline_request.html', form=form, date=request_date.strftime('%m/%d/%Y'),
                                            routing_available=routing_available,
                                            departments=departments, errors=errors)
@@ -157,14 +169,14 @@ def new_request(passed_recaptcha=False, data=None):
             else:
                 request_id, is_new = make_request(text=request_text,
                                               email=request_email,
-                                              alias=alias,
+                                              alias = str(request_first_name + ' ' + request_last_name),
                                               phone=phone_formatted,
                                               address1=request_address_street,
                                               city=request_address_city,
                                               state=request_address_state,
                                               zipcode=request_address_zip,
                                               passed_spam_filter=True,
-                                              department=request_department,
+                                              agency=request_agency,
                                               offline_submission_type=request_format,
                                               date_received=request_date,
                                               privacy=request_privacy,
@@ -180,11 +192,15 @@ def new_request(passed_recaptcha=False, data=None):
 
         else:
             form = NewRequestForm(request.form)
+            request_category = form.request_category.data
+            request_agency = form.request_agency.data
+            request_summary = form.request_summary.data
+            request_privacy = form.request_privacy.data
             request_text = form.request_text.data
-            request_department = form.request_department.data
             request_first_name = form.request_first_name.data
             request_last_name = form.request_last_name.data
-            request_privacy = form.request_privacy.data
+            request_role = form.request_role.data
+            request_organization = form.request_organization.data
             request_email = form.request_email.data
             request_phone = form.request_phone.data
             request_fax = form.request_fax.data
@@ -195,32 +211,65 @@ def new_request(passed_recaptcha=False, data=None):
             if app.config['ENVIRONMENT'] != 'LOCAL':
                 request_recaptcha = recaptcha.verify()
             terms_of_use = form.terms_of_use.data
+            request_submit = form.request_submit.data
             alias = None
             document = None
             zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
-            record_description = form.record_description.data
 
-            try:
-                document = request.files['record']
-            except:
-                app.logger.info("\n\nNo file passed in")
+             # Check Category
+            if not (request_category and request_category.strip()):
+                errors.append('You must select a category for this request')
 
-            if document and not(record_description):
-                errors.append('Please fill out the attachment description.')
+            # Check Agency
+            if not (request_agency and request_agency.strip()):
+                errors.append('You must select an agency for this request')
 
-            if record_description and not(document):
-                errors.append('Please select a file to upload as attachment.')
+            # Check Summary
+            if not (request_summary and request_summary.strip()):
+                errors.append('You must enter a summary for this request')
+            elif len(request_summary) > 250:
+                errors.append('The request summary must be less than 250 characters')
 
-            if not (request_text and request_text.strip()):
-                errors.append('Please fill out the request description.')
+            # Check attachment
+            # attachment = None
+            # try:
+            #     attachment = request.files['request_attachment']
+            # except:
+            #     app.logger.info("\n\nNo file passed in")
 
-            if not (request_department and request_department.strip()):
-                errors.append("Please select a department.")
+            # if attachment and not(request_attachment_description):
+            #     errors.append('Please fill out the attachment description.')
+
+            # if request_attachment_description and not(attachment):
+            #     errors.append('Please select a file to upload as attachment.')
+
+            # # Check Format
+            # if not (request_format and request_format.strip()):
+            #     errors.append('You must enter the format in which the request was received')
+
+            # # Check Date
+            # if request_date:
+            #     try:
+            #         tz = pytz.timezone(app.config['TIMEZONE'])
+            #         offset = tz.utcoffset(datetime.now())
+            #         offset = (offset.days * 86400 + offset.seconds) / 3600
+            #         # request_date = request_date - timedelta(hours=offset)
+            #     except TypeError:
+            #         errors.append("Please use the datepicker to select a date.")
+            #         request_date = None
+            #     except ValueError:
+            #         errors.append("Please use the datepicker to select a date.")
+            #         request_date = None
+            # else:
+            #     errors.append("Please use the datepicker to select a date.")
+
+            if not (request_agency and request_agency.strip()):
+                errors.append("Please select an agency.")
 
             if not (request_first_name and request_first_name.strip()):
-                errors.append("Please enter the requester's first name.")
+                errors.append("Please enter the requester's first name")
             elif not (request_last_name and request_last_name.strip()):
-                errors.append("Please enter the requester's last name.")
+                errors.append("Please enter the requester's last name")
             else:
                 alias = request_first_name + " " + request_last_name
             if not request_privacy:
@@ -235,18 +284,19 @@ def new_request(passed_recaptcha=False, data=None):
             zip_valid = (request_address_zip != '' and zip_reg_ex.match(request_address_zip))
             address_valid = (street_valid and city_valid and state_valid and zip_valid)
 
+            if app.config['ENVIRONMENT'] != 'LOCAL':
+                recaptcha_valid = (request_recaptcha != False)
+
             if not (email_valid or phone_valid or fax_valid or address_valid):
-                errors.append("Please enter at least one type of contact information.")
+                errors.append("Please enter at least one type of contact information")
 
-            if app.config['ENVIRONMENT'] != 'LOCAL' and not request_recaptcha:
-                errors.append("Please complete captcha.")
-
-            if not terms_of_use:
-                errors.append("You must accept the Terms of Use.")
+            if not data:
+                data = request.form.copy()
 
             phone_formatted = ""
+
             if phone_valid:
-              phone_formatted = request_phone.international
+                phone_formatted = request_phone.international
 
             if errors:
                 return render_template('new_request.html', form=form,
@@ -254,14 +304,14 @@ def new_request(passed_recaptcha=False, data=None):
             else:
                 request_id, is_new = make_request(text=request_text,
                                               email=request_email,
-                                              alias=alias,
+                                              alias=str(request_first_name + ' ' + request_last_name),
                                               phone=phone_formatted,
                                               address1=request_address_street,
                                               city=request_address_city,
                                               state=request_address_state,
                                               zipcode=request_address_zip,
                                               passed_spam_filter=True,
-                                              department=request_department,
+                                              agency=request_agency,
                                               privacy=request_privacy,
                                               description=record_description,
                                               document=document)
@@ -378,16 +428,16 @@ def unfollow(request_id, email):
 def show_request(request_id, template="manage_request_public.html"):
     req=get_obj("Request", request_id)
     departments_all=models.Department.query.all()
-    department_data = []
+    agency_data = []
     for d in departments_all:
-      firstUser = models.User.query.filter_by(department=d.id).first()
-      department_data.append({'name': d.name, 'email': firstUser.email})
-    users=models.User.query.filter_by(department=req.department_id).all()
+      firstUser = models.User.query.filter_by(agency=d.id).first()
+      agency_data.append({'name': d.name, 'email': firstUser.email})
+    users=models.User.query.filter_by(agency=req.agency_id).all()
     if not req:
         return render_template('error.html', message="A request with ID %s does not exist." % request_id)
     if req.status and "Closed" in req.status and template != "manage_request_feedback.html":
         template="closed.html"
-    return render_template(template, req=req, department_data=department_data, users=users)
+    return render_template(template, req=req, agency_data=agency_data, users=users)
 
 
 @app.route("/api/staff")
@@ -402,10 +452,10 @@ def staff_to_json():
 @app.route("/api/departments")
 def departments_to_json():
     departments=models.Department.query.all()
-    department_data=[]
+    agency_data=[]
     for d in departments:
-        department_data.append({'department': d.name})
-    return jsonify(**{'objects': department_data})
+        agency_data.append({'agency': d.name})
+    return jsonify(**{'objects': agency_data})
 
 def docs():
     return redirect('http://codeforamerica.github.io/public-records/docs/1.0.0')
@@ -487,20 +537,20 @@ def close(request_id=None):
     return render_template('error.html', message="You can only close from a requests page!")
 
 
-def filter_department(departments_selected, results):
+def filter_agency(departments_selected, results):
     if departments_selected and 'All departments' not in departments_selected:
-        app.logger.info("\n\nDepartment filters:%s." % departments_selected)
-        department_ids=[]
-        for department_name in departments_selected:
-            if department_name:
-                department=models.Department.query.filter_by(name=department_name).first()
-                if department:
-                    department_ids.append(department.id)
-        if department_ids:
-            results=results.filter(models.Request.department_id.in_(department_ids))
+        app.logger.info("\n\nagency filters:%s." % departments_selected)
+        agency_ids=[]
+        for agency_name in departments_selected:
+            if agency_name:
+                agency=models.Department.query.filter_by(name=agency_name).first()
+                if agency:
+                    agency_ids.append(agency.id)
+        if agency_ids:
+            results=results.filter(models.Request.agency_id.in_(agency_ids))
         else:
             # Just return an empty query set
-            results=results.filter(models.Request.department_id < 0)
+            results=results.filter(models.Request.agency_id < 0)
     return results
 
 def filter_search_term(search_input, results):
@@ -520,7 +570,7 @@ def filter_search_term(search_input, results):
 def get_filter_value(filters_map, filter_name, is_list=False, is_boolean=False):
     if filter_name in filters_map:
         val=filters_map[filter_name]
-        if filter_name == 'department' and val:
+        if filter_name == 'agency' and val:
             return [val]
         elif is_list:
             return filters_map.getlist(filter_name)
@@ -601,7 +651,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
     search_term=None
 
     if filters_map:
-        departments_selected=get_filter_value(filters_map=filters_map, filter_name='departments_selected', is_list=True) or get_filter_value(filters_map, 'department')
+        departments_selected=get_filter_value(filters_map=filters_map, filter_name='departments_selected', is_list=True) or get_filter_value(filters_map, 'agency')
         is_open=get_filter_value(filters_map=filters_map, filter_name='is_open', is_boolean=True)
         is_closed=get_filter_value(filters_map=filters_map, filter_name='is_closed', is_boolean=True)
         due_soon=get_filter_value(filters_map=filters_map, filter_name='due_soon', is_boolean=True)
@@ -672,7 +722,7 @@ def prepare_request_fields(results):
     #         "id":           r.id, \
     #         "text":         helpers.clean_text(r.text), \
     #         "date_received": helpers.date(r.date_received or r.date_created), \
-    #         "department":   r.department_name(), \
+    #         "agency":   r.agency_name(), \
     #         "status":       r.status, \
     #         # The following two attributes are defined as model methods,
     #         # and not regular SQLAlchemy attributes.
@@ -684,7 +734,7 @@ def prepare_request_fields(results):
             "id":           r.id, \
             "text":         helpers.clean_text(r.text), \
             "date_received": helpers.date(r.date_received or r.date_created), \
-            "department":   r.department_name(), \
+            "agency":   r.agency_name(), \
             "requester":    r.requester_name(), \
             "due_date":     format_date(r.due_date), \
             "status":       r.status, \
@@ -702,7 +752,7 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 
     # Set filters on the query
 
-    results=filter_department(departments_selected=departments_selected, results=results)
+    results=filter_agency(departments_selected=departments_selected, results=results)
     results=filter_search_term(search_input=search_term, results=results)
 
     # Accumulate status filters

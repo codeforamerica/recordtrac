@@ -10,7 +10,6 @@ from flask_recaptcha import ReCaptcha
 from public_records_portal import db, models
 app = Flask(__name__)
 
-agency = db.session.query(models.Department).all()
 agencies = [(r.name, r.name) for r in db.session.query(models.Department).all()]
 agencies.insert(0, ('',''))
 agencies.append(('Unknown', 'I Don\'t Know'))
@@ -100,10 +99,10 @@ privacy_options = [
     (2, 'No')
 ]
 
-class OfflineRequestForm(Form):x
+class OfflineRequestForm(Form):
     request_category = SelectField(u'Category*', choices=categories, validators=[DataRequired('The request category is required')])
     request_agency = SelectField(u'Agency*', choices=agencies, validators=[DataRequired('Please select an agency')], default='')
-    request_summary = StringField(u'Summary*', validators=[DataRequired('You must enter a summary of your request') Length(1, 250, 'Your request summary must be less than 250 characters')])
+    request_summary = StringField(u'Summary*', validators=[DataRequired('You must enter a summary of your request'), Length(1, 250, 'Your request summary must be less than 250 characters')])
     request_privacy = SelectField(u'Should the request summary be public?*', choices=privacy_options, validators=[DataRequired('You must select a privacy option.')], default=1)
     request_text = TextAreaField(u'Detailed Description*', validators=[Length(1, 5000, 'The detailed description of this request must be less than 5000 characters')])
     request_attachment_description = StringField(u'Description of Attachment')
@@ -112,7 +111,7 @@ class OfflineRequestForm(Form):x
     request_date = DateField(u'Request Date*', format='%m/%d/%Y', validators=[DataRequired('You must enter the date this request was received.')])
     request_first_name = StringField(u'First Name*', validators=[DataRequired('Please enter the requestor\'s first name')])
     request_last_name = StringField(u'Last Name*', validators=[DataRequired('Please enter the requestor\'s last name')])
-    request_title = StringField(u'Role/Title')
+    request_role = StringField(u'Role/Title')
     request_organization = StringField(u'Organization')
     request_email = StringField(u'Email', validators=[Email('Please enter a valid email address')])
     request_phone = PhoneNumberField(u'Phone Number')
@@ -125,18 +124,14 @@ class OfflineRequestForm(Form):x
 
 
 class NewRequestForm(Form):
-        request_category = SelectField(u'Category*', choices=categories, validators=[DataRequired('The request category is required')])
+    request_category = SelectField(u'Category*', choices=categories, validators=[DataRequired('The request category is required')])
     request_agency = SelectField(u'Agency*', choices=agencies, validators=[DataRequired('Please select an agency')], default='')
-    request_summary = StringField(u'Summary*', validators=[DataRequired('You must enter a summary of your request') Length(1, 250, 'Your request summary must be less than 250 characters')])
+    request_summary = StringField(u'Summary*', validators=[DataRequired('You must enter a summary of your request'), Length(1, 250, 'Your request summary must be less than 250 characters')])
     request_privacy = SelectField(u'Should the request summary be public?*', choices=privacy_options, validators=[DataRequired('You must select a privacy option.')], default=1)
     request_text = TextAreaField(u'Detailed Description*', validators=[Length(1, 5000, 'The detailed description of this request must be less than 5000 characters')])
-    request_attachment_description = StringField(u'Description of Attachment')
-    request_attachment = FileField(u'Upload attachment')
-    request_format = SelectField(u'Format Received*', choices=formats, validators=[DataRequired('You must enter the format in which the request was received')], default='')
-    request_date = DateField(u'Request Date*', format='%m/%d/%Y', validators=[DataRequired('You must enter the date this request was received.')])
     request_first_name = StringField(u'First Name*', validators=[DataRequired('Please enter the requestor\'s first name')])
     request_last_name = StringField(u'Last Name*', validators=[DataRequired('Please enter the requestor\'s last name')])
-    request_title = StringField(u'Role/Title')
+    request_role = StringField(u'Role/Title')
     request_organization = StringField(u'Organization')
     request_email = StringField(u'Email', validators=[Email('Please enter a valid email address')])
     request_phone = PhoneNumberField(u'Phone Number')
