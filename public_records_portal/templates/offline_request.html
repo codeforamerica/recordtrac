@@ -80,6 +80,17 @@
                     </div>
                   </div>
                 </div>
+                <h2><lead>Receipt Information</lead></h2>
+                <div class="control-group">
+                  <h2><small>{{ form.request_format.label.text }}</small></h2>
+                  <div class="spacer">
+                    {{ form.request_format(class="input-block-level") }}
+                  </div>
+                  <h2><small>{{ form.request_date.label.text }}</small></h2>
+                  <div class="spacer">
+                    {{ form.request_date(class ="input-block-level") }}
+                  </div>
+                </div>
                 <div class="spacer">&nbsp;</div>
                 <h2>
                   <lead>Personal Information</lead>
