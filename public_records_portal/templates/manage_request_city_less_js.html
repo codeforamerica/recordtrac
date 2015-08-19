@@ -171,7 +171,6 @@
   {% else %}
   <form name="extend_request" class="form-horizontal" id="extension" method="post" action="/add_a_extension">
     <input type="hidden" name="request_id" value="{{ req.id }}"/>
-	<input type="hidden" name="extend_reason" value="{{"Extension - Large Amount" | explain_action("What")}}"/>
     <fieldset>
       <legend>Extend request</legend>
       <div class="row-fluid">
@@ -191,11 +190,11 @@
         <div class="control-group" style="display:none"; id="custom_due_date">
           <label class="control-label">Custom Due Date<span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Request an extension"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
             <div class="controls">
-              <textarea type="text" class="input-xxlarge" id="extension_reason_text" name="extension_reason_name" placeholder="Extension Reason"</textarea>
               <input type="date"
                          name="due_date"
                          value="{{ min_due_date }}"
                           >
+              <textarea type="text" class="input-xxlarge" id="extension_reason_text" name="extend_reason" placeholder="Extension Reason"></textarea>
             </div>
         </div>
         <div class="control-group">
