@@ -297,16 +297,16 @@ def create_or_return_user(email=None, alias=None, phone=None, address1=None, add
                 department = d.id
         if not user:
             if not password:
-                user = create_user(email=email.lower(), alias=alias, phone=phone,  address1=address1, address2=address2, city=city,
+                user = create_user(email=email.lower(), alias=alias, phone=str(phone),  address1=address1, address2=address2, city=city,
                                state=state, zipcode=zipcode, department=department, contact_for=contact_for, backup_for=backup_for, password='admin', is_staff=is_staff)
             else:
-                user = create_user(email=email.lower(), alias=alias, phone=phone,  address1=address1, address2=address2, city=city,
+                user = create_user(email=email.lower(), alias=alias, phone=str(phone),  address1=address1, address2=address2, city=city,
                                state=state, zipcode=zipcode, department=department, contact_for=contact_for, backup_for=backup_for, password=password, is_staff=is_staff)
 
         else:
             # Update user if fields to update are provided
             if alias or phone or department or contact_for or backup_for:
-                user = update_user(user=user, alias=alias, phone=phone, address1=address1, address2=address2, city=city, state=state,
+                user = update_user(user=user, alias=alias, phone=str(phone), address1=address1, address2=address2, city=city, state=state,
                                    zipcode=zipcode, department=department, contact_for=contact_for, backup_for=backup_for, is_staff=is_staff)
         if not_id:
             return user

@@ -180,7 +180,7 @@ def make_request(category = None, agency = None, summary = None, privacy = None,
 	new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email) # Assign someone to the request
 	open_request(request_id) # Set the status of the incoming request to "Open"
 	if email or alias or phone:
-		subscriber_user_id = create_or_return_user(email = email, alias = alias, phone = phone, address1 = street_address, address2 = address2, city = city, state = state, zipcode = zipcode)
+		subscriber_user_id = create_or_return_user(email = email, alias = alias, phone = phone, address1 = street_address, address2 = None, city = city, state = state, zipcode = zip)
 		subscriber_id, is_new_subscriber = create_subscriber(request_id = request_id, user_id = subscriber_user_id)
 		if subscriber_id:
 			generate_prr_emails(request_id, notification_type = "Request made", user_id = subscriber_user_id) # Send them an e-mail notification

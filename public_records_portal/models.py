@@ -112,7 +112,7 @@ class User(db.Model):
         self.first_name = first_name
         self.last_name = last_name
         if phone and phone != "":
-            self.phone = phone
+            self.phone = str(phone)
         if address1 and address1 != "":
             self.address1 = address1
         if address2 and address2 != "":
