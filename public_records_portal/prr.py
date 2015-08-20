@@ -185,7 +185,7 @@ def make_request(text, email = None, user_id = None, phone = None, address1 = No
 		subscriber_user_id = create_or_return_user(email = email, alias = alias, phone = phone, address1 = address1, address2 = address2, city = city, state = state, zipcode = zipcode)
 		subscriber_id, is_new_subscriber = create_subscriber(request_id = request_id, user_id = subscriber_user_id)
 		if subscriber_id:
-			generate_prr_emails(request_id, notification_type = "Request made", user_id = subscriber_user_id) # Send them an e-mail notification
+			generate_prr_emails(request_id, notification_type = "Public Notification Template 1", user_id = subscriber_user_id) # Send them an e-mail notification
         if document: 
             upload_record(request_id, description, user_id, document)
 	return request_id, True
