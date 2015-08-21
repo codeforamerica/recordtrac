@@ -119,3 +119,11 @@ class LoginForm(Form):
     username = StringField('Email', validators=[DataRequired(), Length(1, 64)])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Log In')
+
+class EditUserForm(Form):
+    username = StringField('Email', validators=[DataRequired(), Length(1, 64)])
+    phone = StringField('Phone Number', validators=[DataRequired()])
+    first_name = StringField('First Name', validators=[DataRequired()])
+    last_name = StringField('Last Name', validators=[DataRequired()])
+
+    submit = SubmitField('Update')
