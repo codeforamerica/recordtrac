@@ -125,7 +125,7 @@ def upload_record(request_id, description, user_id, document = None):
 	else:
 		#if str(doc_id).isdigit():
                 if str(doc_id) == 'VIRUS_FOUND':
-                	return "There was a virus found in the document you uploaded." 
+                	return "There was a virus found in the document you uploaded."
 		if doc_id:
 			#record_id = create_record(doc_id = doc_id, request_id = request_id, user_id = user_id, description = description, filename = filename, url = app.config['HOST_URL'] + doc_id)
 			record_id = create_record(doc_id = None, request_id = request_id, user_id = user_id, description = description, filename = filename, url = app.config['HOST_URL'] + doc_id)
@@ -176,7 +176,6 @@ def make_request(text, email = None, user_id = None, phone = None, address1 = No
 		else:
 			app.logger.info("%s is not a valid department" %(department))
 			department = None
-
 	id = "FOIL" + "-" + datetime.now().strftime("%Y") + "-" + agency_codes[department] + "-" + "%05d" % Request.tracking_number
 	request_id = create_request(id=id, text = text, user_id = user_id, offline_submission_type = offline_submission_type, date_received = date_received, privacy=privacy) # Actually create the Request object
 	new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email) # Assign someone to the request
@@ -186,7 +185,7 @@ def make_request(text, email = None, user_id = None, phone = None, address1 = No
 		subscriber_id, is_new_subscriber = create_subscriber(request_id = request_id, user_id = subscriber_user_id)
 		if subscriber_id:
 			generate_prr_emails(request_id, notification_type = "Request made", user_id = subscriber_user_id) # Send them an e-mail notification
-        if document: 
+        if document:
             upload_record(request_id, description, user_id, document)
 	return request_id, True
 
@@ -245,7 +244,7 @@ def assign_owner(request_id, reason, email = None):
 	app.logger.info("\n\nA new owner has been assigned: Owner: %s" % owner_id)
 	new_owner = get_obj("Owner", owner_id)
 	# Update the associated department on request
-	update_obj(attribute = "department_id", val = new_owner.user.department, obj = req)
+	update_obj(attribute = "department_id", val = new_owner.user.department_id, obj = req)
 	user_id = get_attribute(attribute = "user_id", obj_id = owner_id, obj_type = "Owner")
 	# Send notifications
 	if is_new_owner:

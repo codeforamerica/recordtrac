@@ -21,13 +21,11 @@ import json
 import re
 from validate_email import validate_email
 
-
 class requestPrivacy:
     PUBLIC = 0x01
     NAME_PRIVATE = 0x02
     REQUEST_PRIVATE = 0x04
     PRIVATE = 0x08
-
 
 # @export "User"
 class User(db.Model):
@@ -45,9 +43,10 @@ class User(db.Model):
     zipcode = db.Column(db.String())
     date_created = db.Column(db.DateTime)
     password = db.Column(db.String(255))
-    department = db.Column(Integer, ForeignKey("department.id"))
-    current_department = relationship(
-        "Department", foreign_keys=[department], uselist=False)
+    department_id = db.Column(Integer, ForeignKey("department.id", use_alter=True, name="fk_department"))
+    current_department = relationship("Department",
+        foreign_keys=[department_id],
+        lazy='joined', uselist=False)
     contact_for = db.Column(db.String())  # comma separated list
     backup_for = db.Column(db.String())  # comma separated list
     owners = relationship("Owner")
@@ -107,7 +106,7 @@ class User(db.Model):
             return self.zipcode
         return "N/A"
 
-    def __init__(self, email=None, alias=None, first_name = None, last_name = None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=zipcode, department=None, contact_for=None, backup_for=None, password=None, is_staff=False):
+    def __init__(self, email=None, alias=None, first_name = None, last_name = None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=None, department=None, contact_for=None, backup_for=None, password=None, is_staff=False):
         if email and validate_email(email):
             self.email = email
         self.alias = alias
@@ -127,7 +126,7 @@ class User(db.Model):
             self.zipcode = zipcode
         self.date_created = datetime.now().isoformat()
         if department and department != "":
-            self.department = department
+            self.department_id = department
         if contact_for and contact_for != "":
             self.contact_for = contact_for
         if backup_for and backup_for != "":
@@ -142,6 +141,11 @@ class User(db.Model):
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
+
+    def is_admin(self):
+        if 'LIST_OF_ADMINS' in app.config:
+            admins = app.config['LIST_OF_ADMINS'].split(",")
+            return self.email.lower() in admins
 
     def __repr__(self):
         return '<User %r>' % self.email
@@ -159,22 +163,34 @@ class User(db.Model):
 
 ### @export "Department"
 class Department(db.Model):
-    __tablename__ = 'department'
-    id = db.Column(db.Integer, primary_key =True)
-    date_created = db.Column(db.DateTime)
-    date_updated = db.Column(db.DateTime)
-    name = db.Column(db.String(), unique=True)
-    users = relationship("User") # The list of users in this department
-    requests = relationship("Request", order_by = "Request.date_created.asc()") # The list of requests currently associated with this department
-    def __init__(self, name):
-        self.name = name
-        self.date_created = datetime.now().isoformat()
-    def __repr__(self):
-        return '<Department %r>' % self.name
-    def __str__(self):
-        return self.name
-    def get_name(self):
-        return self.name or "N/A"
+	__tablename__ = 'department'
+	id = db.Column(db.Integer, primary_key =True)
+	date_created = db.Column(db.DateTime)
+	date_updated = db.Column(db.DateTime)
+	name = db.Column(db.String(), unique=True)
+	users = relationship("User", foreign_keys=[User.department_id], post_update=True) # The list of users in this department
+	requests = relationship("Request", order_by = "Request.date_created.asc()") # The list of requests currently associated with this department
+
+	primary_contact_id = db.Column(Integer, ForeignKey("user.id"))
+	backup_contact_id = db.Column(Integer, ForeignKey("user.id"))
+	primary_contact = relationship(User,
+		foreign_keys=[primary_contact_id],
+		primaryjoin=(primary_contact_id == User.id),
+		uselist=False, post_update=True)
+	backup_contact = relationship(User,
+		foreign_keys=[backup_contact_id],
+		primaryjoin=(backup_contact_id == User.id),
+		uselist=False, post_update=True)
+
+	def __init__(self, name=''):
+		self.name = name
+		self.date_created = datetime.now().isoformat()
+	def __repr__(self):
+		return '<Department %r>' % self.name
+	def __str__(self):
+		return self.name
+	def get_name(self):
+		return self.name or "N/A"
 
 ### @export "Request"
 class Request(db.Model):
@@ -211,7 +227,7 @@ class Request(db.Model):
                 self.date_received = date_received
         self.privacy = privacy
         self.__class__.tracking_number += 1
-                
+
     def __repr__(self):
         return '<Request %r>' % self.text
 
@@ -354,6 +370,7 @@ class QA(db.Model):
     def __repr__(self):
         return "<QA Q: %r A: %r>" %(self.question, self.answer)
 
+
 ### @export "Owner"
 class Owner(db.Model):
 # A member of city staff assigned to a particular request, that may or may not upload records towards that request.
@@ -397,6 +414,7 @@ class Subscriber(db.Model):
     def __repr__(self):
         return '<Subscriber %r>' %self.user_id
 
+
 ### @export "Record"
 class Record(db.Model):
 # A record that is attached to a particular request. A record can be online (uploaded document, link) or offline.
@@ -404,7 +422,7 @@ class Record(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     date_created = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) # The user who uploaded the record, right now only city staff can
-    doc_id = db.Column(db.Integer) # The document ID. 
+    doc_id = db.Column(db.Integer) # The document ID.
     request_id = db.Column(db.String(100), db.ForeignKey('request.id')) # The request this record was uploaded for
     description = db.Column(db.String(400)) # A short description of what the record is.
     filename = db.Column(db.String(400)) # The original name of the file being uploaded.
@@ -454,3 +472,4 @@ class Visualization(db.Model):
         self.date_created = datetime.now().isoformat()
     def __repr__(self):
         return '<Visualization %r>' % self.type_viz
+

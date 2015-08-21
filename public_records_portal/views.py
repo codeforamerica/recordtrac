@@ -380,9 +380,9 @@ def show_request(request_id, template="manage_request_public.html"):
     departments_all=models.Department.query.all()
     department_data = []
     for d in departments_all:
-      firstUser = models.User.query.filter_by(department=d.id).first()
+      firstUser = models.User.query.filter_by(department_id=d.id).first()
       department_data.append({'name': d.name, 'email': firstUser.email})
-    users=models.User.query.filter_by(department=req.department_id).all()
+    users=models.User.query.filter_by(department_id=req.department_id).all()
     if not req:
         return render_template('error.html', message="A request with ID %s does not exist." % request_id)
     if req.status and "Closed" in req.status and template != "manage_request_feedback.html":
@@ -782,8 +782,6 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 
     return results.order_by(models.Request.id.desc())
 
-
-
 @app.route("/<page>")
 def any_page(page):
     try:
@@ -800,7 +798,6 @@ def tutorial():
 @app.route("/staff_card/<int:user_id>")
 def staff_card(user_id):
     return render_template('staff_card.html', uid=user_id)
-
 
 @app.route("/logout")
 @login_required

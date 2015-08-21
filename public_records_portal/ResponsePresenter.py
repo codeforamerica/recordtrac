@@ -39,7 +39,7 @@ class ResponsePresenter:
 		elif self.type=="extension":
 			self.icon = "icon-calendar icon-large"
 
-	
+
 	def get_update_url(self):
 		return self.update_url
 
@@ -73,7 +73,7 @@ class ResponsePresenter:
 			return """
 			<a href='%(download_url)s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%(download_url)s' target='_blank'><b>%(description)s </b></a>
 			<a href = '%(download_url)s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='View document' target='_blank'><small><i class='icon-external-link'> </i></small></a>
-			""" %{"download_url": download_url, "description": self.response.description, "url": self.response.url} 
+			""" %{"download_url": download_url, "description": self.response.description, "url": self.response.url}
 		elif self.type == "note":
 			return self.response.text
 		elif self.type == "link":
