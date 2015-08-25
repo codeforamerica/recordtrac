@@ -305,9 +305,17 @@ class Request(db.Model):
         else:
             app.logger.info("\n\n Request with this ID has no status: %s" % self.id)
             return False
+    def is_in_progress(self):
+        if self.status:
+            return re.match('.*(progress).*', self.status, re.IGNORECASE) is not None
+        else:
+            app.logger.info("\n\n Request with this ID has no status: %s" % self.id)
+            return False
     def solid_status(self, cron_job = False):
         if self.is_closed():
             return "closed"
+        if self.is_in_progress():
+            return "in progress"
         else:
             if cron_job or (not current_user.is_anonymous()):
                 if self.due_date:

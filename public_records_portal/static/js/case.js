@@ -45,4 +45,12 @@
     }
   });
 
+  $('#acknowledgeRequestForm').on('click',function() {
+      alert("TEST");
+      if ($('#acknowledgeRequestForm').css('display') != 'none') {
+        $('#acknowledgeRequestForm').hide();
+      }
+    }
+  });
+
 })($);

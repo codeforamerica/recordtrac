@@ -6,6 +6,31 @@
     </h3>
   </div>
 
+  <!-- Acknowledge a request -->
+  {% if current_user.is_authenticated() and req.solid_status() == 'open' %}
+  <div class="r_sidebar_banner hidden-phone hidden-tablet">
+  <form name="note" class="form-horizontal" id="note" method="post" action="/update_a_request_acknowledge">
+    <input type="hidden" name="request_id" value="{{ req.id }}"/>
+    <fieldset>
+      <h4>Acknowledge a request</h4>
+            <select class="span10" id="acknowledge_status" name="acknowledge_status">
+              <option value="Granted - 15 days">Granted - 15 days</option>
+              <option value="Granted - 30 days">Granted - 30 days</option>
+              <option value="Granted - 60 days">Granted - 60 days</option>
+              <option value="Granted - 90 days">Granted- 90 days</option>
+              <option value="Granted - 120 days">Granted - 120 days</option>
+              <option value="Granted - In Part 15 days">Granted - In Part 15 days</option>
+              <option value="Granted - In Part 30 days">Granted - In Part 30 days</option>
+              <option value="Granted - In Part 60 days">Granted - In Part 60 days</option>
+              <option value="Granted - In Part 90 days">Granted - In Part 90 days</option>
+              <option value="Granted - In Part 120 days">Granted - In Part 120 days</option>
+            </select>
+        <button id="rerouteButton" class="btn input-block-level" type="submit"> <i class="icon-envelope"> </i> Acknowledge Request</button>
+    </fieldset>
+  </form>
+  </div>
+  {% endif %}
+
   {% if current_user.is_authenticated() and status == 'closed' %}
     <div class="r_sidebar_banner hidden-phone hidden-tablet">
       <form name="reopen_request" class="form-inline" id="question" method="post" action="/update_a_request_reopen">
