@@ -111,6 +111,7 @@ class NewRequestForm(Form):
     terms_of_use = BooleanField(u'I acknowledge that I have read and accepted the Terms of Use for '
                                 u'this application, as stated above',
                                 validators=[DataRequired('You must accept the terms of use')])
+    acknowledge_request = BooleanField(u'Acknowledge Request')
     record_description = StringField(u'Attachment Description')
     record = FileField(u'Upload attachment')
     request_submit = SubmitField(u'Submit Request')

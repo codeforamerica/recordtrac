@@ -72,6 +72,8 @@ def update_resource(resource, request_body):
 			return assign_owner(fields['request_id'], fields['owner_reason'], fields['owner_email'])
 	elif "reopen" in resource:
 		change_request_status(fields['request_id'], "Reopened")
+        elif "acknowledge" in resource:
+                change_request_status(fields['request_id'], "In Progress")
 		return fields['request_id']
 	elif "request_text" in resource:
 		update_obj(attribute = "text", val = fields['request_text'], obj_type = "Request", obj_id = fields['request_id'])
@@ -105,7 +107,7 @@ def add_note(request_id, text, user_id = None, passed_spam_filter = False):
 		change_request_status(request_id, "A response has been added.")
 		if user_id:
 			add_staff_participant(request_id = request_id, user_id = user_id)
-			generate_prr_emails(request_id = request_id, notification_type = "City response added")
+			generate_prr_emails(request_id = request_id, notification_type = "Public Notification Template 10")
 		else:
 			generate_prr_emails(request_id = request_id, notification_type = "Public note added")
 		return note_id
@@ -187,7 +189,7 @@ def make_request(text, email = None, user_id = None, phone = None, address1 = No
 		subscriber_user_id = create_or_return_user(email = email, alias = alias, phone = phone, address1 = address1, address2 = address2, city = city, state = state, zipcode = zipcode)
 		subscriber_id, is_new_subscriber = create_subscriber(request_id = request_id, user_id = subscriber_user_id)
 		if subscriber_id:
-			generate_prr_emails(request_id, notification_type = "Request made", user_id = subscriber_user_id) # Send them an e-mail notification
+			generate_prr_emails(request_id, notification_type = "Public Notification Template 1", user_id = subscriber_user_id) # Send them an e-mail notification
         if document: 
             upload_record(request_id, description, user_id, document)
 	return request_id, True
