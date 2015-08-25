@@ -15,7 +15,12 @@ import uuid
 import json
 import os
 import logging
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import portrait
+from PyPDF2 import PdfFileWriter, PdfFileReader
+import StringIO
 
+standard_response_templates = {"template_02":"FOIL Message Sent","template_03":"FOIL Request Status","template_04":"FOIL Request Completed","template_05":"FOIL Request Status - Fulfilled in Part","template_06":"FOIL Request Denied","template_07":"FOIL Request Closed","template_08":"FOIL Request Payment Information","template_09":"FOIL Request Closed - No Response","template_10":"FOIL Time Extension Requested"}
 
 # @export "get_subscriber"
 def get_subscriber(request_id, user_id):
@@ -214,6 +219,20 @@ def create_subscriber(request_id, user_id):
 def create_note(request_id, text, user_id):
     """ Create a Note object and return the ID. """
     try:
+        if "template_" in text:
+            fname = text + "_" + str(user_id) + ".pdf"
+            fpath = os.path.join(app.config['PDF_FOLDER'], fname)
+            app.logger.info("\n\npdf path: %s" %(fpath))
+            packet = StringIO.StringIO()
+            packet=StringIO.StringIO()
+            cv=canvas.Canvas(packet)
+            cv.drawString(0, 500, "Template Text")
+            cv.save()
+            packet.seek(0)
+            with open(fpath,'wb') as fp:
+                fp.write(packet.getvalue())
+            text = "<a href='/pdfs/" + fname + "'>" + standard_response_templates[text] + "</a>"
+
         note = Note(request_id=request_id, text=text, user_id=user_id)
         put_obj(note)
         return note.id

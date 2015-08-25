@@ -20,6 +20,8 @@ Jinja2==2.7.3
 Mako==1.0.1
 MarkupSafe==0.23
 mimerender==0.5.5
+pdfdocument==3.1.0
+PyPDF2==1.25.1
 phonenumbers==7.0.6
 psycopg2==2.6.1
 python-dateutil==2.4.2
@@ -28,6 +30,7 @@ python-mimeparse==0.1.4
 pyclamd==0.3.15
 pytz==2015.4
 recaptcha-client==1.0.6
+reportlab==3.2.0
 requests==2.7.0
 sendgrid==1.4.0
 six==1.9.0
