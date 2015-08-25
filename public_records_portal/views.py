@@ -441,7 +441,9 @@ def public_add_a_resource(resource, passed_recaptcha=False, data=None):
         if not data:
             data=request.form.copy()
         if 'note' in resource:
-            resource_id=prr.add_note(request_id=data['request_id'], text=data['note_text'], passed_spam_filter=True)
+            resource_id=prr.add_note(request_id=data['request_id'], text=data['note_text'], passed_spam_filter=True, privacy=data['note_privacy'])
+        if 'pdf' in resource:
+            resource_id=prr.add_note(request_id=data['request_id'], text=data['response_template'], passed_spam_filter=True)
         else:
             resource_id=prr.add_resource(resource=resource, request_body=data, current_user_id=None)
         if type(resource_id) == int:
@@ -460,6 +462,21 @@ def update_a_resource(resource, passed_recaptcha=False, data=None):
             data=request.form.copy()
         if 'qa' in resource:
             prr.answer_a_question(qa_id=int(data['qa_id']), answer=data['answer_text'], passed_spam_filter=True)
+        else:
+            update_resource(resource, data)
+        if current_user.is_anonymous() == False:
+            return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
+        else:
+            return redirect(url_for('show_request', request_id=request.form['request_id']))
+    return render_template('error.html', message="You can only update requests from a request page!")
+
+@app.route("/acknowledge_request", methods=["GET", "POST"])
+def acknowledge_request(resource, passed_recaptcha=False, data=None):
+    if (data or request.method == 'POST'):
+        if not data:
+            data=request.form.copy()
+        if 'qa' in resource:
+            prr.answer_a_question(qa_id=int(data['qa_id']), answer=data['acknowledge_request'], passed_spam_filter=True)
         else:
             update_resource(resource, data)
         if current_user.is_anonymous() == False:
@@ -949,6 +966,10 @@ def get_attachments(resource):
     app.logger.info("\n\ngetting attachment file")
     return send_from_directory(app.config["UPLOAD_FOLDER"], resource, as_attachment=True)
 
+@app.route("/pdfs/<string:resource>", methods=["GET"])
+def get_pdfs(resource):
+    app.logger.info("\n\ngetting pdf file")
+    return send_from_directory(app.config["PDF_FOLDER"], resource, as_attachment=True)
 
 @app.route("/api/report/<string:report_type>", methods=["GET"])
 def get_report_jsons(report_type):

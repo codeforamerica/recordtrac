@@ -44,11 +44,18 @@
       $this.html('<i class="icon-chevron-down"></i> See all <i class="icon-chevron-down"></i>')
     }
   });
-
+  $('#acknowledgeRequestForm').on('click',function() {
+      alert("TEST");
+      if ($('#acknowledgeRequestForm').css('display') != 'none') {
+        $('#acknowledgeRequestForm').hide();
+      }
+    }
+});
   $("#days_after").change(function() {
     selected = $(this).val();
     if(selected === "-1") { 
       $("#custom_due_date").show();
+      }
     }
     else {
       $("#custom_due_date").hide();
