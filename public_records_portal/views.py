@@ -441,7 +441,7 @@ def public_add_a_resource(resource, passed_recaptcha=False, data=None):
         if not data:
             data=request.form.copy()
         if 'note' in resource:
-            resource_id=prr.add_note(request_id=data['request_id'], text=data['note_text'], passed_spam_filter=True)
+            resource_id=prr.add_note(request_id=data['request_id'], text=data['note_text'], passed_spam_filter=True, privacy=data['note_privacy'])
         if 'pdf' in resource:
             resource_id=prr.add_note(request_id=data['request_id'], text=data['response_template'], passed_spam_filter=True)
         else:

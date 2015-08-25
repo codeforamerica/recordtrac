@@ -216,7 +216,7 @@ def create_subscriber(request_id, user_id):
 # @export "create_note"
 
 
-def create_note(request_id, text, user_id):
+def create_note(request_id, text, user_id, privacy):
     """ Create a Note object and return the ID. """
     try:
         if "template_" in text:
@@ -233,7 +233,7 @@ def create_note(request_id, text, user_id):
                 fp.write(packet.getvalue())
             text = "<a href='/pdfs/" + fname + "'>" + standard_response_templates[text] + "</a>"
 
-        note = Note(request_id=request_id, text=text, user_id=user_id)
+        note = Note(request_id=request_id, text=text, user_id=user_id, privacy=privacy)
         put_obj(note)
         return note.id
     except Exception, e:

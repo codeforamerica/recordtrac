@@ -28,6 +28,9 @@ class requestPrivacy:
     REQUEST_PRIVATE = 0x04
     PRIVATE = 0x08
 
+class notePrivacy:
+    PUBLIC = 0x01
+    AGENCY = 0x02
 
 # @export "User"
 class User(db.Model):
@@ -448,11 +451,14 @@ class Note(db.Model):
     text = db.Column(db.String())
     request_id = db.Column(db.String(100), db.ForeignKey('request.id')) # The request it belongs to.
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) # The user who wrote the note. Right now only stored for city staff - otherwise it's an anonymous/ 'requester' note.
-    def __init__(self, request_id, text, user_id):
+    privacy = db.Column(db.Integer, default=1)
+
+    def __init__(self, request_id, text, user_id, privacy = 1):
         self.text = text
         self.request_id = request_id
         self.user_id = user_id
         self.date_created = datetime.now().isoformat()
+        self.privacy  = privacy
     def __repr__(self):
         return '<Note %r>' % self.text
 
