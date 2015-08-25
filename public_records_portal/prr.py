@@ -31,6 +31,8 @@ def add_resource(resource, request_body, current_user_id = None):
 		return request_extension(fields['request_id'], fields.getlist('extend_reason'), current_user_id)
 	if "note" in resource:
 		return add_note(request_id = fields['request_id'], text = fields['note_text'], user_id = current_user_id, passed_spam_filter = True) # Bypass spam filter because they are logged in.
+        if "pdf" in resource:
+                return add_note(request_id = fields['request_id'], text = fields['response_template'], user_id = current_user_id, passed_spam_filter = True)
 	elif "record" in resource:
 		app.logger.info("\n\ninside add_resource method")
 		if fields['record_description'] == "":

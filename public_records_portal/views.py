@@ -442,6 +442,8 @@ def public_add_a_resource(resource, passed_recaptcha=False, data=None):
             data=request.form.copy()
         if 'note' in resource:
             resource_id=prr.add_note(request_id=data['request_id'], text=data['note_text'], passed_spam_filter=True)
+        if 'pdf' in resource:
+            resource_id=prr.add_note(request_id=data['request_id'], text=data['response_template'], passed_spam_filter=True)
         else:
             resource_id=prr.add_resource(resource=resource, request_body=data, current_user_id=None)
         if type(resource_id) == int:
@@ -981,6 +983,10 @@ def get_attachments(resource):
     app.logger.info("\n\ngetting attachment file")
     return send_from_directory(app.config["UPLOAD_FOLDER"], resource, as_attachment=True)
 
+@app.route("/pdfs/<string:resource>", methods=["GET"])
+def get_pdfs(resource):
+    app.logger.info("\n\ngetting pdf file")
+    return send_from_directory(app.config["PDF_FOLDER"], resource, as_attachment=True)
 
 @app.route("/api/report/<string:report_type>", methods=["GET"])
 def get_report_jsons(report_type):
