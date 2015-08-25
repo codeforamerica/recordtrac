@@ -2,7 +2,7 @@
     public_records_portal.notifications
     ~~~~~~~~~~~~~~~~
 
-    Implements e-mail notifications for RecordTrac. SendGrid (https://sendgrid.com/) is a dependency, and the following environment variables need to be set in order for this to work: MAIL_USERNAME, MAIL_PASSWORD, and DEFAULT_MAIL_SENDER.
+    Implements e-mail notifications for RecordTrac. Flask-mail is a dependency, and the following environment variables need to be set in order for this to work: MAIL_SERVER, MAIL_PORT, MAIL_USE_TLS, MAIL_USERNAME, MAIL_PASSWORD, and DEFAULT_MAIL_SENDER.
 
 """
 
@@ -14,10 +14,10 @@ from public_records_portal import app
 import os
 import json
 from db_helpers import *
-import sendgrid
 from flask import render_template
 import helpers
 import logging
+from flask_mail import Mail, Message
 
 # Set flags:
 
@@ -38,6 +38,10 @@ def generate_prr_emails(request_id, notification_type, user_id = None):
 	template = "generic_email.html"
 	if notification_type == "Request made":
 		template = "new_request_email.html"
+	if "Public Notification Template" in notification_type:
+		template = "system_email_" +  notification_type[-2]  + ".html"
+	if "Agency Notification Template" in notification_type:
+		template = "agency_email_" +  notification_type[-2]  + ".html"
 	# Get information on who to send the e-mail to and with what subject line based on the notification type:
 	email_info = get_email_info(notification_type=notification_type)
 	email_subject = "Public Records Request %s: %s" %(request_id, email_info["Subject"])
@@ -110,26 +114,13 @@ def send_prr_email(page, recipients, subject, template, include_unsubscribe_link
 
 ### @export "send_email"
 def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_everyone = False):
-	if ('HTTPS_PROXY' and 'HTTP_PROXY') in app.config:
-		sg = sendgrid.SendGridClient(app.config['MAIL_USERNAME'],
-	                             app.config['MAIL_PASSWORD'],
-	                             **{
-	                             	'proxies': {
-	                             		'https': app.config['HTTPS_PROXY'],
-	                             		'http': app.config['HTTP_PROXY'],
-	                             	}
-	                             })
-	else:
-		sg = sendgrid.SendGridClient(app.config['MAIL_USERNAME'],
-	                             app.config['MAIL_PASSWORD'])
+	mail = Mail(app)
 
-
-	sender = app.config['DEFAULT_MAIL_SENDER']
 	plaintext = ""
 	html = body
 
-
-	message = sendgrid.Mail(to=sender, subject=subject, html=html, text=plaintext, from_email=sender)
+	sender = app.config['DEFAULT_MAIL_SENDER']
+	message = Message(subject=subject, html=html, body=plaintext, bcc=sender)
 
 	# if not include_unscubscribe_link:
 		# message.add_filter('subscriptiontrack', 'enable', 0)
@@ -144,18 +135,13 @@ def send_email(body, recipients, subject, include_unsubscribe_link = True, cc_ev
 	else:
 		for recipient in recipients:
 			# if should_notify(recipient):
-			message.add_to(recipient)
-
-	message.add_bcc(sender)
+			message.add_recipient(recipient)
 
 	if send_emails:
 		app.logger.info("\n\n Attempting to send e-mail with body: %s, subject: %s, to %s" %(body, subject, recipients))
 		try:
-			status, msg = sg.send(message)
-			if status == False:
-				app.logger.info("\n\nSendgrid did not deliver e-mail.")
-				app.logger.info("\n\n%s." % msg)
-			return status
+			mail.send(message)
+			return True
 		except Exception, e:
 			app.logger.error("\n\nNo e-mail was sent, error: %s" % e)
 			return False
