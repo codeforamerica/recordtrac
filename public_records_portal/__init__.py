@@ -77,6 +77,7 @@ envvars = [
 	'HTTPS_PROXY', # HTTPS Proxy for SendGrid
 	'HTTP_PROXY', # HTTP PRoxy for SendGrid
 	'UPLOAD_FOLDER', # Upload Folder
+        'PDF_FOLDER', # PDF Folder
         'UPLOAD_DOCS' # Upload docs locally
 ]
 for envvar in envvars:
