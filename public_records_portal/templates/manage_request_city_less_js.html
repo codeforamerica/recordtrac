@@ -172,6 +172,37 @@
     </fieldset>
   </form>
 
+  <!-- Generate PDF -->
+  <form name="note" class="form-horizontal" id="note" method="post" action="/add_a_pdf">
+    <input type="hidden" name="request_id" value="{{ req.id }}"/>
+    <fieldset>
+      <legend>Standard Responses (PDF)</legend>
+      <div class="row-fluid">
+        <div class="control-group">
+          <label class="control-label">Template <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Generate PDF"}}"><small><i class="icon-info-sign"></i></small></span></label>
+          <div class="controls">
+            <select id="response_template" name="response_template" required data-selected-text-format="count" size="9">
+              <option value="template_02">Message Sent</option>
+              <option value="template_03">Request Status</option>
+              <option value="template_04">Request Completed</option>
+              <option value="template_05">Request Status - Fulfilled in Part</option>
+              <option value="template_06">Request Denied</option>
+              <option value="template_07">Request Closed</option>
+              <option value="template_08">Request Payment Information</option>
+              <option value="template_09">Request Closed - No Response</option>
+              <option value="template_10">Time Extension Requested</option>
+            </select>
+          </div>
+        </div>
+        <div class="control-group">
+          <div class="controls">
+            <button type="submit" class="btn btn-primary">Generate PDF</button>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
   <!-- REMOVE THE FOLLOWING SECTION IF YOU DO NOT USE EXTENSIONS IN YOUR AGENCY. -->
   <!-- Extension.-->
   {% if req.extended %}
