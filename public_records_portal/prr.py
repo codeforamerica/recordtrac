@@ -129,7 +129,7 @@ def upload_record(request_id, description, user_id, document = None):
 	else:
 		#if str(doc_id).isdigit():
                 if str(doc_id) == 'VIRUS_FOUND':
-                	return "There was a virus found in the document you uploaded." 
+                	return "There was a virus found in the document you uploaded."
 		if doc_id:
 			#record_id = create_record(doc_id = doc_id, request_id = request_id, user_id = user_id, description = description, filename = filename, url = app.config['HOST_URL'] + doc_id)
 			record_id = create_record(doc_id = None, request_id = request_id, user_id = user_id, description = description, filename = filename, url = app.config['HOST_URL'] + doc_id)
@@ -189,8 +189,8 @@ def make_request(text, email = None, user_id = None, phone = None, address1 = No
 		subscriber_user_id = create_or_return_user(email = email, alias = alias, phone = phone, address1 = address1, address2 = address2, city = city, state = state, zipcode = zipcode)
 		subscriber_id, is_new_subscriber = create_subscriber(request_id = request_id, user_id = subscriber_user_id)
 		if subscriber_id:
-			generate_prr_emails(request_id, notification_type = "Public Notification Template 1", user_id = subscriber_user_id) # Send them an e-mail notification
-        if document: 
+			generate_prr_emails(request_id, notification_type = "Public Notification Template 01", user_id = subscriber_user_id) # Send them an e-mail notification
+        if document:
             upload_record(request_id, description, user_id, document)
 	return request_id, True
 
@@ -265,7 +265,7 @@ def get_request_data_chronologically(req):
 	if not req:
 		return responses
 	for i, note in enumerate(req.notes):
-		if not note.user_id:       
+		if not note.user_id:
 			responses.append(RequestPresenter(note = note, index = i, public = public, request = req))
 	for i, qa in enumerate(req.qas):
 		responses.append(RequestPresenter(qa = qa, index = i, public = public, request = req))
