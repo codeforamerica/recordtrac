@@ -27,6 +27,10 @@ class requestPrivacy:
     REQUEST_PRIVATE = 0x04
     PRIVATE = 0x08
 
+class notePrivacy:
+    PUBLIC = 0x01
+    AGENCY = 0x02
+
 # @export "User"
 class User(db.Model):
     __tablename__ = 'user'
@@ -170,6 +174,15 @@ class Department(db.Model):
 	name = db.Column(db.String(), unique=True)
 	users = relationship("User", foreign_keys=[User.department_id], post_update=True) # The list of users in this department
 	requests = relationship("Request", order_by = "Request.date_created.asc()") # The list of requests currently associated with this department
+    def __init__(self, name):
+        self.name = name
+        self.date_created = datetime.now().isoformat()
+    def __repr__(self):
+        return '<Department %r>' % self.name
+    def __str__(self):
+        return self.name
+    def get_name(self):
+        return self.name or "N/A"
 
 	primary_contact_id = db.Column(Integer, ForeignKey("user.id"))
 	backup_contact_id = db.Column(Integer, ForeignKey("user.id"))
@@ -321,9 +334,17 @@ class Request(db.Model):
         else:
             app.logger.info("\n\n Request with this ID has no status: %s" % self.id)
             return False
+    def is_in_progress(self):
+        if self.status:
+            return re.match('.*(progress).*', self.status, re.IGNORECASE) is not None
+        else:
+            app.logger.info("\n\n Request with this ID has no status: %s" % self.id)
+            return False
     def solid_status(self, cron_job = False):
         if self.is_closed():
             return "closed"
+        if self.is_in_progress():
+            return "in progress"
         else:
             if cron_job or (not current_user.is_anonymous()):
                 if self.due_date:
@@ -331,6 +352,14 @@ class Request(db.Model):
                         return "overdue"
                     elif (datetime.now() + timedelta(days = int(app.config['DAYS_UNTIL_OVERDUE']))) >= self.due_date:
                         return "due soon"
+                    elif (datetime.now() + timedelta(days = int(2))) >= self.due_date:
+                        return "in progress (due in 2 days)"
+                    elif (datetime.now() + timedelta(days = int(5))) >= self.due_date:
+                        return "in progress (due in 5 days)"
+                    elif (datetime.now() + timedelta(days = int(10))) >= self.due_date:
+                        return "in progress (due in 10 days)"
+                    else:
+                        return "acknowledged"
         return "open"
 
     @hybrid_property
@@ -450,11 +479,14 @@ class Note(db.Model):
     text = db.Column(db.String())
     request_id = db.Column(db.String(100), db.ForeignKey('request.id')) # The request it belongs to.
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) # The user who wrote the note. Right now only stored for city staff - otherwise it's an anonymous/ 'requester' note.
-    def __init__(self, request_id, text, user_id):
+    privacy = db.Column(db.Integer, default=1)
+
+    def __init__(self, request_id, text, user_id, privacy = 1):
         self.text = text
         self.request_id = request_id
         self.user_id = user_id
         self.date_created = datetime.now().isoformat()
+        self.privacy  = privacy
     def __repr__(self):
         return '<Note %r>' % self.text
 

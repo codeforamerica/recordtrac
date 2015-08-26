@@ -28,17 +28,19 @@ agency_codes = {"Department of Records and Information Services": "860", "Office
 def add_resource(resource, request_body, current_user_id = None):
 	fields = request_body
 	if "extension" in resource:
-		return request_extension(int(fields['request_id']), fields.getlist('extend_reason'), current_user_id)
+		return request_extension(fields['request_id'], fields.getlist('extend_reason'), current_user_id)
 	if "note" in resource:
-		return add_note(request_id = int(fields['request_id']), text = fields['note_text'], user_id = current_user_id, passed_spam_filter = True) # Bypass spam filter because they are logged in.
+		return add_note(request_id = fields['request_id'], text = fields['note_text'], user_id = current_user_id, passed_spam_filter = True, privacy = fields['note_privacy']) # Bypass spam filter because they are logged in.
+        if "pdf" in resource:
+                return add_note(request_id = fields['request_id'], text = fields['response_template'], user_id = current_user_id, passed_spam_filter = True)
 	elif "record" in resource:
 		app.logger.info("\n\ninside add_resource method")
 		if fields['record_description'] == "":
 			return "When uploading a record, please fill out the 'summary' field."
 		if 'record_access' in fields and fields['record_access'] != "":
-			return add_offline_record(int(fields['request_id']), fields['record_description'], fields['record_access'], current_user_id)
+			return add_offline_record(fields['request_id'], fields['record_description'], fields['record_access'], current_user_id)
 		elif 'link_url' in fields and fields['link_url'] != "":
-			return add_link(request_id = int(fields['request_id']), url = fields['link_url'], description = fields['record_description'], user_id = current_user_id)
+			return add_link(request_id = fields['request_id'], url = fields['link_url'], description = fields['record_description'], user_id = current_user_id)
 		else:
 			app.logger.info("\n\neverything else...")
 			document = None
@@ -46,9 +48,9 @@ def add_resource(resource, request_body, current_user_id = None):
 				document = request.files['record']
 			except:
 				app.logger.info("\n\nNo file passed in")
-			return upload_record(request_id = int(fields['request_id']), document = document, description = fields['record_description'], user_id = current_user_id)
+			return upload_record(request_id = fields['request_id'], document = document, description = fields['record_description'], user_id = current_user_id)
 	elif "qa" in resource:
-		return ask_a_question(request_id = int(fields['request_id']), user_id = current_user_id, question = fields['question_text'])
+		return ask_a_question(request_id = fields['request_id'], user_id = current_user_id, question = fields['question_text'])
 	elif "owner" in resource:
 		participant_id, new = add_staff_participant(request_id = fields['request_id'], email = fields['owner_email'], reason = fields['owner_reason'])
 		if new:
@@ -66,10 +68,12 @@ def update_resource(resource, request_body):
 		if "reason_unassigned" in fields:
 			return remove_staff_participant(owner_id = fields['owner_id'], reason = fields['reason_unassigned'])
 		else:
-			change_request_status(int(fields['request_id']), "Rerouted")
-			return assign_owner(int(fields['request_id']), fields['owner_reason'], fields['owner_email'])
+			change_request_status(fields['request_id'], "Rerouted")
+			return assign_owner(fields['request_id'], fields['owner_reason'], fields['owner_email'])
 	elif "reopen" in resource:
-		change_request_status(int(fields['request_id']), "Reopened")
+		change_request_status(fields['request_id'], "Reopened")
+        elif "acknowledge" in resource:
+                change_request_status(fields['request_id'], "In Progress")
 		return fields['request_id']
 	elif "request_text" in resource:
 		update_obj(attribute = "text", val = fields['request_text'], obj_type = "Request", obj_id = fields['request_id'])
@@ -95,15 +99,15 @@ def request_extension(request_id, extension_reasons, user_id):
 	return add_note(request_id = request_id, text = text, user_id = user_id, passed_spam_filter = True) # Bypass spam filter because they are logged in.
 
 ### @export "add_note"
-def add_note(request_id, text, user_id = None, passed_spam_filter = False):
+def add_note(request_id, text, user_id = None, passed_spam_filter = False, privacy = 1):
 	if not text or text == "" or (not passed_spam_filter):
 		return False
-	note_id = create_note(request_id = request_id, text = text, user_id = user_id)
+	note_id = create_note(request_id = request_id, text = text, user_id = user_id, privacy = privacy)
 	if note_id:
 		change_request_status(request_id, "A response has been added.")
 		if user_id:
 			add_staff_participant(request_id = request_id, user_id = user_id)
-			generate_prr_emails(request_id = request_id, notification_type = "City response added")
+			generate_prr_emails(request_id = request_id, notification_type = "Public Notification Template 10")
 		else:
 			generate_prr_emails(request_id = request_id, notification_type = "Public note added")
 		return note_id
@@ -184,7 +188,7 @@ def make_request(text, email = None, user_id = None, phone = None, address1 = No
 		subscriber_user_id = create_or_return_user(email = email, alias = alias, phone = phone, address1 = address1, address2 = address2, city = city, state = state, zipcode = zipcode)
 		subscriber_id, is_new_subscriber = create_subscriber(request_id = request_id, user_id = subscriber_user_id)
 		if subscriber_id:
-			generate_prr_emails(request_id, notification_type = "Request made", user_id = subscriber_user_id) # Send them an e-mail notification
+			generate_prr_emails(request_id, notification_type = "Public Notification Template 01", user_id = subscriber_user_id) # Send them an e-mail notification
         if document:
             upload_record(request_id, description, user_id, document)
 	return request_id, True
@@ -276,7 +280,10 @@ def get_responses_chronologically(req):
 		return responses
 	for note in req.notes:
 		if note.user_id:
-			responses.append(ResponsePresenter(note = note))
+			if current_user.is_anonymous()  and note.privacy == 2:
+				pass # private note
+			else:
+				responses.append(ResponsePresenter(note = note))
 	for record in req.records:
 		responses.append(ResponsePresenter(record = record))
 	if not responses:
@@ -322,6 +329,6 @@ def close_request(request_id, reason = "", user_id = None):
 	req = get_obj("Request", request_id)
 	change_request_status(request_id, "Closed")
 	# Create a note to capture closed information:
-	create_note(request_id, reason, user_id)
+	create_note(request_id, reason, user_id, privacy = 1)
 	generate_prr_emails(request_id = request_id, notification_type = "Request closed")
 	add_staff_participant(request_id = request_id, user_id = user_id)

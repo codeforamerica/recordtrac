@@ -49,7 +49,7 @@ set_env(key = 'DAYS_TO_FULFILL', default = '10')
 set_env(key = 'DAYS_AFTER_EXTENSION', default = '14')
 set_env(key = 'DAYS_UNTIL_OVERDUE', default = '2')
 
-set_env(key = 'TIMEZONE', default = "US/Pacific")
+set_env(key = 'TIMEZONE', default = "US/Eastern")
 
 # Set rest of the variables that don't have defaults:
 envvars = [
@@ -76,7 +76,8 @@ envvars = [
 	'HTTPS_PROXY', # HTTPS Proxy for SendGrid
 	'HTTP_PROXY', # HTTP PRoxy for SendGrid
 	'UPLOAD_FOLDER', # Upload Folder
-        'UPLOAD_DOCS' # Upload docs locally
+    'PDF_FOLDER', # PDF Folder
+    'UPLOAD_DOCS' # Upload docs locally
 ]
 
 for envvar in envvars:
