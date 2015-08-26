@@ -38,10 +38,10 @@ class User(db.Model):
 	owners = relationship("Owner")
 	subscribers = relationship("Subscriber")
 	is_staff = db.Column(db.Boolean, default = False) # Is this user an active agency member?
-
 	current_department = relationship("Department",
 		foreign_keys=[department_id],
-		lazy='joined', uselist=False)
+		primaryjoin=("User.department_id == Department.id"),
+		uselist=False)
 
 	def is_authenticated(self):
 		return True
