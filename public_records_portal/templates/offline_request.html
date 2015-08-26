@@ -52,11 +52,6 @@
                   {# {{ help("requestSummaryPopover-content", "Enter summary of request - agency")}} #}
                 </div>
                 <div class="control-group">
-                  <h2><small>{{ form.request_privacy.label.text }}</small></h2>
-                  {{ form.request_privacy(class="input-block-level") }}
-                  {# {{ help("requestPrivacyPopover-content", "Summary privacy options - agency") }} #}
-                </div>
-                <div class="control-group">
                   <h2><small>{{ form.request_text.label.text}}</small></h2>
                   <div>
                     {{ form.request_text(rows="4", id="request_text", class="input-block-level", placeholder="Provide detailed information about this request to help the your agency locate the record.") }}
