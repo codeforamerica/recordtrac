@@ -32,7 +32,7 @@ from filters import *
 import re
 from db_helpers import get_count, get_obj
 from sqlalchemy import func, not_, and_, or_
-from forms import OfflineRequestForm, NewRequestForm, LoginForm
+from forms import OfflineRequestForm, NewRequestForm, LoginForm, EditUserForm
 import pytz
 import phonenumbers
 
@@ -57,7 +57,7 @@ def new_request(passed_recaptcha=False, data=None):
     routing_available = False
     errors = []
     if request.method == 'POST':
-        if current_user.is_authenticated(): # Change this to current_user.is_authenticated()
+        if current_user.is_authenticated():
             form = OfflineRequestForm(request.form)
             request_text = form.request_text.data
             request_format = form.request_format.data
@@ -922,6 +922,41 @@ def well_known_status():
 
     return jsonify(response)
 
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    form = LoginForm()
+    errors = []
+    if request.method == 'POST':
+        user = models.User.query.filter_by(email = form.username.data).first()
+        if user and user.is_staff:
+            login_user(user)
+            return edit_user_info()
+    else:
+        return render_template('user_registration.html', form=form, errors=errors)
+
+@app.route("/edit_user_info", methods=['GET', 'POST'])
+@login_required
+def edit_user_info():
+    form = EditUserForm()
+    errors = []
+    if request.method == 'POST':
+        phone = form.phone.data
+        if phone:
+            current_user.phone = phone
+        first_name = form.first_name.data
+        if first_name:
+            current_user.first_name = first_name
+        last_name = form.last_name.data
+        if last_name:
+            current_suer.last_name = last_name
+        email = form.username.data
+        if email:
+            current_user.email = email
+        db.session.add(current_user)
+        db.session.commit()
+        return render_template('edit_user.html', form=form, errors=errors)
+    else:
+        return render_template('edit_user.html', form=form, errors=errors)
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -933,7 +968,7 @@ def login():
             print form.password.data
             user_to_login = authenticate_login(form.username.data, form.password.data)
             if user_to_login:
-                login_user(user_to_login )
+                login_user(user_to_login)
                 redirect_url = get_redirect_target()
                 if 'login' in redirect_url or 'logout' in redirect_url:
                     return redirect(url_for('index'))
