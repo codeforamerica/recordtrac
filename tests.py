@@ -61,7 +61,7 @@ class PublicRecordsTestCase(unittest.TestCase):
 		page = self.submit_generic(fields = fields, endpoint = "public_add_a_note")
 		assert note_text in page.data
 
-	# Tests for adding a record: 
+	# Tests for adding a record:
 	# ---
 
 	def test_upload_record(self):
@@ -70,7 +70,7 @@ class PublicRecordsTestCase(unittest.TestCase):
 		fields = dict(request_id = request_id, record_description = record_description)
 		page = self.submit_generic(fields = fields, endpoint = "add_a_record")
 		assert record_description in page.data
-		
+
 	def test_add_note(self):
 		request_id = self.submit_request(text=self.random_content('request'), email = 'richa@richa.com')
 		note_text = self.random_content('note')
@@ -136,7 +136,6 @@ class PublicRecordsTestCase(unittest.TestCase):
 		page = self.submit_generic(fields = dict(request_id = request_id, extend_reason = [extend_reason]), endpoint = "add_a_extension")
 		assert extend_reason in page.data
 
-
 	def submit_request(self, email, text):
 		request_id, success = prr.make_request(text = text, email = email, passed_spam_filter = True)
 		return request_id
@@ -146,3 +145,4 @@ class PublicRecordsTestCase(unittest.TestCase):
 
 if __name__ == '__main__':
 	unittest.main()
+

@@ -15,7 +15,12 @@ import uuid
 import json
 import os
 import logging
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import portrait
+from PyPDF2 import PdfFileWriter, PdfFileReader
+import StringIO
 
+standard_response_templates = {"template_02":"FOIL Message Sent","template_03":"FOIL Request Status","template_04":"FOIL Request Completed","template_05":"FOIL Request Status - Fulfilled in Part","template_06":"FOIL Request Denied","template_07":"FOIL Request Closed","template_08":"FOIL Request Payment Information","template_09":"FOIL Request Closed - No Response","template_10":"FOIL Time Extension Requested"}
 
 # @export "get_subscriber"
 def get_subscriber(request_id, user_id):
@@ -25,14 +30,10 @@ def get_subscriber(request_id, user_id):
     return None
 
 # @export "get_count"
-
-
 def get_count(obj_type):
     return db.session.query(func.count(eval(obj_type).id)).scalar()
 
 # @export "get_obj"
-
-
 def get_obj(obj_type, obj_id):
     """ Query the database for an object via its class/type (defined in models.py) and ID and return the object. """
     if not obj_id:
@@ -40,8 +41,6 @@ def get_obj(obj_type, obj_id):
     return eval(obj_type).query.get(obj_id)
 
 # @export "get_objs"
-
-
 def get_objs(obj_type):
     """ Query the database for all objects of a certain class/type (defined in models.py) and return queryset. """
     # There has to be a better way of doing this
@@ -62,8 +61,6 @@ def get_objs(obj_type):
     return None
 
 # @export "get_avg_response_time"
-
-
 def get_avg_response_time(department):
     app.logger.info(
         "\n\nCalculating average response time for department: %s" % department)
@@ -86,8 +83,6 @@ def get_avg_response_time(department):
     return None
 
 # @export "get_request_by_owner"
-
-
 def get_request_by_owner(owner_id):
     """ Return the request that a particular owner belongs to """
     if not owner_id:
@@ -95,16 +90,11 @@ def get_request_by_owner(owner_id):
     return Owner.query.get(owner_id).request
 
 # @export "get_owners_by_user_id"
-
-
 def get_owners_by_user_id(user_id):
     """ Return the queryset of owners for a particular user. (A user can be associated with multiple owners)."""
     if not user_id:
         return None
     return Owner.query.filter_by(user_id=user_id)
-
-# @export "get_prr_liaison_by_dept"
-
 
 def get_contact_by_dept(dept):
     """ Return the contact for a given department. """
@@ -116,8 +106,6 @@ def get_contact_by_dept(dept):
     return None
 
 # @export "get_backup_by_dept"
-
-
 def get_backup_by_dept(dept):
     """ Return the contact for a given department. """
     q = db.session.query(User).filter(
@@ -128,8 +116,6 @@ def get_backup_by_dept(dept):
     return None
 
 # @export "put_obj"
-
-
 def put_obj(obj):
     """ Add and commit the object to the database. Return true if successful. """
     if obj:
@@ -140,8 +126,6 @@ def put_obj(obj):
     return False
 
 # @export "get_attribute"
-
-
 def get_attribute(attribute, obj_id=None, obj_type=None, obj=None):
     """ Obtain the object by obj_id and obj_type if obj is not provided, and return the specified attribute for that object. """
     if obj_id and obj_type:
@@ -154,8 +138,6 @@ def get_attribute(attribute, obj_id=None, obj_type=None, obj=None):
     return None
 
 # @export "update_obj"
-
-
 def update_obj(attribute, val, obj_type=None, obj_id=None, obj=None):
     """ Obtain the object by obj_id and obj_type if obj is not provided, and update the specified attribute for that object. Return true if successful. """
     app.logger.info("\n\nUpdating attribute: %s with value: %s for obj_type: %s, obj_id: %s, obj: %s" % (
@@ -173,8 +155,6 @@ def update_obj(attribute, val, obj_type=None, obj_id=None, obj=None):
     return False
 
 # @export "create_QA"
-
-
 def create_QA(request_id, question, user_id):
     """ Create a QA object and return the ID. """
     qa = QA(request_id=request_id, question=question, user_id=user_id)
@@ -183,8 +163,6 @@ def create_QA(request_id, question, user_id):
     return qa.id
 
 # @export "create_request"
-
-
 def create_request(id=id, category=None, summary=None, privacy = 1, text=None, user_id=None, offline_submission_type=None, date_received=None):
     """ Create a Request object and return the ID. """
     req = Request(id=id, category=category, summary = summary, privacy = privacy, text = text, creator_id = user_id, offline_submission_type = offline_submission_type, date_received = date_received)
@@ -194,8 +172,6 @@ def create_request(id=id, category=None, summary=None, privacy = 1, text=None, u
     return req.id
 
 # @export "create_subscriber"
-
-
 def create_subscriber(request_id, user_id):
     """ Create a Subscriber object and return the ID. """
     subscriber = Subscriber.query.filter_by(
@@ -208,12 +184,24 @@ def create_subscriber(request_id, user_id):
     return subscriber.id, False
 
 # @export "create_note"
-
-
-def create_note(request_id, text, user_id):
+def create_note(request_id, text, user_id, privacy):
     """ Create a Note object and return the ID. """
     try:
-        note = Note(request_id=request_id, text=text, user_id=user_id)
+        if "template_" in text:
+            fname = text + "_" + str(user_id) + ".pdf"
+            fpath = os.path.join(app.config['PDF_FOLDER'], fname)
+            app.logger.info("\n\npdf path: %s" %(fpath))
+            packet = StringIO.StringIO()
+            packet=StringIO.StringIO()
+            cv=canvas.Canvas(packet)
+            cv.drawString(0, 500, "Template Text")
+            cv.save()
+            packet.seek(0)
+            with open(fpath,'wb') as fp:
+                fp.write(packet.getvalue())
+            text = "<a href='/pdfs/" + fname + "'>" + standard_response_templates[text] + "</a>"
+
+        note = Note(request_id=request_id, text=text, user_id=user_id, privacy=privacy)
         put_obj(note)
         return note.id
     except Exception, e:
@@ -222,8 +210,6 @@ def create_note(request_id, text, user_id):
         return None
 
 # @export "create_record"
-
-
 def create_record(request_id, user_id, description, doc_id=None, filename=None, access=None, url=None):
     try:
         record = Record(doc_id=doc_id, request_id=request_id, user_id=user_id,
@@ -242,8 +228,6 @@ def remove_obj(obj_type, obj_id):
     db.session.commit()
 
 # @export "create_answer"
-
-
 def create_answer(qa_id, subscriber_id, answer):
     qa = get_obj("QA", qa_id)
     if not qa:
@@ -258,28 +242,25 @@ def create_answer(qa_id, subscriber_id, answer):
 # Following three functions are for integration with Mozilla Persona
 
 # @export "get_user"
-
-
 def get_user(kwargs):
     return User.query.filter(User.email == kwargs.get('email')).filter(User.is_staff == True).first()
 
 # @export "get_user_by_id"
-
-
 def get_user_by_id(id):
     return User.query.get(id)
 
-# @export "create_or_return_
+### @export "authenticate_login"
 def authenticate_login(email, password):
     if email:
-        user = create_or_return_user(email=email, not_id = True)
-        if user.check_password(password):
-            return user
-        if user.password == password: # Hash it
-            user.set_password(password)
-            db.session.add(user)
-            db.session.commit()
-            return user
+        user = User.query.filter_by(email = email).first()
+        if user and (user.is_staff or user.is_admin()):
+            if user.check_password(password):
+                return user
+            if user.password == password: # Hash it
+                user.set_password(password)
+                db.session.add(user)
+                db.session.commit()
+                return user
     return None
 
 def create_or_return_user(email=None, alias=None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=None, department=None, contact_for=None, backup_for=None, not_id=False, is_staff=None, password=None):
@@ -317,8 +298,6 @@ def create_or_return_user(email=None, alias=None, phone=None, address1=None, add
         return user.id
 
 # @export "create_user"
-
-
 def create_user(email=None, alias=None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=None, department=None, contact_for=None, backup_for=None, password=None, is_staff=None):
     first_name = None
     last_name = None
@@ -335,8 +314,6 @@ def create_user(email=None, alias=None, phone=None, address1=None, address2=None
     return user
 
 # @export "update_user"
-
-
 def update_user(user, alias=None, phone=None,  address1=None, address2=None, city=None, state=None, zipcode=None, department=None, contact_for=None, backup_for=None, is_staff=None):
     if alias:
         user.alias = alias
@@ -356,9 +333,9 @@ def update_user(user, alias=None, phone=None,  address1=None, address2=None, cit
         if type(department) != int and not department.isdigit():
             d = Department.query.filter_by(name=department).first()
             if d:
-                user.department = d.id
+                user.department_id = d.id
         else:
-            user.department = department
+            user.department_id = department
     if contact_for:
         if user.contact_for and contact_for not in user.contact_for:
             contact_for = user.contact_for + "," + contact_for
@@ -376,8 +353,6 @@ def update_user(user, alias=None, phone=None,  address1=None, address2=None, cit
     return user
 
 # @export "create_owner"
-
-
 def create_owner(request_id, reason, email=None, user_id=None):
     """ Adds a staff member to the request without assigning them as current owner. (i.e. "participant")
     Useful for multidepartmental requests."""
@@ -390,8 +365,6 @@ def create_owner(request_id, reason, email=None, user_id=None):
     return participant.id
 
 # @export "change_request_status"
-
-
 def change_request_status(request_id, status):
     req = get_obj("Request", request_id)
     req.status = status
@@ -402,8 +375,6 @@ def change_request_status(request_id, status):
     db.session.commit()
 
 # @export "find_request"
-
-
 def find_request(text):
     req = Request.query.filter_by(text=text).first()
     if req:
@@ -467,3 +438,15 @@ def update_subscriber(request_id, alias, phone):
     db.session.commit()
     app.logger.info("\n\nUpdated subscriber for request %s with alias: %s and phone: %s" % (
         request_id, alias, phone))
+
+### @export "set_random_password"
+def set_random_password(email):
+	user = User.query.filter(User.email == func.lower(email)).first()
+	# Must be staff or admin to reset password
+	if user and (user.is_staff == True or user.is_admin() == True):
+		password = uuid.uuid4().hex[:10] # Limit to 10 characters
+		user.set_password(password)
+		db.session.add(user)
+		db.session.commit()
+		return password
+	return None

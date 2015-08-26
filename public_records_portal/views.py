@@ -92,8 +92,6 @@ def new_request(passed_recaptcha=False, data=None):
             elif len(request_summary) > 250:
                 errors.append('The request summary must be less than 250 characters')
 
-            # Check attachment
-            attachment = None
             try:
                 attachment = request.files['request_attachment']
             except:
@@ -104,6 +102,9 @@ def new_request(passed_recaptcha=False, data=None):
 
             if request_attachment_description and not(attachment):
                 errors.append('Please select a file to upload as attachment.')
+
+            if not (request_text and request_text.strip()):
+                errors.append('Please fill out the request description.')
 
             # Check Format
             if not (request_format and request_format.strip()):
@@ -154,10 +155,13 @@ def new_request(passed_recaptcha=False, data=None):
             if not data:
                 data = request.form.copy()
 
-            phone_formatted = ""
+            if app.config['ENVIRONMENT'] != 'LOCAL' and check_for_spam and is_spam(request_text) and not passed_recaptcha:
+                return render_template('recaptcha_request.html', form = data, message = "Hmm, your request looks like spam. To submit your request, type the numbers or letters you see in the field below.", public_key = app.config['RECAPTCHA_SITE_KEY'])
 
+            phone_formatted = ""
             if phone_valid:
                 phone_formatted = request_phone.international
+
 
             if errors:
                 if request_date:
@@ -222,9 +226,11 @@ def new_request(passed_recaptcha=False, data=None):
             alias = None
             document = None
             zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
+            record_description = form.record_description.data
 
              # Check Category
             if not (request_category and request_category.strip()):
+            except:
                 errors.append('You must select a category for this request')
 
             # Check Agency
@@ -422,9 +428,9 @@ def show_request(request_id, template="manage_request_public.html"):
     departments_all=models.Department.query.all()
     agency_data = []
     for d in departments_all:
-      firstUser = models.User.query.filter_by(department=d.id).first()
-      agency_data.append({'name': d.name, 'email': firstUser.email})
-    users=models.User.query.filter_by(department=req.department_id).all()
+      firstUser = models.User.query.filter_by(department_id=d.id).first()
+      department_data.append({'name': d.name, 'email': firstUser.email})
+    users=models.User.query.filter_by(department_id=req.department_id).all()
     if not req:
         return render_template('error.html', message="A request with ID %s does not exist." % request_id)
     if req.status and "Closed" in req.status and template != "manage_request_feedback.html":
@@ -483,7 +489,9 @@ def public_add_a_resource(resource, passed_recaptcha=False, data=None):
         if not data:
             data=request.form.copy()
         if 'note' in resource:
-            resource_id=prr.add_note(request_id=data['request_id'], text=data['note_text'], passed_spam_filter=True)
+            resource_id=prr.add_note(request_id=data['request_id'], text=data['note_text'], passed_spam_filter=True, privacy=data['note_privacy'])
+        if 'pdf' in resource:
+            resource_id=prr.add_note(request_id=data['request_id'], text=data['response_template'], passed_spam_filter=True)
         else:
             resource_id=prr.add_resource(resource=resource, request_body=data, current_user_id=None)
         if type(resource_id) == int:
@@ -502,6 +510,21 @@ def update_a_resource(resource, passed_recaptcha=False, data=None):
             data=request.form.copy()
         if 'qa' in resource:
             prr.answer_a_question(qa_id=int(data['qa_id']), answer=data['answer_text'], passed_spam_filter=True)
+        else:
+            update_resource(resource, data)
+        if current_user.is_anonymous() == False:
+            return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
+        else:
+            return redirect(url_for('show_request', request_id=request.form['request_id']))
+    return render_template('error.html', message="You can only update requests from a request page!")
+
+@app.route("/acknowledge_request", methods=["GET", "POST"])
+def acknowledge_request(resource, passed_recaptcha=False, data=None):
+    if (data or request.method == 'POST'):
+        if not data:
+            data=request.form.copy()
+        if 'qa' in resource:
+            prr.answer_a_question(qa_id=int(data['qa_id']), answer=data['acknowledge_request'], passed_spam_filter=True)
         else:
             update_resource(resource, data)
         if current_user.is_anonymous() == False:
@@ -824,8 +847,6 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 
     return results.order_by(models.Request.id.desc())
 
-
-
 @app.route("/<page>")
 def any_page(page):
     try:
@@ -922,7 +943,7 @@ def well_known_status():
     response={
         'status': 'ok',
         'updated': int(time()),
-        'dependencies': ['Akismet', 'Sendgrid', 'Postgres'],
+        'dependencies': ['Akismet', 'Postgres'],
         'resources': {}
     }
 
@@ -946,23 +967,6 @@ def well_known_status():
 
     except Exception, e:
         response['status']='Akismet fail: %s' % e
-        return jsonify(response)
-
-    #
-    # Try to ask Sendgrid how many emails we have sent in the past month.
-    #
-    try:
-        url='https://sendgrid.com/api/stats.get.json?api_user=%(MAIL_USERNAME)s&api_key=%(MAIL_PASSWORD)s&days=30' % app.config
-        got=get(url)
-
-        if got.status_code != 200:
-            raise Exception('HTTP status %s from Sendgrid /api/stats.get' % got.status_code)
-
-        mails=sum([m['delivered'] + m['repeat_bounces'] for m in got.json()])
-        response['resources']['Sendgrid']=100 * float(mails) / int(app.config.get('SENDGRID_MONTHLY_LIMIT') or 40000)
-
-    except Exception, e:
-        response['status']='Sendgrid fail: %s' % e
         return jsonify(response)
 
     return jsonify(response)
@@ -1008,6 +1012,10 @@ def get_attachments(resource):
     app.logger.info("\n\ngetting attachment file")
     return send_from_directory(app.config["UPLOAD_FOLDER"], resource, as_attachment=True)
 
+@app.route("/pdfs/<string:resource>", methods=["GET"])
+def get_pdfs(resource):
+    app.logger.info("\n\ngetting pdf file")
+    return send_from_directory(app.config["PDF_FOLDER"], resource, as_attachment=True)
 
 @app.route("/api/report/<string:report_type>", methods=["GET"])
 def get_report_jsons(report_type):
