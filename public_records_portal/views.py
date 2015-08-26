@@ -426,7 +426,7 @@ def unfollow(request_id, email):
 @app.route("/request/<string:request_id>")
 def show_request(request_id, template="manage_request_public.html"):
     req = get_obj("Request", request_id)
-    departments_all = models.Department.query.all()
+    departments_all = models.Agency.query.all()
     agency_data = []
     for d in departments_all:
         firstUser = models.User.query.filter_by(department_id=d.id).first()
@@ -450,7 +450,7 @@ def staff_to_json():
 
 @app.route("/api/departments")
 def departments_to_json():
-    departments = models.Department.query.all()
+    departments = models.Agency.query.all()
     agency_data = []
     for d in departments:
         agency_data.append({'agency': d.name})
@@ -564,7 +564,7 @@ def filter_agency(departments_selected, results):
         department_ids = []
         for department_name in departments_selected:
             if department_name:
-                agency = models.Department.query.filter_by(name=department_name).first()
+                agency = models.Agency.query.filter_by(name=department_name).first()
                 if agency:
                     department_ids.append(agency.id)
         if department_ids:
@@ -636,7 +636,7 @@ def display_all_requests(methods=["GET"]):
 
 @app.route("/view_requests_backbone")
 def backbone_requests():
-    return render_template("all_requests.html", departments=db.session.query(models.Department).all(),
+    return render_template("all_requests.html", departments=db.session.query(models.Agency).all(),
                            total_requests_count=get_count("Request"))
 
 
@@ -729,7 +729,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         return requests, num_results, more_results, start_index, end_index
 
     return render_template("all_requests_less_js.html", total_requests_count=get_count("Request"), requests=requests,
-                           departments=db.session.query(models.Department).all(),
+                           departments=db.session.query(models.Agency).all(),
                            departments_selected=departments_selected, is_open=is_open, is_closed=is_closed,
                            due_soon=due_soon, overdue=overdue, mine_as_poc=mine_as_poc, mine_as_helper=mine_as_helper,
                            sort_column=sort_column, sort_direction=sort_direction, search_term=search_term,

@@ -1,256 +1,270 @@
 {% extends "base.html" %}
 {% block title %}
-  {{ title }} &#45; RecordTrac
+    {{ title }} &#45; RecordTrac
 {% endblock title %}
 {% block custom_css_links %}
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/all_requests.css') }}">
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/all_requests_noresults.css') }}">
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.min.css')
-    }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui-1.10.4.custom.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/all_requests.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/all_requests_noresults.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.min.css') }}">
+    <link rel=stylesheet type=text/css
+          href="{{ url_for('static', filename='css/plugins/jquery-ui-1.10.4.custom.min.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui.css') }}">
-  {% endblock custom_css_links %}
-  {% block custom_script_links %}
+{% endblock custom_css_links %}
+{% block custom_script_links %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/underscore-min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/backbone-min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-select.min.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/plugins/bootstrap-select.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/custom.bootstrap-select.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-ui-1.10.4.custom.min.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/plugins/jquery-ui-1.10.4.custom.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/date_picker.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/requests.js') }}"></script>
-  {% endblock custom_script_links %}
-  {% block container %}
+{% endblock custom_script_links %}
+{% block container %}
     <div class="row-fluid">
-      <div class="span11 offset1">
+    <div class="span11 offset1">
         {# 'Explore'  #}
         <div class="row-fluid">
-          <div class="span9">
-            <div id="exploreTitle">
-              <h3>Explore <span class="badge">{{total_requests_count}}</span> requests and counting</h3>
-              <!-- <a href="/new" class="btn btn-primary btn-large pull-right">Request new record</a> -->
+            <div class="span9">
+                <div id="exploreTitle">
+                    <h3>Explore <span class="badge">{{ total_requests_count }}</span> requests and counting</h3>
+                    <!-- <a href="/new" class="btn btn-primary btn-large pull-right">Request new record</a> -->
+                </div>
             </div>
-          </div>
         </div>
         {# Blurb about what RecordTrac does and 'Request new' button.#}
         <div class="row-fluid blurb">
-          <div class="span9">
-            <p class="intro_text">RecordTrac makes every public records request available to the public, including messages or documents uploaded by agency staff.  Search through current and past requests.  You may find what you need!</p>
-          </div>
-          <div class="span3">
-            <a href="/new" class="btn btn-primary btn-large">Request new record</a>
-          </div>
+            <div class="span9">
+                <p class="intro_text">RecordTrac makes every public records request available to the public, including
+                    messages or documents uploaded by agency staff. Search through current and past requests. You may
+                    find what you need!</p>
+            </div>
+            <div class="span3">
+                <a href="/new" class="btn btn-primary btn-large">Request new record</a>
+            </div>
         </div>
         {# Search results table. #}
         <div class="row-fluid">
-          <div class="span3">
-            <div class="well search_style">
-              <div id="search_field_container"></div>
-              <script type="text/template" id="search_field_template">
-              <h4 class="underline">SEARCH</h4>
-              <h5>Request text</h5>
-              <div class="indent">
-                <input id="search_term" class="input-block-level" type="search" placeholder="I'd like to find..." value="<%- search_term %>">
-              </div>
-              </script>
-              <div id="requester_name_container"></div>
-              <script type="text/template" id="requester_name_template">
-              {% if current_user.is_authenticated() %}
-                <h5>Requester name</h5>
-                <div class="indent">
-                  <input id="requester_name" class="input-block-level" type="search" placeholder="Enter name" value="<%- requester_name %>">
-                </div>
-              {% endif %}
-              </script>
-              <div id="sidebar_container"></div>
-              <script type="text/template" id="sidebar_template">
-              <h4 class="underline">ADVANCED FILTER</h4>
-              {% if current_user.is_authenticated() %}
-                <h5>My Requests</h5>
-                <div class="indent">
-                  <label class="checkbox">
-                    <input
-                    type="checkbox"
-                    id="mine_as_poc"
-                    <% if (mine_as_poc == 'true' || mine_as_poc == true) { %>
-                    checked
-                    <% } %> >
-                    <em>as Point of Contact</em>
-                  </label>
-                  <label class="checkbox">
-                    <input
-                    type="checkbox"
-                    id="mine_as_helper"
-                    <% if (mine_as_helper == 'true' || mine_as_helper == true) { %>
-                    checked
-                    <% } %> >
-                    <em>as Helper</em>
-                  </label>
-                </div>
-              {% endif %}
-              <h5>Status</h5>
-              <div class="indent" style="padding-bottom: 15px;">
-                <label class="checkbox">
-                  <input type="checkbox"
-                  id="is_open"
-                  <% if (is_open == 'true' || is_open == true) { %>
-                  checked
-                  <% } %> >
-                  <em class="open_style">Open</em>
-                </label>
-                {% if current_user.is_authenticated() %}
-                  <label class="checkbox">
-                    <input type="checkbox"
-                    id="due_soon"
-                    <% if (due_soon == 'true' || due_soon == true) { %>
-                    checked
-                    <% } %> >
-                    <em class="duesoon_style">Due Soon</em>
-                  </label>
-                  <label class="checkbox">
-                    <input type="checkbox"
-                    id="overdue"
-                    <% if (overdue == 'true' || overdue == true) { %>
-                    checked
-                    <% } %> >
-                    <em class="overdue_style">Overdue</em>
-                  </label>
-                {% endif %}
-                <label class="checkbox">
-                  <input type="checkbox"
-                  id="is_closed"
-                  <% if (is_closed == 'true' || is_closed == true) { %>
-                  checked
-                  <% } %> >
-                  <em class="closed_style">Closed</em>
-                </label>
-              </div>
-              </script>
-              <div id="date_received_container"></div>
-              {% if current_user.is_authenticated() %}
-                <div id="due_date_container"></div>
-              {% endif %}
-              <script type="text/template" id="date_filter_template">
-              <div class="date_filter">
-                <h5><%- title %></h5>
-                <a class="all_dates">All Dates</a>
-                <div class="control-group indent">
-                  <input type="text"
-                  class="span5 min_field"
-                  name="request_received_begin"
-                  value="<%- min_value %>" >
-                  <input type="text"
-                  class="span5 max_field"
-                  name="request_received_end"
-                  value="<%- max_value %>" >
-                </div>
-              </div>
-              </script>
-              <div id="department_selector_container"></div>
-              <script type="text/template" id="department_selector_template">
-              <h5>Department</h5>
-              <div class="row-fluid indent">
-                <select class="span10">
-                  <option>All departments</option>
-                  <% if (department) { %>
-                  <option selected><%= department %></option>
-                  <% } %>
-                  {% for department in departments %}
-                    <option>{{department}}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              </script>
-            </div>
-            {% if current_user.is_authenticated() %}
-              <div class="row-fluid">
-                <p class="text-center" style="padding-top: 2em;">
-                  <a href="/export"> <i class="icon-download"></i> Export data</a>
-                </p>
-              </div>
-            {% endif %}
-          </div>
-          <div class="span8" id="search_results_container"></div>
-          <script type="text/template" id="search_results_template">
-          <table id="requests">
-            <thead id="headings">
-              <tr>
-                <th class="status" ></th>
-                <th id="id" class="sortable" >#</th>
-                <th id="date_received" class="sortable" >Received</th>
-                <th id="text" class="sortable" >Request</th>
-                <th >Department</th>
-                {% if current_user.is_authenticated()  %}
-                  <th >Point of Contact</th>
-                {% endif %}
-                <th id="due_date" class="sortable"  >Due</th>
-                {% if current_user.is_authenticated() %}
-                  <th >Requester</th>
-                {% endif %}
-              </tr>
-            </thead>
-            <tbody>
-              <% if (requests.length > 0) { %>
-              <% _.each(requests, function(request) { %>
-              <tr>
-                <td class="status <%= request.solid_status %>">
-                  <% if ( request.solid_status === "closed" ) { %>
-                  <i class="icon-archive icon-light"></i>
-                  <% } %>
-                </td>
-                <td ><%- request.id %></td>
-                <td ><%- request.date_received %></td>
-                <td >
-                  {% if current_user.is_authenticated() %}
-                    <a href="/city/request/<%= request.id %>">
-                    {% else %}
-                      <a href="/request/<%= request.id %>">
-                      {% endif %}
-                      <% if ( request.text.length > 140 ) { %>
-                      <% text = request.text.substring(0, 140).trim() + "..." %>
-                      <% } else { %>
-                      <% text = request.text %>
-                      <% } %>
-                      <% if (request.solid_status ==="due soon") { %>
-                      <span style = "background-color: #FB991B" class="label label-warning">due soon</span>
-                      <% } else if (request.solid_status === "overdue" ) { %>
-                      <span style = "background-color: #CA1A1A" class="label label-important">overdue</span>
-                      <% } %>
-                      <%- text %>
-                    </a>
-                  </td>
-                  <td ><%- request.department %></td>
-                  {% if current_user.is_authenticated() %}
+            <div class="span3">
+                <div class="well search_style">
+                    <div id="search_field_container"></div>
+                    <script type="text/template" id="search_field_template">
+                        <h4 class="underline">SEARCH</h4>
+                        <h5>Request text</h5>
+                        <div class="indent">
+                            <input id="search_term" class="input-block-level" type="search"
+                                   placeholder="I'd like to find..." value="<%- search_term %>">
+                        </div>
+                    </script>
+                    <div id="requester_name_container"></div>
+                    <script type="text/template" id="requester_name_template">
+                        {% if current_user.is_authenticated() %}
+                            <h5>Requester name</h5>
+                            <div class="indent">
+                                <input id="requester_name" class="input-block-level" type="search"
+                                       placeholder="Enter name" value="<%- requester_name %>">
+                            </div>
+                        {% endif %}
+                    </script>
+                    <div id="sidebar_container"></div>
+                    <script type="text/template" id="sidebar_template">
+                        <h4 class="underline">ADVANCED FILTER</h4>
+                        {% if current_user.is_authenticated() %}
+                            <h5>My Requests</h5>
+                            <div class="indent">
+                                <label class="checkbox">
+                                    <input
+                                            type="checkbox"
+                                            id="mine_as_poc"
+                                    <% if (mine_as_poc == 'true' || mine_as_poc == true) { %>
+                                    checked
+                                    <% } %> >
+                                    <em>as Point of Contact</em>
+                                </label>
+                                <label class="checkbox">
+                                    <input
+                                            type="checkbox"
+                                            id="mine_as_helper"
+                                    <% if (mine_as_helper == 'true' || mine_as_helper == true) { %>
+                                    checked
+                                    <% } %> >
+                                    <em>as Helper</em>
+                                </label>
+                            </div>
+                        {% endif %}
+                        <h5>Status</h5>
+                        <div class="indent" style="padding-bottom: 15px;">
+                            <label class="checkbox">
+                                <input type="checkbox"
+                                       id="is_open"
+                                <% if (is_open == 'true' || is_open == true) { %>
+                                checked
+                                <% } %> >
+                                <em class="open_style">Open</em>
+                            </label>
+                            {% if current_user.is_authenticated() %}
+                                <label class="checkbox">
+                                    <input type="checkbox"
+                                           id="due_soon"
+                                    <% if (due_soon == 'true' || due_soon == true) { %>
+                                    checked
+                                    <% } %> >
+                                    <em class="duesoon_style">Due Soon</em>
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox"
+                                           id="overdue"
+                                    <% if (overdue == 'true' || overdue == true) { %>
+                                    checked
+                                    <% } %> >
+                                    <em class="overdue_style">Overdue</em>
+                                </label>
+                            {% endif %}
+                            <label class="checkbox">
+                                <input type="checkbox"
+                                       id="is_closed"
+                                <% if (is_closed == 'true' || is_closed == true) { %>
+                                checked
+                                <% } %> >
+                                <em class="closed_style">Closed</em>
+                            </label>
+                        </div>
+                    </script>
+                    <div id="date_received_container"></div>
+                    {% if current_user.is_authenticated() %}
+                        <div id="due_date_container"></div>
+                    {% endif %}
+                    <script type="text/template" id="date_filter_template">
+                        <div class="date_filter">
+                            <h5><%- title %></h5>
+                            <a class="all_dates">All Dates</a>
 
-                  <td ><%- request.contact_name %></td>
-                    <td ><%- request.due_date %></td>
-                    <td ><%- request.requester %></td>
-                  {% endif %}
-                </tr>
-                <% } ); %>
-                <% } else { %>
-                <td></td><td></td><td></td><td></td><td>No matching records found</td><td></td><td></td><td></td>
-                <% } %>
-              </tbody>
-            </table>
-            <div class="pull-left pagination">
-              <ul>
-                <li>Showing <%- start_index %> to <%- end_index %> of <%- num_results %> entries</li>
-              </ul>
+                            <div class="control-group indent">
+                                <input type="text"
+                                       class="span5 min_field"
+                                       name="request_received_begin"
+                                       value="<%- min_value %>">
+                                <input type="text"
+                                       class="span5 max_field"
+                                       name="request_received_end"
+                                       value="<%- max_value %>">
+                            </div>
+                        </div>
+                    </script>
+                    <div id="department_selector_container"></div>
+                    <script type="text/template" id="department_selector_template">
+                        <h5>Department</h5>
+                        <div class="row-fluid indent">
+                            <select class="span10">
+                                <option>All departments</option>
+                                <% if (department) { %>
+                                <option selected><%= department %></option>
+                                <% } %>
+                                {% for department in departments %}
+                                    <option>{{ department }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </script>
+                </div>
+                {% if current_user.is_authenticated() %}
+                    <div class="row-fluid">
+                        <p class="text-center" style="padding-top: 2em;">
+                            <a href="/export"> <i class="icon-download"></i> Export data</a>
+                        </p>
+                    </div>
+                {% endif %}
             </div>
-            <div class="pull-right pagination">
-              <% if (page_number > 1) { %>
-              <ul>
-                <li class="prev"><a href="javascript:void(0)">Previous</a></li>
-              </ul>
-              <% } %>
-              <% if (more_results) { %>
-              <ul>
-                <li class="next"><a href="javascript:void(0)">Next</a></li>
-              </ul>
-              <% } %>
-            </div>
+            <div class="span8" id="search_results_container"></div>
+            <script type="text/template" id="search_results_template">
+                <table id="requests">
+                    <thead id="headings">
+                    <tr>
+                        <th class="status"></th>
+                        <th id="id" class="sortable">#</th>
+                        <th id="date_received" class="sortable">Received</th>
+                        <th id="text" class="sortable">Request</th>
+                        <th>Department</th>
+                        {% if current_user.is_authenticated() %}
+                            <th>Point of Contact</th>
+                        {% endif %}
+                        <th id="due_date" class="sortable">Due</th>
+                        {% if current_user.is_authenticated() %}
+                            <th>Requester</th>
+                        {% endif %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% if (requests.length > 0) { %>
+                    <% _.each(requests, function(request) { %>
+                    <tr>
+                        <td class="status <%= request.solid_status %>">
+                            <% if ( request.solid_status === "closed" ) { %>
+                            <i class="icon-archive icon-light"></i>
+                            <% } %>
+                        </td>
+                        <td><%- request.id %></td>
+                        <td><%- request.date_received %></td>
+                        <td>
+                            {% if current_user.is_authenticated() %}
+                                <a href="/city/request/<%= request.id %>">
+                            {% else %}
+                                <a href="/request/<%= request.id %>">
+                            {% endif %}
+                            <% if ( request.text.length > 140 ) { %>
+                            <% text = request.text.substring(0, 140).trim() + "..." %>
+                            <% } else { %>
+                            <% text = request.text %>
+                            <% } %>
+                            <% if (request.solid_status ==="due soon") { %>
+                            <span style="background-color: #FB991B" class="label label-warning">due soon</span>
+                            <% } else if (request.solid_status === "overdue" ) { %>
+                            <span style="background-color: #CA1A1A" class="label label-important">overdue</span>
+                            <% } %>
+                            <%- text %>
+                            </a>
+                        </td>
+                        <td><%- request.department %></td>
+                        {% if current_user.is_authenticated() %}
+
+                            <td><%- request.contact_name %></td>
+                            <td><%- request.due_date %></td>
+                            <td><%- request.requester %></td>
+                        {% endif %}
+                    </tr>
+                    <% } ); %>
+                    <% } else { %>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>No matching records found</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <% } %>
+                    </tbody>
+                </table>
+                <div class="pull-left pagination">
+                    <ul>
+                        <li>Showing <%- start_index %> to <%- end_index %> of <%- num_results %> entries</li>
+                    </ul>
+                </div>
+                <div class="pull-right pagination">
+                    <% if (page_number > 1) { %>
+                    <ul>
+                        <li class="prev"><a href="javascript:void(0)">Previous</a></li>
+                    </ul>
+                    <% } %>
+                    <% if (more_results) { %>
+                    <ul>
+                        <li class="next"><a href="javascript:void(0)">Next</a></li>
+                    </ul>
+                    <% } %>
+                </div>
             </script>
-          </div>
         </div>
-      {% endblock container %}
+    </div>
+{% endblock container %}

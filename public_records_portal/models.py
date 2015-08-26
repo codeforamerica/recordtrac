@@ -163,7 +163,7 @@ class User(db.Model):
 
 
 ### @export "Department"
-class Department(db.Model):
+class Agency(db.Model):
     __tablename__ = 'department'
     id = db.Column(db.Integer, primary_key=True)
     date_created = db.Column(db.DateTime)
@@ -173,20 +173,6 @@ class Department(db.Model):
                          post_update=True)  # The list of users in this department
     requests = relationship("Request",
                             order_by="Request.date_created.asc()")  # The list of requests currently associated with this department
-
-    def __init__(self, name):
-        self.name = name
-        self.date_created = datetime.now().isoformat()
-
-    def __repr__(self):
-        return '<Department %r>' % self.name
-
-    def __str__(self):
-        return self.name
-
-    def get_name(self):
-        return self.name or "N/A"
-
     primary_contact_id = db.Column(Integer, ForeignKey("user.id"))
     backup_contact_id = db.Column(Integer, ForeignKey("user.id"))
     primary_contact = relationship(User,

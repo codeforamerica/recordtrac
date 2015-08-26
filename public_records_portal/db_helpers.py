@@ -75,7 +75,7 @@ def get_objs(obj_type):
 def get_avg_response_time(department):
     app.logger.info(
         "\n\nCalculating average response time for department: %s" % department)
-    d = Department.query.filter_by(name=department).first()
+    d = Agency.query.filter_by(name=department).first()
     response_time = None
     num_closed = 0
     for request in d.requests:
@@ -300,11 +300,11 @@ def create_or_return_user(email=None, alias=None, phone=None, address1=None, add
     if email:
         user = User.query.filter(User.email == func.lower(email)).first()
         if department and type(department) != int and not department.isdigit():
-            d = Department.query.filter_by(name=department).first()
+            d = Agency.query.filter_by(name=department).first()
             if d:
                 department = d.id
             else:
-                d = Department(name=department)
+                d = Agency(name=department)
                 db.session.add(d)
                 db.session.commit()
                 department = d.id
@@ -375,7 +375,7 @@ def update_user(user, alias=None, phone=None, address1=None, address2=None, city
         user.zipcode = zipcode
     if department:
         if type(department) != int and not department.isdigit():
-            d = Department.query.filter_by(name=department).first()
+            d = Agency.query.filter_by(name=department).first()
             if d:
                 user.department_id = d.id
         else:
