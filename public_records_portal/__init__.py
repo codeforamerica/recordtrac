@@ -15,13 +15,11 @@ from flask_recaptcha import ReCaptcha
 # from flask.ext.dotenv import DotEnv
 from flask.ext.sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
-
 # Initialize Flask app
 app = Flask(__name__)
 app.debug = True
 
 load_dotenv(os.path.abspath(os.path.join(os.path.join(os.path.dirname(__file__), os.pardir), '.env')))
-
 
 # Set environment variables
 def set_env(key, default = None):
@@ -37,10 +35,11 @@ def set_env(key, default = None):
 set_env(key = 'APPLICATION_URL', default = "http://127.0.0.1:5000/")
 set_env(key = 'ENVIRONMENT', default="LOCAL")
 # The default records liaison, to whom requests get routed to if no department is selected:
-set_env(key = 'DEFAULT_OWNER_EMAIL', default = 'recordtrac@postcode.io')
-set_env(key = 'DEFAULT_OWNER_REASON', default = 'Open government coordinator' )
 
 set_env(key = 'HOST_URL', default = 'https://127.0.0.1:5000/uploads/') # Where the documents/record uploads are hosted
+set_env(key = 'DEFAULT_OWNER_EMAIL', default = 'recordtrac@codeforamerica.org')
+set_env(key = 'DEFAULT_OWNER_REASON', default = 'Open government coordinator' )
+
 set_env(key = 'AGENCY_NAME', default = 'Your agency name') # e.g. City of Oakland
 set_env(key = 'SECRET_KEY', default = 'Change this to something super secret') # Flask application's secret key
 
@@ -80,6 +79,7 @@ envvars = [
     'PDF_FOLDER', # PDF Folder
     'UPLOAD_DOCS' # Upload docs locally
 ]
+
 for envvar in envvars:
 	set_env(key = envvar)
 

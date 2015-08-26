@@ -28,8 +28,8 @@ class RequestPresenter:
 			if self.staff:
 				if self.staff.email:
 					self.staff_email = self.staff.email
-				if self.staff.department:
-					self.staff_department = self.staff.department
+				if self.staff.department_id:
+					self.staff_department = self.staff.department_id
 				if self.staff.phone:
 					self.staff_phone = self.staff.phone
 				if self.staff.alias:
@@ -41,7 +41,7 @@ class RequestPresenter:
 			self.response = note
 			self.type = "note"
 			self.icon = "icon-edit icon-large"
-	
+
 	def get_id(self):
 		return self.response.id
 
@@ -60,14 +60,14 @@ class RequestPresenter:
 							<label class='control-label'>Answer</label><input type='hidden' name='qa_id' value='%s'/><input type='hidden' name='request_id' value='%s'/>
 							<textarea id='answerTextarea' name='answer_text' class='input-xlarge' rows="2" type='text' rows='1' placeholder='Can you respond to the above question?' required/></textarea>
 							<button id='askQuestion' class='btn btn-primary' type='submit'>Respond</button>
-						</form> 
+						</form>
 						""" % (self.response.id, self.request.id)
 					else:
 						text = text + "<p>Requester hasn't answered yet.</p>"
 			return text
 		elif self.type == "note":
 			return "%s - Requester" %(self.response.text)
-		
+
 	def get_icon(self):
 		return self.icon
 

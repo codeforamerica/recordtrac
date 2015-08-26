@@ -7,7 +7,7 @@ This application requires [PostgreSQL](http://postgresapp.com/). For help gettin
 
 Inside your virtual environment:
 
-    git clone git://github.com/postcode/recordtrac.git
+    git clone git://github.com/codeforamerica/recordtrac.git
     cd recordtrac
     sudo pip install -r requirements.txt
 

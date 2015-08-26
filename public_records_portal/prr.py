@@ -180,7 +180,6 @@ def make_request(text, email = None, user_id = None, phone = None, address1 = No
 		else:
 			app.logger.info("%s is not a valid department" %(department))
 			department = None
-
 	id = "FOIL" + "-" + datetime.now().strftime("%Y") + "-" + agency_codes[department] + "-" + "%05d" % Request.tracking_number
 	request_id = create_request(id=id, text = text, user_id = user_id, offline_submission_type = offline_submission_type, date_received = date_received, privacy=privacy) # Actually create the Request object
 	new_owner_id = assign_owner(request_id = request_id, reason = assigned_to_reason, email = assigned_to_email) # Assign someone to the request
@@ -249,7 +248,7 @@ def assign_owner(request_id, reason, email = None):
 	app.logger.info("\n\nA new owner has been assigned: Owner: %s" % owner_id)
 	new_owner = get_obj("Owner", owner_id)
 	# Update the associated department on request
-	update_obj(attribute = "department_id", val = new_owner.user.department, obj = req)
+	update_obj(attribute = "department_id", val = new_owner.user.department_id, obj = req)
 	user_id = get_attribute(attribute = "user_id", obj_id = owner_id, obj_type = "Owner")
 	# Send notifications
 	if is_new_owner:
