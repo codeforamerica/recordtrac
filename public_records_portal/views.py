@@ -35,6 +35,7 @@ from sqlalchemy import func, not_, and_, or_
 from forms import OfflineRequestForm, NewRequestForm, LoginForm, EditUserForm
 import pytz
 import phonenumbers
+from requires_roles import requires_roles
 
 # Initialize login
 app.logger.info("\n\nInitialize login.")
@@ -47,6 +48,7 @@ login_manager.init_app(app)
 #browser_id = BrowserID()
 #browser_id.user_loader(get_user)
 #browser_id.init_app(app)
+
 
 
 # Submitting a new request
@@ -332,6 +334,7 @@ show_request_for_x.methods=['GET', 'POST']
 
 @app.route("/city/request/<string:request_id>")
 @login_required
+@requires_roles('Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel')
 def show_request_for_city(request_id):
     if is_supported_browser():
         return show_request(request_id=request_id, template="manage_request_city.html")
@@ -976,7 +979,6 @@ def login():
             return redirect(redirect_url)
         else:
             return render_template('login.html', form=form)
-
 
 @app.route("/attachments/<string:resource>", methods=["GET"])
 def get_attachments(resource):
