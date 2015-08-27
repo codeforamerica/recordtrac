@@ -931,10 +931,11 @@ def register():
     errors = []
     if request.method == 'POST':
             user_to_login = authenticate_login(form.username.data)
-            login_user(user_to_login)
-            return render_template("edit_user.html", form=EditUserForm(), errors=[])
-    else:
-        return render_template('user_registration.html', form=form, errors=errors)
+            if user_to_login:
+                login_user(user_to_login)
+                return render_template("edit_user.html", form=EditUserForm(), errors=[])
+            errors.append("Your e-mail address must be added by an administrator before you can log in.")
+    return render_template('user_registration.html', form=form, errors=errors)
 
 @app.route("/edit_user_info", methods=['GET', 'POST'])
 @login_required
