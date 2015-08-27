@@ -57,6 +57,7 @@ class User(db.Model):
 		foreign_keys=[department_id],
 		primaryjoin=("User.department_id == Department.id"),
 		uselist=False)
+	title = db.Column(db.String())
 
 	def is_authenticated(self):
 		return True
