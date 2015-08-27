@@ -58,6 +58,7 @@ class User(db.Model):
 		primaryjoin=("User.department_id == Department.id"),
 		uselist=False)
 	title = db.Column(db.String())
+	role = db.Column(db.String())
 
 	def is_authenticated(self):
 		return True
@@ -110,6 +111,7 @@ class User(db.Model):
 		if self.zipcode and self.zipcode != "":
 			return self.zipcode
 		return "N/A"
+
 
 	def __init__(self, email=None, alias=None, first_name = None, last_name = None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=None, department=None, contact_for=None, backup_for=None, password=None, is_staff=False):
 		if email and validate_email(email):
