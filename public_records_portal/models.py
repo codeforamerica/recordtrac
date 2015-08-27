@@ -48,15 +48,15 @@ class User(db.Model):
 	date_created = db.Column(db.DateTime)
 	password = db.Column(db.String(255))
 	department_id = db.Column(Integer, ForeignKey("department.id", use_alter=True, name="fk_department"))
-	current_department = relationship("Department",
-		foreign_keys=[department_id],
-		lazy='joined', uselist=False)
-	contact_for = db.Column(db.String())  # comma separated list
-	backup_for = db.Column(db.String())  # comma separated list
+	contact_for = db.Column(db.String()) # comma separated list
+	backup_for = db.Column(db.String()) # comma separated list
 	owners = relationship("Owner")
 	subscribers = relationship("Subscriber")
-	# Is this user an active agency member?
-	is_staff = db.Column(db.Boolean, default=False)
+	is_staff = db.Column(db.Boolean, default = False) # Is this user an active agency member?
+	current_department = relationship("Department",
+		foreign_keys=[department_id],
+		primaryjoin=("User.department_id == Department.id"),
+		uselist=False)
 
 	def is_authenticated(self):
 		return True
