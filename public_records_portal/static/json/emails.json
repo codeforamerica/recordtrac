@@ -9,11 +9,11 @@
             "Recipients": ["Staff owner"],
             "Email body": "We're not using this but we could."
         },
-         "Staff participant added":
+        "Staff participant added":
         {   "Subject": "A request has been assigned to you",
             "Recipients": ["Staff participant"]
         },
-        "Question asked": 
+        "Question asked":
         {
             "Subject": "There is a question about your request.",
             "Recipients":["Requester"]
@@ -45,7 +45,7 @@
         },
         "Request made":
         {
-            "Subject": "Your request has been submitted.",
+            "Subject": "FOIL Request Submitted.",
             "Recipients": ["Requester"]
         },
         "Request overdue":
@@ -57,8 +57,87 @@
         {
             "Subject": "You are now subscribed to this request.",
             "Recipients": ["Subscriber"]
+        },
+        "Public Notification Template 01":
+        {
+            "Subject": "FOIL Request Submitted",
+            "Recipients": ["Requester"]
+        },
+        "Public Notification Template 02":
+        {
+            "Subject": "FOIL Message Sent",
+            "Recipients": ["Requester"]
+        },
+        "Public Notification Template 03":
+        {
+            "Subject": "FOIL Request Status",
+            "Recipients": ["Requester"]
+        },
+        "Public Notification Template 04":
+        {
+            "Subject": "FOIL Request Completed",
+            "Recipients": ["Requester"]
+        },
+        "Public Notification Template 05":
+        {
+            "Subject": "FOIL Request Status",
+            "Recipients": ["Requester"]
+        },
+        "Public Notification Template 06":
+        {
+            "Subject": "FOIL Request Denied",
+            "Recipients": ["Requester"]
+        },
+        "Public Notification Template 07":
+        {
+            "Subject": "FOIL Request Closed",
+            "Recipients": ["Requester"]
+        },
+        "Public Notification Template 08":
+        {
+            "Subject": "FOIL Request Payment Information",
+            "Recipients": ["Requester"]
+        },
+        "Public Notification Template 09":
+        {
+            "Subject": "FOIL Request Closed",
+            "Recipients": ["Requester"]
+        },
+        "Public Notification Template 10":
+        {
+            "Subject": "FOIL Time Extension Requested",
+            "Recipients": ["Requester"]
+        },
+        "Agency Notification Template 01":
+        {
+            "Subject": "FOIL Acknowledgement Reminder",
+            "Recipients": ["Staff owner"]
+        },
+        "Agency Notification Template 02":
+        {
+            "Subject": "FOIL 5-Day Fulfillment Reminder",
+            "Recipients": ["Staff owner"]
+        },
+        "Agency Notification Template 03":
+        {
+            "Subject": "FOIL 10-Day Fulfillment Reminder",
+            "Recipients": ["Staff owner"]
+        },
+        "Agency Notification Template 04":
+        {
+            "Subject": "FOIL Acknowledgement Past Due",
+            "Recipients": ["Staff owner"]
+        },
+        "Agency Notification Template 05":
+        {
+            "Subject": "FOIL Acknowledgement Past Due",
+            "Recipients": ["Staff owner"]
+        },
+        "Agency Notification Template 06":
+        {
+            "Subject": "FOIL Extension Reminder",
+            "Recipients": ["Staff owner"]
         }
-
     }
 }
 
