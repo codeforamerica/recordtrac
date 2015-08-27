@@ -30,17 +30,23 @@
 				<form name="edit_user_info" class="form-horizontal" method="post" action="/edit_user_info" autocomplete="off" novalidate="novalidate">
 					{{ form.username.label.text }}
 					<div class="spacer">
-						{{ form.username() }}
+						{{ form.username(placeholder=current_user.email) }}
 					</div>
 					{{ form.phone.label }}
-					{{ form.phone() }}
+					{{ form.phone(placeholder=current_user.phone or "") }}
 					{{ form.first_name.label }}
-					{{ form.first_name() }}
+					{{ form.first_name(placeholder=current_user.first_name or "") }}
 					{{ form.last_name.label }}
-					{{ form.last_name() }}
+					{{ form.last_name(placeholder=current_user.last_name or "") }}
+					{{ form.title.label }}
+					{{ form.title(placeholder=current_user.title or "") }}
 					{{ form.submit }}
 				</form>
 			</div>
 		</div>
 	</div>
 {% endblock container %}
+
+
+
+

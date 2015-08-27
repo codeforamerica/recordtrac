@@ -6,7 +6,7 @@
 
 """
 
-from flask import Flask
+from flask import Flask, flash
 from flask import render_template, request, redirect, url_for, jsonify, send_from_directory
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
 from flask_recaptcha import ReCaptcha
@@ -927,46 +927,31 @@ def register():
     form = LoginForm()
     errors = []
     if request.method == 'POST':
-        user = models.User.query.filter_by(email = form.username.data).first()
-        if user and user.is_staff:
-            login_user(user)
-            return edit_user_info()
+            user_to_login = authenticate_login(form.username.data)
+            login_user(user_to_login)
+            return render_template("edit_user.html", form=EditUserForm(), errors=[])
     else:
         return render_template('user_registration.html', form=form, errors=errors)
 
 @app.route("/edit_user_info", methods=['GET', 'POST'])
 @login_required
 def edit_user_info():
-    form = EditUserForm()
+    form = EditUserForm(request.form, obj=current_user)
     errors = []
     if request.method == 'POST':
-        phone = form.phone.data
-        if phone:
-            current_user.phone = phone
-        first_name = form.first_name.data
-        if first_name:
-            current_user.first_name = first_name
-        last_name = form.last_name.data
-        if last_name:
-            current_suer.last_name = last_name
-        email = form.username.data
-        if email:
-            current_user.email = email
+        form.populate_obj(current_user)
         db.session.add(current_user)
         db.session.commit()
-        return render_template('edit_user.html', form=form, errors=errors)
-    else:
-        return render_template('edit_user.html', form=form, errors=errors)
+        flash("User updated!")
+    return render_template("edit_user.html", form=form, errors=errors)
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     errors = []
     if request.method == 'POST':
-        print form.validate_on_submit()
         if form.validate_on_submit():
-            print form.password.data
-            user_to_login = authenticate_login(form.username.data, form.password.data)
+            user_to_login = authenticate_login(form.username.data)
             if user_to_login:
                 login_user(user_to_login)
                 redirect_url = get_redirect_target()

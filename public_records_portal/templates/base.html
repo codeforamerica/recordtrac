@@ -97,6 +97,15 @@ This template provides the header, footer, and envelope info for all pages excep
         </div>
       </div>
       <div id="container-fluid">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
         {% block container %}
           <div class="row-fluid">
             <div class="span10">

@@ -251,17 +251,10 @@ def get_user_by_id(id):
     return User.query.get(id)
 
 ### @export "authenticate_login"
-def authenticate_login(email, password):
-    if email:
-        user = User.query.filter_by(email = email).first()
-        if user and (user.is_staff or user.is_admin()):
-            if user.check_password(password):
-                return user
-            if user.password == password: # Hash it
-                user.set_password(password)
-                db.session.add(user)
-                db.session.commit()
-                return user
+def authenticate_login(email):
+    user = User.query.filter_by(email = email).first()
+    if user and user.is_staff:
+        return user
     return None
 
 def create_or_return_user(email=None, alias=None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=None, department=None, contact_for=None, backup_for=None, not_id=False, is_staff=None, password=None):
