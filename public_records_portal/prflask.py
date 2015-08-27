@@ -81,6 +81,7 @@ class NoteView(AdminView):
 class UserView(AdminView):
     can_create = True
     can_edit = True
+    can_delete = True
     column_list = ('alias', 'email', 'current_department', 'phone', 'is_staff', 'role')
     column_labels = dict(alias='Name', current_department='Department', phone='Phone #')
     column_descriptions = dict(is_staff='Determines whether the user can log in and edit data through this interface.')
@@ -100,6 +101,7 @@ class DepartmentView(AdminView):
     form_args = dict(backup_contact={
         'description': do_mark_safe(column_descriptions['backup_contact'])
     })
+
 
 
 admin.add_view(RequestView(models.Request, db.session))
