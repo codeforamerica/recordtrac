@@ -31,27 +31,23 @@ manager.create_api(models.QA, methods=['GET'], results_per_page =10, allow_funct
 # manager.create_api(models.Subscriber, methods=['GET'], results_per_page = 10, allow_functions = True)
 manager.create_api(models.Visualization, methods=['GET'], results_per_page = 10, allow_functions = True)
 
+def postdate_check(form, field):
+    if field.data.date() > date.today():
+        raise ValidationError('This field cannot be post-dated')
+
 class HomeView(AdminIndexView):
     @expose('/')
     def home(self):
         return self.render('admin.html')
     def is_accessible(self):
-        if current_user.is_authenticated():
-            return current_user.is_admin()
-        return False
+        return current_user.role in ['Portal Administrator', 'Agency Administrator']
 
 # Create Admin
 admin = Admin(app, name='RecordTrac Admin', url='/admin', index_view = HomeView(name='Home'))
 
 class AdminView(ModelView):
     def is_accessible(self):
-        if current_user.is_authenticated():
-            return current_user.is_admin()
-        return False
-
-def postdate_check(form, field):
-    if field.data.date() > date.today():
-        raise ValidationError('This field cannot be post-dated')
+        return current_user.role in ['Portal Administrator', 'Agency Administrator']
 
 class RequestView(AdminView):
     can_create = False
@@ -85,14 +81,17 @@ class NoteView(AdminView):
 class UserView(AdminView):
     can_create = True
     can_edit = True
-    column_list = ('alias', 'email', 'current_department', 'phone', 'is_staff')
+    column_list = ('alias', 'email', 'current_department', 'phone', 'is_staff', 'role')
     column_labels = dict(alias='Name', current_department='Department', phone='Phone #')
     column_descriptions = dict(is_staff='Determines whether the user can log in and edit data through this interface.')
     form_excluded_columns = ('date_created', 'password', 'contact_for', 'backup_for')
 
 class DepartmentView(AdminView):
+    def is_accessible(self):
+        return current_user.role in ['Portal Administrator']
     can_create = True
     can_edit = True
+    can_delete = True
     column_list = ('name', 'primary_contact', 'backup_contact')
     column_descriptions = dict(backup_contact='Note that if you want to assign a user that does not yet exist as the primary or backup contact for this department, you must <a href="/admin/userview/new/?url=%2Fadmin%2Fdepartmentview%2Fnew%2F">create the user</a> first.')
 
@@ -101,6 +100,7 @@ class DepartmentView(AdminView):
     form_args = dict(backup_contact={
         'description': do_mark_safe(column_descriptions['backup_contact'])
     })
+
 
 admin.add_view(RequestView(models.Request, db.session))
 admin.add_view(RecordView(models.Record, db.session))
