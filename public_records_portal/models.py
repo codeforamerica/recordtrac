@@ -223,9 +223,18 @@ class Request(db.Model):
         else:
             self.due_date = self.date_received + timedelta(days = int(app.config['DAYS_TO_FULFILL']))
 
-    def extension(self):
+    def extension(self, days_after = int(app.config['DAYS_AFTER_EXTENSION']), custom_due_date = None):
         self.extended = True
-        self.due_date = self.due_date + timedelta(days = int(app.config['DAYS_AFTER_EXTENSION']))
+        if days_after != None and days_after != '':
+		    self.due_date = self.due_date + timedelta(days = days_after)
+        elif custom_due_date != None and custom_due_date != '':
+		    self.due_date = custom_due_date
+    def extension(self, days_after = int(app.config['DAYS_AFTER_EXTENSION'])):
+        self.extended = True
+        self.due_date = self.due_date + timedelta(days = days_after)
+    def extension(self, custom_due_date = None):
+		if custom_due_date != None and custom_due_date != '':
+		    self.due_date = custom_due_date
     def point_person(self):
         for o in self.owners:
             if o.is_point_person:
