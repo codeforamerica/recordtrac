@@ -1,6 +1,7 @@
 <!-- routing name -->
 {% set staff = req.point_person() %}
 {% if staff %}
-{% set uid = staff.user.id %}
-<a href="/staff_card/{{uid}}" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverRoute">{{ staff.user.alias or staff.user.email }}</a>
+    {% set uid = staff.user.id %}
+    <a href="/staff_card/{{ uid }}" data-placement="top" data-toggle="popover" href="#"
+       id="contactinfoPopoverRoute">{{ staff.user.alias or staff.user.email }}</a>
 {% endif %}

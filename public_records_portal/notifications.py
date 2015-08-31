@@ -30,6 +30,8 @@ if app.config['ENVIRONMENT'] == 'PRODUCTION':
 elif 'DEV_EMAIL' in app.config:
     send_emails = True
 
+
+
 ### @export "generate_prr_emails"
 def generate_prr_emails(request_id, notification_type, user_id=None):
     app.logger.info("\n\n Generating e-mails for request with ID: %s, notification type: %s, and user ID: %s" % (
