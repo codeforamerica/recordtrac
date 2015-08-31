@@ -11,7 +11,7 @@ The table displays the following information:
 * '#': Each request is assigned a unique number. You can easily track requests with this number by visiting `records.[youragency].gov/requests`
 * Received: This shows the date the request was received. Most municipalities allow an individual to submit a public records request any way they please, including by mail, fax, and over the phone. If a request wasn't originally submitted through RecordTrac, it may take agency employees a day or two to enter it into the system.
 * Request: This is the message sent to the agency by a member of the public. Sometimes agnecy employees will enter a request on behalf of an individual. If the requested document contains confidential information that may violate the security or privacy of a requester, the public will only see a short description of the document.
-* Department: The agency department where the point of contact works. Multiple departments may be involved in one request, but the Point of Contact's department will only be displayed. 
+* Agency: The agency department where the point of contact works. Multiple departments may be involved in one request, but the Point of Contact's department will only be displayed.
 * Point of Contact: The 'Point of Contact' is the employee responsible for providing the requester with the information they need. Sometimes agency employees from several departments will be needed to respond to one public records request. They will be added as Helpers, but they will not be displayed on this particular web page. 
 
 
@@ -30,7 +30,7 @@ Members of the public can filter the search by selecting a view that shows:
 
 * Requests with "open" or "closed" status
 * Date range in which the request was received
-* Department in which the point of contact for that request resides
+* Agency in which the point of contact for that request resides
 
 Members of the public can also sort the requests by:
 

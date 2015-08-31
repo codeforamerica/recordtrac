@@ -1,13 +1,13 @@
-from public_records_portal import prr, db_helpers, db, models
-from public_records_portal.prflask import app
-import os, random, string, json
+import random
 from datetime import datetime, timedelta
+
+from public_records_portal import prr, db_helpers, models
 
 print "Seeding database..."
 
 common_requests = ['City Council meeting minutes', 'Police Report', 'Incident Report', 'Communication between Councilmembers']
 
-departments = [d.name for d in models.Department.query.all()]
+departments = [d.name for d in models.Agency.query.all()]
 people = [d.email for d in models.User.query.all()]
 categories = [
     'Business', 'Civic Services', 'Culture & Recreation', 'Education', 'Environment', 'Health', 'Housing & Development', 'Public Safety', 'Social Services', 'Transportation']

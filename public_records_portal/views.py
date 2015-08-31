@@ -6,35 +6,27 @@
 
 """
 
-from flask import Flask
-from flask import render_template, request, redirect, url_for, jsonify, send_from_directory
+from flask import render_template, redirect, url_for, send_from_directory
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
-from flask_recaptcha import ReCaptcha
 # from flaskext.browserid import BrowserID
-from public_records_portal import app, db, models, recaptcha
+from public_records_portal import db, models, recaptcha
 from prr import add_resource, update_resource, make_request, close_request
 from db_helpers import get_user_by_id, authenticate_login  # finds a user by their id
-from db_helpers import get_user  # finds a user based on BrowserID response
 import os, json
 from urlparse import urlparse, urljoin
-from notifications import send_prr_email, format_date
+from notifications import format_date
 from spam import is_spam, is_working_akismet_key, check_for_spam
-from requests import get
 from time import time
-from flask.ext.cache import Cache
-from timeout import timeout
 from flask import jsonify, request, Response
 import anyjson
-import helpers
 import csv_export
 from datetime import datetime, timedelta
 from filters import *
 import re
 from db_helpers import get_count, get_obj
-from sqlalchemy import func, not_, and_, or_
+from sqlalchemy import func, and_, or_
 from forms import OfflineRequestForm, NewRequestForm, LoginForm
 import pytz
-import phonenumbers
 
 # Initialize login
 app.logger.info("\n\nInitialize login.")
@@ -426,7 +418,7 @@ def unfollow(request_id, email):
 @app.route("/request/<string:request_id>")
 def show_request(request_id, template="manage_request_public.html"):
     req = get_obj("Request", request_id)
-    departments_all = models.Department.query.all()
+    departments_all = models.Agency.query.all()
     agency_data = []
     for d in departments_all:
         firstUser = models.User.query.filter_by(department_id=d.id).first()
@@ -450,7 +442,7 @@ def staff_to_json():
 
 @app.route("/api/departments")
 def departments_to_json():
-    departments = models.Department.query.all()
+    departments = models.Agency.query.all()
     agency_data = []
     for d in departments:
         agency_data.append({'agency': d.name})
@@ -564,7 +556,7 @@ def filter_agency(departments_selected, results):
         department_ids = []
         for department_name in departments_selected:
             if department_name:
-                agency = models.Department.query.filter_by(name=department_name).first()
+                agency = models.Agency.query.filter_by(name=department_name).first()
                 if agency:
                     department_ids.append(agency.id)
         if department_ids:
@@ -636,7 +628,7 @@ def display_all_requests(methods=["GET"]):
 
 @app.route("/view_requests_backbone")
 def backbone_requests():
-    return render_template("all_requests.html", departments=db.session.query(models.Department).all(),
+    return render_template("all_requests.html", departments=db.session.query(models.Agency).all(),
                            total_requests_count=get_count("Request"))
 
 
@@ -729,7 +721,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         return requests, num_results, more_results, start_index, end_index
 
     return render_template("all_requests_less_js.html", total_requests_count=get_count("Request"), requests=requests,
-                           departments=db.session.query(models.Department).all(),
+                           departments=db.session.query(models.Agency).all(),
                            departments_selected=departments_selected, is_open=is_open, is_closed=is_closed,
                            due_soon=due_soon, overdue=overdue, mine_as_poc=mine_as_poc, mine_as_helper=mine_as_helper,
                            sort_column=sort_column, sort_direction=sort_direction, search_term=search_term,

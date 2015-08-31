@@ -6,18 +6,12 @@
 
 """
 
-import os
-import time
-import json
-from datetime import datetime, timedelta
-import logging
 import csv
 import urllib
 
-from flask import Flask, request
-from flask.ext.login import current_user
+from flask import request
 
-from public_records_portal import app, db_helpers
+from public_records_portal import db_helpers
 from db_helpers import find_request, create_request, get_obj, add_staff_participant, remove_staff_participant, \
     update_obj, get_attribute, change_request_status, create_or_return_user, create_subscriber, create_record, \
     create_note, create_QA, create_answer, update_user
@@ -26,11 +20,10 @@ from ResponsePresenter import ResponsePresenter
 from RequestPresenter import RequestPresenter
 from notifications import generate_prr_emails
 import upload_helpers
-from spam import is_spam
 
-agency_codes = {"Department of Records and Information Services": "860", "Office of the Chief Medical Examiner": "816",
-                "Mayor's Office": "002", "Department of Education": "040",
-                "Department of Information Technology and Telecommunications": "858", "DoITT/General Counse": "858",
+agency_codes = {"Agency of Records and Information Services": "860", "Office of the Chief Medical Examiner": "816",
+                "Mayor's Office": "002", "Agency of Education": "040",
+                "Agency of Information Technology and Telecommunications": "858", "DoITT/General Counse": "858",
                 None: "000"}
 
 ### @export "add_resource"
@@ -199,7 +192,7 @@ def make_request(category=None, agency=None, summary=None, text=None, attachment
     assigned_to_email = app.config['DEFAULT_OWNER_EMAIL']
     assigned_to_reason = app.config['DEFAULT_OWNER_REASON']
     if agency:
-        app.logger.info("\n\nDepartment chosen: %s" % agency)
+        app.logger.info("\n\nAgency chosen: %s" % agency)
         prr_email = db_helpers.get_contact_by_dept(agency)
         if prr_email:
             assigned_to_email = prr_email

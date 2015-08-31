@@ -13,7 +13,7 @@ def export():
     records = models.Request.query.order_by(models.Request.id).all()
     db_headers = ['id', 'text', 'date_received', 'date_created', 'due_date', 'extended']
     all_headers = ['Request ID', 'Request Text', 'Date Received', 'Date Created', 'Date Due', 'Extended?',
-                   'Requester First Name', 'Requester Last Name', 'Requester Phone', 'Department Name',
+                   'Requester First Name', 'Requester Last Name', 'Requester Phone', 'Agency Name',
                    'Point of Contact', 'All staff involved', 'Status']
     yield '\t'.join(all_headers) + '\n'
     for curr in records:

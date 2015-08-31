@@ -111,7 +111,7 @@
                     <input class="span12" name="requester_name" type="search" placeholder="Enter name" value="{{requester_name or ''}}">
                   </div>
                 {% endif %}
-              <h5>Department</h5>
+                <h5>Agency</h5>
               <div class="control-group">
                 <select name="departments_selected" class="selectpicker span12" multiple data-selected-text-format="count" data-size="5">
                     {% for department in departments %}
@@ -147,7 +147,7 @@
                 <th>
                   <button class="btn btn-link sortable" type="submit" onclick="return insertInput('text');">Request</button>
                 </th>
-                <th>Department</th>
+                  <th>Agency</th>
                 {% if current_user.is_authenticated() %}
                   <th>Point of Contact</th>
                 {% endif %}

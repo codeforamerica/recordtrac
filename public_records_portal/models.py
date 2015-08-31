@@ -42,7 +42,7 @@ class User(db.Model):
     date_created = db.Column(db.DateTime)
     password = db.Column(db.String(255))
     department_id = db.Column(Integer, ForeignKey("department.id", use_alter=True, name="fk_department"))
-    current_department = relationship("Department",
+    current_department = relationship("Agency",
                                       foreign_keys=[department_id],
                                       lazy='joined', uselist=False)
     contact_for = db.Column(db.String())  # comma separated list
@@ -162,8 +162,8 @@ class User(db.Model):
         return self.email
 
 
-### @export "Department"
-class Department(db.Model):
+### @export "Agency"
+class Agency(db.Model):
     __tablename__ = 'department'
     id = db.Column(db.Integer, primary_key=True)
     date_created = db.Column(db.DateTime)
@@ -179,7 +179,7 @@ class Department(db.Model):
         self.date_created = datetime.now().isoformat()
 
     def __repr__(self):
-        return '<Department %r>' % self.name
+        return '<Agency %r>' % self.name
 
     def __str__(self):
         return self.name
@@ -203,7 +203,7 @@ class Department(db.Model):
         self.date_created = datetime.now().isoformat()
 
     def __repr__(self):
-        return '<Department %r>' % self.name
+        return '<Agency %r>' % self.name
 
     def __str__(self):
         return self.name
@@ -238,7 +238,7 @@ class Request(db.Model):
     creator_id = db.Column(db.Integer, db.ForeignKey(
         'user.id'))  # If city staff created it on behalf of the public, otherwise the creator is the subscriber with creator = true
     department_id = db.Column(db.Integer, db.ForeignKey("department.id"))
-    department = relationship("Department", uselist=False)
+    department = relationship("Agency", uselist=False)
     date_received = db.Column(db.DateTime)
     offline_submission_type = db.Column(db.String())
 
