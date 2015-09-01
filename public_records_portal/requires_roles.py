@@ -1,5 +1,6 @@
 from functools import wraps
 from flask.ext.login import current_user
+from unauthorized_handler import unauthorized
 
 def requires_roles(*roles):
     def wrapper(f):
@@ -10,3 +11,4 @@ def requires_roles(*roles):
             return f(*args, **kwargs)
         return wrapped
     return wrapper
+
