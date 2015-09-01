@@ -78,12 +78,14 @@ class QAView(AdminView):
     can_edit = True
     column_list = ('request_id', 'question', 'answer', 'date_created')
     form_excluded_columns = ('date_created')
+    column_searchable_list = ('question', 'answer')
 
 class NoteView(AdminView):
     can_create = False
     can_edit = True
     column_list = ('request_id', 'text', 'date_created')
     form_excluded_columns = ('date_created')
+    column_searchable_list = ('text',)
 
 class UserView(AdminView):
     can_create = True
@@ -92,6 +94,7 @@ class UserView(AdminView):
     column_labels = dict(alias='Name', current_department='Department', phone='Phone #')
     column_descriptions = dict(is_staff='Determines whether the user can log in and edit data through this interface.')
     form_excluded_columns = ('date_created', 'password', 'contact_for', 'backup_for')
+    column_searchable_list = ('alias', 'email', 'phone')
 
 class DepartmentView(AdminView):
     can_create = True
@@ -104,6 +107,7 @@ class DepartmentView(AdminView):
     form_args = dict(backup_contact={
         'description': do_mark_safe(column_descriptions['backup_contact'])
     })
+    column_searchable_list = ('name',)
 
 admin.add_view(RequestView(models.Request, db.session))
 admin.add_view(RecordView(models.Record, db.session))
