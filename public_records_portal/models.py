@@ -57,6 +57,7 @@ class User(db.Model):
 	subscribers = relationship("Subscriber")
 	# Is this user an active agency member?
 	is_staff = db.Column(db.Boolean, default=False)
+	staff_signature = db.Column(db.String(100), default='public_records_portal/static/images/staff_signature.png')
 
 	def is_authenticated(self):
 		return True
@@ -110,7 +111,7 @@ class User(db.Model):
 			return self.zipcode
 		return "N/A"
 
-	def __init__(self, email=None, alias=None, first_name = None, last_name = None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=None, department=None, contact_for=None, backup_for=None, password=None, is_staff=False):
+	def __init__(self, email=None, alias=None, first_name = None, last_name = None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=None, department=None, contact_for=None, backup_for=None, password=None, is_staff=False, staff_signature='public_records_portal/static/images/staff_signature.png'):
 		if email and validate_email(email):
 			self.email = email
 		self.alias = alias
@@ -137,6 +138,8 @@ class User(db.Model):
 			self.backup_for = backup_for
 		if is_staff:
 			self.is_staff = is_staff
+		if staff_signature:
+			self.staff_signature = staff_signature
 		if password:
 			self.set_password(password)
 

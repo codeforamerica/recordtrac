@@ -41,6 +41,7 @@ set_env(key = 'DEFAULT_OWNER_EMAIL', default = 'recordtrac@codeforamerica.org')
 set_env(key = 'DEFAULT_OWNER_REASON', default = 'Open government coordinator' )
 
 set_env(key = 'AGENCY_NAME', default = 'Your agency name') # e.g. City of Oakland
+set_env(key = 'AGENCY_LETTERHEAD', default = '/public_records_portal/static/images/nycseal.png')
 set_env(key = 'SECRET_KEY', default = 'Change this to something super secret') # Flask application's secret key
 
 # The number of days an agency has (determined by law or policy) to fulfill a request
