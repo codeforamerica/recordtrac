@@ -66,15 +66,17 @@
 {% endblock proxyrequester_info %}
 
 {% block clarify_request %}
-  <!-- ask a question -->
-  <form name="ask_question" id="question" class="form-inline" style="margin: 10px 0px 15px 0px;" method="post" action="/add_a_qa" autocomplete="on">
-    <input type="hidden" name="request_id" value="{{ req.id }}"/>
-    <fieldset>
-      <label>Ask a question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
-      <textarea id="questionTextarea"  name="question_text" class="input-xlarge" placeholder="Ask the requester a question" required/></textarea> 
-      <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
-    </fieldset>
-  </form>
+  {% if email %}
+    <!-- ask a question -->
+    <form name="ask_question" id="question" class="form-inline" style="margin: 10px 0px 15px 0px;" method="post" action="/add_a_qa" autocomplete="on">
+      <input type="hidden" name="request_id" value="{{ req.id }}"/>
+      <fieldset>
+        <label>Ask a question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+        <textarea id="questionTextarea"  name="question_text" class="input-xlarge" placeholder="Ask the requester a question" required/></textarea>
+        <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
+      </fieldset>
+    </form>
+	{% endif %}
 {% endblock clarify_request %}
 
 {% block response_actions_lessjs %}
@@ -153,20 +155,14 @@
         <div class="control-group">
           <label class="control-label">Note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
           <div class="controls">
-            <textarea type="text" class="input-xxlarge" id="noteTextarea" name="note_text"  placeholder="Anything else the requester should know."required/></textarea>
+            <textarea type="text" class="input-xxlarge" id="noteTextarea" name="note_text"  placeholder="Notes visible to staff only."required/></textarea>
           </div>
         </div>
         <div class="control-group">
           <div class="controls">
             <button type="submit" class="btn btn-primary">Add note</button>
           </div>
-<label class="control-label">Privacy <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="Privacy"><small><i class="icon-info-sign"></i></small></span></label>
-          <div class="controls">
-            <select id="note_privacy" name="note_privacy" required data-selected-text-format="count" size="2">
-              <option value="1">Public</option>
-              <option value="2">Staff Only</option>
-            </select>
-          </div>
+		<input type="hidden" name="note_privacy" value="2"/>
         </div>
       </div>
     </fieldset>
