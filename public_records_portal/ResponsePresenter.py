@@ -24,8 +24,6 @@ class ResponsePresenter:
 				self.type = "link"
 		if note:
 			self.response = note
-			if not(note.user_id) and int(note.privacy) == 2:
-				self.response.text = "PRIVATE NOTE"
 			self.update_url = "update_a_note_delete"
 			self.type = "note"
 			if "Request extended:" in self.response.text:
