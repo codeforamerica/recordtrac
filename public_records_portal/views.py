@@ -324,12 +324,16 @@ show_request_for_x.methods=['GET', 'POST']
 
 @app.route("/city/request/<string:request_id>")
 @login_required
-@requires_roles('Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel')
+@requires_roles('Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel', 'Agency Helpers')
 def show_request_for_city(request_id):
-    if is_supported_browser():
-        return show_request(request_id=request_id, template="manage_request_city.html")
+    if current_user.role == 'Agency Helpers':
+        audience = 'helper'
     else:
-        return show_request(request_id=request_id, template="manage_request_city_less_js.html")
+        audience = 'city'
+    if is_supported_browser():
+        return show_request(request_id=request_id, template="manage_request_%s.html" %(audience))
+    else:
+        return show_request(request_id=request_id, template="manage_request_%s_less_js.html" %(audience))
 
 
 @app.route("/response/<string:request_id>")
@@ -556,7 +560,7 @@ def is_supported_browser():
                 or (browser == 'opera') \
                 or (re.search('BlackBerry', uas)):
             return False
-    return False
+    return True
 
 
 @app.route("/view_requests")
