@@ -19,6 +19,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import portrait
 from PyPDF2 import PdfFileWriter, PdfFileReader
 import StringIO
+import re
 
 standard_response_templates = {"template_02":"FOIL Message Sent","template_03":"FOIL Request Status","template_04":"FOIL Request Completed","template_05":"FOIL Request Status - Fulfilled in Part","template_06":"FOIL Request Denied","template_07":"FOIL Request Closed","template_08":"FOIL Request Payment Information","template_09":"FOIL Request Closed - No Response","template_10":"FOIL Time Extension Requested"}
 
@@ -373,6 +374,11 @@ def change_request_status(request_id, status):
     db.session.add(req)
     app.logger.info("\n\nChanged status for request: %s to %s" %
                     (request_id, status))
+
+    if "days" in status:
+            days_to_fulfill = re.findall(r"(\d{2}) days",status)[0]
+            req.due_date = req.date_created + timedelta(days = int(days_to_fulfill))
+
     db.session.commit()
 
 # @export "find_request"

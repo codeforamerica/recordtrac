@@ -73,7 +73,7 @@ def update_resource(resource, request_body):
 	elif "reopen" in resource:
 		change_request_status(fields['request_id'], "Reopened")
         elif "acknowledge" in resource:
-                change_request_status(fields['request_id'], "In Progress")
+                change_request_status(fields['request_id'], fields['acknowledge_status'])
 		return fields['request_id']
 	elif "request_text" in resource:
 		update_obj(attribute = "text", val = fields['request_text'], obj_type = "Request", obj_id = fields['request_id'])

@@ -347,17 +347,21 @@ class Request(db.Model):
 			return "in progress"
 		else:
 			if cron_job or (not current_user.is_anonymous()):
-				if self.due_date:
+				if self.due_date and self.status != "Open":
 					if datetime.now() >= self.due_date:
 						return "overdue"
 					elif (datetime.now() + timedelta(days = int(app.config['DAYS_UNTIL_OVERDUE']))) >= self.due_date:
 						return "due soon"
-					elif (datetime.now() + timedelta(days = int(2))) >= self.due_date:
-						return "in progress (due in 2 days)"
-					elif (datetime.now() + timedelta(days = int(5))) >= self.due_date:
-						return "in progress (due in 5 days)"
-					elif (datetime.now() + timedelta(days = int(10))) >= self.due_date:
-						return "in progress (due in 10 days)"
+					elif (datetime.now() + timedelta(days = int(15))) >= self.due_date:
+						return "in progress (due in 15 days)"
+					elif (datetime.now() + timedelta(days = int(30))) >= self.due_date:
+						return "in progress (due in 30 days)"
+					elif (datetime.now() + timedelta(days = int(60))) >= self.due_date:
+						return "in progress (due in 60 days)"
+					elif (datetime.now() + timedelta(days = int(90))) >= self.due_date:
+						return "in progress (due in 90 days)"
+					elif (datetime.now() + timedelta(days = int(120))) >= self.due_date:
+						return "in progress (due in 120 days)"
 					else:
 						return "acknowledged"
 		return "open"
