@@ -107,9 +107,9 @@ def add_note(request_id, text, user_id = None, passed_spam_filter = False, priva
 		change_request_status(request_id, "A response has been added.")
 		if user_id:
 			add_staff_participant(request_id = request_id, user_id = user_id)
-			generate_prr_emails(request_id = request_id, notification_type = "Public Notification Template 10")
-		else:
-			generate_prr_emails(request_id = request_id, notification_type = "Public note added")
+			#generate_prr_emails(request_id = request_id, notification_type = "Public Notification Template 10")
+		#else:
+		#	generate_prr_emails(request_id = request_id, notification_type = "Public note added")
 		return note_id
 	return False
 
