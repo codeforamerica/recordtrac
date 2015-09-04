@@ -137,7 +137,7 @@
               <table id="requests">
                 <thead id="headings">
                   <tr>
-                    <th class="status"></th>
+                    <th class="status">Status</th>
                     <th>
                       <button class="btn btn-link sortable" type="submit" onclick="return insertInput('id');">#</button>
                     </th>
@@ -152,16 +152,27 @@
                     <th>
                       <button class="btn btn-link sortable" type="submit" onclick="return insertInput('due_date');">Due</button>
                     </th>
-                    <th>Requester</th>
                   </tr>
                 </thead>
                 <tbody>
                   {% for request in requests %}
                     <tr>
-                      <td class="status {{request.solid_status}}">
+                      <td class="status {{request.solid_status.split(' ')[0]}}">
+					    {% if request.solid_status == "open"  %}
+						  Open
+					    {% endif %}
                         {% if request.solid_status == "closed"  %}
-                          <i class="icon-archive icon-light"></i>
+                          <i class="icon-archive icon-light">Closed</i>
                         {% endif %}
+						{% if request.solid_status == "in progress" or "in progress" in request.solid_status %}
+						   In Progress
+						{% endif %}
+						{% if request.solid_status == "due soon"  %}
+						<i class="icon-archive icon-light">Due Soon</i>
+						{% endif %}
+						{% if request.solid_status == "overdue"  %}
+						    Overdue
+						{% endif %}
                       </td>
                       <td>{{request.id}}</td>
                       <td>{{request.date_received}}</td>
@@ -187,11 +198,6 @@
                         <td>{{request.department}}</td>
                         <td>{{request.contact_name}}</td>
                         <td>{{request.due_date }}</td>
-                        {% if request.privacy == 1 or request.privacy == 4 %}
-                          <td>{{request.requester}}</td>
-                        {% else %}
-                          <td>&nbsp;</td>
-                        {% endif %}
                       </tr>
                     {% endfor %}
                   </tbody>
