@@ -31,7 +31,6 @@ PyPDF2==1.25.1
 python-dateutil==2.4.2
 python-dotenv==0.1.2
 python-mimeparse==0.1.4
-python-scribd==1.2.0
 pytz==2015.4
 recaptcha-client==1.0.6
 reportlab==3.2.0
