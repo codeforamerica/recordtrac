@@ -240,17 +240,34 @@ class Request(db.Model):
 				self.date_received = date_received
 		self.privacy = privacy
 		self.__class__.tracking_number += 1
+                
+    def __repr__(self):
+        return '<Request %r>' % self.text
 
-	def __repr__(self):
-		return '<Request %r>' % self.text
+    def set_due_date(self):
+        if not self.date_received:
+            self.date_received = self.date_created
+        if self.extended == True:
+            self.due_date = self.date_received + timedelta(days = int(app.config['DAYS_AFTER_EXTENSION']))
+        else:
+            self.due_date = self.date_received + timedelta(days = int(app.config['DAYS_TO_FULFILL']))
 
-	def set_due_date(self):
-		if not self.date_received:
-			self.date_received = self.date_created
-		if self.extended == True:
-			self.due_date = self.date_received + timedelta(days = int(app.config['DAYS_AFTER_EXTENSION']))
-		else:
-			self.due_date = self.date_received + timedelta(days = int(app.config['DAYS_TO_FULFILL']))
+    def extension(self, days_after = int(app.config['DAYS_AFTER_EXTENSION']), custom_due_date = None):
+        self.extended = True
+        if days_after != None and days_after != '':
+		    self.due_date = self.due_date + timedelta(days = days_after)
+        elif custom_due_date != None and custom_due_date != '':
+		    self.due_date = custom_due_date
+    def point_person(self):
+        for o in self.owners:
+            if o.is_point_person:
+                return o
+        return None
+    def all_owners(self):
+        all_owners = []
+        for o in self.owners:
+            all_owners.append(o.user.get_alias())
+        return all_owners
 
 	def extension(self):
 		self.extended = True
@@ -283,11 +300,62 @@ class Request(db.Model):
 			return requester.user.get_first_name()
 		return "N/A"
 
+    def requester_phone(self):
+        requester = self.requester()
+        if requester and requester.user:
+            return requester.user.get_phone()
+        return "N/A"
+        def requester_address1(self):
+                requester = self.requester()
+                if requester and requester.user:
+                        return requester.user.get_address1()
+                return "N/A"
+        def requester_address2(self):
+                requester = self.requester()
+                if requester and requester.user:
+                        return requester.user.get_address2()
+                return "N/A"
+        def requester_city(self):
+                requester = self.requester()
+                if requester and requester.user:
+                        return requester.user.get_city()
+                return "N/A"
+        def requester_state(self):
+                requester = self.requester()
+                if requester and requester.user:
+                        return requester.user.get_state()
+                return "N/A"
 	def requester_last_name(self):
 		requester = self.requester()
 		if requester and requester.user:
+                        return requester.user.get_zipcode()
+                return "N/A"
+    def point_person_name(self):
+        point_person = self.point_person()
+        if point_person and point_person.user:
+            return point_person.user.get_alias()
+        return "N/A"
+    def department_name(self):
+        if self.department:
 			return requester.user.get_last_name()
 		return "N/A"
+    def is_closed(self):
+        if self.status:
+            return re.match('.*(closed).*', self.status, re.IGNORECASE) is not None
+        else:
+            app.logger.info("\n\n Request with this ID has no status: %s" % self.id)
+            return False
+    def solid_status(self, cron_job = False):
+        if self.is_closed():
+            return "closed"
+        else:
+            if cron_job or (not current_user.is_anonymous()):
+                if self.due_date:
+                    if datetime.now() >= self.due_date:
+                        return "overdue"
+                    elif (datetime.now() + timedelta(days = int(app.config['DAYS_UNTIL_OVERDUE']))) >= self.due_date:
+                        return "due soon"
+        return "open"
 
 	def requester_phone(self):
 		requester = self.requester()
@@ -402,7 +470,6 @@ class QA(db.Model):
 		self.owner_id = user_id
 	def __repr__(self):
 		return "<QA Q: %r A: %r>" %(self.question, self.answer)
-
 
 ### @export "Owner"
 class Owner(db.Model):
