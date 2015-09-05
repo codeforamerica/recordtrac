@@ -344,11 +344,6 @@ class Request(db.Model):
 			all_owners.append(o.user.get_alias())
 		return all_owners
 
-	def extension(self):
-		self.extended = True
-		self.due_date = self.due_date \
-			+ timedelta(days=int(app.config['DAYS_AFTER_EXTENSION']))
-
 	def point_person(self):
 		for o in self.owners:
 			if o.is_point_person:
