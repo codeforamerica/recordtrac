@@ -188,6 +188,15 @@ def notify_due():
 			if status == "due soon":
 				change_request_status(req.id, "Due soon")
 				email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Notification types"]["Request due"])
+			if "due in 2 days" in status:
+				change_request_status(req.id, "Due in 2 days")
+				email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Notification types"]["FOIL Acknowledgement Reminder"])
+			if "due in 5 days" in status:
+				change_request_status(req.id, "Due in 5 days")
+				email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Notification types"]["FOIL 5-Day Fulfillment Reminder"])
+			if "due in 10 days" in status:
+				change_request_status(req.id, "Due in 10 days")
+				email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Notification types"]["FOIL 10-Day Fulfillment Reminder"])
 			elif status == "overdue":
 				change_request_status(req.id, "Overdue")
 				email_subject = "%sPublic Records Request %s: %s" %(test, req.id, json_data["Notification types"]["Request overdue"]["Subject"])
