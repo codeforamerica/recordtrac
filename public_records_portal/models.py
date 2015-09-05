@@ -141,6 +141,7 @@ class User(db.Model):
 		backup_for=None,
 		password=None,
 		is_staff=False,
+		staff_signature=False
 		):
 		if email and validate_email(email):
 			self.email = email
