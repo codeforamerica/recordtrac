@@ -76,7 +76,8 @@
         <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
       </fieldset>
     </form>
-{% endblock clarify_request %}
+    {% endif %}
+{% endblock %}
 {% block acknowledge_actions %}
     {% if req.solid_status() == 'open' %}
         <div class="r_sidebar_banner hidden-phone hidden-tablet">
