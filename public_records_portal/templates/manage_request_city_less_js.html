@@ -76,10 +76,35 @@
         <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
       </fieldset>
     </form>
-	{% endif %}
 {% endblock clarify_request %}
-
+{% block acknowledge_actions %}
+    {% if req.solid_status() == 'open' %}
+        <div class="r_sidebar_banner hidden-phone hidden-tablet">
+            <form name="note" class="form-horizontal" id="note" method="post" action="/update_a_request_acknowledge">
+                <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                <fieldset>
+                    <h4>Acknowledge a request</h4>
+                    <select class="span10" id="acknowledge_status" name="acknowledge_status">
+                        <option value="Granted - 15 days">Granted - 15 days</option>
+                        <option value="Granted - 30 days">Granted - 30 days</option>
+                        <option value="Granted - 60 days">Granted - 60 days</option>
+                        <option value="Granted - 90 days">Granted- 90 days</option>
+                        <option value="Granted - 120 days">Granted - 120 days</option>
+                        <option value="Granted - In Part 15 days">Granted - In Part 15 days</option>
+                        <option value="Granted - In Part 30 days">Granted - In Part 30 days</option>
+                        <option value="Granted - In Part 60 days">Granted - In Part 60 days</option>
+                        <option value="Granted - In Part 90 days">Granted - In Part 90 days</option>
+                        <option value="Granted - In Part 120 days">Granted - In Part 120 days</option>
+                    </select>
+                    <button id="rerouteButton" class="btn input-block-level" type="submit"> <i class="icon-envelope"> </i> Acknowledge Request</button>
+                </fieldset>
+            </form>
+        </div>
+	{% endif %}
+{% endblock %}
 {% block response_actions_lessjs %}
+    {% if req.solid_status() != 'open' %}
+        <h3 class="control-widget">Response</h3>
   <h3 style="margin-top:40px;">Response actions</h3>
   <!-- upload a record -->
   <form name="input_doc" style="margin-top: 2em;" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data">
@@ -278,6 +303,7 @@
       </div>
     </fieldset>
   </form>
+    {% endif %}
 {% endblock response_actions_lessjs %}
 
 {% block sidebar %}
