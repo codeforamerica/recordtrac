@@ -205,7 +205,7 @@ def create_note(request_id, text, user_id, privacy):
             appeals_email = "APPEALS_EMAIL"
             staff = req.point_person()
             staff_alias = staff.user.alias
-            staff_signature = "STAFF_SIGNATURE"
+            staff_signature = staff.user.staff_signature
             
             html = make_response(render_template(template_name,date=date, req=req, department=department, appeals_officer=appeals_officer,appeals_email=appeals_email, staff_alias= staff_alias, staff_signature=staff_signature))
             pdf = StringIO()

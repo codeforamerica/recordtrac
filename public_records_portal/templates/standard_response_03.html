@@ -17,7 +17,7 @@
        {% set state = user.state %}
        {% set zipcode = user.zipcode %}
      {% endif %}
-        <h2>Agency Letterhead</h2>
+        <h2><img src="{{config['AGENCY_LETTERHEAD']}}" alt="NYC Department of Records and Information Services" height="159" width="152"></h2>
         <br><br><br><br>
         {{ date }}
         <br><br>
@@ -48,7 +48,7 @@
         <br><br>
         Sincerely,
         <br><br><br>
-        {{ staff_signature }}
+        <img src="{{ staff_signature }}" alt="NYC Department of Records and Information Services" width="183" height="61">
         <br><br><br>
         {{ staff_alias }}
         <br>

@@ -70,6 +70,7 @@ class User(db.Model):
 	# Is this user an active agency member?
 
 	is_staff = db.Column(db.Boolean, default=False)
+	staff_signature = db.Column(db.String(100), default='public_records_portal/static/images/staff_signature.png')
 
 	def is_authenticated(self):
 		return True
@@ -167,6 +168,8 @@ class User(db.Model):
 			self.backup_for = backup_for
 		if is_staff:
 			self.is_staff = is_staff
+		if staff_signature:
+			self.staff_signature = staff_signature
 		if password:
 			self.set_password(password)
 
@@ -251,7 +254,6 @@ class Department(db.Model):
 	def get_name(self):
 		return self.name or 'N/A'
 
-
 ### @export "Request"
 
 class Request(db.Model):
@@ -320,7 +322,6 @@ class Request(db.Model):
 		else:
 			self.due_date = self.date_received \
 				+ timedelta(days=int(app.config['DAYS_TO_FULFILL']))
-
 
 	def extension(self, days_after=int(app.config['DAYS_AFTER_EXTENSION']),
 				  custom_due_date=None):
@@ -571,7 +572,6 @@ class Request(db.Model):
 	def closed(self):
 		return Request.status.ilike('%closed%')
 
-
 ### @export "QA"
 
 class QA(db.Model):
@@ -637,7 +637,6 @@ class Owner(db.Model):
 
 	def __repr__(self):
 		return '<Owner %r>' % self.id
-
 
 ### @export "Subscriber"
 
