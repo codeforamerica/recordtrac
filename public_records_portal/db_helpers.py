@@ -230,7 +230,7 @@ def create_note(request_id, text, user_id, privacy):
             staff = req.point_person()
             staff_alias = staff.user.alias
             staff_signature = staff.user.staff_signature
-            
+
             html = make_response(render_template(template_name,date=date, req=req, department=department, appeals_officer=appeals_officer,appeals_email=appeals_email, staff_alias= staff_alias, staff_signature=staff_signature))
             pdf = StringIO()
             pisaStatus = pisa.CreatePDF(StringIO(html.get_data().encode('utf-8')), pdf)
@@ -434,8 +434,8 @@ def change_request_status(request_id, status):
                     (request_id, status))
 
     if "days" in status:
-            days_to_fulfill = re.findall(r"(\d{2}) days",status)[0]
-            req.due_date = req.date_created + timedelta(days = int(days_to_fulfill))
+        days_to_fulfill = re.findall(r"(\d{2}) days",status)[0]
+        req.due_date = req.date_created + timedelta(days = int(days_to_fulfill))
 
     db.session.commit()
 
@@ -507,12 +507,12 @@ def update_subscriber(request_id, alias, phone):
 
 ### @export "set_random_password"
 def set_random_password(email):
-	user = User.query.filter(User.email == func.lower(email)).first()
-	# Must be staff or admin to reset password
-	if user and (user.is_staff == True or user.is_admin() == True):
+    user = User.query.filter(User.email == func.lower(email)).first()
+    # Must be staff or admin to reset password
+    if user and (user.is_staff == True or user.is_admin() == True):
         password = uuid.uuid4().hex[:10]  # Limit to 10 characters
-		user.set_password(password)
-		db.session.add(user)
-		db.session.commit()
-		return password
-	return None
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+        return password
+    return None

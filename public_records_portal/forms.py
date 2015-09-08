@@ -11,7 +11,7 @@ from public_records_portal import db, models
 
 app = Flask(__name__)
 
-agencies = [(r.name, r.name) for r in db.session.query(models.Agency).all()]
+agencies = [(r.name, r.name) for r in db.session.query(models.Department).all()]
 agencies.insert(0, ('', ''))
 agencies.append(('Unknown', 'I Don\'t Know'))
 
