@@ -20,7 +20,7 @@
         <a href="#"
            onclick="
                    window.open(
-                   'http://twitter.com/intent/tweet?text=Requested from {{config['AGENCY_NAME']}}:&amp;via=RecordTrac&amp;url={{config['APPLICATION_URL']}}request/{{req.id}}',
+                   'http://twitter.com/intent/tweet?text=Requested from {{ config['AGENCY_NAME'] }}:&amp;via=RecordTrac&amp;url={{ config['APPLICATION_URL'] }}request/{{ req.id }}',
                    'facebook-share-dialog',
                    'width=550,height=350');
                    return false;">
@@ -31,7 +31,7 @@
         <a href="#"
            onclick="
                    window.open(
-                   'https://www.facebook.com/sharer/sharer.php?u={{config['APPLICATION_URL']}}request/{{req.id}}',
+                   'https://www.facebook.com/sharer/sharer.php?u={{ config['APPLICATION_URL'] }}request/{{ req.id }}',
                    'facebook-share-dialog',
                    'width=626,height=436');
                    return false;">
@@ -42,7 +42,7 @@
     <!-- main content -->
     <div class="row-fluid">
         <div class="span8">
-            {% block banner %}{{super()}}{% endblock banner %}
+            {% block banner %}{{ super() }}{% endblock banner %}
         </div>
     </div>
     <div class="row-fluid">
@@ -50,11 +50,12 @@
             {% block well %}
                 <div class="well">
                     {% block request %}
-                        <div id = "request-container">
+                        <div id="request-container">
                             <!-- request area -->
                             <div class="row-fluid">
-                                <h3 class="control-widget">Request <span class="muted">#{{req.id}}</span></h3>
-                                {% block clarify_request %}{% endblock clarify_request %}{% block public_note %}{% endblock public_note %}
+                                <h3 class="control-widget">Request <span class="muted">#{{ req.id }}</span></h3>
+                                {% block clarify_request %}{% endblock clarify_request %}
+                                        {% block public_note %}{% endblock public_note %}
                                 {% if current_user.is_authenticated() %}
                                     <p class="lead" truncateable="250"> {{ req.requester().alias }}</p>
                                     <p class="lead" truncateable="250"> {{ req.text | new_lines }}</p>
@@ -65,7 +66,8 @@
                                     {% elif req.privacy == 2 %}
                                         <p class="lead" truncateable="250"> {{ req.text | new_lines }} </p>
                                     {% elif req.privacy == 4 %}
-                                        <p class="lead" truncateable="250"> A private request was made by {{ req.requester().user.alias }} </p>
+                                        <p class="lead" truncateable="250"> A private request was made
+                                            by {{ req.requester().user.alias }} </p>
                                     {% elif req.privacy == 8 %}
                                         <p class="lead" truncateable="250"> A private request was made </p>
                                     {% endif %}
@@ -89,7 +91,7 @@
                                     {% set icon = response.get_icon() %}
                                     <div class="row-fluid response">
                                         <div class="span1 text-left">
-                                            <i class="{{icon}}"></i>
+                                            <i class="{{ icon }}"></i>
                                         </div>
                                         <div class="span9">
                                             <p truncateable="175">
@@ -97,10 +99,12 @@
                                             </p>
                                         </div>
                                         <div class="span2 text-right request-date">
-                                            <div class = "timestampPopoverContainer">
+                                            <div class="timestampPopoverContainer">
                                                 <div class="row-fluid">
-                                                    <span class="timestampPopover" onmouseover="">{{ response.date() | date_granular }}</span>
-                                                    <div class = "hide">
+                                                    <span class="timestampPopover"
+                                                          onmouseover="">{{ response.date() | date_granular }}</span>
+
+                                                    <div class="hide">
                                                         {% include '_timestamp.html' %}
                                                     </div>
                                                 </div>
@@ -110,7 +114,8 @@
                                 {% endfor %}
                                 {% if request_data | length > 1 %}
                                     <!-- SHOW/HIDE button; js is in case.js -->
-                                    <div class="case-show-all show"><i class="icon-chevron-down"></i> See all <i class="icon-chevron-down"></i></div>
+                                    <div class="case-show-all show"><i class="icon-chevron-down"></i> See all <i
+                                            class="icon-chevron-down"></i></div>
                                 {% endif %}
                             </div>
                         </div>
@@ -120,9 +125,8 @@
             {% block requester_info %}{% endblock requester_info %}
 
             {% block responses_container %}
-                {{ r }}
                 <div id="responses-container" class="row-fluid">
-                    {% block acknowledge_actions %}{% endblock %}
+                    <h3 class="control-widget">Response</h3>
                     {% block response_actions %}{% endblock response_actions %}
                     <!-- shows all existing responses (links, documents, offline docs, notes) -->
                     {% set responses = ( req | get_responses_chronologically ) %}
@@ -133,21 +137,25 @@
                             {% set icon = response.get_icon() %}
                             <div class="row-fluid response-wrapper">
                                 <div class="span1 text-left">
-                                    <i class="{{icon}}"></i>
+                                    <i class="{{ icon }}"></i>
                                 </div>
                                 <div class="span9">
                                     <p class="expandable" truncateable="200">
-                                        {{ response.display_text() | safe }} - <a href="/staff_card/{{uid}}"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias or staff.email }}</span></a>
+                                        {{ response.display_text() | safe }} - <a href="/staff_card/{{ uid }}"><span
+                                            class="contactinfoPopover"
+                                            onmouseover="directoryPopover('{{ staff.email }}', '{{ staff.department }}', '{{ staff.phone }}', '#contactinfoPopoverResponse{{ loop.index }}')">{{ staff.alias or staff.email }}</span></a>
                                     </p>
                                 </div>
                                 <div class="span2 text-right response-date">
                                     <!-- <div class="row-fluid">
                     <a href="/staff_card/{{uid}}" data-placement="right" data-toggle="popover" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias or staff.email }}</span></a>
                   </div> -->
-                                    <div class = "timestampPopoverContainer">
+                                    <div class="timestampPopoverContainer">
                                         <div class="row-fluid">
-                                            <span class="timestampPopover" onmouseover="">{{ response.date() | date_granular }}</span>
-                                            <div class = "hide">
+                                            <span class="timestampPopover"
+                                                  onmouseover="">{{ response.date() | date_granular }}</span>
+
+                                            <div class="hide">
                                                 {% include '_timestamp.html' %}
                                             </div>
                                         </div>
@@ -156,14 +164,17 @@
                             </div>
                         {% endfor %}
                         {% else %}<!--added an if then to check to see if any responses exist - if no then show text here for the "if any response exists" above -->
-                        <div class = "row-fluid">
+                        <div class="row-fluid">
                             <br>
                             {% set requester = req.requester() %}
                             {% if requester %}
                                 {% set email = requester.user.email %}
                             {% endif %}
                             {% if not email %}
-                                <p id="no-email"><i>Requester did not provide an e-mail address. <i class="icon-question-sign" title= "If a clarification is needed and no alternate contact information has been provided, it may not be possible to respond to this request."></i></i></p>
+                                <p id="no-email"><i>Requester did not provide an e-mail address. <i
+                                        class="icon-question-sign"
+                                        title="If a clarification is needed and no alternate contact information has been provided, it may not be possible to respond to this request."></i></i>
+                                </p>
                             {% endif %}
                             <p id="no-records"><i>No records uploaded yet.</i></p>
                         </div>
@@ -195,7 +206,6 @@
                     </div>
 
 
-
                 </div>
             {% endblock sidebar %}
 
@@ -205,15 +215,19 @@
 
             {% block follow %}
                 <form name="folow" id="follow" method="post" action="/public_add_a_subscriber">
-                    <input type="hidden" name="request_id" value= "{{req.id}}"/>
+                    <input type="hidden" name="request_id" value="{{ req.id }}"/>
                     <!-- <fieldset> -->
                     <div class="row-fluid follow">
                         <div class="span10 offset2">
                             <div class="input-append">
-                                <input id="followRequest" name="follow_email" class="span6" placeholder="yourname@email.com" type="email">
+                                <input id="followRequest" name="follow_email" class="span6"
+                                       placeholder="yourname@email.com" type="email">
                                 <button id="followRequest-button" class="btn" type="submit">Follow</button>
                             </div>
-                            <div id="whatisfollow"><span id="recordTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="Enter your email here and we will send you updates for this request." ><small><i class="icon-question-sign"></i></i></small></span></div>
+                            <div id="whatisfollow"><span id="recordTooltip" rel="tooltip" data-toggle="tooltip"
+                                                         data-placement="right" title=""
+                                                         data-original-title="Enter your email here and we will send you updates for this request."><small>
+                                <i class="icon-question-sign"></i></i></small></span></div>
                         </div>
                     </div>
                     </fieldset>
