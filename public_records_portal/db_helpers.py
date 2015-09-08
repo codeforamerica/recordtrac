@@ -6,16 +6,17 @@
 
 import uuid
 import os
-import StringIO
+
+from StringIO import StringIO
+import re
 
 from sqlalchemy import func
 from reportlab.pdfgen import canvas
+
 from xhtml2pdf import pisa
+from flask import render_template, make_response
+
 from models import *
-from flask import Flask
-from flask import render_template, render_template_string, redirect, url_for, make_response
-from StringIO import StringIO
-import re
 
 standard_response_templates = {"template_02": "FOIL Message Sent", "template_03": "FOIL Request Status",
                                "template_04": "FOIL Request Completed",
@@ -71,7 +72,7 @@ def get_objs(obj_type):
 def get_avg_response_time(department):
     app.logger.info(
         "\n\nCalculating average response time for department: %s" % department)
-    d = Agency.query.filter_by(name=department).first()
+    d = Department.query.filter_by(name=department).first()
     response_time = None
     num_closed = 0
     for request in d.requests:
@@ -112,7 +113,7 @@ def get_contact_by_dept(dept):
         func.lower(User.contact_for).like("%%%s%%" % dept.lower()))
     if len(q.all()) > 0:
         return q[0].email
-    app.logger.debug("Agency: %s" % dept)
+    app.logger.debug("Department: %s" % dept)
     return None
 
 
@@ -123,7 +124,7 @@ def get_backup_by_dept(dept):
         func.lower(User.backup_for).like("%%%s%%" % dept.lower()))
     if len(q.all()) > 0:
         return q[0].email
-    app.logger.debug("Agency: %s" % dept)
+    app.logger.debug("Department: %s" % dept)
     return None
 
 
@@ -314,11 +315,11 @@ def create_or_return_user(email=None, alias=None, phone=None, address1=None, add
     if email:
         user = User.query.filter(User.email == func.lower(email)).first()
         if department and type(department) != int and not department.isdigit():
-            d = Agency.query.filter_by(name=department).first()
+            d = Department.query.filter_by(name=department).first()
             if d:
                 department = d.id
             else:
-                d = Agency(name=department)
+                d = Department(name=department)
                 db.session.add(d)
                 db.session.commit()
                 department = d.id
@@ -389,7 +390,7 @@ def update_user(user, alias=None, phone=None, address1=None, address2=None, city
         user.zipcode = zipcode
     if department:
         if type(department) != int and not department.isdigit():
-            d = Agency.query.filter_by(name=department).first()
+            d = Department.query.filter_by(name=department).first()
             if d:
                 user.department_id = d.id
         else:

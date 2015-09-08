@@ -215,7 +215,7 @@ def new_request(passed_recaptcha=False, data=None):
             alias = None
             document = None
             zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
-            record_description = form.record_description.data
+            request_text = form.request_text.data
 
             # Check Category
             if not (request_category and request_category.strip()):
