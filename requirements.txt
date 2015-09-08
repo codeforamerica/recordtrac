@@ -1,6 +1,7 @@
 alembic==0.7.6
 anyjson==0.3.3
 blinker==1.4
+business_calendar==0.1.0
 click==4.0
 decorator==3.4.2
 Flask==0.10.1
@@ -31,7 +32,6 @@ PyPDF2==1.25.1
 python-dateutil==2.4.2
 python-dotenv==0.1.2
 python-mimeparse==0.1.4
-python-scribd==1.2.0
 pytz==2015.4
 recaptcha-client==1.0.6
 reportlab==3.2.0
