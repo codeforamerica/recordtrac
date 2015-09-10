@@ -614,6 +614,7 @@ def is_supported_browser():
                 or (browser == 'opera') \
                 or (re.search('BlackBerry', uas)):
             return False
+        return True
     return False
 
 
