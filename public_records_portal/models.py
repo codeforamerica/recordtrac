@@ -13,7 +13,7 @@ from sqlalchemy import Table, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 from sqlalchemy import and_, or_
-
+from dateutil.parser import parse
 from datetime import datetime, timedelta
 from public_records_portal import db, app
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -255,6 +255,14 @@ class Request(db.Model):
 	def extension(self):
 		self.extended = True
 		self.due_date = self.due_date + timedelta(days = int(app.config['DAYS_AFTER_EXTENSION']))
+
+	def extension(self, days_after = None, due_date = None):
+		self.extended = True
+		if due_date is None or due_date == '':
+			self.due_date = self.due_date + timedelta(days = int(days_after))
+		else:
+			self.due_date = parse(str(due_date)) + timedelta(days = 1)
+
 	def point_person(self):
 		for o in self.owners:
 			if o.is_point_person:
