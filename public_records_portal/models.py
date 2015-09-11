@@ -176,7 +176,8 @@ class Request(db.Model):
 	def all_owners(self):
 		all_owners = []
 		for o in self.owners:
-			all_owners.append(o.user.get_alias())
+			if o.user:
+				all_owners.append(o.user.get_alias())
 		return all_owners
 
 	def requester(self):
