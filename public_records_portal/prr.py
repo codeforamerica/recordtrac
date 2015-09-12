@@ -21,7 +21,6 @@ from spam import is_spam
 import logging
 import csv
 import urllib
-from requires_roles import requires_roles
 
 agency_codes = {"Department of Records and Information Services": "860", "Office of the Chief Medical Examiner":"816","Mayor's Office":"002","Department of Education":"040","Department of Information Technology and Telecommunications":"858","DoITT/General Counse":"858", None:"000"}
 
@@ -29,7 +28,7 @@ agency_codes = {"Department of Records and Information Services": "860", "Office
 def add_resource(resource, request_body, current_user_id = None):
 	fields = request_body
 	if "extension" in resource:
-		return request_extension(fields['request_id'], fields.getlist('extend_reason'), current_user_id)
+		return request_extension(fields['request_id'], fields.getlist('extend_reason'), fields.getlist('days_after')[0], current_user_id)
 	if "note" in resource:
 		return add_note(request_id = fields['request_id'], text = fields['note_text'], user_id = current_user_id, passed_spam_filter = True, privacy = fields['note_privacy']) # Bypass spam filter because they are logged in.
         if "pdf" in resource:
@@ -74,7 +73,7 @@ def update_resource(resource, request_body):
 	elif "reopen" in resource:
 		change_request_status(fields['request_id'], "Reopened")
         elif "acknowledge" in resource:
-                change_request_status(fields['request_id'], "In Progress")
+                change_request_status(fields['request_id'], fields['acknowledge_status'])
 		return fields['request_id']
 	elif "request_text" in resource:
 		update_obj(attribute = "text", val = fields['request_text'], obj_type = "Request", obj_id = fields['request_id'])
@@ -90,10 +89,9 @@ def update_resource(resource, request_body):
 		return False
 
 ### @export "request_extension"
-@requires_roles('Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel')
-def request_extension(request_id, extension_reasons, user_id):
+def request_extension(request_id, extension_reasons, days_after, user_id):
 	req = Request.query.get(request_id)
-	req.extension()
+	req.extension(days_after)
 	text = "Request extended:"
 	for reason in extension_reasons:
 		text = text + reason + "</br>"
@@ -266,7 +264,7 @@ def get_request_data_chronologically(req):
 	if not req:
 		return responses
 	for i, note in enumerate(req.notes):
-		if not note.user_id: # Indicates note was written by public, so considered part of the 'request'
+		if not note.user_id:
 			responses.append(RequestPresenter(note = note, index = i, public = public, request = req))
 	for i, qa in enumerate(req.qas):
 		responses.append(RequestPresenter(qa = qa, index = i, public = public, request = req))
@@ -281,10 +279,9 @@ def get_responses_chronologically(req):
 	if not req:
 		return responses
 	for note in req.notes:
-		if note.user_id: # Indicates note was written by staff, so considered part of the 'response'
-			# Ensure private notes only available to appropriate users
-			if note.privacy == 2 and (current_user.is_anonymous() or current_user.role not in ['Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel', 'Agency Helpers']):
-				pass
+		if note.user_id:
+			if current_user.is_anonymous()  and note.privacy == 2:
+				pass # private note
 			else:
 				responses.append(ResponsePresenter(note = note))
 	for record in req.records:
