@@ -24,9 +24,7 @@ def check_for_spam():
 def is_spam(comment, user_ip, user_agent):
 	if check_for_spam():
 		app.logger.info("\n\nAttempting to check for spam...")
-		key = app.config['AKISMET_KEY']
-		blog = app.config['APPLICATION_URL']
-		if not is_working_akismet_key(key = key, blog = blog):
+		if not is_working_akismet_key():
 			app.logger.info("\n\nThere was a problem verifying the supplied AKISMET_KEY. Unable to check for spam.")
 			return False
 		if isinstance(comment, unicode):
@@ -36,7 +34,7 @@ def is_spam(comment, user_ip, user_agent):
 			return True
 	return False
 
-def is_working_akismet_key(key, blog):
+def is_working_akismet_key():
 	key = app.config['AKISMET_KEY']
 	blog = app.config['APPLICATION_URL']
 	return akismet.verify_key(key=key, blog=blog)
