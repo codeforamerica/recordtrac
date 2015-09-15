@@ -62,8 +62,7 @@ envvars = [
     'SENDGRID_MONTHLY_LIMIT',  # Your SendGrid Monthly Limit
     'HTTPS_PROXY',
     'HTTP_PROXY',
-    'LIST_OF_ADMINS',
-    # Defines who has admin access (/admin) with a comma delimited list of e-mail addresses. i.e. 'richa@codeforamerica.org,cris@codeforamerica.org'
+    'LIST_OF_ADMINS', # Defines who has admin access (/admin) with a comma delimited list of e-mail addresses
     'SECRET_KEY',  # Flask app secret key
     'AKISMET_KEY',  # Used for spam filtering
     'RECAPTCHA_SITE_KEY',
