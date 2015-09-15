@@ -268,7 +268,7 @@ class Request(db.Model):
                        order_by='QA.date_created.desc()')  # The list of QA units for this request
     status_updated = db.Column(db.DateTime)
     summary = db.Column(db.String(500), nullable=False)
-    text = db.Column(db.String(500), unique=True,
+    text = db.Column(db.String(5000), unique=True,
                      nullable=False)  # The actual request text.
     owners = relationship('Owner', cascade='all, delete',
                           order_by='Owner.date_created.asc()')
