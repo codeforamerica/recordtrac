@@ -621,7 +621,7 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 								 .filter(models.Owner.is_point_person == True)
 		elif mine_as_helper == checkbox_value:
 				# Where am I a Helper only?
-				results = results.filter(models.Request.id == Owner.request_id) \
+				results = results.filter(models.Request.id == models.Owner.request_id) \
 								 .filter(models.Owner.user_id == user_id) \
 								 .filter(models.Owner.active == True) \
 								 .filter(models.Owner.is_point_person == False)
