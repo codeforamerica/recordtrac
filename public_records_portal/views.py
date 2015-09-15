@@ -45,7 +45,6 @@ app.logger.info("\n\nEnvironment is %s" % app.config['ENVIRONMENT'])
 #browser_id.user_loader(get_user)
 #browser_id.init_app(app)
 
-
 # Submitting a new request
 @app.route("/new", methods=["GET", "POST"])
 def new_request(passed_recaptcha=False, data=None):
@@ -563,14 +562,13 @@ def is_supported_browser():
     return True
 
 
-@app.route("/view_requests")
-def display_all_requests(methods=["GET"]):
-    """ Dynamically load requests page depending on browser. """
-    if is_supported_browser():
-        return backbone_requests()
-    else:
-        return no_backbone_requests()
-
+@app.route("/view_requests", methods = ["GET"])
+def display_all_requests():
+	""" Dynamically load requests page depending on browser. """
+	if is_supported_browser():
+		return backbone_requests()
+	else:
+		return no_backbone_requests()
 
 @app.route("/view_requests_backbone")
 def backbone_requests():
@@ -580,7 +578,6 @@ def backbone_requests():
 @app.route("/view_requests_no_backbone")
 def no_backbone_requests():
     return fetch_requests()
-
 
 @app.route("/requests", methods=["GET"])
 def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-%m-%d', checkbox_value='on'):
@@ -773,7 +770,7 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
                     .filter(models.Owner.is_point_person == True)
         elif mine_as_helper == checkbox_value:
             # Where am I a Helper only?
-            results=results.filter(models.Request.id == Owner.request_id) \
+            results=results.filter(models.Request.id == models.Owner.request_id) \
                 .filter(models.Owner.user_id == user_id) \
                 .filter(models.Owner.active == True) \
                 .filter(models.Owner.is_point_person == False)
