@@ -72,8 +72,8 @@ def update_resource(resource, request_body):
 			return assign_owner(fields['request_id'], fields['owner_reason'], fields['owner_email'])
 	elif "reopen" in resource:
 		change_request_status(fields['request_id'], "Reopened")
-        elif "acknowledge" in resource:
-                change_request_status(fields['request_id'], fields['acknowledge_status'])
+	elif "acknowledge" in resource:
+		change_request_status(fields['request_id'], fields['acknowledge_status'])
 		return fields['request_id']
 	elif "request_text" in resource:
 		update_obj(attribute = "text", val = fields['request_text'], obj_type = "Request", obj_id = fields['request_id'])
@@ -208,7 +208,7 @@ def ask_a_question(request_id, user_id, question):
 	req = get_obj("Request", request_id)
 	qa_id = create_QA(request_id = request_id, question = question, user_id = user_id)
 	if qa_id:
-		change_request_status(request_id, "Pending")
+		change_request_status(request_id, "Asked A Question")
 		requester = req.requester()
 		if requester:
 			generate_prr_emails(request_id, notification_type = "Question asked", user_id = requester.user_id)

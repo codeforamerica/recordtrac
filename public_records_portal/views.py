@@ -28,6 +28,7 @@ import anyjson
 import helpers
 import csv_export
 from datetime import datetime, timedelta
+import dateutil.parser
 from filters import *
 import re
 from db_helpers import get_count, get_obj
@@ -969,8 +970,8 @@ def get_pdfs(resource):
     app.logger.info("\n\ngetting pdf file")
     return send_from_directory(app.config["PDF_FOLDER"], resource, as_attachment=True)
 
-@app.route("/api/report/<string:report_type>", methods=["GET"])
-def get_report_jsons(report_type):
+@app.route("/api/report/<string:report_type>/<string:public_filter>", methods=["GET"])
+def get_report_jsons(report_type,public_filter):
     app.logger.info("\n\ngenerating report data")
 
     if not report_type:
@@ -979,15 +980,78 @@ def get_report_jsons(report_type):
         }
         return jsonify(response)
 
-    if report_type == "overdue":
+    if report_type == "all":
         try:
-            overdue_request=models.Request.query.filter(models.Request.overdue == True).all()
-            notdue_request=models.Request.query.filter(models.Request.overdue == False).all()
+            if public_filter == "all" or public_filter == "agency_0":
+                overdue_request=models.Request.query.filter(models.Request.overdue == True).all()
+                notdue_request=models.Request.query.filter(models.Request.overdue == False).all()
+                received_request=models.Request.query.all()
+                published_request=models.Request.query.filter(models.Request.published == True).all()
+                denied_request=models.Request.query.filter(models.Request.denied == True).all()
+                granted_and_closed_request=models.Request.query.filter(models.Request.granted_and_closed == True).all()
+            elif "agency" in public_filter:
+                agencyFilter = public_filter.split("_")[1]
+                agencyFilterInt = int(agencyFilter)
+                overdue_request=models.Request.query.filter(models.Request.overdue == True).filter(models.Request.department_id == agencyFilterInt).all()
+                notdue_request=models.Request.query.filter(models.Request.overdue == False).filter(models.Request.department_id == agencyFilterInt).all()
+                received_request=models.Request.query.filter(models.Request.department_id == agencyFilterInt).all()
+                published_request=models.Request.query.filter(models.Request.published == True).filter(models.Request.department_id == agencyFilterInt).all()
+                denied_request=models.Request.query.filter(models.Request.denied == True).filter(models.Request.department_id == agencyFilterInt).all()
+                granted_and_closed_request=models.Request.query.filter(models.Request.granted_and_closed == True).filter(models.Request.department_id == agencyFilterInt).all()
+            elif "calendarYear" in public_filter:
+                overdue_request=models.Request.query.filter(models.Request.overdue == True).all()
+                notdue_request=models.Request.query.filter(models.Request.overdue == False).all()
+                received_request=models.Request.query.all()
+                published_request=models.Request.query.filter(models.Request.published == True).all()
+                denied_request=models.Request.query.filter(models.Request.denied == True).all()
+                granted_and_closed_request=models.Request.query.filter(models.Request.granted_and_closed == True).all()
+            elif "fullYear" in public_filter:
+                overdue_request=models.Request.query.filter(models.Request.overdue == True).all()
+                notdue_request=models.Request.query.filter(models.Request.overdue == False).all()
+                received_request=models.Request.query.all()
+                published_request=models.Request.query.filter(models.Request.published == True).all()
+                denied_request=models.Request.query.filter(models.Request.denied == True).all()
+                granted_and_closed_request=models.Request.query.filter(models.Request.granted_and_closed == True).all()
+            elif "rolling" in public_filter:
+                overdue_request=models.Request.query.filter(models.Request.overdue == True).all()
+                notdue_request=models.Request.query.filter(models.Request.overdue == False).all()
+                received_request=models.Request.query.all()
+                published_request=models.Request.query.filter(models.Request.published == True).all()
+                denied_request=models.Request.query.filter(models.Request.denied == True).all()
+                granted_and_closed_request=models.Request.query.filter(models.Request.granted_and_closed == True).all()
+            elif "staff" in public_filter:
+                staff_id = int(public_filter.split("_")[1])
+                overdue_request=models.Request.query.filter(models.Request.overdue == True).filter(models.Owner.active == True).filter(models.Owner.is_point_person == True).all()
+                notdue_request=models.Request.query.filter(models.Request.overdue == False).filter(models.Owner.active == True).filter(models.Owner.is_point_person == True).all()
+                received_request=models.Request.query.filter(models.Owner.user_id == staff_id).filter(models.Owner.active == True).filter(models.Owner.is_point_person == True).all()
+                published_request=models.Request.query.filter(models.Request.published == True).filter(models.Owner.user_id == staff_id).filter(models.Owner.active == True).filter(models.Owner.is_point_person == True).all()
+                denied_request=models.Request.query.filter(models.Request.denied == True).filter(models.Owner.user_id == staff_id).filter(models.Owner.active == True).filter(models.Owner.is_point_person == True).all()
+                granted_and_closed_request=models.Request.query.filter(models.Request.granted_and_closed == True).filter(models.Owner.user_id == staff_id).filter(models.Owner.active == True).filter(models.Owner.is_point_person == True).all()
+					
             response={
                 "status" : "ok",
                 "data" : [
-                    {"label" : "Over Due", "value" : len(overdue_request), "callback" : "overdue"},
-                    {"label" : "Not Due", "value" : len(notdue_request), "callback" : "notdue"}
+                    {"label" : "Received", "value" : len(received_request), "callback" : "received"},
+					{"label" : "Published", "value" : len(published_request), "callback" : "received"},
+                    {"label" : "Denied", "value" : len(denied_request), "callback" : "denied"},
+                    {"label" : "Granted And Closed", "value" : len(granted_and_closed_request), "callback" : "granted_and_closed"}
+                ]
+            }
+
+        except Exception, e:
+            response={
+                "status" : "failed",
+                "data" : "fail to find overdue request",
+                 "exception": e
+            }
+        return jsonify(response)
+    if report_type == "received":
+        try:
+            received_request=models.Request.query.all()
+            response={
+                "status" : "ok",
+                "data" : [
+                    {"label" : "Received", "value" : len(received_request), "callback" : "received"}
                 ]
             }
 
@@ -1008,9 +1072,10 @@ def get_report_jsons(report_type):
 @app.route("/report")
 @login_required
 def report():
+    users=models.User.query.all()
     overdue_request=models.Request.query.filter(models.Request.overdue == True).all()
     app.logger.info("\n\nOverdue Requests %s" %(len(overdue_request)))
-    return render_template('report.html')
+    return render_template('report.html',users=users)
 
 @app.route("/submit", methods=["POST"])
 def submit():
