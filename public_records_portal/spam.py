@@ -31,7 +31,7 @@ def is_spam(comment, user_ip, user_agent):
 			return False
 		if isinstance(comment, unicode):
 			comment = comment.encode('utf8', 'ignore')
-		if akismet.comment_check(key = key, blog = blog, user_ip = user_ip, user_agent = user_agent, comment_content = comment) or 'http' in comment:
+		if akismet.comment_check(key=app.config['AKISMET_KEY'], blog=app.config['APPLICATION_URL'], user_ip = user_ip, user_agent = user_agent, comment_content = comment) or 'http' in comment:
 			app.logger.info("Spam detected: %s" % comment )
 			return True
 	return False

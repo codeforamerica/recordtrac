@@ -185,7 +185,7 @@
                       {% endif %}
                     </td>
                     <td>{{request.id}}</td>
-                    <td>{{request.date_received | format_datetime('%b %d, %Y at %-I:%M %p') }}</td>
+                    <td>{{request.date_received}}</td>
                     <td>
                     {% if current_user.is_authenticated() %}
                       <a href="/city/request/{{request.id}}">

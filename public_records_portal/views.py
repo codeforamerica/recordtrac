@@ -89,17 +89,17 @@ def reset_password(email=None):
 	return render_template('reset_password.html', after_reset = after_reset, reset_success = reset_success)
 
 
-@app.route("/login_required", methods = ["GET", "POST"])
+@app.route("/update_password", methods = ["GET", "POST"])
 @login_required
 def update_password(password=None):
 	if request.method == 'POST':
-		if set_password(current_user, request.form['password']):
-			return index()
-		app.logger.info("\n\nFailure updating password for user %s" % current_user.id)
-		return render_template('error.html', message = "Something went wrong updating your password.")
-	else:
+		current_user.set_password(request.form['password'])
+		db.session.add(current_user)
+		db.session.commit()
 		app.logger.info("\n\nSuccessfully updated password for user %s" % current_user.id)
-		return render_template('update_password.html', user_id = current_user.id)
+		return index()
+	else:
+		return render_template('update_password.html')
 
 # Submitting a new request
 @app.route("/new", methods=["GET", "POST"])
@@ -413,8 +413,8 @@ def is_supported_browser():
 			return False
 	return True
 
-@app.route("/view_requests")
-def display_all_requests(methods = ["GET"]):
+@app.route("/view_requests", methods = ["GET"])
+def display_all_requests():
 	""" Dynamically load requests page depending on browser. """
 	if is_supported_browser():
 		return backbone_requests()
@@ -506,7 +506,10 @@ def fetch_requests(output_results_only = False, filters_map = None, date_format 
 	if output_results_only == True:
 		return requests, num_results, more_results, start_index, end_index
 
-	return render_template("all_requests_less_js.html", total_requests_count = get_count("Request"), requests = requests, departments = db.session.query(models.Department).all(), departments_selected = departments_selected, is_open = is_open, is_closed = is_closed, due_soon = due_soon, overdue = overdue, mine_as_poc = mine_as_poc, mine_as_helper = mine_as_helper, sort_column = sort_column, sort_direction = sort_direction, search_term = search_term, min_due_date = min_due_date, max_due_date = max_due_date, min_date_received = min_date_received, max_date_received = max_date_received, requester_name = requester_name, page_number = page_number, more_results = more_results, num_results = num_results, start_index = start_index, end_index = end_index)
+	template = "all_requests_less_js.html"
+	if is_supported_browser():
+		template = "all_requests.html"
+	return render_template(template, total_requests_count = get_count("Request"), requests = requests, departments = db.session.query(models.Department).all(), departments_selected = departments_selected, is_open = is_open, is_closed = is_closed, due_soon = due_soon, overdue = overdue, mine_as_poc = mine_as_poc, mine_as_helper = mine_as_helper, sort_column = sort_column, sort_direction = sort_direction, search_term = search_term, min_due_date = min_due_date, max_due_date = max_due_date, min_date_received = min_date_received, max_date_received = max_date_received, requester_name = requester_name, page_number = page_number, more_results = more_results, num_results = num_results, start_index = start_index, end_index = end_index)
 
 @app.route("/custom/request", methods = ["GET", "POST"])
 def json_requests():
