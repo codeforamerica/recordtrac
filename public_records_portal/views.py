@@ -28,6 +28,7 @@ import anyjson
 import helpers
 import csv_export
 from datetime import datetime, timedelta
+import dateutil.parser
 from filters import *
 import re
 from db_helpers import get_count, get_obj
@@ -969,8 +970,8 @@ def get_pdfs(resource):
     app.logger.info("\n\ngetting pdf file")
     return send_from_directory(app.config["PDF_FOLDER"], resource, as_attachment=True)
 
-@app.route("/api/report/<string:report_type>", methods=["GET"])
-def get_report_jsons(report_type):
+@app.route("/api/report/<string:report_type>/<string:public_filter>", methods=["GET"])
+def get_report_jsons(report_type,public_filter):
     app.logger.info("\n\ngenerating report data")
 
     if not report_type:
@@ -979,15 +980,140 @@ def get_report_jsons(report_type):
         }
         return jsonify(response)
 
-    if report_type == "overdue":
+    overdue_filter = models.Request.overdue
+    notoverdue_filter = models.Request.notoverdue
+    published_filter = models.Request.published
+    denied_filter = models.Request.denied
+    granted_and_closed_filter = models.Request.granted_and_closed
+    granted_in_part_filter = models.Request.granted_in_part
+    no_customer_response_filter = models.Request.no_customer_response
+    out_of_jurisdiction_filter = models.Request.out_of_jurisdiction
+    referred_to_nyc_gov_filter = models.Request.referred_to_nycgov
+    referred_to_opendata_filter = models.Request.referred_to_opendata
+    referred_to_other_agency_filter = models.Request.referred_to_other_agency
+    referred_to_publications_portal_filter = models.Request.referred_to_publications_portal
+ 
+    if report_type == "all":
         try:
-            overdue_request=models.Request.query.filter(models.Request.overdue == True).all()
-            notdue_request=models.Request.query.filter(models.Request.overdue == False).all()
+            if public_filter == "all" or public_filter == "agency_0":
+                overdue_request=models.Request.query.filter(overdue_filter).all()
+                notdue_request=models.Request.query.filter(notoverdue_filter).all()
+                received_request=models.Request.query.all()
+                published_request=models.Request.query.filter(published_filter).all()
+                denied_request=models.Request.query.filter(denied_filter).all()
+                granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).all()
+                granted_in_part_request=models.Request.query.filter(granted_in_part_filter).all()
+                no_customer_response_request=models.Request.query.filter(no_customer_response_filter).all()
+                out_of_jurisdiction_request=models.Request.query.filter(out_of_jurisdiction_filter).all()
+                referred_to_nyc_gov_request=models.Request.query.filter(referred_to_nyc_gov_filter).all()
+                referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
+                referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
+                referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).all()
+            elif "agency" in public_filter:
+                agencyFilter = public_filter.split("_")[1]
+                agencyFilterInt = int(agencyFilter)
+                overdue_request=models.Request.query.filter(overdue_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                notdue_request=models.Request.query.filter(notoverdue_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                received_request=models.Request.query.filter(models.Request.department_id == agencyFilterInt).all()
+                published_request=models.Request.query.filter(published_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                denied_request=models.Request.query.filter(denied_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                granted_in_part_request=models.Request.query.filter(granted_in_part_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                no_customer_response_request=models.Request.query.filter(no_customer_response_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                out_of_jurisdiction_request=models.Request.query.filter(out_of_jurisdiction_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                referred_to_nyc_gov_request=models.Request.query.filter(referred_to_nyc_gov_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).filter(models.Request.department_id == agencyFilterInt).all()
+            elif "calendarYear" in public_filter:
+                overdue_request=models.Request.query.filter(overdue_filter).all()
+                notdue_request=models.Request.query.filter(notoverdue_filter).all()
+                received_request=models.Request.query.all()
+                published_request=models.Request.query.filter(published_filter).all()
+                denied_request=models.Request.query.filter(denied_filter).all()
+                granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).all()
+                granted_in_part_request=models.Request.query.filter(granted_in_part_filter).all()
+                no_customer_response_request=models.Request.query.filter(no_customer_response_filter).all()
+                out_of_jurisdiction_request=models.Request.query.filter(out_of_jurisdiction_filter).all()
+                referred_to_nyc_gov_request=models.Request.query.filter(referred_to_nyc_gov_filter).all()
+                referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
+                referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
+                referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).all()
+            elif "fullYear" in public_filter:
+                overdue_request=models.Request.query.filter(overdue_filter).all()
+                notdue_request=models.Request.query.filter(notoverdue_filter).all()
+                received_request=models.Request.query.all()
+                published_request=models.Request.query.filter(published_filter).all()
+                denied_request=models.Request.query.filter(denied_filter).all()
+                granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).all()
+                granted_in_part_request=models.Request.query.filter(granted_in_part_filter).all()
+                no_customer_response_request=models.Request.query.filter(no_customer_response_filter).all()
+                out_of_jurisdiction_request=models.Request.query.filter(out_of_jurisdiction_filter).all()
+                referred_to_nyc_gov_request=models.Request.query.filter(referred_to_nyc_gov_filter).all()
+                referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
+                referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
+                referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).all()
+            elif "rolling" in public_filter:
+                overdue_request=models.Request.query.filter(overdue_filter).all()
+                notdue_request=models.Request.query.filter(notoverdue_filter).all()
+                received_request=models.Request.query.all()
+                published_request=models.Request.query.filter(published_filter).all()
+                denied_request=models.Request.query.filter(denied_filter).all()
+                granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).all()
+                granted_in_part_request=models.Request.query.filter(granted_in_part_filter).all()
+                no_customer_response_request=models.Request.query.filter(no_customer_response_filter).all()
+                out_of_jurisdiction_request=models.Request.query.filter(out_of_jurisdiction_filter).all()
+                referred_to_nyc_gov_request=models.Request.query.filter(referred_to_nyc_gov_filter).all()
+                referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
+                referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
+                referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).all()
+            elif "staff" in public_filter:
+                staff_id = int(public_filter.split("_")[1])
+                overdue_request=models.Request.query.filter(overdue_filter).filter(models.Owner.is_point_person == True).all()
+                notdue_request=models.Request.query.filter(notoverdue_filter).filter(models.Owner.is_point_person == True).all()
+                received_request=models.Request.query.filter(models.Owner.user_id == staff_id).all()
+                published_request=models.Request.query.filter(published_filter).filter(models.Owner.user_id == staff_id).all()
+                denied_request=models.Request.query.filter(denied_filter).filter(models.Owner.user_id == staff_id).all()
+                granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).filter(models.Owner.user_id == staff_id).all()
+                granted_in_part_request=models.Request.query.filter(granted_in_part_filter).filter(models.Owner.user_id == staff_id).all()
+                no_customer_response_request=models.Request.query.filter(no_customer_response_filter).filter(models.Owner.user_id == staff_id).all()
+                out_of_jurisdiction_request=models.Request.query.filter(out_of_jurisdiction_filter).filter(models.Owner.user_id == staff_id).all()
+                referred_to_nyc_gov_request=models.Request.query.filter(referred_to_nyc_gov_filter).filter(models.Owner.user_id == staff_id).all()
+                referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).filter(models.Owner.user_id == staff_id).all()
+                referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).filter(models.Owner.user_id == staff_id).all()
+                referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).filter(models.Owner.user_id == staff_id).all()
+ 
             response={
                 "status" : "ok",
                 "data" : [
-                    {"label" : "Over Due", "value" : len(overdue_request), "callback" : "overdue"},
-                    {"label" : "Not Due", "value" : len(notdue_request), "callback" : "notdue"}
+                    {"label" : "Received", "value" : len(received_request), "callback" : "received"},
+                    {"label" : "Published", "value" : len(published_request), "callback" : "received"},
+                    {"label" : "Denied", "value" : len(denied_request), "callback" : "denied"},
+                    {"label" : "Granted And Closed", "value" : len(granted_and_closed_request), "callback" : "granted_and_closed"},
+                    {"label" : "Granted In Part", "value" : len(granted_in_part_request), "callback" : "granted_in_part"},
+                    {"label" : "No Customer Response", "value" : len(no_customer_response_request), "callback" : "no_customer_response"},
+                    {"label" : "Out of Jurisdiction", "value" : len(out_of_jurisdiction_request), "callback" : "out_of_jurisdiction"},
+                    {"label" : "Referred to NYC.gov", "value" : len(referred_to_nyc_gov_request), "callback" : "referred_to_nyc_gov_request"},
+                    {"label" : "Referred to Open Data", "value" : len(referred_to_opendata_request), "callback" : "referred_to_opendata_request"},
+                    {"label" : "Referred to Other Agency", "value" : len(referred_to_other_agency_request), "callback" : "referred_to_other_agency_request"},
+                    {"label" : "Referred to Publications Portal", "value" : len(referred_to_publications_portal_request), "callback" : "referred_to_publications_portal_request"}
+                ]
+            }
+
+        except Exception, e:
+            response={
+                "status" : "failed",
+                "data" : "fail to find overdue request",
+                 "exception": e
+            }
+        return jsonify(response)
+    if report_type == "received":
+        try:
+            received_request=models.Request.query.all()
+            response={
+                "status" : "ok",
+                "data" : [
+                    {"label" : "Received", "value" : len(received_request), "callback" : "received"}
                 ]
             }
 
@@ -1008,9 +1134,10 @@ def get_report_jsons(report_type):
 @app.route("/report")
 @login_required
 def report():
+    users=models.User.query.all()
     overdue_request=models.Request.query.filter(models.Request.overdue == True).all()
     app.logger.info("\n\nOverdue Requests %s" %(len(overdue_request)))
-    return render_template('report.html')
+    return render_template('report.html',users=users)
 
 @app.route("/submit", methods=["POST"])
 def submit():

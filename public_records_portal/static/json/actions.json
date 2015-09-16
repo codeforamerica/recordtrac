@@ -184,6 +184,30 @@
         "Who":"",
         "Action":""
     },
+    "Initial request redirected":
+    {
+        "What":"Initial request was initially directed to wrong agenyc and has been redirected.",
+        "Who":"",
+        "Action":""
+    },
+    "Please visit NYC.gov":
+    {
+        "What":"Please visit the following link to find this information: http://www.nyc.gov",
+        "Who":"",
+        "Action":""
+    },
+    "Please visit nycopendata":
+    {
+        "What":"Please visit the NYC Open Data Portal to find this information: https://nycopendata.socrata.com/",
+        "Who":"",
+        "Action":""
+    },
+    "Please visit NYC Government Publications Portal":
+    {
+        "What":"Please visit the NYC Government Publications Portal to find this informaton: http://a860-gpp.nyc.gov/",
+        "Who":"",
+        "Action":""
+    },
     "Unable to contact the requester":
     {
         "What":"We closed this request after we were unable to contact the requester to determine what they needed.",
