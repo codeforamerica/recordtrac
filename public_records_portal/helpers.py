@@ -19,7 +19,7 @@ import notifications
 
 
 def localize(datetime_str):
-    tz = pytz.timezone(app.config['TIMEZONE'])
+    tz = app.config['TIMEZONE']
     return datetime_str.replace(tzinfo=pytz.utc).astimezone(tz)  # This appears to work in Heroku but not locally
 
 
@@ -55,10 +55,12 @@ def date(obj):
     """ Take a datetime or datetime-like object and return a formatted date. """
     if not obj:
         return None
+    app.logger.info(type(obj))
     try:
+        app.logger.info(notifications.format_date(obj))
         return notifications.format_date(obj)
     except:  # Not a datetime object
-        return notifications.format_date(datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f"))
+        return notifications.format_date(datetime.strftime(obj, "%Y-%m-%dT%H:%M:%S.%f"))
 
 
 def timestamp(obj):
