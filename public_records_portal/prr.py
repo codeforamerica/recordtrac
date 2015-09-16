@@ -16,7 +16,6 @@ from models import *
 from ResponsePresenter import ResponsePresenter
 from RequestPresenter import RequestPresenter
 from notifications import generate_prr_emails
-import scribd_helpers
 from spam import is_spam
 import logging
 import csv
@@ -38,13 +37,13 @@ def add_resource(resource, request_body, current_user_id = None):
 			return add_offline_record(int(fields['request_id']), fields['record_description'], fields['record_access'], current_user_id)
 		elif 'link_url' in fields and fields['link_url'] != "":
 			return add_link(request_id = int(fields['request_id']), url = fields['link_url'], description = fields['record_description'], user_id = current_user_id)
-		else:
-			document = None
-			try:
-				document = request.files['record']
-			except:
-				app.logger.info("\n\nNo file passed in")
-			return upload_record(request_id = int(fields['request_id']), document = document, description = fields['record_description'], user_id = current_user_id)
+		# else:
+		# 	document = None
+		# 	try:
+		# 		document = request.files['record']
+		# 	except:
+		# 		app.logger.info("\n\nNo file passed in")
+		# 	return upload_record(request_id = int(fields['request_id']), document = document, description = fields['record_description'], user_id = current_user_id)
 	elif "qa" in resource:
 		return ask_a_question(request_id = int(fields['request_id']), user_id = current_user_id, question = fields['question_text'])
 	elif "owner" in resource:
@@ -73,13 +72,10 @@ def update_resource(resource, request_body):
 		update_obj(attribute = "text", val = fields['request_text'], obj_type = "Request", obj_id = fields['request_id'])
 	elif "note_text" in resource:
 		update_obj(attribute = "text", val = fields['note_text'], obj_type = "Note", obj_id = fields['response_id'])
-		# Need to store note text somewhere else (or just do delete here as well)
 	elif "note_delete" in resource:
-		# Need to store note somewhere else
 		remove_obj("Note", int(fields['response_id']))
 	elif "record_delete" in resource:
 		remove_obj("Record", int(fields['record_id']))
-		# Need to store record somewhere else and prompt them to delete from Scribd as well, if they'd like
 	else:
 		return False
 
@@ -108,25 +104,6 @@ def add_note(request_id, text, user_id = None, passed_spam_filter = False):
 		return note_id
 	return False
 
-
-
-### @export "upload_record"
-def upload_record(request_id, description, user_id, document = None):
-	""" Creates a record with upload/download attributes """
-	try:
-		doc_id, filename = scribd_helpers.upload_file(document = document, request_id = request_id)
-	except:
-		return "The upload timed out, please try again."
-	if doc_id == False:
-		return "Extension type '%s' is not allowed." % filename
-	else:
-		if str(doc_id).isdigit():
-			record_id = create_record(doc_id = doc_id, request_id = request_id, user_id = user_id, description = description, filename = filename, url = app.config['HOST_URL'] + doc_id)
-			change_request_status(request_id, "A response has been added.")
-			generate_prr_emails(request_id = request_id, notification_type = "City response added")
-			add_staff_participant(request_id = request_id, user_id = user_id)
-			return record_id
-	return "There was an issue with your upload."
 
 ### @export "add_offline_record"
 def add_offline_record(request_id, description, access, user_id):

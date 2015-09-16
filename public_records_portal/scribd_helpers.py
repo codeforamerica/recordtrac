@@ -40,9 +40,9 @@ def upload(document, filename, API_KEY, API_SECRET, description):
             name = filename,
             progress_callback=progress,
             req_buffer = tempfile.TemporaryFile()
-            )  
-        doc.description = description    
-        doc.save() 
+            )
+        doc.description = description
+        doc.save()
         doc_id = doc.id
         return doc_id
     except scribd.ResponseError, err:
@@ -68,7 +68,7 @@ def get_scribd_download_url(doc_id, record_id = None):
 def set_scribd_download_url(download_url, record_id):
     update_obj('download_url', download_url, obj_type = 'Record', obj_id = record_id)
 
-def scribd_batch_download(): 
+def scribd_batch_download():
 	req = Request.query.all()
 	for record in req.records:
 		if record.download_url:
@@ -101,7 +101,7 @@ def update_descriptions(API_KEY, API_SECRET):
 
 
 @timeout(seconds=20)
-def upload_file(document, request_id): 
+def upload_file(document, request_id):
 # Uploads file to scribd.com and returns doc ID. File can be accessed at scribd.com/doc/id
     if not should_upload():
         return '1', None # Don't need to do real uploads locally

@@ -38,7 +38,6 @@ set_env(key = 'ENVIRONMENT', default="LOCAL")
 set_env(key = 'DEFAULT_OWNER_EMAIL', default = 'recordtrac@codeforamerica.org')
 set_env(key = 'DEFAULT_OWNER_REASON', default = 'Open government coordinator' )
 
-set_env(key = 'HOST_URL', default = 'https://www.scribd.com/doc/') # Where the documents/record uploads are hosted
 set_env(key = 'AGENCY_NAME', default = 'Your agency name') # e.g. City of Oakland
 set_env(key = 'SECRET_KEY', default = 'Change this to something super secret') # Flask application's secret key
 
@@ -58,8 +57,6 @@ envvars = [
 			'SENDGRID_MONTHLY_LIMIT', # Your SendGrid Monthly Limit
 			'LIST_OF_ADMINS', # Defines who has admin access (/admin) with a comma delimited list of e-mail addresses. i.e. 'richa@codeforamerica.org,cris@codeforamerica.org'
 			'SECRET_KEY', # Flask app secret key
-			'SCRIBD_API_KEY',
-			'SCRIBD_API_SECRET',
 			'AKISMET_KEY', # Used for spam filtering
 			'RECAPTCHA_PUBLIC_KEY',
 			'RECAPTCHA_PRIVATE_KEY',
@@ -71,7 +68,7 @@ envvars = [
 			'LOGO_ON_WHITE_URL', # The path/URL at which a logo (on a white background) of the agency is hosted. (.png or .jpg)
 			'LOGO_ON_BLACK_URL', # The path/URL at which a logo (on a black background) of the agency is hosted. (.png or .jpg)
 			'TESTING', # Set if you are running tests. Primarily used to ignore @login_requireds when running tests.
-			'SHOULD_UPLOAD' # Set if you want to test uploading documents to the specified host (currently Scribd)
+			'SHOULD_UPLOAD' # Set if you want to test uploading documents to the specified host
 			]
 for envvar in envvars:
 	set_env(key = envvar)

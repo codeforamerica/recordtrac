@@ -9,7 +9,6 @@
 
 
 from models import Record, Note
-import scribd_helpers
 
 class ResponsePresenter:
 	def __init__(self, record = None, note = None):
@@ -39,7 +38,7 @@ class ResponsePresenter:
 		elif self.type=="extension":
 			self.icon = "icon-calendar icon-large"
 
-	
+
 	def get_update_url(self):
 		return self.update_url
 
@@ -66,14 +65,9 @@ class ResponsePresenter:
 			return "Name of Record: %s<br> How to Access Record: %s" %(self.response.description, self.response.access)
 		elif self.type == "document":
 			download_url = self.response.download_url
-			if not download_url:
-				download_url = scribd_helpers.get_scribd_download_url(doc_id = self.response.doc_id, record_id = self.response.id)
-				if not download_url:
-					download_url = "This document is still being uploaded, but it will be available shortly."
 			return """
 			<a href='%(download_url)s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%(download_url)s' target='_blank'><b>%(description)s </b></a>
-			<a href = '%(scribd_url)s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='View document on Scribd hosting service' target='_blank'><small><i class='icon-external-link'> </i></small></a>
-			""" %{"download_url": download_url, "description": self.response.description, "scribd_url": self.response.url} 
+			""" %{"download_url": download_url, "description": self.response.description}
 		elif self.type == "note":
 			return self.response.text
 		elif self.type == "link":
