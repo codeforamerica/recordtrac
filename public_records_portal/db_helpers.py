@@ -119,19 +119,17 @@ def get_owners_by_user_id(user_id):
 ### @export "get_prr_liaison_by_dept"
 def get_contact_by_dept(dept):
 	""" Return the contact for a given department. """
-	q = db.session.query(User).filter(func.lower(User.contact_for).like("%%%s%%" % dept.lower()))
-	if len(q.all()) > 0:
-		return q[0].email
-	app.logger.debug("Department: %s" % dept)
+	d = Department.query.filter(Department.name == dept).first()
+	if d and d.primary_contact:
+		return d.primary_contact.email
 	return None
 
 ### @export "get_backup_by_dept"
 def get_backup_by_dept(dept):
-	""" Return the contact for a given department. """
-	q = db.session.query(User).filter(func.lower(User.backup_for).like("%%%s%%" % dept.lower()))
-	if len(q.all()) > 0:
-		return q[0].email
-	app.logger.debug("Department: %s" % dept)
+	""" Return the backup for a given department. """
+	d = Department.query.filter(Department.name == dept).first()
+	if d and d.backup_contact:
+		return d.backup_contact.email
 	return None
 
 ### @export "put_obj"
@@ -309,18 +307,6 @@ def update_user(user, alias = None, phone = None, department = None, contact_for
 	db.session.commit()
 	app.logger.info("\n\nUpdated user %s, alias: %s phone: %s department: %s" % (user.id, alias, phone, department))
 	return user
-
-### @export "create_owner"
-def create_owner(request_id, reason, email = None, user_id = None):
-	""" Adds a staff member to the request without assigning them as current owner. (i.e. "participant")
-	Useful for multidepartmental requests."""
-	if not user_id:
-		user_id = create_or_return_user(email = email)
-	participant = Owner(request_id = request_id, user_id = user_id, reason = reason)
-	db.session.add(participant)
-	db.session.commit()
-	app.logger.info("\n\nCreated owner with id: %s" % participant.id)
-	return participant.id
 
 ### @export "change_request_status"
 def change_request_status(request_id, status):
