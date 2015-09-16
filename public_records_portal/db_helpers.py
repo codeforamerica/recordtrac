@@ -297,15 +297,15 @@ def get_user_by_id(id):
 
 
 ### @export "authenticate_login"
-def authenticate_login(email):
-        user = User.query.filter_by(email=email).first()
-        if user and (user.is_staff or user.is_admin()):
-            if user.check_password(password):
-                return user
-            if user.password == password:  # Hash it
-                user.set_password(password)
-                db.session.add(user)
-                db.session.commit()
+def authenticate_login(email, password):
+    user = User.query.filter_by(email=email).first()
+    if user and (user.is_staff or user.is_admin()):
+        if user.check_password(password):
+            return user
+        if user.password == password:  # Hash it
+            user.set_password(password)
+            db.session.add(user)
+            db.session.commit()
         return user
     return None
 

@@ -12,7 +12,7 @@ from flask.ext.login import login_user, logout_user, current_user, login_require
 # from flaskext.browserid import BrowserID
 from public_records_portal import db, models, recaptcha
 from prr import add_resource, update_resource, make_request, close_request
-from db_helpers import authenticate_login
+from db_helpers import authenticate_login, get_user_by_id
 import os, json
 from urlparse import urlparse, urljoin
 from notifications import format_date
@@ -29,6 +29,7 @@ from sqlalchemy import func, and_, or_
 from forms import OfflineRequestForm, NewRequestForm, LoginForm, EditUserForm
 import pytz
 from requires_roles import requires_roles
+from flask_login import LoginManager
 
 # Initialize login
 app.logger.info("\n\nInitialize login.")
@@ -39,6 +40,7 @@ login_manager.user_loader(get_user_by_id)
 login_manager.init_app(app)
 
 zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
+
 
 # Submitting a new request
 @app.route("/new", methods=["GET", "POST"])
@@ -1047,7 +1049,7 @@ def login():
     errors = []
     if request.method == 'POST':
         if form.validate_on_submit():
-            user_to_login = authenticate_login(form.username.data)
+            user_to_login = authenticate_login(form.username.data, form.password.data)
             if user_to_login:
                 login_user(user_to_login)
                 redirect_url = get_redirect_target()
