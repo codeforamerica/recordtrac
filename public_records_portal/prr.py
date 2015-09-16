@@ -190,8 +190,6 @@ def make_request(category=None, agency=None, summary=None, text=None, attachment
                  last_name=None, alias=None, role=None, organization=None, email=None, phone=None, fax=None,
                  street_address=None, city=None, state=None, zip=None, user_id=None):
     """ Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
-    if not passed_spam_filter:
-        return None, False
     request_id = find_request(text)
     if request_id:  # Same request already exists
         return request_id, False

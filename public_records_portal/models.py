@@ -23,14 +23,6 @@ from validate_email import validate_email
 
 from public_records_portal import db, app
 
-
-class requestPrivacy:
-    PUBLIC = 0x01
-    NAME_PRIVATE = 0x02
-    REQUEST_PRIVATE = 0x04
-    PRIVATE = 0x08
-
-
 class notePrivacy:
     PUBLIC = 0x01
     AGENCY = 0x02
@@ -69,6 +61,8 @@ class User(db.Model):
     is_staff = db.Column(db.Boolean, default=False)
     staff_signature = db.Column(db.String(100),
                                 default='public_records_portal/static/images/staff_signature.png')
+
+    role = db.Column(db.String())
 
     def is_authenticated(self):
         return True

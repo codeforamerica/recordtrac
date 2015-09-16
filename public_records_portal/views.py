@@ -793,6 +793,23 @@ def prepare_request_fields(results):
     }, results)
 
 
+def filter_department(departments_selected, results):
+    if departments_selected and 'All departments' not in departments_selected:
+        app.logger.info("\n\nDepartment filters:%s." % departments_selected)
+        department_ids = []
+        for department_name in departments_selected:
+            if department_name:
+                department = models.Department.query.filter_by(name=department_name).first()
+                if department:
+                    department_ids.append(department.id)
+        if department_ids:
+            results = results.filter(models.Request.department_id.in_(department_ids))
+        else:
+            # Just return an empty query set
+            results = results.filter(models.Request.department_id < 0)
+    return results
+
+
 def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, overdue, mine_as_poc, mine_as_helper,
                            sort_column, sort_direction, search_term, min_due_date, max_due_date, min_date_received,
                            max_date_received, requester_name, page_number, user_id, date_format, checkbox_value):
