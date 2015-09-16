@@ -327,7 +327,7 @@ def set_directory_fields():
 ### @export "close_request"
 def close_request(request_id, reason = "", user_id = None):
 	req = get_obj("Request", request_id)
-	change_request_status(request_id, "Closed")
+	change_request_status(request_id, "Closed:" + str(reason))
 	# Create a note to capture closed information:
 	create_note(request_id, reason, user_id, privacy = 1)
 	generate_prr_emails(request_id = request_id, notification_type = "Request closed")
