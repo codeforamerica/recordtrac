@@ -223,6 +223,7 @@ class Request(db.Model):
 	records = relationship("Record", cascade="all,delete", order_by = "Record.date_created.desc()") # The list of records that have been uploaded for this request.
 	notes = relationship("Note", cascade="all,delete", order_by = "Note.date_created.desc()") # The list of notes appended to this request.
 	status = db.Column(db.String(400)) # The status of the request (open, closed, etc.)
+	prev_status = db.Column(db.String(400)) # The previous status of the request (open, closed, etc.)
 	creator_id = db.Column(db.Integer, db.ForeignKey('user.id')) # If city staff created it on behalf of the public, otherwise the creator is the subscriber with creator = true
 	department_id = db.Column(db.Integer, db.ForeignKey("department.id"))
 	department = relationship("Department", uselist = False)
@@ -390,7 +391,35 @@ class Request(db.Model):
 
 	@hybrid_property
 	def closed(self):
-			return Request.status.ilike("%closed%")
+		return Request.status.ilike("%closed%")
+
+	@hybrid_property
+	def published(self):
+		return Request.status.ilike("%closed%")
+	
+	@hybrid_property
+	def granted_and_closed(self):
+		return Request.status.ilike("%grantedandclosed%")
+
+        @hybrid_property
+        def granted_in_part(self):
+                return and_(Request.prev_status.ilike("%granted%"), Request.prev_status.ilike("%in part%"), Request.prev_status.ilike("%closed%"))
+
+        @hybrid_property
+        def no_customer_response(self):
+                return and_(Request.prev_status.ilike("%asked a question%"), Request.prev_status.ilike("%closed%"))
+
+        @hybrid_property
+        def out_of_jurisdiction(self):
+                return and_(Request.prev_status.ilike("%out of jurisdiction%"), Request.prev_status.ilike("%closed%"))
+
+	@hybrid_property
+	def denied(self):
+		return Request.status.ilike("%denied%")
+
+        @hybrid_property
+        def notoverdue(self):
+                return ~self.overdue
 
 ### @export "QA"
 class QA(db.Model):
