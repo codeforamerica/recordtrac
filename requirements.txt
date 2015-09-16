@@ -45,6 +45,7 @@ six
 smtpapi
 SQLAlchemy
 SQLAlchemy-Utils
+tzlocal
 validate-email
 validators
 Werkzeug
