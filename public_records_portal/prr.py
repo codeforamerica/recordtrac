@@ -88,7 +88,7 @@ def update_resource(resource, request_body):
     elif "reopen" in resource:
         change_request_status(fields['request_id'], "Reopened")
     elif "acknowledge" in resource:
-        change_request_status(fields['request_id'], fields['acknowledge_status'])
+        change_request_status(fields['request_id'], "In Progress")
         return fields['request_id']
     elif "request_text" in resource:
         update_obj(attribute="text", val=fields['request_text'], obj_type="Request", obj_id=fields['request_id'])
@@ -185,9 +185,10 @@ def add_link(request_id, url, description, user_id):
 
 
 ### @export "make_request"
-def make_request(text, email=None, user_id=None, phone=None, address1=None, address2=None, city=None, state=None,
-                 zipcode=None, alias=None, department=None, passed_spam_filter=False, offline_submission_type=None,
-                 date_received=None, privacy=1, description=None, document=None):
+def make_request(category=None, agency=None, summary=None, text=None, attachment=None,
+                 attachment_description=None, offline_submission_type=None, date_received=None, first_name=None,
+                 last_name=None, alias=None, role=None, organization=None, email=None, phone=None, fax=None,
+                 street_address=None, city=None, state=None, zip=None, user_id=None):
     """ Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
     if not passed_spam_filter:
         return None, False
@@ -196,31 +197,32 @@ def make_request(text, email=None, user_id=None, phone=None, address1=None, addr
         return request_id, False
     assigned_to_email = app.config['DEFAULT_OWNER_EMAIL']
     assigned_to_reason = app.config['DEFAULT_OWNER_REASON']
-    if department:
-        app.logger.info("\n\nDepartment chosen: %s" % department)
-        prr_email = db_helpers.get_contact_by_dept(department)
+    if agency:
+        app.logger.info("\n\nAgency chosen: %s" % agency)
+        prr_email = db_helpers.get_contact_by_dept(agency)
         if prr_email:
             assigned_to_email = prr_email
-            assigned_to_reason = "PRR Liaison for %s" % (department)
+            assigned_to_reason = "PRR Liaison for %s" % agency
         else:
-            app.logger.info("%s is not a valid department" % (department))
-            department = None
+            app.logger.info("%s is not a valid department" % agency)
+            agency = None
     id = "FOIL" + "-" + datetime.now().strftime("%Y") + "-" + agency_codes[
-        department] + "-" + "%05d" % Request.tracking_number
-    request_id = create_request(id=id, text=text, user_id=user_id, offline_submission_type=offline_submission_type,
-                                date_received=date_received, privacy=privacy)  # Actually create the Request object
+        agency] + "-" + "%05d" % Request.tracking_number
+    request_id = create_request(id=id, category=category, summary=summary, text=text, user_id=user_id,
+                                offline_submission_type=offline_submission_type,
+                                date_received=date_received)  # Actually create the Request object
     new_owner_id = assign_owner(request_id=request_id, reason=assigned_to_reason,
                                 email=assigned_to_email)  # Assign someone to the request
     open_request(request_id)  # Set the status of the incoming request to "Open"
     if email or alias or phone:
-        subscriber_user_id = create_or_return_user(email=email, alias=alias, phone=phone, address1=address1,
-                                                   address2=address2, city=city, state=state, zipcode=zipcode)
+        subscriber_user_id = create_or_return_user(email=email, alias=alias, phone=phone, address1=street_address,
+                                                   address2=None, city=city, state=state, zipcode=zip)
         subscriber_id, is_new_subscriber = create_subscriber(request_id=request_id, user_id=subscriber_user_id)
         if subscriber_id:
             generate_prr_emails(request_id, notification_type="Public Notification Template 01",
                                 user_id=subscriber_user_id)  # Send them an e-mail notification
-    if document:
-        upload_record(request_id, description, user_id, document)
+    if attachment:
+        upload_record(request_id, attachment_description, user_id, attachment)
     return request_id, True
 
 
@@ -301,7 +303,7 @@ def get_request_data_chronologically(req):
     if not req:
         return responses
     for i, note in enumerate(req.notes):
-        if not note.user_id:  # Indicates note was written by public, so considered part of the 'request'
+        if not note.user_id:
             responses.append(RequestPresenter(note=note, index=i, public=public, request=req))
     for i, qa in enumerate(req.qas):
         responses.append(RequestPresenter(qa=qa, index=i, public=public, request=req))
@@ -317,7 +319,7 @@ def get_responses_chronologically(req):
     if not req:
         return responses
     for note in req.notes:
-        if note.user_id:  # Indicates note was written by staff, so considered part of the 'response'
+        if note.user_id:
             # Ensure private notes only available to appropriate users
             if note.privacy == 2 and (
                 current_user.is_anonymous() or current_user.role not in ['Portal Administrator', 'Agency Administrator',
@@ -341,7 +343,7 @@ def set_directory_fields():
     if 'STAFF_URL' in app.config:
         # This gets run at regular internals via db_users.py in order to keep the staff user list up to date. Before users are added/updated, ALL users get reset to 'inactive', and then only the ones in the current CSV are set to active.
         for user in User.query.filter(User.is_staff == True).all():
-            update_user(user=user, is_staff=True)
+            update_user(user=user, is_staff=False)
         csvfile = urllib.urlopen(app.config['STAFF_URL'])
         dictreader = csv.DictReader(csvfile, delimiter=',')
         for row in dictreader:

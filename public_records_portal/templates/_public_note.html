@@ -1,40 +1,49 @@
-  <!-- Ask_question button that expands into a form -->
+<!-- Ask_question button that expands into a form -->
 <!-- currently found at the top of the manage_request_city view -->
 
 <div class="rw-container">
-  <div class="rw-controller-container">
-    <div class="rw-controller-btns-container">
+    <div class="rw-controller-container">
+        <div class="rw-controller-btns-container">
 
-      <div class="rw-btn-wrap" data-target="1">
-        <div class="rw-btn"><i class="icon-edit"></i></div>
-        <div class="rw-btn-expand">Add a Note</div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="rw-actions-container">
-    <div class="target-for" data-target-for="1">
-
-      <form name="public_note" class="form-horizontal" id="public_note" method="post" action="/public_add_a_note">
-        <input type="hidden" name="request_id" value="{{ req.id }}"/>
-        <fieldset>
-          <div class="row-fluid">
-
-            <div class="control-group button-margin">
-              <label class="control-label" for="public_noteTextarea">Add a note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a public note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
-              <div class="controls">
-                <textarea id="public_noteTextarea" name="note_text" class="input-xlarge" type="text" rows="3" placeholder="Use this field to note anything else the city should know about your request." required/></textarea>
-                <button type="submit" class="btn btn-primary">Add note</button>
-              </div>
+            <div class="rw-btn-wrap" data-target="1">
+                <div class="rw-btn"><i class="icon-edit"></i></div>
+                <div class="rw-btn-expand">Add a Note</div>
             </div>
-            
-          </div>
-        </fieldset>
-      </form>
 
+        </div>
     </div>
-  </div>
+
+    <div class="rw-actions-container">
+        <div class="target-for" data-target-for="1">
+
+            <form name="public_note" class="form-horizontal" id="public_note" method="post" action="/public_add_a_note">
+                <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                <fieldset>
+                    <div class="row-fluid">
+
+                        <div class="control-group button-margin">
+                            <label class="control-label" for="public_noteTextarea">Add a note <span rel="tooltip"
+                                                                                                    data-toggle="tooltip"
+                                                                                                    data-placement="right"
+                                                                                                    title=""
+                                                                                                    data-original-title="{{ "Add a public note"| explain_action }}"><small>
+                                <i class="icon-info-sign"></i></small></span></label>
+
+                            <div class="controls">
+                                <textarea id="public_noteTextarea" name="note_text" class="input-xlarge" type="text"
+                                          rows="3"
+                                          placeholder="Use this field to note anything else the city should know about your request."
+                                          required/></textarea>
+                                <button type="submit" class="btn btn-primary">Add note</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </fieldset>
+            </form>
+
+        </div>
+    </div>
 
 </div>
 

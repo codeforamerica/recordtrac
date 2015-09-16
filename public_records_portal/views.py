@@ -34,10 +34,11 @@ from requires_roles import requires_roles
 app.logger.info("\n\nInitialize login.")
 app.logger.info("\n\nEnvironment is %s" % app.config['ENVIRONMENT'])
 
+login_manager = LoginManager()
+login_manager.user_loader(get_user_by_id)
+login_manager.init_app(app)
 
-# browser_id = BrowserID()
-# browser_id.user_loader(get_user)
-# browser_id.init_app(app)
+zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
 
 # Submitting a new request
 @app.route("/new", methods=["GET", "POST"])
@@ -49,13 +50,18 @@ def new_request(passed_recaptcha=False, data=None):
     if request.method == 'POST':
         if current_user.is_authenticated():
             form = OfflineRequestForm(request.form)
+            request_category = form.request_category.data
+            request_agency = form.request_agency.data
+            request_summary = form.request_summary.data
             request_text = form.request_text.data
+            request_attachment_description = form.request_attachment_description.data
+            request_attachment = form.request_attachment.data
             request_format = form.request_format.data
             request_date = form.request_date.data
-            request_department = form.request_department.data
             request_first_name = form.request_first_name.data
             request_last_name = form.request_last_name.data
-            request_privacy = form.request_privacy.data
+            request_role = form.request_role.data
+            request_organization = form.request_organization.data
             request_email = form.request_email.data
             request_phone = form.request_phone.data
             request_fax = form.request_fax.data
@@ -63,14 +69,24 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_city = form.request_address_city.data
             request_address_state = form.request_address_state.data
             request_address_zip = form.request_address_zip.data
-            terms_of_use = form.terms_of_use.data
-            alias = None
-            document = None
-            zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
-            record_description = form.record_description.data
+            request_submit = form.request_submit.data
+
+            # Check Category
+            if not (request_category and request_category.strip()):
+                errors.append('You must select a category for this request')
+
+            # Check Agency
+            if not (request_agency and request_agency.strip()):
+                errors.append('You must select an agency for this request')
+
+            # Check Summary
+            if not (request_summary and request_summary.strip()):
+                errors.append('You must enter a summary for this request')
+            elif len(request_summary) > 250:
+                errors.append('The request summary must be less than 250 characters')
 
             try:
-                document = request.files['record']
+                attachment = request.files['request_attachment']
             except:
                 app.logger.info("\n\nNo file passed in")
 
@@ -83,8 +99,11 @@ def new_request(passed_recaptcha=False, data=None):
             if not (request_text and request_text.strip()):
                 errors.append('Please fill out the request description.')
 
+            # Check Format
             if not (request_format and request_format.strip()):
-                errors.append('Please choose a request format.')
+                errors.append('You must enter the format in which the request was received')
+
+            # Check Date
             if request_date:
                 try:
                     tz = pytz.timezone(app.config['TIMEZONE'])
@@ -99,8 +118,8 @@ def new_request(passed_recaptcha=False, data=None):
                     request_date = None
             else:
                 errors.append("Please use the datepicker to select a date.")
-            if not (request_department and request_department.strip()):
-                errors.append("Please select a department.")
+            if not (request_agency and request_agency.strip()):
+                errors.append("Please select a agency.")
 
             if not (request_first_name and request_first_name.strip()):
                 errors.append("Please enter the requester's first name")
@@ -108,8 +127,6 @@ def new_request(passed_recaptcha=False, data=None):
                 errors.append("Please enter the requester's last name")
             else:
                 alias = request_first_name + " " + request_last_name
-            if not request_privacy:
-                errors.append("Please choose a privacy option.")
 
             email_valid = (request_email != '')
             phone_valid = (request_phone is not None)
@@ -119,13 +136,14 @@ def new_request(passed_recaptcha=False, data=None):
             state_valid = (request_address_state != '')
             zip_valid = (request_address_zip != '' and zip_reg_ex.match(request_address_zip))
             address_valid = (street_valid and city_valid and state_valid and zip_valid)
+
             if app.config['ENVIRONMENT'] != 'LOCAL':
                 recaptcha_valid = (request_recaptcha != False)
 
             if not (email_valid or phone_valid or fax_valid or address_valid):
                 errors.append("Please enter at least one type of contact information")
 
-            if app.config['ENVIRONMENT'] != 'LOCAL' and not data and not passed_recaptcha:
+            if not data:
                 data = request.form.copy()
 
             if app.config['ENVIRONMENT'] != 'LOCAL' and check_for_spam and is_spam(
@@ -140,28 +158,33 @@ def new_request(passed_recaptcha=False, data=None):
 
             if errors:
                 if request_date:
-                    print request_date
                     return render_template('offline_request.html', form=form, date=request_date.strftime('%m/%d/%Y'),
                                            routing_available=routing_available,
                                            departments=departments, errors=errors)
                 return render_template('offline_request.html', form=form,
                                        routing_available=routing_available, departments=departments, errors=errors)
             else:
-                request_id, is_new = make_request(text=request_text,
-                                                  email=request_email,
-                                                  alias=alias,
-                                                  phone=phone_formatted,
-                                                  address1=request_address_street,
-                                                  city=request_address_city,
-                                                  state=request_address_state,
-                                                  zipcode=request_address_zip,
-                                                  passed_spam_filter=True,
-                                                  department=request_department,
-                                                  offline_submission_type=request_format,
-                                                  date_received=request_date,
-                                                  privacy=request_privacy,
-                                                  description=record_description,
-                                                  document=document)
+                request_id, is_new = make_request(
+                    category=request_category,
+                    agency=request_agency,
+                    summary=request_summary,
+                    text=request_text,
+                    attachment=attachment,
+                    attachment_description=request_attachment_description,
+                    offline_submission_type=request_format,
+                    date_received=request_date,
+                    first_name=request_first_name,
+                    last_name=request_last_name,
+                    alias=str(request_first_name + ' ' + request_last_name),
+                    role=request_role,
+                    organization=request_organization,
+                    email=request_email,
+                    phone=request_phone,
+                    fax=request_fax,
+                    street_address=request_address_street,
+                    city=request_address_city,
+                    state=request_address_state,
+                    zip=request_address_zip)
                 if not request_id:
                     errors.append("Looks like your request is the same as /request/%s" % request_id)
                     return render_template('offline_request.html', form=form,
@@ -172,11 +195,14 @@ def new_request(passed_recaptcha=False, data=None):
 
         else:
             form = NewRequestForm(request.form)
+            request_category = form.request_category.data
+            request_agency = form.request_agency.data
+            request_summary = form.request_summary.data
             request_text = form.request_text.data
-            request_department = form.request_department.data
             request_first_name = form.request_first_name.data
             request_last_name = form.request_last_name.data
-            request_privacy = form.request_privacy.data
+            request_role = form.request_role.data
+            request_organization = form.request_organization.data
             request_email = form.request_email.data
             request_phone = form.request_phone.data
             request_fax = form.request_fax.data
@@ -187,36 +213,48 @@ def new_request(passed_recaptcha=False, data=None):
             if app.config['ENVIRONMENT'] != 'LOCAL':
                 request_recaptcha = recaptcha.verify()
             terms_of_use = form.terms_of_use.data
+            request_submit = form.request_submit.data
             alias = None
             document = None
             zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
-            record_description = form.record_description.data
+            request_text = form.request_text.data
 
-            try:
-                document = request.files['record']
-            except:
-                app.logger.info("\n\nNo file passed in")
+            # Check Category
+            if not (request_category and request_category.strip()):
+                errors.append('You must select a category for this request')
 
-            if document and not (record_description):
-                errors.append('Please fill out the attachment description.')
+            # Check Agency
+            if not (request_agency and request_agency.strip()):
+                errors.append('You must select an agency for this request')
 
-            if record_description and not (document):
-                errors.append('Please select a file to upload as attachment.')
+            # Check Summary
+            if not (request_summary and request_summary.strip()):
+                errors.append('You must enter a summary for this request')
+            elif len(request_summary) > 250:
+                errors.append('The request summary must be less than 250 characters')
 
-            if not (request_text and request_text.strip()):
-                errors.append('Please fill out the request description.')
+            # Check attachment
+            # attachment = None
+            # try:
+            #     attachment = request.files['request_attachment']
+            # except:
+            #     app.logger.info("\n\nNo file passed in")
 
-            if not (request_department and request_department.strip()):
-                errors.append("Please select a department.")
+            # if attachment and not(request_attachment_description):
+            #     errors.append('Please fill out the attachment description.')
+
+            # if request_attachment_description and not(attachment):
+            #     errors.append('Please select a file to upload as attachment.')
+
+            if not (request_agency and request_agency.strip()):
+                errors.append("Please select an agency.")
 
             if not (request_first_name and request_first_name.strip()):
-                errors.append("Please enter the requester's first name.")
+                errors.append("Please enter the requester's first name")
             elif not (request_last_name and request_last_name.strip()):
-                errors.append("Please enter the requester's last name.")
+                errors.append("Please enter the requester's last name")
             else:
                 alias = request_first_name + " " + request_last_name
-            if not request_privacy:
-                errors.append("Please choose a privacy option.")
 
             email_valid = (request_email != '')
             phone_valid = (request_phone is not None)
@@ -227,16 +265,17 @@ def new_request(passed_recaptcha=False, data=None):
             zip_valid = (request_address_zip != '' and zip_reg_ex.match(request_address_zip))
             address_valid = (street_valid and city_valid and state_valid and zip_valid)
 
+            if app.config['ENVIRONMENT'] != 'LOCAL':
+                recaptcha_valid = (request_recaptcha != False)
+
             if not (email_valid or phone_valid or fax_valid or address_valid):
-                errors.append("Please enter at least one type of contact information.")
+                errors.append("Please enter at least one type of contact information")
 
-            if app.config['ENVIRONMENT'] != 'LOCAL' and not request_recaptcha:
-                errors.append("Please complete captcha.")
-
-            if not terms_of_use:
-                errors.append("You must accept the Terms of Use.")
+            if not data:
+                data = request.form.copy()
 
             phone_formatted = ""
+
             if phone_valid:
                 phone_formatted = request_phone.international
 
@@ -244,27 +283,32 @@ def new_request(passed_recaptcha=False, data=None):
                 return render_template('new_request.html', form=form,
                                        routing_available=routing_available, departments=departments, errors=errors)
             else:
-                request_id, is_new = make_request(text=request_text,
-                                                  email=request_email,
-                                                  alias=alias,
-                                                  phone=phone_formatted,
-                                                  address1=request_address_street,
-                                                  city=request_address_city,
-                                                  state=request_address_state,
-                                                  zipcode=request_address_zip,
-                                                  passed_spam_filter=True,
-                                                  department=request_department,
-                                                  privacy=request_privacy,
-                                                  description=record_description,
-                                                  document=document)
+                request_id, is_new = make_request(
+                    category=request_category,
+                    agency=request_agency,
+                    summary=request_summary,
+                    text=request_text,
+                    first_name=request_first_name,
+                    last_name=request_last_name,
+                    alias=str(request_first_name + ' ' + request_last_name),
+                    role=request_role,
+                    organization=request_organization,
+                    email=request_email,
+                    phone=request_phone,
+                    fax=request_fax,
+                    street_address=request_address_street,
+                    city=request_address_city,
+                    state=request_address_state,
+                    zip=request_address_zip)
 
-                if not request_id:
-                    errors.append("Looks like your request is the same as /request/%s" % request_id)
-                    return render_template('new_request.html', form=form,
-                                           routing_available=routing_available, departments=departments, errors=errors)
+            if not request_id:
+                errors.append("Looks like your request is the same as /request/%s" % request_id)
+                return render_template('new_request.html', form=form,
+                                       routing_available=routing_available, departments=departments, errors=errors)
 
-                return redirect(url_for('show_request_for_x', request_id=request_id,
-                                        audience='new'))
+            return redirect(url_for('show_request_for_x', request_id=request_id,
+                                    audience='new'))
+
     elif request.method == 'GET':
         if 'LIAISONS_URL' in app.config:
             routing_available = True
@@ -294,6 +338,12 @@ def index():
 @app.route("/landing")
 def landing():
     return render_template('landing.html')
+
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    app.logger.info("\n\nuser is unauthorized.")
+    return render_template("alpha.html")
 
 
 @app.errorhandler(404)
@@ -377,16 +427,16 @@ def unfollow(request_id, email):
 def show_request(request_id, template="manage_request_public.html"):
     req = get_obj("Request", request_id)
     departments_all = models.Department.query.all()
-    department_data = []
+    agency_data = []
     for d in departments_all:
         firstUser = models.User.query.filter_by(department_id=d.id).first()
-        department_data.append({'name': d.name, 'email': firstUser.email})
+        agency_data.append({'name': d.name, 'email': firstUser.email})
     users = models.User.query.filter_by(department_id=req.department_id).all()
     if not req:
         return render_template('error.html', message="A request with ID %s does not exist." % request_id)
     if req.status and "Closed" in req.status and template != "manage_request_feedback.html":
         template = "closed.html"
-    return render_template(template, req=req, department_data=department_data, users=users)
+    return render_template(template, req=req, agency_data=agency_data, users=users)
 
 
 @app.route("/api/staff")
@@ -401,10 +451,10 @@ def staff_to_json():
 @app.route("/api/departments")
 def departments_to_json():
     departments = models.Department.query.all()
-    department_data = []
+    agency_data = []
     for d in departments:
-        department_data.append({'department': d.name})
-    return jsonify(**{'objects': department_data})
+        agency_data.append({'agency': d.name})
+    return jsonify(**{'objects': agency_data})
 
 
 def docs():
@@ -508,9 +558,9 @@ def close(request_id=None):
     return render_template('error.html', message="You can only close from a requests page!")
 
 
-def filter_department(departments_selected, results):
+def filter_agency(departments_selected, results):
     if departments_selected and 'All departments' not in departments_selected:
-        app.logger.info("\n\nDepartment filters:%s." % departments_selected)
+        app.logger.info("\n\nagency filters:%s." % departments_selected)
         department_ids = []
         for department_name in departments_selected:
             if department_name:
@@ -544,7 +594,7 @@ def filter_search_term(search_input, results):
 def get_filter_value(filters_map, filter_name, is_list=False, is_boolean=False):
     if filter_name in filters_map:
         val = filters_map[filter_name]
-        if filter_name == 'department' and val:
+        if filter_name == 'agency' and val:
             return [val]
         elif is_list:
             return filters_map.getlist(filter_name)
@@ -718,7 +768,7 @@ def prepare_request_fields(results):
     #         "id":           r.id, \
     #         "text":         helpers.clean_text(r.text), \
     #         "date_received": helpers.date(r.date_received or r.date_created), \
-    #         "department":   r.department_name(), \
+    #         "agency":   r.department_name(), \
     #         "status":       r.status, \
     #         # The following two attributes are defined as model methods,
     #         # and not regular SQLAlchemy attributes.
@@ -730,15 +780,14 @@ def prepare_request_fields(results):
         "id": r.id, \
         "text": helpers.clean_text(r.text), \
         "date_received": helpers.date(r.date_received or r.date_created), \
-        "department": r.department_name(), \
+        "agency": r.department_name(), \
         "requester": r.requester_name(), \
         "due_date": format_date(r.due_date), \
         "status": r.status, \
         # The following two attributes are defined as model methods,
         # and not regular SQLAlchemy attributes.
         "contact_name": r.point_person_name(), \
-        "solid_status": r.solid_status(), \
-        "privacy": r.privacy
+        "solid_status": r.solid_status()
     }, results)
 
 

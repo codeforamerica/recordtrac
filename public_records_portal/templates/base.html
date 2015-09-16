@@ -6,7 +6,7 @@ This template provides the header, footer, and envelope info for all pages excep
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock title%}</title>
+    <title>OpenFOIL | {% block title %}{% endblock title%}</title>
     <!-- HTML5 shim for IE backwards compatibility -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -126,7 +126,9 @@ This template provides the header, footer, and envelope info for all pages excep
 <!-- Footer is separate on landing page -->
     {% block footer %}
       <div id="footer" class="well well-small footer">
-        <p class="text-center">For more information contact the <a href="http://www.nyc.gov/html/records/html/contact/home.shtml">NYC Department of Records and Information Services</a>.<br />&copy; City of New York 2015</p>
+          <p class="text-center">For more information contact the <a
+                  href="http://www.nyc.gov/html/records/html/contact/home.shtml">NYC Agency of Records and Information
+              Services</a>.<br/>&copy; City of New York 2015</p>
         <!-- <p class="text-center">Made by the <a href="http://www.codeforamerica.org/apps/recordtrac/" target="_blank">Code for America 2013 Fellows</a> with the City of Oakland</p> -->
       </div>
     {% endblock footer %}
@@ -156,6 +158,7 @@ This template provides the header, footer, and envelope info for all pages excep
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/css3-mediaqueries.js') }}"></script>
     <!-- accessibility element tag polyfill -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/accessifyhtml5.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/autosize.min.js') }}"></script>
 
     {% block custom_script_links %}
     {% endblock custom_script_links %}

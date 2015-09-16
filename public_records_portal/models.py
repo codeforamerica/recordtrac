@@ -1,8 +1,11 @@
-"""
-	public_records_portal.models
-	~~~~~~~~~~~~~~~~
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
-	Defines RecordTrac's database schema, and implements helper functions.
+"""
+....public_records_portal.models
+....~~~~~~~~~~~~~~~~
+
+....Defines RecordTrac's database schema, and implements helper functions.
 
 """
 
@@ -14,11 +17,26 @@ from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy import and_
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash, \
+    check_password_hash
 from validate_email import validate_email
 
 from public_records_portal import db, app
 
+
+class requestPrivacy:
+    PUBLIC = 0x01
+    NAME_PRIVATE = 0x02
+    REQUEST_PRIVATE = 0x04
+    PRIVATE = 0x08
+
+
+class notePrivacy:
+    PUBLIC = 0x01
+    AGENCY = 0x02
+
+
+# @export "User"
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -35,18 +53,22 @@ class User(db.Model):
     zipcode = db.Column(db.String())
     date_created = db.Column(db.DateTime)
     password = db.Column(db.String(255))
-    department_id = db.Column(Integer, ForeignKey("department.id", use_alter=True, name="fk_department"))
+    department_id = db.Column(Integer, ForeignKey('department.id',
+                                                  use_alter=True,
+                                                  name='fk_department'))
+    current_department = relationship('Department',
+                                      foreign_keys=[department_id],
+                                      lazy='joined', uselist=False)
     contact_for = db.Column(db.String())  # comma separated list
     backup_for = db.Column(db.String())  # comma separated list
-    owners = relationship("Owner")
-    subscribers = relationship("Subscriber")
-    is_staff = db.Column(db.Boolean, default=False)  # Is this user an active agency member?
-    current_department = relationship("Department",
-                                      foreign_keys=[department_id],
-                                      primaryjoin=("User.department_id == Department.id"),
-                                      uselist=False)
-    title = db.Column(db.String())
-    role = db.Column(db.String())
+    owners = relationship('Owner')
+    subscribers = relationship('Subscriber')
+
+    # Is this user an active agency member?
+
+    is_staff = db.Column(db.Boolean, default=False)
+    staff_signature = db.Column(db.String(100),
+                                default='public_records_portal/static/images/staff_signature.png')
 
     def is_authenticated(self):
         return True
@@ -61,74 +83,92 @@ class User(db.Model):
         return unicode(self.id)
 
     def get_alias(self):
-        if self.alias and self.alias != "":
+        if self.alias and self.alias != '':
             return self.alias
-        return "N/A"
+        return 'N/A'
 
     def get_first_name(self):
-        if self.first_name and self.first_name != "":
+        if self.first_name and self.first_name != '':
             return self.first_name
-        return "N/A"
+        return 'N/A'
 
     def get_last_name(self):
-        if self.last_name and self.last_name != "":
+        if self.last_name and self.last_name != '':
             return self.last_name
-        return "N/A"
+        return 'N/A'
 
     def get_phone(self):
-        if self.phone and self.phone != "":
+        if self.phone and self.phone != '':
             return self.phone
-        return "N/A"
+        return 'N/A'
 
     def get_adddress1(self):
-        if self.address1 and self.address1 != "":
+        if self.address1 and self.address1 != '':
             return self.address1
-        return "N/A"
+        return 'N/A'
 
     def get_city(self):
-        if self.city and self.city != "":
+        if self.city and self.city != '':
             return self.city
-        return "N/A"
+        return 'N/A'
 
     def get_state(self):
-        if self.state and self.state != "":
+        if self.state and self.state != '':
             return self.state
-        return "N/A"
+        return 'N/A'
 
     def get_zipcode(self):
-        if self.zipcode and self.zipcode != "":
+        if self.zipcode and self.zipcode != '':
             return self.zipcode
-        return "N/A"
+        return 'N/A'
 
-    def __init__(self, email=None, alias=None, first_name=None, last_name=None, phone=None, address1=None,
-                 address2=None, city=None, state=None, zipcode=None, department=None, contact_for=None, backup_for=None,
-                 password=None, is_staff=False):
+    def __init__(
+            self,
+            email=None,
+            alias=None,
+            first_name=None,
+            last_name=None,
+            phone=None,
+            address1=None,
+            address2=None,
+            city=None,
+            state=None,
+            zipcode=None,
+            department=None,
+            contact_for=None,
+            backup_for=None,
+            password=None,
+            is_staff=False,
+            staff_signature=False
+    ):
         if email and validate_email(email):
             self.email = email
         self.alias = alias
         self.first_name = first_name
         self.last_name = last_name
-        if phone and phone != "":
+        if phone and phone != '':
             self.phone = phone
-        if address1 and address1 != "":
+        if address1 and address1 != '':
             self.address1 = address1
-        if address2 and address2 != "":
+        if address2 and address2 != '':
             self.address2 = address2
-        if city and city != "":
+        if city and city != '':
             self.city = city
-        if state and state != "":
+        if state and state != '':
             self.state = state
-        if zipcode and zipcode != "":
+        if zipcode and zipcode != '':
             self.zipcode = zipcode
         self.date_created = datetime.now().isoformat()
-        if department and department != "":
+        if department and department != '':
             self.department_id = department
-        if contact_for and contact_for != "":
+        if contact_for and contact_for != '':
             self.contact_for = contact_for
-        if backup_for and backup_for != "":
+        if backup_for and backup_for != '':
             self.backup_for = backup_for
         if is_staff:
             self.is_staff = is_staff
+        if staff_signature:
+            self.staff_signature = staff_signature
         if password:
             self.set_password(password)
 
@@ -140,7 +180,7 @@ class User(db.Model):
 
     def is_admin(self):
         if 'LIST_OF_ADMINS' in app.config:
-            admins = app.config['LIST_OF_ADMINS'].split(",")
+            admins = app.config['LIST_OF_ADMINS'].split(',')
             return self.email.lower() in admins
 
     def __repr__(self):
@@ -153,10 +193,14 @@ class User(db.Model):
         if self.current_department and self.current_department.name:
             return self.current_department.name
         else:
-            app.logger.error(
-                "\n\nUser %s is not associated with a department." % self.email)
-            return "N/A"
+            app.logger.error('''
 
+User %s is not associated with a department.'''
+                             % self.email)
+            return 'N/A'
+
+
+### @export "Department"
 
 class Department(db.Model):
     __tablename__ = 'department'
@@ -164,10 +208,10 @@ class Department(db.Model):
     date_created = db.Column(db.DateTime)
     date_updated = db.Column(db.DateTime)
     name = db.Column(db.String(), unique=True)
-    users = relationship("User", foreign_keys=[User.department_id],
+    users = relationship('User', foreign_keys=[User.department_id],
                          post_update=True)  # The list of users in this department
-    requests = relationship("Request",
-                            order_by="Request.date_created.asc()")  # The list of requests currently associated with this department
+    requests = relationship('Request',
+                            order_by='Request.date_created.asc()')  # The list of requests currently associated with this department
 
     def __init__(self, name):
         self.name = name
@@ -180,18 +224,20 @@ class Department(db.Model):
         return self.name
 
     def get_name(self):
-        return self.name or "N/A"
+        return self.name or 'N/A'
 
-    primary_contact_id = db.Column(Integer, ForeignKey("user.id"))
-    backup_contact_id = db.Column(Integer, ForeignKey("user.id"))
+    primary_contact_id = db.Column(Integer, ForeignKey('user.id'))
+    backup_contact_id = db.Column(Integer, ForeignKey('user.id'))
     primary_contact = relationship(User,
                                    foreign_keys=[primary_contact_id],
-                                   primaryjoin=(primary_contact_id == User.id),
-                                   uselist=False, post_update=True)
+                                   primaryjoin=primary_contact_id
+                                               == User.id, uselist=False,
+                                   post_update=True)
     backup_contact = relationship(User,
                                   foreign_keys=[backup_contact_id],
-                                  primaryjoin=(backup_contact_id == User.id),
-                                  uselist=False, post_update=True)
+                                  primaryjoin=backup_contact_id
+                                              == User.id, uselist=False,
+                                  post_update=True)
 
     def __init__(self, name=''):
         self.name = name
@@ -204,47 +250,65 @@ class Department(db.Model):
         return self.name
 
     def get_name(self):
-        return self.name or "N/A"
+        return self.name or 'N/A'
 
+### @export "Request"
 
 class Request(db.Model):
     # The public records request
+
     __tablename__ = 'request'
-    tracking_number = 1
-    # id = db.Column(db.Integer, primary_key =True)
+    tracking_number = 0x01
     id = db.Column(db.String(100), primary_key=True)
     date_created = db.Column(db.DateTime)
     due_date = db.Column(db.DateTime)
-    extended = db.Column(db.Boolean, default=False)  # Has the due date been extended?
-    qas = relationship("QA", cascade="all,delete",
-                       order_by="QA.date_created.desc()")  # The list of QA units for this request
+    extended = db.Column(db.Boolean,
+                         default=False)  # Has the due date been extended?
+    qas = relationship('QA', cascade='all,delete',
+                       order_by='QA.date_created.desc()')  # The list of QA units for this request
     status_updated = db.Column(db.DateTime)
-    text = db.Column(db.String(500), unique=True, nullable=False)  # The actual request text.
-    owners = relationship("Owner", cascade="all, delete", order_by="Owner.date_created.asc()")
-    subscribers = relationship("Subscriber", cascade="all, delete")  # The list of subscribers following this request.
-    records = relationship("Record", cascade="all,delete",
-                           order_by="Record.date_created.desc()")  # The list of records that have been uploaded for this request.
-    notes = relationship("Note", cascade="all,delete",
-                         order_by="Note.date_created.desc()")  # The list of notes appended to this request.
-    status = db.Column(db.String(400))  # The status of the request (open, closed, etc.)
+    summary = db.Column(db.String(500), nullable=False)
+    text = db.Column(db.String(5000), unique=True,
+                     nullable=False)  # The actual request text.
+    owners = relationship('Owner', cascade='all, delete',
+                          order_by='Owner.date_created.asc()')
+    subscribers = relationship('Subscriber',
+                               cascade='all, delete')  # The list of subscribers following this request.
+    records = relationship('Record', cascade='all,delete',
+                           order_by='Record.date_created.desc()')  # The list of records that have been uploaded for this request.
+    notes = relationship('Note', cascade='all,delete',
+                         order_by='Note.date_created.desc()')  # The list of notes appended to this request.
+    status = db.Column(
+        db.String(400))  # The status of the request (open, closed, etc.)
     creator_id = db.Column(db.Integer, db.ForeignKey(
         'user.id'))  # If city staff created it on behalf of the public, otherwise the creator is the subscriber with creator = true
-    department_id = db.Column(db.Integer, db.ForeignKey("department.id"))
-    department = relationship("Department", uselist=False)
+    department_id = db.Column(db.Integer, db.ForeignKey('department.id'
+                                                        ))
+    department = relationship('Department', uselist=False)
     date_received = db.Column(db.DateTime)
     offline_submission_type = db.Column(db.String())
-    privacy = db.Column(db.Integer, default=0x01)
+    category = db.Column(db.String, nullable=False)
 
-    def __init__(self, id, text, creator_id=None, offline_submission_type=None, date_received=None, privacy=1):
+    def __init__(
+            self,
+            id,
+            summary,
+            text,
+            creator_id=None,
+            offline_submission_type=None,
+            date_received=None,
+            category=None
+    ):
         self.id = id
+        self.summary = summary
         self.text = text
         self.date_created = datetime.now().isoformat()
         self.creator_id = creator_id
         self.offline_submission_type = offline_submission_type
         if date_received and type(date_received) is datetime:
             self.date_received = date_received
-        self.privacy = privacy
-        self.__class__.tracking_number += 1
+        self.__class__.tracking_number += 0x01
+        self.category = category
 
     def __repr__(self):
         return '<Request %r>' % self.text
@@ -253,13 +317,32 @@ class Request(db.Model):
         if not self.date_received:
             self.date_received = self.date_created
         if self.extended == True:
-            self.due_date = self.date_received + timedelta(days=int(app.config['DAYS_AFTER_EXTENSION']))
+            self.due_date = self.date_received \
+                            + timedelta(
+                days=int(app.config['DAYS_AFTER_EXTENSION']))
         else:
-            self.due_date = self.date_received + timedelta(days=int(app.config['DAYS_TO_FULFILL']))
+            self.due_date = self.date_received \
+                            + timedelta(days=int(app.config['DAYS_TO_FULFILL']))
 
-    def extension(self):
+    def extension(self, days_after=int(app.config['DAYS_AFTER_EXTENSION']),
+                  custom_due_date=None):
         self.extended = True
-        self.due_date = self.due_date + timedelta(days=int(app.config['DAYS_AFTER_EXTENSION']))
+        if days_after != None and days_after != '':
+            self.due_date = self.due_date + timedelta(days=days_after)
+        elif custom_due_date != None and custom_due_date != '':
+            self.due_date = custom_due_date
+
+    def point_person(self):
+        for o in self.owners:
+            if o.is_point_person:
+                return o
+        return None
+
+    def all_owners(self):
+        all_owners = []
+        for o in self.owners:
+            all_owners.append(o.user.get_alias())
+        return all_owners
 
     def point_person(self):
         for o in self.owners:
@@ -275,119 +358,206 @@ class Request(db.Model):
 
     def requester(self):
         if self.subscribers:
-            return self.subscribers[0] or None  # The first subscriber is always the requester
+            return self.subscribers[
+                       0] or None  # The first subscriber is always the requester
         return None
 
     def requester_name(self):
         requester = self.requester()
         if requester and requester.user:
             return requester.user.get_alias()
-        return "N/A"
+        return 'N/A'
 
     def requester_first_name(self):
         requester = self.requester()
         if requester and requester.user:
             return requester.user.get_first_name()
-        return "N/A"
-
-    def requester_last_name(self):
-        requester = self.requester()
-        if requester and requester.user:
-            return requester.user.get_last_name()
-        return "N/A"
+        return 'N/A'
 
     def requester_phone(self):
         requester = self.requester()
         if requester and requester.user:
             return requester.user.get_phone()
-        return "N/A"
+        return 'N/A'
 
     def requester_address1(self):
         requester = self.requester()
         if requester and requester.user:
             return requester.user.get_address1()
-        return "N/A"
+        return 'N/A'
 
     def requester_address2(self):
         requester = self.requester()
         if requester and requester.user:
             return requester.user.get_address2()
-        return "N/A"
+        return 'N/A'
 
     def requester_city(self):
         requester = self.requester()
         if requester and requester.user:
             return requester.user.get_city()
-        return "N/A"
+        return 'N/A'
 
     def requester_state(self):
         requester = self.requester()
         if requester and requester.user:
             return requester.user.get_state()
-        return "N/A"
+        return 'N/A'
 
-    def requester_zipcode(self):
+    def requester_last_name(self):
         requester = self.requester()
         if requester and requester.user:
             return requester.user.get_zipcode()
-        return "N/A"
+        return 'N/A'
 
     def point_person_name(self):
         point_person = self.point_person()
         if point_person and point_person.user:
             return point_person.user.get_alias()
-        return "N/A"
+        return 'N/A'
 
     def department_name(self):
         if self.department:
-            return self.department.get_name()
-        return "N/A"
+            return requester.user.get_last_name()
+        return 'N/A'
 
     def is_closed(self):
         if self.status:
-            return re.match('.*(closed).*', self.status, re.IGNORECASE) is not None
+            return re.match('.*(closed).*', self.status, re.IGNORECASE) \
+                   is not None
         else:
-            app.logger.info("\n\n Request with this ID has no status: %s" % self.id)
-            return False
+            app.logger.info('''
 
-    def is_in_progress(self):
-        if self.status:
-            return re.match('.*(progress).*', self.status, re.IGNORECASE) is not None
-        else:
-            app.logger.info("\n\n Request with this ID has no status: %s" % self.id)
+	 Request with this ID has no status: %s'''
+                            % self.id)
             return False
 
     def solid_status(self, cron_job=False):
         if self.is_closed():
-            return "closed"
-        if self.is_in_progress():
-            return "in progress"
+            return 'closed'
         else:
-            if cron_job or (not current_user.is_anonymous()):
+            if cron_job or not current_user.is_anonymous():
                 if self.due_date:
                     if datetime.now() >= self.due_date:
-                        return "overdue"
-                    elif (datetime.now() + timedelta(days=int(app.config['DAYS_UNTIL_OVERDUE']))) >= self.due_date:
-                        return "due soon"
-                    elif (datetime.now() + timedelta(days=int(2))) >= self.due_date:
-                        return "in progress (due in 2 days)"
-                    elif (datetime.now() + timedelta(days=int(5))) >= self.due_date:
-                        return "in progress (due in 5 days)"
-                    elif (datetime.now() + timedelta(days=int(10))) >= self.due_date:
-                        return "in progress (due in 10 days)"
+                        return 'overdue'
+                    elif datetime.now() \
+                            + timedelta(days=int(app.config['DAYS_UNTIL_OVERDUE'
+                                                 ])) >= self.due_date:
+                        return 'due soon'
+        return 'open'
+
+    def requester_phone(self):
+        requester = self.requester()
+        if requester and requester.user:
+            return requester.user.get_phone()
+        return 'N/A'
+
+        def requester_address1(self):
+            requester = self.requester()
+            if requester and requester.user:
+                return requester.user.get_address1()
+            return 'N/A'
+
+        def requester_address2(self):
+            requester = self.requester()
+            if requester and requester.user:
+                return requester.user.get_address2()
+            return 'N/A'
+
+        def requester_city(self):
+            requester = self.requester()
+            if requester and requester.user:
+                return requester.user.get_city()
+            return 'N/A'
+
+        def requester_state(self):
+            requester = self.requester()
+            if requester and requester.user:
+                return requester.user.get_state()
+            return 'N/A'
+
+        def requester_zipcode(self):
+            requester = self.requester()
+            if requester and requester.user:
+                return requester.user.get_zipcode()
+            return 'N/A'
+
+    def point_person_name(self):
+        point_person = self.point_person()
+        if point_person and point_person.user:
+            return point_person.user.get_alias()
+        return 'N/A'
+
+    def department_name(self):
+        if self.department:
+            return self.department.get_name()
+        return 'N/A'
+
+    def is_closed(self):
+        if self.status:
+            return re.match('.*(closed).*', self.status, re.IGNORECASE) \
+                   is not None
+        else:
+            app.logger.info('''
+
+ Request with this ID has no status: %s'''
+                            % self.id)
+            return False
+
+    def is_in_progress(self):
+        if self.status:
+            return re.match('.*(progress).*', self.status,
+                            re.IGNORECASE) is not None
+        else:
+            app.logger.info('''
+
+ Request with this ID has no status: %s'''
+                            % self.id)
+            return False
+
+    def solid_status(self, cron_job=False):
+        if self.is_closed():
+            return 'closed'
+        if self.is_in_progress():
+            return 'in progress'
+        else:
+            if cron_job or not current_user.is_anonymous():
+                if self.due_date and self.status != 'Open':
+                    if datetime.now() >= self.due_date:
+                        return 'overdue'
+                    elif datetime.now() \
+                            + timedelta(days=int(app.config['DAYS_UNTIL_OVERDUE'
+                                                 ])) >= self.due_date:
+                        return 'due soon'
+                    elif datetime.now() + timedelta(days=int(15)) \
+                            >= self.due_date:
+                        return 'in progress (due in 15 days)'
+                    elif datetime.now() + timedelta(days=int(30)) \
+                            >= self.due_date:
+                        return 'in progress (due in 30 days)'
+                    elif datetime.now() + timedelta(days=int(60)) \
+                            >= self.due_date:
+                        return 'in progress (due in 60 days)'
+                    elif datetime.now() + timedelta(days=int(90)) \
+                            >= self.due_date:
+                        return 'in progress (due in 90 days)'
+                    elif datetime.now() + timedelta(days=int(120)) \
+                            >= self.due_date:
+                        return 'in progress (due in 120 days)'
                     else:
-                        return "acknowledged"
-        return "open"
+                        return 'acknowledged'
+        return 'open'
 
     @hybrid_property
     def open(self):
-        two_days = datetime.now() + timedelta(days=2)
+        two_days = datetime.now() + timedelta(days=0x02)
         return and_(~self.closed, self.due_date > two_days)
 
     @hybrid_property
     def due_soon(self):
-        two_days = datetime.now() + timedelta(days=2)
-        return and_(self.due_date < two_days, self.due_date > datetime.now(), ~self.closed)
+        two_days = datetime.now() + timedelta(days=0x02)
+        return and_(self.due_date < two_days, self.due_date
+                    > datetime.now(), ~self.closed)
 
     @hybrid_property
     def overdue(self):
@@ -395,46 +565,65 @@ class Request(db.Model):
 
     @hybrid_property
     def closed(self):
-        return Request.status.ilike("%closed%")
+        return Request.status.ilike('%closed%')
 
+### @export "QA"
 
 class QA(db.Model):
     # A Q & A block for a request
+
     __tablename__ = 'qa'
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.String())
     answer = db.Column(db.String())
     request_id = db.Column(db.String(100), db.ForeignKey('request.id'))
-    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # Actually just a user ID
-    subscriber_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # Actually just a user ID
+    owner_id = db.Column(db.Integer,
+                         db.ForeignKey('user.id'))  # Actually just a user ID
+    subscriber_id = db.Column(db.Integer, db.ForeignKey(
+        'user.id'))  # Actually just a user ID
     date_created = db.Column(db.DateTime)
 
-    def __init__(self, request_id, question, user_id=None):
+    def __init__(
+            self,
+            request_id,
+            question,
+            user_id=None,
+    ):
         self.question = question
         self.request_id = request_id
         self.date_created = datetime.now().isoformat()
         self.owner_id = user_id
 
     def __repr__(self):
-        return "<QA Q: %r A: %r>" % (self.question, self.answer)
+        return '<QA Q: %r A: %r>' % (self.question, self.answer)
 
+
+### @export "Owner"
 
 class Owner(db.Model):
     # A member of city staff assigned to a particular request, that may or may not upload records towards that request.
+
     __tablename__ = 'owner'
     id = db.Column(db.Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'))
-    user = relationship("User", uselist=False)
+    user = relationship('User', uselist=False)
     request_id = db.Column(db.String(100), db.ForeignKey('request.id'))
-    request = relationship("Request", foreign_keys=[request_id])
-    active = db.Column(db.Boolean, default=True)  # Indicate whether they're still involved in the request or not.
+    request = relationship('Request', foreign_keys=[request_id])
+    active = db.Column(db.Boolean,
+                       default=True)  # Indicate whether they're still involved in the request or not.
     reason = db.Column(db.String())  # Reason they were assigned
     reason_unassigned = db.Column(db.String())  # Reason they were unassigned
     date_created = db.Column(db.DateTime)
     date_updated = db.Column(db.DateTime)
     is_point_person = db.Column(db.Boolean)
 
-    def __init__(self, request_id, user_id, reason=None, is_point_person=False):
+    def __init__(
+            self,
+            request_id,
+            user_id,
+            reason=None,
+            is_point_person=False,
+    ):
         self.reason = reason
         self.user_id = user_id
         self.request_id = request_id
@@ -445,20 +634,28 @@ class Owner(db.Model):
     def __repr__(self):
         return '<Owner %r>' % self.id
 
+### @export "Subscriber"
 
 class Subscriber(db.Model):
     # A person subscribed to a request, who may or may not have created the request, and may or may not own a part of the request.
+
     __tablename__ = 'subscriber'
     id = db.Column(db.Integer, primary_key=True)
-    should_notify = db.Column(db.Boolean, default=True)  # Allows a subscriber to unsubscribe
+    should_notify = db.Column(db.Boolean,
+                              default=True)  # Allows a subscriber to unsubscribe
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    user = relationship("User", uselist=False)
+    user = relationship('User', uselist=False)
     request_id = db.Column(db.String(100), db.ForeignKey('request.id'))
     date_created = db.Column(db.DateTime)
     owner_id = db.Column(db.Integer, db.ForeignKey(
         'owner.id'))  # Not null if responsible for fulfilling a part of the request. UPDATE 6-11-2014: This isn't used. we should get rid of it.
 
-    def __init__(self, request_id, user_id, creator=False):
+    def __init__(
+            self,
+            request_id,
+            user_id,
+            creator=False,
+    ):
         self.user_id = user_id
         self.request_id = request_id
         self.date_created = datetime.now().isoformat()
@@ -467,22 +664,39 @@ class Subscriber(db.Model):
         return '<Subscriber %r>' % self.user_id
 
 
+### @export "Record"
+
 class Record(db.Model):
     # A record that is attached to a particular request. A record can be online (uploaded document, link) or offline.
+
     __tablename__ = 'record'
     id = db.Column(db.Integer, primary_key=True)
     date_created = db.Column(db.DateTime)
-    user_id = db.Column(db.Integer,
-                        db.ForeignKey('user.id'))  # The user who uploaded the record, right now only city staff can
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        'user.id'))  # The user who uploaded the record, right now only city staff can
     doc_id = db.Column(db.Integer)  # The document ID.
-    request_id = db.Column(db.String(100), db.ForeignKey('request.id'))  # The request this record was uploaded for
-    description = db.Column(db.String(400))  # A short description of what the record is.
-    filename = db.Column(db.String(400))  # The original name of the file being uploaded.
+    request_id = db.Column(db.String(100), db.ForeignKey(
+        'request.id'))  # The request this record was uploaded for
+    description = db.Column(
+        db.String(400))  # A short description of what the record is.
+    filename = db.Column(
+        db.String(400))  # The original name of the file being uploaded.
     url = db.Column(db.String())  # Where it exists on the internet.
-    download_url = db.Column(db.String())  # Where it can be downloaded on the internet.
-    access = db.Column(db.String())  # How to access it. Probably only defined on offline docs for now.
+    download_url = db.Column(
+        db.String())  # Where it can be downloaded on the internet.
+    access = db.Column(
+        db.String())  # How to access it. Probably only defined on offline docs for now.
 
-    def __init__(self, request_id, user_id, url=None, filename=None, doc_id=None, description=None, access=None):
+    def __init__(
+            self,
+            request_id,
+            user_id,
+            url=None,
+            filename=None,
+            doc_id=None,
+            description=None,
+            access=None,
+    ):
         self.doc_id = doc_id
         self.request_id = request_id
         self.user_id = user_id
@@ -496,18 +710,28 @@ class Record(db.Model):
         return '<Record %r>' % self.description
 
 
+### @export "Note"
+
 class Note(db.Model):
     # A note on a request.
+
     __tablename__ = 'note'
     id = db.Column(db.Integer, primary_key=True)
     date_created = db.Column(db.DateTime)
     text = db.Column(db.String())
-    request_id = db.Column(db.String(100), db.ForeignKey('request.id'))  # The request it belongs to.
+    request_id = db.Column(db.String(100), db.ForeignKey(
+        'request.id'))  # The request it belongs to.
     user_id = db.Column(db.Integer, db.ForeignKey(
         'user.id'))  # The user who wrote the note. Right now only stored for city staff - otherwise it's an anonymous/ 'requester' note.
-    privacy = db.Column(db.Integer, default=1)
+    privacy = db.Column(db.Integer, default=0x01)
 
-    def __init__(self, request_id, text, user_id, privacy=1):
+    def __init__(
+            self,
+            request_id,
+            text,
+            user_id,
+            privacy=0x01,
+    ):
         self.text = text
         self.request_id = request_id
         self.user_id = user_id
@@ -517,6 +741,8 @@ class Note(db.Model):
     def __repr__(self):
         return '<Note %r>' % self.text
 
+
+### @export "Visualization"
 
 class Visualization(db.Model):
     __tablename__ = 'visualization'
