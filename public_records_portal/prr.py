@@ -21,6 +21,7 @@ from spam import is_spam
 import logging
 import csv
 import urllib
+from requires_roles import requires_roles
 
 agency_codes = {"Department of Records and Information Services": "860", "Office of the Chief Medical Examiner":"816","Mayor's Office":"002","Department of Education":"040","Department of Information Technology and Telecommunications":"858","DoITT/General Counse":"858", None:"000"}
 
@@ -89,6 +90,7 @@ def update_resource(resource, request_body):
 		return False
 
 ### @export "request_extension"
+@requires_roles('Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel')
 def request_extension(request_id, extension_reasons, days_after, user_id):
 	req = Request.query.get(request_id)
 	req.extension(days_after)
@@ -264,7 +266,7 @@ def get_request_data_chronologically(req):
 	if not req:
 		return responses
 	for i, note in enumerate(req.notes):
-		if not note.user_id:
+		if not note.user_id: # Indicates note was written by public, so considered part of the 'request'
 			responses.append(RequestPresenter(note = note, index = i, public = public, request = req))
 	for i, qa in enumerate(req.qas):
 		responses.append(RequestPresenter(qa = qa, index = i, public = public, request = req))
@@ -279,9 +281,10 @@ def get_responses_chronologically(req):
 	if not req:
 		return responses
 	for note in req.notes:
-		if note.user_id:
-			if current_user.is_anonymous()  and note.privacy == 2:
-				pass # private note
+		if note.user_id: # Indicates note was written by staff, so considered part of the 'response'
+			# Ensure private notes only available to appropriate users
+			if note.privacy == 2 and (current_user.is_anonymous() or current_user.role not in ['Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel', 'Agency Helpers']):
+				pass
 			else:
 				responses.append(ResponsePresenter(note = note))
 	for record in req.records:
@@ -332,3 +335,18 @@ def close_request(request_id, reason = "", user_id = None):
 	create_note(request_id, reason, user_id, privacy = 1)
 	generate_prr_emails(request_id = request_id, notification_type = "Request closed")
 	add_staff_participant(request_id = request_id, user_id = user_id)
+
+# Similar to close_request but no e-mails are sent
+def close_request_spam(user_id, request_id, reason = "This is spam"):
+	req = get_obj("Request", request_id)
+	change_request_status(request_id, "Closed")
+	# Create a note to capture closed information:
+	create_note(request_id, reason, user_id)
+	add_staff_participant(request_id = request_id, user_id = user_id)
+
+
+
+
+
+
+
