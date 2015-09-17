@@ -23,6 +23,7 @@ from validate_email import validate_email
 
 from public_records_portal import db, app
 
+
 class notePrivacy:
     PUBLIC = 0x01
     AGENCY = 0x02
@@ -133,7 +134,8 @@ class User(db.Model):
             backup_for=None,
             password=None,
             is_staff=False,
-            staff_signature=False
+            staff_signature=False,
+            role=None
     ):
         if email and validate_email(email):
             self.email = email
@@ -165,12 +167,17 @@ class User(db.Model):
             self.staff_signature = staff_signature
         if password:
             self.set_password(password)
+        if role:
+            self.set_role(role)
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
+
+    def set_role(self, role):
+        self.role = role
 
     def is_admin(self):
         if 'LIST_OF_ADMINS' in app.config:
@@ -245,6 +252,7 @@ class Department(db.Model):
 
     def get_name(self):
         return self.name or 'N/A'
+
 
 ### @export "Request"
 
@@ -446,35 +454,35 @@ class Request(db.Model):
             return requester.user.get_phone()
         return 'N/A'
 
-        def requester_address1(self):
-            requester = self.requester()
-            if requester and requester.user:
-                return requester.user.get_address1()
-            return 'N/A'
+    def requester_address1(self):
+        requester = self.requester()
+        if requester and requester.user:
+            return requester.user.get_address1()
+        return 'N/A'
 
-        def requester_address2(self):
-            requester = self.requester()
-            if requester and requester.user:
-                return requester.user.get_address2()
-            return 'N/A'
+    def requester_address2(self):
+        requester = self.requester()
+        if requester and requester.user:
+            return requester.user.get_address2()
+        return 'N/A'
 
-        def requester_city(self):
-            requester = self.requester()
-            if requester and requester.user:
-                return requester.user.get_city()
-            return 'N/A'
+    def requester_city(self):
+        requester = self.requester()
+        if requester and requester.user:
+            return requester.user.get_city()
+        return 'N/A'
 
-        def requester_state(self):
-            requester = self.requester()
-            if requester and requester.user:
-                return requester.user.get_state()
-            return 'N/A'
+    def requester_state(self):
+        requester = self.requester()
+        if requester and requester.user:
+            return requester.user.get_state()
+        return 'N/A'
 
-        def requester_zipcode(self):
-            requester = self.requester()
-            if requester and requester.user:
-                return requester.user.get_zipcode()
-            return 'N/A'
+    def requester_zipcode(self):
+        requester = self.requester()
+        if requester and requester.user:
+            return requester.user.get_zipcode()
+        return 'N/A'
 
     def point_person_name(self):
         point_person = self.point_person()
@@ -561,6 +569,7 @@ class Request(db.Model):
     def closed(self):
         return Request.status.ilike('%closed%')
 
+
 ### @export "QA"
 
 class QA(db.Model):
@@ -627,6 +636,7 @@ class Owner(db.Model):
 
     def __repr__(self):
         return '<Owner %r>' % self.id
+
 
 ### @export "Subscriber"
 

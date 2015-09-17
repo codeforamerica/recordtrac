@@ -116,20 +116,22 @@ def request_extension(request_id, extension_reasons, days_after, user_id):
     return add_note(request_id=request_id, text=text, user_id=user_id,
                     passed_spam_filter=True)  # Bypass spam filter because they are logged in.
 
+
 ### @export "add_note"
-def add_note(request_id, text, user_id = None, passed_spam_filter = False, privacy = 1):
-	if not text or text == "" or (not passed_spam_filter):
-		return False
-	note_id = create_note(request_id = request_id, text = text, user_id = user_id, privacy = privacy)
-	if note_id:
-		change_request_status(request_id, "A response has been added.")
-		if user_id:
-			add_staff_participant(request_id = request_id, user_id = user_id)
-			generate_prr_emails(request_id = request_id, notification_type = "Public Notification Template 10")
-		else:
-			generate_prr_emails(request_id = request_id, notification_type = "Public note added")
-		return note_id
-	return False
+def add_note(request_id, text, user_id=None, passed_spam_filter=False, privacy=1):
+    if not text or text == "" or (not passed_spam_filter):
+        return False
+    note_id = create_note(request_id=request_id, text=text, user_id=user_id, privacy=privacy)
+    if note_id:
+        change_request_status(request_id, "A response has been added.")
+        if user_id:
+            add_staff_participant(request_id=request_id, user_id=user_id)
+            generate_prr_emails(request_id=request_id, notification_type="Public Notification Template 10")
+        else:
+            generate_prr_emails(request_id=request_id, notification_type="Public note added")
+        return note_id
+    return False
+
 
 ### @export "add_note"
 def add_note(request_id, text, user_id=None, passed_spam_filter=False, privacy=1):
@@ -334,8 +336,10 @@ def get_responses_chronologically(req):
         if note.user_id:
             # Ensure private notes only available to appropriate users
             if note.privacy == 2 and (
-                current_user.is_anonymous() or current_user.role not in ['Portal Administrator', 'Agency Administrator',
-                                                                         'Agency FOIL Personnel', 'Agency Helpers']):
+                        current_user.is_anonymous() or current_user.role not in ['Portal Administrator',
+                                                                                 'Agency Administrator',
+                                                                                 'Agency FOIL Personnel',
+                                                                                 'Agency Helpers']):
                 pass
             else:
                 responses.append(ResponsePresenter(note=note))
@@ -360,7 +364,7 @@ def set_directory_fields():
         dictreader = csv.DictReader(csvfile, delimiter=',')
         for row in dictreader:
             create_or_return_user(email=row['email'].lower(), alias=row['name'], phone=row['phone number'],
-                                  department=row['department name'], is_staff=True)
+                                  department=row['department name'], is_staff=True, role='Agency FOIL Personnel')
         # Set liaisons data (who is a PRR liaison for what department)
         if 'LIAISONS_URL' in app.config:
             csvfile = urllib.urlopen(app.config['LIAISONS_URL'])
@@ -381,7 +385,7 @@ def set_directory_fields():
                                   department=app.config['DEFAULT_OWNER_REASON'], is_staff=True)
             app.logger.info(
                 "\n\n Creating a single user from DEFAULT_OWNER_EMAIL and DEFAULT_OWNER_REASON for now. You may log in with %s" % (
-                app.config['DEFAULT_OWNER_EMAIL']))
+                    app.config['DEFAULT_OWNER_EMAIL']))
         else:
             app.logger.info("\n\n Unable to create any users. No one will be able to log in.")
 

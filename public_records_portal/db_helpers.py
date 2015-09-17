@@ -312,7 +312,7 @@ def authenticate_login(email, password):
 
 def create_or_return_user(email=None, alias=None, phone=None, address1=None, address2=None, city=None, state=None,
                           zipcode=None, department=None, contact_for=None, backup_for=None, not_id=False, is_staff=None,
-                          password=None):
+                          password=None, role=None):
     app.logger.info("\n\nCreating or returning user...")
     if email:
         user = User.query.filter(User.email == func.lower(email)).first()
@@ -330,12 +330,12 @@ def create_or_return_user(email=None, alias=None, phone=None, address1=None, add
                 user = create_user(email=email.lower(), alias=alias, phone=str(phone), address1=address1,
                                    address2=address2, city=city,
                                    state=state, zipcode=zipcode, department=department, contact_for=contact_for,
-                                   backup_for=backup_for, password='admin', is_staff=is_staff)
+                                   backup_for=backup_for, password='admin', is_staff=is_staff, role=role)
             else:
                 user = create_user(email=email.lower(), alias=alias, phone=str(phone), address1=address1,
                                    address2=address2, city=city,
                                    state=state, zipcode=zipcode, department=department, contact_for=contact_for,
-                                   backup_for=backup_for, password=password, is_staff=is_staff)
+                                   backup_for=backup_for, password=password, is_staff=is_staff, role=role)
 
         else:
             # Update user if fields to update are provided
@@ -343,19 +343,19 @@ def create_or_return_user(email=None, alias=None, phone=None, address1=None, add
                 user = update_user(user=user, alias=alias, phone=str(phone), address1=address1, address2=address2,
                                    city=city, state=state,
                                    zipcode=zipcode, department=department, contact_for=contact_for,
-                                   backup_for=backup_for, is_staff=is_staff)
+                                   backup_for=backup_for, is_staff=is_staff, role=role)
         if not_id:
             return user
         return user.id
     else:
         user = create_user(alias=alias, phone=phone, address1=address1,
-                           address2=address2, city=city, state=state, zipcode=zipcode, is_staff=is_staff)
+                           address2=address2, city=city, state=state, zipcode=zipcode, is_staff=is_staff, role=role)
         return user.id
 
 
 # @export "create_user"
 def create_user(email=None, alias=None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=None,
-                department=None, contact_for=None, backup_for=None, password=None, is_staff=None):
+                department=None, contact_for=None, backup_for=None, password=None, is_staff=None, role=None):
     first_name = None
     last_name = None
     if alias and " " in alias:
@@ -365,7 +365,7 @@ def create_user(email=None, alias=None, phone=None, address1=None, address2=None
     user = User(email=email, alias=alias, first_name=first_name, last_name=last_name, phone=phone, address1=address1,
                 address2=address2, city=city, state=state,
                 zipcode=zipcode, department=department, contact_for=contact_for, backup_for=backup_for,
-                password=password, is_staff=is_staff)
+                password=password, is_staff=is_staff, role=role)
     db.session.add(user)
     db.session.commit()
     app.logger.info("\n\nCreated new user, alias: %s id: %s" %
@@ -375,7 +375,7 @@ def create_user(email=None, alias=None, phone=None, address1=None, address2=None
 
 # @export "update_user"
 def update_user(user, alias=None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=None,
-                department=None, contact_for=None, backup_for=None, is_staff=None):
+                department=None, contact_for=None, backup_for=None, is_staff=None, role=None):
     if alias:
         user.alias = alias
     if phone:
@@ -407,6 +407,8 @@ def update_user(user, alias=None, phone=None, address1=None, address2=None, city
         user.backup_for = backup_for
     if is_staff:
         user.is_staff = is_staff
+    if role:
+        user.set_role(role)
     db.session.add(user)
     db.session.commit()
     app.logger.info("\n\nUpdated user %s, alias: %s phone: %s department: %s" % (
