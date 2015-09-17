@@ -31,8 +31,6 @@ elif 'DEV_EMAIL' in app.config:
     send_emails = True
 
 
-
-### @export "generate_prr_emails"
 def generate_prr_emails(request_id, notification_type, user_id=None):
     app.logger.info("\n\n Generating e-mails for request with ID: %s, notification type: %s, and user ID: %s" % (
     request_id, notification_type, user_id))
@@ -108,7 +106,6 @@ def generate_prr_emails(request_id, notification_type, user_id=None):
             app.logger.info("Not a valid recipient type: %s" % recipient_type)
 
 
-### @export "send_prr_email"
 def send_prr_email(page, recipients, subject, template, include_unsubscribe_link=True, cc_everyone=False, password=None,
                    unfollow_link=None):
     app.logger.info("\n\nAttempting to send an e-mail to %s with subject %s, referencing page %s and template %s" % (
@@ -126,7 +123,6 @@ def send_prr_email(page, recipients, subject, template, include_unsubscribe_link
             app.logger.info("\n\n E-mail flag turned off, no e-mails sent.")
 
 
-### @export "send_email"
 def send_email(body, recipients, subject, include_unsubscribe_link=True, cc_everyone=False):
     mail = Mail(app)
 
@@ -164,7 +160,6 @@ def send_email(body, recipients, subject, include_unsubscribe_link=True, cc_ever
     return False
 
 
-### @export "due_date"
 def due_date(date_obj, extended=None, format=True):
     days_to_fulfill = 10
     if extended == True:
@@ -179,7 +174,6 @@ def due_date(date_obj, extended=None, format=True):
     return due_date
 
 
-### @export "is_overdue"
 def is_overdue(date_obj, extended=None):
     current_date = datetime.now()
     due = due_date(date_obj=date_obj, extended=extended, format=False)
@@ -188,14 +182,12 @@ def is_overdue(date_obj, extended=None):
     return False, due
 
 
-### @export "get_email_info"
 def get_email_info(notification_type):
     email_json = open(os.path.join(app.root_path, 'static/json/emails.json'))
     json_data = json.load(email_json)
     return json_data["Notification types"][notification_type]
 
 
-### @export "notify_due"
 def notify_due():
     requests = get_objs("Request")
     email_json = open(os.path.join(app.root_path, 'static/json/emails.json'))
@@ -223,7 +215,6 @@ def notify_due():
             send_email(body=body, recipients=recipients, subject=email_subject, include_unsubscribe_link=False)
 
 
-### @export "get_staff_recipients"
 def get_staff_recipients(request):
     recipients = []
     owner_email = request.point_person().user.email
@@ -244,7 +235,6 @@ def get_staff_recipients(request):
         raise ValueError('No staff recipients for request %s' % (request.id))
 
 
-### @export "should_notify"
 def should_notify(user_email):
     """ Looks up the user in do_not_email.json and returns False if found. """
     do_not_email = open(os.path.join(app.root_path, 'static/json/do_not_email.json'))
@@ -257,7 +247,6 @@ def should_notify(user_email):
     return True
 
 
-### @export "format_date"
 def format_date(obj):
     """ Take a datetime object and return it in format Jun 12, 2013 """
     if not obj:

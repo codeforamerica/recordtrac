@@ -57,10 +57,9 @@ def date(obj):
         return None
     app.logger.info(type(obj))
     try:
-        app.logger.info(notifications.format_date(obj))
         return notifications.format_date(obj)
     except:  # Not a datetime object
-        return notifications.format_date(datetime.strftime(obj, "%Y-%m-%dT%H:%M:%S.%f"))
+        return notifications.format_date(datetime.strptime("%Y-%m-%dT%H:%M:%S.%f", obj))
 
 
 def timestamp(obj):
