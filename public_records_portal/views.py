@@ -621,7 +621,7 @@ def is_supported_browser():
                 or (browser == 'opera') \
                 or (re.search('BlackBerry', uas)):
             return False
-        return True
+        return False
     return False
 
 
@@ -786,8 +786,7 @@ def prepare_request_fields(results):
             # The following two attributes are defined as model methods,
             # and not regular SQLAlchemy attributes.
             "contact_name": r.point_person_name(), \
-            "solid_status": r.solid_status(), \
-            "privacy":      r.privacy
+            "solid_status": r.solid_status()
     }, results)
 
 

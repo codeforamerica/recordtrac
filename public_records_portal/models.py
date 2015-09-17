@@ -424,7 +424,7 @@ class Request(db.Model):
 
     def department_name(self):
         if self.department:
-            return requester.user.get_last_name()
+            return self.department.name
         return 'N/A'
 
     def is_closed(self):
