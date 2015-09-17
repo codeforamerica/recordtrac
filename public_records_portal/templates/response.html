@@ -3,46 +3,53 @@
 {% extends "base.html" %}
 {% block title %}Request{% endblock %}
 {% block content %}
-  {% block well %}
-      {% block request %}
-      <!-- request area -->
-        <div class="row-fluid">
-          <h3 >Request <span class="muted">#{{req.id}}</span></h3>
-          <div class="span10">
-              <p class="lead"> {{ req.text }} </p>
-          </div>
-        </div>
-      {% endblock request %}  
-      {% block response %}
-        <!-- response area: need to give this more space between the request area-->
-        <div class="row-fluid">
-          <h3 class="response">Response</h3>
+    {% block well %}
+        {% block request %}
+            <!-- request area -->
+            <div class="row-fluid">
+                <h3>Request <span class="muted">#{{ req.id }}</span></h3>
+
+                <div class="span10">
+                    <p class="lead"> {{ req.text }} </p>
+                </div>
+            </div>
+        {% endblock request %}
+        {% block response %}
+            <!-- response area: need to give this more space between the request area-->
+            <div class="row-fluid">
+            <h3 class="response">Response</h3>
             <!-- shows all existing responses (links, documents, offline docs, notes) -->
             {% set responses = ( req | get_responses_chronologically ) %}
-            {% if responses %} 
+            {% if responses %}
                 <div class="span10">
-                  {% for response in responses %}
-                      <div class="row-fluid response">
-                        <div class="span2 text-center">
-                          <i class="{{response.icon}}">  </i></br>
-                          <small> {{ response.date | date_granular }} </small> </br>
+                    {% for response in responses %}
+                        <div class="row-fluid response">
+                            <div class="span2 text-center">
+                                <i class="{{ response.icon }}"> </i></br>
+                                <small> {{ response.date | date_granular }} </small>
+                                </br>
+                            </div>
+                            <div class="span10">
+                                <p>
+                                    {{ response.text | safe }} - <em><a data-placement="left" data-toggle="popover"
+                                                                        href="#"
+                                                                        id="contactinfoPopoverResponse{{ loop.index }}"
+                                                                        class="hidden-phone hidden-tablet"><span
+                                        class="contactinfoPopover"
+                                        onmouseover="directoryPopover('{{ response.staff_email }}', '{{ response.staff_dept }}', '{{ response.staff_phone }}', '#contactinfoPopoverResponse{{ loop.index }}')">{{ response.staff_alias or response.staff_email }}</span></a></em>.
+                                </p>
+                            </div>
                         </div>
-                        <div class="span10">
-                          <p> 
-                             {{ response.text | safe }} - <em><a data-placement="left" data-toggle="popover" href="#" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{response.staff_email}}', '{{response.staff_dept}}', '{{response.staff_phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ response.staff_alias or response.staff_email }}</span></a></em>. 
-                          </p>
-                        </div>
-                      </div>
-                  {% endfor %}
+                    {% endfor %}
                 </div>
-            {% else %}<!--added an if then to check to see if any responses exist - if no then show text here for the "if any response exists" above -->
-              <div class="span10">
-                <p><br><i>No records uploaded yet.</i></p>
-              </div>
-          {% endif %}
-      {% endblock response %}
+                {% else %}<!--added an if then to check to see if any responses exist - if no then show text here for the "if any response exists" above -->
+                <div class="span10">
+                    <p><br><i>No records uploaded yet.</i></p>
+                </div>
+            {% endif %}
+        {% endblock response %}
 
-      </div>
     </div>
-  {% endblock well %}
+        </div>
+    {% endblock well %}
 {% endblock content %}
