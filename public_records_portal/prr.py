@@ -116,6 +116,20 @@ def request_extension(request_id, extension_reasons, days_after, user_id):
     return add_note(request_id=request_id, text=text, user_id=user_id,
                     passed_spam_filter=True)  # Bypass spam filter because they are logged in.
 
+### @export "add_note"
+def add_note(request_id, text, user_id = None, passed_spam_filter = False, privacy = 1):
+	if not text or text == "" or (not passed_spam_filter):
+		return False
+	note_id = create_note(request_id = request_id, text = text, user_id = user_id, privacy = privacy)
+	if note_id:
+		change_request_status(request_id, "A response has been added.")
+		if user_id:
+			add_staff_participant(request_id = request_id, user_id = user_id)
+			generate_prr_emails(request_id = request_id, notification_type = "Public Notification Template 10")
+		else:
+			generate_prr_emails(request_id = request_id, notification_type = "Public note added")
+		return note_id
+	return False
 
 ### @export "add_note"
 def add_note(request_id, text, user_id=None, passed_spam_filter=False, privacy=1):

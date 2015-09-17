@@ -136,6 +136,6 @@ pdfs/
 #~#
 .env*
 pdfs/
-
+venv/
 Vagrantfile
 .vagrant/

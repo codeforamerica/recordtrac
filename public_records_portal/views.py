@@ -374,7 +374,6 @@ def show_request_for_x(audience, request_id):
 
 show_request_for_x.methods = ['GET', 'POST']
 
-
 @app.route("/city/request/<string:request_id>")
 @login_required
 @requires_roles('Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel', 'Agency Helpers')
@@ -458,7 +457,6 @@ def departments_to_json():
         agency_data.append({'agency': d.name})
     return jsonify(**{'objects': agency_data})
 
-
 def docs():
     return redirect('http://codeforamerica.github.io/public-records/docs/1.0.0')
 
@@ -474,6 +472,7 @@ def edit_case(request_id):
 @login_required
 def add_a_resource(resource):
     if request.method == 'POST':
+        print "Resource is a ", resource
         resource_id = add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
         if type(resource_id) == int or str(resource_id).isdigit():
             app.logger.info("\n\nSuccessfully added resource: %s with id: %s" % (resource, resource_id))
@@ -524,7 +523,6 @@ def update_a_resource(resource, passed_recaptcha=False, data=None):
             return redirect(url_for('show_request', request_id=request.form['request_id']))
     return render_template('error.html', message="You can only update requests from a request page!")
 
-
 @app.route("/acknowledge_request", methods=["GET", "POST"])
 def acknowledge_request(resource, passed_recaptcha=False, data=None):
     if (data or request.method == 'POST'):
@@ -539,7 +537,6 @@ def acknowledge_request(resource, passed_recaptcha=False, data=None):
         else:
             return redirect(url_for('show_request', request_id=request.form['request_id']))
     return render_template('error.html', message="You can only update requests from a request page!")
-
 
 # Closing is specific to a case, so this only gets called from a case (that only city staff have a view of)
 
@@ -779,17 +776,18 @@ def prepare_request_fields(results):
     #     }, results)
     # else:
     return map(lambda r: {
-        "id": r.id, \
-        "text": helpers.clean_text(r.text), \
-        "date_received": helpers.date(r.date_received or r.date_created), \
-        "agency": r.department_name(), \
-        "requester": r.requester_name(), \
-        "due_date": format_date(r.due_date), \
-        "status": r.status, \
-        # The following two attributes are defined as model methods,
-        # and not regular SQLAlchemy attributes.
-        "contact_name": r.point_person_name(), \
-        "solid_status": r.solid_status()
+            "id":           r.id, \
+            "text":         helpers.clean_text(r.text), \
+            "date_received": helpers.date(r.date_received or r.date_created), \
+            "department":   r.department_name(), \
+            "requester":    r.requester_name(), \
+            "due_date":     format_date(r.due_date), \
+            "status":       r.status, \
+            # The following two attributes are defined as model methods,
+            # and not regular SQLAlchemy attributes.
+            "contact_name": r.point_person_name(), \
+            "solid_status": r.solid_status(), \
+            "privacy":      r.privacy
     }, results)
 
 
@@ -911,7 +909,6 @@ def any_page(page):
         return render_template('%s.html' % (page))
     except:
         return render_template('error.html', message="%s totally doesn't exist." % (page))
-
 
 def tutorial():
     user_id = get_user_id()
