@@ -1,0 +1,202 @@
+/*imports*/
+@import 'compass';
+@import "compass/css3/transition";
+@import 'mixins';
+@import 'variables';
+@import 'plugins/BootSwatchr6';
+@import 'nyc-global';
+@import 'plugins/font-awesome.min';
+
+html, body {
+	min-height: 100%;
+	height: 100%;
+}
+
+/* Tight tracking on all headings, per the NYC style */
+
+h1, h2, h3, h4, h5, h6 {
+	letter-spacing: -.04rem;
+	line-height: 1.15;
+}
+
+h1 {
+	@include breakpoint(baby-bear) {
+		font-size: 2.2rem;
+	}
+}
+
+.wrapper {
+	margin-bottom: -$footer-height;
+	min-height: 100%;
+	max-width: calc(940px + #{$wrapper-pad});
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: $wrapper-pad;
+	padding-right: $wrapper-pad;
+
+	@include breakpoint(mama-bear) {
+		max-width: 724px;
+	}
+
+	@include breakpoint(baby-bear) {
+		padding-left: $wrapper-pad-mobile;
+		padding-right: $wrapper-pad-mobile;
+		margin-bottom: -$footer-height-mobile;
+	}
+
+	/* styling the form inputs. Note: this falls within the .wrapper class only to increase specificity */
+	input, select, textarea {
+		font-size: 1.2rem;
+		line-height: 1.4;
+		padding: .7rem;
+		width: 100%;
+
+		&[type=text] {
+			padding-top: 1.2rem;
+			padding-bottom: 1.2rem;
+		}
+	}
+}
+
+.navbar {
+	padding: 2rem 0;
+
+	.nav {
+		float: right;
+		margin-top: 2.4rem;
+	}
+
+	.brand {
+		padding: 0;
+		margin: 0;
+	}
+}
+
+.navbar-inner {
+	background: none;
+	border: 0;
+	border-bottom: 1px solid black;
+	box-shadow: none;
+	padding: 0 0 1rem;
+	@include border-radius(0);
+}
+
+#logo_nav {
+	padding: 0;
+	width: 13rem;	
+}
+
+/* tabs */
+ul.nav.tabs {
+	font-size: 16px;
+
+	@include breakpoint(baby-bear) {
+		font-size: 1.2rem;
+		width: 100%;
+		text-align: center;
+	}
+
+	li.active {
+		border-bottom: 2px solid #17B292;
+
+		a {
+			padding-bottom: 4px;
+		}
+	}
+}
+
+footer {
+	background: #000;
+	color: #fff;
+	padding: 2rem 0 3rem;
+	@include border-radius(0);
+	width: 100%;
+	height: $footer-height;
+	margin-top: $wrapper-pad-bottom;
+
+	@include breakpoint(baby-bear) {
+		height: $footer-height-mobile;
+	}
+
+	li {
+		font-size: 1.3rem;
+		line-height: 1.3;
+		border-bottom: 1px solid #fff;
+		list-style-type: none;
+		padding: 1rem 0;
+
+		a {
+			&:link, &:active, &:visited {
+				color: #fff;
+			}
+
+			&:hover {
+				text-decoration: none;
+				color: $light-grey;
+			}
+		}
+	}
+}
+
+.push {
+	height: $footer-height;
+	margin-bottom: 0px;
+
+	@include breakpoint(baby-bear) {
+		height: $footer-height-mobile;
+	}
+}
+
+/* Targeting the intro text block on the homepage */
+
+.intro p {
+	font-size: 1.2rem;
+	line-height: 1.4;
+	margin: 0 0 1rem;
+}
+
+/* this hides step2 in the new request form, but it will also prevent non-JS users from viewing the form. Need to come back to this. */
+.step {
+	display: none;
+
+	/* if the user doesn't have js enabled this will display both steps together. */
+	.no-js & {
+		display: block; 
+	}
+}
+
+/* if the user doesn't have js enabled remove the two step process */
+.no-js #button1 {
+	display: none;
+}
+
+/* This is defined in the bootstrap style, but we can tweak it here */
+.btn-primary {
+	background: $nyc-blue;
+	margin: 1rem 0 2rem;
+	max-width: 25rem;
+	padding: 1rem 0;
+	font-size: 1.2rem;
+	@include transition(.3s all ease);
+
+	&:hover {
+		background: $light-blue;
+	}
+}
+
+/* This is the class to be applied to sidebar boxes */
+.sideblock {
+	background: $off-white;
+	padding: 1rem 1.5rem;
+}
+
+.form-nav {
+	.link {
+		color: $grey;
+		text-decoration: underline;
+		cursor: pointer;
+	}
+}
+
+
+
