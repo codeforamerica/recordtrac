@@ -44,6 +44,21 @@
       $this.html('<i class="icon-chevron-down"></i> See all <i class="icon-chevron-down"></i>')
     }
   });
+  $('#acknowledgeRequestForm').on('click',function() {
+      if ($('#acknowledgeRequestForm').css('display') != 'none') {
+        $('#acknowledgeRequestForm').hide();
+      }
+});
+  $("#days_after").change(function() {
+    selected = $(this).val();
+    if(selected === "0") { 
+      $("#custom_due_date").show();
+      }
+    else {
+      $("#custom_due_date").hide();
+    }
+});
+
 
   $("#days_after").change(function() {
     selected = $(this).val();

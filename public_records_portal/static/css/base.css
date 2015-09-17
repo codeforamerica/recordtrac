@@ -47,7 +47,7 @@
 		margin-left: 0;
 	}
 
-	.navbar-inner {	
+	.navbar-inner {
 	  -webkit-border-radius: 0;
 	  -moz-border-radius: 0;
 	  border-radius: 0;
@@ -113,6 +113,7 @@ label.error {
 }
 html, body {
 	height: 100%;
+	font-family: Sans-Serif;
 }
 .wrapper {
 	min-height: 100%;
