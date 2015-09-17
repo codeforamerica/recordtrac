@@ -89,7 +89,7 @@ This template provides the header, footer, and envelope info for all pages excep
           <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
 
               {% if current_user.is_authenticated() %}
-                <!-- <ul class="nav tabs">
+                <ul class="nav tabs">
                   <li><a href="/new">New request</a></li>
                   <li><a href="/view_requests">All requests</a></li>
                   <li><a href="/track">Track</a></li>
@@ -98,12 +98,12 @@ This template provides the header, footer, and envelope info for all pages excep
                 </ul>
                 <ul class="nav pull-right">
                   <li><a href="/logout">Logout</a></li>
-                </ul> -->
+                </ul>
               {% else %}
                 <ul class="nav tabs">
-                  <li><a href="new.html">Request a Record</a></li>
-                  <li><a href="track.html">Track an Existing Request</a></li>
-                  <li><a href="about.html">About Open Records</a></li>
+                  <li><a href="/new">Request a Record</a></li>
+                  <li><a href="/track">Track an Existing Request</a></li>
+                  <li><a href="/about">About Open Records</a></li>
                 </ul>
                 <!-- <ul class="nav pull-right">
                   <li><a href="/login" >Login</a></li>
