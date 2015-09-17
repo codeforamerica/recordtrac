@@ -10,13 +10,10 @@
 """
 
 from datetime import datetime, timedelta
-from dateutil.parser import parse
-from business_calendar import Calendar
-from public_records_portal import db, app
-from werkzeug.security import generate_password_hash, check_password_hash
-import json
 import re
 
+from dateutil.parser import parse
+from business_calendar import Calendar
 from flask.ext.login import current_user
 from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
@@ -25,6 +22,8 @@ from sqlalchemy import and_
 from werkzeug.security import generate_password_hash, \
     check_password_hash
 from validate_email import validate_email
+
+from public_records_portal import db, app
 
 cal = Calendar()
 
@@ -495,29 +494,24 @@ class Request(db.Model):
             return point_person.user.get_alias()
         return 'N/A'
 
-	def set_due_date(self):
-		if not self.date_received:
-			self.date_received = self.date_created
-		if self.extended == True:
-			self.due_date = cal.addbusdays(self.date_received, int(app.config['DAYS_AFTER_EXTENSION']))
-		else:
-			self.due_date = cal.addbusdays(self.date_received, int(app.config['DAYS_TO_FULFILL']))
-
-	def extension(self):
-		self.extended = True
-		self.due_date = cal.addbusdays(self.due_date, app.config['DAYS_AFTER_EXTENSION'])
-	def extension(self, days_after = None, due_date = None):
-		self.extended = True
-		if due_date is None or due_date == '':
-			self.due_date = cal.addbusdays(self.due_date, int(days_after))
-		else:
-			self.due_date = parse(str(due_date)) + timedelta(days = 1)
+    def set_due_date(self):
+        if not self.date_received:
+            self.date_received = self.date_created
+        if self.extended == True:
+            self.due_date = cal.addbusdays(self.date_received, int(app.config['DAYS_AFTER_EXTENSION']))
         else:
-            app.logger.info('''
+            self.due_date = cal.addbusdays(self.date_received, int(app.config['DAYS_TO_FULFILL']))
 
- Request with this ID has no status: %s'''
-                            % self.id)
-            return False
+    def extension(self):
+        self.extended = True
+        self.due_date = cal.addbusdays(self.due_date, app.config['DAYS_AFTER_EXTENSION'])
+
+    def extension(self, days_after=None, due_date=None):
+        self.extended = True
+        if due_date is None or due_date == '':
+            self.due_date = cal.addbusdays(self.due_date, int(days_after))
+        else:
+            self.due_date = parse(str(due_date)) + timedelta(days=1)
 
     def is_in_progress(self):
         if self.status:
@@ -526,7 +520,7 @@ class Request(db.Model):
         else:
             app.logger.info('''
 
- Request with this ID has no status: %s'''
+     Request with this ID has no status: %s'''
                             % self.id)
             return False
 
