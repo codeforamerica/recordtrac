@@ -11,7 +11,7 @@ from flask import render_template, redirect, url_for, send_from_directory
 from flask.ext.login import login_user, logout_user, current_user, login_required
 # from flaskext.browserid import BrowserID
 from public_records_portal import db, models, recaptcha
-from prr import add_resource, update_resource, make_request, close_request
+from prr import add_resource, update_resource, make_request, close_request, add_note, add_public_note
 from db_helpers import authenticate_login, get_user_by_id
 import os, json
 from urlparse import urlparse, urljoin
@@ -374,6 +374,7 @@ def show_request_for_x(audience, request_id):
 
 show_request_for_x.methods = ['GET', 'POST']
 
+
 @app.route("/city/request/<string:request_id>")
 @login_required
 @requires_roles('Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel', 'Agency Helpers')
@@ -457,6 +458,7 @@ def departments_to_json():
         agency_data.append({'agency': d.name})
     return jsonify(**{'objects': agency_data})
 
+
 def docs():
     return redirect('http://codeforamerica.github.io/public-records/docs/1.0.0')
 
@@ -486,28 +488,6 @@ def add_a_resource(resource):
     return render_template('error.html', message="You can only update requests from a request page!")
 
 
-@app.route("/public_add_a_<string:resource>", methods=["GET", "POST"])
-def public_add_a_resource(resource, passed_recaptcha=False, data=None):
-    if (data or request.method == 'POST') and ('note' in resource or 'subscriber' in resource):
-        if not data:
-            data = request.form.copy()
-        if 'note' in resource:
-            resource_id = prr.add_note(request_id=data['request_id'], text=data['note_text'], passed_spam_filter=True,
-                                       privacy=data['note_privacy'])
-        if 'pdf' in resource:
-            resource_id = prr.add_note(request_id=data['request_id'], text=data['response_template'],
-                                       passed_spam_filter=True)
-        else:
-            resource_id = prr.add_resource(resource=resource, request_body=data, current_user_id=None)
-        if type(resource_id) == int:
-            request_id = data['request_id']
-            audience = 'public'
-            if 'subscriber' in resource:
-                audience = 'follower'
-            return redirect(url_for('show_request_for_x', audience=audience, request_id=request_id))
-    return render_template('error.html')
-
-
 @app.route("/update_a_<string:resource>", methods=["GET", "POST"])
 def update_a_resource(resource, passed_recaptcha=False, data=None):
     if (data or request.method == 'POST'):
@@ -523,6 +503,7 @@ def update_a_resource(resource, passed_recaptcha=False, data=None):
             return redirect(url_for('show_request', request_id=request.form['request_id']))
     return render_template('error.html', message="You can only update requests from a request page!")
 
+
 @app.route("/acknowledge_request", methods=["GET", "POST"])
 def acknowledge_request(resource, passed_recaptcha=False, data=None):
     if (data or request.method == 'POST'):
@@ -537,6 +518,7 @@ def acknowledge_request(resource, passed_recaptcha=False, data=None):
         else:
             return redirect(url_for('show_request', request_id=request.form['request_id']))
     return render_template('error.html', message="You can only update requests from a request page!")
+
 
 # Closing is specific to a case, so this only gets called from a case (that only city staff have a view of)
 
@@ -776,17 +758,17 @@ def prepare_request_fields(results):
     #     }, results)
     # else:
     return map(lambda r: {
-            "id":           r.id, \
-            "text":         helpers.clean_text(r.text), \
-            "date_received": helpers.date(r.date_received or r.date_created), \
-            "department":   r.department_name(), \
-            "requester":    r.requester_name(), \
-            "due_date":     format_date(r.due_date), \
-            "status":       r.status, \
-            # The following two attributes are defined as model methods,
-            # and not regular SQLAlchemy attributes.
-            "contact_name": r.point_person_name(), \
-            "solid_status": r.solid_status()
+        "id": r.id, \
+        "text": helpers.clean_text(r.text), \
+        "date_received": helpers.date(r.date_received or r.date_created), \
+        "department": r.department_name(), \
+        "requester": r.requester_name(), \
+        "due_date": format_date(r.due_date), \
+        "status": r.status, \
+        # The following two attributes are defined as model methods,
+        # and not regular SQLAlchemy attributes.
+        "contact_name": r.point_person_name(), \
+        "solid_status": r.solid_status()
     }, results)
 
 
@@ -909,6 +891,7 @@ def any_page(page):
     except:
         return render_template('error.html', message="%s totally doesn't exist." % (page))
 
+
 def tutorial():
     user_id = get_user_id()
     app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
@@ -982,9 +965,7 @@ def recaptcha_templatetype(templatetype):
             message = "Invalid. Please try again."
             return render_template(template, message=message, form=request.form)
         else:
-            if templatetype == "note":
-                return public_add_a_resource(passed_recaptcha=True, data=request.form, resource="note")
-            elif templatetype == "answer":
+            if templatetype == "answer":
                 app.logger.info("Template type is answer!")
                 return update_a_resource(passed_recaptcha=True, data=request.form, resource="qa")
             elif templatetype == "request":
