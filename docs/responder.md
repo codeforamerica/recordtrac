@@ -1,8 +1,8 @@
-# How to use RecordTrac as an agency employee 
+# How to use RecordTrac as an agency employee
 
 ## Search for a record
 
-RecordTrac displays all current and past records requests at `records.[youragency].gov/requests`. 
+RecordTrac displays all current and past records requests at `records.[youragency].gov/requests`.
 
 ![staff_table](/docs/images/staff_table.png "staff_table")
 
@@ -11,12 +11,12 @@ The table displays the following information:
 * '#': Each request is assigned a unique number. You can easily track requests with this number by visiting `records.[youragency].gov/track]`.
 * Received: This shows the date the request was received.  If a request wasn't originally submitted through RecordTrac, it may take agency employees a day or two to enter it into the system.
 * Request: This is the message sent to the agency by a member of the public. Sometimes agnecy employees will enter a request on behalf of an individual. If the requested document contains confidential information that may violate the security or privacy of a requester, the public will only see a short description of the document.
-* Department: The agency department where the point of contact works. Multiple departments may be involved in one request, but the Point of Contact's department will only be displayed. 
-* Point of Contact: The 'Point of Contact' is the employee responsible for providing the requester with the information they need. Sometimes agency employees from several departments will be needed to respond to one public records request. They will be added as Helpers, but they will not be displayed on this particular web page. 
+* Department: The agency department where the point of contact works. Multiple departments may be involved in one request, but the Point of Contact's department will only be displayed.
+* Point of Contact: The 'Point of Contact' is the employee responsible for providing the requester with the information they need. Sometimes agency employees from several departments will be needed to respond to one public records request. They will be added as Helpers, but they will not be displayed on this particular web page.
 
 	*☟ NOTE: Requesters are not able to search by or view the following two columns. ☟*
 
-* Due: This shows the date the request is due.  The date is calculated from an admin-configured response time. 
+* Due: This shows the date the request is due.  The date is calculated from an admin-configured response time.
 * Requester: The requester's name, if provided by the requester.  If no name was provided, it will display as "N/A".
 
 ### Manage your request list
@@ -46,19 +46,19 @@ Agency staff can also sort the requests by:
 
 * Request number (#)
 * Date the request was received
-* Request text 
+* Request text
 * Due date
 
 ## Make a new request
-Agency staff can create a request on behalf of a requester. 
+Agency staff can create a request on behalf of a requester.
 
 ![staff_new_request](/docs/images/staff_new_request.png "staff_new_request")
 
-* Some contact information is optional, although we strongly encourage the requester to provide an email address as this is the only way they can receive status updates on their request. 
+* Some contact information is optional, although we strongly encourage the requester to provide an email address as this is the only way they can receive status updates on their request.
 * There is no limit to the amount of text a requester can put in the request field.
-* Requesters are able to enter the department they want the request sent to or the type of document they need. 
-* The department or document type field is used to select which person initially receives the request. 
-* If a department is not selected, the request is automatically routed to an agency employee who will route it for the requester. 
+* Requesters are able to enter the department they want the request sent to or the type of document they need.
+* The department or document type field is used to select which person initially receives the request.
+* If a department is not selected, the request is automatically routed to an agency employee who will route it for the requester.
 
 
 ### Responder-specific fields
@@ -84,7 +84,7 @@ An agency employee can send the request to another individual in the official di
 
 ![add_helper](/docs/images/add_helper.png "add_helper")
 
-Sometimes more than one person is needed to fulfill a request or it involves multiple departments. Click on 'Helpers' to notify additional staff of this request. The staff member will be alerted via email that they are expected to respond to this request. The helpers will be able to add documents and send messages to the requester via RecordTrac. 
+Sometimes more than one person is needed to fulfill a request or it involves multiple departments. Click on 'Helpers' to notify additional staff of this request. The staff member will be alerted via email that they are expected to respond to this request. The helpers will be able to add documents and send messages to the requester via RecordTrac.
 
 ### Ask a Question
 
@@ -98,10 +98,8 @@ An agency employee can ask questions about this particular records request. The 
 
 Documents stored on a computer can be uploaded. The requester will be notified via email every time a record is uploaded. The documents will be posted online for everyone to view.
 
-You must name every record you upload.  
+You must name every record you upload.
 
-Records are displayed online via Scribd. Supported file types are the following:
-'txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc', 'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff'
 
 ### Add a Link to Another Website
 
@@ -109,7 +107,7 @@ Records are displayed online via Scribd. Supported file types are the following:
 
 An agency employee can respond to a request by providing a link to where the document or information is stored online. The requester will be notified via email about this link. This web address will be posted online for everyone to view.
 
-You must name each link you post.  
+You must name each link you post.
 
 
 ### Add An Offline Record
@@ -118,7 +116,7 @@ You must name each link you post.
 
 Some records cannot be uploaded to the website and requesters will have to be told when and where to pick up copies of it. The requester will be notified via email about this message. This message will be posted online for everyone to view.
 
-You must provide a name for the instructions you post. 
+You must provide a name for the instructions you post.
 
 Below is an example of a posted message:
 
@@ -141,13 +139,13 @@ Notify a requester if additional time is needed to fulfill their public records 
 
 ![close_request](/docs/images/close_request.png "close_request")
 
-To close out a request, staff can edit a message already provided to them. An email is then sent to the requester notifying them the request is closed. The status of the request will also change. 
+To close out a request, staff can edit a message already provided to them. An email is then sent to the requester notifying them the request is closed. The status of the request will also change.
 
 Example list of reasons a request can be closed.  These may vary between agencies:
 
 * Fulfilled: "We released all of the requested documents."
 * Fulfilled - Private Documents Not Uploaded: "We cannot upload your document online. The records contains sensitive information only you can view."
-* Fulfilled - Information Redacted: "We released all of the requested documents. Personal information, such as home addresses, telephone numbers, and credit card numbers, were removed from the documents to protect the privacy or identity of another individual. 
+* Fulfilled - Information Redacted: "We released all of the requested documents. Personal information, such as home addresses, telephone numbers, and credit card numbers, were removed from the documents to protect the privacy or identity of another individual.
 * Not a public records request: "This is not a public records request. For more general information please contact..."
 * Record Does Not Exist: "The record you asked for does not exist."
 * Contact another agency: "We don't have the records you requested. We suggest you submit a public records request to..."
@@ -168,13 +166,13 @@ Allows you to re-open a request after it is closed. This makes it possible for y
 
 ![responses](/docs/images/responses.png "responses")
 
-All responses are displayed in chronological order. Each response includes the time it was uploaded and who uploaded the document or sent the message. 
+All responses are displayed in chronological order. Each response includes the time it was uploaded and who uploaded the document or sent the message.
 
 #### What is Unique to the Agency View
 
-There are two views in RecordTrac: the agency employee view and the public view. 
+There are two views in RecordTrac: the agency employee view and the public view.
 
-Agency employees are the only users able to upload records, extend a request, close a request, and correspond with the requester through RecordTrac. 
+Agency employees are the only users able to upload records, extend a request, close a request, and correspond with the requester through RecordTrac.
 
 Only agency employees can view:
 
@@ -196,7 +194,7 @@ The Point of Contact and Helpers for a request recieve an email notification whe
 ### Tutorial
 
 RecordTrac's tutorial shows agency employees how to successfully manage a public records request with RecordTrac. The tutorial was created to quickly on-board new employees who are responsible for fulfilling public records requests. Only agency staff who are logged into RecordTrac are able to view the tutorial.
-You can view the tutorial by going to `records.[youragency].gov/tutorial`.  
+You can view the tutorial by going to `records.[youragency].gov/tutorial`.
 
 ## [Admin](/docs/admin.md)
 
