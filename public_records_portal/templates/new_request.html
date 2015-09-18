@@ -17,6 +17,296 @@
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
 {% endblock custom_css_links %}
 {% block container %}
+
+
+<!-- start of static form -->
+
+<div class="row-fluid">
+    <div class="span8">
+        <h1>Create a new records request</h1>
+        <p>Please make your request specific so you receive the fastest service. After you submit a FOIL request you will receive a confirmation number so you can track the status of the response. The agency will notify you about how much time is required to respond to your request.</p>
+    </div>
+
+    <form name="newrequest" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="off" novalidate="novalidate" enctype="multipart/form-data">
+        <div class="row-fluid">
+            <div class="step" id="step1">
+                <div class="span8">
+                  <fieldset>
+                    <div class="control-group">
+                        <h1><small>{{ form.request_department.label.text}}</small></h1>
+                        {{ form.request_department(class="input-block-level combobox") }}
+
+                      <h2><small>What agency has the records you want?*</small></h2>
+                      <select name="agency">
+                        <option value="--">–</option>
+                        <option>Actuary, NYC Office of the (NYCOA)</option>
+                        <option>Administrative Justice Coordinator, NYC Office of (AJC)</option>
+                        <option>Administrative Trials and Hearings, Office of (OATH)</option>
+                        <option>Aging, Department for the (DFTA)</option>
+                        <option>Art Commission</option>
+                        <option>Brooklyn Public Library (BPL)</option>
+                        <option>Buildings, Department of (DOB)</option>
+                        <option>Business Integrity Commission (BIC)</option>
+                        <option>Campaign Finance Board (CFB)</option>
+                        <option>Center for Economic Opportunity (CEO)</option>
+                        <option>Center for Innovation through Data Intelligence (CIDI)</option>
+                        <option>Chief Medical Examiner, NYC Office of (OCME)</option>
+                        <option>Children's Services, Administration for (ACS)</option>
+                        <option>City Clerk, Office of the (CLERK)</option>
+                        <option>City Council, New York</option>
+                        <option>City Planning, Department of (DCP)</option>
+                        <option>City University of New York (CUNY)</option>
+                        <option>Citywide Administrative Services, Department of (DCAS)</option>
+                        <option>Citywide Event Coordination and Management, Office of (CECM)</option>
+                        <option>Civil Service Commission (CSC)</option>
+                        <option>Civilian Complaint Review Board (CCRB)</option>
+                        <option>Commission to Combat Police Corruption (CCPC)</option>
+                        <option>Community Affairs Unit (CAU)</option>
+                        <option>Community Boards (CB)</option>
+                        <option>Comptroller (COMP)</option>
+                        <option>Conflicts of Interest Board (COIB)</option>
+                        <option>Consumer Affairs, Department of (DCA)</option>
+                        <option>Contract Services, Mayor's Office of (MOCS)</option>
+                        <option>Correction, Board of (BOC)</option>
+                        <option>Correction, Department of (DOC)</option>
+                        <option>Criminal Justice, Mayor's Office of</option>
+                        <option>Cultural Affairs, Department of (DCLA)</option>
+                        <option>Data Analytics, Mayor's Office of (MODA)</option>
+                        <option>Design Commission</option>
+                        <option>Design and Construction, Department of (DDC)</option>
+                        <option>District Attorney - Bronx County</option>
+                        <option>District Attorney - Kings County (Brooklyn)</option>
+                        <option>District Attorney - New York County (Manhattan)</option>
+                        <option>District Attorney - Queens County</option>
+                        <option>District Attorney - Richmond County (Staten Island)</option>
+                        <option>Domestic Violence, Mayor's Office to Combat (OCDV)</option>
+                        <option>Economic Development Corporation (EDC)</option>
+                        <option>Education, Department of (DOE)</option>
+                        <option>Elections, Board of (BOE)</option>
+                        <option>Emergency Management NYC Office of (OEM)</option>
+                        <option>Environmental Coordination, NYC Office of (OEC)</option>
+                        <option>Environmental Protection, Department of (DEP)</option>
+                        <option>Environmental Remediation, Office of (OER)</option>
+                        <option>Equal Employment Practices Commission (EEPC)</option>
+                        <option>Finance, Department of (DOF)</option>
+                        <option>Fire Department, New York City (FDNY)</option>
+                        <option>Fiscal Year 2005 Securitization Corporation</option>
+                        <option>Food Policy Director, Office of the</option>
+                        <option>GreeNYC (GNYC)</option>
+                        <option>Health and Hospitals Corporation (HHC)</option>
+                        <option>Health and Mental Hygiene, Department of (DOHMH)</option>
+                        <option>Homeless Services, Department of (DHS)</option>
+                        <option>Housing Authority, New York City (NYCHA)</option>
+                        <option>Housing Preservation and Development, Department of (HPD)</option>
+                        <option>Housing Recovery Operations (HRO)</option>
+                        <option>Hudson Yards Infrastructure Corporation</option>
+                        <option>Human Resources Administration (HRA)</option>
+                        <option>Human Rights, City Commission on (CCHR)</option>
+                        <option>Immigrant Affairs, Mayor's Office of (MOIA)</option>
+                        <option>Independent Budget Office, NYC (IBO)</option>
+                        <option>Information Technology and Telecommunications, Department of (DOITT)</option>
+                        <option>Inspector General NYPD, Office of the</option>
+                        <option>Intergovernmental Affairs, Mayor's Office of (MOIGA)</option>
+                        <option>International Affairs, Mayor's Office for (IA)</option>
+                        <option>Investigation, Department of (DOI)</option>
+                        <option>Judiciary, Mayor's Advisory Committee on the (ACJ)</option>
+                        <option>Labor Relations, NYC Office of (OLR)</option>
+                        <option>Landmarks Preservation Commission (LPC)</option>
+                        <option>Law Department (LAW)</option>
+                        <option>Library, Brooklyn Public (BPL)</option>
+                        <option>Library, New York Public (NYPL)</option>
+                        <option>Library, Queens Public (QL)</option>
+                        <option>Loft Board (LOFT)</option>
+                        <option>Long-Term Planning & Sustainability, Office of (OLTPS)</option>
+                        <option>Management and Budget, Office of (OMB)</option>
+                        <option>Mayor's Committee on City Marshals (MCCM)</option>
+                        <option>Mayor's Fund to Advance NYC (Mayor's Fund)</option>
+                        <option>Mayor's Office (OM)</option>
+                        <option>Media and Entertainment, Mayor's Office of (MOME)</option>
+                        <option>Media, NYC</option>
+                        <option>NYC & Company (NYCGO)</option>
+                        <option>NYC Employees' Retirement System (NYCERS)</option>
+                        <option>NYC Service (SERVICE)</option>
+                        <option>NYC Young Men’s Initiative</option>
+                        <option>New Business Acceleration Team (NBAT)</option>
+                        <option>New York City Transitional Finance Authority (TFA)</option>
+                        <option>New York Public Library (NYPL)</option>
+                        <option>Operations, Mayor's Office of (OPS)</option>
+                        <option>Parks and Recreation, Department of (DPR)</option>
+                        <option>Payroll Administration, Office of (OPA)</option>
+                        <option>People with Disabilities, Mayor's Office for (MOPD)</option>
+                        <option>Police Department (NYPD)</option>
+                        <option>Police Pension Fund (PPF)</option>
+                        <option>Probation, Department of (DOP)</option>
+                        <option>Procurement Policy Board (PPB)</option>
+                        <option>Public Administrator - Bronx County (BCPA)</option>
+                        <option>Public Administrator - Kings County (KCPA)</option>
+                        <option>Public Administrator - New York County (NYCountyPA)</option>
+                        <option>Public Administrator - Queens County (QPA)</option>
+                        <option>Public Administrator - Richmond County (RCPA)</option>
+                        <option>Public Advocate (PUB ADV)</option>
+                        <option>Queens Library (QL)</option>
+                        <option>Records, Department of (DOR)</option>
+                        <option>Rent Guidelines Board (RGB)</option>
+                        <option>Sales Tax Asset Receivable Corporation (STAR)</option>
+                        <option>Sanitation, Department of (DSNY)</option>
+                        <option>School Construction Authority (SCA)</option>
+                        <option>Small Business Services (SBS)</option>
+                        <option>Special Enforcement, Mayor's Office of (MOSE)</option>
+                        <option>Special Narcotics Prosecutor, NYC Office of the (SNP)</option>
+                        <option>Standards and Appeals, Board of (BSA)</option>
+                        <option>TSASC, Inc.</option>
+                        <option>Tax Appeals Tribunal, New York City (TAT)</option>
+                        <option>Tax Commission, New York City (TC)</option>
+                        <option>Taxi and Limousine Commission (TLC)</option>
+                        <option>Transportation, Department of (DOT)</option>
+                        <option>Veterans' Affairs, Mayor's Office of (MOVA)</option>
+                        <option>Water Board (NYWB)</option>
+                        <option>Water Finance Authority, NYC Municipal (NYW)</option>
+                        <option>Workforce Development, Mayor's Office of</option>
+                        <option>Workforce Investment Board (WIB)</option>
+                        <option>Youth and Community Development, Department of (DYCD)</option>
+                      </select>
+                    </div>
+                    <div class="control-group">
+                      <h2><small>Category*</small></h2>
+                      <select name="category">
+                        <option value="--">–</option>
+                        <option value="category">Documents</option>
+                        <option value="category">Photos</option>
+                        <option value="category">Audio Recordings</option>
+                        <option value="category">Emails</option>
+                      </select>
+                    </div>
+                    <div class="control-group">
+                      <h2><small>What is the topic of your request?*</small></h2>
+                      <textarea name="topic" class="input-block-level", rows="2", id="request_summary", placeholder="Please provide a short summary of your request")></textarea>
+                    </div>
+                  </fieldset>
+                  <div id="button1" class="btn btn-primary btn-large input-block-level">Next</div>
+                  <div class="form-nav">
+                    <p>Step 1 of 2</p>
+                  </div>
+                </div>
+                <div class="span4">
+                  <div class="sideblock">
+                    <h3>Example Topic</h3>
+                    <p>Public Advocate Emails from 2015</p>
+                  </div>
+                  <h5>Note: The agency, category, and topic of your request will be visible to the public. Do not enter personal information here.</h5>
+                </div>
+              </div>
+            </div>
+            <div class="row-fluid">
+              <div class="step" id="step2">
+                <fieldset>
+                  <div class="row-fluid">
+                    <div class="span8">
+                      <div class="control-group">
+                        <h2><lead>Details about your records request</lead></h2>
+                        <textarea rows="8", id="request_text", class="input-block-level" placeholder="Provide more information about your request to help the City locate the record. If don’t know the record name, describe type of information you think it would contain and the approximate date range. Do not include private info – such as social security # or credit card.")></textarea>
+                      </div>
+                    </div>
+                    <div class="span4">
+                      <div class="sideblock">
+                        <h3>Example Request</h3>
+                        <p>Topic: Public Advocate Emails from 2015</p>
+                        <p>Emails that mention bike lanes or bicycle lanes from the Public Advocate's Office between July 27, 2015 and September 10, 2015</p>
+                      </div>
+                      <h5>Note: The details of your request will not be visible to the public.</h5>
+                    </div>
+                  </div>
+                  <div class="row-fluid">
+                    <div class="span8">
+                    <h2><lead>Personal Information</lead></h2>
+                    <p>Your name and contact information will not be posted to this site. This information is required and will be shared only with a City Agency and only for the purpose of fulfilling your request. You must provide at least one way to reach you.</p>
+
+                    <div class="row-fluid">
+                      <div class="control-group span6">
+                        <h2><small>{{ form.request_first_name.label.text }}</small></h2>
+                        <input class="input-block-level" type="text" placeholder="John" />
+                      </div>
+                      <div class="control-group span6">
+                        <h2><small>Last Name*</small></h2>
+                        <input class="input-block-level" type="text" placeholder="Doe" />
+                      </div>
+                    </div>
+                    <div class="control-group">
+                      <h2><small>Role/Title</small></h2>
+                      <input class="input-block-level" type="text" placeholder="Your role in your organization (if applicable)" />
+                    </div>
+                    <div class="control-group">
+                      <h2><small>Organization</small></h2>
+                      <input class="input-block-level" type="text" placeholder="Your organization (if applicable)" />
+                    </div>
+
+                    <h2><lead>Contact Information</lead></h2>
+                    <p>No information entered in this section will be visibile to the public. <em>Please Note: At least one method of communication is required</em></p>
+
+                    <div class="control-group">
+                      <h2><small>Email Address</small></h2>
+                        <input class="input-block-level", type="email", placeholder="requester@email.com" />
+                      <h2><small>Phone Number</small></h2>
+                        <input class="input-block-level" type="tel" placeholder="(555) 555-5555" />
+                      <h2><small>Fax Number</small></h2>
+                      <div class="spacer spacer_phone" style="background-color: #FFFFFF;">
+                        <input class="input-block-level" type="tel" placeholder="(555) 555-5555" />
+                      </div>
+                      <h2><small>Address</small></h2>
+                      <small>Address Line 1</small>
+                      <input class="input-block-level" type="text" placeholder="123 Main Street" />
+                      <small>Address Line 2</small>
+                      <input class="input-block-level" type="text" placeholder="Apartment 3D" />
+                      <div class="row-fluid">
+                        <div class="span5">
+                          <small>City</small>
+                          <div class="spacer">
+                            <input class="input-block-level" type="text" placeholder="New York" />
+                          </div>
+                        </div>
+                        <div class="span4">
+                        <small>State</small>
+                          <div class="spacer">
+                            <input class="input-block-level combobox" />
+                          </div>
+                        </div>
+                        <div class="span3">
+                          <small>Zip Code</small>
+                          <div class="spacer">
+                            <input class="input-block-level" type="text" placeholder="12345" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <!-- <div id="captcha">
+                    {% if config['ENVIRONMENT'] != 'LOCAL' %}
+                    <form method="post" action="/submit">
+                      {{ recaptcha }}
+                    </form>
+                    {% endif %}
+                  </div> -->
+                    <div id="terms_of_use" class="control-group">
+                      <p class="lead"><!-- {{ form.terms_of_use.label.text }}&nbsp;{{ form.terms_of_use }} --> Terms of Use blurb goes here.</p>
+                    </div>
+                    <div id="requestButton" class="spacer">
+                      <!-- Note: this button type will need to be submit when it's time to make this function.  -->
+                      <button id="button2" title="submit_request_button" class="btn btn-primary btn-large input-block-level">Submit request</button>
+                    </div>
+                    <div class="form-nav">
+                      <p>Step 2 of 2</p>
+                      <p id="back" class="link">Back to Step 1</p>
+                    </div>
+                  </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </form>
+      </div>
+
+
+<!-- end of static form -->
+
     <div class="row-fluid">
         <div class="span11 offset1">
             <div class="row-fluid">
@@ -216,4 +506,6 @@
 
     <!-- For file uploads -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-fileupload.js') }}"></script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/newrequestform.js') }}"></script>
 {% endblock custom_script_links %}
