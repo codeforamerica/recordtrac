@@ -578,11 +578,7 @@ def is_supported_browser():
 
 @app.route("/view_requests", methods=["GET"])
 def display_all_requests():
-    """ Dynamically load requests page depending on browser. """
-    if is_supported_browser():
-        return backbone_requests()
-    else:
-        return no_backbone_requests()
+    return no_backbone_requests()
 
 
 @app.route("/view_requests_backbone")
@@ -617,6 +613,8 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
     mine_as_poc = checkbox_value
     mine_as_helper = checkbox_value
     departments_selected = []
+    if current_user.is_authenticated():
+        departments_selected.append(current_user.current_department.name)
     sort_column = "id"
     sort_direction = "asc"
     min_due_date = None

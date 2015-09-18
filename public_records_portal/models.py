@@ -100,6 +100,9 @@ class User(db.Model):
             return self.zipcode
         return "N/A"
 
+    def show_department_filters(self):
+        return self.current_department.name == "DORIS" or self.current_department.name == "Mayor's Office"
+
     def __init__(self, email=None, alias=None, first_name=None, last_name=None, phone=None, address1=None,
                  address2=None, city=None, state=None, zipcode=None, department=None, contact_for=None, backup_for=None,
                  password=None, is_staff=False):
