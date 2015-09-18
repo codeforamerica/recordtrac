@@ -55,7 +55,6 @@ def date(obj):
     """ Take a datetime or datetime-like object and return a formatted date. """
     if not obj:
         return None
-    app.logger.info(type(obj))
     try:
         return notifications.format_date(obj)
     except:  # Not a datetime object
