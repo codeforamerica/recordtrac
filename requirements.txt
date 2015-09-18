@@ -39,7 +39,6 @@ python-dateutil
 python-dotenv
 python-mimeparse
 python-saml
-python-scribd
 pytz
 recaptcha-client
 reportlab
