@@ -121,6 +121,9 @@ class User(db.Model):
             return self.zipcode
         return 'N/A'
 
+    def show_department_filters(self):
+        return self.current_department.name == "DORIS" or self.current_department.name == "Mayor's Office"
+
     def __init__(
             self,
             email=None,
@@ -199,6 +202,8 @@ class User(db.Model):
             return self.current_department.name
         else:
             app.logger.error('''
+                "\n\nUser %s is not associated with a department." % self.email)
+            return "N/A"
 
 User %s is not associated with a department.'''
                              % self.email)
@@ -380,6 +385,12 @@ class Request(db.Model):
             return requester.user.get_first_name()
         return 'N/A'
 
+    def requester_last_name(self):
+        requester = self.requester()
+        if requester and requester.user:
+            return requester.user.get_last_name()
+        return "N/A"
+
     def requester_phone(self):
         requester = self.requester()
         if requester and requester.user:
@@ -410,7 +421,7 @@ class Request(db.Model):
             return requester.user.get_state()
         return 'N/A'
 
-    def requester_last_name(self):
+    def requester_zipcode(self):
         requester = self.requester()
         if requester and requester.user:
             return requester.user.get_zipcode()

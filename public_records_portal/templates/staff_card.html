@@ -13,7 +13,7 @@
 			<h3>{{staff.alias}}</h3>
         <div><span class="title">Agency: </span> <span class="entry">{{ staff.department_name() }}</span></div>
 			<div><span class="title">Email:  </span><span class="entry"><a href="mailto:{{staff.email}}">{{staff.email}}</a></span></div>
-			<div><span class="title">Phone:  </span><span class="entry">{{staff.phone}}</span></div>
+			<div><span class="title">Phone:  </span><span class="entry">{{staff.phone or "N/A"}}</span></div>
 	{% else %}
 		<div> Staff ID provided does not exist. </div>
 	{% endif %}

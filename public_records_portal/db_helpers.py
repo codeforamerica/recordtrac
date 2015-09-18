@@ -113,23 +113,20 @@ def get_owners_by_user_id(user_id):
 
 
 def get_contact_by_dept(dept):
-    """ Return the contact for a given department. """
-    q = db.session.query(User).filter(
-        func.lower(User.contact_for).like("%%%s%%" % dept.lower()))
-    if len(q.all()) > 0:
-        return q[0].email
-    app.logger.debug("Department: %s" % dept)
-    return None
+	""" Return the contact for a given department. """
+	d = Department.query.filter(Department.name == dept).first()
+	if d and d.primary_contact:
+		return d.primary_contact.email
+	return None
 
-# @export "get_backup_by_dept"
+### @export "get_backup_by_dept"
 def get_backup_by_dept(dept):
-    """ Return the contact for a given department. """
-    q = db.session.query(User).filter(
-        func.lower(User.backup_for).like("%%%s%%" % dept.lower()))
-    if len(q.all()) > 0:
-        return q[0].email
-    app.logger.debug("Department: %s" % dept)
-    return None
+	""" Return the backup for a given department. """
+	d = Department.query.filter(Department.name == dept).first()
+	if d and d.backup_contact:
+		return d.backup_contact.email
+	return None
+### @export "put_obj"
 
 
 # @export "put_obj"

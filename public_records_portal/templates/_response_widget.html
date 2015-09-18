@@ -1,320 +1,219 @@
 <!-- used for file uploads -->
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-fileupload.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-fileupload.css') }}">
 
 <div class="rw-container">
 
-    <div class="rw-controller-container">
-        <div class="rw-controller-btns-container">
+  <div class="rw-controller-container">
+    <div class="rw-controller-btns-container">
 
-            <div class="rw-btn-wrap" data-target="1">
-                <div class="rw-btn"><i class="icon-file-text-alt"></i></div>
-                <div class="rw-btn-expand">Add Record</div>
+      <div class="rw-btn-wrap" data-target="1">
+        <div class="rw-btn" ><i class="icon-file-text-alt"></i></div><div class="rw-btn-expand">Add Record</div>
+      </div>
+
+      <div class="rw-btn-wrap" data-target="2">
+        <div class="rw-btn" ><i class="icon-edit"></i></div><div class="rw-btn-expand">Add Note</div>
+      </div>
+
+<!-- REMOVE THE BELOW SECTION IF YOU DO NOT USE EXTENSIONS IN YOUR AGENCY. -->
+{% if req.extended %}
+{% else %}
+      <div class="rw-btn-wrap" data-target="3">
+        <div class="rw-btn" ><i class="icon-calendar"></i></div><div class="rw-btn-expand">Extend Request</div>
+      </div>
+{% endif %}
+<!-- REMOVE THE ABOVE SECTION IF YOU DO NOT USE EXTENSIONS IN YOUR AGENCY. -->
+
+      <div class="rw-btn-wrap" data-target="4">
+        <div class="rw-btn" ><i class="icon-archive"></i></div><div class="rw-btn-expand">Close Request</div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- here reside the data-target-for="X"  -->
+  <div class="rw-actions-container">
+
+    <div class="target-for" data-target-for="1">
+      <form name="input_doc" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data">
+        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+        <fieldset>
+          <div class="row-fluid">
+            <!-- <h4>Add a record</h4> -->
+            <div class="control-group">
+              <label class="control-label" for="recordSummary">Name of record</label>
+              <div class="controls">
+                <textarea class="input-xxlarge" rows="1" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of the record" required /></textarea>
+              </div>
             </div>
-
-            <div class="rw-btn-wrap" data-target="2">
-                <div class="rw-btn"><i class="icon-edit"></i></div>
-                <div class="rw-btn-expand">Add Note</div>
-            </div>
-
-            <!-- REMOVE THE BELOW SECTION IF YOU DO NOT USE EXTENSIONS IN YOUR AGENCY. -->
-            {% if req.extended %}
-            {% else %}
-                <div class="rw-btn-wrap" data-target="3">
-                    <div class="rw-btn"><i class="icon-calendar"></i></div>
-                    <div class="rw-btn-expand">Extend Request</div>
+            <div class="control-group">
+              <label class="control-label">Provide a link to a record <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a link" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></label>
+              <div class="row-fluid">
+                <div class="controls">
+                  <input type="text" name="link_url" id="inputUrl" class="input-xxlarge"/>
+                  <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
                 </div>
-            {% endif %}
-            <!-- REMOVE THE ABOVE SECTION IF YOU DO NOT USE EXTENSIONS IN YOUR AGENCY. -->
-
-            <div class="rw-btn-wrap" data-target="4">
-                <div class="rw-btn"><i class="icon-archive"></i></div>
-                <div class="rw-btn-expand">Close Request</div>
+              </div>
             </div>
+            <div class="control-group button-margin">
+              <label class="control-label">Or indicate how the record can be accessed offline <span id="offlinedocTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Describe hard copies" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></label>
+              <div class="row-fluid">
+                <div class="controls">
+                  <textarea class="input-xxlarge" id="offlineDoc_textarea" name="record_access" rows="3" placeholder="How can the requester get this record?  Ex. 'Sent via mail on a CD', 'Print out awaiting requester at City Clerk desk'" ></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="controls">
+                <button type="submit" class="btn btn-primary">Add record</button>
+              </div>
+            </div>
+          </div>
 
-        </div>
-
+        </fieldset>
+      </form>
     </div>
 
-    <!-- here reside the data-target-for="X"  -->
-    <div class="rw-actions-container">
 
-        <div class="target-for" data-target-for="1">
-            <form name="input_doc" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record"
-                  autocomplete="on" enctype="multipart/form-data">
-                <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                <fieldset>
-                    <div class="row-fluid">
-                        <!-- <h4>Add a record</h4> -->
-                        <div class="control-group">
-                            <label class="control-label" for="recordSummary">Name of record</label>
-
-                            <div class="controls">
-                                <textarea class="input-xxlarge" rows="1" name="record_description" type="text"
-                                          id="recordSummary" placeholder="Add a short explanation of the record"
-                                          required/></textarea>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label">Upload a record <span id="recordTooltip" rel="tooltip"
-                                                                               data-toggle="tooltip"
-                                                                               data-placement="right" title=""
-                                                                               data-original-title="{{ "Upload a document" | explain_action }}"><small>
-                                <i class="icon-info-sign"></i></small></span></label>
-
-                            <div class="row-fluid">
-                                <div class="controls">
-                                    <div class="fileupload fileupload-new" data-provides="fileupload">
-                                        <div class="input-append">
-                                            <div class="uneditable-input span3">
-                                                <i class="icon-file fileupload-exists"></i>
-                                                <span class="fileupload-preview"/>
-                                            </div>
-                      <span class="btn btn-file">
-                        <span class="fileupload-new">Select file</span>
-                        <span class="fileupload-exists">Change</span>
-                        <input type="file" name="record"/>
-                      </span>
-                                            <a href="#" class="btn fileupload-exists"
-                                               data-dismiss="fileupload">Remove</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label">Or provide a link to a record <span rel="tooltip"
-                                                                                             data-toggle="tooltip"
-                                                                                             data-placement="right"
-                                                                                             title=""
-                                                                                             data-original-title="{{ "Add a link" | explain_action }}"><small>
-                                <i class="icon-info-sign"></i></small></span></label>
-
-                            <div class="row-fluid">
-                                <div class="controls">
-                                    <input type="text" name="link_url" id="inputUrl" class="input-xxlarge"/>
-                                    <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group button-margin">
-                            <label class="control-label">Or indicate how the record can be accessed offline <span
-                                    id="offlinedocTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right"
-                                    title="" data-original-title="{{ "Describe hard copies" | explain_action }}"><small>
-                                <i class="icon-info-sign"></i></small></span></label>
-
-                            <div class="row-fluid">
-                                <div class="controls">
-                                    <textarea class="input-xxlarge" id="offlineDoc_textarea" name="record_access"
-                                              rows="3"
-                                              placeholder="How can the requester get this record?  Ex. 'Sent via mail on a CD', 'Print out awaiting requester at City Clerk desk'"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="controls">
-                                <button type="submit" class="btn btn-primary">Add record</button>
-                            </div>
-                        </div>
-                    </div>
-
-                </fieldset>
-            </form>
-        </div>
-
-
-        <!-- Add a note form -->
-        <div class="target-for" data-target-for="2">
-            <form name="note" class="form-horizontal" id="note" method="post" action="/add_a_note">
-                <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                <fieldset>
-                    <div class="row-fluid">
-                        <!-- <h4>Add a note</h4> -->
-                        <div class="control-group button-margin">
-                            <label class="control-label">Note <span rel="tooltip" data-toggle="tooltip"
-                                                                    data-placement="right" title=""
-                                                                    data-original-title="{{ "Add a note"| explain_action }}"><small>
-                                <i class="icon-info-sign"></i></small></span></label>
-
-                            <div class="controls">
-                                <textarea type="text" class="input-xxlarge" id="noteTextarea" name="note_text" rows="2"
-                                          placeholder="Anything else the requester should know." required/></textarea>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="controls">
-                                <button type="submit" class="btn btn-primary">Add note</button>
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
-        </div>
-
-
-        <!-- Request an extension form -->
-        <div class="target-for" data-target-for="3">
-            {% if False %} <!--  if req.extended-->
-            {% else %}
-                <form name="extend_request" class="form-horizontal" id="extension" method="post"
-                      action="/add_a_extension">
-                    <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                    <input type="hidden" name="extend_reason"/>
-                    <fieldset>
-                        <div class="row-fluid">
-                            <!-- <h4>Request an extension</h4> -->
-                            <div class="control-group button-margin">
-                                <label class="control-label">Reason <span rel="tooltip" data-toggle="tooltip"
-                                                                          data-placement="right" title=""
-                                                                          data-original-title="{{ "Request an extension"| explain_action }}"><small>
-                                    <i class="icon-info-sign"></i></small></span></label>
-
-                                <div class="controls">
-                                    <select id="extend_reasons" name="extend_reasons" class="selectpicker" multiple
-                                            required data-selected-text-format="count">
-                                        <option value="{{ "Extension - Large Amount" | explain_action("What") }}">Large
-                                            amount
-                                        </option>
-                                        <option value="{{ "Extension - Separate Facility" | explain_action("What") }}">
-                                            Separate facility
-                                        </option>
-                                        <option value="{{ "Extension - Another Agency" | explain_action("What") }}">
-                                            Another agency
-                                        </option>
-                                        <option value="{{ "Extension - Data" | explain_action("What") }}">Data
-                                            extraction
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <div class="controls">
-                                    <!-- <button id="extendRequest" class="btn btn-primary" type="submit">Request an extension</button> -->
-                                    <!-- Button to trigger modal -->
-                                    <a id="extendRequest_button" href="#extendModal" role="button"
+    <!-- Add a note form -->
+    <div class="target-for" data-target-for="2">
+      <form name="note" class="form-horizontal" id="note" method="post" action="/add_a_note">
+        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+        <fieldset>
+          <div class="row-fluid">
+            <!-- <h4>Add a note</h4> -->
+            <div class="control-group button-margin">
+              <label class="control-label">Note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+              <div class="controls">
+                <textarea type="text" class="input-xxlarge" id="noteTextarea" name="note_text" rows="2" placeholder="Anything else the requester should know."required/></textarea>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="controls">
+                <button type="submit" class="btn btn-primary">Add note</button>
+              </div>
+            </div>
+            <label class="control-label">Privacy <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="Privacy"><small><i class="icon-info-sign"></i></small></span></label>
+            <div class="controls">
+              <select id="note_privacy" name="note_privacy" required data-selected-text-format="count" size="2">
+                <option value="1">Public</option>
+                <option value="2">Staff Only</option>
               </select>
-                                       class="btn btn-primary" data-toggle="modal">Extend request...</a>
-
-                                    <!-- Modal -->
-                                    <div id="extendModal" class="modal hide fade" tabindex="-1" role="dialog"
-                                         aria-labelledby="extendModalLabel" aria-hidden="true">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                                                ×
-                                            </button>
-                                            <h3 id="extendModalLabel">Reason for extension</h3>
-                                        </div>
-                                        <div class="modal-body">
-                                            <!-- NOTE: need to remove the line breaks in the CODE in textarea in order to remove the funky indentation -->
-                                            <textarea id="extendTextarea" class="input-block-level"
-                                                      rows="10"></textarea>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                                            <button id="extendButton" type="submit" class="btn btn-primary">Extend this
-                                                request
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
-            {% endif %}
-        </div>
-
-
-        <!-- Close request form -->
-        <div class="target-for" data-target-for="4">
-            <form name="close" class="form-horizontal" id="closeRequest" method="post" action="/close">
-                <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                <input type="hidden" name="close_reason"/>
-                <fieldset>
-                    <div class="row-fluid">
-                        <!-- <h4>Close this request </h4> -->
-                        <div class="control-group button-margin">
-
-                            <label class="control-label">Reason <span rel="tooltip" data-toggle="tooltip"
-                                                                      data-placement="right" title=""
-                                                                      data-original-title="{{ "Close a request"| explain_action }}"><small>
-                                <i class="icon-info-sign"></i></small></span></label>
-
-                            <div class="controls">
-                                <select id="close_reasons" name="close_reasons" class="selectpicker" multiple
-                                        data-selected-text-format="count">
-                                    <option value="{{ "Fulfilled" | explain_action("What") }}">Fulfilled</option>
-                                    <option value="{{ "Fulfilled - Private Documents Not Uploaded" | explain_action("What") }}">
-                                        Fulfilled - Private Documents Not Uploaded
-                                    </option>
-                                    <option value="{{ "Fulfilled - Information Redacted" | explain_action("What") }}">
-                                        Fulfilled - Information Redacted
-                                    </option>
-                                    <option value="{{ "Fulfilled - Identity of Citizens Making Complaints Removed" | explain_action("What") }}">
-                                        Fulfilled - Identity of Citizens Making Complaints Removed
-                                    </option>
-                                    <option value="{{ "Not a public records request" | explain_action("What") }}">Not a
-                                        public records request
-                                    </option>
-                                    <option value="{{ "Record Does Not Exist" | explain_action("What") }}">Do not have
-                                        this record
-                                    </option>
-                                    <option value="{{ "Can Not Release - Personal Records" | explain_action("What") }}">
-                                        Can Not Release - Personal Records
-                                    </option>
-                                    <option value="{{ "Can Not Release - Ongoing Litigation" | explain_action("What") }}">
-                                        Can Not Release - Ongoing Litigation
-                                    </option>
-                                    <option value="{{ "Can Not Release - Investigative Records" | explain_action("What") }}">
-                                        Can Not Release - Investigative Records
-                                    </option>
-                                    <option value="{{ "Can Not Release - Attorney-Client Privilege" | explain_action("What") }}">
-                                        Can Not Release - Attorney-Client Privilege
-                                    </option>
-                                    <option value="{{ "Unable to contact the requester" | explain_action("What") }}">
-                                        Unable to contact the requester
-                                    </option>
-                                    <option value="{{ "Contact Another Government Agency" | explain_action("What") }}">
-                                        Contact Another Government Agency
-                                    </option>
-                                    <option value="{{ "Requester Not Interested" | explain_action("What") }}">Requester
-                                        Not Interested
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="controls">
-                                <!-- Button to trigger modal -->
-                                <a id="closeRequest_button" href="#closeModal" role="button" class="btn btn-inverse"
-                                   data-toggle="modal">Close request...</a>
-
-                                <!-- Modal -->
-                                <div id="closeModal" class="modal hide fade" tabindex="-1" role="dialog"
-                                     aria-labelledby="closeModalLabel" aria-hidden="true">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
-                                        </button>
-                                        <h3 id="closeModalLabel">Reason for closing</h3>
-                                    </div>
-                                    <div class="modal-body">
-                                        <!-- NOTE: need to remove the line breaks in the CODE in textarea in order to remove the funky indentation -->
-                                        <textarea id="closeTextarea" class="input-block-level" rows="10"></textarea>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                                        <button id="closeButton" type="submit" class="btn btn-inverse">Close this
-                                            request
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
-        </div>
-
+            </div>
+          </div>
+        </fieldset>
+      </form>
     </div>
+
+
+    <!-- Request an extension form -->
+    <div class="target-for" data-target-for="3">
+      {% if False %} <!--  if req.extended-->
+      {% else %}
+      <form name="extend_request" class="form-horizontal" id="extension" method="post" action="/add_a_extension">
+        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+        <input type="hidden" name="extend_reason"/>
+        <fieldset>
+          <div class="row-fluid">
+            <!-- <h4>Request an extension</h4> -->
+            <div class="control-group button-margin">
+              <label class="control-label">Reason <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Request an extension"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+              <div class="controls">
+                <select id="extend_reasons" name="extend_reasons" class="selectpicker" multiple required data-selected-text-format="count">
+                  <option value="{{"Extension - Large Amount" | explain_action("What")}}">Large amount</option>
+                  <option value="{{"Extension - Separate Facility" | explain_action("What")}}">Separate facility</option>
+                  <option value="{{"Extension - Another Agency" | explain_action("What")}}">Another agency</option>
+                  <option value="{{"Extension - Data" | explain_action("What")}}">Data extraction</option>
+                </select>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="controls">
+                <!-- <button id="extendRequest" class="btn btn-primary" type="submit">Request an extension</button> -->
+                <!-- Button to trigger modal -->
+                <a id="extendRequest_button" href="#extendModal" role="button" class="btn btn-primary" data-toggle="modal" >Extend request...</a>
+
+                <!-- Modal -->
+                <div id="extendModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="extendModalLabel" aria-hidden="true">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="extendModalLabel">Reason for extension</h3>
+                  </div>
+                  <div class="modal-body">
+                    <!-- NOTE: need to remove the line breaks in the CODE in textarea in order to remove the funky indentation -->
+                    <textarea id="extendTextarea" class="input-block-level" rows="10"></textarea>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    <button id="extendButton" type="submit" class="btn btn-primary">Extend this request</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+      {% endif %}
+    </div>
+
+
+    <!-- Close request form -->
+    <div class="target-for" data-target-for="4">
+      <form name="close" class="form-horizontal" id="closeRequest" method="post" action="/close">
+        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+        <input type="hidden" name="close_reason"/>
+        <fieldset>
+          <div class="row-fluid">
+            <!-- <h4>Close this request </h4> -->
+            <div class="control-group button-margin">
+
+              <label class="control-label">Reason <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+              <div class="controls">
+                <select id="close_reasons" name="close_reasons" class="selectpicker" multiple data-selected-text-format="count" >
+                  <option value="{{"Fulfilled" | explain_action("What")}}">Fulfilled</option>
+                  <option value="{{"Fulfilled - Private Documents Not Uploaded" | explain_action("What")}}">Fulfilled - Private Documents Not Uploaded</option>
+                  <option value="{{"Fulfilled - Information Redacted" | explain_action("What")}}">Fulfilled - Information Redacted</option>
+                  <option value="{{"Fulfilled - Identity of Citizens Making Complaints Removed" | explain_action("What")}}">Fulfilled - Identity of Citizens Making Complaints Removed</option>
+                  <option value="{{"Not a public records request" | explain_action("What")}}">Not a public records request</option>
+                  <option value="{{"Record Does Not Exist" | explain_action("What")}}">Do not have this record</option>
+                  <option value="{{"Can Not Release - Personal Records" | explain_action("What")}}">Can Not Release - Personal Records</option>
+                  <option value="{{"Can Not Release - Ongoing Litigation" | explain_action("What")}}">Can Not Release - Ongoing Litigation</option>
+                  <option value="{{"Can Not Release - Investigative Records" | explain_action("What")}}">Can Not Release - Investigative Records</option>
+                  <option value="{{"Can Not Release - Attorney-Client Privilege" | explain_action("What")}}">Can Not Release - Attorney-Client Privilege</option>
+                  <option value="{{"Unable to contact the requester" | explain_action("What")}}">Unable to contact the requester</option>
+                  <option value="{{"Contact Another Government Agency" | explain_action("What")}}">Contact Another Government Agency</option>
+                  <option value="{{"Requester Not Interested" | explain_action("What")}}">Requester Not Interested</option>
+                </select>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="controls">
+                <!-- Button to trigger modal -->
+                <a id="closeRequest_button" href="#closeModal" role="button" class="btn btn-inverse" data-toggle="modal" >Close request...</a>
+
+                <!-- Modal -->
+                <div id="closeModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="closeModalLabel" aria-hidden="true">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="closeModalLabel">Reason for closing</h3>
+                  </div>
+                  <div class="modal-body">
+                    <!-- NOTE: need to remove the line breaks in the CODE in textarea in order to remove the funky indentation -->
+                    <textarea id="closeTextarea" class="input-block-level" rows="10"></textarea>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    <button id="closeButton" type="submit" class="btn btn-inverse">Close this request</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+
+  </div>
 
 </div>
 

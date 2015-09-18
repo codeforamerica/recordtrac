@@ -93,7 +93,7 @@ class UserView(AdminView):
     can_delete = True
     column_list = ('alias', 'email', 'current_department', 'phone', 'is_staff', 'role')
     column_labels = dict(alias='Name', current_department='Department', phone='Phone #')
-    column_descriptions = dict(is_staff='Determines whether the user can log in and edit data through this interface.')
+    column_descriptions = dict(is_staff='Determines whether the user can log in and manage requests.')
     form_excluded_columns = ('date_created', 'password', 'contact_for', 'backup_for')
     column_searchable_list = ('alias', 'email', 'phone')
 
