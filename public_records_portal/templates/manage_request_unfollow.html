@@ -3,20 +3,23 @@
 {% extends "case.html" %}
 {% block title %}Request {{ request_id }}{% endblock %}
 {% block head %}
-  {{ super() }}
+    {{ super() }}
 {% endblock %}
 
 {% block banner %}
-  <!-- success banner -->
-  <div class="alert alert-success">
-    <button type="button" class="close" data-dismiss="alert">x</button>
-    <div class="span1 text-right"><i class="icon-ok-sign icon-2x"> </i></div>
-    <div class="offset1">
-      <p><strong>  You have successfully unsubscribed from this request.</strong></p>
-      <p>You will not receive any new email updates for this request.</p>
-      <p>If you would like to start receiving updates again, enter your email address and click the Follow button on the right side of this request page.</p>
+    <!-- success banner -->
+    <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert">x</button>
+        <div class="span1 text-right"><i class="icon-ok-sign icon-2x"> </i></div>
+        <div class="offset1">
+            <p><strong> You have successfully unsubscribed from this request.</strong></p>
+
+            <p>You will not receive any new email updates for this request.</p>
+
+            <p>If you would like to start receiving updates again, enter your email address and click the Follow button
+                on the right side of this request page.</p>
+        </div>
     </div>
-  </div>
 {% endblock banner %}
 
 

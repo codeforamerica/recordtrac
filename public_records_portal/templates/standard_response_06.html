@@ -1,0 +1,60 @@
+<html>
+    <head>
+    </head>
+    <body>
+    {% block body %}
+    {% set requester = req.requester() %}
+    {% if requester %}
+       {% set user = requester.user %}
+       {% set email = user.email %}
+       {% set alias = user.alias %}
+       {% set first_name = alias.split(",")[0] %}
+       {% set last_name = alias.split(",")[1] %}
+       {% set phone = user.phone %}
+       {% set address1 = user.address1 %}
+       {% set address2 = user.address2 %}
+       {% set city = user.city %}
+       {% set state = user.state %}
+       {% set zipcode = user.zipcode %}
+     {% endif %}
+        <h2><img src="{{config['AGENCY_LETTERHEAD']}}" alt="NYC Department of Records and Information Services" height="159" width="152"></h2>
+        <br><br><br><br>
+        {{ date }}
+        <br><br>
+        {{ alias}}
+        <br>
+        {% if address1 %}
+            {{ address1 }}
+            <br>
+        {% endif %}
+        {% if address2 %}
+            {{ address2 }}
+            <br>
+        {% endif %}
+
+        {% if city %}
+            {{ city }}, {{ state }} {{ zipcode }}
+            <br>
+        {% endif %}
+
+        Re: FOIL Response -  {{ req.id }}
+        <br> 
+        Dear {{ alias }}:
+        <br><br>
+        This letter is a response to your request {{ req.id }}  pursuant to the Freedom of Information Law received on {{ date }}. 
+        <p>
+        After conducting a search, the {{ department }} has denied your request. You can learn more about the appeals process at: APPEALS_URL.
+        </p>
+       
+        Sincerely,
+        <br><br><br>
+        <img src="{{ staff_signature }}" alt="NYC Department of Records and Information Services" width="183" height="61">
+        <br><br><br>
+        {{ staff_alias }}
+        <br>
+        Records Access Officer
+
+        <hr style="margin: 3em 0;"/>
+    {% endblock %}
+    </body>
+</html>

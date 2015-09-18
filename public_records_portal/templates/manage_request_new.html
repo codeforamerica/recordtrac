@@ -3,7 +3,7 @@
 {% extends "case.html" %}
 {% block title %}Request {{ request_id }}{% endblock %}
 {% block head %}
-  {{ super() }}
+    {{ super() }}
 {% endblock %}
 
 {% block banner %}
@@ -12,38 +12,42 @@
         {% set email = requester.user.email %}
     {% endif %}
     {% if email %}
-      <div class="alert alert-success">
-      <button type="button" class="close" data-dismiss="alert">x</button>
-      <div class="span1 text-right"><i class="icon-ok-sign icon-2x"> </i></div>
+        <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert">x</button>
+        <div class="span1 text-right"><i class="icon-ok-sign icon-2x"> </i></div>
     {% else %}
         <div class="alert alert-warning">
-       <button type="button" class="close" data-dismiss="alert">x</button>
-      <div class="span1 text-right"><i class="icon-warning-sign icon-2x"> </i></div>
+        <button type="button" class="close" data-dismiss="alert">x</button>
+        <div class="span1 text-right"><i class="icon-warning-sign icon-2x"> </i></div>
     {% endif %}
-    <div class="offset1">
+<div class="offset1">
     {% if current_user.is_authenticated() %}
-      <p><strong>  The request has been submitted!</strong></p>
-      <p>
-        {% if email %}
-          The requester has been notified via email that they can expect to hear a response from the {{config['AGENCY_NAME']}} within 5 business days. Requester will be automatically contacted with any updates.
-        {% else %}
-          Because the requester did not provide an email address, the agency is responsible for communicating updates to the requester in the format received.
-        {% endif %}
-      </p>
+        <p><strong> The request has been submitted!</strong></p>
+        <p>
+            {% if email %}
+                The requester has been notified via email that they can expect to hear a response from the
+                {{ config['AGENCY_NAME'] }} within 5 business days. Requester will be automatically contacted with any
+                updates.
+            {% else %}
+                Because the requester did not provide an email address, the agency is responsible for communicating
+                updates to the requester in the format received.
+            {% endif %}
+        </p>
     {% else %}
-        <p><strong>  Your request has been submitted!</strong></p>
-        <p>You can expect an acknowledgement from the {{config['AGENCY_NAME']}} within 5 business days.
-          <!-- {% if email %}
+        <p><strong> Your request has been submitted!</strong></p>
+        <p>You can expect an acknowledgement from the {{ config['AGENCY_NAME'] }} within 5 business days.
+            <!-- {% if email %}
             You will be contacted via e-mail with any updates.
           {% else %}
             You did not provide an e-mail address so you will have to visit this page for updates.
           {% endif %} -->
-          The agency will use the contact information you provided.
+            The agency will use the contact information you provided.
         </p>
-        <p>All messages from the {{config['AGENCY_NAME']}} and/or the information and documents you requested will be posted to this page. You can access <a href ="{{request.path}}">this page</a> at any time.</p>
+        <p>All messages from the {{ config['AGENCY_NAME'] }} and/or the information and documents you requested will be
+            posted to this page. You can access <a href="{{ request.path }}">this page</a> at any time.</p>
     {% endif %}
-    </div>
-  </div>
+</div>
+</div>
 {% endblock banner %}
 
 
