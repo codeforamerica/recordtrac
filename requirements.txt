@@ -18,6 +18,7 @@ Flask-SQLAlchemy
 Flask-WTF
 gunicorn
 honcho
+html5lib
 infinity
 intervals
 isodate
@@ -38,6 +39,7 @@ python-dateutil
 python-dotenv
 python-mimeparse
 python-saml
+python-scribd
 pytz
 recaptcha-client
 reportlab
