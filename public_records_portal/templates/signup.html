@@ -1,59 +1,71 @@
 {#
 This template is for an interest signup.
 #}<!doctype html>
-<html >
-    <head>
-	    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-	    <meta charset="UTF-8">
-	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	    <title>Signup</title>
-	<!-- HTML5 shim for IE backwards compatibility -->
-	    <!--[if lt IE 9]>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <!-- HTML5 shim for IE backwards compatibility -->
+    <!--[if lt IE 9]>
 	      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	    <![endif]-->
-	    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap.min.css') }}">
-	    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-responsive.min.css') }}">
-	    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/font-awesome.min.css') }}">
-	    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/signup.css') }}">
-	    <link href='http://fonts.googleapis.com/css?family=Asap' rel='stylesheet' type='text/css'>
-	    <!-- Favicon -->
-    	<link rel="icon" type="image/ico" href="{{ url_for('static', filename='images/favicon.ico') }}"/>
-    </head>
-    <body>
-    	<div id="maincontainer" class="container-fluid" bgcolor="#939597">
-		  <div class="row-fluid">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap.min.css') }}">
+    <link rel=stylesheet type=text/css
+          href="{{ url_for('static', filename='css/plugins/bootstrap-responsive.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/font-awesome.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/signup.css') }}">
+    <link href='http://fonts.googleapis.com/css?family=Asap' rel='stylesheet' type='text/css'>
+    <!-- Favicon -->
+    <link rel="icon" type="image/ico" href="{{ url_for('static', filename='images/favicon.ico') }}"/>
+</head>
+<body>
+<div id="maincontainer" class="container-fluid" bgcolor="#939597">
+    <div class="row-fluid">
 
-		    <div id="intro" class="span4">
-			    <!--Sidebar content-->
-			    <h1>
-			    <a href="http://www.recordtrac.com"><img src="{{ url_for('static', filename='images/recordtrac_logo.png') }}" id="rtlogo" width="40px" alt="RecordTrac"/>RecordTrac</a>
-				</h1>
+        <div id="intro" class="span4">
+            <!--Sidebar content-->
+            <h1>
+                <a href="http://www.recordtrac.com"><img
+                        src="{{ url_for('static', filename='images/recordtrac_logo.png') }}" id="rtlogo" width="40px"
+                        alt="RecordTrac"/>RecordTrac</a>
+            </h1>
 
-				<p class="lead">
-				RecordTrac is a new web application that helps agencies manage and respond to public records requests. It also gives the public a quick, easy way to submit public records requests.  
-				</p>
-				<p class="regulartext">
-				Anyone can view every uploaded document and message submitted through this application. This allows the public and agency employees to search through past requests, view previously released records, and better understand what happens to each request. 
-				</p>
-				<p class="regulartext">
-				If you are interested in using RecordTrac in your agency, we'd love to connect.  Just fill out the form to the right.
-				</p>
+            <p class="lead">
+                RecordTrac is a new web application that helps agencies manage and respond to public records requests.
+                It also gives the public a quick, easy way to submit public records requests.
+            </p>
 
-				<a href="https://github.com/codeforamerica/recordtrac" class="text-center">More info...</a>
+            <p class="regulartext">
+                Anyone can view every uploaded document and message submitted through this application. This allows the
+                public and agency employees to search through past requests, view previously released records, and
+                better understand what happens to each request.
+            </p>
 
-				<div>
-					<img id="flagtag_white" src="{{ url_for('static', filename='images/flagtag_white.png') }}"  class="text-center" width="150" alt="Code for America"/>
-				</div>
-		    </div>
+            <p class="regulartext">
+                If you are interested in using RecordTrac in your agency, we'd love to connect. Just fill out the form
+                to the right.
+            </p>
 
-		    <div id="form" class="span8">
-		      <!--Body content-->
-		      <iframe src="https://docs.google.com/forms/d/1vb1_5zTd91ltVpVYlIX7MT9sh3qbLyTStmLCcUlTvNM/viewform?embedded=true" width="850" height="1500" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
-		    </div>
-		  </div>
-		</div>
+            <a href="https://github.com/codeforamerica/recordtrac" class="text-center">More info...</a>
 
-	  	<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.10.1.min.js') }}"></script>    
-	    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.validate.js') }}"></script>
-	    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap.js') }}"></script>
-  </body>
+            <div>
+                <img id="flagtag_white" src="{{ url_for('static', filename='images/flagtag_white.png') }}"
+                     class="text-center" width="150" alt="Code for America"/>
+            </div>
+        </div>
+
+        <div id="form" class="span8">
+            <!--Body content-->
+            <iframe src="https://docs.google.com/forms/d/1vb1_5zTd91ltVpVYlIX7MT9sh3qbLyTStmLCcUlTvNM/viewform?embedded=true"
+                    width="850" height="1500" frameborder="0" marginheight="0" marginwidth="0">Loading...
+            </iframe>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.10.1.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.validate.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap.js') }}"></script>
+</body>
