@@ -14,7 +14,7 @@ from flask import request
 from public_records_portal import db_helpers
 from db_helpers import find_request, create_request, get_obj, add_staff_participant, remove_staff_participant, \
     update_obj, get_attribute, change_request_status, create_or_return_user, create_subscriber, create_record, \
-    create_note, create_QA, create_answer, update_user, id_counter, id_generator
+    create_note, create_QA, create_answer, update_user, id_generator, id_counter
 from models import *
 from ResponsePresenter import ResponsePresenter
 from RequestPresenter import RequestPresenter
@@ -211,8 +211,18 @@ def make_request(category=None, agency=None, summary=None, text=None, attachment
         else:
             app.logger.info("%s is not a valid department" % agency)
             agency = None
+    global currentRequestId
+    currentRequestId = id_generator.next()
     id = "FOIL" + "-" + datetime.now().strftime("%Y") + "-" + agency_codes[
-        agency] + "-" + "%05d" % id_generator.next()
+        agency] + "-" + "%05d" % currentRequestId
+    req = get_obj("Request", id)
+    while req is not None and req.id == id:
+        app.logger.info(req.id + " VS " + id)
+        currentRequestId = id_generator.next()
+        id = "FOIL" + "-" + datetime.now().strftime("%Y") + "-" + agency_codes[
+            agency] + "-" + "%05d" % currentRequestId
+        req = get_obj("Request", id)
+ 
     request_id = create_request(id=id, category=category, summary=summary, text=text, user_id=user_id,
                                 offline_submission_type=offline_submission_type,
                                 date_received=date_received)  # Actually create the Request object

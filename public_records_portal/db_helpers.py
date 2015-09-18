@@ -38,6 +38,7 @@ def id_counter():
         i = i + 1
 
 id_generator = id_counter()
+currentRequestId = id_generator.next()
 
 # @export "get_subscriber"
 def get_subscriber(request_id, user_id):
