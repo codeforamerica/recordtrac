@@ -996,13 +996,13 @@ def well_known_status():
     #
     # Try to connect to Akismet and see if the key is valid.
     #
-    try:
-        if not is_working_akismet_key():
-            raise Exception('Akismet reported a non-working key')
-
-    except Exception, e:
-        response['status'] = 'Akismet fail: %s' % e
-        return jsonify(response)
+    # try:
+    #     if not is_working_akismet_key():
+    #         raise Exception('Akismet reported a non-working key')
+    #
+    # except Exception, e:
+    #     response['status'] = 'Akismet fail: %s' % e
+    #     return jsonify(response)
 
     return jsonify(response)
 
