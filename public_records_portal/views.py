@@ -92,10 +92,8 @@ def new_request(passed_recaptcha=False, data=None):
             except:
                 app.logger.info("\n\nNo file passed in")
 
-            if document and not (record_description):
-                errors.append('Please fill out the attachment description.')
 
-            if record_description and not (document):
+            if request_attachment_description and not (request_attachment):
                 errors.append('Please select a file to upload as attachment.')
 
             if not (request_text and request_text.strip()):
@@ -108,7 +106,7 @@ def new_request(passed_recaptcha=False, data=None):
             # Check Date
             if request_date:
                 try:
-                    tz = pytz.timezone(app.config['TIMEZONE'])
+                    tz = pytz.timezone(str(app.config['TIMEZONE']))
                     offset = tz.utcoffset(datetime.now())
                     offset = (offset.days * 86400 + offset.seconds) / 3600
                     # request_date = request_date - timedelta(hours=offset)
@@ -171,7 +169,7 @@ def new_request(passed_recaptcha=False, data=None):
                     agency=request_agency,
                     summary=request_summary,
                     text=request_text,
-                    attachment=attachment,
+                    attachment=request_attachment,
                     attachment_description=request_attachment_description,
                     offline_submission_type=request_format,
                     date_received=request_date,
