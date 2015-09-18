@@ -4,7 +4,7 @@
 .. modlueauthor:: Richa Agarwal <richa@codeforamerica.org>
 """
 
-
+from __future__ import generators
 from public_records_portal import db, app
 from models import *
 from datetime import datetime, timedelta
@@ -30,6 +30,14 @@ from flask import render_template, make_response
 from models import *
 
 cal = Calendar()
+
+def id_counter():
+    i = 0
+    while 1:
+        yield i
+        i = i + 1
+
+id_generator = id_counter()
 
 # @export "get_subscriber"
 def get_subscriber(request_id, user_id):

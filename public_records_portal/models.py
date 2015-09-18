@@ -269,7 +269,6 @@ class Request(db.Model):
     # The public records request
 
     __tablename__ = 'request'
-    tracking_number = 0x01
     id = db.Column(db.String(100), primary_key=True)
     date_created = db.Column(db.DateTime)
     due_date = db.Column(db.DateTime)
@@ -318,7 +317,6 @@ class Request(db.Model):
         self.offline_submission_type = offline_submission_type
         if date_received and type(date_received) is datetime:
             self.date_received = date_received
-        self.__class__.tracking_number += 0x01
         self.category = category
 
     def __repr__(self):

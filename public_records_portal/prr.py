@@ -14,7 +14,7 @@ from flask import request
 from public_records_portal import db_helpers
 from db_helpers import find_request, create_request, get_obj, add_staff_participant, remove_staff_participant, \
     update_obj, get_attribute, change_request_status, create_or_return_user, create_subscriber, create_record, \
-    create_note, create_QA, create_answer, update_user
+    create_note, create_QA, create_answer, update_user, id_counter, id_generator
 from models import *
 from ResponsePresenter import ResponsePresenter
 from RequestPresenter import RequestPresenter
@@ -212,7 +212,7 @@ def make_request(category=None, agency=None, summary=None, text=None, attachment
             app.logger.info("%s is not a valid department" % agency)
             agency = None
     id = "FOIL" + "-" + datetime.now().strftime("%Y") + "-" + agency_codes[
-        agency] + "-" + "%05d" % Request.tracking_number
+        agency] + "-" + "%05d" % id_generator.next()
     request_id = create_request(id=id, category=category, summary=summary, text=text, user_id=user_id,
                                 offline_submission_type=offline_submission_type,
                                 date_received=date_received)  # Actually create the Request object
