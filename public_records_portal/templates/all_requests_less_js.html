@@ -180,7 +180,9 @@
                                             onclick="return insertInput('due_date');">Due
                                     </button>
                                 </th>
-                                <th>Requester</th>
+                                {% if current_user.is_authenticated() %}
+                                    <th>Requester</th>
+                                {% endif %}
                             </tr>
                             </thead>
                             <tbody>
@@ -228,7 +230,9 @@
                                     <td>{{ request.department }}</td>
                                     <td>{{ request.contact_name }}</td>
                                     <td>{{ request.due_date }}</td>
+                                {% if current_user.is_authenticated() %}
                                     <td>{{ request.requester }}</td>
+                                {% endif %}
                                 </tr>
                             {% endfor %}
                             </tbody>
