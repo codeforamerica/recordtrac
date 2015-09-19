@@ -56,6 +56,7 @@ rect:hover{
 	font-size: 11px;
 }
 
+
 </style>
 <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/d3pie.min.js') }}"></script>
 
@@ -117,7 +118,11 @@ rect:hover{
                                                 colors["Granted In Part"] = "#D42AE8";
                                                 colors["No Customer Response"] = "#535AD7";
                                                 colors["Out of Jurisdiction"] = "#FF402C";
-						
+					        colors["Referred to NYC.gov"] = "#83BFFF";
+                                                colors["Referred to Open Data"] = "#6EDB8F";
+                                                colors["Referred to Other Agency"] = "#FFE366";
+                                                colors["Referred to Publications Portal"] = "#FFC266";
+	
 						var dataset = report_data.data;
 						
 						var xScale = d3.scale.ordinal()

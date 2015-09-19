@@ -5,9 +5,9 @@
         "Action": "The requester will be notified via email."
     },
     "Add a note": {
-        "What": "Use this space to provide an update about the request.",
-        "Who": "We'll post your question online to be viewed by the public.",
-        "Action": "The requester will be notified via email."
+        "What": "Use this space to track private notes.",
+        "Who": "Your note will only be visible to staff.",
+        "Action": ""
     },
     "Add a public note": {
         "What": "Use this section to communicate with the city.",
@@ -181,6 +181,30 @@
     "Requester Not Interested":
     {
         "What":"The person who submitted this request determined they no longer need the record.",
+        "Who":"",
+        "Action":""
+    },
+    "Initial request redirected":
+    {
+        "What":"Initial request was initially directed to wrong agenyc and has been redirected.",
+        "Who":"",
+        "Action":""
+    },
+    "Please visit NYC.gov":
+    {
+        "What":"Please visit the following link to find this information: http://www.nyc.gov",
+        "Who":"",
+        "Action":""
+    },
+    "Please visit nycopendata":
+    {
+        "What":"Please visit the NYC Open Data Portal to find this information: https://nycopendata.socrata.com/",
+        "Who":"",
+        "Action":""
+    },
+    "Please visit NYC Government Publications Portal":
+    {
+        "What":"Please visit the NYC Government Publications Portal to find this informaton: http://a860-gpp.nyc.gov/",
         "Who":"",
         "Action":""
     },

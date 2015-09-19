@@ -11,22 +11,23 @@
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-fileupload.css') }}">
 {% endblock custom_css_links %}
 
+{% set alias = "Not provided" %}
+{% set phone = "Not provided" %}
+{% set requester = req.requester() %}
+{% if requester %}
+  {% set user = requester.user %}
+  {% set email = user.email %}
+  {% set alias = user.alias %}
+  {% set phone = user.phone %}
+  {% set address1 = user.address1 %}
+  {% set address2 = user.address2 %}
+  {% set city = user.city %}
+  {% set state = user.state %}
+  {% set zipcode = user.zipcode %}
+{% endif %}
+
 {% block requester_info %}
   <div>
-    {% set alias = "Not provided" %}
-    {% set phone = "Not provided" %}
-    {% set requester = req.requester() %}
-    {% if requester %}
-       {% set user = requester.user %}  
-       {% set email = user.email %}
-       {% set alias = user.alias %}
-       {% set phone = user.phone %}
-       {% set address1 = user.address1 %}
-       {% set address2 = user.address2 %}
-       {% set city = user.city %}
-       {% set state = user.state %}
-       {% set zipcode = user.zipcode %}
-    {% endif %}
     {% if not email %}
       <span id="no_email">
         <strong><i class="icon icon-exclamation-sign"></i> Requester's e-mail has not been provided.</strong>
@@ -66,15 +67,40 @@
 {% endblock proxyrequester_info %}
 
 {% block clarify_request %}
-  <!-- ask a question -->
-  <form name="ask_question" id="question" class="form-inline" style="margin: 10px 0px 15px 0px;" method="post" action="/add_a_qa" autocomplete="on">
-    <input type="hidden" name="request_id" value="{{ req.id }}"/>
-    <fieldset>
-      <label>Ask a question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
-      <textarea id="questionTextarea"  name="question_text" class="input-xlarge" placeholder="Ask the requester a question" required/></textarea> 
-      <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
-    </fieldset>
-  </form>
+  {% if email %}
+    <!-- ask a question -->
+    <form name="ask_question" id="question" class="form-inline" style="margin: 10px 0px 15px 0px;" method="post" action="/add_a_qa" autocomplete="on">
+      <input type="hidden" name="request_id" value="{{ req.id }}"/>
+      <fieldset>
+        <label>Ask a question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+        <textarea id="questionTextarea"  name="question_text" class="input-xlarge" placeholder="Ask the requester a question" required/></textarea>
+        <button id="askQuestion" class="btn btn-primary" data-toggle="modal" data-target="#confirm-submit" type="submit">Ask</button>
+      </fieldset>
+    </form>
+	
+	<div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					Confirmation
+				</div>
+				<div class="modal-body">
+					Are you sure you want to make the following question public?
+					<table class="table">
+						<tr>
+							<th>Question</th>
+							<td id="question_text"></td>
+						</tr>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<a href="#" id="submit" class="btn btn-success success">Submit</a>
+				</div>
+			</div>
+		</div>
+	</div>
+  {% endif %}
 {% endblock clarify_request %}
 
 {% block response_actions_lessjs %}
@@ -153,25 +179,20 @@
         <div class="control-group">
           <label class="control-label">Note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
           <div class="controls">
-            <textarea type="text" class="input-xxlarge" id="noteTextarea" name="note_text"  placeholder="Anything else the requester should know."required/></textarea>
+            <textarea type="text" class="input-xxlarge" id="noteTextarea" name="note_text"  placeholder="Notes visible to staff only."required/></textarea>
           </div>
         </div>
         <div class="control-group">
           <div class="controls">
             <button type="submit" class="btn btn-primary">Add note</button>
           </div>
-<label class="control-label">Privacy <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="Privacy"><small><i class="icon-info-sign"></i></small></span></label>
-          <div class="controls">
-            <select id="note_privacy" name="note_privacy" required data-selected-text-format="count" size="2">
-              <option value="1">Public</option>
-              <option value="2">Staff Only</option>
-            </select>
-          </div>
+		<input type="hidden" name="note_privacy" value="2"/>
         </div>
       </div>
     </fieldset>
   </form>
-
+  </form>
+  
   <!-- Generate PDF -->
   <form name="note" class="form-horizontal" id="note" method="post" action="/add_a_pdf">
     <input type="hidden" name="request_id" value="{{ req.id }}"/>
@@ -270,6 +291,10 @@
               <option value="{{"Unable to contact the requester" | explain_action("What")}}">Unable to contact the requester</option>
               <option value="{{"Contact Another Government Agency" | explain_action("What")}}">Contact Another Government Agency</option>
               <option value="{{"Requester Not Interested" | explain_action("What")}}">Requester Not Interested</option>
+             <option value="{{"Initial request redirected" | explain_action("What")}}">Initial request redirected</option>
+              <option value="{{"Please visit NYC.gov" | explain_action("What")}}">Please visit NYC.gov</option>
+              <option value="{{"Please visit nycopendata" | explain_action("What")}}">Please visit nycopendata</option>
+              <option value="{{"Please visit NYC Government Publications Portal" | explain_action("What")}}">Please visit NYC Government Publications Portal</option>
             </select>
           </div>
         </div>

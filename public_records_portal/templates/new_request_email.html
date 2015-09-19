@@ -2,43 +2,49 @@
 
 <body>
 <div style="background-color:#FFF;width:100%;margin:0px; padding:0px">
-	<div style="padding:20px;">
-		<div style="padding:8px;background-color:#EEE;-moz-border-radius:7px;-webkit-border-radius:7px;">
-			<div style="clear:both;">
-				<span style="font-family: arial,helvetica,sans-serif;"><span style="color: rgb(51, 51, 51); font-size: 14px;">
+    <div style="padding:20px;">
+        <div style="padding:8px;background-color:#EEE;-moz-border-radius:7px;-webkit-border-radius:7px;">
+            <div style="clear:both;">
+				<span style="font-family: arial,helvetica,sans-serif;"><span
+                        style="color: rgb(51, 51, 51); font-size: 14px;">
 					<p>
-					Thank you for submitting a public records request to the {{config['AGENCY_NAME']}}. You will receive email updates about your request, but you can always view any activity on the request page, <a href='{{page}}'>{{page}}</a>.
+                        Thank you for submitting a public records request to the {{ config['AGENCY_NAME'] }}. You will
+                        receive email updates about your request, but you can always view any activity on the request
+                        page, <a href='{{ page }}'>{{ page }}</a>.
 				</p>
-				<p>In the next 10 days, you can expect a response from the City.</br>
+				<p>In the next {{config['DAYS_TO_FULFILL']}} days, you can expect a response from {{config['AGENCY_NAME']}}.</br>
 				A response can be the following:<ul>
 				<li>a question about your request</li>
 				<li>an estimate on when your records will be delivered</li>
 				<li>a note explaining why the records cannot be released</li>
 				<li>the documents you requested</li></ul></p>
-			<p>This email is an automated notification, which is unable to receive replies. Please contact {{config['DEFAULT_OWNER_EMAIL']}} with any questions or concerns.</p>
-<br/>  
+                </ul>
+                    </p>
+                    <p>This email is an automated notification, which is unable to receive replies. Please
+                        contact {{ config['DEFAULT_OWNER_EMAIL'] }} with any questions or concerns.</p>
+<br/>
 <p>
 <hr>
-<br />
-<br />
+<br/>
+<br/>
 <span style="font-family: arial,helvetica,sans-serif;"><span style="color: rgb(51, 51, 51); font-size: 11px;">
 <center>
-<i>For more information about RecordTrac, visit <a href="http://postcode.io/recordtrac">PostCode.io</a>.</i>
+    <i>For more information about RecordTrac, visit <a href="http://postcode.io/recordtrac">PostCode.io</a>.</i>
 </center>
 </span>
-</p>
+    </p>
 
 		</span></span></div>
-		</div>
-	</div>
+        </div>
+    </div>
 </div>
 </body>
 <footer>
 
 <span style="font-family: arial,helvetica,sans-serif;"><span style="color: rgb(51, 51, 51); font-size: 11px;">
 <center>
-<img src="{{config['LOGO_ON_WHITE_URL']}}" width="50" height="40"> <br /> <br />
-{{config['AGENCY_NAME']}}
+    <img src="{{ config['LOGO_ON_WHITE_URL'] }}" width="50" height="40"> <br/> <br/>
+    {{ config['AGENCY_NAME'] }}
 
 </center>
 <span>
