@@ -209,7 +209,7 @@ User %s is not associated with a department.'''
             return 'N/A'
 
 
-### @export "Department"
+
 
 class Department(db.Model):
     __tablename__ = 'department'
@@ -262,7 +262,7 @@ class Department(db.Model):
         return self.name or 'N/A'
 
 
-### @export "Request"
+
 
 class Request(db.Model):
     # The public records request
@@ -527,7 +527,7 @@ class Request(db.Model):
         return and_(Request.status.ilike("%publications portal%"), Request.status.ilike("%closed%"))
 
 
-### @export "QA"
+
 
 class QA(db.Model):
     # A Q & A block for a request
@@ -558,7 +558,7 @@ class QA(db.Model):
         return '<QA Q: %r A: %r>' % (self.question, self.answer)
 
 
-### @export "Owner"
+
 
 class Owner(db.Model):
     # A member of city staff assigned to a particular request, that may or may not upload records towards that request.
@@ -595,7 +595,7 @@ class Owner(db.Model):
         return '<Owner %r>' % self.id
 
 
-### @export "Subscriber"
+
 
 class Subscriber(db.Model):
     # A person subscribed to a request, who may or may not have created the request, and may or may not own a part of the request.
@@ -625,7 +625,7 @@ class Subscriber(db.Model):
         return '<Subscriber %r>' % self.user_id
 
 
-### @export "Record"
+
 
 class Record(db.Model):
     # A record that is attached to a particular request. A record can be online (uploaded document, link) or offline.
@@ -671,7 +671,7 @@ class Record(db.Model):
         return '<Record %r>' % self.description
 
 
-### @export "Note"
+
 
 class Note(db.Model):
     # A note on a request.
@@ -703,7 +703,7 @@ class Note(db.Model):
         return '<Note %r>' % self.text
 
 
-### @export "Visualization"
+
 
 class Visualization(db.Model):
     __tablename__ = 'visualization'
