@@ -976,7 +976,7 @@ def get_report_jsons(report_type,public_filter):
 
     if not report_type:
         response={
-            "status" : "failed: unregonized request."
+            "status" : "failed: unrecognized request."
         }
         return jsonify(response)
 
@@ -1099,7 +1099,6 @@ def get_report_jsons(report_type,public_filter):
                     {"label" : "Referred to Publications Portal", "value" : len(referred_to_publications_portal_request), "callback" : "referred_to_publications_portal_request"}
                 ]
             }
-
         except Exception, e:
             response={
                 "status" : "failed",
