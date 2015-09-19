@@ -1,0 +1,29 @@
+<!-- Add a note form -->
+<form name="note" class="form-horizontal" id="note" method="post" action="/add_a_note">
+  <input type="hidden" name="request_id" value="{{ req.id }}"/>
+  <fieldset>
+    <div class="row-fluid">
+      <!-- <h4>Add a note</h4> -->
+      <div class="control-group button-margin">
+        <label class="control-label">Note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+        <div class="controls">
+          <textarea type="text" class="input-xxlarge" id="noteTextarea" name="note_text" rows="2" required/></textarea>
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="controls">
+          <button type="submit" class="btn btn-primary">Add note</button>
+        </div>
+      </div>
+      <label class="control-label">Privacy <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="Privacy"><small><i class="icon-info-sign"></i></small></span></label>
+      <div class="controls">
+        <select id="note_privacy" name="note_privacy" required data-selected-text-format="count" size="2">
+          <option selected value="2">Staff Only</option>
+        </select>
+      </div>
+    </div>
+  </fieldset>
+</form>
+
+
+

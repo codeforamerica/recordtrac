@@ -6,7 +6,6 @@
 
 """
 
-
 from public_records_portal import app, gravatar, prr, notifications, helpers, db_helpers
 # Register your filter here!
 

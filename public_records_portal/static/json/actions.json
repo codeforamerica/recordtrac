@@ -5,9 +5,9 @@
         "Action": "The requester will be notified via email."
     },
     "Add a note": {
-        "What": "Use this space to provide an update about the request.",
-        "Who": "We'll post your question online to be viewed by the public.",
-        "Action": "The requester will be notified via email."
+        "What": "Use this space to track private notes.",
+        "Who": "Your note will only be visible to staff.",
+        "Action": ""
     },
     "Add a public note": {
         "What": "Use this section to communicate with the city.",
