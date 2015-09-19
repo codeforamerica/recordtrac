@@ -1213,7 +1213,6 @@ def get_report_jsons(report_type,public_filter):
     if report_type == "received":
         try:
             received_request=models.Request.query.all()
-            response={
             response = {
                 "status" : "ok",
                 "data" : [

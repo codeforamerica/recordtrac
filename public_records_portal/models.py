@@ -12,16 +12,15 @@
 from datetime import datetime, timedelta
 import re
 
-from dateutil.parser import parse
 from business_calendar import Calendar
 from flask.ext.login import current_user
 from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy import and_
 from werkzeug.security import generate_password_hash, \
     check_password_hash
 from validate_email import validate_email
+from sqlalchemy import and_, or_
 
 from public_records_portal import db, app
 
@@ -299,6 +298,7 @@ class Request(db.Model):
     date_received = db.Column(db.DateTime)
     offline_submission_type = db.Column(db.String())
     category = db.Column(db.String, nullable=False)
+    prev_status = db.Column(db.String(400))  # The previous status of the request (open, closed, etc.)
 
     def __init__(
             self,
@@ -308,7 +308,7 @@ class Request(db.Model):
             creator_id=None,
             offline_submission_type=None,
             date_received=None,
-            category=None
+            category=None,
     ):
         self.id = id
         self.summary = summary
@@ -465,14 +465,13 @@ class Request(db.Model):
 
     @hybrid_property
     def open(self):
-        two_days = datetime.now() + timedelta(days=0x02)
+        two_days = datetime.now() + timedelta(days=2)
         return and_(~self.closed, self.due_date > two_days)
 
     @hybrid_property
     def due_soon(self):
-        two_days = datetime.now() + timedelta(days=0x02)
-        return and_(self.due_date < two_days, self.due_date
-                    > datetime.now(), ~self.closed)
+        two_days = datetime.now() + timedelta(days=2)
+        return and_(self.due_date < two_days, self.due_date > datetime.now(), ~self.closed)
 
     @hybrid_property
     def overdue(self):
@@ -480,7 +479,52 @@ class Request(db.Model):
 
     @hybrid_property
     def closed(self):
-        return Request.status.ilike('%closed%')
+        return Request.status.ilike("%closed%")
+
+    @hybrid_property
+    def published(self):
+        return Request.status.ilike("%closed%")
+
+    @hybrid_property
+    def granted_and_closed(self):
+        return Request.status.ilike("%grantedandclosed%")
+
+    @hybrid_property
+    def granted_in_part(self):
+        return and_(Request.status.ilike("%fulfilled%"), Request.status.ilike("%in part%"),
+                    Request.status.ilike("%closed%"))
+
+    @hybrid_property
+    def no_customer_response(self):
+        return and_(Request.prev_status.ilike("%asked a question%"), Request.prev_status.ilike("%closed%"))
+
+    @hybrid_property
+    def out_of_jurisdiction(self):
+        return and_(Request.status.ilike("%out of jurisdiction%"), Request.status.ilike("%closed%"))
+
+    @hybrid_property
+    def denied(self):
+        return Request.status.ilike("%denied%")
+
+    @hybrid_property
+    def notoverdue(self):
+        return ~self.overdue
+
+    @hybrid_property
+    def referred_to_nycgov(self):
+        return or_(Request.status.ilike("%nyc.gov%"), Request.status.ilike("%311%"))
+
+    @hybrid_property
+    def referred_to_opendata(self):
+        return and_(Request.status.ilike("%nycopendata%"), Request.status.ilike("%closed%"))
+
+    @hybrid_property
+    def referred_to_other_agency(self):
+        return and_(Request.status.ilike("%redirected%"), Request.status.ilike("%closed%"))
+
+    @hybrid_property
+    def referred_to_publications_portal(self):
+        return and_(Request.status.ilike("%publications portal%"), Request.status.ilike("%closed%"))
 
 
 ### @export "QA"
