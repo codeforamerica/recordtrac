@@ -12,16 +12,15 @@
 from datetime import datetime, timedelta
 import re
 
-from dateutil.parser import parse
 from business_calendar import Calendar
 from flask.ext.login import current_user
 from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy import and_
 from werkzeug.security import generate_password_hash, \
     check_password_hash
 from validate_email import validate_email
+from sqlalchemy import and_, or_
 
 from public_records_portal import db, app
 
@@ -210,7 +209,7 @@ User %s is not associated with a department.'''
             return 'N/A'
 
 
-### @export "Department"
+
 
 class Department(db.Model):
     __tablename__ = 'department'
@@ -263,7 +262,7 @@ class Department(db.Model):
         return self.name or 'N/A'
 
 
-### @export "Request"
+
 
 class Request(db.Model):
     # The public records request
@@ -298,6 +297,7 @@ class Request(db.Model):
     date_received = db.Column(db.DateTime)
     offline_submission_type = db.Column(db.String())
     category = db.Column(db.String, nullable=False)
+    prev_status = db.Column(db.String(400))  # The previous status of the request (open, closed, etc.)
 
     def __init__(
             self,
@@ -307,7 +307,7 @@ class Request(db.Model):
             creator_id=None,
             offline_submission_type=None,
             date_received=None,
-            category=None
+            category=None,
     ):
         self.id = id
         self.summary = summary
@@ -461,121 +461,15 @@ class Request(db.Model):
                         return 'due soon'
         return 'open'
 
-    def requester_phone(self):
-        requester = self.requester()
-        if requester and requester.user:
-            return requester.user.get_phone()
-        return 'N/A'
-
-    def requester_address1(self):
-        requester = self.requester()
-        if requester and requester.user:
-            return requester.user.get_address1()
-        return 'N/A'
-
-    def requester_address2(self):
-        requester = self.requester()
-        if requester and requester.user:
-            return requester.user.get_address2()
-        return 'N/A'
-
-    def requester_city(self):
-        requester = self.requester()
-        if requester and requester.user:
-            return requester.user.get_city()
-        return 'N/A'
-
-    def requester_state(self):
-        requester = self.requester()
-        if requester and requester.user:
-            return requester.user.get_state()
-        return 'N/A'
-
-    def requester_zipcode(self):
-        requester = self.requester()
-        if requester and requester.user:
-            return requester.user.get_zipcode()
-        return 'N/A'
-
-    def point_person_name(self):
-        point_person = self.point_person()
-        if point_person and point_person.user:
-            return point_person.user.get_alias()
-        return 'N/A'
-
-    def set_due_date(self):
-        if not self.date_received:
-            self.date_received = self.date_created
-        if self.extended == True:
-            self.due_date = cal.addbusdays(self.date_received, int(app.config['DAYS_AFTER_EXTENSION']))
-        else:
-            self.due_date = cal.addbusdays(self.date_received, int(app.config['DAYS_TO_FULFILL']))
-
-    def extension(self):
-        self.extended = True
-        self.due_date = cal.addbusdays(self.due_date, app.config['DAYS_AFTER_EXTENSION'])
-
-    def extension(self, days_after=None, due_date=None):
-        self.extended = True
-        if due_date is None or due_date == '':
-            self.due_date = cal.addbusdays(self.due_date, int(days_after))
-        else:
-            self.due_date = parse(str(due_date)) + timedelta(days=1)
-
-    def is_in_progress(self):
-        if self.status:
-            return re.match('.*(progress).*', self.status,
-                            re.IGNORECASE) is not None
-        else:
-            app.logger.info('''
-
-     Request with this ID has no status: %s'''
-                            % self.id)
-            return False
-
-    def solid_status(self, cron_job=False):
-        if self.is_closed():
-            return 'closed'
-        if self.is_in_progress():
-            return 'in progress'
-        else:
-            if cron_job or not current_user.is_anonymous():
-                if self.due_date and self.status != 'Open':
-                    if datetime.now() >= self.due_date:
-                        return 'overdue'
-                    elif datetime.now() \
-                            + timedelta(days=int(app.config['DAYS_UNTIL_OVERDUE'
-                                                 ])) >= self.due_date:
-                        return 'due soon'
-                    elif datetime.now() + timedelta(days=int(15)) \
-                            >= self.due_date:
-                        return 'in progress (due in 15 days)'
-                    elif datetime.now() + timedelta(days=int(30)) \
-                            >= self.due_date:
-                        return 'in progress (due in 30 days)'
-                    elif datetime.now() + timedelta(days=int(60)) \
-                            >= self.due_date:
-                        return 'in progress (due in 60 days)'
-                    elif datetime.now() + timedelta(days=int(90)) \
-                            >= self.due_date:
-                        return 'in progress (due in 90 days)'
-                    elif datetime.now() + timedelta(days=int(120)) \
-                            >= self.due_date:
-                        return 'in progress (due in 120 days)'
-                    else:
-                        return 'acknowledged'
-        return 'open'
-
     @hybrid_property
     def open(self):
-        two_days = datetime.now() + timedelta(days=0x02)
+        two_days = datetime.now() + timedelta(days=2)
         return and_(~self.closed, self.due_date > two_days)
 
     @hybrid_property
     def due_soon(self):
-        two_days = datetime.now() + timedelta(days=0x02)
-        return and_(self.due_date < two_days, self.due_date
-                    > datetime.now(), ~self.closed)
+        two_days = datetime.now() + timedelta(days=2)
+        return and_(self.due_date < two_days, self.due_date > datetime.now(), ~self.closed)
 
     @hybrid_property
     def overdue(self):
@@ -583,10 +477,55 @@ class Request(db.Model):
 
     @hybrid_property
     def closed(self):
-        return Request.status.ilike('%closed%')
+        return Request.status.ilike("%closed%")
+
+    @hybrid_property
+    def published(self):
+        return Request.status.ilike("%closed%")
+
+    @hybrid_property
+    def granted_and_closed(self):
+        return Request.status.ilike("%grantedandclosed%")
+
+    @hybrid_property
+    def granted_in_part(self):
+        return and_(Request.status.ilike("%fulfilled%"), Request.status.ilike("%in part%"),
+                    Request.status.ilike("%closed%"))
+
+    @hybrid_property
+    def no_customer_response(self):
+        return and_(Request.prev_status.ilike("%asked a question%"), Request.prev_status.ilike("%closed%"))
+
+    @hybrid_property
+    def out_of_jurisdiction(self):
+        return and_(Request.status.ilike("%out of jurisdiction%"), Request.status.ilike("%closed%"))
+
+    @hybrid_property
+    def denied(self):
+        return Request.status.ilike("%denied%")
+
+    @hybrid_property
+    def notoverdue(self):
+        return ~self.overdue
+
+    @hybrid_property
+    def referred_to_nycgov(self):
+        return or_(Request.status.ilike("%nyc.gov%"), Request.status.ilike("%311%"))
+
+    @hybrid_property
+    def referred_to_opendata(self):
+        return and_(Request.status.ilike("%nycopendata%"), Request.status.ilike("%closed%"))
+
+    @hybrid_property
+    def referred_to_other_agency(self):
+        return and_(Request.status.ilike("%redirected%"), Request.status.ilike("%closed%"))
+
+    @hybrid_property
+    def referred_to_publications_portal(self):
+        return and_(Request.status.ilike("%publications portal%"), Request.status.ilike("%closed%"))
 
 
-### @export "QA"
+
 
 class QA(db.Model):
     # A Q & A block for a request
@@ -617,7 +556,7 @@ class QA(db.Model):
         return '<QA Q: %r A: %r>' % (self.question, self.answer)
 
 
-### @export "Owner"
+
 
 class Owner(db.Model):
     # A member of city staff assigned to a particular request, that may or may not upload records towards that request.
@@ -654,7 +593,7 @@ class Owner(db.Model):
         return '<Owner %r>' % self.id
 
 
-### @export "Subscriber"
+
 
 class Subscriber(db.Model):
     # A person subscribed to a request, who may or may not have created the request, and may or may not own a part of the request.
@@ -684,7 +623,7 @@ class Subscriber(db.Model):
         return '<Subscriber %r>' % self.user_id
 
 
-### @export "Record"
+
 
 class Record(db.Model):
     # A record that is attached to a particular request. A record can be online (uploaded document, link) or offline.
@@ -730,7 +669,7 @@ class Record(db.Model):
         return '<Record %r>' % self.description
 
 
-### @export "Note"
+
 
 class Note(db.Model):
     # A note on a request.
@@ -762,7 +701,7 @@ class Note(db.Model):
         return '<Note %r>' % self.text
 
 
-### @export "Visualization"
+
 
 class Visualization(db.Model):
     __tablename__ = 'visualization'

@@ -48,7 +48,8 @@
       if ($('#acknowledgeRequestForm').css('display') != 'none') {
         $('#acknowledgeRequestForm').hide();
       }
-});
+  });
+ 
   $("#days_after").change(function() {
     selected = $(this).val();
     if(selected === "0") { 
@@ -76,7 +77,7 @@
 
   $('#submit').on('click',function(){
     $('#question').submit();
-  });
+   });
 
 
 })($);

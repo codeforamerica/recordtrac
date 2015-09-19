@@ -432,6 +432,7 @@ def create_owner(request_id, reason, email=None, user_id=None):
 # @export "change_request_status"
 def change_request_status(request_id, status):
     req = get_obj("Request", request_id)
+    req.prev_status = req.status
     req.status = status
     req.status_updated = datetime.now().isoformat()
     db.session.add(req)

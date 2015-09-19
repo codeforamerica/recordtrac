@@ -2,89 +2,249 @@
 
 {% block container %}
 
+<style>
+	#tooltip {
+		position: absolute;
+		width: 95px;
+		height: auto;
+		padding: 10px;
+		background-color: white;
+		-webkit-border-radius: 10px;
+		-moz-border-radius: 10px;
+		border-radius: 10px;
+		-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+		-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+		box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+		pointer-events: none;
+	}
+#tooltip.hidden {
+	display: none;
+}
+#tooltip p {
+	margin: 0;
+	font-family: sans-serif;
+	font-size: 12px;
+	line-height: 16px;
+}
+.indent{
+	padding-left: 5px;
+}
+.heading{
+	font-weight: bold;
+}
+value{
+	color: red;
+	font-style: italic;
+}
+rect {
+	-moz-transition: all 0.3s;
+	-webkit-transition: all 0.3s;
+	-o-transition: all 0.3s;
+	transition: all 0.3s;
+}
+rect:hover{
+	fill: orange;
+}
+.axis path,
+.axis line {
+	fill: none;
+	stroke: black;
+	shape-rendering: crispEdges;
+}
+.axis text {
+	font-family: sans-serif;
+	font-size: 11px;
+}
 
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/d3pie.min.js') }}"></script>
 
-    <div class="row-fluid">
-        <div class="span10">
-            {% block banner %}
-                {{ super() }}
-            {% endblock banner %}
+</style>
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/d3pie.min.js') }}"></script>
 
-            <div id="report_div"></div>
+<div class="row-fluid">
+    <div class="span10">
+		{% block banner %}
+			{{ super() }}
+		{% endblock banner %}
 
-            <script type="text/javascript">
+		<!--div id="report_div"></div-->
+		<div id="bar_chart"></div>
+		<br>
+		<button id="calendarYear" type="submit" class="btn btn-primary">Calendar Year</button>
+		<button id="fullYear" type="submit" class="btn btn-primary">Full Year</button>
+        <button id="rolling" type="submit" class="btn btn-primary">Rolling 365</button>
+		<h5>Department Filter</h5>
+		<select id="agency_filter" name="agency_filter">
+			<option value="0">None Selected</option>
+			<option value="1">Department of Records and Information Services</option>
+			<option value="2">Office of the Chief Medical Examiner</option>
+			<option value="3">Mayor's Office</option>
+			<option value="4">Department of Education</option>
+			<option value="5">Department of Information Technology and Telecommunications</option>
+			<option value="5">Deputy Mayor</option>
+		</select>
+		<h5>Staff Filter</h5>
+		<select id="staff_filter" name="staff_filter">
+			    <option value="0">None Selected</option>
+				{% for user in users %}
+				{{ user.email }}
+				<option value="{{ user.id }}">{{ user.alias}}</option>
+				{% endfor %}
+		</select>
+		
+		<script type="text/javascript">
 
-                function draw_piechart(report_data) {
-                    /*
-                     console.log("drawing piechart");
-                     console.log("report data:" + report_data);
+			function draw_barchart(reportPath) {
+				
+				$("#bar_chart").empty();
+				var w = 500, h = 100;
+				var svg = d3.select("#bar_chart").append("svg").attr("width",w).attr("height",h);
+				
+				d3.json(reportPath, function(report_data) {
+						var margin = {
+						top: 25,
+						right: 75,
+						bottom: 85,
+						left: 85
+						},
+						w = 600 - margin.left - margin.right,
+						h = 350 - margin.top - margin.bottom;
+						var padding = 10;
+						
+						var colors = {};
+						colors["Received"] = "#278ECF";
+						colors["Published"] = "#4BD762";
+						colors["Denied"] = "#FFCA1F";
+						colors["Granted And Closed"] = "#FF9416";
+                                                colors["Granted In Part"] = "#D42AE8";
+                                                colors["No Customer Response"] = "#535AD7";
+                                                colors["Out of Jurisdiction"] = "#FF402C";
+					        colors["Referred to NYC.gov"] = "#83BFFF";
+                                                colors["Referred to Open Data"] = "#6EDB8F";
+                                                colors["Referred to Other Agency"] = "#FFE366";
+                                                colors["Referred to Publications Portal"] = "#FFC266";
+	
+						var dataset = report_data.data;
+						
+						var xScale = d3.scale.ordinal()
+						.domain(d3.range(dataset.length))
+						.rangeRoundBands([0, w], 0.05);
+						// ternary operator to determine if global or local has a larger scale
+						var yScale = d3.scale.linear()
+						.domain([0, d3.max(dataset, function (d) {
+										   return d.value;
+										   })])
+						.range([h, 0]);
+						var xAxis = d3.svg.axis()
+						.scale(xScale)
+						.tickFormat(function (d) {
+									return dataset[d].label;
+									})
+						.orient("bottom");
+						var yAxis = d3.svg.axis()
+						.scale(yScale)
+						.orient("left")
+						.ticks(5);
+						
+						var commaFormat = d3.format(',');
+						
+						//SVG element
+						var svg = d3.select("#bar_chart")
+						.append("svg")
+						.attr("width", w + margin.left + margin.right)
+						.attr("height", h + margin.top + margin.bottom)
+						.append("g")
+						.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+						
+						// Graph Bars
+						var sets = svg.selectAll(".set")
+						.data(dataset)
+						.enter()
+						.append("g")
+						.attr("class", "set")
+						.attr("transform", function (d, i) {
+							  return "translate(" + xScale(i) + ",0)";
+							  });
+						
+						sets.append("rect")
+						.attr("class", "OverDue")
+						.attr("width", xScale.rangeBand() / 2)
+						.attr("y", function (d) {
+							  return yScale(d.value);
+							  })
+						.attr("x", xScale.rangeBand() / 2)
+						.attr("height", function (d) {
+							  return h - yScale(d.value);
+							  })
+						.attr("fill", function (d) {
+							  return colors[d.label];
+							  })
+						;
+						
+						
+						// xAxis
+						svg.append("g") // Add the X Axis
+						.attr("class", "x axis")
+						.attr("transform", "translate(0," + (h) + ")")
+						.call(xAxis)
+						.selectAll("text")
+						.style("text-anchor", "end")
+						.attr("dx", "-.8em")
+						.attr("dy", ".15em")
+						.attr("transform", function (d) {
+							  return "rotate(-25)";
+							  });
+						// yAxis
+						svg.append("g")
+						.attr("class", "y axis")
+						.attr("transform", "translate(0 ,0)")
+						.call(yAxis);
+						// xAxis label
+						svg.append("text")
+						.attr("transform", "translate(" + (w / 2) + " ," + (h + margin.bottom - 5) + ")")
+						.style("text-anchor", "middle")
+						.text("Request Type");
+						
+						//yAxis label
+						svg.append("text")
+						.attr("transform", "rotate(-90)")
+						.attr("y", 0 - margin.left)
+						.attr("x", 0 - (h / 2))
+						.attr("dy", "1em")
+						.style("text-anchor", "middle")
+						.text("# of Requests");
+						
+						});
+						
+			}
+		
+			draw_barchart("/api/report/all/all");
 
-                     var width = 400;
-                     var height = 400;
-                     var radius = height / 2;
+			$("#calendarYear").click(function() {
+			    draw_barchart("/api/report/all/calendarYear");
+			});
 
-                     var color = d3.scale.category20c();
-                     var vis = d3.select('#report_div').append("svg:svg").data([report_data]).attr("width", width).attr("height", height).append("svg:g").attr("transform", "translate(" + radius + "," + radius + ")");
-                     var pie = d3.layout.pie().value(function(d) {
-                     console.log("report data value: " + d.value);
-                     return d.value;
-                     });
-                     var arc = d3.svg.arc().outerRadius(radius);
-                     var arcs = vis.selectAll("g.slice").data(pie).enter().append("svg.g").attr("class", "slice");
-                     arcs.append("svg:path").attr("fill", function(d, i) {
-                     console.log("color: " + color(i));
-                     return color(i);
-                     }).attr("d", function (d) {
-                     console.log(arc(d));
-                     return arc(d);
-                     });
-                     arcs.append("svg:text").attr("transform", function(d) {
-                     d.innerRadius = 0;
-                     d.outerRadius = radius;
-                     return "translate(" + arc.centroid(d) + ")";
-                     }).attr("text-anchor", "middle").text(function(d, i) {
-                     console.log("report data label: " + report_data[i].label);
-                     return report_data[i].label;
-                     });
+			$("#fullYear").click(function() {
+			    draw_barchart("/api/report/all/fullYear");
+			});
+			
+			$("#rolling").click(function() {
+				draw_barchart("/api/report/all/rolling");
+			});
+			
+			$("#agency_filter").change(function() {
+				selected = $(this).val();
 
-                     console.log("finished drawing piechart");
-                     */
+				draw_barchart("/api/report/all/agency_" + selected);
+			});
+			$("#staff_filter").change(function() {
+				selected = $(this).val();
 
-                    var pie = new d3pie("report_div", {
-                        header: {
-                            title: {
-                                text: "Request Due pie chart"
-                            }
-                        },
-                        data: {
-                            content: report_data
-                        },
-                        callbacks: {
-                            onClickSegment: function (a) {
-                                alert("callback event: " + a.data.callback);
-                            }
-                        }
-                    });
-                }
+				draw_barchart("/api/report/all/staff_" + selected);
+			});
 
-                $.ajax({
-                    type: "GET",
-                    contentType: "application/json; charset=utf-8",
-                    url: "/api/report/overdue",
-                    dataType: "json",
-                    async: true,
-                    success: function (data) {
-                        div_name = "report_div";
-                        draw_piechart(data.data);
-                    },
-                    error: function (result) {
-                        alert(result);
-                    }
-                });
 
-            </script>
+		</script>
 
-        </div>
-    </div>
+	</div>
+</div>
 {% endblock container %}
