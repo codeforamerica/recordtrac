@@ -20,7 +20,9 @@
 // });
 
 /* banner dismissal */
-  $(function(){$(".alert").alert()})
+$(function () {
+    $(".alert").alert()
+});
 
 /* navbar active page indicator */
   $(function(){
@@ -99,7 +101,7 @@ function directoryPopover(staffName, staffDept, staffPhone, elemID){
         return $("Contact information");
       },
       content: function() {
-            var $cont = $("<p class='tight_paragraph'><span class='muted'>Department: </span>"+staffDept+"</p><p class='tight_paragraph'><span class='muted'>Email: </span>"+staffName+"</p><p class='tight_paragraph'><span class='muted'>Phone: </span>"+staffPhone+"</p>");
+          var $cont = $("<p class='tight_paragraph'><span class='muted'>Agency: </span>" + staffDept + "</p><p class='tight_paragraph'><span class='muted'>Email: </span>" + staffName + "</p><p class='tight_paragraph'><span class='muted'>Phone: </span>" + staffPhone + "</p>");
             return $cont;
       }
   });
@@ -107,7 +109,7 @@ function directoryPopover(staffName, staffDept, staffPhone, elemID){
 
 
 /* tooptip */
-  $('[rel=tooltip]').tooltip({html:true}) 
+$('[rel=tooltip]').tooltip({html: true});
 
 /* need to include a way to close the popover by clicking anywhere outside the popover - 
 currently have to click on button */

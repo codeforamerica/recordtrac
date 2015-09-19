@@ -128,6 +128,7 @@ settings.env
 notes/
 .DS_Store
 *.psd
+pdfs/
 
 # @waltz's emacs gitignore partee pak
 *~

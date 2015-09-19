@@ -52,12 +52,31 @@
  
   $("#days_after").change(function() {
     selected = $(this).val();
-    if(selected === "-1") { 
+    if(selected === "0") { 
       $("#custom_due_date").show();
       }
     else {
       $("#custom_due_date").hide();
     }
+});
+
+
+  $("#days_after").change(function() {
+    selected = $(this).val();
+    if(selected === "-1") { 
+      $("#custom_due_date").show();
+    }
+    else {
+      $("#custom_due_date").hide();
+    }
+  });
+
+  $('#askQuestion').on('click',function(){
+    $('#question_text').html($('#questionTextarea').val());
+  });
+
+  $('#submit').on('click',function(){
+    $('#question').submit();
    });
 
 
