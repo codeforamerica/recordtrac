@@ -32,6 +32,7 @@ def add_public_note(request_id, text):
     print "Add Public Note"
     return 1
 
+
 ### @export "add_resource"
 def add_resource(resource, request_body, current_user_id=None):
     fields = request_body
@@ -83,30 +84,30 @@ def add_resource(resource, request_body, current_user_id=None):
 
 ### @export "update_resource"
 def update_resource(resource, request_body):
-	fields = request_body
-	if "owner" in resource:
-		if "reason_unassigned" in fields:
-			return remove_staff_participant(owner_id = fields['owner_id'], reason = fields['reason_unassigned'])
-		else:
-			change_request_status(fields['request_id'], "Rerouted")
-			return assign_owner(fields['request_id'], fields['owner_reason'], fields['owner_email'])
-	elif "reopen" in resource:
-		change_request_status(fields['request_id'], "Reopened")
-	elif "acknowledge" in resource:
-		change_request_status(fields['request_id'], fields['acknowledge_status'])
-		return fields['request_id']
-	elif "request_text" in resource:
-		update_obj(attribute = "text", val = fields['request_text'], obj_type = "Request", obj_id = fields['request_id'])
-	elif "note_text" in resource:
-		update_obj(attribute = "text", val = fields['note_text'], obj_type = "Note", obj_id = fields['response_id'])
-		# Need to store note text somewhere else (or just do delete here as well)
-	elif "note_delete" in resource:
-		# Need to store note somewhere else
-		remove_obj("Note", int(fields['response_id']))
-	elif "record_delete" in resource:
-		remove_obj("Record", int(fields['record_id']))
-	else:
-		return False
+    fields = request_body
+    if "owner" in resource:
+        if "reason_unassigned" in fields:
+            return remove_staff_participant(owner_id=fields['owner_id'], reason=fields['reason_unassigned'])
+        else:
+            change_request_status(fields['request_id'], "Rerouted")
+            return assign_owner(fields['request_id'], fields['owner_reason'], fields['owner_email'])
+    elif "reopen" in resource:
+        change_request_status(fields['request_id'], "Reopened")
+    elif "acknowledge" in resource:
+        change_request_status(fields['request_id'], fields['acknowledge_status'])
+        return fields['request_id']
+    elif "request_text" in resource:
+        update_obj(attribute="text", val=fields['request_text'], obj_type="Request", obj_id=fields['request_id'])
+    elif "note_text" in resource:
+        update_obj(attribute="text", val=fields['note_text'], obj_type="Note", obj_id=fields['response_id'])
+    # Need to store note text somewhere else (or just do delete here as well)
+    elif "note_delete" in resource:
+        # Need to store note somewhere else
+        remove_obj("Note", int(fields['response_id']))
+    elif "record_delete" in resource:
+        remove_obj("Record", int(fields['record_id']))
+    else:
+        return False
 
 
 ### @export "request_extension"
@@ -119,7 +120,7 @@ def request_extension(request_id, extension_reasons, user_id, days_after=None, d
         text = text + reason + "</br>"
     add_staff_participant(request_id=request_id, user_id=user_id)
     return add_note(request_id=request_id, text=text, user_id=user_id,
-                passed_spam_filter=True)  # Bypass spam filter because they are logged in.
+                    passed_spam_filter=True)  # Bypass spam filter because they are logged in.
 
 
 def add_note(request_id, text, user_id=None, privacy=1):
@@ -136,8 +137,6 @@ def add_note(request_id, text, user_id=None, privacy=1):
             return note_id
         return False
     return False
-
-
 
 
 ### @export "upload_record"
@@ -388,13 +387,4 @@ def close_request(request_id, reason="", user_id=None):
     # Create a note to capture closed information:
     create_note(request_id, reason, user_id, privacy=1)
     generate_prr_emails(request_id=request_id, notification_type="Request closed")
-    add_staff_participant(request_id=request_id, user_id=user_id)
-
-
-### @export "close_request"
-def close_request(request_id, reason = "", user_id = None):
-	req = get_obj("Request", request_id)
-	change_request_status(request_id, "Closed:" + str(reason))
-	# Create a note to capture closed information:
-	create_note(request_id, reason, user_id, privacy = 1)
     add_staff_participant(request_id=request_id, user_id=user_id)
