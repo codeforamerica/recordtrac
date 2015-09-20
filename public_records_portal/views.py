@@ -72,7 +72,6 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_city = form.request_address_city.data
             request_address_state = form.request_address_state.data
             request_address_zip = form.request_address_zip.data
-            request_submit = form.request_submit.data
 
             # Check Category
             if not (request_category and request_category.strip()):
