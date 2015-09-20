@@ -138,3 +138,5 @@ pdfs/
 venv/
 Vagrantfile
 .vagrant/
+.codekit-cache/
+config.codekit
