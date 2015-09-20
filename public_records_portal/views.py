@@ -6,35 +6,31 @@
 
 """
 
-import os
-import json
-from urlparse import urlparse, urljoin
-from time import time
-from datetime import datetime, timedelta
-import re
-
 from flask import flash
 from flask import render_template, redirect, url_for, send_from_directory
 from flask.ext.login import login_user, logout_user, current_user, login_required
+# from flaskext.browserid import BrowserID
+from public_records_portal import db, models, recaptcha
+from prr import add_resource, update_resource, make_request, close_request, add_note, add_public_note
+from db_helpers import authenticate_login, get_user_by_id
+import os, json
+from urlparse import urlparse, urljoin
+from notifications import format_date
+from spam import is_spam, is_working_akismet_key, check_for_spam
+from time import time
 from flask import jsonify, request, Response
 import anyjson
-from sqlalchemy import func, and_, or_
-import pytz
-
-from flask_login import LoginManager
-
-from public_records_portal import db, models, recaptcha
-from prr import add_resource, update_resource, make_request, close_request
-from db_helpers import authenticate_login, get_user_by_id
-from notifications import format_date
 import csv_export
+from datetime import datetime, timedelta
+import dateutil.parser
 from filters import *
+import re
 from db_helpers import get_count, get_obj
+from sqlalchemy import func, and_, or_
 from forms import OfflineRequestForm, NewRequestForm, LoginForm, EditUserForm
+import pytz
 from requires_roles import requires_roles
-
-
-
+from flask_login import LoginManager
 
 # Initialize login
 app.logger.info("\n\nInitialize login.")
@@ -49,7 +45,7 @@ zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
 
 # Submitting a new request
 @app.route("/new", methods=["GET", "POST"])
-def new_request():
+def new_request(passed_recaptcha=False, data=None):
     form = None
     departments = None
     routing_available = False
@@ -58,13 +54,13 @@ def new_request():
         if current_user.is_authenticated():
             form = OfflineRequestForm(request.form)
             request_category = form.request_category.data
-            request_agency = current_user.current_department
-            request_topic = form.request_topic.data
-            request_description = form.request_description.data
+            request_agency = form.request_agency.data
+            request_summary = form.request_summary.data
+            request_text = form.request_text.data
             request_attachment_description = form.request_attachment_description.data
             request_attachment = form.request_attachment.data
-            request_date = form.request_date.data
             request_format = form.request_format.data
+            request_date = form.request_date.data
             request_first_name = form.request_first_name.data
             request_last_name = form.request_last_name.data
             request_role = form.request_role.data
@@ -72,37 +68,41 @@ def new_request():
             request_email = form.request_email.data
             request_phone = form.request_phone.data
             request_fax = form.request_fax.data
-            request_address_one = form.request_address_one.data
-            request_address_two = form.request_address_two.data
+            request_address_street = form.request_address_street.data
             request_address_city = form.request_address_city.data
             request_address_state = form.request_address_state.data
             request_address_zip = form.request_address_zip.data
-            request_alias = None
+            request_submit = form.request_submit.data
 
-            # Check Topic
-            if not (request_topic and request_topic.strip()):
-                errors.append('You must enter a topic for this request')
-            elif len(request_topic) > 250:
+            # Check Category
+            if not (request_category and request_category.strip()):
+                errors.append('You must select a category for this request')
+
+            # Check Agency
+            if not (request_agency and request_agency.strip()):
+                errors.append('You must select an agency for this request')
+
+            # Check Summary
+            if not (request_summary and request_summary.strip()):
+                errors.append('You must enter a summary for this request')
+            elif len(request_summary) > 250:
                 errors.append('The request summary must be less than 250 characters')
 
-            # Check Description
-            if not (request_description and request_agency.strip()):
-                errors.append('Please provide a detailed description of your request')
-            elif len(request_description) > 5000:
-                errors.append('The request description must be less than 5000 characters')
+            try:
+                attachment = request.files['request_attachment']
+            except:
+                app.logger.info("\n\nNo file passed in")
 
-            # Check Attachment
-            if request_attachment:
-                try:
-                    attachment = request.files['request_attachment']
-                except:
-                    app.logger.info("No file passed in")
-            elif request_attachment_description and not request_attachment:
-                errors.append('Please upload an attachment')
+
+            if request_attachment_description and not (request_attachment):
+                errors.append('Please select a file to upload as attachment.')
+
+            if not (request_text and request_text.strip()):
+                errors.append('Please fill out the request description.')
 
             # Check Format
             if not (request_format and request_format.strip()):
-                errors.append('Please select the format in which the request was received')
+                errors.append('You must enter the format in which the request was received')
 
             # Check Date
             if request_date:
@@ -110,72 +110,86 @@ def new_request():
                     tz = pytz.timezone(str(app.config['TIMEZONE']))
                     offset = tz.utcoffset(datetime.now())
                     offset = (offset.days * 86400 + offset.seconds) / 3600
-                    request_date = request_date - timedelta(hours=offset)
+                    # request_date = request_date - timedelta(hours=offset)
                 except TypeError:
-                    errors.append("Please use the datepicker to select a date")
+                    errors.append("Please use the datepicker to select a date.")
                     request_date = None
                 except ValueError:
-                    errors.append("Please use the datepicker to select a date")
+                    errors.append("Please use the datepicker to select a date.")
                     request_date = None
             else:
-                errors.append("Please use the datepicker to select a date")
+                errors.append("Please use the datepicker to select a date.")
+            if not (request_agency and request_agency.strip()):
+                errors.append("Please select a agency.")
 
-
-            # Check Name
             if not (request_first_name and request_first_name.strip()):
-                errors.append("Please enter your first name")
+                errors.append("Please enter the requester's first name")
             elif not (request_last_name and request_last_name.strip()):
-                errors.append("Please enter your last name")
+                errors.append("Please enter the requester's last name")
             else:
-                request_alias = request_first_name + " " + request_last_name
+                alias = request_first_name + " " + request_last_name
 
             email_valid = (request_email != '')
             phone_valid = (request_phone is not None)
             fax_valid = (request_fax is not None)
-            street_valid = (request_address_one != '')
+            street_valid = (request_address_street != '')
             city_valid = (request_address_city != '')
             state_valid = (request_address_state != '')
             zip_valid = (request_address_zip != '' and zip_reg_ex.match(request_address_zip))
             address_valid = (street_valid and city_valid and state_valid and zip_valid)
 
+            if app.config['ENVIRONMENT'] != 'LOCAL':
+                recaptcha_valid = (request_recaptcha != False)
+
             if not (email_valid or phone_valid or fax_valid or address_valid):
                 errors.append("Please enter at least one type of contact information")
+
+            if not data:
+                data = request.form.copy()
+
+            if app.config['ENVIRONMENT'] != 'LOCAL' and check_for_spam and is_spam(
+                    request_text) and not passed_recaptcha:
+                return render_template('recaptcha_request.html', form=data,
+                                       message="Hmm, your request looks like spam. To submit your request, type the numbers or letters you see in the field below.",
+                                       public_key=app.config['RECAPTCHA_SITE_KEY'])
 
             phone_formatted = ""
             if phone_valid:
                 phone_formatted = request_phone.international
 
+
             if errors:
-                return render_template('new_request.html', form=form,
+                if request_date:
+                    return render_template('offline_request.html', form=form, date=request_date.strftime('%m/%d/%Y'),
+                                           routing_available=routing_available,
+                                           departments=departments, errors=errors)
+                return render_template('offline_request.html', form=form,
                                        routing_available=routing_available, departments=departments, errors=errors)
             else:
                 request_id, is_new = make_request(
                     category=request_category,
                     agency=request_agency,
-                    topic=request_topic,
-                    description=request_description,
-                    attachment=attachment,
+                    summary=request_summary,
+                    text=request_text,
+                    attachment=request_attachment,
                     attachment_description=request_attachment_description,
                     offline_submission_type=request_format,
                     date_received=request_date,
                     first_name=request_first_name,
-                    last_name=request_first_name,
-                    alias=request_alias,
+                    last_name=request_last_name,
+                    alias=str(request_first_name + ' ' + request_last_name),
                     role=request_role,
                     organization=request_organization,
                     email=request_email,
-                    phone=phone_formatted,
+                    phone=request_phone,
                     fax=request_fax,
-                    street_address_one=request_address_one,
-                    street_address_two=request_address_two,
+                    street_address=request_address_street,
                     city=request_address_city,
                     state=request_address_state,
-                    zip=request_address_zip,
-                    user_id=current_user.id)
-
+                    zip=request_address_zip)
                 if not request_id:
                     errors.append("Looks like your request is the same as /request/%s" % request_id)
-                    return render_template('new_request.html', form=form,
+                    return render_template('offline_request.html', form=form,
                                            routing_available=routing_available, departments=departments, errors=errors)
 
                 return redirect(url_for('show_request_for_x', request_id=request_id,
@@ -185,8 +199,8 @@ def new_request():
             form = NewRequestForm(request.form)
             request_category = form.request_category.data
             request_agency = form.request_agency.data
-            request_topic = form.request_topic.data
-            request_description = form.request_description.data
+            request_summary = form.request_summary.data
+            request_text = form.request_text.data
             request_first_name = form.request_first_name.data
             request_last_name = form.request_last_name.data
             request_role = form.request_role.data
@@ -194,47 +208,60 @@ def new_request():
             request_email = form.request_email.data
             request_phone = form.request_phone.data
             request_fax = form.request_fax.data
-            request_address_one = form.request_address_one.data
-            request_address_two = form.request_address_two.data
+            request_address_street = form.request_address_street.data
             request_address_city = form.request_address_city.data
             request_address_state = form.request_address_state.data
             request_address_zip = form.request_address_zip.data
             if app.config['ENVIRONMENT'] != 'LOCAL':
                 request_recaptcha = recaptcha.verify()
-            else:
-                request_recaptcha = True
+            terms_of_use = form.terms_of_use.data
             request_submit = form.request_submit.data
-            print request_submit
-            request_alias = None
+            alias = None
+            document = None
+            zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
+            request_text = form.request_text.data
+
+            # Check Category
+            if not (request_category and request_category.strip()):
+                errors.append('You must select a category for this request')
 
             # Check Agency
             if not (request_agency and request_agency.strip()):
-                errors.append('Please select an agency to route your request')
+                errors.append('You must select an agency for this request')
 
-            # Check Topic
-            if not (request_topic and request_topic.strip()):
-                errors.append('You must enter a topic for this request')
-            elif len(request_topic) > 250:
+            # Check Summary
+            if not (request_summary and request_summary.strip()):
+                errors.append('You must enter a summary for this request')
+            elif len(request_summary) > 250:
                 errors.append('The request summary must be less than 250 characters')
 
-            # Check Description
-            if not (request_description and request_agency.strip()):
-                errors.append('Please provide a detailed description of your request')
-            elif len(request_description) > 5000:
-                errors.append('The request description must be less than 5000 characters')
+            # Check attachment
+            # attachment = None
+            # try:
+            #     attachment = request.files['request_attachment']
+            # except:
+            #     app.logger.info("\n\nNo file passed in")
 
-            # Check Name
+            # if attachment and not(request_attachment_description):
+            #     errors.append('Please fill out the attachment description.')
+
+            # if request_attachment_description and not(attachment):
+            #     errors.append('Please select a file to upload as attachment.')
+
+            if not (request_agency and request_agency.strip()):
+                errors.append("Please select an agency.")
+
             if not (request_first_name and request_first_name.strip()):
-                errors.append("Please enter your first name")
+                errors.append("Please enter the requester's first name")
             elif not (request_last_name and request_last_name.strip()):
-                errors.append("Please enter your last name")
+                errors.append("Please enter the requester's last name")
             else:
-                request_alias = request_first_name + " " + request_last_name
+                alias = request_first_name + " " + request_last_name
 
             email_valid = (request_email != '')
             phone_valid = (request_phone is not None)
             fax_valid = (request_fax is not None)
-            street_valid = (request_address_one != '')
+            street_valid = (request_address_street != '')
             city_valid = (request_address_city != '')
             state_valid = (request_address_state != '')
             zip_valid = (request_address_zip != '' and zip_reg_ex.match(request_address_zip))
@@ -242,14 +269,12 @@ def new_request():
 
             if app.config['ENVIRONMENT'] != 'LOCAL':
                 recaptcha_valid = (request_recaptcha != False)
-            else:
-                recaptcha_valid = True
 
             if not (email_valid or phone_valid or fax_valid or address_valid):
                 errors.append("Please enter at least one type of contact information")
+            if not data:
 
-            if not recaptcha_valid:
-                errors.append("Please let us know you are not a robot")
+                data = request.form.copy()
 
             phone_formatted = ""
             if phone_valid:
@@ -262,29 +287,28 @@ def new_request():
                 request_id, is_new = make_request(
                     category=request_category,
                     agency=request_agency,
-                    topic=request_topic,
-                    description=request_description,
+                    summary=request_summary,
+                    text=request_text,
                     first_name=request_first_name,
                     last_name=request_last_name,
-                    alias=request_alias,
+                    alias=str(request_first_name + ' ' + request_last_name),
                     role=request_role,
                     organization=request_organization,
                     email=request_email,
-                    phone=phone_formatted,
+                    phone=request_phone,
                     fax=request_fax,
-                    street_address_one=request_address_one,
-                    street_address_two=request_address_two,
+                    street_address=request_address_street,
                     city=request_address_city,
                     state=request_address_state,
-                    zip=request_addresss_city)
+                    zip=request_address_zip)
 
-                if not request_id:
-                    errors.append("Looks like your request is the same as /request/%s" % request_id)
-                    return render_template('new_request.html', form=form,
-                                           routing_available=routing_available, departments=departments, errors=errors)
+            if not request_id:
+                errors.append("Looks like your request is the same as /request/%s" % request_id)
+                return render_template('new_request.html', form=form,
+                                       routing_available=routing_available, departments=departments, errors=errors)
 
-                return redirect(url_for('show_request_for_x', request_id=request_id,
-                                        audience='new'))
+            return redirect(url_for('show_request_for_x', request_id=request_id,
+                                    audience='new'))
 
     elif request.method == 'GET':
         if 'LIAISONS_URL' in app.config:
@@ -322,7 +346,6 @@ def unauthorized():
     app.logger.info("\n\nuser is unauthorized.")
     return render_template("alpha.html")
 
-
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
@@ -335,7 +358,6 @@ def explain_all_actions():
     for data in json_data:
         actions.append("%s: %s" % (data, json_data[data]["What"]))
     return render_template('actions.html', actions=actions)
-
 
 # Returns a view of the case based on the audience. Currently views exist for city staff or general public.
 
@@ -494,7 +516,6 @@ def acknowledge_request(resource, passed_recaptcha=False, data=None):
             return redirect(url_for('show_request', request_id=request.form['request_id']))
     return render_template('error.html', message="You can only update requests from a request page!")
 
-
 # Closing is specific to a case, so this only gets called from a case (that only city staff have a view of)
 
 @app.route("/close", methods=["GET", "POST"])
@@ -529,7 +550,6 @@ def filter_agency(departments_selected, results):
             # Just return an empty query set
             results = results.filter(models.Request.department_id < 0)
     return results
-
 
 def filter_search_term(search_input, results):
     if search_input:
@@ -600,6 +620,7 @@ def no_backbone_requests():
 
 @app.route("/requests", methods=["GET"])
 def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-%m-%d', checkbox_value='on'):
+
     user_id = get_user_id()
 
     if not filters_map:
@@ -864,7 +885,6 @@ def any_page(page):
     except:
         return render_template('error.html', message="%s totally doesn't exist." % (page))
 
-
 def tutorial():
     user_id = get_user_id()
     app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
@@ -881,7 +901,6 @@ def staff_card(user_id):
 def logout():
     logout_user()
     return index()
-
 
 def get_user_id():
     if current_user.is_authenticated():
@@ -906,7 +925,6 @@ def is_public_record():
         return json_data["Divorce"]
     return ''
 
-
 def get_redirect_target():
     """ Taken from http://flask.pocoo.org/snippets/62/ """
     for target in request.values.get('next'), request.referrer:
@@ -915,13 +933,13 @@ def get_redirect_target():
         if is_safe_url(target):
             return target
 
-
 def is_safe_url(target):
     """ Taken from http://flask.pocoo.org/snippets/62/ """
     ref_url = urlparse(request.host_url)
     test_url = urlparse(urljoin(request.host_url, target))
     return test_url.scheme in ('http', 'https') and \
            ref_url.netloc == test_url.netloc
+
 
 
 @app.route("/recaptcha_<string:templatetype>", methods=["GET", "POST"])
@@ -1057,12 +1075,12 @@ def get_pdfs(resource):
 
 
 @app.route("/api/report/<string:report_type>/<string:public_filter>", methods=["GET"])
-def get_report_jsons(report_type, public_filter):
+def get_report_jsons(report_type,public_filter):
     app.logger.info("\n\ngenerating report data")
 
     if not report_type:
-        response = {
-            "status": "failed: unrecognized request."
+        response={
+            "status" : "failed: unrecognized request."
         }
         return jsonify(response)
 
@@ -1078,163 +1096,127 @@ def get_report_jsons(report_type, public_filter):
     referred_to_opendata_filter = models.Request.referred_to_opendata
     referred_to_other_agency_filter = models.Request.referred_to_other_agency
     referred_to_publications_portal_filter = models.Request.referred_to_publications_portal
-
+ 
     if report_type == "all":
         try:
             if public_filter == "all" or public_filter == "agency_0":
-                overdue_request = models.Request.query.filter(overdue_filter).all()
-                notdue_request = models.Request.query.filter(notoverdue_filter).all()
-                received_request = models.Request.query.all()
-                published_request = models.Request.query.filter(published_filter).all()
-                denied_request = models.Request.query.filter(denied_filter).all()
-                granted_and_closed_request = models.Request.query.filter(granted_and_closed_filter).all()
-                granted_in_part_request = models.Request.query.filter(granted_in_part_filter).all()
-                no_customer_response_request = models.Request.query.filter(no_customer_response_filter).all()
-                out_of_jurisdiction_request = models.Request.query.filter(out_of_jurisdiction_filter).all()
-                referred_to_nyc_gov_request = models.Request.query.filter(referred_to_nyc_gov_filter).all()
-                referred_to_opendata_request = models.Request.query.filter(referred_to_opendata_filter).all()
-                referred_to_other_agency_request = models.Request.query.filter(referred_to_other_agency_filter).all()
-                referred_to_publications_portal_request = models.Request.query.filter(
-                    referred_to_publications_portal_filter).all()
+                overdue_request=models.Request.query.filter(overdue_filter).all()
+                notdue_request=models.Request.query.filter(notoverdue_filter).all()
+                received_request=models.Request.query.all()
+                published_request=models.Request.query.filter(published_filter).all()
+                denied_request=models.Request.query.filter(denied_filter).all()
+                granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).all()
+                granted_in_part_request=models.Request.query.filter(granted_in_part_filter).all()
+                no_customer_response_request=models.Request.query.filter(no_customer_response_filter).all()
+                out_of_jurisdiction_request=models.Request.query.filter(out_of_jurisdiction_filter).all()
+                referred_to_nyc_gov_request=models.Request.query.filter(referred_to_nyc_gov_filter).all()
+                referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
+                referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
+                referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).all()
             elif "agency" in public_filter:
                 agencyFilter = public_filter.split("_")[1]
                 agencyFilterInt = int(agencyFilter)
-                overdue_request = models.Request.query.filter(overdue_filter).filter(
-                    models.Request.department_id == agencyFilterInt).all()
-                notdue_request = models.Request.query.filter(notoverdue_filter).filter(
-                    models.Request.department_id == agencyFilterInt).all()
-                received_request = models.Request.query.filter(models.Request.department_id == agencyFilterInt).all()
-                published_request = models.Request.query.filter(published_filter).filter(
-                    models.Request.department_id == agencyFilterInt).all()
-                denied_request = models.Request.query.filter(denied_filter).filter(
-                    models.Request.department_id == agencyFilterInt).all()
-                granted_and_closed_request = models.Request.query.filter(granted_and_closed_filter).filter(
-                    models.Request.department_id == agencyFilterInt).all()
-                granted_in_part_request = models.Request.query.filter(granted_in_part_filter).filter(
-                    models.Request.department_id == agencyFilterInt).all()
-                no_customer_response_request = models.Request.query.filter(no_customer_response_filter).filter(
-                    models.Request.department_id == agencyFilterInt).all()
-                out_of_jurisdiction_request = models.Request.query.filter(out_of_jurisdiction_filter).filter(
-                    models.Request.department_id == agencyFilterInt).all()
-                referred_to_nyc_gov_request = models.Request.query.filter(referred_to_nyc_gov_filter).filter(
-                    models.Request.department_id == agencyFilterInt).all()
-                referred_to_opendata_request = models.Request.query.filter(referred_to_opendata_filter).filter(
-                    models.Request.department_id == agencyFilterInt).all()
-                referred_to_other_agency_request = models.Request.query.filter(referred_to_other_agency_filter).filter(
-                    models.Request.department_id == agencyFilterInt).all()
-                referred_to_publications_portal_request = models.Request.query.filter(
-                    referred_to_publications_portal_filter).filter(
-                    models.Request.department_id == agencyFilterInt).all()
+                overdue_request=models.Request.query.filter(overdue_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                notdue_request=models.Request.query.filter(notoverdue_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                received_request=models.Request.query.filter(models.Request.department_id == agencyFilterInt).all()
+                published_request=models.Request.query.filter(published_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                denied_request=models.Request.query.filter(denied_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                granted_in_part_request=models.Request.query.filter(granted_in_part_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                no_customer_response_request=models.Request.query.filter(no_customer_response_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                out_of_jurisdiction_request=models.Request.query.filter(out_of_jurisdiction_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                referred_to_nyc_gov_request=models.Request.query.filter(referred_to_nyc_gov_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).filter(models.Request.department_id == agencyFilterInt).all()
             elif "calendarYear" in public_filter:
-                overdue_request = models.Request.query.filter(overdue_filter).all()
-                notdue_request = models.Request.query.filter(notoverdue_filter).all()
-                received_request = models.Request.query.all()
-                published_request = models.Request.query.filter(published_filter).all()
-                denied_request = models.Request.query.filter(denied_filter).all()
-                granted_and_closed_request = models.Request.query.filter(granted_and_closed_filter).all()
-                granted_in_part_request = models.Request.query.filter(granted_in_part_filter).all()
-                no_customer_response_request = models.Request.query.filter(no_customer_response_filter).all()
-                out_of_jurisdiction_request = models.Request.query.filter(out_of_jurisdiction_filter).all()
-                referred_to_nyc_gov_request = models.Request.query.filter(referred_to_nyc_gov_filter).all()
-                referred_to_opendata_request = models.Request.query.filter(referred_to_opendata_filter).all()
-                referred_to_other_agency_request = models.Request.query.filter(referred_to_other_agency_filter).all()
-                referred_to_publications_portal_request = models.Request.query.filter(
-                    referred_to_publications_portal_filter).all()
+                overdue_request=models.Request.query.filter(overdue_filter).all()
+                notdue_request=models.Request.query.filter(notoverdue_filter).all()
+                received_request=models.Request.query.all()
+                published_request=models.Request.query.filter(published_filter).all()
+                denied_request=models.Request.query.filter(denied_filter).all()
+                granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).all()
+                granted_in_part_request=models.Request.query.filter(granted_in_part_filter).all()
+                no_customer_response_request=models.Request.query.filter(no_customer_response_filter).all()
+                out_of_jurisdiction_request=models.Request.query.filter(out_of_jurisdiction_filter).all()
+                referred_to_nyc_gov_request=models.Request.query.filter(referred_to_nyc_gov_filter).all()
+                referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
+                referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
+                referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).all()
             elif "fullYear" in public_filter:
-                overdue_request = models.Request.query.filter(overdue_filter).all()
-                notdue_request = models.Request.query.filter(notoverdue_filter).all()
-                received_request = models.Request.query.all()
-                published_request = models.Request.query.filter(published_filter).all()
-                denied_request = models.Request.query.filter(denied_filter).all()
-                granted_and_closed_request = models.Request.query.filter(granted_and_closed_filter).all()
-                granted_in_part_request = models.Request.query.filter(granted_in_part_filter).all()
-                no_customer_response_request = models.Request.query.filter(no_customer_response_filter).all()
-                out_of_jurisdiction_request = models.Request.query.filter(out_of_jurisdiction_filter).all()
-                referred_to_nyc_gov_request = models.Request.query.filter(referred_to_nyc_gov_filter).all()
-                referred_to_opendata_request = models.Request.query.filter(referred_to_opendata_filter).all()
-                referred_to_other_agency_request = models.Request.query.filter(referred_to_other_agency_filter).all()
-                referred_to_publications_portal_request = models.Request.query.filter(
-                    referred_to_publications_portal_filter).all()
+                overdue_request=models.Request.query.filter(overdue_filter).all()
+                notdue_request=models.Request.query.filter(notoverdue_filter).all()
+                received_request=models.Request.query.all()
+                published_request=models.Request.query.filter(published_filter).all()
+                denied_request=models.Request.query.filter(denied_filter).all()
+                granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).all()
+                granted_in_part_request=models.Request.query.filter(granted_in_part_filter).all()
+                no_customer_response_request=models.Request.query.filter(no_customer_response_filter).all()
+                out_of_jurisdiction_request=models.Request.query.filter(out_of_jurisdiction_filter).all()
+                referred_to_nyc_gov_request=models.Request.query.filter(referred_to_nyc_gov_filter).all()
+                referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
+                referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
+                referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).all()
             elif "rolling" in public_filter:
-                overdue_request = models.Request.query.filter(overdue_filter).all()
-                notdue_request = models.Request.query.filter(notoverdue_filter).all()
-                received_request = models.Request.query.all()
-                published_request = models.Request.query.filter(published_filter).all()
-                denied_request = models.Request.query.filter(denied_filter).all()
-                granted_and_closed_request = models.Request.query.filter(granted_and_closed_filter).all()
-                granted_in_part_request = models.Request.query.filter(granted_in_part_filter).all()
-                no_customer_response_request = models.Request.query.filter(no_customer_response_filter).all()
-                out_of_jurisdiction_request = models.Request.query.filter(out_of_jurisdiction_filter).all()
-                referred_to_nyc_gov_request = models.Request.query.filter(referred_to_nyc_gov_filter).all()
-                referred_to_opendata_request = models.Request.query.filter(referred_to_opendata_filter).all()
-                referred_to_other_agency_request = models.Request.query.filter(referred_to_other_agency_filter).all()
-                referred_to_publications_portal_request = models.Request.query.filter(
-                    referred_to_publications_portal_filter).all()
+                overdue_request=models.Request.query.filter(overdue_filter).all()
+                notdue_request=models.Request.query.filter(notoverdue_filter).all()
+                received_request=models.Request.query.all()
+                published_request=models.Request.query.filter(published_filter).all()
+                denied_request=models.Request.query.filter(denied_filter).all()
+                granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).all()
+                granted_in_part_request=models.Request.query.filter(granted_in_part_filter).all()
+                no_customer_response_request=models.Request.query.filter(no_customer_response_filter).all()
+                out_of_jurisdiction_request=models.Request.query.filter(out_of_jurisdiction_filter).all()
+                referred_to_nyc_gov_request=models.Request.query.filter(referred_to_nyc_gov_filter).all()
+                referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
+                referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
+                referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).all()
             elif "staff" in public_filter:
                 staff_id = int(public_filter.split("_")[1])
-                overdue_request = models.Request.query.filter(overdue_filter).filter(
-                    models.Owner.is_point_person == True).all()
-                notdue_request = models.Request.query.filter(notoverdue_filter).filter(
-                    models.Owner.is_point_person == True).all()
-                received_request = models.Request.query.filter(models.Owner.user_id == staff_id).all()
-                published_request = models.Request.query.filter(published_filter).filter(
-                    models.Owner.user_id == staff_id).all()
-                denied_request = models.Request.query.filter(denied_filter).filter(
-                    models.Owner.user_id == staff_id).all()
-                granted_and_closed_request = models.Request.query.filter(granted_and_closed_filter).filter(
-                    models.Owner.user_id == staff_id).all()
-                granted_in_part_request = models.Request.query.filter(granted_in_part_filter).filter(
-                    models.Owner.user_id == staff_id).all()
-                no_customer_response_request = models.Request.query.filter(no_customer_response_filter).filter(
-                    models.Owner.user_id == staff_id).all()
-                out_of_jurisdiction_request = models.Request.query.filter(out_of_jurisdiction_filter).filter(
-                    models.Owner.user_id == staff_id).all()
-                referred_to_nyc_gov_request = models.Request.query.filter(referred_to_nyc_gov_filter).filter(
-                    models.Owner.user_id == staff_id).all()
-                referred_to_opendata_request = models.Request.query.filter(referred_to_opendata_filter).filter(
-                    models.Owner.user_id == staff_id).all()
-                referred_to_other_agency_request = models.Request.query.filter(referred_to_other_agency_filter).filter(
-                    models.Owner.user_id == staff_id).all()
-                referred_to_publications_portal_request = models.Request.query.filter(
-                    referred_to_publications_portal_filter).filter(models.Owner.user_id == staff_id).all()
+                overdue_request=models.Request.query.filter(overdue_filter).filter(models.Owner.is_point_person == True).all()
+                notdue_request=models.Request.query.filter(notoverdue_filter).filter(models.Owner.is_point_person == True).all()
+                received_request=models.Request.query.filter(models.Owner.user_id == staff_id).all()
+                published_request=models.Request.query.filter(published_filter).filter(models.Owner.user_id == staff_id).all()
+                denied_request=models.Request.query.filter(denied_filter).filter(models.Owner.user_id == staff_id).all()
+                granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).filter(models.Owner.user_id == staff_id).all()
+                granted_in_part_request=models.Request.query.filter(granted_in_part_filter).filter(models.Owner.user_id == staff_id).all()
+                no_customer_response_request=models.Request.query.filter(no_customer_response_filter).filter(models.Owner.user_id == staff_id).all()
+                out_of_jurisdiction_request=models.Request.query.filter(out_of_jurisdiction_filter).filter(models.Owner.user_id == staff_id).all()
+                referred_to_nyc_gov_request=models.Request.query.filter(referred_to_nyc_gov_filter).filter(models.Owner.user_id == staff_id).all()
+                referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).filter(models.Owner.user_id == staff_id).all()
+                referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).filter(models.Owner.user_id == staff_id).all()
+                referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).filter(models.Owner.user_id == staff_id).all()
 
-            response = {
-                "status": "ok",
-                "data": [
-                    {"label": "Received", "value": len(received_request), "callback": "received"},
-                    {"label": "Published", "value": len(published_request), "callback": "received"},
-                    {"label": "Denied", "value": len(denied_request), "callback": "denied"},
-                    {"label": "Granted And Closed", "value": len(granted_and_closed_request),
-                     "callback": "granted_and_closed"},
-                    {"label": "Granted In Part", "value": len(granted_in_part_request), "callback": "granted_in_part"},
-                    {"label": "No Customer Response", "value": len(no_customer_response_request),
-                     "callback": "no_customer_response"},
-                    {"label": "Out of Jurisdiction", "value": len(out_of_jurisdiction_request),
-                     "callback": "out_of_jurisdiction"},
-                    {"label": "Referred to NYC.gov", "value": len(referred_to_nyc_gov_request),
-                     "callback": "referred_to_nyc_gov_request"},
-                    {"label": "Referred to Open Data", "value": len(referred_to_opendata_request),
-                     "callback": "referred_to_opendata_request"},
-                    {"label": "Referred to Other Agency", "value": len(referred_to_other_agency_request),
-                     "callback": "referred_to_other_agency_request"},
-                    {"label": "Referred to Publications Portal", "value": len(referred_to_publications_portal_request),
-                     "callback": "referred_to_publications_portal_request"}
+            response={
+                "status" : "ok",
+                "data" : [
+                    {"label" : "Received", "value" : len(received_request), "callback" : "received"},
+                    {"label" : "Published", "value" : len(published_request), "callback" : "received"},
+                    {"label" : "Denied", "value" : len(denied_request), "callback" : "denied"},
+                    {"label" : "Granted And Closed", "value" : len(granted_and_closed_request), "callback" : "granted_and_closed"},
+                    {"label" : "Granted In Part", "value" : len(granted_in_part_request), "callback" : "granted_in_part"},
+                    {"label" : "No Customer Response", "value" : len(no_customer_response_request), "callback" : "no_customer_response"},
+                    {"label" : "Out of Jurisdiction", "value" : len(out_of_jurisdiction_request), "callback" : "out_of_jurisdiction"},
+                    {"label" : "Referred to NYC.gov", "value" : len(referred_to_nyc_gov_request), "callback" : "referred_to_nyc_gov_request"},
+                    {"label" : "Referred to Open Data", "value" : len(referred_to_opendata_request), "callback" : "referred_to_opendata_request"},
+                    {"label" : "Referred to Other Agency", "value" : len(referred_to_other_agency_request), "callback" : "referred_to_other_agency_request"},
+                    {"label" : "Referred to Publications Portal", "value" : len(referred_to_publications_portal_request), "callback" : "referred_to_publications_portal_request"}
                 ]
             }
         except Exception, e:
-            response = {
-                "status": "failed",
-                "data": "fail to find overdue request",
-                "exception": e
+            response={
+                "status" : "failed",
+                "data" : "fail to find overdue request",
+                 "exception": e
             }
         return jsonify(response)
     if report_type == "received":
         try:
-            received_request = models.Request.query.all()
+            received_request=models.Request.query.all()
             response = {
-                "status": "ok",
-                "data": [
-                    {"label": "Received", "value": len(received_request), "callback": "received"}
+                "status" : "ok",
+                "data" : [
+                    {"label" : "Received", "value" : len(received_request), "callback" : "received"}
                 ]
             }
 
@@ -1255,11 +1237,10 @@ def get_report_jsons(report_type, public_filter):
 @app.route("/report")
 @login_required
 def report():
-    users = models.User.query.all()
-    overdue_request = models.Request.query.filter(models.Request.overdue == True).all()
-    app.logger.info("\n\nOverdue Requests %s" % (len(overdue_request)))
-    return render_template('report.html', users=users)
-
+    users=models.User.query.all()
+    overdue_request=models.Request.query.filter(models.Request.overdue == True).all()
+    app.logger.info("\n\nOverdue Requests %s" %(len(overdue_request)))
+    return render_template('report.html',users=users)
 
 @app.route("/submit", methods=["POST"])
 def submit():

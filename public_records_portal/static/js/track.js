@@ -5,7 +5,6 @@ $(document).ready(function(){
       rules: {
         request_id: {
           required: true,
-          number: true
          },
       highlight: function(element) {
         $(element).closest('.control-group').removeClass('success').addClass('error');

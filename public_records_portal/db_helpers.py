@@ -312,29 +312,21 @@ def authenticate_login(email, password):
         return user
     return None
 
-def create_or_return_user(email=None,
-                          alias=None,
-                          first_name=None,
-                          last_name=None,
-                          organization=None,
-                          title=None,
-                          phone=None,
-                          fax=None,
-                          address1=None,
-                          address2=None,
-                          city=None,
-                          state=None,
-                          zipcode=None,
-                          department=None,
-                          contact_for=None,
-                          backup_for=None,
-                          not_id=False,
-                          is_staff=None,
-                          password=None,
-                          role=None):
+def create_or_return_user(email=None, alias=None, phone=None, address1=None, address2=None, city=None, state=None,
+                          zipcode=None, department=None, contact_for=None, backup_for=None, not_id=False, is_staff=None,
+                          password=None, role=None):
     app.logger.info("\n\nCreating or returning user...")
     if email:
         user = User.query.filter(User.email == func.lower(email)).first()
+        if department and type(department) != int and not department.isdigit():
+            d = Department.query.filter_by(name=department).first()
+            if d:
+                department = d.id
+            else:
+                d = Department(name=department)
+                db.session.add(d)
+                db.session.commit()
+                department = d.id
         if not user:
             if not password:
                 user = create_user(email=email.lower(), alias=alias, phone=str(phone), address1=address1,
@@ -346,6 +338,7 @@ def create_or_return_user(email=None,
                                    address2=address2, city=city,
                                    state=state, zipcode=zipcode, department=department, contact_for=contact_for,
                                    backup_for=backup_for, password=password, is_staff=is_staff, role=role)
+
         else:
             # Update user if fields to update are provided
             if alias or phone or department or contact_for or backup_for:
@@ -353,16 +346,6 @@ def create_or_return_user(email=None,
                                    city=city, state=state,
                                    zipcode=zipcode, department=department, contact_for=contact_for,
                                    backup_for=backup_for, is_staff=is_staff, role=role)
-
-        if department and type(department) != int and not department.isdigit():
-            d = Department.query.filter_by(name=department).first()
-            if d:
-                department = d.id
-            else:
-                d = Department(name=department)
-                db.session.add(d)
-                db.session.commit()
-                department = d.id
         if not_id:
             return user
         return user.id

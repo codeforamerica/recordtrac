@@ -33,7 +33,7 @@ def add_public_note(request_id, text):
     return 1
 
 
-
+### @export "add_resource"
 def add_resource(resource, request_body, current_user_id=None):
     fields = request_body
     if "extension" in resource:
@@ -82,7 +82,7 @@ def add_resource(resource, request_body, current_user_id=None):
         return False
 
 
-
+### @export "update_resource"
 def update_resource(resource, request_body):
     fields = request_body
     if "owner" in resource:
@@ -110,7 +110,7 @@ def update_resource(resource, request_body):
         return False
 
 
-
+### @export "request_extension"
 @requires_roles('Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel')
 def request_extension(request_id, extension_reasons, user_id, days_after=None, due_date=None):
     req = Request.query.get(request_id)
@@ -139,7 +139,7 @@ def add_note(request_id, text, user_id=None, privacy=1):
     return False
 
 
-
+### @export "upload_record"
 def upload_record(request_id, description, user_id, document=None):
     """ Creates a record with upload/download attributes """
     app.logger.info("\n\nBegins Upload_record method")
@@ -165,7 +165,7 @@ def upload_record(request_id, description, user_id, document=None):
     return "There was an issue with your upload."
 
 
-
+### @export "add_offline_record"
 def add_offline_record(request_id, description, access, user_id):
     """ Creates a record with offline attributes """
     record_id = create_record(request_id=request_id, user_id=user_id, access=access,
@@ -178,7 +178,7 @@ def add_offline_record(request_id, description, access, user_id):
     return False
 
 
-
+### @export "add_link"
 def add_link(request_id, url, description, user_id):
     """ Creates a record with link attributes """
     record_id = create_record(url=url, request_id=request_id, user_id=user_id, description=description)
@@ -189,36 +189,18 @@ def add_link(request_id, url, description, user_id):
         return record_id
     return False
 
-def make_request(category=None,
-                 agency=None,
-                 topic=None,
-                 description=None,
-                 attachment=None,
-                 attachment_description=None,
-                 offline_submission_type=None,
-                 date_received=None,
-                 first_name=None,
-                 last_name=None,
-                 alias=None,
-                 role=None,
-                 organization=None,
-                 email=None,
-                 phone=None,
-                 fax=None,
-                 street_address_one=None,
-                 street_address_two=None,
-                 city=None,
-                 state=None,
-                 zip=None,
-                 user_id=None):
+
+### @export "make_request"
+def make_request(category=None, agency=None, summary=None, text=None, attachment=None,
+                 attachment_description=None, offline_submission_type=None, date_received=None, first_name=None,
+                 last_name=None, alias=None, role=None, organization=None, email=None, phone=None, fax=None,
+                 street_address=None, city=None, state=None, zip=None, user_id=None):
     """ Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
-    request_id = find_request(topic)
+    request_id = find_request(text)
     if request_id:  # Same request already exists
         return request_id, False
-
     assigned_to_email = app.config['DEFAULT_OWNER_EMAIL']
     assigned_to_reason = app.config['DEFAULT_OWNER_REASON']
-
     if agency:
         app.logger.info("\n\nAgency chosen: %s" % agency)
         prr_email = db_helpers.get_contact_by_dept(agency)
@@ -240,47 +222,25 @@ def make_request(category=None,
             agency] + "-" + "%05d" % currentRequestId
         req = get_obj("Request", id)
  
-    request_id = create_request(id=id,
-                                category=category,
-                                summary=topic,
-                                text=description,
-                                user_id=user_id,
+    request_id = create_request(id=id, category=category, summary=summary, text=text, user_id=user_id,
                                 offline_submission_type=offline_submission_type,
                                 date_received=date_received)  # Actually create the Request object
-    new_owner_id = assign_owner(request_id=request_id,
-                                reason=assigned_to_reason,
+    new_owner_id = assign_owner(request_id=request_id, reason=assigned_to_reason,
                                 email=assigned_to_email)  # Assign someone to the request
     open_request(request_id)  # Set the status of the incoming request to "Open"
-    if alias:
-        subscriber_user_id = create_or_return_user(email=email,
-                                                   alias=alias,
-                                                   first_name=first_name,
-                                                   last_name=last_name,
-                                                   organization=organization,
-                                                   title=role,
-                                                   phone=phone,
-                                                   fax=fax,
-                                                   address1=street_address_one,
-                                                   address2=street_address_two,
-                                                   city=city,
-                                                   state=state,
-                                                   zipcode=zip)
-        subscriber_id, is_new_subscriber = create_subscriber(
-            request_id=request_id,
-            user_id=subscriber_user_id)
+    if email or alias or phone:
+        subscriber_user_id = create_or_return_user(email=email, alias=alias, phone=phone, address1=street_address,
+                                                   address2=None, city=city, state=state, zipcode=zip)
+        subscriber_id, is_new_subscriber = create_subscriber(request_id=request_id, user_id=subscriber_user_id)
         if subscriber_id:
-            generate_prr_emails(request_id,
-                                notification_type="Public Notification Template 01",
+            generate_prr_emails(request_id, notification_type="Public Notification Template 01",
                                 user_id=subscriber_user_id)  # Send them an e-mail notification
     if attachment:
-        upload_record(request_id,
-                      attachment_description,
-                      user_id,
-                      attachment)
+        upload_record(request_id, attachment_description, user_id, attachment)
     return request_id, True
 
 
-
+### @export "add_subscriber"
 def add_subscriber(request_id, email):
     user_id = create_or_return_user(email=email)
     subscriber_id, is_new_subscriber = create_subscriber(request_id=request_id, user_id=user_id)
@@ -290,7 +250,7 @@ def add_subscriber(request_id, email):
     return False
 
 
-
+### @export "ask_a_question"
 def ask_a_question(request_id, user_id, question):
     """ City staff can ask a question about a request they are confused about."""
     req = get_obj("Request", request_id)
@@ -305,7 +265,7 @@ def ask_a_question(request_id, user_id, question):
     return False
 
 
-
+### @export "answer_a_question"
 def answer_a_question(qa_id, answer, subscriber_id=None, passed_spam_filter=False):
     """ A requester can answer a question city staff asked them about their request."""
     if (not answer) or (answer == "") or (not passed_spam_filter):
@@ -317,12 +277,12 @@ def answer_a_question(qa_id, answer, subscriber_id=None, passed_spam_filter=Fals
         return True
 
 
-
+### @export "open_request"
 def open_request(request_id):
     change_request_status(request_id, "Open")
 
 
-
+### @export "assign_owner"
 def assign_owner(request_id, reason, email=None):
     """ Called any time a new owner is assigned. This will overwrite the current owner."""
     req = get_obj("Request", request_id)
@@ -348,7 +308,7 @@ def assign_owner(request_id, reason, email=None):
     return owner_id
 
 
-
+### @export "get_request_data_chronologically"
 def get_request_data_chronologically(req):
     public = False
     if current_user.is_anonymous():
@@ -367,7 +327,7 @@ def get_request_data_chronologically(req):
     return responses
 
 
-
+### @export "get_responses_chronologically"
 def get_responses_chronologically(req):
     responses = []
     if not req:
@@ -393,7 +353,7 @@ def get_responses_chronologically(req):
     return responses
 
 
-
+### @export "set_directory_fields"
 def set_directory_fields():
     # Set basic user data
     if 'STAFF_URL' in app.config:
@@ -430,7 +390,7 @@ def set_directory_fields():
             app.logger.info("\n\n Unable to create any users. No one will be able to log in.")
 
 
-
+### @export "close_request"
 def close_request(request_id, reason="", user_id=None):
     req = get_obj("Request", request_id)
     change_request_status(request_id, "Closed")

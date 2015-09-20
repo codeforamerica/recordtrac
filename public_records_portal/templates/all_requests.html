@@ -148,7 +148,7 @@
               </script>
               <div id="department_selector_container"></div>
               <script type="text/template" id="department_selector_template">
-              <h5>Department</h5>
+                  <h5>Agency</h5>
               <div class="row-fluid indent">
                 <select class="span10">
                   <option>All departments</option>
@@ -179,10 +179,14 @@
                 <th id="id" class="sortable" >#</th>
                 <th id="date_received" class="sortable" >Received</th>
                 <th id="text" class="sortable" >Request</th>
-                <th >Department</th>
-                <th >Point of Contact</th>
+                  <th>Agency</th>
+                {% if current_user.is_authenticated()  %}
+                  <th >Point of Contact</th>
+                {% endif %}
                 <th id="due_date" class="sortable"  >Due</th>
-                <th >Requester</th>
+                {% if current_user.is_authenticated() %}
+                  <th >Requester</th>
+                {% endif %}
               </tr>
             </thead>
             <tbody>
@@ -216,8 +220,9 @@
                     </a>
                   </td>
                   <td ><%- request.department %></td>
-                  <td ><%- request.contact_name %></td>
                   {% if current_user.is_authenticated() %}
+
+                  <td ><%- request.contact_name %></td>
                     <td ><%- request.due_date %></td>
                     <td ><%- request.requester %></td>
                   {% endif %}

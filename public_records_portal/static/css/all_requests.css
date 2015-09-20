@@ -163,6 +163,10 @@ h3 {
     background-color: #2688AD;
 }
 
+#requests .status.in {
+    background-color: #2688AD;
+}
+
 #requests .status.soon {
     background-color: #FB991B;
 }
