@@ -1033,6 +1033,8 @@ def login():
     form = LoginForm()
     errors = []
     if request.method == 'POST':
+        print form.username.data
+        print form.password.data
         if form.validate_on_submit():
             user_to_login = authenticate_login(form.username.data, form.password.data)
             if user_to_login:
