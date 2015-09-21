@@ -5,14 +5,10 @@
 
 {% block title %}Public records{% endblock title %}
 {% block custom_css_links %}
-    <!-- used for the extension and close request multi-select boxes in city view -->
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.css') }}">
     <!-- used for department dropdown -->
     <link rel=stylesheet type=text/css
           href="{{ url_for('static', filename='css/plugins/jquery-ui-1.10.4.custom.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-combobox.css') }}"
-          media="screen">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/new_request.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-fileupload.css') }}">
@@ -42,13 +38,7 @@
                                 <h2>
                                     <small>Category*</small>
                                 </h2>
-                                <select name="category">
-                                    <option value="--">–</option>
-                                    <option value="category">Documents</option>
-                                    <option value="category">Photos</option>
-                                    <option value="category">Audio Recordings</option>
-                                    <option value="category">Emails</option>
-                                </select>
+                                {{ form.request_category(class="input-block-level") }}
                             </div>
                             <div class="control-group">
                                 <h2>
@@ -227,34 +217,21 @@
 {% block custom_script_links %}
     <!-- used for department dropdown -->
     <script type="text/javascript"
-            src="{{ url_for('static', filename = 'js/plugins/bootstrap-combobox.js') }}"></script>
-    <script type="text/javascript"
             src="{{ url_for('static', filename='js/plugins/jquery-ui-1.10.4.custom.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/new_request.js') }}"></script>
     {% if date %}
         <script type="text/javascript">
             $(document).ready(function () {
-                $("input[id^='request_date']").datepicker();
-                $("input[id^='request_date']").val("{{ date }}");
+                $("input[id^='request_date']").datepicker().val("{{ date }}");
             });
         </script>
     {% else %}
         <script type="text/javascript">
             $(document).ready(function () {
-                $("input[id^='request_date']").datepicker();
-                $("input[id^='request_date']").val('');
+                $("input[id^='request_date']").datepicker().val('');
             });
         </script>
     {% endif %}
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('.combobox').combobox();
-        });
-    </script>
-
-    <!-- For file uploads -->
-    <script type="text/javascript"
-            src="{{ url_for('static', filename='js/plugins/bootstrap-fileupload.js') }}"></script>
 
     <script type="text/javascript" src="{{ url_for('static', filename = 'js/newrequestform.js') }}"></script>
 {% endblock custom_script_links %}
