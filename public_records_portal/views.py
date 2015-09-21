@@ -472,6 +472,8 @@ def edit_case(request_id):
 def add_a_resource(resource):
     if request.method == 'POST':
         print "Resource is a ", resource
+        if resource == 'pdf':
+            return add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
         resource_id = add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
         if type(resource_id) == int or str(resource_id).isdigit():
             app.logger.info("\n\nSuccessfully added resource: %s with id: %s" % (resource, resource_id))
