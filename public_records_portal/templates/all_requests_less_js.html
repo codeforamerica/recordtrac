@@ -22,10 +22,10 @@
     <div class="row-fluid" >
       <div class="span11 offset1">
         <div class="row-fluid">
-          <div class="span11">
+          <div class="span11" style="width:100%;">
             <div id="exploreTitle">
               <h3>Explore <span class="badge">{{total_requests_count}}</span> requests and counting</h3>
-              <a href="/new" class="btn btn-primary btn-large pull-right">Request new record</a>
+              <a href="/new" class="btn btn-primary btn-large pull-right" style="margin-top:0rem">Request new record</a>
             </div>
           </div>
         </div>
@@ -37,7 +37,7 @@
         <form id ="all_requests_form" name="all_requests" action="/requests" method="GET">
           <div class="row-fluid" style="padding-bottom: 5%;">
             <div class="span4">
-              <div class="well well-small" style="padding-bottom: 3.5em;">
+              <div class="well well-small" style="padding-bottom: 6.0em;margin-top:3em">
                 <h5>Search request text</h5>
                 <div>
                   <input class="span12" name="search_term" type="search" value="{{search_term or ''}}" placeholder="I'd like to find...">
@@ -154,12 +154,15 @@
                     <th>
                       <button class="btn btn-link sortable" type="submit" onclick="return insertInput('due_date');">Due</button>
                     </th>
-                    <th>Requester</th>
                   </tr>
                 </thead>
                 <tbody>
                   {% for request in requests %}
-                    <tr>
+                    {% if current_user.is_authenticated() %}
+                        <tr onclick ="window.location='/city/request/{{request.id}}'">
+                    {% else %}
+                        <tr onclick="window.location='/request/{{request.id}}'">
+                    {% endif %}
                       <td class="status {{request.solid_status}}">
                         {% if request.solid_status == "closed"  %}
                           <i class="icon-archive icon-light"></i>
@@ -179,21 +182,16 @@
                             {% elif request.solid_status == "overdue" %}
                             <span style = "background-color: #CA1A1A" class="label label-important">overdue</span>
                           {% endif %}
-                          {% if request.privacy == 1 or request.privacy == 2 or current_user.is_authenticated() %}
-                            {{ text }}
-                          {% else %}
-                            Private Request
-                          {% endif %}
+{#                          {% if request.privacy == 1 or request.privacy == 2 or current_user.is_authenticated() %}#}
+                          {{ text }}
+{#                          {% else %}#}
+{#                            Private Request#}
+{#                          {% endif %}#}
                         </a>
                         </td>
                         <td>{{request.department}}</td>
                         <td>{{request.contact_name}}</td>
                         <td>{{request.due_date }}</td>
-                        {% if request.privacy == 1 or request.privacy == 4 %}
-                          <td>{{request.requester}}</td>
-                        {% else %}
-                          <td>&nbsp;</td>
-                        {% endif %}
                       </tr>
                     {% endfor %}
                   </tbody>

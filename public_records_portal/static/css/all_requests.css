@@ -1,5 +1,10 @@
 /* custom css for all_requests.html and child templates */
 
+*{
+
+}
+
+
 /* top area */
 .blurb {
 	padding-bottom: 1em;
