@@ -1,162 +1,171 @@
 {#
 This template provides the header, footer, and envelope info for all pages except signup.
-#}<!doctype html>
+#}<!DOCTYPE html>
 <html class="no-js" lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock title%}</title>
+    <title>{% block title %}{% endblock title %}</title>
     <!-- HTML5 shim for IE backwards compatibility -->
     <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="{{ url_for('static', filename='js/plugins/html5.js') }}"></script>
     <![endif]-->
 
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style/css/screen.css') }}">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/favicon-32x32.png') }}"/>
+    <link rel="icon" type="image/png" sizes="32x32"
+          href="{{ url_for('static', filename='images/favicon-32x32.png') }}"/>
 
     {% block custom_css_links %}
 
     {% endblock custom_css_links %}
 
-  <!-- modernizr -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/modernizr-latest-min.js') }}"></script>
+    <!-- modernizr -->
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/plugins/modernizr-latest-min.js') }}"></script>
 
-  <!-- auth_script requires jquery and Mozilla's 'include.js' shim -->
+    <!-- auth_script requires jquery and Mozilla's 'include.js' shim -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.11.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/include.js') }}"></script>
     <script type="text/javascript">{{ auth_script|safe }}</script>
 
-  <!-- IE8 polyfill for CSS3 pseudo classes like :hover -->
+    <!-- IE8 polyfill for CSS3 pseudo classes like :hover -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.11.1.min.js') }}"></script>
     <!--[if (gte IE 6)&(lte IE 8)]>
       <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/selectivizr-min.js') }}"></script>
       <noscript><link rel="stylesheet" href="[fallback css]" /></noscript>
     <![endif]-->
 
-  <!-- transform and other prefixes polyfill -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/css3finalize/4.0.0/jquery.css3finalize.min.js"></script>
+    <!-- transform and other prefixes polyfill -->
+    <script src="{{ url_for('static', filename='js/plugins/jquery.css3finalize.min.js') }}"></script>
 
-  <!-- REM unit polyfill -->
+    <!-- REM unit polyfill -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/rem.min.js') }}"></script>
 
-    <script type='text/javascript' src="{{ url_for('static', filename='js/plugins/d3.v3.min.js') }}" charset="utf-8"></script>
+    <script type='text/javascript' src="{{ url_for('static', filename='js/plugins/d3.v3.min.js') }}"
+            charset="utf-8"></script>
 
-  </head>
+</head>
 
-  <body>
-    <div class="agency-header">
-      <div class="upper-header-black">
+<body>
+<div class="agency-header">
+    <div class="upper-header-black">
         <div class="container">
           <span class="upper-header-left">
-            <a href="http://www1.nyc.gov"><img src="http://www1.nyc.gov/assets/home/images/global/nyc_white.png" alt="NYC" class="small-nyc-logo" /></a>
-            <img src="http://www1.nyc.gov/assets/home/images/global/upper-header-divider.gif" alt="" />
-            <span class="upper-header-black-title">Records - Open Foil</span>
+            <a href="http://www1.nyc.gov"><img src="http://www1.nyc.gov/assets/home/images/global/nyc_white.png"
+                                               alt="NYC" class="small-nyc-logo"/></a>
+            <img src="http://www1.nyc.gov/assets/home/images/global/upper-header-divider.gif" alt=""/>
+            <span class="upper-header-black-title">OpenRecords</span>
           </span>
-          <span class="upper-header-padding"></span>
+            <span class="upper-header-padding"></span>
           <span class="upper-header-right">
             <span class="upper-header-three-one-one">
               <a href="http://www1.nyc.gov/311/index.page">311</a>
             </span>
-            <img src="http://www1.nyc.gov/assets/home/images/global/upper-header-divider.gif" alt="" />
+            <img src="http://www1.nyc.gov/assets/home/images/global/upper-header-divider.gif" alt=""/>
             <span class="upper-header-search">
               <a href="http://www1.nyc.gov/home/search/index.page">Search all NYC.gov websites</a>
             </span>
           </span>
         </div>
-      </div>
     </div>
-    <div class="wrapper">
-      <div class="navbar">
+</div>
+<div class="wrapper">
+    <div class="navbar">
         <div class="navbar-inner">
-          <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="index.html"><img id="logo_nav" src="{{ url_for('static', filename='images/logo.png') }}" alt="{{config['AGENCY_NAME']}} logo" /></a>
-          <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="/"><img id="logo_nav"
+                                           src="{{ url_for('static', filename='images/logo.png') }}"
+                                           alt="{{ config['AGENCY_NAME'] }} logo"/></a>
 
-              {% if current_user.is_authenticated() %}
-                <ul class="nav tabs">
-                  <li><a href="/new">New request</a></li>
-                  <li><a href="/view_requests">All requests</a></li>
-                  <li><a href="/track">Track</a></li>
-                  <li><a href="/report">Report</a></li>
-                  <li><a href="/about">About</a></li>
-                </ul>
-                <ul class="nav pull-right">
-                  <li><a href="/logout">Logout</a></li>
-                </ul>
-              {% else %}
-                <ul class="nav tabs">
-                  <li><a href="/new">Request a Record</a></li>
-                  <li><a href="/track">Track an Existing Request</a></li>
-                  <li><a href="/about">About Open Records</a></li>
-                </ul>
-                <!-- <ul class="nav pull-right">
-                  <li><a href="/login" >Login</a></li>
-                </ul> -->
-              {% endif %}
-          </div>
-        </div>
-      </div>
-      <div id="container-fluid">
-        {% block container %}
-          <div class="row-fluid">
-            <div class="span10">
-              {% block banner %}
-
-              {% endblock banner%}
+            <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
+                {% if current_user.is_authenticated() %}
+                    <ul class="nav tabs">
+                        <li><a href="/new">New request</a></li>
+                        <li><a href="/view_requests">All requests</a></li>
+                        <li><a href="/track">Track</a></li>
+                        <li><a href="/report">Report</a></li>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/logout">Logout</a></li>
+                    </ul>
+                    <ul class="nav pull-right">
+                    </ul>
+                {% else %}
+                    <ul class="nav tabs">
+                        <li><a href="/new">Request a Record</a></li>
+                        <li><a href="/track">Track an Existing Request</a></li>
+                        <li><a href="/about">About Open Records</a></li>
+                        <li><a href="/login">Login</a></li>
+                    </ul>
+                    <ul class="nav pull-right">
+                    </ul>
+                {% endif %}
             </div>
-          </div>
+        </div>
+    </div>
+    <div id="container-fluid">
+        {% block container %}
+            <div class="row-fluid">
+                <div class="span10">
+                    {% block banner %}
+
+                    {% endblock banner %}
+                </div>
+            </div>
 
         {% endblock container %}
-      </div>
-<div class="push"></div>   
-    </div> <!-- // Wrapper -->
-    <div class="iw_component" id="1422284559235">
-      <div class="row">
-        <footer>
-          <div class="container">
-            <div class="span9 footer-links">
-              <a href="http://www1.nyc.gov/nyc-resources/agencies.page">Directory of City Agencies</a> 
-              <a href="http://www1.nyc.gov/home/contact-us.page">Contact NYC Government</a> 
-              <a href="https://a127-ess.nyc.gov">City Employees</a> 
-              <a href="http://www.nyc.gov/notifynyc">Notify NYC</a> 
-              <a href="http://a856-citystore.nyc.gov/">CityStore</a> 
-              <a href="http://www1.nyc.gov/connect/social-media.page">Stay Connected</a> 
-              <a href="http://www1.nyc.gov/connect/applications.page">NYC Mobile Apps</a> 
-              <a href="http://www1.nyc.gov/nyc-resources/nyc-maps.page">Maps</a> 
-              <a href="http://www1.nyc.gov/nyc-resources/resident-toolkit.page">Resident Toolkit</a>
-            </div>
-            <div class="span3">
-            <span class="logo-nyc">NYC</span>
-              <form class="form-search" method="get" action="http://www1.nyc.gov/home/search/index.page">
-                <input placeholder="Search" class="input-search placeholder" name="search-terms" type="text" />
-                <button class="ico-search">Search</button>
-              </form>
-              <div class="copyright">
-                <p>City of New York. 2015 All Rights Reserved,</p>
-                <p>NYC is a trademark and service mark of the City of New York</p>
-                <p><a href="http://www1.nyc.gov/home/privacy-policy.page" title="Privacy">Privacy Policy</a>. 
-                <a href="http://www1.nyc.gov/home/terms-of-use.page" title="TOU">Terms of Use</a>.</p>
-              </div>
-            </div>
-          </div>
-        </footer>
-      </div>
     </div>
-    
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.placeholder.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/placeholder.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.validate.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap.js') }}"></script>
-   
-    {% block custom_script_links %}
-    {% endblock custom_script_links %}
-  </body>
+    <div class="push"></div>
+</div>
+<!-- // Wrapper -->
+<div class="iw_component" id="1422284559235">
+    <div class="row">
+        <footer>
+            <div class="container">
+                <div class="span9 footer-links">
+                    <a href="http://www1.nyc.gov/nyc-resources/agencies.page">Directory of City Agencies</a>
+                    <a href="http://www1.nyc.gov/home/contact-us.page">Contact NYC Government</a>
+                    <a href="https://a127-ess.nyc.gov">City Employees</a>
+                    <a href="http://www.nyc.gov/notifynyc">Notify NYC</a>
+                    <a href="http://a856-citystore.nyc.gov/">CityStore</a>
+                    <a href="http://www1.nyc.gov/connect/social-media.page">Stay Connected</a>
+                    <a href="http://www1.nyc.gov/connect/applications.page">NYC Mobile Apps</a>
+                    <a href="http://www1.nyc.gov/nyc-resources/nyc-maps.page">Maps</a>
+                    <a href="http://www1.nyc.gov/nyc-resources/resident-toolkit.page">Resident Toolkit</a>
+                </div>
+                <div class="span3">
+                    <span class="logo-nyc">NYC</span>
+
+                    <form class="form-search" method="get" action="http://www1.nyc.gov/home/search/index.page">
+                        <input placeholder="Search" class="input-search placeholder" name="search-terms" type="text"/>
+                        <button class="ico-search">Search</button>
+                    </form>
+                    <div class="copyright">
+                        <p>City of New York. 2015 All Rights Reserved,</p>
+
+                        <p>NYC is a trademark and service mark of the City of New York</p>
+
+                        <p><a href="http://www1.nyc.gov/home/privacy-policy.page" title="Privacy">Privacy Policy</a>.
+                            <a href="http://www1.nyc.gov/home/terms-of-use.page" title="TOU">Terms of Use</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.placeholder.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.validate.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap.js') }}"></script>
+
+{% block custom_script_links %}
+{% endblock custom_script_links %}
+</body>
 </html>
