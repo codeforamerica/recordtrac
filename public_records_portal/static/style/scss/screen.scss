@@ -26,7 +26,7 @@ h1 {
 }
 
 .wrapper {
-	margin-bottom: -$footer-height;
+	margin-bottom: calc(-#{$footer-height} - 2rem);
 	min-height: 100%;
 	max-width: calc(940px + #{$wrapper-pad});
 	margin-left: auto;
@@ -108,11 +108,11 @@ ul.nav.tabs {
 footer {
 	background: #000;
 	color: #fff;
-	padding: 2rem 0 3rem;
+	padding: 2rem 0 0;
 	@include border-radius(0);
 	width: 100%;
 	height: $footer-height;
-	margin-top: $wrapper-pad-bottom;
+	// margin-top: calc(#{$wrapper-pad-bottom});
 
 	@include breakpoint(baby-bear) {
 		height: $footer-height-mobile;
@@ -139,7 +139,7 @@ footer {
 }
 
 .push {
-	height: $footer-height;
+	height: calc(#{$footer-height} + 2rem);
 	margin-bottom: 0px;
 
 	@include breakpoint(baby-bear) {
@@ -175,7 +175,7 @@ footer {
 	background: $nyc-blue;
 	margin: 1rem 0 2rem;
 	max-width: 25rem;
-	padding: 1rem 0;
+	padding: 1rem 1.5rem;
 	font-size: 1.2rem;
 	@include transition(.3s all ease);
 
@@ -188,6 +188,7 @@ footer {
 .sideblock {
 	background: $off-white;
 	padding: 1rem 1.5rem;
+	margin: 0 auto 2rem;
 }
 
 .form-nav {
