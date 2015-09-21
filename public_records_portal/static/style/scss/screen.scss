@@ -199,5 +199,17 @@ footer {
 	}
 }
 
+/* Form field tweaking */
+
+/* Trying to make fields not squish on IE */
+/* .control-group is only added for specificity */
+.control-group {
+	.input-block-level {
+		display: block;
+		@include box-sizing(content-box);
+		min-height: 1rem;
+	}
+}
+
 
 
