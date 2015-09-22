@@ -13,6 +13,7 @@
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/new_request.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-fileupload.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
+
 {% endblock custom_css_links %}
 {% block container %}
 
@@ -38,13 +39,13 @@
                                 <h2>
                                     <small>Category*</small>
                                 </h2>
-                                {{ form.request_category(class="input-block-level") }}
+                                {{ form.request_category(class="combobox input-block-level") }}
                             </div>
                             <div class="control-group">
                                 <h2>
                                     <small>What agency has the records you want?*</small>
                                 </h2>
-                                {{ form.request_agency(class="input-block-level") }}
+                                {{ form.request_agency(class="combobox input-block-level") }}
                             </div>
 
                             <div class="control-group">
@@ -232,6 +233,15 @@
             });
         </script>
     {% endif %}
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.placeholder.min.js') }}"></script>
+
+    <script type="text/javascript">
+    $(function() {
+        // Invoke the plugin
+        $('input, textarea').placeholder({customClass:'placeholder'});
+    });
+    </script>
 
     <script type="text/javascript" src="{{ url_for('static', filename = 'js/newrequestform.js') }}"></script>
 {% endblock custom_script_links %}
