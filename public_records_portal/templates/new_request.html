@@ -300,7 +300,11 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-combobox.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('.combobox').combobox();
+            if (Modernizr.touch) { 
+                // don't run combobox
+            } else { 
+                $('.combobox').combobox();
+            }
         });
     </script>
     <script type="text/javascript">
