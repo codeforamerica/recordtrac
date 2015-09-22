@@ -4,7 +4,7 @@
 @import 'mixins';
 @import 'variables';
 @import 'plugins/BootSwatchr6';
-// @import 'plugins/combobox'; 
+@import 'plugins/combobox'; 
 @import 'nyc-global';
 @import 'plugins/font-awesome.min';
 
@@ -23,6 +23,53 @@ h1, h2, h3, h4, h5, h6 {
 h1 {
 	@include breakpoint(baby-bear) {
 		font-size: 2.2rem;
+	}
+}
+
+.wrapper {
+	margin-bottom: calc(-#{$footer-height} - 2rem);
+	min-height: 100%;
+	max-width: calc(940px + #{$wrapper-pad});
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: $wrapper-pad;
+	padding-right: $wrapper-pad;
+
+	@include breakpoint(mama-bear) {
+		max-width: 724px;
+	}
+
+	@include breakpoint(baby-bear) {
+		padding-left: $wrapper-pad-mobile;
+		padding-right: $wrapper-pad-mobile;
+		margin-bottom: -$footer-height-mobile;
+	}
+
+	/* styling the form inputs. Note: this falls within the .wrapper class only to increase specificity */
+	input, select, textarea {
+		font-size: 1.2rem;
+		line-height: 1.4;
+		padding: .7rem;
+		/* width: 100%;*/
+		width: calc(100% - 1.4rem);
+		display: block;
+		@include box-sizing(content-box);
+
+		&[type=text] {
+			padding: 1rem .7rem;
+		}
+		/* styling IE fix, placeholder plug-in*/
+		&.placeholder {
+			color: $light-grey;
+		}
+	}
+}
+
+/* if one of these inputs is a child of the combobox... */
+.wrapper .combobox-container {
+	input {
+		width: calc(100% - 4.7rem);
+		display: inline-block;
 	}
 }
 
@@ -203,6 +250,42 @@ footer {
 	}
 }
 
+.form-nav {
+	background: $off-white;
+	width: 100%;
+	float: left;
+	display: block;
+	margin: 1.2rem auto 4rem;
+	border: 2px solid $light-grey;
+	overflow: hidden;
+	@include border-radius(20px);
+	@include transition(.5s all ease);
+
+	> div {
+		width: 50%;
+		float: left;
+		text-align: center;
+		color: $dark-grey;
+
+		a {
+			cursor: pointer;
+
+			&:hover {
+				text-decoration: none;
+			}
+		}
+	}
+
+	.active {
+		background: $nyc-blue;
+		color: #fff;
+
+		a:hover {
+			color: $off-white;
+		}
+	}
+}
+
 /* if the user doesn't have js enabled remove the two step process */
 .no-js #button1 {
 	display: none;
@@ -229,24 +312,9 @@ footer {
 	margin: 0 auto 2rem;
 }
 
-.form-nav {
-	.link {
-		color: $grey;
-		text-decoration: underline;
-		cursor: pointer;
-	}
-}
 
-/* Form field tweaking */
-
-/* Trying to make fields not squish on IE */
-/* .control-group is only added for specificity */
-.control-group {
-	.input-block-level {
-		display: block;
-		@include box-sizing(content-box);
-		min-height: 1rem;
-	}
+.clearfix {
+	clear: both;
 }
 
 

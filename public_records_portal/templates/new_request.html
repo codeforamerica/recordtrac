@@ -29,6 +29,17 @@
                 you about how much time is required to respond to your request.</p>
         </div>
 
+        <div class="span4">
+            <div class="form-nav">
+                <div class="active" id="s1">
+                    <h4><a>Step 1</a></h4>
+                </div>
+                <div id="s2">
+                    <h4><a>Step 2</a></h4>
+                </div>
+            </div>
+        </div>
+
         <form name="newrequest" class="form-horizontal" id="submitRequest" method="post" action="/new"
               autocomplete="off" novalidate="novalidate" enctype="multipart/form-data">
             <div class="row-fluid">
@@ -57,9 +68,6 @@
                             </div>
                         </fieldset>
                         <div id="button1" class="btn btn-primary btn-large input-block-level">Next</div>
-                        <div class="form-nav">
-                            <p>Step 1 of 2</p>
-                        </div>
                     </div>
                     <div class="span4">
                         <div class="sideblock">
@@ -69,6 +77,8 @@
                         </div>
                         <h5>Note: The agency, category, and topic of your request will be visible to the public. Do not
                             enter personal information here.</h5>
+
+                        <p>* indicates required field</p>
                     </div>
                 </div>
             </div>
@@ -96,6 +106,8 @@
                                         between July 27, 2015 and September 10, 2015</p>
                                 </div>
                                 <h5>Note: The details of your request will not be visible to the public.</h5>
+
+                                <p>* indicates required field</p>
                             </div>
                         </div>
                         <div class="row-fluid">
@@ -250,11 +262,6 @@
                                         Submit request
                                     </button>
                                 </div>
-                                <div class="form-nav">
-                                    <p>Step 2 of 2</p>
-
-                                    <p id="back" class="link">Back to Step 1</p>
-                                </div>
                             </div>
                         </div>
                 </div>
@@ -302,21 +309,28 @@
 
             $('#button1').click(function () {
 
-// validation
+                // validation
 
                 if( !$('#agency').val() || !$('#request_summary').val() ) {
                     alert("All indicated information is required. Please complete all fields");
                     exit();
                 }
 
-                // scroll to the top of the form
-                $('html, body').animate({
-                    scrollTop: $("#submitRequest").offset().top
-                }, 500);
+                // scroll to the top of the form if touch device
+
+                if (Modernizr.touch) { 
+                    $('html, body').animate({
+                        scrollTop: $("#submitRequest").offset().top
+                    }, 500);
+                } else { 
+                    // don't scroll to the top
+                }
 
                 // fade out step1, fade in step2
                 $('#step1').fadeOut('fast', function () {
                 });
+                $( "#s1" ).removeClass( "active" );
+                $( "#s2" ).addClass( "active" );
                 $('#step2').fadeIn('slow', function () {
                 });
             });
@@ -339,14 +353,66 @@
 
             $('#back').click(function () {
                 // scroll to the top of the form
-                $('html, body').animate({
-                    scrollTop: $("#submitRequest").offset().top
-                }, 500);
+                if (Modernizr.touch) { 
+                    $('html, body').animate({
+                        scrollTop: $("#submitRequest").offset().top
+                    }, 500);
+                } else { 
+                    // don't scroll to the top
+                }
 
                 // fade out step1, fade in step2
                 $('#step2').fadeOut('fast', function () {
                 });
+                $( "#s2" ).removeClass( "active" );
+                $( "#s1" ).addClass( "active" );
                 $('#step1').fadeIn('slow', function () {
+                });
+            });
+
+            $('#s1 a').click(function () {
+                // when step one is clicked, go to step 1
+
+                if (Modernizr.touch) { 
+                    $('html, body').animate({
+                        scrollTop: $("#submitRequest").offset().top
+                    }, 500);
+                } else { 
+                    // don't scroll to the top
+                }
+
+
+                $('#step2').fadeOut('fast', function () {
+                });
+                $( "#s2" ).removeClass( "active" );
+                $( "#s1" ).addClass( "active" );
+                $('#step1').fadeIn('slow', function () {
+                });
+            });
+
+            $('#s2 a').click(function () {
+                // when step two is clicked, go to step 1
+
+                // validation
+
+                if( !$('#agency').val() || !$('#request_summary').val() ) {
+                    alert("All indicated information is required. Please complete all fields");
+                    exit();
+                }
+
+                if (Modernizr.touch) { 
+                    $('html, body').animate({
+                        scrollTop: $("#submitRequest").offset().top
+                    }, 500);
+                } else { 
+                    // don't scroll to the top
+                }
+
+                $('#step1').fadeOut('fast', function () {
+                });
+                $( "#s1" ).removeClass( "active" );
+                $( "#s2" ).addClass( "active" );
+                $('#step2').fadeIn('slow', function () {
                 });
             });
 
