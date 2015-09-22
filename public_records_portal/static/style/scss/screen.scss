@@ -4,7 +4,7 @@
 @import 'mixins';
 @import 'variables';
 @import 'plugins/BootSwatchr6';
-@import 'plugins/combobox'; 
+// @import 'plugins/combobox'; 
 @import 'nyc-global';
 @import 'plugins/font-awesome.min';
 
@@ -23,6 +23,84 @@ h1, h2, h3, h4, h5, h6 {
 h1 {
 	@include breakpoint(baby-bear) {
 		font-size: 2.2rem;
+	}
+}
+
+.navbar {
+	padding: 2rem 0;
+
+	.nav {
+		float: right;
+		clear: right;
+
+		> li > a {
+			padding: 10px 0px 10px 30px;
+
+			@include breakpoint(baby-bear) {
+				padding: 10px 0px 10px 0px;
+			}
+		}
+	}
+
+	.brand {
+		padding: 0;
+		margin: 0;
+	}
+}
+
+.navbar-inner {
+	background: none;
+	border: 0;
+	border-bottom: 1px solid black;
+	box-shadow: none;
+	padding: 0 0 1rem;
+	@include border-radius(0);
+
+	.login {
+		float: right;
+		margin: 0;
+		background: $dark-grey;
+
+		@include breakpoint(baby-bear) {
+			width: 100%;
+			padding: .7rem 0;
+			margin: 1rem 0;
+			@include border-radius(10px);
+			font-size: 1.1rem;
+		}
+
+		p {
+			margin: 0;
+
+			a {
+				color: #fff;
+				text-shadow: none;
+			}
+		}
+	}
+}
+
+#logo_nav {
+	padding: 0;
+	width: 13rem;	
+}
+
+/* tabs */
+ul.nav.tabs {
+	font-size: 16px;
+
+	@include breakpoint(baby-bear) {
+		font-size: 1.2rem;
+		width: 100%;
+		text-align: center;
+	}
+
+	li.active {
+		border-bottom: 2px solid $nyc-blue;
+
+		a {
+			padding-bottom: 4px;
+		}
 	}
 }
 
@@ -52,11 +130,10 @@ h1 {
 		padding: .7rem;
 		/* width: 100%;*/
 		width: calc(100% - 1.4rem);
-		display: block;
-		@include box-sizing(content-box);
 
 		&[type=text] {
-			padding: 1rem .7rem;
+			padding-top: 1.2rem;
+			padding-bottom: 1.2rem;
 		}
 		/* styling IE fix, placeholder plug-in*/
 		&.placeholder {
@@ -65,60 +142,6 @@ h1 {
 	}
 }
 
-/* if one of these inputs is a child of the combobox... */
-.wrapper .combobox-container {
-	input {
-		width: calc(100% - 4.7rem);
-		display: inline-block;
-	}
-}
-
-.navbar {
-	padding: 2rem 0;
-
-	.nav {
-		float: right;
-		margin-top: 2.4rem;
-	}
-
-	.brand {
-		padding: 0;
-		margin: 0;
-	}
-}
-
-.navbar-inner {
-	background: none;
-	border: 0;
-	border-bottom: 1px solid black;
-	box-shadow: none;
-	padding: 0 0 1rem;
-	@include border-radius(0);
-}
-
-#logo_nav {
-	padding: 0;
-	width: 13rem;	
-}
-
-/* tabs */
-ul.nav.tabs {
-	font-size: 16px;
-
-	@include breakpoint(baby-bear) {
-		font-size: 1.2rem;
-		width: 100%;
-		text-align: center;
-	}
-
-	li.active {
-		border-bottom: 2px solid $nyc-blue;
-
-		a {
-			padding-bottom: 4px;
-		}
-	}
-}
 
 footer {
 	background: #000;
@@ -211,6 +234,18 @@ footer {
 		color: $grey;
 		text-decoration: underline;
 		cursor: pointer;
+	}
+}
+
+/* Form field tweaking */
+
+/* Trying to make fields not squish on IE */
+/* .control-group is only added for specificity */
+.control-group {
+	.input-block-level {
+		display: block;
+		@include box-sizing(content-box);
+		min-height: 1rem;
 	}
 }
 
