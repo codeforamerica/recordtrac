@@ -4,7 +4,7 @@
 @import 'mixins';
 @import 'variables';
 @import 'plugins/BootSwatchr6';
-// @import 'plugins/combobox'; 
+@import 'plugins/combobox'; 
 @import 'nyc-global';
 @import 'plugins/font-awesome.min';
 
@@ -52,6 +52,14 @@ h1 {
 		padding: .7rem;
 		/* width: 100%;*/
 		width: calc(100% - 1.4rem);
+		display: block;
+		@include box-sizing(content-box);
+
+		/* if one of these inputs is a child of the combobox... */
+		.combobox-container & {
+			width: calc(100% - 45px);
+			display: inline-block;
+		}
 
 		&[type=text] {
 			padding-top: 1.2rem;
@@ -211,9 +219,7 @@ footer {
 /* .control-group is only added for specificity */
 .control-group {
 	.input-block-level {
-		display: block;
-		@include box-sizing(content-box);
-		min-height: 1rem;
+		
 	}
 }
 

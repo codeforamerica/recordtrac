@@ -14,14 +14,6 @@
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-fileupload.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
 
-        <style type="text/css">
-
-    .step {
-        display: block !important;
-    }
-
-    </style>
-
 {% endblock custom_css_links %}
 {% block container %}
 
@@ -301,6 +293,14 @@
         // Invoke the plugin
         $('input, textarea').placeholder({customClass:'placeholder'});
     });
+    </script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-combobox.js') }}"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('.combobox').combobox();
+      });
     </script>
 
     <script type="text/javascript" src="{{ url_for('static', filename = 'js/newrequestform.js') }}"></script>
