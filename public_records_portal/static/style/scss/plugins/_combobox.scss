@@ -8,10 +8,10 @@
   content: "";
 }
 .combobox-container:after {
-  clear: both;
+  clear: both; 
 }
 .combobox-container input,
-.combobox-container .uneditable-input {
+.combobox-container .uneditable-input { 
   @include border-radius(0 3px 3px 0);
 }
 .combobox-container input:focus,
@@ -23,20 +23,21 @@
   border-left-color: #ccc;
 }
 .combobox-container .add-on {
-  float: right;
+  float: left;
   display: inline-block;
   width: auto;
   min-width: 16px;
   height: inherit !important;
   margin-right: -1px;
-  padding: 4px 5px;
+  padding: 1rem;
   font-weight: normal;
   color: #999999;
   text-align: center;
   text-shadow: 0 1px 0 #ffffff;
   background-color: #f5f5f5;
   border: 1px solid #ccc;
-  @include border-radius(3px 0 0 3px);
+  margin-left: -1px;
+  @include border-radius(0px);
   
 }
 .combobox-container .active {
@@ -52,11 +53,7 @@
   border-left-color: #eee;
   border-right-color: #ccc;
 }
-.combobox-container .add-on {
-  margin-right: 0;
-  margin-left: -1px;
-  @include border-radius(0 3px 3px 0);
-}
+
 .combobox-container input:first-child {
   *margin-left: -160px;
 }

@@ -55,20 +55,21 @@ h1 {
 		display: block;
 		@include box-sizing(content-box);
 
-		/* if one of these inputs is a child of the combobox... */
-		.combobox-container & {
-			width: calc(100% - 45px);
-			display: inline-block;
-		}
-
 		&[type=text] {
-			padding-top: 1.2rem;
-			padding-bottom: 1.2rem;
+			padding: 1rem .7rem;
 		}
 		/* styling IE fix, placeholder plug-in*/
 		&.placeholder {
 			color: $light-grey;
 		}
+	}
+}
+
+/* if one of these inputs is a child of the combobox... */
+.wrapper .combobox-container {
+	input {
+		width: calc(100% - 4.7rem);
+		display: inline-block;
 	}
 }
 
@@ -210,16 +211,6 @@ footer {
 		color: $grey;
 		text-decoration: underline;
 		cursor: pointer;
-	}
-}
-
-/* Form field tweaking */
-
-/* Trying to make fields not squish on IE */
-/* .control-group is only added for specificity */
-.control-group {
-	.input-block-level {
-		
 	}
 }
 
