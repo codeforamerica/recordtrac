@@ -39,13 +39,13 @@
                                 <h2>
                                     <small>Category*</small>
                                 </h2>
-                                {{ form.request_category(class="combobox input-block-level") }}
+                                {{ form.request_category(id="category", class="combobox input-block-level") }}
                             </div>
                             <div class="control-group">
                                 <h2>
                                     <small>What agency has the records you want?*</small>
                                 </h2>
-                                {{ form.request_agency(class="combobox input-block-level") }}
+                                {{ form.request_agency(id="agency", class="combobox input-block-level") }}
                             </div>
 
                             <div class="control-group">
@@ -230,7 +230,7 @@
                                                     <option value="WV">West Virginia</option>
                                                     <option value="WI">Wisconsin</option>
                                                     <option value="WY">Wyoming</option>
-                                                </select>   
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="span3">
@@ -286,22 +286,77 @@
         </script>
     {% endif %}
 
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.placeholder.min.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/plugins/jquery.placeholder.min.js') }}"></script>
 
     <script type="text/javascript">
-    $(function() {
-        // Invoke the plugin
-        $('input, textarea').placeholder({customClass:'placeholder'});
-    });
+        $(function () {
+            // Invoke the plugin
+            $('input, textarea').placeholder({customClass: 'placeholder'});
+        });
     </script>
 
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-combobox.js') }}"></script>
     <script type="text/javascript">
-      $(document).ready(function(){
-        $('.combobox').combobox();
-      });
+        $(document).ready(function () {
+            $('.combobox').combobox();
+        });
     </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#step1').fadeIn('fast');
 
-    <script type="text/javascript" src="{{ url_for('static', filename = 'js/newrequestform.js') }}"></script>
+            $('#button1').click(function () {
+
+// validation
+
+                if( !$('#agency').val() || !$('#request_summary').val() ) {
+                    alert("All indicated information is required. Please complete all fields");
+                    exit();
+                }
+
+                // scroll to the top of the form
+                $('html, body').animate({
+                    scrollTop: $("#submitRequest").offset().top
+                }, 500);
+
+                // fade out step1, fade in step2
+                $('#step1').fadeOut('fast', function () {
+                });
+                $('#step2').fadeIn('slow', function () {
+                });
+            });
+
+            $('#button2').click(function () {
+
+                // validation
+
+                if ((document.newrequest.field.value == "")
+                        || (document.newrequest.field.value == "")
+                        || (document.newrequest.field.value == "")
+
+
+                ) {
+                    alert("All  indicated information is required. Please complete all fields");
+                    exit();
+                }
+
+            });
+
+            $('#back').click(function () {
+                // scroll to the top of the form
+                $('html, body').animate({
+                    scrollTop: $("#submitRequest").offset().top
+                }, 500);
+
+                // fade out step1, fade in step2
+                $('#step2').fadeOut('fast', function () {
+                });
+                $('#step1').fadeIn('slow', function () {
+                });
+            });
+
+        });
+    </script>
 {% endblock custom_script_links %}

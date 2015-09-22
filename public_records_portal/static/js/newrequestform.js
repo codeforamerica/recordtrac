@@ -5,9 +5,9 @@ $(function(){
 		    
 // validation
 	
-	if ((document.newrequest.agency.value=="--")
-	|| (document.newrequest.category.value=="--")
-	|| (document.newrequest.topic.value=="")
+	if ((document.newrequest.agency.val())
+	|| (document.newrequest.category.val())
+	|| (document.newrequest.topic.val())
 
 		
 	){
