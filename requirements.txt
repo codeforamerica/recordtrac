@@ -5,6 +5,7 @@ business_calendar
 click
 decorator
 defusedxml
+dm.xmlsec.binding
 Flask
 Flask-Admin
 Flask-BrowserID
@@ -24,6 +25,7 @@ isodate
 itsdangerous
 Jinja2
 lxml
+M2Crypto
 Mako
 MarkupSafe
 mimerender
@@ -36,6 +38,7 @@ PyPDF2
 python-dateutil
 python-dotenv
 python-mimeparse
+python-saml
 pytz
 recaptcha-client
 reportlab
