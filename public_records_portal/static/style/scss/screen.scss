@@ -50,11 +50,16 @@ h1 {
 		font-size: 1.2rem;
 		line-height: 1.4;
 		padding: .7rem;
-		width: 100%;
+		/* width: 100%;*/
+		width: calc(100% - 1.4rem);
 
 		&[type=text] {
 			padding-top: 1.2rem;
 			padding-bottom: 1.2rem;
+		}
+		/* styling IE fix, placeholder plug-in*/
+		&.placeholder {
+			color: $light-grey;
 		}
 	}
 }
