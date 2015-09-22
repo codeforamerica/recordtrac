@@ -6,7 +6,7 @@
 @import 'plugins/BootSwatchr6';
 @import 'plugins/combobox'; 
 @import 'nyc-global';
-@import 'plugins/font-awesome.min';
+// @import 'plugins/font-awesome.min';
 
 html, body {
 	min-height: 100%;
@@ -286,9 +286,34 @@ footer {
 	}
 }
 
+#back {
+	float: left;
+	padding-right: 1rem;
+	margin: 0;
+	color: $light-grey;
+
+	.fa, p {
+		display: inline;
+		font-size: 1.2rem;
+		cursor: pointer;
+		text-decoration: none;
+	}
+}
+
 /* if the user doesn't have js enabled remove the two step process */
-.no-js #button1 {
-	display: none;
+.no-js {
+
+	#button1 {
+		display: none;
+	} 
+
+	.form-nav {
+		display: none;
+	}
+
+	#back {
+		display: none;
+	}
 }
 
 /* This is defined in the bootstrap style, but we can tweak it here */
