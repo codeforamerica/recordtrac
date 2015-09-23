@@ -2,7 +2,7 @@
     {% if owner.active %}
         {% set participant = (owner | display_staff_participant(req)) %}
         {% if participant %}
-            {% if current_user.is_authenticated() %}
+            {% if current_user.is_authenticated %}
                 <div data-placement="left" class="unassignPopover">
                     <div class="popover-container">
                         {{ participant }}<span class="pull-right"><font color='white'> remove</font></span>

@@ -311,7 +311,7 @@ def assign_owner(request_id, reason, email=None):
 ### @export "get_request_data_chronologically"
 def get_request_data_chronologically(req):
     public = False
-    if current_user.is_anonymous():
+    if current_user.is_anonymous:
         public = True
     responses = []
     if not req:
@@ -336,7 +336,7 @@ def get_responses_chronologically(req):
         if note.user_id:
             # Ensure private notes only available to appropriate users
             if note.privacy == 2 and (
-                        current_user.is_anonymous() or current_user.role not in ['Portal Administrator',
+                        current_user.is_anonymous or current_user.role not in ['Portal Administrator',
                                                                                  'Agency Administrator',
                                                                                  'Agency FOIL Personnel',
                                                                                  'Agency Helpers']):

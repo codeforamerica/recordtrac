@@ -51,7 +51,7 @@ def new_request(passed_recaptcha=False, data=None):
     routing_available = False
     errors = []
     if request.method == 'POST':
-        if current_user.is_authenticated():
+        if current_user.is_authenticated:
             form = OfflineRequestForm(request.form)
             request_category = form.request_category.data
             request_agency = form.request_agency.data
@@ -312,7 +312,7 @@ def new_request(passed_recaptcha=False, data=None):
     elif request.method == 'GET':
         if 'LIAISONS_URL' in app.config:
             routing_available = True
-        if current_user.is_authenticated() and current_user.role in ['Portal Administrator', 'Agency Administrator',
+        if current_user.is_authenticated and current_user.role in ['Portal Administrator', 'Agency Administrator',
                                                                      'Agency FOIL Personnel']:
             form = OfflineRequestForm()
             return render_template('offline_request.html', form=form, routing_available=routing_available)
@@ -329,7 +329,7 @@ def to_csv():
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    if current_user.is_anonymous() == False:
+    if current_user.is_anonymous == False:
         return redirect(url_for('display_all_requests'))
     else:
         return landing()
@@ -398,7 +398,7 @@ def track(request_id=None):
     if request.method == 'POST':
         if not request_id:
             request_id = request.form['request_id']
-        if not current_user.is_anonymous():
+        if not current_user.is_anonymous:
             audience = 'city'
         else:
             audience = 'public'
@@ -429,9 +429,12 @@ def show_request(request_id, template="manage_request_public.html"):
     for d in departments_all:
         firstUser = models.User.query.filter_by(department_id=d.id).first()
         agency_data.append({'name': d.name, 'email': firstUser.email})
-    users = models.User.query.filter_by(department_id=req.department_id).all()
+
     if not req:
         return render_template('error.html', message="A request with ID %s does not exist." % request_id)
+    else:
+        users = models.User.query.filter_by(department_id=req.department_id).all()
+
     if req.status and "Closed" in req.status and template != "manage_request_feedback.html":
         template = "closed.html"
     return render_template(template, req=req, agency_data=agency_data, users=users)
@@ -493,7 +496,7 @@ def update_a_resource(resource, passed_recaptcha=False, data=None):
             prr.answer_a_question(qa_id=int(data['qa_id']), answer=data['answer_text'], passed_spam_filter=True)
         else:
             update_resource(resource, data)
-        if current_user.is_anonymous() == False:
+        if current_user.is_anonymous == False:
             return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
         else:
             return redirect(url_for('show_request', request_id=request.form['request_id']))
@@ -509,7 +512,7 @@ def acknowledge_request(resource, passed_recaptcha=False, data=None):
             prr.answer_a_question(qa_id=int(data['qa_id']), answer=data['acknowledge_request'], passed_spam_filter=True)
         else:
             update_resource(resource, data)
-        if current_user.is_anonymous() == False:
+        if current_user.is_anonymous == False:
             return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
         else:
             return redirect(url_for('show_request', request_id=request.form['request_id']))
@@ -639,7 +642,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
     mine_as_poc = checkbox_value
     mine_as_helper = checkbox_value
     departments_selected = []
-    if current_user.is_authenticated():
+    if current_user.is_authenticated:
         departments_selected.append(current_user.current_department.name)
     sort_column = "id"
     sort_direction = "asc"
@@ -737,7 +740,7 @@ def json_requests():
 
 
 def prepare_request_fields(results):
-    # if current_user.is_anonymous():
+    # if current_user.is_anonymous:
     #     return map(lambda r: {
     #         "id":           r.id, \
     #         "text":         helpers.clean_text(r.text), \
@@ -902,7 +905,7 @@ def logout():
     return index()
 
 def get_user_id():
-    if current_user.is_authenticated():
+    if current_user.is_authenticated:
         return current_user.id
     return None
 
