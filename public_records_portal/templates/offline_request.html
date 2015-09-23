@@ -70,31 +70,26 @@
                                     <div class="control-group">
                                         <h1><small>Attach documentation</small></h1>
                                             <!-- upload a record -->
-                                            {{ form.request_attachment_description.label.text }}
-                                            <textarea class="input-xxlarge" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of the record" required /></textarea>
+                                            {{ form.request_attachment_description(rows="3", class="input-block-level", placeholder="Add a short explanation of the record")}}
+{#                                            <textarea class="input-xxlarge" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of the record" required /></textarea>#}
+                                            {{ form.request_attachment(class="fileupload fileupload-new")}}
 
-                                            {{ form.request_attachment.label.text }}
-
-                                           <div class="fileupload fileupload-new" data-provides="fileupload">
-                                               <div class="input-append">
-                                               <!-- <div class="uneditable-input">
-                                                   <i class="icon-file fileupload-exists"></i>
-                                                   <span class="fileupload-preview" />
-                                                   </div> -->
-                                               <span class="btn btn-file">
-                                                   <span class="fileupload-new">Select file</span>
-                                                   <span class="fileupload-exists">Change</span>
-                                                   <input type="file" name="record" />
-                                               </span>
-                                               <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                                               </div>
-                                          </div>
+{#                                           <div class="fileupload fileupload-new" data-provides="fileupload">#}
+{#                                               <div class="input-append">#}
+{#                                               <span class="btn btn-file">#}
+{#                                                   <span class="fileupload-new">Select file</span>#}
+{#                                                   <span class="fileupload-exists">Change</span>#}
+{#                                                   <input type="file" name="record" />#}
+{#                                               </span>#}
+{#                                               <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>#}
+{#                                               </div>#}
+{#                                          </div>#}
 
                                     </div>
 
                                     <div class="control-group">
-										<h1><small>{{ form.request_agency.label.text}} </small></h1>
-										{{ form.request_agency(class="input-block-level") }}
+										<h1><small>{{ form.request_category.label.text}} </small></h1>
+										{{ form.request_category(class="input-block-level") }}
                                     </div>
                                     <div class="control-group">
 										<h1><small>{{ form.request_first_name.label.text }}</small></h1>
@@ -162,9 +157,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div id="terms_of_use">
-                                        <p class="lead">{{ form.terms_of_use.label.text }}&nbsp;{{ form.terms_of_use }}</p>
                                     </div>
                                     <div id="requestButton" class="control-group">
                                         <div>

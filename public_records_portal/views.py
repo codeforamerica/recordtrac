@@ -73,6 +73,8 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_city = form.request_address_city.data
             request_address_state = form.request_address_state.data
             request_address_zip = form.request_address_zip.data
+            print "asdasd" + request_attachment_description
+            print "asdasd" + request_attachment
 
             # Check Category
             if not (request_category and request_category.strip()):
@@ -90,6 +92,7 @@ def new_request(passed_recaptcha=False, data=None):
                 app.logger.info("\n\nNo file passed in")
 
 
+            #Check Attachment
             if request_attachment_description and not (request_attachment):
                 errors.append('Please select a file to upload as attachment.')
 
@@ -115,8 +118,6 @@ def new_request(passed_recaptcha=False, data=None):
                     request_date = None
             else:
                 errors.append("Please use the datepicker to select a date.")
-            if not (request_agency and request_agency.strip()):
-                errors.append("Please select a agency.")
 
             if not (request_first_name and request_first_name.strip()):
                 errors.append("Please enter the requester's first name")
