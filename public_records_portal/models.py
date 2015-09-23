@@ -451,7 +451,7 @@ class Request(db.Model):
         if self.is_closed():
             return 'closed'
         else:
-            if cron_job or not current_user.is_anonymous():
+            if cron_job or not current_user.is_anonymous:
                 if self.due_date:
                     if datetime.now() >= self.due_date:
                         return 'overdue'

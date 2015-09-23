@@ -86,7 +86,7 @@ This template provides the header, footer, and envelope info for all pages excep
                                            alt="{{ config['AGENCY_NAME'] }} logo"/></a>
 
             <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
-                {% if current_user.is_authenticated() %}
+                {% if current_user.is_authenticated %}
                     <ul class="nav tabs">
                         <li><a href="/new">New request</a></li>
                         <li><a href="/view_requests">All requests</a></li>

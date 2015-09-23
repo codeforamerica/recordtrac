@@ -50,7 +50,7 @@
                 </div>
                 <div class="row-fluid">
                   <!-- <h4 class="underline">ADVANCED FILTER</h4> -->
-                  {% if current_user.is_authenticated() %}
+                  {% if current_user.is_authenticated %}
                     <div class="span6">
                       <h5>My requests</h5>
                       <div class="indent">
@@ -72,7 +72,7 @@
                         <input type="checkbox" name="is_open" {% if is_open %} checked {% endif %} />
                         <em class="open_style">Open</em>
                       </label>
-                      {% if current_user.is_authenticated() %}
+                      {% if current_user.is_authenticated %}
                         <label class="checkbox">
                           <input type="checkbox" name="due_soon" {% if due_soon %} checked {% endif %} />
                           <em class="duesoon_style">Due Soon</em>
@@ -100,7 +100,7 @@
                   value="{{ max_date_received }}"
                   class="span12" >
                 </div>
-                {% if current_user.is_authenticated() %}
+                {% if current_user.is_authenticated %}
                   <h5>Due date</h5>
                   <div class="control-group">
                     <input type="date"
@@ -117,7 +117,7 @@
                     <input class="span12" name="requester_name" type="search" placeholder="Enter name" value="{{requester_name or ''}}">
                   </div>
                 {% endif %}
-                {% if current_user.is_anonymous() or (current_user.is_authenticated() and current_user.show_department_filters()) %}
+                {% if current_user.is_anonymous or (current_user.is_authenticated and current_user.show_department_filters()) %}
                   <h5>Department</h5>
                   <div class="control-group">
                     <select name="departments_selected" class="selectpicker span12" multiple data-selected-text-format="count" data-size="5">
@@ -133,7 +133,7 @@
                   {% endif %}
                 <button class="btn btn-primary span12" style="margin-left: 0px;" type="submit" value="Submit">Find</button>
               </div>
-              {% if current_user.is_authenticated() %}
+              {% if current_user.is_authenticated %}
                 <div class="row-fluid">
                   <p class="text-center">
                     <a href="/export"> <i class="icon-download"></i> Export data</a>
@@ -164,7 +164,7 @@
                 </thead>
                 <tbody>
                   {% for request in requests %}
-                    {% if current_user.is_authenticated() %}
+                    {% if current_user.is_authenticated %}
                         <tr class="clickable-row" onclick ="window.location='/city/request/{{request.id}}'">
                     {% else %}
                         <tr class="clickable-row" onclick="window.location='/request/{{request.id}}'">
@@ -177,7 +177,7 @@
                       <td>{{request.id}}</td>
                       <td>{{request.date_received}}</td>
                       <td>
-                          {% if current_user.is_authenticated() %}
+                          {% if current_user.is_authenticated %}
                             <a href="/city/request/{{request.id}}">
                           {% else %}
                             <a href="/request/{{request.id}}">
@@ -188,7 +188,7 @@
                             {% elif request.solid_status == "overdue" %}
                             <span style = "background-color: #CA1A1A" class="label label-important">overdue</span>
                           {% endif %}
-{#                          {% if request.privacy == 1 or request.privacy == 2 or current_user.is_authenticated() %}#}
+{#                          {% if request.privacy == 1 or request.privacy == 2 or current_user.is_authenticated %}#}
                           {{ text }}
 {#                          {% else %}#}
 {#                            Private Request#}
