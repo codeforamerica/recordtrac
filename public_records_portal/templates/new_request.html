@@ -125,28 +125,29 @@
                                         <h2>
                                             <small>{{ form.request_first_name.label.text }}</small>
                                         </h2>
-                                        <input class="input-block-level" type="text" placeholder="John"/>
+
+                                        <input class="input-block-level" id="request_first_name" type="text" placeholder="John"/>
                                     </div>
                                     <div class="control-group span6">
                                         <h2>
                                             <small>Last Name*</small>
                                         </h2>
-                                        <input class="input-block-level" type="text" placeholder="Doe"/>
+                                        <input class="input-block-level" id="request_last_name" type="text" placeholder="Doe"/>
                                     </div>
                                 </div>
                                 <div class="control-group">
                                     <h2>
                                         <small>Role/Title</small>
                                     </h2>
-                                    <input class="input-block-level" type="text"
+                                    <input class="input-block-level" id="request_role" type="text"
                                            placeholder="Your role in your organization (if applicable)"/>
                                 </div>
                                 <div class="control-group">
                                     <h2>
                                         <small>Organization</small>
                                     </h2>
-                                    <input class="input-block-level" type="text"
-                                           placeholder="Your organization (if applicable)"/>
+                                    <input class="input-block-level" id="request_organization" type="text"
+                                           placeholder="Your organization (if applicable)" id="request_organization"/>
                                 </div>
 
                                 <h2>
@@ -159,39 +160,39 @@
                                     <h2>
                                         <small>Email Address</small>
                                     </h2>
-                                    <input class="input-block-level" , type="email" ,
+                                    <input class="input-block-level" id="request_email" type="email"
                                            placeholder="requester@email.com"/>
 
                                     <h2>
                                         <small>Phone Number</small>
                                     </h2>
-                                    <input class="input-block-level" type="tel" placeholder="(555) 555-5555"/>
+                                    <input class="input-block-level" id="request_phone" type="tel" placeholder="(555) 555-5555"/>
 
                                     <h2>
                                         <small>Fax Number</small>
                                     </h2>
                                     <div class="spacer spacer_phone" style="background-color: #FFFFFF;">
-                                        <input class="input-block-level" type="tel" placeholder="(555) 555-5555"/>
+                                        <input class="input-block-level" id="request_fax" type="tel" placeholder="(555) 555-5555"/>
                                     </div>
                                     <h2>
                                         <small>Address</small>
                                     </h2>
                                     <small>Address Line 1</small>
-                                    <input class="input-block-level" type="text" placeholder="123 Main Street"/>
+                                    <input class="input-block-level" id="request_address1" type="text" placeholder="123 Main Street"/>
                                     <small>Address Line 2</small>
-                                    <input class="input-block-level" type="text" placeholder="Apartment 3D"/>
+                                    <input class="input-block-level" id="request_address2" type="text" placeholder="Apartment 3D"/>
 
                                     <div class="row-fluid">
                                         <div class="span5">
                                             <small>City</small>
                                             <div class="spacer">
-                                                <input class="input-block-level" type="text" placeholder="New York"/>
+                                                <input class="input-block-level" id="request_city" type="text" placeholder="New York"/>
                                             </div>
                                         </div>
                                         <div class="span4">
                                             <small>State</small>
                                             <div class="spacer">
-                                                <select class="combobox">
+                                                <select class="combobox" id="request_state">
                                                     <option value="AL">Alabama</option>
                                                     <option value="AK">Alaska</option>
                                                     <option value="AZ">Arizona</option>
@@ -249,7 +250,7 @@
                                         <div class="span3">
                                             <small>Zip Code</small>
                                             <div class="spacer">
-                                                <input class="input-block-level" type="text" placeholder="12345"/>
+                                                <input class="input-block-level" id="request_zip" type="text" placeholder="12345"/>
                                             </div>
                                         </div>
                                     </div>
@@ -423,4 +424,6 @@
 
         });
     </script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/localstorage.js') }}"></script>
 {% endblock custom_script_links %}
