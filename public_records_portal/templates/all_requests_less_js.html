@@ -26,9 +26,9 @@
   {% endblock custom_script_links %}
   {% block container %}
     <div class="row-fluid" >
-      <div class="span11 offset1">
+      <div class="">
         <div class="row-fluid">
-          <div class="span11" style="width:100%;">
+          <div class="" style="width:100%;">
             <div id="exploreTitle">
               <h3>Explore <span class="badge">{{total_requests_count}}</span> requests and counting</h3>
               <a href="/new" class="btn btn-primary btn-large pull-right" style="margin-top:0rem">Request new record</a>
@@ -42,7 +42,7 @@
         </div>
         <form id ="all_requests_form" name="all_requests" action="/requests" method="GET">
           <div class="row-fluid" style="padding-bottom: 5%;">
-            <div class="span4">
+            <div class="span3">
               <div class="well well-small" style="padding-bottom: 6.0em;margin-top:3em">
                 <h5>Search request text</h5>
                 <div>
@@ -141,7 +141,7 @@
                 </div>
               {% endif %}
             </div>
-            <div class="span7">
+            <div class="span9">
               <table id="requests">
                 <thead id="headings">
                   <tr>
