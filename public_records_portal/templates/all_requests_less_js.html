@@ -10,6 +10,12 @@
     }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui-1.10.4.custom.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui.css') }}">
+    <style type=text/css>
+    .clickable-row {
+        cursor: pointer;
+    }
+
+    </style>
   {% endblock custom_css_links %}
   {% block custom_script_links %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-select.min.js') }}"></script>
@@ -159,9 +165,9 @@
                 <tbody>
                   {% for request in requests %}
                     {% if current_user.is_authenticated() %}
-                        <tr onclick ="window.location='/city/request/{{request.id}}'">
+                        <tr class="clickable-row" onclick ="window.location='/city/request/{{request.id}}'">
                     {% else %}
-                        <tr onclick="window.location='/request/{{request.id}}'">
+                        <tr class="clickable-row" onclick="window.location='/request/{{request.id}}'">
                     {% endif %}
                       <td class="status {{request.solid_status}}">
                         {% if request.solid_status == "closed"  %}
