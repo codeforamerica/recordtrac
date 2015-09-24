@@ -459,11 +459,7 @@ class Request(db.Model):
                             + timedelta(days=int(app.config['DAYS_UNTIL_OVERDUE'
                                                  ])) >= self.due_date:
                         return 'due soon'
-
-        if 'Granted' not in self.status:
-            return 'open'
-        else:
-            return self.status
+        return 'open'
 
     @hybrid_property
     def open(self):
