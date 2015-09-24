@@ -53,8 +53,7 @@
                                 <h2>
                                 <small>What is the topic of your request?*</small>
                                 </h2>
-                                <textarea name="topic" class="input-block-level" , rows="2" , id="request_summary" ,
-                                placeholder="Please provide a short summary of your request" )></textarea>
+                                {{ form.request_summary(class="input-block-level", rows="2", id="request_summary", placeholder="Please provide a short summary of your request" ) }}
                             </div>
                         </fieldset>
                         <div id="button1" class="btn btn-primary btn-large input-block-level">Next</div>

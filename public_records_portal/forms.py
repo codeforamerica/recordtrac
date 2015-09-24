@@ -146,7 +146,8 @@ class OfflineRequestForm(Form):
         Email('Please enter a valid email address')])
     request_phone = PhoneNumberField(u'Phone Number')
     request_fax = PhoneNumberField(u'Fax Number')
-    request_address_street = StringField(u'Street Address')
+    request_address_street_one = StringField(u'Address Line 1')
+    request_address_street_two = StringField(u'Address Line 2')
     request_address_city = StringField(u'City')
     request_address_state = SelectField(u'State', choices=states, default='NY')
     request_address_zip = StringField(u'Zip Code',

@@ -87,10 +87,10 @@ def update_resource(resource, request_body):
     fields = request_body
     if "owner" in resource:
         if "reason_unassigned" in fields:
-            return remove_staff_participant(owner_id=fields['owner_id'], reason=fields['reason_unassigned'])
+            return remove_staff_participant(owner_id=fields['owner_id'])
         else:
             change_request_status(fields['request_id'], "Rerouted")
-            return assign_owner(fields['request_id'], fields['owner_reason'], fields['owner_email'])
+            return assign_owner(fields['request_id'], fields['owner_email'])
     elif "reopen" in resource:
         change_request_status(fields['request_id'], "Reopened")
     elif "acknowledge" in resource:
@@ -194,7 +194,7 @@ def add_link(request_id, url, description, user_id):
 def make_request(category=None, agency=None, summary=None, text=None, attachment=None,
                  attachment_description=None, offline_submission_type=None, date_received=None, first_name=None,
                  last_name=None, alias=None, role=None, organization=None, email=None, phone=None, fax=None,
-                 street_address=None, city=None, state=None, zip=None, user_id=None):
+                 street_address_one=None, street_address_two=None, city=None, state=None, zip=None, user_id=None):
     """ Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
     request_id = find_request(text)
     if request_id:  # Same request already exists
@@ -221,7 +221,7 @@ def make_request(category=None, agency=None, summary=None, text=None, attachment
         id = "FOIL" + "-" + datetime.now().strftime("%Y") + "-" + agency_codes[
             agency] + "-" + "%05d" % currentRequestId
         req = get_obj("Request", id)
- 
+
     request_id = create_request(id=id, category=category, summary=summary, text=text, user_id=user_id,
                                 offline_submission_type=offline_submission_type,
                                 date_received=date_received)  # Actually create the Request object
@@ -229,8 +229,8 @@ def make_request(category=None, agency=None, summary=None, text=None, attachment
                                 email=assigned_to_email)  # Assign someone to the request
     open_request(request_id)  # Set the status of the incoming request to "Open"
     if email or alias or phone:
-        subscriber_user_id = create_or_return_user(email=email, alias=alias, phone=phone, address1=street_address,
-                                                   address2=None, city=city, state=state, zipcode=zip)
+        subscriber_user_id = create_or_return_user(email=email, alias=alias, phone=phone, address1=street_address_one,
+                                                   address2=street_address_two, city=city, state=state, zipcode=zip)
         subscriber_id, is_new_subscriber = create_subscriber(request_id=request_id, user_id=subscriber_user_id)
         if subscriber_id:
             generate_prr_emails(request_id, notification_type="Public Notification Template 01",
@@ -283,7 +283,7 @@ def open_request(request_id):
 
 
 ### @export "assign_owner"
-def assign_owner(request_id, reason, email=None):
+def assign_owner(request_id, reason=None, email=None):
     """ Called any time a new owner is assigned. This will overwrite the current owner."""
     req = get_obj("Request", request_id)
     past_owner_id = None
