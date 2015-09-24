@@ -150,12 +150,6 @@ def new_request(passed_recaptcha=False, data=None):
             if not data:
                 data = request.form.copy()
 
-            if app.config['ENVIRONMENT'] != 'LOCAL' and check_for_spam and is_spam(
-                    request_text) and not passed_recaptcha:
-                return render_template('recaptcha_request.html', form=data,
-                                       message="Hmm, your request looks like spam. To submit your request, type the numbers or letters you see in the field below.",
-                                       public_key=app.config['RECAPTCHA_SITE_KEY'])
-
             phone_formatted = ""
             if phone_valid:
                 phone_formatted = request_phone.international
