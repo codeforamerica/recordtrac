@@ -16,7 +16,6 @@ agencies = [
     (r.name, r.name) for r in db.session.query(models.Department).all()
     ]
 agencies.insert(0, ('', ''))
-agencies.append(('Unknown', 'I Don\'t Know'))
 
 categories = [
     ('', ''),

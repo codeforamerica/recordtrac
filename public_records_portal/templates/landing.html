@@ -1,4 +1,4 @@
-<!-- This template is for the landing page. -->
+<!-- This ntemplate is for the landing page. -->
 
 {% extends "base.html" %}
 {% block title %}NYC Open Gov{% endblock title %}
@@ -26,10 +26,15 @@
            <li><a href="http://www.nyc.gov/html/exit-page.html?url=https://data.cityofnewyork.us/">NYC OpenData Portal</a> Discover open datasets</li>
         </ul>
       </div>
-      <button type="button" class="btn btn-default btn-lg">
-        <span class="glyphicon glyphicon-star" aria-hidden="true"></span> View Records Request Reports
-      </button>
-    </div>
+      <div class="span4">
+<div class="row-fluid">
+<a href="/reports" class="btn btn-link round_link">
+<img src="{{ url_for('static', filename='images/explore.png') }}" alt="Reports">
+<h4 class="text-center text-title">View Reports</h4>
+</a>
+</div>
+</div>    
+</div>
 </div>
 
 
