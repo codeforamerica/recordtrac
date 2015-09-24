@@ -18,11 +18,11 @@
 {% endblock custom_css_links %}
 {% block container %}
     <div class="row-fluid">
-        <div class="span11 offset1">
+        <div class="span12 offset">
             <div class="row-fluid">
-                <div class="span7">
+                <div class="span12">
                     <div class="row-fluid">
-                        <div class="span8">
+                        <div class="span12">
 							{% for message in errors %}
                                 <div class="alert alert-danger">
                                     <a href="#" class="close" data-dismiss="alert">&times;</a>
@@ -32,7 +32,7 @@
                         </div>
                     </div>
                     <div class="row-fluid">
-                        <div class="span10">
+                        <div class="span12">
                             <h3>Create a New Request</h3>
                             <p class="intro_text">
                                 Use this page to request public records that you received by phone, fax, mail, email, or in person on behalf of a resident.
@@ -41,9 +41,9 @@
                             <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="off" novalidate="novalidate" enctype="multipart/form-data">
                                 <fieldset>
                                     <div class="control-group">
-                                        <h1><small><i class="icon-exclamation-sign"></i>&nbsp;{{ form.request_text.label.text}}</small></h1>
+                                        <h1><small>{{ form.request_text.label.text}}</small></h1>
                                         <div>
-											{{ form.request_text(rows="3", class="input-block-level", placeholder="Describe your request. Be as specific as possible.") }}
+											{{ form.request_text(rows="3", class="input-block-level", placeholder="Describe the request. Be as specific as possible.") }}
 											{{ help("requestTextPopover-content", "Enter records request") }}
                                         </div>
                                     </div>
@@ -60,35 +60,29 @@
                                     </div>
                                     <!-- upload a record -->
                                     <!-- name of record -->
+                                    <!-- upload a record -->
+                                    <!-- name of record -->
                                     <div class="control-group">
                                         <h1><small>Attach documentation</small></h1>
-                                            <!-- upload a record -->
                                             {{ form.request_attachment_description.label.text }}
                                             <textarea class="input-xxlarge" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of the record" required /></textarea>
-
-                                            {{ form.request_attachment.label.text }}
-
-                                           <div class="fileupload fileupload-new" data-provides="fileupload">
-                                               <div class="input-append">
-                                               <!-- <div class="uneditable-input">
-                                                   <i class="icon-file fileupload-exists"></i>
-                                                   <span class="fileupload-preview" />
-                                                   </div> -->
-                                               <span class="btn btn-file">
-                                                   <span class="fileupload-new">Select file</span>
-                                                   <span class="fileupload-exists">Change</span>
-                                                   <input type="file" name="record" />
-                                               </span>
-                                               <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                                               </div>
-                                          </div>
-
                                     </div>
-
-                                    <div class="control-group">
-										<h1><small>{{ form.request_agency.label.text}} </small></h1>
-										{{ form.request_agency(class="input-block-level") }}
-                                    </div>
+                                   <!-- upload a record -->
+                                       {{ form.request_attachment.label.text }}
+                                       <div class="fileupload fileupload-new" data-provides="fileupload">
+                                           <div class="input-append">
+                                           <!-- <div class="uneditable-input">
+                                               <i class="icon-file fileupload-exists"></i>
+                                               <span class="fileupload-preview" />
+                                               </div> -->
+                                           <span class="btn btn-file">
+                                               <span class="fileupload-new">Select file</span>
+                                               <span class="fileupload-exists">Change</span>
+                                               <input type="file" name="record" />
+                                           </span>
+                                           <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                                           </div>
+                                      </div>
                                     <div class="control-group">
 										<h1><small>{{ form.request_first_name.label.text }}</small></h1>
                                         <div class="spacer">
@@ -169,26 +163,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="span4">
-                    <div class="row-fluid">
-						{% block sidebar %}
-                            <div class="well r_sidebar hidden-phone">
-                                <h4>Example</h4>
-                                <!-- needs to be hooked up to prr_help.json PLEASE DELETE THIS COMMENT WHEN DONE -->
-                                <p class="example">I need a copy of the Mayor’s emails sent to the Department of Transportation between July 30, 2013 and August 8, 2013.</p><p class="example">The emails should contain the words “bridge project” or “bridge development”.</p>
-                                <h4>Tips</h4>
-                                <ul>
-                                    <li>Don't reveal personal information, like your social security number or home address.</li>
-                                    <li>Limit your request by a date range.</li>
-                                    <li>Provide the name of the record or take a guess.</li>
-                                    <li>If you don't know the name of the record, describe the information you believe is contained in it.</li>
-                                </ul>
-                            </div>
-						{% endblock sidebar %}
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
