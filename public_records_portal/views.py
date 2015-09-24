@@ -143,9 +143,6 @@ def new_request(passed_recaptcha=False, data=None):
             address_valid = (
                 street_valid and city_valid and state_valid and zip_valid)
 
-            if app.config['ENVIRONMENT'] != 'LOCAL':
-                recaptcha_valid = (request_recaptcha != False)
-
             if not (email_valid or phone_valid or fax_valid or address_valid):
                 errors.append(
                     "Please enter at least one type of contact information")
