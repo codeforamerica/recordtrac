@@ -6,7 +6,7 @@
 </div>
 
 <!-- Acknowledge a request -->
-{% if current_user.is_authenticated() and req.solid_status() == 'open' %}
+{% if current_user.is_authenticated and req.solid_status() == 'open' %}
     <div class="r_sidebar_banner hidden-phone hidden-tablet">
         <form name="note" class="form-horizontal" id="note" method="post" action="/update_a_request_acknowledge">
             <input type="hidden" name="request_id" value="{{ req.id }}"/>
@@ -32,7 +32,7 @@
     </div>
 {% endif %}
 
-{% if current_user.is_authenticated() and status == 'closed' %}
+{% if current_user.is_authenticated and status == 'closed' %}
     <div class="r_sidebar_banner hidden-phone hidden-tablet">
         <form name="reopen_request" class="form-inline" id="question" method="post" action="/update_a_request_reopen">
             <input type="hidden" name="request_id" value="{{ req.id }}"/>

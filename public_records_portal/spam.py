@@ -13,7 +13,7 @@ import akismet
 
 
 def check_for_spam():
-    if current_user.is_authenticated():  # Spam filter is currently implemented to prevent bot spamming, so if someone is logged in they have already verified they are human
+    if current_user.is_authenticated:  # Spam filter is currently implemented to prevent bot spamming, so if someone is logged in they have already verified they are human
         return False
     if app.config[
         'ENVIRONMENT'] == 'PRODUCTION':  # This only needs to work in production, unless a local config variable is set to indicate otherwise

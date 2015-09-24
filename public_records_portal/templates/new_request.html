@@ -13,8 +13,6 @@
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/new_request.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-fileupload.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-
 {% endblock custom_css_links %}
 {% block container %}
 
@@ -30,17 +28,6 @@
                 you about how much time is required to respond to your request.</p>
         </div>
 
-        <div class="span4">
-            <div class="form-nav">
-                <div class="active" id="s1">
-                    <h4><a>Step 1</a></h4>
-                </div>
-                <div id="s2">
-                    <h4><a>Step 2</a></h4>
-                </div>
-            </div>
-        </div>
-
         <form name="newrequest" class="form-horizontal" id="submitRequest" method="post" action="/new"
               autocomplete="off" novalidate="novalidate" enctype="multipart/form-data">
             <div class="row-fluid">
@@ -49,15 +36,15 @@
                         <fieldset>
                             <div class="control-group">
                                 <h2>
-                                    <small>Category*</small>
+                                    <small id='categoryTitle' title='Category is Required' >Category*</small>
                                 </h2>
-                                {{ form.request_category(id="category", class="combobox") }}
+                                {{ form.request_category(class="input-block-level") }}
                             </div>
                             <div class="control-group">
                                 <h2>
                                     <small>What agency has the records you want?*</small>
                                 </h2>
-                                {{ form.request_agency(id="agency", class="combobox") }}
+                                {{ form.request_agency(class="input-block-level") }}
                             </div>
 
                             <div class="control-group">
@@ -69,6 +56,9 @@
                             </div>
                         </fieldset>
                         <div id="button1" class="btn btn-primary btn-large input-block-level">Next</div>
+                        <div class="form-nav">
+                            <p>Step 1 of 2</p>
+                        </div>
                     </div>
                     <div class="span4">
                         <div class="sideblock">
@@ -78,8 +68,6 @@
                         </div>
                         <h5>Note: The agency, category, and topic of your request will be visible to the public. Do not
                             enter personal information here.</h5>
-
-                        <p>* indicates required field</p>
                     </div>
                 </div>
             </div>
@@ -90,7 +78,7 @@
                             <div class="span8">
                                 <div class="control-group">
                                     <h2>
-                                        <lead>Details about your records request</lead>
+                                        <lead id='detailsTitle' title='Details are Required'>Details about your records request</lead>
                                     </h2>
                                     <textarea rows="8" , id="request_text" , class="input-block-level"
                                               placeholder="Provide more information about your request to help the City locate the record. If don’t know the record name, describe type of information you think it would contain and the approximate date range. Do not include private info – such as social security # or credit card."
@@ -107,8 +95,6 @@
                                         between July 27, 2015 and September 10, 2015</p>
                                 </div>
                                 <h5>Note: The details of your request will not be visible to the public.</h5>
-
-                                <p>* indicates required field</p>
                             </div>
                         </div>
                         <div class="row-fluid">
@@ -125,29 +111,28 @@
                                         <h2>
                                             <small>{{ form.request_first_name.label.text }}</small>
                                         </h2>
-
-                                        <input class="input-block-level" id="request_first_name" type="text" placeholder="John"/>
+                                        <input  id="request_first_name" class="input-block-level" type="text" placeholder="John"/>
                                     </div>
                                     <div class="control-group span6">
                                         <h2>
                                             <small>Last Name*</small>
                                         </h2>
-                                        <input class="input-block-level" id="request_last_name" type="text" placeholder="Doe"/>
+                                        <input id="request_last_name" class="input-block-level" type="text" placeholder="Doe"/>
                                     </div>
                                 </div>
                                 <div class="control-group">
                                     <h2>
                                         <small>Role/Title</small>
                                     </h2>
-                                    <input class="input-block-level" id="request_role" type="text"
+                                    <input class="input-block-level" type="text"
                                            placeholder="Your role in your organization (if applicable)"/>
                                 </div>
                                 <div class="control-group">
                                     <h2>
                                         <small>Organization</small>
                                     </h2>
-                                    <input class="input-block-level" id="request_organization" type="text"
-                                           placeholder="Your organization (if applicable)" id="request_organization"/>
+                                    <input class="input-block-level" type="text"
+                                           placeholder="Your organization (if applicable)"/>
                                 </div>
 
                                 <h2>
@@ -160,97 +145,45 @@
                                     <h2>
                                         <small>Email Address</small>
                                     </h2>
-                                    <input class="input-block-level" id="request_email" type="email"
+                                    <input class="input-block-level" , type="email" ,
                                            placeholder="requester@email.com"/>
 
                                     <h2>
                                         <small>Phone Number</small>
                                     </h2>
-                                    <input class="input-block-level" id="request_phone" type="tel" placeholder="(555) 555-5555"/>
+                                    <input class="input-block-level" type="tel" placeholder="(555) 555-5555"/>
 
                                     <h2>
                                         <small>Fax Number</small>
                                     </h2>
                                     <div class="spacer spacer_phone" style="background-color: #FFFFFF;">
-                                        <input class="input-block-level" id="request_fax" type="tel" placeholder="(555) 555-5555"/>
+                                        <input class="input-block-level" type="tel" placeholder="(555) 555-5555"/>
                                     </div>
                                     <h2>
                                         <small>Address</small>
                                     </h2>
                                     <small>Address Line 1</small>
-                                    <input class="input-block-level" id="request_address1" type="text" placeholder="123 Main Street"/>
+                                    <input class="input-block-level" type="text" placeholder="123 Main Street"/>
                                     <small>Address Line 2</small>
-                                    <input class="input-block-level" id="request_address2" type="text" placeholder="Apartment 3D"/>
+                                    <input class="input-block-level" type="text" placeholder="Apartment 3D"/>
 
                                     <div class="row-fluid">
                                         <div class="span5">
                                             <small>City</small>
                                             <div class="spacer">
-                                                <input class="input-block-level" id="request_city" type="text" placeholder="New York"/>
+                                                <input class="input-block-level" type="text" placeholder="New York"/>
                                             </div>
                                         </div>
                                         <div class="span4">
                                             <small>State</small>
                                             <div class="spacer">
-                                                <select class="combobox" id="request_state">
-                                                    <option value="AL">Alabama</option>
-                                                    <option value="AK">Alaska</option>
-                                                    <option value="AZ">Arizona</option>
-                                                    <option value="AR">Arkansas</option>
-                                                    <option value="CA">California</option>
-                                                    <option value="CO">Colorado</option>
-                                                    <option value="CT">Connecticut</option>
-                                                    <option value="DE">Delaware</option>
-                                                    <option value="DC">District Of Columbia</option>
-                                                    <option value="FL">Florida</option>
-                                                    <option value="GA">Georgia</option>
-                                                    <option value="HI">Hawaii</option>
-                                                    <option value="ID">Idaho</option>
-                                                    <option value="IL">Illinois</option>
-                                                    <option value="IN">Indiana</option>
-                                                    <option value="IA">Iowa</option>
-                                                    <option value="KS">Kansas</option>
-                                                    <option value="KY">Kentucky</option>
-                                                    <option value="LA">Louisiana</option>
-                                                    <option value="ME">Maine</option>
-                                                    <option value="MD">Maryland</option>
-                                                    <option value="MA">Massachusetts</option>
-                                                    <option value="MI">Michigan</option>
-                                                    <option value="MN">Minnesota</option>
-                                                    <option value="MS">Mississippi</option>
-                                                    <option value="MO">Missouri</option>
-                                                    <option value="MT">Montana</option>
-                                                    <option value="NE">Nebraska</option>
-                                                    <option value="NV">Nevada</option>
-                                                    <option value="NH">New Hampshire</option>
-                                                    <option value="NJ">New Jersey</option>
-                                                    <option value="NM">New Mexico</option>
-                                                    <option value="NY">New York</option>
-                                                    <option value="NC">North Carolina</option>
-                                                    <option value="ND">North Dakota</option>
-                                                    <option value="OH">Ohio</option>
-                                                    <option value="OK">Oklahoma</option>
-                                                    <option value="OR">Oregon</option>
-                                                    <option value="PA">Pennsylvania</option>
-                                                    <option value="RI">Rhode Island</option>
-                                                    <option value="SC">South Carolina</option>
-                                                    <option value="SD">South Dakota</option>
-                                                    <option value="TN">Tennessee</option>
-                                                    <option value="TX">Texas</option>
-                                                    <option value="UT">Utah</option>
-                                                    <option value="VT">Vermont</option>
-                                                    <option value="VA">Virginia</option>
-                                                    <option value="WA">Washington</option>
-                                                    <option value="WV">West Virginia</option>
-                                                    <option value="WI">Wisconsin</option>
-                                                    <option value="WY">Wyoming</option>
-                                                </select>
+                                                <input class="input-block-level combobox"/>
                                             </div>
                                         </div>
                                         <div class="span3">
                                             <small>Zip Code</small>
                                             <div class="spacer">
-                                                <input class="input-block-level" id="request_zip" type="text" placeholder="12345"/>
+                                                <input class="input-block-level" type="text" placeholder="12345"/>
                                             </div>
                                         </div>
                                     </div>
@@ -263,10 +196,11 @@
                                             class="btn btn-primary btn-large input-block-level">
                                         Submit request
                                     </button>
-                                    <div class="" id="back">
-                                        <i class="fa fa-chevron-circle-left"></i>
-                                        <p>Back</p>
-                                    </div>
+                                </div>
+                                <div class="form-nav">
+                                    <p>Step 2 of 2</p>
+
+                                    <p id="back" class="link">Back to Step 1</p>
                                 </div>
                             </div>
                         </div>
@@ -299,131 +233,6 @@
         </script>
     {% endif %}
 
-    <script type="text/javascript"
-            src="{{ url_for('static', filename='js/plugins/jquery.placeholder.min.js') }}"></script>
-
-    <script type="text/javascript">
-        $(function () {
-            // Invoke the plugin
-            $('input, textarea').placeholder({customClass: 'placeholder'});
-        });
-    </script>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#step1').fadeIn('fast');
-
-            $('#button1').click(function () {
-
-                // validation
-
-                if( !$('#agency').val() || !$('#request_summary').val() ) {
-                    alert("All indicated information is required. Please complete all fields");
-                    exit();
-                }
-
-                // scroll to the top of the form if touch device
-
-                if (Modernizr.touch) { 
-                    $('html, body').animate({
-                        scrollTop: $("#submitRequest").offset().top
-                    }, 500);
-                } else { 
-                    // don't scroll to the top
-                }
-
-                // fade out step1, fade in step2
-                $('#step1').fadeOut('fast', function () {
-                });
-                $( "#s1" ).removeClass( "active" );
-                $( "#s2" ).addClass( "active" );
-                $('#step2').fadeIn('slow', function () {
-                });
-            });
-
-            $('#button2').click(function () {
-
-                // validation
-
-                if ((document.newrequest.field.value == "")
-                        || (document.newrequest.field.value == "")
-                        || (document.newrequest.field.value == "")
-
-
-                ) {
-                    alert("All  indicated information is required. Please complete all fields");
-                    exit();
-                }
-
-            });
-
-            $('#back').click(function () {
-                // scroll to the top of the form
-                if (Modernizr.touch) { 
-                    $('html, body').animate({
-                        scrollTop: $("#submitRequest").offset().top
-                    }, 500);
-                } else { 
-                    // don't scroll to the top
-                }
-
-                // fade out step1, fade in step2
-                $('#step2').fadeOut('fast', function () {
-                });
-                $( "#s2" ).removeClass( "active" );
-                $( "#s1" ).addClass( "active" );
-                $('#step1').fadeIn('slow', function () {
-                });
-            });
-
-            $('#s1 a').click(function () {
-                // when step one is clicked, go to step 1
-
-                if (Modernizr.touch) { 
-                    $('html, body').animate({
-                        scrollTop: $("#submitRequest").offset().top
-                    }, 500);
-                } else { 
-                    // don't scroll to the top
-                }
-
-
-                $('#step2').fadeOut('fast', function () {
-                });
-                $( "#s2" ).removeClass( "active" );
-                $( "#s1" ).addClass( "active" );
-                $('#step1').fadeIn('slow', function () {
-                });
-            });
-
-            $('#s2 a').click(function () {
-                // when step two is clicked, go to step 1
-
-                // validation
-
-                if( !$('#agency').val() || !$('#request_summary').val() ) {
-                    alert("All indicated information is required. Please complete all fields");
-                    exit();
-                }
-
-                if (Modernizr.touch) { 
-                    $('html, body').animate({
-                        scrollTop: $("#submitRequest").offset().top
-                    }, 500);
-                } else { 
-                    // don't scroll to the top
-                }
-
-                $('#step1').fadeOut('fast', function () {
-                });
-                $( "#s1" ).removeClass( "active" );
-                $( "#s2" ).addClass( "active" );
-                $('#step2').fadeIn('slow', function () {
-                });
-            });
-
-        });
-    </script>
-
-    <script type="text/javascript" src="{{ url_for('static', filename='js/localstorage.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/newrequestform.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/validate.js') }}"></script>
 {% endblock custom_script_links %}

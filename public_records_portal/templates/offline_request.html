@@ -62,28 +62,32 @@
                                     <!-- name of record -->
                                     <div class="control-group">
                                         <h1><small>Attach documentation</small></h1>
-                                            {{ form.record_description.label.text }}
+                                            <!-- upload a record -->
+                                            {{ form.request_attachment_description.label.text }}
                                             <textarea class="input-xxlarge" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of the record" required /></textarea>
+
+                                            {{ form.request_attachment.label.text }}
+
+                                           <div class="fileupload fileupload-new" data-provides="fileupload">
+                                               <div class="input-append">
+                                               <!-- <div class="uneditable-input">
+                                                   <i class="icon-file fileupload-exists"></i>
+                                                   <span class="fileupload-preview" />
+                                                   </div> -->
+                                               <span class="btn btn-file">
+                                                   <span class="fileupload-new">Select file</span>
+                                                   <span class="fileupload-exists">Change</span>
+                                                   <input type="file" name="record" />
+                                               </span>
+                                               <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                                               </div>
+                                          </div>
+
                                     </div>
-                                   <!-- upload a record -->
-                                       {{ form.record.label.text }}
-                                       <div class="fileupload fileupload-new" data-provides="fileupload">
-                                           <div class="input-append">
-                                           <!-- <div class="uneditable-input">
-                                               <i class="icon-file fileupload-exists"></i>
-                                               <span class="fileupload-preview" />
-                                               </div> -->
-                                           <span class="btn btn-file">
-                                               <span class="fileupload-new">Select file</span>
-                                               <span class="fileupload-exists">Change</span>
-                                               <input type="file" name="record" />
-                                           </span>
-                                           <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                                           </div>
-                                      </div>
+
                                     <div class="control-group">
-										<h1><small>{{ form.request_department.label.text}}</small></h1>
-										{{ form.request_department(class="input-block-level") }}
+										<h1><small>{{ form.request_agency.label.text}} </small></h1>
+										{{ form.request_agency(class="input-block-level") }}
                                     </div>
                                     <div class="control-group">
 										<h1><small>{{ form.request_first_name.label.text }}</small></h1>

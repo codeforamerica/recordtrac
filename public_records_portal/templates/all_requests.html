@@ -55,7 +55,7 @@
               </script>
               <div id="requester_name_container"></div>
               <script type="text/template" id="requester_name_template">
-              {% if current_user.is_authenticated() %}
+              {% if current_user.is_authenticated %}
                 <h5>Requester name</h5>
                 <div class="indent">
                   <input id="requester_name" class="input-block-level" type="search" placeholder="Enter name" value="<%- requester_name %>">
@@ -65,7 +65,7 @@
               <div id="sidebar_container"></div>
               <script type="text/template" id="sidebar_template">
               <h4 class="underline">ADVANCED FILTER</h4>
-              {% if current_user.is_authenticated() %}
+              {% if current_user.is_authenticated %}
                 <h5>My Requests</h5>
                 <div class="indent">
                   <label class="checkbox">
@@ -98,7 +98,7 @@
                   <% } %> >
                   <em class="open_style">Open</em>
                 </label>
-                {% if current_user.is_authenticated() %}
+                {% if current_user.is_authenticated %}
                   <label class="checkbox">
                     <input type="checkbox"
                     id="due_soon"
@@ -127,7 +127,7 @@
               </div>
               </script>
               <div id="date_received_container"></div>
-              {% if current_user.is_authenticated() %}
+              {% if current_user.is_authenticated %}
                 <div id="due_date_container"></div>
               {% endif %}
               <script type="text/template" id="date_filter_template">
@@ -162,7 +162,7 @@
               </div>
               </script>
             </div>
-            {% if current_user.is_authenticated() %}
+            {% if current_user.is_authenticated %}
               <div class="row-fluid">
                 <p class="text-center" style="padding-top: 2em;">
                   <a href="/export"> <i class="icon-download"></i> Export data</a>
@@ -180,13 +180,11 @@
                 <th id="date_received" class="sortable" >Received</th>
                 <th id="text" class="sortable" >Request</th>
                   <th>Agency</th>
-                {% if current_user.is_authenticated()  %}
+                {% if current_user.is_authenticated  %}
                   <th >Point of Contact</th>
                 {% endif %}
                 <th id="due_date" class="sortable"  >Due</th>
-                {% if current_user.is_authenticated() %}
-                  <th >Requester</th>
-                {% endif %}
+
               </tr>
             </thead>
             <tbody>
@@ -201,7 +199,7 @@
                 <td ><%- request.id %></td>
                 <td ><%- request.date_received %></td>
                 <td >
-                  {% if current_user.is_authenticated() %}
+                  {% if current_user.is_authenticated %}
                     <a href="/city/request/<%= request.id %>">
                     {% else %}
                       <a href="/request/<%= request.id %>">
@@ -220,7 +218,7 @@
                     </a>
                   </td>
                   <td ><%- request.department %></td>
-                  {% if current_user.is_authenticated() %}
+                  {% if current_user.is_authenticated %}
 
                   <td ><%- request.contact_name %></td>
                     <td ><%- request.due_date %></td>
