@@ -108,7 +108,7 @@
                     <input class="span12" name="requester_name" type="search" placeholder="Enter name" value="{{requester_name or ''}}">
                   </div>
                 {% endif %}
-                {% if current_user.is_anonymous() or (current_user.is_authenticated and current_user.show_department_filters()) %}
+                {% if current_user.is_anonymous or (current_user.is_authenticated and current_user.show_department_filters()) %}
                   <h5>Department</h5>
                   <div class="control-group">
                     <select name="departments_selected" class="selectpicker span12" multiple data-selected-text-format="count" data-size="5">
