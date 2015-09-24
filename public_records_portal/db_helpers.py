@@ -439,9 +439,10 @@ def change_request_status(request_id, status):
     app.logger.info("\n\nChanged status for request: %s to %s" %
                     (request_id, status))
 
+    date_created = req.date_received or req.date_created
     if "days" in status:
             days_to_fulfill = re.findall(r"(\d{2}) days",status)[0]
-            req.due_date = cal.addbusdays(self.date_created, int(days_to_fulfill))
+            req.due_date = cal.addbusdays(date_created, int(days_to_fulfill))
 
     db.session.commit()
 
