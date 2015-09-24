@@ -122,7 +122,7 @@ class OfflineRequestForm(Form):
         Length(1, 5000,
                'The detailed description of this request must be less than '
                '5000 characters')])
-    request_attachment_description = StringField(u'Description of Attachment')
+    request_attachment_description = TextAreaField(u'Description of Attachment', validators=[Length(1,5000,'less than 5000 characters')])
     request_attachment = FileField(u'Upload attachment')
     request_format = SelectField(u'Format Received*', choices=formats,
                                  validators=[

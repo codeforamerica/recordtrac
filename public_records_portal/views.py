@@ -54,7 +54,8 @@ def new_request(passed_recaptcha=False, data=None):
         if current_user.is_authenticated:
             form = OfflineRequestForm(request.form)
             request_category = form.request_category.data
-            request_agency = form.request_agency.data
+            request_agency = current_user.current_department.name
+            print request_agency
             request_summary = form.request_summary.data
             request_text = form.request_text.data
             request_attachment_description = form.request_attachment_description.data
@@ -72,14 +73,12 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_city = form.request_address_city.data
             request_address_state = form.request_address_state.data
             request_address_zip = form.request_address_zip.data
+            print "asdasd" + request_attachment_description
+            print "asdasd" + request_attachment
 
             # Check Category
             if not (request_category and request_category.strip()):
                 errors.append('You must select a category for this request')
-
-            # Check Agency
-            if not (request_agency and request_agency.strip()):
-                errors.append('You must select an agency for this request')
 
             # Check Summary
             if not (request_summary and request_summary.strip()):
@@ -93,6 +92,7 @@ def new_request(passed_recaptcha=False, data=None):
                 app.logger.info("\n\nNo file passed in")
 
 
+            #Check Attachment
             if request_attachment_description and not (request_attachment):
                 errors.append('Please select a file to upload as attachment.')
 
@@ -118,8 +118,6 @@ def new_request(passed_recaptcha=False, data=None):
                     request_date = None
             else:
                 errors.append("Please use the datepicker to select a date.")
-            if not (request_agency and request_agency.strip()):
-                errors.append("Please select a agency.")
 
             if not (request_first_name and request_first_name.strip()):
                 errors.append("Please enter the requester's first name")
@@ -128,6 +126,7 @@ def new_request(passed_recaptcha=False, data=None):
             else:
                 alias = request_first_name + " " + request_last_name
 
+            zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
             email_valid = (request_email != '')
             phone_valid = (request_phone is not None)
             fax_valid = (request_fax is not None)
@@ -229,9 +228,9 @@ def new_request(passed_recaptcha=False, data=None):
                 errors.append('You must select an agency for this request')
 
             # Check Summary
-            if not (request_summary and request_summary.strip()):
+            if not (request_text and request_text.strip()):
                 errors.append('You must enter a summary for this request')
-            elif len(request_summary) > 250:
+            elif len(request_text) > 250:
                 errors.append('The request summary must be less than 250 characters')
 
             # Check attachment
