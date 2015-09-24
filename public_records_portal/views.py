@@ -1244,7 +1244,6 @@ def get_report_jsons(report_type,public_filter):
 
 
 @app.route("/report")
-@login_required
 def report():
     users=models.User.query.all()
     overdue_request=models.Request.query.filter(models.Request.overdue == True).all()
