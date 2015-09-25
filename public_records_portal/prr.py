@@ -207,9 +207,6 @@ def make_request(category=None, agency=None, summary=None, text=None, attachment
         if prr_email:
             assigned_to_email = prr_email
             assigned_to_reason = "PRR Liaison for %s" % agency
-        else:
-            app.logger.info("%s is not a valid department" % agency)
-            agency = None
     global currentRequestId
     currentRequestId = id_generator.next()
     id = "FOIL" + "-" + datetime.now().strftime("%Y") + "-" + agency_codes[

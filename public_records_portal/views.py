@@ -229,10 +229,14 @@ def new_request(passed_recaptcha=False, data=None):
 
             if not (request_summary and request_summary.strip()):
                 errors.append('You must enter a summary for this request')
-            elif len(request_text) > 250:
+            elif len(request_summary) > 250:
                 errors.append(
                     'The request summary must be less than 250 characters')
 
+            if not (request_text and request_text.strip()):
+                errors.append('You must provide some details about this request')
+            elif len(request_text) > 5000:
+                errors.append('Your description must be less than 5000 characters')
             # Check attachment
             # attachment = None
             # try:
@@ -308,10 +312,10 @@ def new_request(passed_recaptcha=False, data=None):
                     state=request_address_state,
                     zip=request_address_zip)
 
-            if not request_id:
-                errors.append(
-                    "Looks like your request is the same as /request/%s" % request_id)
-                return render_template('new_request.html', form=form,
+                if not request_id:
+                    errors.append(
+                        "Looks like your request is the same as /request/%s" % request_id)
+                    return render_template('new_request.html', form=form,
                                        routing_available=routing_available, departments=departments, errors=errors)
             print "submitted"
             return redirect(url_for('show_request_for_x', request_id=request_id,
@@ -708,6 +712,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
 
     results = results.limit(limit).offset(offset).all()
     requests = prepare_request_fields(results=results)
+    print requests
     if output_results_only == True:
         return requests, num_results, more_results, start_index, end_index
 
@@ -760,7 +765,7 @@ def prepare_request_fields(results):
     # else:
     return map(lambda r: {
         "id": r.id, \
-        "text": helpers.clean_text(r.text), \
+        "summary": helpers.clean_text(r.summary), \
         "date_received": helpers.date(r.date_received or r.date_created), \
         "department": r.department_name(), \
         "requester": r.requester_name(), \
