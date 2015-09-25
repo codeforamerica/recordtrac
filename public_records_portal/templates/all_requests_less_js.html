@@ -1,251 +1,285 @@
 {% extends "base.html" %}
 {% block title %}
-  {{ title }} &#45; RecordTrac
+    {{ title }} &#45; RecordTrac
 {% endblock title %}
 {% block custom_css_links %}
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/all_requests.css') }}">
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/all_requests_noresults.css') }}">
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.css')
-    }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui-1.10.4.custom.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/all_requests.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/all_requests_noresults.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.css') }}">
+    <link rel=stylesheet type=text/css
+          href="{{ url_for('static', filename='css/plugins/jquery-ui-1.10.4.custom.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui.css') }}">
-  {% endblock custom_css_links %}
-  {% block custom_script_links %}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-select.min.js') }}"></script>
+    <style type=text/css>
+        .clickable-row {
+            cursor: pointer;
+        }
+
+    </style>
+{% endblock custom_css_links %}
+{% block custom_script_links %}
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/plugins/bootstrap-select.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/custom.bootstrap-select.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-ui-1.10.4.custom.min.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/plugins/jquery-ui-1.10.4.custom.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/date_picker.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/all_requests.js') }}"></script>
-  {% endblock custom_script_links %}
-  {% block container %}
-    <div class="row-fluid" >
-      <div class="span12">
-        <div class="row-fluid">
-          <div id="exploreTitle" class="span8">
-            <h2>Explore <span class="badge">{{total_requests_count}}</span> requests and counting</h2>
-            <p class="intro_text">NYC Open Gov makes every public records request available to the public, including messages or documents uploaded by agency staff. By searching the reqeusts, you may find the information you are interested in, which will save time for you and for the {{config['AGENCY_NAME']}}</p>
+{% endblock custom_script_links %}
+{% block container %}
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="row-fluid">
+                <div id="exploreTitle" class="span8">
+                    <h2>Explore <span class="badge">{{ total_requests_count }}</span> requests and counting</h2>
 
-          </div>
-          <div class="span4">
-            <a href="/new" class="btn btn-primary btn-large pull-right">Request new record</a>
-          </div>
-        </div>
-        <form id ="all_requests_form" name="all_requests" action="/requests" method="GET">
-          <div class="row-fluid" style="padding-bottom: 5%;">
-            <div class="span4">
-              <div class="well well-small" style="padding-bottom: 3.5em;">
-                <h5>Search request text</h5>
-                <div>
-                  <input class="span12" name="search_term" type="search" value="{{search_term or ''}}" placeholder="I'd like to find...">
+                    <p class="intro_text">NYC Open Gov makes every public records request available to the public,
+                        including messages or documents uploaded by agency staff. By searching the reqeusts, you may
+                        find the information you are interested in, which will save time for you and for
+                        the {{ config['AGENCY_NAME'] }}</p>
+
                 </div>
-                <div class="row-fluid">
-                  <!-- <h4 class="underline">ADVANCED FILTER</h4> -->
-                  {% if current_user.is_authenticated %}
-                    <div class="span6">
-                      <h5>My requests</h5>
-                      <div class="indent">
-                        <label class="checkbox">
-                          <input type="checkbox" name="mine_as_poc" {% if mine_as_poc %} checked {% endif %} />
-                          <em>as Point of Contact</em>
-                        </label>
-                        <label class="checkbox">
-                          <input type="checkbox" name="mine_as_helper" {% if mine_as_helper %} checked {% endif %} />
-                          <em>as Helper</em>
-                        </label>
-                      </div>
-                    </div>
-                  {% endif %}
-                  <div class="span6">
-                    <h5>Status</h5>
-                    <div class="indent">
-                      <label class="checkbox">
-                        <input type="checkbox" name="is_open" {% if is_open %} checked {% endif %} />
-                        <em class="open_style">Open</em>
-                      </label>
-                      {% if current_user.is_authenticated %}
-                        <label class="checkbox">
-                          <input type="checkbox" name="due_soon" {% if due_soon %} checked {% endif %} />
-                          <em class="duesoon_style">Due Soon</em>
-                        </label>
-                        <label class="checkbox">
-                          <input type="checkbox" name="overdue" {% if overdue %} checked {% endif %} />
-                          <em class="overdue_style">Overdue</em>
-                        </label>
-                      {% endif %}
-                      <label class="checkbox">
-                        <input type="checkbox" name="is_closed" {% if is_closed %} checked {% endif %} />
-                        <em class="closed_style">Closed</em>
-                      </label>
-                    </div>
-                  </div>
+                <div class="span4">
+                    <a href="/new" class="btn btn-primary btn-large pull-right">Request new record</a>
                 </div>
-                <h5>Date received</h5>
-                <div class="control-group">
-                  <input type="date"
-                  name="min_date_received"
-                  value="{{ min_date_received }}"
-                  class="span12" >
-                  <input type="date"
-                  name="max_date_received"
-                  value="{{ max_date_received }}"
-                  class="span12" >
-                </div>
-                {% if current_user.is_authenticated %}
-                  <h5>Due date</h5>
-                  <div class="control-group">
-                    <input type="date"
-                    name="min_due_date"
-                    value="{{ min_due_date }}"
-                    class="span12" >
-                    <input type="date"
-                    name="max_due_date"
-                    value="{{ max_due_date }}"
-                    class="span12" >
-                  </div>
-                  <h5>Requester name</h5>
-                  <div>
-                    <input class="span12" name="requester_name" type="search" placeholder="Enter name" value="{{requester_name or ''}}">
-                  </div>
-                {% endif %}
-                {% if current_user.is_anonymous or (current_user.is_authenticated and current_user.show_department_filters()) %}
-                  <h5>Department</h5>
-                  <div class="control-group">
-                    <select name="departments_selected" class="selectpicker span12" multiple data-selected-text-format="count" data-size="5">
-                      {% for department in departments %}
-                        {% if departments_selected and department.name in departments_selected %}
-                          <option selected>{{department.name}}</option>
-                        {% else %}
-                          <option>{{department.name}}</option>
-                        {% endif %}
-                      {% endfor %}
-                    </select>
-                  </div>
-                  {% endif %}
-                <button class="btn btn-primary span12" style="margin-left: 0px;" type="submit" value="Submit">Find</button>
-              </div>
-              {% if current_user.is_authenticated %}
-                <div class="row-fluid">
-                  <p class="text-center">
-                    <a href="/export"> <i class="icon-download"></i> Export data</a>
-                  </p>
-                </div>
-              {% endif %}
             </div>
-            <div class="span7">
-              <table id="requests">
-                <thead id="headings">
-                  <tr>
-                    <th class="status"></th>
-                    <th>
-                      <button class="btn btn-link sortable" type="submit" onclick="return insertInput('id');">#</button>
-                    </th>
-                    <th>
-                      <button class="btn btn-link sortable" type="submit" onclick="return insertInput('date_received');">Received</button>
-                    </th>
-                    <th>
-                      <button class="btn btn-link sortable" type="submit" onclick="return insertInput('text');">Request</button>
-                    </th>
-                    <th>Department</th>
-                    <th>Point of Contact</th>
-                    <th>
-                      <button class="btn btn-link sortable" type="submit" onclick="return insertInput('due_date');">Due</button>
-                    </th>
-                    <th>Requester</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for request in requests %}
-                    <tr>
-                      <td class="status {{request.solid_status}}">
-                        {% if request.solid_status == "closed"  %}
-                          <i class="icon-archive icon-light"></i>
+            <form id="all_requests_form" name="all_requests" action="/requests" method="GET">
+                <div class="row-fluid" style="padding-bottom: 5%;">
+                    <div class="span4">
+                        <div class="well well-small" style="padding-bottom: 6em;">
+                            <h5>Search request text</h5>
+                            <div>
+                                <input class="span12" name="search_term" type="search" value="{{ search_term or '' }}"
+                                       placeholder="I'd like to find...">
+                            </div>
+                            <div class="row-fluid">
+                                <!-- <h4 class="underline">ADVANCED FILTER</h4> -->
+                                {% if current_user.is_authenticated %}
+                                    <div class="span6">
+                                        <h5>My requests</h5>
+                                        <div class="indent">
+                                            <label class="checkbox">
+                                                <input type="checkbox" ID="checkbox" name="mine_as_poc" {% if mine_as_poc %}
+                                                       checked {% endif %} />
+                                                <em>&nbsp as Point of Contact</em>
+                                                <br><br>
+                                            </label>
+                                            <label class="checkbox">
+                                                <input type="checkbox" ID="checkbox" name="mine_as_helper" {% if mine_as_helper %}
+                                                       checked {% endif %} />
+                                                <em>&nbsp as Helper</em>
+                                            </label>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                <div class="span6">
+                                    <h5>Status</h5>
+
+                                    <div class="indent">
+                                        <label class="checkbox">
+                                            <input type="checkbox" ID="checkbox" name="is_open" {% if is_open %}checked {% endif %}/>
+                                            <em class="open_style">Open</em>
+                                        </label>
+                                        {% if current_user.is_authenticated %}
+                                            <label class="checkbox">
+                                                <input type="checkbox" ID="checkbox"  name="due_soon" {% if due_soon %}
+                                                       checked {% endif %} />
+                                                <em class="duesoon_style">Due Soon</em>
+                                            </label>
+                                            <label class="checkbox">
+                                                <input type="checkbox" ID="checkbox" name="overdue" {% if overdue %}
+                                                       checked {% endif %} />
+                                                <em class="overdue_style">Overdue</em>
+                                            </label>
+                                        {% endif %}
+                                        <label class="checkbox">
+                                            <input type="checkbox" ID="checkbox"  name="is_closed" {% if is_closed %}
+                                                   checked {% endif %} />
+                                            <em class="closed_style">Closed</em>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <h5>Date received</h5>
+
+                            <div class="control-group">
+                                <input type="date"
+                                       name="min_date_received"
+                                       value="{{ min_date_received }}"
+                                       class="span12">
+                                <input type="date"
+                                       name="max_date_received"
+                                       value="{{ max_date_received }}"
+                                       class="span12">
+                            </div>
+                            {% if current_user.is_authenticated %}
+                                <h5>Due date</h5>
+                                <div class="control-group">
+                                    <input type="date"
+                                           name="min_due_date"
+                                           value="{{ min_due_date }}"
+                                           class="span12">
+                                    <input type="date"
+                                           name="max_due_date"
+                                           value="{{ max_due_date }}"
+                                           class="span12">
+                                </div>
+                                <h5>Requester name</h5>
+                                <div>
+                                    <input class="span12" name="requester_name" type="search" placeholder="Enter name"
+                                           value="{{ requester_name or '' }}">
+                                </div>
+                            {% endif %}
+                            {% if current_user.is_anonymous or (current_user.is_authenticated and current_user.show_department_filters()) %}
+                                <h5>Agency Name</h5>
+                                <div class="control-group">
+                                    <select name="departments_selected" class="selectpicker span12">
+                                        {% for department in departments %}
+                                            {% if departments_selected and department.name in departments_selected %}
+                                                <option selected>{{ department.name }}</option>
+                                            {% else %}
+                                                <option>{{ department.name }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            {% endif %}
+                            <button class="btn btn-primary span12" style="margin-left: 0px;" type="submit"
+                                    value="Submit">Find
+                            </button>
+                        </div>
+                        {% if current_user.is_authenticated %}
+                            <div class="row-fluid">
+                                <p class="text-center">
+                                    <a href="/export"> <i class="icon-download"></i> Export data</a>
+                                </p>
+                            </div>
                         {% endif %}
-                      </td>
-                      <td>{{request.id}}</td>
-                      <td>{{request.date_received}}</td>
-                      <td>
-                          {% if current_user.is_authenticated %}
-                            <a href="/city/request/{{request.id}}">
-                          {% else %}
-                            <a href="/request/{{request.id}}">
-                          {% endif %}
-                          {% set text = request.text %}
-                          {% if request.solid_status == "due soon" %}
-                            <span style = "background-color: #FB991B" class="label label-warning">due soon</span>
-                            {% elif request.solid_status == "overdue" %}
-                            <span style = "background-color: #CA1A1A" class="label label-important">overdue</span>
-                          {% endif %}
-                          {% if request.privacy == 1 or request.privacy == 2 or current_user.is_authenticated %}
-                            {{ text }}
-                          {% else %}
-                            Private Request
-                          {% endif %}
-                        </a>
-                        </td>
-                        <td>{{request.department}}</td>
-                        <td>{{request.contact_name}}</td>
-                        <td>{{request.due_date }}</td>
-                        {% if request.privacy == 1 or request.privacy == 4 %}
-                          <td>{{request.requester}}</td>
-                        {% else %}
-                          <td>&nbsp;</td>
-                        {% endif %}
-                      </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-                <div class="pull-left pagination">
-                  <ul>
-                    {% if page_number > 1 %}
-                      <button class="btn btn-small" type="submit" onclick="return pageNumber(-1);">Previous</button>
-                    {% endif %}
-                    <li>Showing {{ start_index }} to {{ end_index }} of {{ num_results }} entries</li>
-                    {% if more_results %}
-                      <button class="btn btn-small" type="submit" onclick="return pageNumber(1);">Next</button>
-                    {% endif %}
-                  </ul>
+                    </div>
+                    <div class="span7">
+                        <table id="requests">
+                            <thead id="headings">
+                            <tr>
+                                <th class="status"></th>
+                                <th>
+                                    <button class="btn btn-link sortable" type="submit"
+                                            onclick="return insertInput('id');">#
+                                    </button>
+                                </th>
+                                <th>
+                                    <button class="btn btn-link sortable" type="submit"
+                                            onclick="return insertInput('date_received');">Received
+                                    </button>
+                                </th>
+                                <th>
+                                    <button class="btn btn-link sortable" type="submit"
+                                            onclick="return insertInput('text');">Request
+                                    </button>
+                                </th>
+                                <th>Assigned Agency</th>
+                                <th>Point of Contact</th>
+                                <th>
+                                    <button class="btn btn-link sortable" type="submit"
+                                            onclick="return insertInput('due_date');">Due
+                                    </button>
+                                </th>
+                                <th>Requester</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for request in requests %}
+                                {% if current_user.is_authenticated %}
+                                    <tr class="clickable-row"
+                                        onclick="window.location='/city/request/{{ request.id }}'">
+                                        {% else %}
+                                    <tr class="clickable-row" onclick="window.location='/request/{{ request.id }}'">
+                                {% endif %}
+                            <td class="status {{ request.solid_status }}">
+                                {% if request.solid_status == "closed" %}
+                                    <i class="icon-archive icon-light"></i>
+                                {% endif %}
+                            </td>
+                            <td>{{ request.id }}</td>
+                            <td>{{ request.date_received }}</td>
+                            <td>
+                                {% if current_user.is_authenticated %}
+                                    <a href="/city/request/{{ request.id }}">
+                                {% else %}
+                                    <a href="/request/{{ request.id }}">
+                                {% endif %}
+                                {% set text = request.summary %}
+                                {% if request.solid_status == "due soon" %}
+                                    <span style="background-color: #FB991B" class="label label-warning">due soon</span>
+                                {% elif request.solid_status == "overdue" %}
+                                    <span style="background-color: #CA1A1A" class="label label-important">overdue</span>
+                                {% endif %}
+                                {{ summary }}
+                                </a>
+                            </td>
+                            <td>{{ request.department }}</td>
+                            <td>{{ request.contact_name }}</td>
+                            <td>{{ request.due_date }}</td>
+                            {% if request.privacy == 1 or request.privacy == 4 %}
+                                <td>{{ request.requester }}</td>
+                            {% else %}
+                                <td>&nbsp;</td>
+                            {% endif %}
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="pull-left pagination">
+                            <ul>
+                                {% if page_number > 1 %}
+                                    <button class="btn btn-small" type="submit" onclick="return pageNumber(-1);">
+                                        Previous
+                                    </button>
+                                {% endif %}
+                                <li>Showing {{ start_index }} to {{ end_index }} of {{ num_results }} entries</li>
+                                {% if more_results %}
+                                    <button class="btn btn-small" type="submit" onclick="return pageNumber(1);">Next
+                                    </button>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-          </form>
+            </form>
         </div>
-      </div>
-      <script type="text/javascript">
-      var sort_direction = '{{sort_direction|safe}}';
-      var sort_column = '{{sort_column|safe }}';
-      var page_number = {{page_number|safe}};
-      function insertInput(inputValue)
-      {
-      if (inputValue == sort_column) {
-      if (sort_direction == 'asc') {
-      sort_direction = 'desc';
-      }
-      else {
-      sort_direction = 'asc';
-      }
-      hiddenInput = document.createElement('input');
-      hiddenInput.type = 'hidden';
-      hiddenInput.name = 'sort_direction';
-      hiddenInput.value = sort_direction;
-      document.getElementById('all_requests_form').appendChild(hiddenInput);
-      }
-      hiddenInput = document.createElement('input');
-      hiddenInput.type = 'hidden';
-      hiddenInput.name = 'sort_column';
-      hiddenInput.value = inputValue;
-      document.getElementById('all_requests_form').appendChild(hiddenInput);
-      return true;
-      }
-      function pageNumber(numChange)
-      {
-      var new_num = page_number + numChange;
-      hiddenInput = document.createElement('input');
-      hiddenInput.type = 'hidden';
-      hiddenInput.name = 'page_number';
-      hiddenInput.value = new_num;
-      document.getElementById('all_requests_form').appendChild(hiddenInput);
-      return true;
-      }
-      </script>
-    {% endblock container %}
+    </div>
+    <script type="text/javascript">
+        var sort_direction = '{{sort_direction|safe}}';
+        var sort_column = '{{sort_column|safe }}';
+        var page_number = {{page_number|safe}};
+        function insertInput(inputValue) {
+            if (inputValue == sort_column) {
+                if (sort_direction == 'asc') {
+                    sort_direction = 'desc';
+                }
+                else {
+                    sort_direction = 'asc';
+                }
+                hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'sort_direction';
+                hiddenInput.value = sort_direction;
+                document.getElementById('all_requests_form').appendChild(hiddenInput);
+            }
+            hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'sort_column';
+            hiddenInput.value = inputValue;
+            document.getElementById('all_requests_form').appendChild(hiddenInput);
+            return true;
+        }
+        function pageNumber(numChange) {
+            var new_num = page_number + numChange;
+            hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'page_number';
+            hiddenInput.value = new_num;
+            document.getElementById('all_requests_form').appendChild(hiddenInput);
+            return true;
+        }
+    </script>
+{% endblock container %}
