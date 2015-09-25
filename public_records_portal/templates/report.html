@@ -70,7 +70,7 @@ rect:hover{
 		<div id="bar_chart"></div>
 		<br>
 		<button id="calendarYear" type="submit" class="btn btn-primary">Calendar Year</button>
-		<button id="fullYear" type="submit" class="btn btn-primary">Full Year</button>
+		<button id="fullYear" type="submit" class="btn btn-primary">Year to Date</button>
         <button id="rolling" type="submit" class="btn btn-primary">Rolling 365</button>
 		<h5>Department Filter</h5>
 		<select id="agency_filter" name="agency_filter">
@@ -82,6 +82,7 @@ rect:hover{
 			<option value="5">Department of Information Technology and Telecommunications</option>
 			<option value="5">Deputy Mayor</option>
 		</select>
+        {%  if current_user.is_authenticated %}
 		<h5>Staff Filter</h5>
 		<select id="staff_filter" name="staff_filter">
 			    <option value="0">None Selected</option>
@@ -90,6 +91,9 @@ rect:hover{
 				<option value="{{ user.id }}">{{ user.alias}}</option>
 				{% endfor %}
 		</select>
+        {% endif %}
+
+        <br />
 		
 		<script type="text/javascript">
 
