@@ -27,8 +27,6 @@ test = "[TEST] "
 if app.config['ENVIRONMENT'] == 'PRODUCTION':
     send_emails = True
     test = ""
-elif 'DEV_EMAIL' in app.config:
-    send_emails = True
 
 
 def generate_prr_emails(request_id, notification_type, user_id=None):
