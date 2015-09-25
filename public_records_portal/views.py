@@ -491,6 +491,25 @@ def add_a_resource(resource):
             return render_template('help_with_uploads.html', message=resource_id)
     return render_template('error.html', message="You can only update requests from a request page!")
 
+@app.route("/public_add_a_<string:resource>", methods = ["GET", "POST"])
+def public_add_a_resource(resource, passed_recaptcha = False, data = None):
+    if (data or request.method == 'POST') and ('note' in resource or 'subscriber' in resource):
+            if not data:
+                    data = request.form.copy()
+            if 'note' in resource:
+                if not passed_recaptcha and is_spam(comment = data['note_text'], user_ip = request.remote_addr, user_agent = request.headers.get('User-Agent')):
+                    return render_template('recaptcha_note.html', form = data, message = "Hmm, your note looks like spam. To submit your note, type the numbers or letters you see in the field below.")
+                resource_id = prr.add_note(request_id = data['request_id'], text = data['note_text'], passed_spam_filter = True)
+            else:
+                resource_id = prr.add_resource(resource = resource, request_body = data, current_user_id = None)
+            if type(resource_id) == int:
+                request_id = data['request_id']
+                audience = 'public'
+                if 'subscriber' in resource:
+                    audience = 'follower'
+                return redirect(url_for('show_request_for_x', audience=audience, request_id = request_id))
+    return render_template('error.html')
+
 
 @app.route("/update_a_<string:resource>", methods=["GET", "POST"])
 def update_a_resource(resource, passed_recaptcha=False, data=None):
