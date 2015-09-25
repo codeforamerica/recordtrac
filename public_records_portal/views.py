@@ -56,7 +56,6 @@ def new_request(passed_recaptcha=False, data=None):
             form = OfflineRequestForm(request.form)
             request_category = form.request_category.data
             request_agency = current_user.current_department.name
-            print request_agency
             request_summary = form.request_summary.data
             request_text = form.request_text.data
             request_attachment_description = form.request_attachment_description.data
@@ -75,8 +74,6 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_city = form.request_address_city.data
             request_address_state = form.request_address_state.data
             request_address_zip = form.request_address_zip.data
-            print "asdasd" + request_attachment_description
-            print "asdasd" + request_attachment
 
             # Check Category
             if not (request_category and request_category.strip()):
@@ -90,13 +87,13 @@ def new_request(passed_recaptcha=False, data=None):
                     'The request summary must be less than 250 characters')
 
             try:
-                attachment = request.files['request_attachment']
+                request_attachment = request.files['request_attachment']
             except:
                 app.logger.info("\n\nNo file passed in")
 
             # Check Attachment
-            if request_attachment_description and not (request_attachment):
-                errors.append('Please select a file to upload as attachment.')
+            # if request_attachment_description and not (request_attachment):
+            #     errors.append('Please select a file to upload as attachment.')
 
             if not (request_text and request_text.strip()):
                 errors.append('Please fill out the request description.')
@@ -233,18 +230,18 @@ def new_request(passed_recaptcha=False, data=None):
                 errors.append(
                     'The request summary must be less than 250 characters')
 
-            # Check attachment
-            # attachment = None
-            # try:
-            #     attachment = request.files['request_attachment']
-            # except:
-            #     app.logger.info("\n\nNo file passed in")
+            #Check attachment
+            attachment = None
+            try:
+                attachment = request.files['request_attachment']
+            except:
+                app.logger.info("\n\nNo file passed in")
 
-            # if attachment and not(request_attachment_description):
-            #     errors.append('Please fill out the attachment description.')
+            if attachment and not(request_attachment_description):
+                errors.append('Please fill out the attachment description.')
 
-            # if request_attachment_description and not(attachment):
-            # errors.append('Please select a file to upload as attachment.')
+            if request_attachment_description and not(attachment):
+                errors.append('Please select a file to upload as attachment.')
 
             if not (request_agency and request_agency.strip()):
                 errors.append("Please select an agency.")
