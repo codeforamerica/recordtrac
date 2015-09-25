@@ -1048,7 +1048,7 @@ def login():
                 login_user(user_to_login)
                 redirect_url = get_redirect_target()
                 if 'login' in redirect_url or 'logout' in redirect_url:
-                    return redirect(url_for('index'))
+                    return redirect(url_for('display_all_requests'))
                 else:
                     if 'city' not in redirect_url:
                         redirect_url = redirect_url.replace("/request", "/city/request")
