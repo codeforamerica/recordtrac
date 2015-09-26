@@ -246,8 +246,8 @@ def new_request(passed_recaptcha=False, data=None):
             # if request_attachment_description and not(attachment):
             # errors.append('Please select a file to upload as attachment.')
 
-            if not (request_agency and request_agency.strip()):
-                errors.append("Please select an agency.")
+            # if not (request_agency and request_agency.strip()):
+            #     errors.append("Please select an agency.")
 
             if not (request_first_name and request_first_name.strip()):
                 errors.append("Please enter the requester's first name")
@@ -1048,7 +1048,7 @@ def login():
                 login_user(user_to_login)
                 redirect_url = get_redirect_target()
                 if 'login' in redirect_url or 'logout' in redirect_url:
-                    return redirect(url_for('index'))
+                    return redirect(url_for('display_all_requests'))
                 else:
                     if 'city' not in redirect_url:
                         redirect_url = redirect_url.replace("/request", "/city/request")

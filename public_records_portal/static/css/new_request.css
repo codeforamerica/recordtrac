@@ -76,3 +76,7 @@ line-height: 1.25;
 #requestButton {
 	margin-bottom: 20%;
 }
+
+.missing_field {
+	display: none;
+}

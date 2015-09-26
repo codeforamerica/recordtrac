@@ -1,6 +1,49 @@
 $(function() {
     $('#step1').fadeIn('fast');
 
+    var validContact = false;
+    var validAddress = false;
+
+    var addressValidator = new FormValidator('submitRequest', [{
+        name: 'address_1',
+        display: 'Address 1',
+        rules: 'required'
+    }, {
+        name: 'city',
+        display: 'City',
+        rules: 'required'
+    }, {
+        name: 'zip_code',
+        display: 'Zip Code',
+        rules: 'required'
+    }], function(errors, event) {
+        if(errors.length === 0) {
+            validAddress = true;
+        }
+    });
+
+    var contactValidator = new FormValidator('submitRequest', [{
+        name: 'email',
+        display: 'Email',
+        rules: 'required'
+    }, {
+        name: 'phone',
+        display: 'Phone',
+        rules: 'required'
+    }, {
+        name: 'fax',
+        display: 'Fax',
+        rules: 'required'
+    }], function(errors, event) {
+        if(errors.length < 3) {
+            validContact = true;
+        }
+    });
+
+    if (!validContact && !validAddress) {
+        $('#missing_contact_information').show();
+    }
+
     var validator = new FormValidator('submitRequest', [{
         name: 'request_agency',
         display: 'Request Agency',
@@ -21,15 +64,35 @@ $(function() {
         name: 'request_last_name',
         display: 'Request Last Name',
         rules: 'required'
+    }, {
+        name: 'request_contact_information',
+        display: 'Request Contact Information',
+        rules: 'required'
     }], function(errors, event) {
         if (errors.length > 0) {
             // Show the errors
             $('#step2').fadeOut('fast', function() {});
-
             var errorString = '';
             for (var i = 0, errorLength = errors.length; i < errorLength; i++) {
                 errorString += errors[i].message + '<br />';
+                if (errors[i].name === 'request_agency') {
+                    $('#missing_agency').show();
+                }
+                if (errors[i].name === 'request_summary') {
+                    $('#missing_summary').show();
+                }
+                if (errors[i].name === 'request_text') {
+                    $('#missing_text').show();
+                }
+                if (errors[i].name === 'request_first_name') {
+                    $('#missing_first_name').show();
+                }
+                if (errors[i].name === 'request_last_name') {
+                    $('#missing_last_name').show();
+                }
             }
+            console.log(errorString);
+            console.log(errors);
             var stepId = '#step2';
             var toolTipId = '#detailsTitle';
 
