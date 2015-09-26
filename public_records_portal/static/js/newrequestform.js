@@ -122,6 +122,8 @@ $(function() {
         // fade out step1, fade in step2
         $('#step1').fadeOut('fast', function() {});
         $('#step2').fadeIn('slow', function() {});
+        $('#s1').removeClass('active');
+        $('#s2').addClass('active');
     });
 
     $('#button2').click(function() {
