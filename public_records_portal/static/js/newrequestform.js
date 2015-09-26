@@ -40,10 +40,6 @@ $(function() {
         }
     });
 
-    if (!validContact && !validAddress) {
-        $('#missing_contact_information').show();
-    }
-
     var validator = new FormValidator('submitRequest', [{
         name: 'request_agency',
         display: 'Request Agency',
@@ -89,6 +85,9 @@ $(function() {
                 }
                 if (errors[i].name === 'request_last_name') {
                     $('#missing_last_name').show();
+                }
+                if (!validContact && !validAddress) {
+                    $('#missing_contact_information').show();
                 }
             }
             console.log(errorString);
