@@ -90,8 +90,6 @@ $(function() {
                     $('#missing_contact_information').show();
                 }
             }
-            console.log(errorString);
-            console.log(errors);
             var stepId = '#step2';
             var toolTipId = '#detailsTitle';
 
@@ -101,10 +99,6 @@ $(function() {
             }
 
             $(stepId).fadeIn('slow', function() {
-                $(toolTipId).tooltip({
-                    content: errorString
-                });
-                $(toolTipId).tooltip().mouseover();
                 $('html, body').animate({
                     scrollTop: $("#submitRequest").offset().top
                 }, 500);
