@@ -704,13 +704,13 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
 
     # Set initial checkboxes for mine_as_poc and mine_as_helper when redirected from login page
     if 'login' in request.referrer:
-        if current_user.is_authenticated and current_user.role in ['Portal Administrator', 'Agency Administrator']:
+        if current_user.is_authenticated and (current_user.role in ['Portal Administrator', 'Agency Administrator'] or current_user.is_admin()):
             mine_as_poc = None
             mine_as_helper = None
-        if current_user.is_authenticated and current_user.role in ['Agency FOIL Personnel']:
+        elif current_user.is_authenticated and current_user.role in ['Agency FOIL Personnel']:
             mine_as_poc = "on"
             mine_as_helper = "on"
-        if current_user.is_authenticated and current_user.role in ['Agency Helpers']:
+        elif current_user.is_authenticated and current_user.role in ['Agency Helpers']:
             mine_as_poc = "on"
 
     results = get_results_by_filters(departments_selected=departments_selected, is_open=is_open, is_closed=is_closed,
