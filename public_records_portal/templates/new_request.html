@@ -76,11 +76,9 @@
                             <div class="span8">
                                 <div class="control-group">
                                     <h2>
-                                    <lead id='detailsTitle' title='Details are Required'>Details about your records request</lead>
+                                    <small>{{ form.request_text.label.text }}</small>
                                     </h2>
-                                    <textarea rows="8" , id="request_text" , class="input-block-level"
-                                    placeholder="Provide more information about your request to help the City locate the record. If don’t know the record name, describe type of information you think it would contain and the approximate date range. Do not include private info – such as social security # or credit card."
-                                    )></textarea>
+                                    {{ form.request_text(class="input-block-level",rows="6",id="request_text",placeholder="Provide more information about your request to help the City locate the record. If don’t know the record name, describe type of information you think it would contain and the approximate date range. Do not include private info – such as social security # or credit card." ) }}
                                 </div>
                             </div>
                             <div class="span4">
