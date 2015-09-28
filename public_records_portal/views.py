@@ -702,6 +702,17 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         requester_name = get_filter_value(filters_map, 'requester_name')
         page_number = int(get_filter_value(filters_map, 'page_number') or '1')
 
+    # Set initial checkboxes for mine_as_poc and mine_as_helper when redirected from login page
+    if 'login' in request.referrer:
+        if current_user.is_authenticated and current_user.role in ['Portal Administrator', 'Agency Administrator']:
+            mine_as_poc = None
+            mine_as_helper = None
+        if current_user.is_authenticated and current_user.role in ['Agency FOIL Personnel']:
+            mine_as_poc = "on"
+            mine_as_helper = "on"
+        if current_user.is_authenticated and current_user.role in ['Agency Helpers']:
+            mine_as_poc = "on"
+
     results = get_results_by_filters(departments_selected=departments_selected, is_open=is_open, is_closed=is_closed,
                                      due_soon=due_soon, overdue=overdue, mine_as_poc=mine_as_poc,
                                      mine_as_helper=mine_as_helper, sort_column=sort_column,
