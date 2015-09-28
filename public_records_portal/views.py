@@ -87,13 +87,13 @@ def new_request(passed_recaptcha=False, data=None):
                     'The request summary must be less than 250 characters')
 
             try:
-                attachment = request.files['request_attachment']
+                request_attachment = request.files['request_attachment']
             except:
                 app.logger.info("\n\nNo file passed in")
 
             # Check Attachment
-            if request_attachment_description and not (request_attachment):
-                errors.append('Please select a file to upload as attachment.')
+            # if request_attachment_description and not (request_attachment):
+            #     errors.append('Please select a file to upload as attachment.')
 
             if not (request_text and request_text.strip()):
                 errors.append('Please fill out the request description.')

@@ -71,21 +71,9 @@
                                     <h1><small>Attach documentation</small></h1>
                                     <!-- upload a record -->
                                     {{ form.request_attachment_description(rows="3", class="input-block-level", placeholder="Add a short explanation of the record")}}
-                                    {{ form.request_attachment(class="fileupload fileupload-new")}}
-                                </div>
-                                <div class="control-group">
-                                    <h1><small>{{ form.request_first_name.label.text }}</small></h1>
-                                    <div class="spacer">
-                                        {{ form.request_first_name(class="input-block-level", type="text", placeholder="John") }}
-                                        {{ help("namePopover-content", "Enter name") }}
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <h1><small>{{ form.request_last_name.label.text }}</small></h1>
-                                    <div class="spacer">
-                                        {{ form.request_last_name(class="input-block-level", type="text", placeholder="Doe") }}
-                                        {{ help("namePopover-content", "Enter name") }}
-                                    </div>
+{#                                    upload does not work!!!!!  #}
+                                    {{ form.request_attachment(class="fileupload fileupload-new", method="post", dataprovides="fileupload")}}
+
                                 </div>
                                 <h2>
                                 <lead>Personal Information</lead>
