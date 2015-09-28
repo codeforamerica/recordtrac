@@ -56,6 +56,7 @@ def new_request(passed_recaptcha=False, data=None):
             form = OfflineRequestForm(request.form)
             request_category = form.request_category.data
             request_agency = current_user.current_department.name
+            print request_agency
             request_summary = form.request_summary.data
             request_text = form.request_text.data
             request_attachment_description = form.request_attachment_description.data
