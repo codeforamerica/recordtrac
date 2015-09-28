@@ -9,8 +9,9 @@
 import csv
 import urllib
 
-from flask import request
-
+from flask import Flask, request, render_template, render_template_string, redirect, url_for, make_response
+from StringIO import StringIO
+from xhtml2pdf import pisa
 from public_records_portal import db_helpers
 from db_helpers import find_request, create_request, get_obj, add_staff_participant, remove_staff_participant, \
     update_obj, get_attribute, change_request_status, create_or_return_user, create_subscriber, create_record, \
@@ -45,7 +46,7 @@ def add_resource(resource, request_body, current_user_id=None):
                         privacy=fields['note_privacy'])  # Bypass spam filter because they are logged in.
 
     if "pdf" in resource:
-        return add_note(request_id=fields['request_id'], text=fields['response_template'], user_id=current_user_id,
+        return add_pdf(request_id=fields['request_id'], text=fields['response_template'], user_id=current_user_id,
                         passed_spam_filter=True)
     elif "record" in resource:
         app.logger.info("\n\ninside add_resource method")
@@ -138,6 +139,31 @@ def add_note(request_id, text, user_id=None, privacy=1):
         return False
     return False
 
+### @export "add_pdf"
+def add_pdf(request_id, text, user_id = None, passed_spam_filter = False, privacy = 1):
+        if "template_" in text:
+            template_num = text.split("_")[1]
+            template_name = 'standard_response_' + template_num + ".html"
+            app.logger.info("\n\nPDF TEMPLATE:" + template_name)
+            date = datetime.now().strftime('%B %d, %Y')
+            req = Request.query.get(request_id)
+            department = Department.query.filter_by(id=req.department_id).first()
+            appeals_officer = "APPEALS OFFICER"
+            appeals_email = "APPEALS_EMAIL"
+            staff = req.point_person()
+            staff_alias = staff.user.alias
+            staff_signature = staff.user.staff_signature
+
+            html = make_response(render_template(template_name,date=date, req=req, department=department, appeals_officer=appeals_officer,appeals_email=appeals_email, staff_alias= staff_alias, staff_signature=staff_signature))
+            pdf = StringIO()
+            pisaStatus = pisa.CreatePDF(StringIO(html.get_data().encode('utf-8')), pdf)
+            if not pisaStatus.err:
+                resp = pdf.getvalue()
+                pdf.close()
+                response = make_response(resp)
+                response.headers['Content-Type'] = 'application/pdf'
+                response.headers["Content-Disposition"] = "attachment; filename = Response.pdf"
+                return response
 
 ### @export "upload_record"
 def upload_record(request_id, description, user_id, document=None):
@@ -207,9 +233,6 @@ def make_request(category=None, agency=None, summary=None, text=None, attachment
         if prr_email:
             assigned_to_email = prr_email
             assigned_to_reason = "PRR Liaison for %s" % agency
-        else:
-            app.logger.info("%s is not a valid department" % agency)
-            agency = None
     global currentRequestId
     currentRequestId = id_generator.next()
     id = "FOIL" + "-" + datetime.now().strftime("%Y") + "-" + agency_codes[
@@ -229,7 +252,7 @@ def make_request(category=None, agency=None, summary=None, text=None, attachment
                                 email=assigned_to_email)  # Assign someone to the request
     open_request(request_id)  # Set the status of the incoming request to "Open"
     if email or alias or phone:
-        subscriber_user_id = create_or_return_user(email=email, alias=alias, phone=phone, address1=street_address_one,
+        subscriber_user_id = create_or_return_user(email=email, alias=alias, first_name=first_name, last_name=last_name, phone=phone, address1=street_address_one,
                                                    address2=street_address_two, city=city, state=state, zipcode=zip)
         subscriber_id, is_new_subscriber = create_subscriber(request_id=request_id, user_id=subscriber_user_id)
         if subscriber_id:

@@ -46,9 +46,8 @@
             <form id="all_requests_form" name="all_requests" action="/requests" method="GET">
                 <div class="row-fluid" style="padding-bottom: 5%;">
                     <div class="span4">
-                        <div class="well well-small" style="padding-bottom: 3.5em;">
+                        <div class="well well-small" style="padding-bottom: 6em;">
                             <h5>Search request text</h5>
-
                             <div>
                                 <input class="span12" name="search_term" type="search" value="{{ search_term or '' }}"
                                        placeholder="I'd like to find...">
@@ -58,17 +57,17 @@
                                 {% if current_user.is_authenticated %}
                                     <div class="span6">
                                         <h5>My requests</h5>
-
                                         <div class="indent">
                                             <label class="checkbox">
-                                                <input type="checkbox" name="mine_as_poc" {% if mine_as_poc %}
+                                                <input type="checkbox" ID="checkbox" name="mine_as_poc" {% if mine_as_poc %}
                                                        checked {% endif %} />
-                                                <em>as Point of Contact</em>
+                                                <em>&nbsp as Point of Contact</em>
+                                                <br><br>
                                             </label>
                                             <label class="checkbox">
-                                                <input type="checkbox" name="mine_as_helper" {% if mine_as_helper %}
+                                                <input type="checkbox" ID="checkbox" name="mine_as_helper" {% if mine_as_helper %}
                                                        checked {% endif %} />
-                                                <em>as Helper</em>
+                                                <em>&nbsp as Helper</em>
                                             </label>
                                         </div>
                                     </div>
@@ -78,23 +77,23 @@
 
                                     <div class="indent">
                                         <label class="checkbox">
-                                            <input type="checkbox" name="is_open" {% if is_open %}checked {% endif %}/>
+                                            <input type="checkbox" ID="checkbox" name="is_open" {% if is_open %}checked {% endif %}/>
                                             <em class="open_style">Open</em>
                                         </label>
                                         {% if current_user.is_authenticated %}
                                             <label class="checkbox">
-                                                <input type="checkbox" name="due_soon" {% if due_soon %}
+                                                <input type="checkbox" ID="checkbox"  name="due_soon" {% if due_soon %}
                                                        checked {% endif %} />
                                                 <em class="duesoon_style">Due Soon</em>
                                             </label>
                                             <label class="checkbox">
-                                                <input type="checkbox" name="overdue" {% if overdue %}
+                                                <input type="checkbox" ID="checkbox" name="overdue" {% if overdue %}
                                                        checked {% endif %} />
                                                 <em class="overdue_style">Overdue</em>
                                             </label>
                                         {% endif %}
                                         <label class="checkbox">
-                                            <input type="checkbox" name="is_closed" {% if is_closed %}
+                                            <input type="checkbox" ID="checkbox"  name="is_closed" {% if is_closed %}
                                                    checked {% endif %} />
                                             <em class="closed_style">Closed</em>
                                         </label>
@@ -134,8 +133,7 @@
                             {% if current_user.is_anonymous or (current_user.is_authenticated and current_user.show_department_filters()) %}
                                 <h5>Agency Name</h5>
                                 <div class="control-group">
-                                    <select name="departments_selected" class="selectpicker span12" multiple
-                                            data-selected-text-format="count" data-size="5">
+                                    <select name="departments_selected" class="selectpicker span12">
                                         {% for department in departments %}
                                             {% if departments_selected and department.name in departments_selected %}
                                                 <option selected>{{ department.name }}</option>

@@ -908,6 +908,7 @@
   input[type="checkbox"],
   input[type="radio"] {
     border: 1px solid #ccc;
+
   }
   .form-horizontal .control-label {
     float: none;

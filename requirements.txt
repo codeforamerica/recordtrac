@@ -23,7 +23,6 @@ intervals
 isodate
 itsdangerous
 Jinja2
-lxml
 Mako
 MarkupSafe
 mimerender
