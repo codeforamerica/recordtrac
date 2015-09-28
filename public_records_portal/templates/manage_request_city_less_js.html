@@ -77,7 +77,7 @@
         <button id="askQuestion" class="btn btn-primary" data-toggle="modal" data-target="#confirm-submit" type="submit">Ask</button>
       </fieldset>
     </form>
-
+	
 	<div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -192,7 +192,7 @@
     </fieldset>
   </form>
   </form>
-
+  
   <!-- Generate PDF -->
   <form name="note" class="form-horizontal" id="note" method="post" action="/add_a_pdf">
     <input type="hidden" name="request_id" value="{{ req.id }}"/>
@@ -334,11 +334,12 @@
           <input type="hidden" name="request_id" value="{{ req.id }}"/>
           <!--input id="rerouteEmail" class="input-block-level" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required /-->
           </select>
-          <select class="span10 input-block-level" id="rerouteEmail" name="owner_email">
+          <select class="span10" id="rerouteEmail" name="owner_email">
             {% for data in department_data %}
               <option value="{{ data.email }}">{{ data.name}}</option>
             {% endfor %}
           </select>
+          <input id="rerouteReason" class="input-block-level" type="text" name="owner_reason" placeholder="Say why." required />
           <button id="rerouteButton" class="btn input-block-level" type="submit"> <i class="icon-envelope"> </i> Change point of contact</button>
       </fieldset>
     </form>
@@ -356,29 +357,31 @@
               <option value="{{ user.email }}">{{ user.alias}}</option>
             {% endfor %}
           </select>
+          <input id="rerouteReason" class="input-block-level" type="text" name="owner_reason" placeholder="Say why." required />
           <button id="rerouteButton" class="btn input-block-level" type="submit"> <i class="icon-envelope"> </i> Change Assignee</button>
       </fieldset>
     </form>
 
-    <div class="row-fluid participantRow">
-      <div class="participantRow-helpers"><h4 class="participantRow-title">Helpers</h4></div>
+    <div class="row-fluid participantRow">   
+      <div class="participantRow-helpers"><h4 class="participantRow-title">Helpers</h4></div>  
     </div>
     <div class="row-fluid participantRow-participants">
       {% for owner in req.owners %}
         {% if owner.active %}
-          {% set participant = (owner | display_staff_participant(req)) %}
+          {% set participant = (owner | display_staff_participant(req)) %} 
           {% if participant %}
             {% if current_user.is_authenticated %}
-
+              
                 <div>
                   {{ participant }}
                   <form id="unassignForm" class="form-inline" method ="post" action="/update_a_owner">
                         <input type="hidden" name="request_id" value="{{ req.id }}"/>
                         <input type="hidden" name="owner_id" value="{{ owner.id }}"/>
+                        <input type="text" class="span8" name="reason_unassigned" value="Task complete" required />
                         <button id="unassignButton" class="btn btn-mini" type="submit"> <i class="icon-envelope"> </i> Remove</button>
                   </form>
-                </div>
-
+                </div> 
+                
             {% else %}
               <div>
                 {{ participant }}
@@ -393,6 +396,7 @@
       <fieldset>
         <input type="hidden" name="request_id" value="{{ req.id }}"/>
         <input id="notifyEmail" class="input-block-level" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
+        <input id="notifyReason" class="input-block-level" type="text" name="owner_reason" placeholder="Say why." required />
         <button id="notifyButton" class="btn input-block-level" type="submit"> <i class="icon-envelope"> </i> Add a helper</button>
     </form>
 
@@ -400,9 +404,9 @@
       {% include '_history.html' %}
     </div>
 
+    
 
-
-
+    
 
 
   </div>
@@ -427,9 +431,9 @@
   <!-- used for the extension and close request multi-select boxes in city view -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-select.min.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/custom.bootstrap-select.js') }}"></script>
+  
 
-
-
+   
   <!-- For file uploads -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-fileupload.js') }}"></script>
 {% endblock custom_script_links %}

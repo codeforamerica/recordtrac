@@ -441,9 +441,12 @@ def show_request(request_id, template="manage_request_public.html"):
     for d in departments_all:
         firstUser = models.User.query.filter_by(department_id=d.id).first()
         agency_data.append({'name': d.name, 'email': firstUser.email})
-    users = models.User.query.filter_by(department_id=req.department_id).all()
+
     if not req:
         return render_template('error.html', message="A request with ID %s does not exist." % request_id)
+    else:
+        users = models.User.query.filter_by(department_id=req.department_id).all()
+
     if req.status and "Closed" in req.status and template != "manage_request_feedback.html":
         template = "closed.html"
     return render_template(template, req=req, agency_data=agency_data, users=users)
