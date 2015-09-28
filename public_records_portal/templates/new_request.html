@@ -24,10 +24,10 @@
         <div class="span4">
             <div class="form-nav">
                 <div class="active" id="s1">
-                    <h4><a>Step 1</a></h4>
+                    <h4>Step 1</h4>
                 </div>
                 <div id="s2">
-                    <h4><a>Step 2</a></h4>
+                    <h4>Step 2</h4>
                 </div>
             </div>
         </div>
@@ -54,12 +54,18 @@
                                 <h2>
                                 <small>What agency has the records you want?*</small>
                                 </h2>
+                                <div class="missing_field alert alert-danger" id="missing_agency" style="width: calc(100% - 4.5rem);">
+                                    Agency Missing
+                                </div>
                                 {{ form.request_agency(class="input-block-level") }}
                             </div>
                             <div class="control-group">
                                 <h2>
                                 <small>What is the topic of your request?*</small>
                                 </h2>
+                                <div class="missing_field alert alert-danger" id="missing_summary">
+                                    Summary Missing
+                                </div>
                                 {{ form.request_summary(class="input-block-level", rows="2", id="request_summary", placeholder="Please provide a short summary of your request" ) }}
                             </div>
                         </fieldset>
@@ -85,6 +91,10 @@
                                     <h2>
                                     <lead id='detailsTitle' title='Details are Required'>Details about your records request</lead>
                                     </h2>
+                                    <div class="missing_field alert alert-danger" id="missing_text">
+                                        Details Missing
+                                    </div>
+                                    <textarea rows="8" , id="request_text" , class="input-block-level"
                                     {{ form.request_text(rows="8" , id="request_text" , class="input-block-level", placeholder="Provide more information about your request to help the City locate the record. If don’t know the record name, describe type of information you think it would contain and the approximate date range. Do not include private info – such as social security # or credit card.") }}
                                 </div>
                             </div>
@@ -110,12 +120,18 @@
                                         <h2>
                                         <small>{{ form.request_first_name.label.text }}</small>
                                         </h2>
+                                        <div class="missing_field alert alert-danger" id="missing_first_name">
+                                            First Name Missing
+                                        </div>
                                         {{ form.request_first_name(id="request_first_name", class="input-block-level", type="text", placeholder="John") }}
                                     </div>
                                     <div class="control-group span6">
                                         <h2>
                                         <small>{{ form.request_last_name.label.text }}</small>
                                         </h2>
+                                        <div class="missing_field alert alert-danger" id="missing_last_name">
+                                            Last Name Missing
+                                        </div>
                                         {{ form.request_last_name(id="request_last_name", class="input-block-level", type="text", placeholder="Doe")}}
                                     </div>
                                 </div>
@@ -134,9 +150,11 @@
                                 <h2>
                                 <lead>Contact Information</lead>
                                 </h2>
+                                <div class="missing_field alert alert-danger" id="missing_contact_information">
+                                    At least one form of contact information needed.
+                                </div>
                                 <p>No information entered in this section will be visibile to the public. <em>Please
                                 Note: At least one method of communication is required</em></p>
-                                <p><em>*</em> denotes a required field</p>
                                 <div class="control-group">
                                     <h2>
                                     <small>{{ form.request_email.label.text }}</small>
