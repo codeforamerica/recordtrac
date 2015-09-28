@@ -56,7 +56,6 @@ def new_request(passed_recaptcha=False, data=None):
             form = OfflineRequestForm(request.form)
             request_category = form.request_category.data
             request_agency = current_user.current_department.name
-            print request_agency
             request_summary = form.request_summary.data
             request_text = form.request_text.data
             request_attachment_description = form.request_attachment_description.data
@@ -75,8 +74,6 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_city = form.request_address_city.data
             request_address_state = form.request_address_state.data
             request_address_zip = form.request_address_zip.data
-            print "asdasd" + request_attachment_description
-            print "asdasd" + request_attachment
 
             # Check Category
             if not (request_category and request_category.strip()):
@@ -184,7 +181,7 @@ def new_request(passed_recaptcha=False, data=None):
                     city=request_address_city,
                     state=request_address_state,
                     zip=request_address_zip)
-                if not request_id:
+                if is_new == False:
                     errors.append(
                         "Looks like your request is the same as /request/%s" % request_id)
                     return render_template('offline_request.html', form=form,
@@ -308,7 +305,7 @@ def new_request(passed_recaptcha=False, data=None):
                 state=request_address_state,
                 zip=request_address_zip)
 
-            if not request_id:
+            if is_new == False:
                 errors.append(
                     "Looks like your request is the same as <a href=\"/request/%s\"" % request_id)
                 return render_template('new_request.html', form=form,
