@@ -312,7 +312,7 @@ def authenticate_login(email, password):
         return user
     return None
 
-def create_or_return_user(email=None, alias=None, phone=None, address1=None, address2=None, city=None, state=None,
+def create_or_return_user(email=None, alias=None, first_name=None, last_name=None, phone=None, address1=None, address2=None, city=None, state=None,
                           zipcode=None, department=None, contact_for=None, backup_for=None, not_id=False, is_staff=None,
                           password=None, role=None):
     app.logger.info("\n\nCreating or returning user...")
@@ -329,12 +329,12 @@ def create_or_return_user(email=None, alias=None, phone=None, address1=None, add
                 department = d.id
         if not user:
             if not password:
-                user = create_user(email=email.lower(), alias=alias, phone=str(phone), address1=address1,
+                user = create_user(email=email.lower(), alias=alias, first_name=first_name, last_name=last_name, phone=str(phone), address1=address1,
                                    address2=address2, city=city,
                                    state=state, zipcode=zipcode, department=department, contact_for=contact_for,
                                    backup_for=backup_for, password='admin', is_staff=is_staff, role=role)
             else:
-                user = create_user(email=email.lower(), alias=alias, phone=str(phone), address1=address1,
+                user = create_user(email=email.lower(), alias=alias, first_name=first_name, last_name=last_name, phone=str(phone), address1=address1,
                                    address2=address2, city=city,
                                    state=state, zipcode=zipcode, department=department, contact_for=contact_for,
                                    backup_for=backup_for, password=password, is_staff=is_staff, role=role)
@@ -342,7 +342,7 @@ def create_or_return_user(email=None, alias=None, phone=None, address1=None, add
         else:
             # Update user if fields to update are provided
             if alias or phone or department or contact_for or backup_for:
-                user = update_user(user=user, alias=alias, phone=str(phone), address1=address1, address2=address2,
+                user = update_user(user=user, alias=alias, first_name=first_name, last_name=last_name, phone=str(phone), address1=address1, address2=address2,
                                    city=city, state=state,
                                    zipcode=zipcode, department=department, contact_for=contact_for,
                                    backup_for=backup_for, is_staff=is_staff, role=role)
@@ -350,19 +350,13 @@ def create_or_return_user(email=None, alias=None, phone=None, address1=None, add
             return user
         return user.id
     else:
-        user = create_user(alias=alias, phone=phone, address1=address1,
+        user = create_user(alias=alias, first_name=first_name, last_name=last_name, phone=phone, address1=address1,
                            address2=address2, city=city, state=state, zipcode=zipcode, is_staff=is_staff, role=role)
         return user.id
 
 # @export "create_user"
-def create_user(email=None, alias=None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=None,
+def create_user(email=None, alias=None, first_name=None, last_name=None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=None,
                 department=None, contact_for=None, backup_for=None, password=None, is_staff=None, role=None):
-    first_name = None
-    last_name = None
-    if alias and " " in alias:
-        nameStr = alias.split(" ")
-        first_name = nameStr[0]
-        last_name = nameStr[1]
     user = User(email=email, alias=alias, first_name=first_name, last_name=last_name, phone=phone, address1=address1,
                 address2=address2, city=city, state=state,
                 zipcode=zipcode, department=department, contact_for=contact_for, backup_for=backup_for,
@@ -375,10 +369,14 @@ def create_user(email=None, alias=None, phone=None, address1=None, address2=None
 
 
 # @export "update_user"
-def update_user(user, alias=None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=None,
+def update_user(user, alias=None, first_name=None, last_name=None, phone=None, address1=None, address2=None, city=None, state=None, zipcode=None,
                 department=None, contact_for=None, backup_for=None, is_staff=None, role=None):
     if alias:
         user.alias = alias
+    if first_name:
+        user.first_name = first_name
+    if last_name:
+        user.last_name = last_name
     if phone:
         user.phone = phone
     if address1:
