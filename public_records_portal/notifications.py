@@ -38,9 +38,9 @@ def generate_prr_emails(request_id, notification_type, user_id=None):
     if notification_type == "Request made":
         template = "new_request_email.html"
     if "Public Notification Template" in notification_type:
-        template = "system_email_" + notification_type[-2] + ".html"
+        template = "system_email_" + notification_type[-2:] + ".html"
     if "Agency Notification Template" in notification_type:
-        template = "agency_email_" + notification_type[-2] + ".html"
+        template = "agency_email_" + notification_type[-2:] + ".html"
     # Get information on who to send the e-mail to and with what subject line based on the notification type:
     email_info = get_email_info(notification_type=notification_type)
     email_subject = "Public Records Request %s: %s" % (request_id, email_info["Subject"])
