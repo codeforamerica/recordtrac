@@ -9,8 +9,9 @@
 import csv
 import urllib
 
-from flask import request
-
+from flask import Flask, request, render_template, render_template_string, redirect, url_for, make_response
+from StringIO import StringIO
+from xhtml2pdf import pisa
 from public_records_portal import db_helpers
 from db_helpers import find_request, create_request, get_obj, add_staff_participant, remove_staff_participant, \
     update_obj, get_attribute, change_request_status, create_or_return_user, create_subscriber, create_record, \
@@ -45,7 +46,7 @@ def add_resource(resource, request_body, current_user_id=None):
                         privacy=fields['note_privacy'])  # Bypass spam filter because they are logged in.
 
     if "pdf" in resource:
-        return add_note(request_id=fields['request_id'], text=fields['response_template'], user_id=current_user_id,
+        return add_pdf(request_id=fields['request_id'], text=fields['response_template'], user_id=current_user_id,
                         passed_spam_filter=True)
     elif "record" in resource:
         app.logger.info("\n\ninside add_resource method")
@@ -138,6 +139,31 @@ def add_note(request_id, text, user_id=None, privacy=1):
         return False
     return False
 
+### @export "add_pdf"
+def add_pdf(request_id, text, user_id = None, passed_spam_filter = False, privacy = 1):
+        if "template_" in text:
+            template_num = text.split("_")[1]
+            template_name = 'standard_response_' + template_num + ".html"
+            app.logger.info("\n\nPDF TEMPLATE:" + template_name)
+            date = datetime.now().strftime('%B %d, %Y')
+            req = Request.query.get(request_id)
+            department = Department.query.filter_by(id=req.department_id).first()
+            appeals_officer = "APPEALS OFFICER"
+            appeals_email = "APPEALS_EMAIL"
+            staff = req.point_person()
+            staff_alias = staff.user.alias
+            staff_signature = staff.user.staff_signature
+
+            html = make_response(render_template(template_name,date=date, req=req, department=department, appeals_officer=appeals_officer,appeals_email=appeals_email, staff_alias= staff_alias, staff_signature=staff_signature))
+            pdf = StringIO()
+            pisaStatus = pisa.CreatePDF(StringIO(html.get_data().encode('utf-8')), pdf)
+            if not pisaStatus.err:
+                resp = pdf.getvalue()
+                pdf.close()
+                response = make_response(resp)
+                response.headers['Content-Type'] = 'application/pdf'
+                response.headers["Content-Disposition"] = "attachment; filename = Response.pdf"
+                return response
 
 ### @export "upload_record"
 def upload_record(request_id, description, user_id, document=None):

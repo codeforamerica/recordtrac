@@ -216,38 +216,6 @@ def create_subscriber(request_id, user_id):
 def create_note(request_id, text, user_id, privacy):
     """ Create a Note object and return the ID. """
     try:
-        if "template_" in text:
-            template_num = text.split("_")[1]
-            template_name = 'standard_response_' + template_num + ".html"
-            fname = text + "_" + str(user_id) + ".pdf"
-            fpath = os.path.join(app.config['PDF_FOLDER'], fname)
-            app.logger.info("\n\npdf path: %s" % (fpath))
-            packet = StringIO.StringIO()
-            packet = StringIO.StringIO()
-            cv = canvas.Canvas(packet)
-            cv.drawString(0, 500, "Template Text")
-            cv.save()
-            packet.seek(0)
-            with open(fpath, 'wb') as fp:
-                fp.write(packet.getvalue())
-            text = "<a href='/pdfs/" + fname + "'>" + standard_response_templates[text] + "</a>"
-            date = datetime.now().strftime('%B %d, %Y')
-            req = Request.query.get(request_id)
-            department = Department.query.filter_by(id=req.department_id).first()
-            appeals_officer = "APPEALS OFFICER"
-            appeals_email = "APPEALS_EMAIL"
-            staff = req.point_person()
-            staff_alias = staff.user.alias
-            staff_signature = staff.user.staff_signature
-
-            html = make_response(render_template(template_name,date=date, req=req, department=department, appeals_officer=appeals_officer,appeals_email=appeals_email, staff_alias= staff_alias, staff_signature=staff_signature))
-            pdf = StringIO()
-            pisaStatus = pisa.CreatePDF(StringIO(html.get_data().encode('utf-8')), pdf)
-            if not pisaStatus.err:
-                fd = open(fpath,'w+b')
-                fd.write(pdf.getvalue())
-                fd.close()
-
         note = Note(request_id=request_id, text=text, user_id=user_id, privacy=privacy)
         put_obj(note)
         return note.id
