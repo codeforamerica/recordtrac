@@ -36,6 +36,12 @@
             <div class="row-fluid">
                 <div class="step" id="step1">
                     <div class="span8">
+                        {% if errors %}
+                            <div class="alert alert-warning">
+                                {% for error in errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
                         <fieldset>
                             <div class="control-group">
                                 <h2>
