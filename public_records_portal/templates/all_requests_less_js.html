@@ -188,11 +188,7 @@
                             {% elif request.solid_status == "overdue" %}
                             <span style = "background-color: #CA1A1A" class="label label-important">overdue</span>
                           {% endif %}
-{#                          {% if request.privacy == 1 or request.privacy == 2 or current_user.is_authenticated %}#}
-                          {{ text }}
-{#                          {% else %}#}
-{#                            Private Request#}
-{#                          {% endif %}#}
+                          {{ request.summary }}
                         </a>
                         </td>
                         <td>{{request.department}}</td>
