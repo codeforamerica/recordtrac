@@ -292,7 +292,6 @@ class Request(db.Model):
     creator_id = db.Column(db.Integer, db.ForeignKey(
         'user.id'))  # If city staff created it on behalf of the public, otherwise the creator is the subscriber with creator = true
     department_id = db.Column(db.Integer, ForeignKey('department.id',
-                                                        user_alter=True,
                                                         name='fk_department'))
     department = relationship('Department', uselist=False)
     date_received = db.Column(db.DateTime)
