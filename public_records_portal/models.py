@@ -291,8 +291,9 @@ class Request(db.Model):
         db.String(400))  # The status of the request (open, closed, etc.)
     creator_id = db.Column(db.Integer, db.ForeignKey(
         'user.id'))  # If city staff created it on behalf of the public, otherwise the creator is the subscriber with creator = true
-    department_id = db.Column(db.Integer, db.ForeignKey('department.id'
-                                                        ))
+    department_id = db.Column(db.Integer, ForeignKey('department.id',
+                                                        user_alter=True,
+                                                        name='fk_department'))
     department = relationship('Department', uselist=False)
     date_received = db.Column(db.DateTime)
     offline_submission_type = db.Column(db.String())
@@ -308,6 +309,8 @@ class Request(db.Model):
             offline_submission_type=None,
             date_received=None,
             category=None,
+            agency=None,
+
     ):
         self.id = id
         self.summary = summary
@@ -318,6 +321,7 @@ class Request(db.Model):
         if date_received and type(date_received) is datetime:
             self.date_received = date_received
         self.category = category
+        self.department_id = agency
 
     def __repr__(self):
         return '<Request %r>' % self.text

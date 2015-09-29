@@ -153,8 +153,13 @@ def add_pdf(request_id, text, user_id = None, passed_spam_filter = False, privac
             staff = req.point_person()
             staff_alias = staff.user.alias
             staff_signature = staff.user.staff_signature
+            print "subscribers123467" +str(req.subscribers)
+            if req.subscribers != []:
+                user_name = req.subscribers[0]
+            else:
+                user_name = "First Name Last Name"
 
-            html = make_response(render_template(template_name,date=date, req=req, department=department, appeals_officer=appeals_officer,appeals_email=appeals_email, staff_alias= staff_alias, staff_signature=staff_signature))
+            html = make_response(render_template(template_name,user_name = user_name, date=date, req=req, department=department, appeals_officer=appeals_officer,appeals_email=appeals_email, staff_alias= staff_alias, staff_signature=staff_signature))
             pdf = StringIO()
             pisaStatus = pisa.CreatePDF(StringIO(html.get_data().encode('utf-8')), pdf)
             if not pisaStatus.err:
@@ -245,11 +250,13 @@ def make_request(category=None, agency=None, summary=None, text=None, attachment
             agency] + "-" + "%05d" % currentRequestId
         req = get_obj("Request", id)
 
-    request_id = create_request(id=id, category=category, summary=summary, text=text, user_id=user_id,
+    request_id = create_request(id=id, agency=agency, category=category,  summary=summary, text=text, user_id=user_id,
                                 offline_submission_type=offline_submission_type,
                                 date_received=date_received)  # Actually create the Request object
-    new_owner_id = assign_owner(request_id=request_id, reason=assigned_to_reason,
-                                email=assigned_to_email)  # Assign someone to the request
+
+    # Department_id was removed here after the request was assigned a new owner. I don't know why the next two lines of code are there but they don't seem to impact the site's functionality. This now works!
+    # new_owner_id = assign_owner(request_id=request_id, reason=assigned_to_reason,
+    #                             email=assigned_to_email)  # Assign someone to the request
     open_request(request_id)  # Set the status of the incoming request to "Open"
     if email or alias or phone:
         subscriber_user_id = create_or_return_user(email=email, alias=alias, first_name=first_name, last_name=last_name, phone=phone, address1=street_address_one,
