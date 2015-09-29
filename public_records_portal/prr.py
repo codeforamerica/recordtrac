@@ -23,10 +23,20 @@ from notifications import generate_prr_emails
 import upload_helpers
 from requires_roles import requires_roles
 
-agency_codes = {"Department of Records and Information Services": "860", "Office of the Chief Medical Examiner": "816",
-                "Mayor's Office": "002", "Department of Education": "040",
-                "Department of Information Technology and Telecommunications": "858", "DoITT/General Counse": "858",
-                None: "000"}
+agency_codes = {
+"Commission on Human Rights": "228",
+"Department of Education": "040",
+"Department of Information Technology and Telecommunications": "858",
+"Department of Records and Information Services": "860",
+"Law Department": "025",
+"Mayor's Office of Operations": "002",
+"Mayor's Office of Technology and Innovation": "002",
+"Office of Administrative Trials and Hearings": "820",
+"Office of Emergency Management": "017",
+"Office of the Chief Medical Examiner": "816",
+"Office of the Mayor": "002",
+None: "000"
+}
 
 
 def add_public_note(request_id, text):
