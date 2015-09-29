@@ -411,14 +411,11 @@ def set_directory_fields():
             dictreader = csv.DictReader(csvfile, delimiter=',')
             for row in dictreader:
                 user = create_or_return_user(email=row['PRR liaison'], contact_for=row['department name'])
-                if row['department name'] and user:
-                    department = Department.query.filter(Department.name == row['department name']).first()
-                    user_obj = get_user_by_id(user)
-                    user_email = user_obj.email
-                    app.logger.info("\n\nSetting Primary Contact For %s as %s" % (department.name, user_email))
-                    update_obj(attribute="primary_contact_id", val=user, obj_type="Department", obj_id=department.id)
-                if row['PRR backup'] != "":
-                    user = create_or_return_user(email=row['PRR backup'], backup_for=row['department name'])
+                if row['department name'] != "":
+                    set_department_contact(row['department name'], "primary_contact_id", user)
+                    if row['PRR backup'] != "":
+                        user = create_or_return_user(email=row['PRR backup'], backup_for=row['department name'])
+                        set_department_contact(row['department name'], "backup_contact_id", user)
         else:
             app.logger.info(
                 "\n\n Please update the config variable LIAISONS_URL for where to find department liaison data for your agency.")
@@ -435,6 +432,13 @@ def set_directory_fields():
         else:
             app.logger.info("\n\n Unable to create any users. No one will be able to log in.")
 
+### @export "set_department_contact"
+def set_department_contact(department_name, attribute_name, user_id):
+    department = Department.query.filter(Department.name == department_name).first()
+    user_obj = get_user_by_id(user_id)
+    user_email = user_obj.email
+    app.logger.info("\n\nSetting %s For %s as %s" % (attribute_name, department.name, user_email))
+    update_obj(attribute=attribute_name, val=user_id, obj_type="Department", obj_id=department.id)
 
 ### @export "close_request"
 def close_request(request_id, reason="", user_id=None):
