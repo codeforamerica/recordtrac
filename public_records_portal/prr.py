@@ -253,6 +253,8 @@ def make_request(category=None, agency=None, summary=None, text=None, attachment
     request_id = create_request(id=id, agency=agency, category=category,  summary=summary, text=text, user_id=user_id,
                                 offline_submission_type=offline_submission_type,
                                 date_received=date_received)  # Actually create the Request object
+
+    # Department_id was removed here after the request was assigned a new owner. I don't know why the next two lines of code are there but they don't seem to impact the site's functionality. This now works!
     # new_owner_id = assign_owner(request_id=request_id, reason=assigned_to_reason,
     #                             email=assigned_to_email)  # Assign someone to the request
     open_request(request_id)  # Set the status of the incoming request to "Open"
