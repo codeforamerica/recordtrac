@@ -49,7 +49,7 @@ def add_resource(resource, request_body, current_user_id=None):
     fields = request_body
     if "extension" in resource:
         return request_extension(fields['request_id'], fields.getlist('extend_reason'), current_user_id,
-                                 fields['days_after'], fields['due_date'])
+                                 int(fields['days_after']), fields['due_date'])
     if "note" in resource:
         return add_note(request_id=fields['request_id'], text=fields['note_text'], user_id=current_user_id,
                         passed_spam_filter=True,
@@ -128,14 +128,18 @@ def update_resource(resource, request_body):
 ### @export "request_extension"
 @requires_roles('Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel')
 def request_extension(request_id, extension_reasons, user_id, days_after=None, due_date=None):
+    """
+    This function allows portal admins, agency admins, and FOIL officers to request additonal time.
+    Uses add_resource from prr.py and takes extension date from field retrived from that function.
+    Returns note with new date after adding delta.
+    """
     req = Request.query.get(request_id)
     req.extension(days_after, due_date)
     text = "Request extended:"
     for reason in extension_reasons:
         text = text + reason + "</br>"
     add_staff_participant(request_id=request_id, user_id=user_id)
-    return add_note(request_id=request_id, text=text, user_id=user_id,
-                    passed_spam_filter=True)  # Bypass spam filter because they are logged in.
+    return add_note(request_id=request_id, text=text, user_id=user_id)  # Bypass spam filter because they are logged in.
 
 
 def add_note(request_id, text, user_id=None, privacy=1):
