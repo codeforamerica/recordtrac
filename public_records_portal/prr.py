@@ -103,7 +103,11 @@ def update_resource(resource, request_body):
             change_request_status(fields['request_id'], "Rerouted")
             return assign_owner(fields['request_id'], fields['owner_email'])
     elif "reopen" in resource:
-        change_request_status(fields['request_id'], "Reopened")
+        request_id = fields['request_id']
+        change_request_status(request_id, "Reopened")
+        req = get_obj("Request", request_id)
+        user_id = req.subscribers[0].user.id
+        generate_prr_emails(request_id=request_id, user_id=user_id, notification_type="Public Notification Template 10")
     elif "acknowledge" in resource:
         change_request_status(fields['request_id'], fields['acknowledge_status'])
         return fields['request_id']
