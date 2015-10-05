@@ -1282,3 +1282,7 @@ def submit():
         pass
     else:
         pass
+
+@app.route("/test")
+def test():
+    return render_template('system_email_01.html')
