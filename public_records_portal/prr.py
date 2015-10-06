@@ -52,8 +52,7 @@ def add_resource(resource, request_body, current_user_id=None):
                                  int(fields['days_after']), fields['due_date'])
     if "note" in resource:
         return add_note(request_id=fields['request_id'], text=fields['note_text'], user_id=current_user_id,
-                        passed_spam_filter=True,
-                        privacy=fields['note_privacy'])  # Bypass spam filter because they are logged in.
+                        privacy=fields['note_privacy']) 
 
     if "pdf" in resource:
         return add_pdf(request_id=fields['request_id'], text=fields['response_template'], user_id=current_user_id,

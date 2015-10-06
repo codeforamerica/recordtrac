@@ -72,12 +72,60 @@
   });
 
   $('#askQuestion').on('click',function(){
+    $('#modalQuestionTable').show();
     $('#question_text').html($('#questionTextarea').val());
   });
 
   $('#submit').on('click',function(){
+    $('#additional_information').val($('#additional_note').val());
     $('#question').submit();
    });
 
+  $('#rerouteButton').on('click',function(){
+    var modalQuestion = 'Are you sure you want to acknowledge the request for the number of days below and send an email to the requester?';
+    modalQuestion += '<br><br>' + $('#acknowledge_status').val();
+    $('#modalquestionDiv').html(modalQuestion);
+    $('#modalQuestionTable').hide();
+  });
+
+  $('#extendButton').on('click',function(){
+    days = $('#days_after').val();
+    var modalQuestion = 'Are you sure you want to request an extension for the number of days below and send an email to the requester?';
+
+    if (days != -1) {
+        modalQuestion += '<br><br>' + $('#days_after').val() + " days";
+     }
+     else {
+        due_date = $('#due_date').val();
+        year = due_date.substring(0,4);
+        month = due_date.substring(5,7);
+        day = due_date.substring(8,10);
+        modalQuestion = 'Are you sure you want to set the following due date and send an email to the requester?';
+        modalQuestion += '<br><br>' + month + "/" + day + "/" + year;
+     }
+    $('#modalquestionDiv').html(modalQuestion);
+    $('#modalQuestionTable').hide();
+  });
+
+  $('#closeButton').on('click',function(){
+    var modalQuestion = 'Are you sure you want to close the request for the reasons below and send an email to the requester?';
+    modalQuestion += '<br><br>' + $('#close_reasons').val();
+    $('#modalquestionDiv').html(modalQuestion);
+    $('#modalQuestionTable').hide();
+  });
+
+  $('#addRecordButton').on('click',function(){
+    var modalQuestion = 'Are you sure you want to add this record and send an email to the requester?';
+    modalQuestion += '<br><br>' + $('#recordSummary').val();
+    $('#modalquestionDiv').html(modalQuestion);
+    $('#modalQuestionTable').hide();
+  });
+
+  $('#addNoteButton').on('click',function(){
+    var modalQuestion = 'Are you sure you want to add the note below and send an email to the requester?';
+    modalQuestion += '<br><br>' + $('#noteTextarea').val();
+    $('#modalquestionDiv').html(modalQuestion);
+    $('#modalQuestionTable').hide();
+  });
 
 })($);
