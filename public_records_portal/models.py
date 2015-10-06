@@ -33,7 +33,22 @@ class notePrivacy:
 
 
 # @export "User"
-
+class AnonUser:
+    @property
+    def is_authenticated(self):
+        return False
+    @property
+    def is_active(self):
+        return False
+    @property
+    def is_anonymous(self):
+        return True
+    @property
+    def get_id(self):
+        return None
+    @property
+    def role(self):
+        return None
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)

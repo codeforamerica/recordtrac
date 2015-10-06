@@ -32,6 +32,7 @@ from forms import OfflineRequestForm, NewRequestForm, LoginForm, EditUserForm
 import pytz
 from requires_roles import requires_roles
 from flask_login import LoginManager
+from models import AnonUser
 
 # Initialize login
 app.logger.info("\n\nInitialize login.")
@@ -39,6 +40,7 @@ app.logger.info("\n\nEnvironment is %s" % app.config['ENVIRONMENT'])
 
 login_manager = LoginManager()
 login_manager.user_loader(get_user_by_id)
+login_manager.anonymous_user = AnonUser
 login_manager.init_app(app)
 
 zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
@@ -923,13 +925,6 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
     return results.order_by(models.Request.id.desc())
 
 
-@app.route("/<page>")
-def any_page(page):
-    try:
-        return render_template('%s.html' % (page))
-    except:
-        return render_template('error.html', message="%s totally doesn't exist." % (page))
-
 def tutorial():
     user_id = get_user_id()
     app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
@@ -1296,13 +1291,13 @@ def submit():
         pass
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('404.html'), 404
+    return render_template("404.html"), 404
 @app.errorhandler(500)
 def internal_server_error(e):
-    return render_template('500.html'), 500
+    return render_template("500.html"), 500
 @app.errorhandler(403)
 def access_denied(e):
-    return render_template('403.html'), 403
+    return render_template("403.html"), 403
 @app.errorhandler(501)
 def unexplained_error(e):
-    return render_template('501.html'), 501
+    return render_template("501.html"), 501
