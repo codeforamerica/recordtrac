@@ -58,19 +58,14 @@
 {#                                        {% block public_note %}{% endblock public_note %}#}
                                 {% if current_user.is_authenticated %}
                                     <p class="lead" truncateable="250"> {{ req.requester().alias }}</p>
-                                    <p class="lead" truncateable="250"> {{ req.text | new_lines }}</p>
+                                    <p class="lead" style="margin-bottom: 0rem;" truncateable="250"> Summary of Request: </p>
+                                    <p truncateable="250"> {{ req.summary | new_lines }}</p>
+                                    <p class="lead" truncateable="250" style="margin-bottom: 0rem;"> Description of Request: </p>
+                                    <p truncateable="250"> {{ req.text | new_lines }}</p>
                                 {% else %}
-                                    {% if req.privacy == 1 %}
-                                        <p class="lead" truncateable="250"> {{ req.requester().alias }}</p>
-                                        <p class="lead" truncateable="250"> {{ req.text | new_lines }} </p>
-                                    {% elif req.privacy == 2 %}
-                                        <p class="lead" truncateable="250"> {{ req.text | new_lines }} </p>
-                                    {% elif req.privacy == 4 %}
-                                        <p class="lead" truncateable="250"> A private request was made
-                                            by {{ req.requester().user.alias }} </p>
-                                    {% elif req.privacy == 8 %}
-                                        <p class="lead" truncateable="250"> A private request was made </p>
-                                    {% endif %}
+                                    <p class="lead" truncateable="250"> {{ req.requester().alias }}</p>
+                                    <p class="lead" style="margin-bottom: 0rem;" truncateable="250"> Summary of Request: </p>
+                                    <p truncateable="250"> {{ req.summary | new_lines }}</p>
                                 {% endif %}
 
                             </div>
