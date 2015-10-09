@@ -107,6 +107,16 @@ This template provides the header, footer, and envelope info for all pages excep
                     <div class="login btn">
                       <p><a href="/login" >Login</a></p>
                     </div>
+                    <div class="google_translate" style="float: right; padding-right: 10px;">
+                        <div id="google_translate_element"></div>
+                        <script type="text/javascript">
+                        function googleTranslateElementInit() {
+                        new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+                        }
+                        </script>
+                        <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+                        </script>
+                    </div>
                     <ul class="nav tabs">
                         <li><a href="/new">Request a Record</a></li>
                         <li><a href="/view_requests">All Requests</a></li>
