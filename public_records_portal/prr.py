@@ -52,7 +52,7 @@ def add_resource(resource, request_body, current_user_id=None):
                                  int(fields['days_after']), fields['due_date'])
     if "note" in resource:
         return add_note(request_id=fields['request_id'], text=fields['note_text'], user_id=current_user_id,
-                        privacy=fields['note_privacy']) 
+                        privacy=fields['note_privacy'],request_body=request_body)
 
     if "pdf" in resource:
         return add_pdf(request_id=fields['request_id'], text=fields['response_template'], user_id=current_user_id,
@@ -143,7 +143,7 @@ def request_extension(request_id, extension_reasons, user_id, days_after=None, d
     return add_note(request_id=request_id, text=text, user_id=user_id)  # Bypass spam filter because they are logged in.
 
 
-def add_note(request_id, text, request_body, user_id=None, privacy=1):
+def add_note(request_id, text, request_body=None, user_id=None, privacy=1):
     if text and text != "":
         print text
         note_id = create_note(request_id=request_id, text=text, user_id=user_id, privacy=privacy)
@@ -151,9 +151,9 @@ def add_note(request_id, text, request_body, user_id=None, privacy=1):
             change_request_status(request_id, "A response has been added.")
             if user_id:
                 add_staff_participant(request_id=request_id, user_id=user_id)
-                generate_prr_emails(request_id=request_id, notification_type="Public Notification Template 10", text=request_body.additional_information)
+                generate_prr_emails(request_id=request_id, notification_type="Public Notification Template 10", text=request_body['additional_information'],user_id=user_id)
             else:
-                generate_prr_emails(request_id=request_id, notification_type="Public note added", text=request_body.additional_information)
+                generate_prr_emails(request_id=request_id, notification_type="Public note added", text=request_body['additional_information'],user_id=user_id)
             return note_id
         return False
     return False
