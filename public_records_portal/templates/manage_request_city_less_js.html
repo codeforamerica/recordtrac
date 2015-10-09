@@ -76,7 +76,6 @@
           <textarea id="questionTextarea"  name="question_text" class="input-xlarge" placeholder="Ask the requester a question" required/></textarea>
         <button id="askQuestion" class="btn btn-primary" data-toggle="modal" data-target="#confirm-submit" type="submit">Ask</button>
        {% endif %}
-        <input type="hidden" id="additional_information" name="additional_information" />
       </fieldset>
     </form>
 
@@ -92,6 +91,7 @@
 						<tr>
 							<th>Question</th>
 							<td id="question_text"></td>
+                                                        <input type="hidden" id="form_id" value=""/>
 						</tr>
 					</table>
                                         <table id="modalAdditionalInfoTable" class="table">
@@ -130,19 +130,14 @@
           <label class="control-label">Upload a record <span id="recordTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Upload a document" | explain_action}}" ><small><i class="icon-info-sign"></i></small></span></label>
           <div class="row-fluid">
             <div class="controls">
-              <div class="fileupload fileupload-new" data-provides="fileupload">
-                <div class="input-append">
-                  <!-- <div class="uneditable-input">
-                    <i class="icon-file fileupload-exists"></i>
-                    <span class="fileupload-preview" />
-                  </div> -->
-                  <span class="btn btn-file">
-                    <span class="fileupload-new">Select file</span>
-                    <span class="fileupload-exists">Change</span>
-                    <input type="file" name="record" />
-                  </span>
-                  <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                </div>
+              <div class="fileinput fileinput-new" data-provides="fileinput">
+                <span class="btn btn-default btn-file">
+                  <span class="fileinput-new">Select file</span>
+                  <span class="fileinput-exists">Change</span>
+                  <input type="file" name="record">
+                </span>
+                <span class="fileinput-filename"></span>
+                <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">&times;</a>
               </div>
             </div>
           </div>
@@ -201,7 +196,7 @@
   </form>
   
   <!-- Generate PDF -->
-  <form name="note" class="form-horizontal" id="note" method="post" action="/add_a_pdf">
+  <form name="note" class="form-horizontal" id="note_pdf" method="post" action="/add_a_pdf">
     <input type="hidden" name="request_id" value="{{ req.id }}"/>
     <fieldset>
       <legend>Standard Responses (PDF)</legend>
@@ -365,7 +360,7 @@
             {% endfor %}
           </select>
           <input id="rerouteReason" class="input-block-level" type="text" name="owner_reason" placeholder="Say why." required />
-          <button id="rerouteButton" class="btn input-block-level" type="submit"> <i class="icon-envelope"> </i> Change Assignee</button>
+          <button id="rerouteButtonAssignee" class="btn input-block-level" type="submit"> <i class="icon-envelope"> </i> Change Assignee</button>
       </fieldset>
     </form>
 

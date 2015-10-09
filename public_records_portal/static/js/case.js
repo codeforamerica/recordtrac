@@ -77,8 +77,13 @@
   });
 
   $('#submit').on('click',function(){
-    $('#additional_information').val($('#additional_note').val());
-    $('#question').submit();
+    additional_information = $('#additional_note').val();
+    form_id = '#' + $('#form_id').val();
+    var input = $("<input>")
+               .attr("type", "hidden")
+               .attr("name", "additional_information").val(additional_information);
+    $(form_id).append($(input));
+    $(form_id).submit();
    });
 
   $('#rerouteButton').on('click',function(){
@@ -89,6 +94,7 @@
   });
 
   $('#extendButton').on('click',function(){
+    $('#form_id').val('extension');
     days = $('#days_after').val();
     var modalQuestion = 'Are you sure you want to request an extension for the number of days below and send an email to the requester?';
 
@@ -108,6 +114,7 @@
   });
 
   $('#closeButton').on('click',function(){
+    $('#form_id').val('closeRequest');
     var modalQuestion = 'Are you sure you want to close the request for the reasons below and send an email to the requester?';
     modalQuestion += '<br><br>' + $('#close_reasons').val();
     $('#modalquestionDiv').html(modalQuestion);
@@ -115,6 +122,7 @@
   });
 
   $('#addRecordButton').on('click',function(){
+    $('#form_id').val('submitRecord');
     var modalQuestion = 'Are you sure you want to add this record and send an email to the requester?';
     modalQuestion += '<br><br>' + $('#recordSummary').val();
     $('#modalquestionDiv').html(modalQuestion);
@@ -122,6 +130,7 @@
   });
 
   $('#addNoteButton').on('click',function(){
+    $('#form_id').val('note');
     var modalQuestion = 'Are you sure you want to add the note below and send an email to the requester?';
     modalQuestion += '<br><br>' + $('#noteTextarea').val();
     $('#modalquestionDiv').html(modalQuestion);
