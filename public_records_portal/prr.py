@@ -208,8 +208,7 @@ def upload_record(request_id, description, user_id, document=None):
             record_id = create_record(doc_id=None, request_id=request_id, user_id=user_id, description=description,
                                       filename=filename, url=app.config['HOST_URL'] + doc_id)
             change_request_status(request_id, "A response has been added.")
-            attached_file = app.config['UPLOAD_FOLDER'] + "/" + filename
-            generate_prr_emails(request_id=request_id, notification_type="City response added",attached_file=attached_file)
+            generate_prr_emails(request_id=request_id, notification_type="City response added")
             add_staff_participant(request_id=request_id, user_id=user_id)
             return record_id
     return "There was an issue with your upload."
