@@ -55,7 +55,6 @@ def new_request(passed_recaptcha=False, data=None):
         if current_user.is_authenticated:
             form = OfflineRequestForm(request.form)
             request_agency = current_user.current_department.name
-            print request_agency
             request_summary = form.request_summary.data
             request_text = form.request_text.data
             request_attachment_description = form.request_attachment_description.data
@@ -88,8 +87,8 @@ def new_request(passed_recaptcha=False, data=None):
                 app.logger.info("\n\nNo file passed in")
 
             # Check Attachment
-            # if request_attachment_description and not (request_attachment):
-            #     errors.append('Please select a file to upload as attachment.')
+            if request_attachment_description and not (request_attachment):
+                errors.append('Please select a file to upload as attachment.')
 
             if not (request_text and request_text.strip()):
                 errors.append('Please fill out the request description.')

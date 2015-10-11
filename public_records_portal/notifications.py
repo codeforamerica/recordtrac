@@ -27,7 +27,9 @@ test = "[TEST] "
 if app.config['ENVIRONMENT'] == 'PRODUCTION':
     send_emails = True
     test = ""
-
+if app.config['ENVIRONMENT'] == 'LOCAL':
+    send_emails = True
+    test = "[LOCAL]"
 
 def generate_prr_emails(request_id, notification_type, user_id=None):
     app.logger.info("\n\n Generating e-mails for request with ID: %s, notification type: %s, and user ID: %s" % (
