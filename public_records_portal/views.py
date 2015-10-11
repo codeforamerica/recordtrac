@@ -205,7 +205,6 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_zip = form.request_address_zip.data
 
             request_id, is_new = make_request(
-                category=request_category,
                 agency=request_agency,
                 summary=request_summary,
                 text=request_text,
