@@ -91,16 +91,12 @@
         </div>
         {% endblock well %}
 
-        {% if current_user.is_authenticated %}
-            <!-- Request Assignment Operations -->
-            <h4 class="case_participantRow">Assigned Officer</h4>
-            {% include '_contact_popover.html' %}
-        {% else %}'
-            <h4 class="case_participantRow">Point of Contact</h4>
-            {% include '_contact_popover.html' %}
-        {% endif %}
+
         {% block requester_info %}{% endblock requester_info %}
 
+        {% block subscribe %}
+            {% include '_subscribe_widget.html' %}
+        {% endblock subscribe %}
         {% block responses_container %}
         <div id="responses-container" class="row-fluid">
             {% set responses = ( req | get_responses_chronologically ) %}
@@ -155,6 +151,14 @@
         {% block sidebar %}
 
         {% block status %}{% endblock status %}
+        {% if current_user.is_authenticated %}
+            <!-- Request Assignment Operations -->
+            <h4 class="case_participantRow">Assigned Officer</h4>
+            {% include '_contact_popover.html' %}
+        {% else %}
+            <h4 class="case_participantRow">Point of Contact</h4>
+            {% include '_contact_popover.html' %}
+        {% endif %}
         {% endblock sidebar %}
 
         {% block request_dates %}
@@ -163,33 +167,7 @@
         </div>
         {% endblock request_dates %}
 
-        {% block follow %}
-        <form name="folow" id="follow" method="post"
-              action="/public_add_a_subscriber">
-            <input type="hidden" name="request_id" value="{{ req.id }}"/>
-            <!-- <fieldset> -->
-            <div class="row-fluid follow">
-                <div class="span10 offset2">
-                    <div class="input-append">
-                        <input id="followRequest" name="follow_email"
-                               class="span6"
-                               placeholder="yourname@email.com" type="email">
-                        <button id="followRequest-button" class="btn"
-                                type="submit">Follow
-                        </button>
-                    </div>
-                    <div id="whatisfollow"><span id="recordTooltip"
-                                                 rel="tooltip"
-                                                 data-toggle="tooltip"
-                                                 data-placement="right" title=""
-                                                 data-original-title="Enter your email here and we will send you updates for this request."><small>
-                        <i class="icon-question-sign"></i></i></small></span>
-                    </div>
-                </div>
-            </div>
-            </fieldset>
-        </form>
-        {% endblock follow %}
+
     </div>
 
 </div>

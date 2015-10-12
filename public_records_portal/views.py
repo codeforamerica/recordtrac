@@ -189,7 +189,7 @@ def new_request(passed_recaptcha=False, data=None):
                                            routing_available=routing_available, departments=departments, errors=errors)
 
                 return redirect(url_for('show_request_for_x', request_id=request_id,
-                                        audience='new'))
+                                        audience='new', email=(request_email is not None)))
 
         else:
             form = NewRequestForm(request.form)
@@ -312,7 +312,7 @@ def new_request(passed_recaptcha=False, data=None):
                 return render_template('new_request.html', form=form,
                                    routing_available=routing_available, departments=departments, errors=errors)
             return redirect(url_for('show_request_for_x', request_id=request_id,
-                                    audience='new'))
+                                    audience='new', email=(request_email is not None)))
 
     elif request.method == 'GET':
         if 'LIAISONS_URL' in app.config:

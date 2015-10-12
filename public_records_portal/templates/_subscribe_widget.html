@@ -1,0 +1,22 @@
+{% block subscribe %}
+    {% if current_user.is_anonymous and not request.args.email %}
+        <form name="follow" id="follow" method="post" action="/public_add_a_subscriber">
+            <input type="hidden" name="request_id" value="{{ req.id }}"/>
+            <fieldset>
+                <div class="row-fluid follow">
+                    <div class="span10">
+                        <p>Subscribe to receive updates about this request</p>
+                        <div class="input-append">
+                            <input id="followRequest" name="follow_email"
+                                   class="span6"
+                                   placeholder="yourname@email.com" type="email">
+                            <button id="followRequest-button" class="btn"
+                                    type="submit">Subscribe
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    {% endif %}
+{% endblock subscribe %}
