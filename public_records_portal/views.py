@@ -54,9 +54,7 @@ def new_request(passed_recaptcha=False, data=None):
     if request.method == 'POST':
         if current_user.is_authenticated:
             form = OfflineRequestForm(request.form)
-            request_category = form.request_category.data
             request_agency = current_user.current_department.name
-            print request_agency
             request_summary = form.request_summary.data
             request_text = form.request_text.data
             request_attachment_description = form.request_attachment_description.data
@@ -75,10 +73,6 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_city = form.request_address_city.data
             request_address_state = form.request_address_state.data
             request_address_zip = form.request_address_zip.data
-
-            # Check Category
-            if not (request_category and request_category.strip()):
-                errors.append('You must select a category for this request')
 
             # Check Summary
             if not (request_summary and request_summary.strip()):
@@ -161,7 +155,6 @@ def new_request(passed_recaptcha=False, data=None):
                                        routing_available=routing_available, departments=departments, errors=errors)
             else:
                 request_id, is_new = make_request(
-                    category=request_category,
                     agency=request_agency,
                     summary=request_summary,
                     text=request_text,

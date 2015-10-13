@@ -240,7 +240,7 @@ def add_link(request_id, url, description, user_id):
 
 
 ### @export "make_request"
-def make_request(category=None, agency=None, summary=None, text=None, attachment=None,
+def make_request(agency=None, summary=None, text=None, attachment=None,
                  attachment_description=None, offline_submission_type=None, date_received=None, first_name=None,
                  last_name=None, alias=None, role=None, organization=None, email=None, phone=None, fax=None,
                  street_address_one=None, street_address_two=None, city=None, state=None, zip=None, user_id=None):
@@ -268,7 +268,7 @@ def make_request(category=None, agency=None, summary=None, text=None, attachment
             agency] + "-" + "%05d" % currentRequestId
         req = get_obj("Request", id)
 
-    request_id = create_request(id=id, agency=agency, category=category,  summary=summary, text=text, user_id=user_id,
+    request_id = create_request(id=id, agency=agency, summary=summary, text=text, user_id=user_id,
                                 offline_submission_type=offline_submission_type,
                                 date_received=date_received)  # Actually create the Request object
 

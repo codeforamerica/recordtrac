@@ -296,7 +296,6 @@ class Request(db.Model):
     department = relationship('Department', uselist=False)
     date_received = db.Column(db.DateTime)
     offline_submission_type = db.Column(db.String())
-    category = db.Column(db.String, nullable=False)
     prev_status = db.Column(db.String(400))  # The previous status of the request (open, closed, etc.)
 
     def __init__(
@@ -307,7 +306,6 @@ class Request(db.Model):
             creator_id=None,
             offline_submission_type=None,
             date_received=None,
-            category=None,
             agency=None,
 
     ):
@@ -319,7 +317,6 @@ class Request(db.Model):
         self.offline_submission_type = offline_submission_type
         if date_received and type(date_received) is datetime:
             self.date_received = date_received
-        self.category = category
         self.department_id = agency
 
     def __repr__(self):

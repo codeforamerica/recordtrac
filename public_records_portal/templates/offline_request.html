@@ -38,11 +38,6 @@
                         <br/>
                         <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="off" novalidate="novalidate" enctype="multipart/form-data">
                             <fieldset>
-
-                                <div class="control-group">
-                                    <h1><small>{{ form.request_category.label.text}} </small></h1>
-                                    {{ form.request_category(class="input-block-level") }}
-                                </div>
                                 <div class="control-group">
                                     <h1><small>What is the topic of this request?*</small></h1>
                                     {{ form.request_summary(rows="3", class="input-block-level", placeholder="Please provide a short summary of the request") }}
