@@ -231,6 +231,8 @@
         });
         </script>
     {% endif %}
+    <script type='text/javascript' src="{{ url_for('static', filename = 'js/plugins/jquery.validate.js') }}"></script>
+    <script type='text/javascript' src="{{ url_for('static', filename = 'js/plugins/additional-methods.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename = 'js/newrequestform.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename = 'js/validate.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/validator.js') }}"></script>
 {% endblock custom_script_links %}
