@@ -21,7 +21,7 @@
         "Question answered":
         {
             "Subject": "A question about this request has been answered by the requester.",
-            "Recipients": ["Staff participants"]
+            "Recipients": ["Staff participants", "Staff owner"]
         },
         "Request closed":
         {

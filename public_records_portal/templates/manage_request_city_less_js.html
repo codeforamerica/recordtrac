@@ -74,7 +74,8 @@
       {% if email %}
         <label>Ask a question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
           <textarea id="questionTextarea"  name="question_text" class="input-xlarge" placeholder="Ask the requester a question" required/></textarea>
-        <button id="askQuestion" class="btn btn-primary" data-toggle="modal" data-target="#confirm-submit" type="submit">Ask</button>
+        <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
+{#        <button id="askQuestion" class="btn btn-primary" data-toggle="modal" data-target="#confirm-submit" type="submit">Ask</button>#}
        {% endif %}
       </fieldset>
     </form>
@@ -164,7 +165,8 @@
         <!-- submission -->
         <div class="control-group">
           <div class="controls">
-            <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#confirm-submit" id="addRecordButton">Add record</button>
+{#            <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#confirm-submit" id="addRecordButton">Add record</button>#}
+            <button type="submit" class="btn btn-primary" id="addRecordButton">Add record</button>
           </div>
         </div>
 
@@ -342,7 +344,7 @@
             {% endfor %}
           </select>
           <input id="rerouteReason" class="input-block-level" type="text" name="owner_reason" placeholder="Say why." required />
-          <button id="rerouteButton" class="btn input-block-level" type="submit"> <i class="icon-envelope"> </i> Change point of contact</button>
+          <button id="rerouteButton" class="btn input-block-level" type="submit" > <i class="icon-envelope"> </i> Change point of contact</button>
       </fieldset>
     </form>
 

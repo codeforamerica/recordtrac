@@ -29,18 +29,22 @@ if app.config['ENVIRONMENT'] == 'PRODUCTION':
     test = ""
 
 
-def generate_prr_emails(request_id, notification_type, text=None,user_id=None):
+def generate_prr_emails(request_id, notification_type, text=None,user_id=None, department_name=None):
     app.logger.info("\n\n Generating e-mails for request with ID: %s, notification type: %s, and user ID: %s" % (
     request_id, notification_type, user_id))
     app_url = app.config['APPLICATION_URL']
     # Define the e-mail template:
     template = "generic_email.html"
+
     if notification_type == "Request made":
         template = "new_request_email.html"
-    if "Public Notification Template" in notification_type:
+    if notification_type=="Question asked":
+        template = "question_asked.html"
+    elif "Public Notification Template" in notification_type:
         template = "system_email_" + notification_type[-2:] + ".html"
-    if "Agency Notification Template" in notification_type:
+    elif "Agency Notification Template" in notification_type:
         template = "agency_email_" + notification_type[-2:] + ".html"
+
     # Get information on who to send the e-mail to and with what subject line based on the notification type:
     email_info = get_email_info(notification_type=notification_type)
     email_subject = "Public Records Request %s: %s" % (request_id, email_info["Subject"])
@@ -52,9 +56,12 @@ def generate_prr_emails(request_id, notification_type, text=None,user_id=None):
         if user_id and (recipient_type == "Requester" or recipient_type == "Subscriber"):
             subscriber = get_subscriber(request_id=request_id, user_id=user_id)
             should_notify = get_attribute(attribute="should_notify", obj=subscriber)
-            if should_notify == False:
-                app.logger.info("\n\nSubscriber %s unsubscribed, no notification sent." % subscriber.id)
-                continue
+            if not should_notify:
+                if not subscriber:
+                    continue
+                else:
+                    app.logger.info("\n\nSubscriber %s unsubscribed, no notification sent." % subscriber.id)
+                    continue
         # Set up the e-mail
         page = "%srequest/%s" % (app_url, request_id)  # The request URL
         if "Staff" in recipient_type:
@@ -72,7 +79,7 @@ def generate_prr_emails(request_id, notification_type, text=None,user_id=None):
                     if unfollow_link:
                         unfollow_link = unfollow_link + recipient
                     send_prr_email(page=page, recipients=[recipient], subject=email_subject, template=template,
-                                   include_unsubscribe_link=include_unsubscribe_link, unfollow_link=unfollow_link, additional_information=text)
+                                   include_unsubscribe_link=include_unsubscribe_link, unfollow_link=unfollow_link, additional_information=text, request_id=request_id, department_name=department_name)
             else:
                 app.logger.debug("\n\n No user ID provided")
         elif recipient_type == "Subscribers":
@@ -87,7 +94,7 @@ def generate_prr_emails(request_id, notification_type, text=None,user_id=None):
                         unfollow_link = unfollow_link + recipient
                     send_prr_email(page=page, recipients=[recipient], subject=email_subject, template=template,
                                    include_unsubscribe_link=include_unsubscribe_link,
-                                   unfollow_link=unfollow_link, additional_information=text)  # Each subscriber needs to get a separate e-mail.
+                                   unfollow_link=unfollow_link, additional_information=text, request_id=request_id, department_name=department_name)  # Each subscriber needs to get a separate e-mail.
         elif recipient_type == "Staff participants":
             recipients = []
             participants = get_attribute(attribute="owners", obj_id=request_id, obj_type="Request")
@@ -98,20 +105,20 @@ def generate_prr_emails(request_id, notification_type, text=None,user_id=None):
                         recipients.append(recipient)
             send_prr_email(page=page, recipients=recipients, subject=email_subject, template=template,
                            include_unsubscribe_link=include_unsubscribe_link, cc_everyone=False,
-                           unfollow_link=unfollow_link, additional_information=text)
+                           unfollow_link=unfollow_link, additional_information=text, request_id=request_id, department_name=department_name)
             app.logger.info("\n\nRecipients: %s" % recipients)
         else:
             app.logger.info("Not a valid recipient type: %s" % recipient_type)
 
 
 def send_prr_email(page, recipients, subject, template, include_unsubscribe_link=True, cc_everyone=False, password=None,
-                   unfollow_link=None, additional_information=None):
+                   unfollow_link=None, additional_information=None, request_id=None, department_name=None):
     app.logger.info("\n\nAttempting to send an e-mail to %s with subject %s, referencing page %s and template %s" % (
     recipients, subject, page, template))
     if recipients:
         if send_emails:
             try:
-                send_email(body=render_template(template, unfollow_link=unfollow_link, page=page, additional_info=additional_information),
+                send_email(body=render_template(template, unfollow_link=unfollow_link, page=page, additional_information=additional_information, request_id=request_id,department_name=department_name),
                            recipients=recipients, subject=subject, include_unsubscribe_link=include_unsubscribe_link,
                            cc_everyone=cc_everyone)
                 app.logger.info("\n\n E-mail sent successfully!")
