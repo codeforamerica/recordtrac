@@ -268,7 +268,7 @@ def make_request(agency=None, summary=None, text=None, attachment=None,
             agency] + "-" + "%05d" % currentRequestId
         req = get_obj("Request", id)
 
-    request_id = create_request(id=id, agency=agency, category=category,  summary=summary, text=text, user_id=user_id,
+    request_id = create_request(id=id, agency=agency, summary=summary, text=text, user_id=user_id,
                                 offline_submission_type=offline_submission_type,
                                 date_received=date_received)  # Actually create the Request object
 
