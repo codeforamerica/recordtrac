@@ -21,6 +21,8 @@
         <p>Please make your request specific so you receive the fastest service. After you submit a FOIL request you
             will receive a confirmation number so you can track the status of the response. The agency will notify
             you about how much time is required to respond to your request.</p>
+        <p><b>Note: The agency, category, and topic of your request will be visible to the public. Do not
+                enter personal information here.</b></h5>
     </div>
 
     <form name="newrequest" class="form-horizontal" id="submitRequest" method="post" action="/new"
@@ -68,9 +70,6 @@
                     <h3>Example Topic</h3>
                     <p>Public Advocate Emails from 2015</p>
                 </div>
-                <h5>Note: The agency, category, and topic of your request will be visible to the public. Do not
-                    enter personal information here.</h5>
-
                 <p><em>*</em> denotes a required field</p>
             </div>
         </div>
@@ -86,10 +85,7 @@
                                 Details Missing
                             </div>
                             {{
-                            form.request_text(class="input-block-level",rows="6",id="request_text",placeholder="Provide
-                            more information about your request to help the City locate the record. If don’t know the
-                            record name, describe type of information you think it would contain and the approximate
-                            date range. Do not include private info – such as social security # or credit card." ) }}
+                            form.request_text(class="input-block-level",rows="6",id="request_text",placeholder="Provide more information about your request to help the City locate the record. If don’t know the record name, describe type of information you think it would contain and the approximate date range. Do not include private info – such as social security # or credit card." ) }}
                         </div>
                     </div>
                     <div class="span4">
@@ -101,7 +97,6 @@
                             <p>Emails that mention bike lanes or bicycle lanes from the Public Advocate's Office
                                 between July 27, 2015 and September 10, 2015</p>
                         </div>
-                        <h5>Note: The details of your request will not be visible to the public.</h5>
                     </div>
                 </div>
                 <div class="row-fluid">
@@ -112,6 +107,7 @@
                         <p>This information will not be publicly viewable on this site. You must provide contact
                             information so that the agency can respond to your request for records.
                         </p>
+                        <p><b>Note: The details of your request will not be visible to the public.</b></p>
 
                         <div class="row-fluid">
                             <div class="control-group span6">
