@@ -91,9 +91,6 @@ This template provides the header, footer, and envelope info for all pages excep
 
             <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
                 {% if current_user.is_authenticated %}
-                    <div class="login btn">
-                      <p><a href="/logout" >Logout</a></p>
-                    </div>
                     <ul class="nav tabs">
                         <li><a href="/new">Request a Record</a></li>
                         <li><a href="/view_requests">All Requests</a></li>
@@ -104,9 +101,6 @@ This template provides the header, footer, and envelope info for all pages excep
                     <ul class="nav pull-right">
                     </ul>
                 {% else %}
-                    <div class="login btn">
-                      <p><a href="/login" >Login</a></p>
-                    </div>
                     <ul class="nav tabs">
                         <li><a href="/new">Request a Record</a></li>
                         <li><a href="/view_requests">All Requests</a></li>
