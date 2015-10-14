@@ -64,10 +64,10 @@ def add_resource(resource, request_body, current_user_id=None):
             return "When uploading a record, please fill out the 'summary' field."
         if 'record_access' in fields and fields['record_access'] != "":
             return add_offline_record(fields['request_id'], fields['record_description'], fields['record_access'],
-                                      current_user_id)
+                                      current_user_id, department_name)
         elif 'link_url' in fields and fields['link_url'] != "":
             return add_link(request_id=fields['request_id'], url=fields['link_url'],
-                            description=fields['record_description'], user_id=current_user_id)
+                            description=fields['record_description'], user_id=current_user_id, department_name=department_name)
         else:
             app.logger.info("\n\neverything else...")
             document = None
@@ -142,9 +142,9 @@ def request_extension(request_id, extension_reasons, user_id, days_after=None, d
     req.extension(days_after, due_date)
     text = "Request extended:"
     if request_body is not None:
-        generate_prr_emails(request_id=request_id, notification_type="Public Notification Template 10", text=request_body['additional_information'])
+        generate_prr_emails(request_id=request_id, notification_type="Public Notification Template 03", text=request_body['additional_information'])
     else:
-        generate_prr_emails(request_id=request_id, notification_type="Public Notification Template 10", text=extension_reasons)
+        generate_prr_emails(request_id=request_id, notification_type="Public Notification Template 03", text=extension_reasons)
     for reason in extension_reasons:
         text = text + reason + "</br>"
     add_staff_participant(request_id=request_id, user_id=user_id)
@@ -160,14 +160,14 @@ def add_note(request_id, text,  privacy=1, request_body=None, user_id=None):
             if user_id:
                 add_staff_participant(request_id=request_id, user_id=user_id)
                 if request_body is not None:
-                    generate_prr_emails(request_id=request_id, notification_type="Public Notification Template 10", text=request_body['additional_information'],user_id=user_id)
+                    generate_prr_emails(request_id=request_id, notification_type="Public note added", text=request_body['note_text'],user_id=user_id)
                 else:
-                    generate_prr_emails(request_id=request_id, notification_type="Public Notification Template 10",user_id=user_id)
+                    generate_prr_emails(request_id=request_id, notification_type="Public note added",user_id=user_id)
             else:
                 if request_body is not None:
-                    generate_prr_emails(request_id=request_id, notification_type="Public Notification Template 10", text=request_body['additional_information'],user_id=user_id)
+                    generate_prr_emails(request_id=request_id, notification_type="Public note added", text=request_body['note_text'],user_id=user_id)
                 else:
-                    generate_prr_emails(request_id=request_id, notification_type="Public Notification Template 10",user_id=user_id)
+                    generate_prr_emails(request_id=request_id, notification_type="Public note added",user_id=user_id)
             return note_id
         return False
     return False
@@ -233,25 +233,25 @@ def upload_record(request_id, description, user_id, request_body, document=None)
 
 
 ### @export "add_offline_record"
-def add_offline_record(request_id, description, access, user_id, request_body=None):
+def add_offline_record(request_id, description, access, user_id, department_name, request_body=None):
     """ Creates a record with offline attributes """
     record_id = create_record(request_id=request_id, user_id=user_id, access=access,
                               description=description)  # To create an offline record, we need to know the request ID to which it will be added, the user ID for the person adding the record, how it can be accessed, and a description/title of the record.
     if record_id:
         change_request_status(request_id, "A response has been added.")
-        generate_prr_emails(request_id=request_id, notification_type="City response added", text=description)
+        generate_prr_emails(request_id=request_id, notification_type="City response added", text=description, department_name=department_name)
         add_staff_participant(request_id=request_id, user_id=user_id)
         return record_id
     return False
 
 
 ### @export "add_link"
-def add_link(request_id, url, description, user_id, request_body):
+def add_link(request_id, url, description, user_id, request_body, department_name):
     """ Creates a record with link attributes """
     record_id = create_record(url=url, request_id=request_id, user_id=user_id, description=description)
     if record_id:
         change_request_status(request_id, "A response has been added.")
-        generate_prr_emails(request_id=request_id, notification_type="City response added", text=url+description)
+        generate_prr_emails(request_id=request_id, notification_type="City response added", text=url+description, department_name = department_name)
         add_staff_participant(request_id=request_id, user_id=user_id)
         return record_id
     return False
