@@ -3,6 +3,16 @@
     ["Requester", "Subscribers", "Subscriber", "Staff owner", "Departmental backups", "Staff participants", "Staff participant"],
     "Notification types":
     {
+
+        "Helper added":
+        {
+
+        },
+        "Helper removed":
+        {
+          "Subject": "A helper has been removed from your request",
+          "Recipients": ["Staff owner", "Staff participants"]
+        },
         "Request assigned":
         {
             "Subject": "A request has been assigned to you",

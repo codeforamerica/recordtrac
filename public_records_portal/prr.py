@@ -85,7 +85,7 @@ def add_resource(resource, request_body, current_user_id=None):
                                                     reason=fields['owner_reason'])
         if new:
             if request_body:
-                generate_prr_emails(request_id=fields['request_id'], notification_type="Staff participant added", text=request_body['additional_information'],
+                generate_prr_emails(request_id=fields['request_id'], notification_type="Staff participant added", text=request_body,
                                     user_id=get_attribute("user_id", obj_id=participant_id, obj_type="Owner"))
             else:
                 generate_prr_emails(request_id=fields['request_id'], notification_type="Staff participant added",
@@ -101,6 +101,7 @@ def add_resource(resource, request_body, current_user_id=None):
 def update_resource(resource, request_body):
     fields = request_body
     if "owner" in resource:
+        generate_prr_emails(request_id=fields['request_id'],notification_type="Helper removed", text=request_body)
         if "reason_unassigned" in fields:
             return remove_staff_participant(owner_id=fields['owner_id'])
         else:
@@ -142,7 +143,7 @@ def request_extension(request_id, extension_reasons, user_id, days_after=None, d
     req.extension(days_after, due_date)
     text = "Request extended:"
     if request_body is not None:
-        generate_prr_emails(request_id=request_id, notification_type="Public Notification Template 03", text=request_body['additional_information'])
+        generate_prr_emails(request_id=request_id, notification_type="Public Notification Template 03", text=request_body)
     else:
         generate_prr_emails(request_id=request_id, notification_type="Public Notification Template 03", text=extension_reasons)
     for reason in extension_reasons:
@@ -153,7 +154,7 @@ def request_extension(request_id, extension_reasons, user_id, days_after=None, d
 
 def add_note(request_id, text,  privacy=1, request_body=None, user_id=None):
     if text and text != "":
-        print text
+        #THIS IS FUCKED
         note_id = create_note(request_id=request_id, text=text, user_id=user_id, privacy=privacy)
         if note_id:
             change_request_status(request_id, "A response has been added.")
@@ -468,10 +469,10 @@ def set_department_contact(department_name, attribute_name, user_id):
 
 #needs additional information
 ### @export "close_request"
-def close_request(request_id, reason="", user_id=None):
+def close_request(request_id, reason="", user_id=None, request_body=None):
     req = get_obj("Request", request_id)
     change_request_status(request_id, "Closed")
     # Create a note to capture closed information:
     create_note(request_id, reason, user_id, privacy=1)
-    generate_prr_emails(request_id=request_id, notification_type="Request closed",text=reason)
+    generate_prr_emails(request_id=request_id, notification_type="Request closed",text=request_body['additional_information'])
     add_staff_participant(request_id=request_id, user_id=user_id)

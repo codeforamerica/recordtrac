@@ -521,6 +521,8 @@ def public_add_a_resource(resource, passed_recaptcha = False, data = None):
 @app.route("/update_a_<string:resource>", methods=["GET", "POST"])
 def update_a_resource(resource, passed_recaptcha=False, data=None):
     if (data or request.method == 'POST'):
+        if 'owner' in resource:
+            update_resource(resource=resource,request_body=request.form)
         if not data:
             data = request.form.copy()
         if 'qa' in resource:
@@ -563,7 +565,7 @@ def close(request_id=None):
         elif 'close_reasons' in request.form:
             for close_reason in request.form.getlist('close_reasons'):
                 reason += close_reason + " "
-        close_request(request_id=request_id, reason=reason, user_id=get_user_id())
+        close_request(request_id=request_id, reason=reason, user_id=get_user_id(), request_body=request.form)
         return show_request(request_id, template=template)
     return render_template('error.html', message="You can only close from a requests page!")
 
