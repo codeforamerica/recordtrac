@@ -62,6 +62,9 @@ def generate_prr_emails(request_id, notification_type, text=None,user_id=None, d
     elif notification_type=="Request closed":
         template="request_closed.html"
     elif notification_type=="Staff participant added":
+        user = User.query.get(user_id)
+        user_name = user.alias
+        text=text['owner_reason']
         template="helper_added.html"
     elif notification_type=="Helper removed":
         template="helper_removed.html"

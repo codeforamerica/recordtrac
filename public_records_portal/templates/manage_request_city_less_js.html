@@ -358,7 +358,7 @@
           <select class="span10" id="rerouteEmail" name="owner_email">
             {% for user in users %}
               {{ user.email }}
-              <option value="{{ user.email }}">{{ user.alias}}</option>
+              <option value="{{ user.id }}">{{ user.alias}}</option>
             {% endfor %}
           </select>
           <input id="rerouteReason" class="input-block-level" type="text" name="owner_reason" placeholder="Say why." required />

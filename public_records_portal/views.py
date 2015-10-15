@@ -521,8 +521,10 @@ def public_add_a_resource(resource, passed_recaptcha = False, data = None):
 @app.route("/update_a_<string:resource>", methods=["GET", "POST"])
 def update_a_resource(resource, passed_recaptcha=False, data=None):
     if (data or request.method == 'POST'):
+        req=request.form
         if 'owner' in resource:
-            update_resource(resource=resource,request_body=request.form)
+            print request.form
+            update_resource(resource, req)
         if not data:
             data = request.form.copy()
         if 'qa' in resource:

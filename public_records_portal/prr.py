@@ -83,13 +83,13 @@ def add_resource(resource, request_body, current_user_id=None):
     elif "owner" in resource:
         participant_id, new = add_staff_participant(request_id=fields['request_id'], email=fields['owner_email'],
                                                     reason=fields['owner_reason'])
-        if new:
-            if request_body:
-                generate_prr_emails(request_id=fields['request_id'], notification_type="Staff participant added", text=request_body,
-                                    user_id=get_attribute("user_id", obj_id=participant_id, obj_type="Owner"))
-            else:
-                generate_prr_emails(request_id=fields['request_id'], notification_type="Staff participant added",
+        # if new:
+        if request_body:
+            generate_prr_emails(request_id=fields['request_id'], notification_type="Staff participant added", text=request_body,
                                 user_id=get_attribute("user_id", obj_id=participant_id, obj_type="Owner"))
+        else:
+            generate_prr_emails(request_id=fields['request_id'], notification_type="Staff participant added",
+                            user_id=get_attribute("user_id", obj_id=participant_id, obj_type="Owner"))
         return participant_id
     elif "subscriber" in resource:
         return add_subscriber(request_id=fields['request_id'], email=fields['follow_email'])
@@ -101,7 +101,16 @@ def add_resource(resource, request_body, current_user_id=None):
 def update_resource(resource, request_body):
     fields = request_body
     if "owner" in resource:
-        generate_prr_emails(request_id=fields['request_id'],notification_type="Helper removed", text=request_body)
+        if 'owner_id' not in fields:
+            print fields['request_id']
+            own=Owner.query.filter_by(request_id=fields['request_id']).first()
+            print own
+            user_name=(User.query.get(own.user_id)).alias
+        else:
+            owner = Owner.query.get(request_body['owner_id'])
+            user_id=owner.user_id
+            user_name=(User.query.get(user_id)).alias
+        generate_prr_emails(request_id=fields['request_id'],notification_type="Helper removed", text=request_body,user_name=user_name)
         if "reason_unassigned" in fields:
             return remove_staff_participant(owner_id=fields['owner_id'])
         else:

@@ -87,6 +87,7 @@
    });
 
   $('#rerouteButton').on('click',function(){
+    $('#form_id').val('note');
     var modalQuestion = 'Are you sure you want to acknowledge the request for the number of days below and send an email to the requester?';
     modalQuestion += '<br><br>' + $('#acknowledge_status').val();
     $('#modalquestionDiv').html(modalQuestion);
@@ -136,5 +137,15 @@
     $('#modalquestionDiv').html(modalQuestion);
     $('#modalQuestionTable').hide();
   });
+
+  $('#notifyButton').on('click',function(){
+    $('#form_id').val('notifyForm');
+    var modalQuestion = 'Are you sure you want to add the helper and send an email to the requester? Please specify the reason below.';
+    modalQuestion += '<br><br>' + $('#notifyReason').val();
+    $('#modalquestionDiv').html(modalQuestion);
+    $('#modalQuestionTable').hide();
+  });
+
+
 
 })($);
