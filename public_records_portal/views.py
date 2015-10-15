@@ -27,7 +27,7 @@ import dateutil.parser
 from filters import *
 import re
 from db_helpers import get_count, get_obj
-from sqlalchemy import func, and_, or_
+from sqlalchemy import func, and_, or_, text
 from forms import OfflineRequestForm, NewRequestForm, LoginForm, EditUserForm
 import pytz
 from requires_roles import requires_roles
@@ -411,7 +411,8 @@ def track(request_id=None):
             audience = 'city'
         else:
             audience = 'public'
-        return redirect(url_for('show_request_for_x', audience=audience, request_id=request_id))
+
+        return redirect(url_for('fetch_requests', request_id_search=request_id))
     else:
         return render_template("track.html")
 
@@ -599,6 +600,13 @@ def filter_search_term(search_input, results):
         results = results.filter("to_tsvector(text) @@ to_tsquery('%s')" % search_query)
     return results
 
+def filter_request_id(request_id_search, results):
+    if request_id_search:
+        app.logger.info("Searching for matching request_id '%s'." % filter_request_id)
+        request_id_search = request_id_search.strip() # Get rid of leading and trailing spaces
+        request_id_search = request_id_search + ":*"  # Catch substrings
+        results = results.filter(text("to_tsvector(id) @@ to_tsquery('%s')" % request_id_search))
+    return results
 
 def get_filter_value(filters_map, filter_name, is_list=False, is_boolean=False):
     if filter_name in filters_map:
@@ -684,6 +692,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
     requester_name = None
     page_number = 1
     search_term = None
+    request_id_search = None
 
     if filters_map:
         departments_selected = get_filter_value(filters_map=filters_map, filter_name='departments_selected',
@@ -703,9 +712,10 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         max_date_received = get_filter_value(filters_map, 'max_date_received')
         requester_name = get_filter_value(filters_map, 'requester_name')
         page_number = int(get_filter_value(filters_map, 'page_number') or '1')
-
+        request_id_search = get_filter_value(filters_map, 'request_id_search')
+ 
     # Set initial checkboxes for mine_as_poc and mine_as_helper when redirected from login page
-    if 'login' in request.referrer:
+    if request.referrer and 'login' in request.referrer:
         if current_user.is_authenticated and (current_user.role in ['Portal Administrator', 'Agency Administrator'] or current_user.is_admin()):
             mine_as_poc = None
             mine_as_helper = None
@@ -722,7 +732,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
                                      max_due_date=max_due_date, min_date_received=min_date_received,
                                      max_date_received=max_date_received, requester_name=requester_name,
                                      page_number=page_number, user_id=user_id, date_format=date_format,
-                                     checkbox_value=checkbox_value)
+                                     checkbox_value=checkbox_value, request_id_search=request_id_search)
 
     # Execute query
     limit = 15
@@ -830,7 +840,7 @@ def filter_department(departments_selected, results):
 
 def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, overdue, mine_as_poc, mine_as_helper,
                            sort_column, sort_direction, search_term, min_due_date, max_due_date, min_date_received,
-                           max_date_received, requester_name, page_number, user_id, date_format, checkbox_value):
+                           max_date_received, requester_name, page_number, user_id, date_format, checkbox_value, request_id_search):
     # Initialize query
     results = db.session.query(models.Request)
 
@@ -838,6 +848,7 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 
     results = filter_department(departments_selected=departments_selected, results=results)
     results = filter_search_term(search_input=search_term, results=results)
+    results = filter_request_id(request_id_search=request_id_search, results=results)
 
     # Accumulate status filters
     status_filters = []
