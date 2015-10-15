@@ -335,7 +335,7 @@
           <!--input id="rerouteEmail" class="input-block-level" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required /-->
           </select>
           <select class="span10" id="rerouteEmail" name="owner_email">
-            {% for data in department_data %}
+            {% for data in agency_data %}
               <option value="{{ data.email }}">{{ data.name}}</option>
             {% endfor %}
           </select>
