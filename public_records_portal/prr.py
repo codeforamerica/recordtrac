@@ -104,13 +104,13 @@ def update_resource(resource, request_body):
         if 'owner_id' not in fields:
             print fields['request_id']
             own=Owner.query.filter_by(request_id=fields['request_id']).first()
-            print own
             user_name=(User.query.get(own.user_id)).alias
+            generate_prr_emails(request_id=fields['request_id'],notification_type="Request assigned", text=request_body['owner_reason'],user_name=user_name)
         else:
             owner = Owner.query.get(request_body['owner_id'])
             user_id=owner.user_id
             user_name=(User.query.get(user_id)).alias
-        generate_prr_emails(request_id=fields['request_id'],notification_type="Helper removed", text=request_body,user_name=user_name)
+            generate_prr_emails(request_id=fields['request_id'],notification_type="Helper removed", text=request_body,user_name=user_name)
         if "reason_unassigned" in fields:
             return remove_staff_participant(owner_id=fields['owner_id'])
         else:

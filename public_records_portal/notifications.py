@@ -45,27 +45,33 @@ def generate_prr_emails(request_id, notification_type, text=None,user_id=None, d
     print user_id
     template = "generic_email.html"
 
+    #making a new request
     if notification_type == "Request made":
         template = "new_request_email.html"
+    #asking a question
     elif notification_type=="Question asked":
         template = "question_asked.html"
+    #respond to question
     elif notification_type=="Question answered":
         template = "question_answered.html"
     elif notification_type=="City response added":
         template="city_response_added.html"
+    #adding a note
     elif notification_type=="Public note added":
         template="public_note_added.html"
+    #Changing Assignee
     elif notification_type=="Request assigned":
-        user = User.query.get(user_id)
-        user_name = user.alias
         template="request_assigned.html"
+    #Closing a request
     elif notification_type=="Request closed":
         template="request_closed.html"
+    #Adding a helper
     elif notification_type=="Staff participant added":
         user = User.query.get(user_id)
         user_name = user.alias
         text=text['owner_reason']
         template="helper_added.html"
+    #Removing a helper
     elif notification_type=="Helper removed":
         template="helper_removed.html"
     elif "Public Notification Template" in notification_type:
