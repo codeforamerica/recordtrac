@@ -705,7 +705,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         page_number = int(get_filter_value(filters_map, 'page_number') or '1')
 
     # Set initial checkboxes for mine_as_poc and mine_as_helper when redirected from login page
-    if 'login' in request.referrer:
+    if request.referrer and 'login' in request.referrer:
         if current_user.is_authenticated and (current_user.role in ['Portal Administrator', 'Agency Administrator'] or current_user.is_admin()):
             mine_as_poc = None
             mine_as_helper = None
