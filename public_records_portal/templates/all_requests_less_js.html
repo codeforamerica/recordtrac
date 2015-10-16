@@ -184,7 +184,9 @@
                                             onclick="return insertInput('due_date');">Due
                                     </button>
                                 </th>
-                                <th>Requester</th>
+                                {% if current_user.is_authenticated %}
+                                    <th>Requester</th>
+                                {% endif %}
                             </tr>
                             </thead>
                             <tbody>
@@ -214,16 +216,14 @@
                                 {% elif request.solid_status == "overdue" %}
                                     <span style="background-color: #CA1A1A" class="label label-important">overdue</span>
                                 {% endif %}
-                                {{ summary }}
+                                {{ text }}
                                 </a>
                             </td>
                             <td>{{ request.department }}</td>
                             <td>{{ request.contact_name }}</td>
                             <td>{{ request.due_date }}</td>
-                            {% if request.privacy == 1 or request.privacy == 4 %}
+                            {% if current_user.is_authenticated %}
                                 <td>{{ request.requester }}</td>
-                            {% else %}
-                                <td>&nbsp;</td>
                             {% endif %}
                             </tr>
                             {% endfor %}
