@@ -10,7 +10,8 @@ $(function() {
                 required: true
             },
             request_summary: {
-                required: true
+                required: true,
+                maxlength: 90
             },
             request_text: {
                 required: true
@@ -112,16 +113,5 @@ $(function() {
         $("#s2").addClass("active");
         $('#step2').fadeIn('slow', function() {});
     });
-
-    function maxLength(el) {    
-    if (!('maxLength' in el)) {
-        var max = el.attributes.maxLength.value;
-        el.onkeypress = function () {
-            if (this.value.length >= max) return false;
-        };
-    }
-}
-
-maxLength(document.getElementById("request_summary"));
 
 });
