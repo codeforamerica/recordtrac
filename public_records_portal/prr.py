@@ -101,12 +101,11 @@ def add_resource(resource, request_body, current_user_id=None):
 def update_resource(resource, request_body):
     fields = request_body
     if "owner" in resource:
-        if 'owner_id' not in fields:
-            print fields['request_id']
-            own=Owner.query.filter_by(request_id=fields['request_id']).first()
+        if "change_assignee" in fields:
+            own=Owner.query.filter_by(user_id=fields['owner_id']).first()
             user_name=(User.query.get(own.user_id)).alias
             generate_prr_emails(request_id=fields['request_id'],notification_type="Request assigned", text=request_body['owner_reason'],user_name=user_name)
-        else:
+        if "remove_helper" in fields:
             owner = Owner.query.get(request_body['owner_id'])
             user_id=owner.user_id
             user_name=(User.query.get(user_id)).alias
@@ -115,7 +114,7 @@ def update_resource(resource, request_body):
             return remove_staff_participant(owner_id=fields['owner_id'])
         else:
             change_request_status(fields['request_id'], "Rerouted")
-            return assign_owner(fields['request_id'], fields['owner_email'])
+            return assign_owner(fields['request_id'], fields['owner_id'])
     elif "reopen" in resource:
         request_id = fields['request_id']
         change_request_status(request_id, "Reopened")
@@ -125,6 +124,7 @@ def update_resource(resource, request_body):
 
     elif "acknowledge" in resource:
         change_request_status(fields['request_id'], fields['acknowledge_status'])
+        generate_prr_emails(request_id=fields['request_id'], text=fields['additional_information'], days_after=fields['acknowledge_status'], notification_type="Acknowledge request")
         return fields['request_id']
     elif "request_text" in resource:
         update_obj(attribute="text", val=fields['request_text'], obj_type="Request", obj_id=fields['request_id'])

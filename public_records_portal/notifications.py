@@ -74,6 +74,9 @@ def generate_prr_emails(request_id, notification_type, text=None,user_id=None, d
     #Removing a helper
     elif notification_type=="Helper removed":
         template="helper_removed.html"
+    #Acknowledging a Request
+    elif notification_type=="Acknowledge request":
+        template="acknowledge_request.html"
     elif "Public Notification Template" in notification_type:
         if text['days_after'] is not None:
             days_after=text['days_after']
@@ -132,7 +135,7 @@ def generate_prr_emails(request_id, notification_type, text=None,user_id=None, d
                         unfollow_link = unfollow_link + recipient
                     send_prr_email(page=page, recipients=[recipient], subject=email_subject, template=template,
                                    include_unsubscribe_link=include_unsubscribe_link,
-                                   unfollow_link=unfollow_link, additional_information=text, request_id=request_id, department_name=department_name, user_name=user_name)  # Each subscriber needs to get a separate e-mail.
+                                   unfollow_link=unfollow_link, additional_information=text, request_id=request_id, department_name=department_name, user_name=user_name,days_after=days_after)  # Each subscriber needs to get a separate e-mail.
         elif recipient_type == "Staff participants":
             recipients = []
             participants = get_attribute(attribute="owners", obj_id=request_id, obj_type="Request")

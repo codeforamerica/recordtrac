@@ -68,6 +68,11 @@
             "Subject": "You are now subscribed to this request.",
             "Recipients": ["Subscriber"]
         },
+        "Acknowledge request":
+        {
+            "Subject": "The request has been Acknowledged",
+            "Recipients":["Subscribers","Requester"]
+        },
         "Public Notification Template 01":
         {
             "Subject": "FOIL Request Submitted",

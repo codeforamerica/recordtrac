@@ -354,10 +354,12 @@
       <fieldset>
         <!-- <label>Change Assignee</label> -->
           <input type="hidden" name="request_id" value="{{ req.id }}"/>
+              <input type="hidden" name="change_assignee" value="True" />
+
           <!--input id="rerouteEmail" class="input-block-level" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required /-->
-          <select class="span10" id="rerouteEmail" name="owner_email">
+          <select class="span10" id="rerouteEmail" name="owner_id">
             {% for user in users %}
-              {{ user.email }}
+{#              {{ user.email }}#}
               <option value="{{ user.id }}">{{ user.alias}}</option>
             {% endfor %}
           </select>
@@ -381,6 +383,7 @@
                   <form id="unassignForm" class="form-inline" method ="post" action="/update_a_owner">
                         <input type="hidden" name="request_id" value="{{ req.id }}"/>
                         <input type="hidden" name="owner_id" value="{{ owner.id }}"/>
+                        <input type="hidden" name="remove_helper" value="True" />
                         <input type="text" class="span8" name="reason_unassigned" value="Task complete" required />
                         <button id="unassignButton" class="btn btn-mini" type="submit"> <i class="icon-envelope"> </i> Remove</button>
                   </form>
