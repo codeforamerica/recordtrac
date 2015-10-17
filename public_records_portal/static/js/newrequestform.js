@@ -114,4 +114,17 @@ $(function() {
         $('#step2').fadeIn('slow', function() {});
     });
 
+    // displays characters remaining, highlights extra characters
+    var text_max = 90;
+    $('#summary_count').text(text_max + ' characters remaining');
+
+    $('#request_summary').keyup(function() {
+        var summary = $('request_summary');
+        var text_length = $('#request_summary').val().length;
+        var text_remaining = text_max - text_length;
+        if (text_remaining < 0) {
+            //highlight range of summary (90:) red
+        }
+        $('#summary_count').text(text_remaining + ' characters remaining');
+    });
 });
