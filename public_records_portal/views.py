@@ -445,8 +445,9 @@ def show_request(request_id, template="manage_request_public.html"):
     departments_all = models.Department.query.all()
     agency_data = []
     for d in departments_all:
-        firstUser = models.User.query.filter_by(department_id=d.id).first()
-        agency_data.append({'name': d.name, 'email': firstUser.email})
+        #firstUser = models.User.query.filter_by(department_id=d.id).first()
+        primary_contact = d.primary_contact
+        agency_data.append({'name': d.name, 'email': primary_contact.email})
 
     if not req:
         return render_template('error.html', message="A request with ID %s does not exist." % request_id)

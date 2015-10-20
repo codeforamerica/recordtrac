@@ -83,12 +83,15 @@ class User(db.Model):
 
     role = db.Column(db.String())
 
+    @property
     def is_authenticated(self):
         return True
 
+    @property
     def is_active(self):
         return True
 
+    @property
     def is_anonymous(self):
         return False
 
@@ -136,7 +139,7 @@ class User(db.Model):
         return 'N/A'
 
     def show_department_filters(self):
-        return self.current_department.name == "DORIS" or self.current_department.name == "Mayor's Office"
+        return self.current_department.name == "DORIS" or self.current_department.name == "Department of Records and Information Services" or self.current_department.name == "Mayor's Office"
 
     def __init__(
             self,

@@ -101,7 +101,7 @@ def update_resource(resource, request_body):
             return remove_staff_participant(owner_id=fields['owner_id'])
         else:
             change_request_status(fields['request_id'], "Rerouted")
-            return assign_owner(fields['request_id'], fields['owner_email'])
+            return assign_owner(request_id=fields['request_id'], reason=fields['owner_reason'], email=fields['owner_email'])
     elif "reopen" in resource:
         request_id = fields['request_id']
         change_request_status(request_id, "Reopened")
