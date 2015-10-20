@@ -329,6 +329,9 @@ def new_request(passed_recaptcha=False, data=None):
             form = NewRequestForm()
             return render_template('new_request.html', form=form, routing_available=routing_available)
 
+@app.route("/faq")
+def faq():
+    return render_template("faq.html")
 
 @app.route("/export")
 @login_required
