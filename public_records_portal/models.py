@@ -276,7 +276,7 @@ class Request(db.Model):
     qas = relationship('QA', cascade='all,delete',
                        order_by='QA.date_created.desc()')  # The list of QA units for this request
     status_updated = db.Column(db.DateTime)
-    summary = db.Column(db.String(500), nullable=False)
+    summary = db.Column(db.String(5000), nullable=False)
     text = db.Column(db.String(5000), unique=True,
                      nullable=False)  # The actual request text.
     owners = relationship('Owner', cascade='all, delete',
@@ -292,7 +292,6 @@ class Request(db.Model):
     creator_id = db.Column(db.Integer, db.ForeignKey(
         'user.id'))  # If city staff created it on behalf of the public, otherwise the creator is the subscriber with creator = true
     department_id = db.Column(db.Integer, ForeignKey('department.id',
-                                                        user_alter=True,
                                                         name='fk_department'))
     department = relationship('Department', uselist=False)
     date_received = db.Column(db.DateTime)
