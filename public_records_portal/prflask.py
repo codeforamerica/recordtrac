@@ -44,7 +44,7 @@ class HomeView(AdminIndexView):
         return self.render('admin.html')
 
     def is_accessible(self):
-        if not current_user.is_authenticated:
+        if current_user.is_authenticated:
             return render_template("404.html"), 404
         elif current_user.role in ['Portal Administrator', 'Agency Administrator']:
             return current_user.role in ['Portal Administrator', 'Agency Administrator']
