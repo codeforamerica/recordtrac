@@ -312,6 +312,10 @@ def create_or_return_user(email=None, alias=None, first_name=None, last_name=Non
         else:
             # Update user if fields to update are provided
             if alias or phone or department or contact_for or backup_for:
+                # If no department is given, don't update staff user
+                if user.is_staff == True and user.department_id != None and department == None:
+                    return user.id
+
                 user = update_user(user=user, alias=alias, first_name=first_name, last_name=last_name, phone=str(phone), address1=address1, address2=address2,
                                    city=city, state=state,
                                    zipcode=zipcode, department=department, contact_for=contact_for,

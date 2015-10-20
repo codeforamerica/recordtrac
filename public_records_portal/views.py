@@ -34,6 +34,7 @@ from requires_roles import requires_roles
 from flask_login import LoginManager
 from models import AnonUser
 
+
 # Initialize login
 app.logger.info("\n\nInitialize login.")
 app.logger.info("\n\nEnvironment is %s" % app.config['ENVIRONMENT'])
@@ -44,6 +45,9 @@ login_manager.anonymous_user = AnonUser
 login_manager.init_app(app)
 
 zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
+@app.before_request
+def make_session_permanent():
+    app.permanent_session_lifetime = timedelta(minutes=120)
 
 
 # Submitting a new request
@@ -327,6 +331,9 @@ def new_request(passed_recaptcha=False, data=None):
             form = NewRequestForm()
             return render_template('new_request.html', form=form, routing_available=routing_available)
 
+@app.route("/faq")
+def faq():
+    return render_template("faq.html")
 
 @app.route("/export")
 @login_required
@@ -1155,7 +1162,7 @@ def get_report_jsons(report_type,public_filter):
                 referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
                 referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
                 referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).all()
-            elif "agency" in public_filter:
+            elif "agency" in public_filter and "staff" not in public_filter:
                 agencyFilter = public_filter.split("_")[1]
                 agencyFilterInt = int(agencyFilter)
                 overdue_request=models.Request.query.filter(overdue_filter).filter(models.Request.department_id == agencyFilterInt).all()
@@ -1213,21 +1220,21 @@ def get_report_jsons(report_type,public_filter):
                 referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
                 referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
                 referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).all()
-            elif "staff" in public_filter:
+            if "staff" in public_filter:
                 staff_id = int(public_filter.split("_")[1])
-                overdue_request=models.Request.query.filter(overdue_filter).filter(models.Owner.is_point_person == True).all()
-                notdue_request=models.Request.query.filter(notoverdue_filter).filter(models.Owner.is_point_person == True).all()
-                received_request=models.Request.query.filter(models.Owner.user_id == staff_id).all()
-                published_request=models.Request.query.filter(published_filter).filter(models.Owner.user_id == staff_id).all()
-                denied_request=models.Request.query.filter(denied_filter).filter(models.Owner.user_id == staff_id).all()
-                granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).filter(models.Owner.user_id == staff_id).all()
-                granted_in_part_request=models.Request.query.filter(granted_in_part_filter).filter(models.Owner.user_id == staff_id).all()
-                no_customer_response_request=models.Request.query.filter(no_customer_response_filter).filter(models.Owner.user_id == staff_id).all()
-                out_of_jurisdiction_request=models.Request.query.filter(out_of_jurisdiction_filter).filter(models.Owner.user_id == staff_id).all()
-                referred_to_nyc_gov_request=models.Request.query.filter(referred_to_nyc_gov_filter).filter(models.Owner.user_id == staff_id).all()
-                referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).filter(models.Owner.user_id == staff_id).all()
-                referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).filter(models.Owner.user_id == staff_id).all()
-                referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).filter(models.Owner.user_id == staff_id).all()
+                overdue_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(overdue_filter).filter(models.Owner.is_point_person == True).all()
+                notdue_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(notoverdue_filter).filter(models.Owner.is_point_person == True).all()
+                received_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(models.Owner.user_id == staff_id).all()
+                published_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(published_filter).filter(models.Owner.user_id == staff_id).all()
+                denied_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(denied_filter).filter(models.Owner.user_id == staff_id).all()
+                granted_and_closed_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(granted_and_closed_filter).filter(models.Owner.user_id == staff_id).all()
+                granted_in_part_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(granted_in_part_filter).filter(models.Owner.user_id == staff_id).all()
+                no_customer_response_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(no_customer_response_filter).filter(models.Owner.user_id == staff_id).all()
+                out_of_jurisdiction_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(out_of_jurisdiction_filter).filter(models.Owner.user_id == staff_id).all()
+                referred_to_nyc_gov_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(referred_to_nyc_gov_filter).filter(models.Owner.user_id == staff_id).all()
+                referred_to_opendata_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(referred_to_opendata_filter).filter(models.Owner.user_id == staff_id).all()
+                referred_to_other_agency_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(referred_to_other_agency_filter).filter(models.Owner.user_id == staff_id).all()
+                referred_to_publications_portal_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(referred_to_publications_portal_filter).filter(models.Owner.user_id == staff_id).all()
 
             response={
                 "status" : "ok",

@@ -15,7 +15,7 @@ from xhtml2pdf import pisa
 from public_records_portal import db_helpers
 from db_helpers import find_request, create_request, get_obj, add_staff_participant, remove_staff_participant, \
     update_obj, get_attribute, change_request_status, create_or_return_user, create_subscriber, create_record, \
-    create_note, create_QA, create_answer, update_user, id_generator, id_counter
+    create_note, create_QA, create_answer, update_user, id_generator, id_counter, get_user_by_id
 from models import *
 from ResponsePresenter import ResponsePresenter
 from RequestPresenter import RequestPresenter
@@ -49,7 +49,7 @@ def add_resource(resource, request_body, current_user_id=None):
     fields = request_body
     if "extension" in resource:
         return request_extension(fields['request_id'], fields.getlist('extend_reason'), current_user_id,
-                                 fields['days_after'], fields['due_date'])
+                                 int(fields['days_after']), fields['due_date'])
     if "note" in resource:
         return add_note(request_id=fields['request_id'], text=fields['note_text'], user_id=current_user_id,
                         passed_spam_filter=True,
@@ -103,7 +103,11 @@ def update_resource(resource, request_body):
             change_request_status(fields['request_id'], "Rerouted")
             return assign_owner(fields['request_id'], fields['owner_email'])
     elif "reopen" in resource:
-        change_request_status(fields['request_id'], "Reopened")
+        request_id = fields['request_id']
+        change_request_status(request_id, "Reopened")
+        req = get_obj("Request", request_id)
+        user_id = req.subscribers[0].user.id
+        generate_prr_emails(request_id=request_id, user_id=user_id, notification_type="Public Notification Template 10")
     elif "acknowledge" in resource:
         change_request_status(fields['request_id'], fields['acknowledge_status'])
         return fields['request_id']
@@ -124,14 +128,18 @@ def update_resource(resource, request_body):
 ### @export "request_extension"
 @requires_roles('Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel')
 def request_extension(request_id, extension_reasons, user_id, days_after=None, due_date=None):
+    """
+    This function allows portal admins, agency admins, and FOIL officers to request additonal time.
+    Uses add_resource from prr.py and takes extension date from field retrived from that function.
+    Returns note with new date after adding delta.
+    """
     req = Request.query.get(request_id)
     req.extension(days_after, due_date)
     text = "Request extended:"
     for reason in extension_reasons:
         text = text + reason + "</br>"
     add_staff_participant(request_id=request_id, user_id=user_id)
-    return add_note(request_id=request_id, text=text, user_id=user_id,
-                    passed_spam_filter=True)  # Bypass spam filter because they are logged in.
+    return add_note(request_id=request_id, text=text, user_id=user_id)  # Bypass spam filter because they are logged in.
 
 
 def add_note(request_id, text, user_id=None, privacy=1):
@@ -200,7 +208,8 @@ def upload_record(request_id, description, user_id, document=None):
             record_id = create_record(doc_id=None, request_id=request_id, user_id=user_id, description=description,
                                       filename=filename, url=app.config['HOST_URL'] + doc_id)
             change_request_status(request_id, "A response has been added.")
-            generate_prr_emails(request_id=request_id, notification_type="City response added")
+            attached_file = app.config['UPLOAD_FOLDER'] + "/" + filename
+            generate_prr_emails(request_id=request_id, notification_type="City response added",attached_file=attached_file)
             add_staff_participant(request_id=request_id, user_id=user_id)
             return record_id
     return "There was an issue with your upload."
@@ -264,9 +273,9 @@ def make_request(category=None, agency=None, summary=None, text=None, attachment
                                 offline_submission_type=offline_submission_type,
                                 date_received=date_received)  # Actually create the Request object
 
-    # Department_id was removed here after the request was assigned a new owner. I don't know why the next two lines of code are there but they don't seem to impact the site's functionality. This now works!
-    # new_owner_id = assign_owner(request_id=request_id, reason=assigned_to_reason,
-    #                             email=assigned_to_email)  # Assign someone to the request
+    # Please don't remove call to assign_owner below
+    new_owner_id = assign_owner(request_id=request_id, reason=assigned_to_reason,
+                                email=assigned_to_email)  # Assign someone to the request
     open_request(request_id)  # Set the status of the incoming request to "Open"
     if email or alias or phone:
         subscriber_user_id = create_or_return_user(email=email, alias=alias, first_name=first_name, last_name=last_name, phone=phone, address1=street_address_one,
@@ -411,8 +420,11 @@ def set_directory_fields():
             dictreader = csv.DictReader(csvfile, delimiter=',')
             for row in dictreader:
                 user = create_or_return_user(email=row['PRR liaison'], contact_for=row['department name'])
-                if row['PRR backup'] != "":
-                    user = create_or_return_user(email=row['PRR backup'], backup_for=row['department name'])
+                if row['department name'] != "":
+                    set_department_contact(row['department name'], "primary_contact_id", user)
+                    if row['PRR backup'] != "":
+                        user = create_or_return_user(email=row['PRR backup'], backup_for=row['department name'])
+                        set_department_contact(row['department name'], "backup_contact_id", user)
         else:
             app.logger.info(
                 "\n\n Please update the config variable LIAISONS_URL for where to find department liaison data for your agency.")
@@ -429,6 +441,13 @@ def set_directory_fields():
         else:
             app.logger.info("\n\n Unable to create any users. No one will be able to log in.")
 
+### @export "set_department_contact"
+def set_department_contact(department_name, attribute_name, user_id):
+    department = Department.query.filter(Department.name == department_name).first()
+    user_obj = get_user_by_id(user_id)
+    user_email = user_obj.email
+    app.logger.info("\n\nSetting %s For %s as %s" % (attribute_name, department.name, user_email))
+    update_obj(attribute=attribute_name, val=user_id, obj_type="Department", obj_id=department.id)
 
 ### @export "close_request"
 def close_request(request_id, reason="", user_id=None):
