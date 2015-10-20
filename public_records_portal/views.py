@@ -33,6 +33,7 @@ import pytz
 from requires_roles import requires_roles
 from flask_login import LoginManager
 
+
 # Initialize login
 app.logger.info("\n\nInitialize login.")
 app.logger.info("\n\nEnvironment is %s" % app.config['ENVIRONMENT'])
@@ -42,6 +43,9 @@ login_manager.user_loader(get_user_by_id)
 login_manager.init_app(app)
 
 zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
+@app.before_request
+def make_session_permanent():
+    app.permanent_session_lifetime = timedelta(minutes=120)
 
 
 # Submitting a new request
