@@ -39,10 +39,10 @@ def generate_prr_emails(request_id, notification_type, text=None,user_id=None, d
     request_id, notification_type, user_id))
     app_url = app.config['APPLICATION_URL']
     # Define the e-mail template:
-    print request_id
-    print notification_type
-    print text
-    print user_id
+    # print request_id
+    # print notification_type
+    # print text
+    # print user_id
     template = "generic_email.html"
 
     #making a new request
@@ -78,10 +78,11 @@ def generate_prr_emails(request_id, notification_type, text=None,user_id=None, d
     elif notification_type=="Acknowledge request":
         template="acknowledge_request.html"
     elif "Public Notification Template" in notification_type:
-        if text['days_after'] is not None:
-            days_after=text['days_after']
-            text = text['additional_information']
-        template = "system_email_" + notification_type[-2:] + ".html"
+        if 'days_after' in text:
+            if text['days_after'] is not None:
+                days_after=text['days_after']
+                text = text['additional_information']
+            template = "system_email_" + notification_type[-2:] + ".html"
     elif "Agency Notification Template" in notification_type:
         template = "agency_email_" + notification_type[-2:] + ".html"
 

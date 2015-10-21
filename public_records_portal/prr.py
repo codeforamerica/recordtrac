@@ -120,7 +120,7 @@ def update_resource(resource, request_body):
         change_request_status(request_id, "Reopened")
         req = get_obj("Request", request_id)
         user_id = req.subscribers[0].user.id
-        generate_prr_emails(request_id=request_id, user_id=user_id, notification_type="Public Notification Template 10")
+        generate_prr_emails(request_id=request_id, user_id=user_id, text=request_body['additional_information'], notification_type="Reopen request")
 
     elif "acknowledge" in resource:
         change_request_status(fields['request_id'], fields['acknowledge_status'])
@@ -310,7 +310,7 @@ def make_request(category=None, agency=None, summary=None, text=None, attachment
         subscriber_id, is_new_subscriber = create_subscriber(request_id=request_id, user_id=subscriber_user_id)
         if subscriber_id:
             generate_prr_emails(request_id, notification_type="Public Notification Template 01",
-                                user_id=subscriber_user_id, text=summary+text)  # Send them an e-mail notification
+                                user_id=subscriber_user_id, text=summary)  # Send them an e-mail notification
     if attachment:
         upload_record(request_id, attachment_description, user_id, attachment)
     return request_id, True

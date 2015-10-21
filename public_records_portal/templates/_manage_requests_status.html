@@ -34,9 +34,9 @@
 
 {% if current_user.is_authenticated and status == 'closed' %}
     <div class="r_sidebar_banner hidden-phone hidden-tablet">
-        <form name="reopen_request" class="form-inline" id="question" method="post" action="/update_a_request_reopen">
+        <form name="reopen_request" class="form-inline" id="reopen" method="post" action="/update_a_request_reopen">
             <input type="hidden" name="request_id" value="{{ req.id }}"/>
-            <button id="reopenRequest" class="btn btn-primary btn-block" type="submit">Reopen request</button>
+            <button id="reopenrequestButton" class="btn btn-primary btn-block" data-toggle="modal" data-target="#confirm-submit" type="submit">Reopen request</button>
         </form>
     </div>
 {% endif %}

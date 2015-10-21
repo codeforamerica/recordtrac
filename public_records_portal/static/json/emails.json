@@ -4,9 +4,10 @@
     "Notification types":
     {
 
-        "Helper added":
+        "Reopen request":
         {
-
+          "Subject": "Request has been reopened",
+          "Recipients": ["Requester"]
         },
         "Helper removed":
         {
