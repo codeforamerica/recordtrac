@@ -32,6 +32,8 @@ from forms import OfflineRequestForm, NewRequestForm, LoginForm, EditUserForm
 import pytz
 from requires_roles import requires_roles
 from flask_login import LoginManager
+from models import AnonUser
+
 
 # Initialize login
 app.logger.info("\n\nInitialize login.")
@@ -39,9 +41,13 @@ app.logger.info("\n\nEnvironment is %s" % app.config['ENVIRONMENT'])
 
 login_manager = LoginManager()
 login_manager.user_loader(get_user_by_id)
+login_manager.anonymous_user = AnonUser
 login_manager.init_app(app)
 
 zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
+@app.before_request
+def make_session_permanent():
+    app.permanent_session_lifetime = timedelta(minutes=120)
 
 
 # Submitting a new request
@@ -325,6 +331,9 @@ def new_request(passed_recaptcha=False, data=None):
             form = NewRequestForm()
             return render_template('new_request.html', form=form, routing_available=routing_available)
 
+@app.route("/faq")
+def faq():
+    return render_template("faq.html")
 
 @app.route("/export")
 @login_required
@@ -436,8 +445,9 @@ def show_request(request_id, template="manage_request_public.html"):
     departments_all = models.Department.query.all()
     agency_data = []
     for d in departments_all:
-        firstUser = models.User.query.filter_by(department_id=d.id).first()
-        agency_data.append({'name': d.name, 'email': firstUser.email})
+        #firstUser = models.User.query.filter_by(department_id=d.id).first()
+        primary_contact = d.primary_contact
+        agency_data.append({'name': d.name, 'email': primary_contact.email})
 
     if not req:
         return render_template('error.html', message="A request with ID %s does not exist." % request_id)
@@ -923,13 +933,6 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
     return results.order_by(models.Request.id.desc())
 
 
-@app.route("/<page>")
-def any_page(page):
-    try:
-        return render_template('%s.html' % (page))
-    except:
-        return render_template('error.html', message="%s totally doesn't exist." % (page))
-
 def tutorial():
     user_id = get_user_id()
     app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
@@ -1095,7 +1098,7 @@ def login():
                 app.logger.info(
                     "\n\nLogin failed (due to incorrect email/password combo) for email : %s" % form.username.data)
                 errors.append('Incorrect email/password combination. Please try again. If you forgot your password,'
-                              'please <a href="/reset_password">request a new password</a>.')
+                              'please <a href="/reset_password">reque st a new password</a>.')
                 return render_template('login.html', form=form, errors=errors)
         else:
             errors.append('Something went wrong')
@@ -1299,3 +1302,15 @@ def submit():
         pass
     else:
         pass
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html"), 404
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template("500.html"), 500
+@app.errorhandler(403)
+def access_denied(e):
+    return render_template("403.html"), 403
+@app.errorhandler(501)
+def unexplained_error(e):
+    return render_template("501.html"), 501
