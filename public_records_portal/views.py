@@ -412,7 +412,7 @@ def show_response(request_id):
     return render_template("response.html", req=req)
 
 
-@app.route("/track", methods=["POST"])
+@app.route("/track", methods=["GET","POST"])
 def track(request_id=None):
     if request.method == 'POST':
         if not request_id:
