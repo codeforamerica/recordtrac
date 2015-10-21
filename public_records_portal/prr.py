@@ -101,7 +101,7 @@ def update_resource(resource, request_body):
             return remove_staff_participant(owner_id=fields['owner_id'])
         else:
             change_request_status(fields['request_id'], "Rerouted")
-            return assign_owner(fields['request_id'], fields['owner_email'])
+            return assign_owner(request_id=fields['request_id'], reason=fields['owner_reason'], email=fields['owner_email'])
     elif "reopen" in resource:
         request_id = fields['request_id']
         change_request_status(request_id, "Reopened")
@@ -208,7 +208,8 @@ def upload_record(request_id, description, user_id, document=None):
             record_id = create_record(doc_id=None, request_id=request_id, user_id=user_id, description=description,
                                       filename=filename, url=app.config['HOST_URL'] + doc_id)
             change_request_status(request_id, "A response has been added.")
-            generate_prr_emails(request_id=request_id, notification_type="City response added")
+            attached_file = app.config['UPLOAD_FOLDER'] + "/" + filename
+            generate_prr_emails(request_id=request_id, notification_type="City response added",attached_file=attached_file)
             add_staff_participant(request_id=request_id, user_id=user_id)
             return record_id
     return "There was an issue with your upload."
