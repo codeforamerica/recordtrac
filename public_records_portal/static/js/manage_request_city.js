@@ -1,7 +1,6 @@
 $(document).ready(function(){
   /* validates ask a question form */
 
-
 $('.unassignPopover').click(function() {
     var el = $(this);
     $('.unassignPopover').popover({
