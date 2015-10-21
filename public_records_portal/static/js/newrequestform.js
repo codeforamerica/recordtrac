@@ -112,7 +112,13 @@ $(function() {
         $('html, body').animate({
             scrollTop: $("#submitRequest").offset().top
         }, 500);
-
+        confirmation=confirm('By selecting "OK" you are acknowledging that this information will be available to the public');
+        if(confirmation==true){
+            //Do nothing and continue with the transition
+        }
+        else{
+            exit();
+        }
         // fade out step1, fade in step2
         $('#step1').fadeOut('fast', function() {});
         $('#step2').fadeIn('slow', function() {});

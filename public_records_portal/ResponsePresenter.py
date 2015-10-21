@@ -77,7 +77,8 @@ class ResponsePresenter:
         elif self.type == "note":
             return self.response.text
         elif self.type == "link":
-            # return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s'>%s </a>" % (self.response.url, self.response.url, self.response.description)
+            if self.response.filename == None:
+                return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s'>%s </a>" % (self.response.url, self.response.url, self.response.description)
             download_url = "/attachments/" + str(self.response.filename)
             return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s'>%s </a>" % (
             download_url, download_url, self.response.description)
