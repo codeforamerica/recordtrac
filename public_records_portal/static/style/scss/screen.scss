@@ -4,9 +4,9 @@
 @import 'mixins';
 @import 'variables';
 @import 'plugins/BootSwatchr6';
-@import 'plugins/combobox'; 
+@import 'plugins/combobox';
 @import 'nyc-global';
-// @import 'plugins/font-awesome.min';
+@import 'plugins/font-awesome.min';
 
 html, body {
 	min-height: 100%;
@@ -125,11 +125,25 @@ h1 {
 			}
 		}
 	}
+
+	.google_translate {
+		float: right;
+		padding: 0 .7rem .7rem 0;
+		margin: 0;
+
+		@include breakpoint(baby-bear) {
+			width: 100%;
+			padding: .7rem 0;
+			margin: 1rem 0;
+			@include border-radius(10px);
+			font-size: 1.1rem;
+		}
+	}
 }
 
 #logo_nav {
 	padding: 0;
-	width: 13rem;	
+	width: 13rem;
 }
 
 /* tabs */
@@ -246,74 +260,13 @@ footer {
 
 	/* if the user doesn't have js enabled this will display both steps together. */
 	.no-js & {
-		display: block; 
-	}
-}
-
-.form-nav {
-	background: $off-white;
-	width: 100%;
-	float: left;
-	display: block;
-	margin: 1.2rem auto 4rem;
-	border: 2px solid $light-grey;
-	overflow: hidden;
-	@include border-radius(20px);
-	@include transition(.5s all ease);
-
-	> div {
-		width: 50%;
-		float: left;
-		text-align: center;
-		color: $dark-grey;
-
-		a {
-			cursor: pointer;
-
-			&:hover {
-				text-decoration: none;
-			}
-		}
-	}
-
-	.active {
-		background: $nyc-blue;
-		color: #fff;
-
-		a:hover {
-			color: $off-white;
-		}
-	}
-}
-
-#back {
-	float: left;
-	padding-right: 1rem;
-	margin: 0;
-	color: $light-grey;
-
-	.fa, p {
-		display: inline;
-		font-size: 1.2rem;
-		cursor: pointer;
-		text-decoration: none;
+		display: block;
 	}
 }
 
 /* if the user doesn't have js enabled remove the two step process */
-.no-js {
-
-	#button1 {
-		display: none;
-	} 
-
-	.form-nav {
-		display: none;
-	}
-
-	#back {
-		display: none;
-	}
+.no-js #button1 {
+	display: none;
 }
 
 /* This is defined in the bootstrap style, but we can tweak it here */
@@ -337,9 +290,12 @@ footer {
 	margin: 0 auto 2rem;
 }
 
-
-.clearfix {
-	clear: both;
+.form-nav {
+	.link {
+		color: $grey;
+		text-decoration: underline;
+		cursor: pointer;
+	}
 }
 
 
