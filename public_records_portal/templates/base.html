@@ -91,32 +91,38 @@ This template provides the header, footer, and envelope info for all pages excep
 
             <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
                 {% if current_user.is_authenticated %}
-{#                    Changed so the whole logout button is clickable rather than just the text itself#}
-                    <a href="/logout" >
-                        <div class="login btn">
-                            Logout
-                        </div>
-                    </a>
+                    <div class="login btn">
+                      <p><a href="/logout" >Logout</a></p>
+                    </div>
                     <ul class="nav tabs">
                         <li><a href="/new">Request a Record</a></li>
                         <li><a href="/view_requests">All Requests</a></li>
                         <li><a href="/track">Track an Existing Request</a></li>
                         <li><a href="/report">Report</a></li>
+                        <li><a href="/faq">FAQ</a></li>
                         <li><a href="/about">About</a></li>
                     </ul>
                     <ul class="nav pull-right">
                     </ul>
                 {% else %}
-{#                    Changed so the whole login button is clickable rather than just the text itself#}
-                    <a href="/login" >
-                        <div class="login btn">
-                            Login
-                        </div>
-                    </a>
+                    <div class="login btn">
+                      <p><a href="/login" >Login</a></p>
+                    </div>
+                    <div class="google_translate">
+                        <div id="google_translate_element"></div>
+                        <script type="text/javascript">
+                        function googleTranslateElementInit() {
+                        new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+                        }
+                        </script>
+                        <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+                        </script>
+                    </div>
                     <ul class="nav tabs">
                         <li><a href="/new">Request a Record</a></li>
                         <li><a href="/view_requests">All Requests</a></li>
                         <li><a href="/track">Track an Existing Request</a></li>
+                        <li><a href="/faq">FAQ</a></li>
                         <li><a href="/about">About</a></li>
                     </ul>
                     <ul class="nav pull-right">
