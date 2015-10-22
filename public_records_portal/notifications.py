@@ -47,36 +47,38 @@ def generate_prr_emails(request_id, notification_type, text=None,user_id=None, d
 
     #making a new request
     if notification_type == "Request made":
-        template = "new_request_email.html"
+        template = "emtemplate_new_request.html"
     #asking a question
     elif notification_type=="Question asked":
-        template = "question_asked.html"
+        template = "emtemplate_question_asked.html"
     #respond to question
     elif notification_type=="Question answered":
-        template = "question_answered.html"
+        template = "emtemplate_question_answered.html"
     elif notification_type=="City response added":
-        template="city_response_added.html"
+        template="emtemplate_city_response_added.html"
     #adding a note
     elif notification_type=="Public note added":
-        template="public_note_added.html"
+        template="emtemplate_public_note_added.html"
     #Changing Assignee
     elif notification_type=="Request assigned":
-        template="request_assigned.html"
+        template="emtemplate_request_assigned.html"
     #Closing a request
     elif notification_type=="Request closed":
-        template="request_closed.html"
+        template="emtemplate_request_closed.html"
     #Adding a helper
     elif notification_type=="Staff participant added":
         user = User.query.get(user_id)
         user_name = user.alias
         text=text['owner_reason']
-        template="helper_added.html"
+        template="emtemplate_helper_added.html"
     #Removing a helper
     elif notification_type=="Helper removed":
-        template="helper_removed.html"
+        template="emtemplate_helper_removed.html"
     #Acknowledging a Request
     elif notification_type=="Acknowledge request":
-        template="acknowledge_request.html"
+        template="emtemplate_acknowledge_request.html"
+    elif notification_type=="Reopen request":
+        template="emtemplate_reopen_request.html"
     elif "Public Notification Template" in notification_type:
         if 'days_after' in text:
             if text['days_after'] is not None:

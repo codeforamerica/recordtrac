@@ -7,11 +7,16 @@
             <div style="clear:both;">
 				<span style="font-family: arial,helvetica,sans-serif;"><span
                         style="color: rgb(51, 51, 51); font-size: 14px;">
-
 <p>
-{#    You can view the request and take any necessary action at the following webpage: <a href='{{ page }}'>{{ page }}</a>. Click <a href="FAQ PAGE">here</a> to learn about how the City Responds to FOIL requests.#}
-    Request {{ request_id }} has been acknowledged, {{ days }}.
-    Additional Information: {{ additional_information }}
+    Your request under the Freedom of Information Law (FOIL) has been reviewed and the documents you requested have been emailed to you.
+    {% if additional_information %}
+    <p>
+        Additional Information: {{ additional_information }}
+    </p>
+    {% endif %}
+</p>
+<p>
+    You can view the request and take any necessary action at the following webpage: <a href='{{ page }}'>{{ page }}</a>
 </p>
                     </br>
 
@@ -23,10 +28,11 @@
                     {% endif %}
                     </br>
 
-
 		</span></span></div>
         </div>
     </div>
+
+
 </div>
 </body>
 <footer>
