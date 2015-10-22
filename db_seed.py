@@ -35,5 +35,3 @@ for i in range(20):
 				prr.close_request(request_id = request_id, reason = "Record does not exist.", user_id = 1)
 		prr.assign_owner(request_id = request_id, reason = random.choice(reasons), email = random.choice(people))
 		db_helpers.add_staff_participant(request_id = request_id, email = random.choice(people), reason = random.choice(reasons))
-
-

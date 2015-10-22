@@ -29,7 +29,6 @@ if app.config['ENVIRONMENT'] == 'PRODUCTION':
     send_emails = True
     test = ""
 
-
 def generate_prr_emails(request_id, notification_type, user_id=None, attached_file=None):
     app.logger.info("\n\n Generating e-mails for request with ID: %s, notification type: %s, attachment: %s, and user ID: %s" % (
     request_id, notification_type, attached_file, user_id))
