@@ -100,7 +100,7 @@ def update_resource(resource, request_body):
             return remove_staff_participant(owner_id=fields['owner_id'])
         else:
             change_request_status(fields['request_id'], "Rerouted")
-            return assign_owner(fields['request_id'], fields['owner_email'])
+            return assign_owner(request_id=fields['request_id'], reason=fields['owner_reason'], email=fields['owner_email'])
     elif "reopen" in resource:
         request_id = fields['request_id']
         change_request_status(request_id, "Reopened")
@@ -207,7 +207,8 @@ def upload_record(request_id, description, user_id, document=None):
             record_id = create_record(doc_id=None, request_id=request_id, user_id=user_id, description=description,
                                       filename=filename, url=app.config['HOST_URL'] + doc_id)
             change_request_status(request_id, "A response has been added.")
-            generate_prr_emails(request_id=request_id, notification_type="City response added")
+            attached_file = app.config['UPLOAD_FOLDER'] + "/" + filename
+            generate_prr_emails(request_id=request_id, notification_type="City response added",attached_file=attached_file)
             add_staff_participant(request_id=request_id, user_id=user_id)
             return record_id
     return "There was an issue with your upload."
@@ -239,7 +240,7 @@ def add_link(request_id, url, description, user_id):
 
 
 ### @export "make_request"
-def make_request(category=None, agency=None, summary=None, text=None, attachment=None,
+def make_request(agency=None, summary=None, text=None, attachment=None,
                  attachment_description=None, offline_submission_type=None, date_received=None, first_name=None,
                  last_name=None, alias=None, role=None, organization=None, email=None, phone=None, fax=None,
                  street_address_one=None, street_address_two=None, city=None, state=None, zip=None, user_id=None):
@@ -267,7 +268,7 @@ def make_request(category=None, agency=None, summary=None, text=None, attachment
             agency] + "-" + "%05d" % currentRequestId
         req = get_obj("Request", id)
 
-    request_id = create_request(id=id, agency=agency, category=category,  summary=summary, text=text, user_id=user_id,
+    request_id = create_request(id=id, agency=agency, summary=summary, text=text, user_id=user_id,
                                 offline_submission_type=offline_submission_type,
                                 date_received=date_received)  # Actually create the Request object
 
