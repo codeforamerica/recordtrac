@@ -227,19 +227,12 @@
                                 </a>
                             </td>
                             <td>{{ request.department }}</td>
-<<<<<<< HEAD
-                            <td>{{ request.contact_name }}</td>
-                            <td>{{ request.due_date }}</td>
-                            {% if current_user.is_authenticated %}
-                                <td>{{ request.requester }}</td>
-=======
                             <td class="hide-mobile">{{ request.contact_name }}</td>
                             <td >{{ request.due_date }}</td>
-                            {% if request.privacy == 1 or request.privacy == 4 %}
+                            {% if current_user.is_authenticated %}
                                 <td class="hide-mobile">{{ request.requester }}</td>
                             {% else %}
                                 <td class="hide-mobile">&nbsp;</td>
->>>>>>> master
                             {% endif %}
                             </tr>
                             {% endfor %}
