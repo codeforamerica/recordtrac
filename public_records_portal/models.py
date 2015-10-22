@@ -227,8 +227,6 @@ User %s is not associated with a department.'''
             return 'N/A'
 
 
-
-
 class Department(db.Model):
     __tablename__ = 'department'
     id = db.Column(db.Integer, primary_key=True)
@@ -257,29 +255,14 @@ class Department(db.Model):
     backup_contact_id = db.Column(Integer, ForeignKey('user.id'))
     primary_contact = relationship(User,
                                    foreign_keys=[primary_contact_id],
-                                   primaryjoin=primary_contact_id
-                                               == User.id, uselist=False,
+                                   primaryjoin=(primary_contact_id == User.id),
+                                   uselist=False,
                                    post_update=True)
     backup_contact = relationship(User,
                                   foreign_keys=[backup_contact_id],
-                                  primaryjoin=backup_contact_id
-                                              == User.id, uselist=False,
+                                  primaryjoin=(backup_contact_id == User.id),
+                                  uselist=False,
                                   post_update=True)
-
-    def __init__(self, name=''):
-        self.name = name
-        self.date_created = datetime.now().isoformat()
-
-    def __repr__(self):
-        return '<Department %r>' % self.name
-
-    def __str__(self):
-        return self.name
-
-    def get_name(self):
-        return self.name or 'N/A'
-
-
 
 
 class Request(db.Model):
@@ -324,8 +307,7 @@ class Request(db.Model):
             creator_id=None,
             offline_submission_type=None,
             date_received=None,
-            agency=None,
-
+            agency=None
     ):
         self.id = id
         self.summary = summary
@@ -459,9 +441,7 @@ class Request(db.Model):
             return re.match('.*(closed).*', self.status, re.IGNORECASE) \
                    is not None
         else:
-            app.logger.info('''
-
-	 Request with this ID has no status: %s'''
+            app.logger.info('''\nRequest with this ID has no status: %s'''
                             % self.id)
             return False
 
@@ -547,8 +527,6 @@ class Request(db.Model):
         return and_(Request.status.ilike("%publications portal%"), Request.status.ilike("%closed%"))
 
 
-
-
 class QA(db.Model):
     # A Q & A block for a request
 
@@ -576,8 +554,6 @@ class QA(db.Model):
 
     def __repr__(self):
         return '<QA Q: %r A: %r>' % (self.question, self.answer)
-
-
 
 
 class Owner(db.Model):
@@ -615,8 +591,6 @@ class Owner(db.Model):
         return '<Owner %r>' % self.id
 
 
-
-
 class Subscriber(db.Model):
     # A person subscribed to a request, who may or may not have created the request, and may or may not own a part of the request.
 
@@ -643,8 +617,6 @@ class Subscriber(db.Model):
 
     def __repr__(self):
         return '<Subscriber %r>' % self.user_id
-
-
 
 
 class Record(db.Model):
@@ -691,8 +663,6 @@ class Record(db.Model):
         return '<Record %r>' % self.description
 
 
-
-
 class Note(db.Model):
     # A note on a request.
 
@@ -721,8 +691,6 @@ class Note(db.Model):
 
     def __repr__(self):
         return '<Note %r>' % self.text
-
-
 
 
 class Visualization(db.Model):
