@@ -9,8 +9,6 @@ common_requests = ['City Council meeting minutes', 'Police Report', 'Incident Re
 
 departments = [d.name for d in models.Department.query.all()]
 people = [d.email for d in models.User.query.all()]
-categories = [
-    'Business', 'Civic Services', 'Culture & Recreation', 'Education', 'Environment', 'Health', 'Housing & Development', 'Public Safety', 'Social Services', 'Transportation']
 reasons = ['They have the document', 'They would know more about this', 'They are my backup', 'Can you look into this?']
 documents = ['Minutes', 'Report']
 answers = ["Yep, thanks so much!", "No, nevermind then."]

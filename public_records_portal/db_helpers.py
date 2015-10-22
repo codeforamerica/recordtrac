@@ -193,7 +193,7 @@ def create_request(id=id, agency=None, summary=None, text=None, user_id=None, of
     """ Create a Request object and return the ID. """
     agency_id = Department.query.filter_by(name=agency).first().id
     # print "agency_id is " + str(agency_id)
-    req = Request(id=id, agency=agency_id,  summary=summary, text=text, creator_id=user_id,
+    req = Request(id=id, agency=agency_id, summary=summary, text=text, creator_id=user_id,
                   offline_submission_type=offline_submission_type, date_received=date_received)
     db.session.add(req)
     db.session.commit()
