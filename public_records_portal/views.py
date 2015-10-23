@@ -410,6 +410,7 @@ def edit_case(request_id):
 @app.route("/add_a_<string:resource>", methods=["GET", "POST"])
 @login_required
 def add_a_resource(resource):
+    req = request.form
     if request.method == 'POST':
         print "Resource is a ", resource
         if resource == 'pdf':
@@ -1230,6 +1231,13 @@ def submit():
         pass
     else:
         pass
+
+@app.route("/changeprivacy", methods=["POST","GET"])
+def change_privacy():
+    req=request.form
+    app.logger.info("Changing privacy funtcion")
+    return redirect(url_for('show_request_for_city',request_id=request.form['request_id']))
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html"), 404
