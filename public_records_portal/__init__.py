@@ -25,6 +25,21 @@ app.debug = True
 
 load_dotenv(abspath(join(join(dirname(__file__), pardir), '.env')))
 
+# LDAP Settings
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+#app.config['WTF_CSRF_SECRET_KEY'] = 'random key for form'
+app.config['LDAP_PROVIDER_URL'] = 'ldaps://ldaps-dev.nycid.nycnet:636/'
+# Tester code
+def test_Ldap():
+    conn = ldap.initialize('ldaps://ldaps-dev.nycid.nycnet:636')
+    conn.start_tls_s()
+    # Gives server down
+
+# .ENV VARS
+# LDAP_PROVIDER_URL = 'ldaps://ldaps-dev.nycid.nycnet:636/'
+# LDAP_LOGIN_VIEW = 'login'
+# LDAP_LOGIN_TEMPLATE = 'login.html'
+
 
 def set_env(key, default=None):
     ''' Used to set environment variables '''

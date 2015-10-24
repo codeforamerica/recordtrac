@@ -28,7 +28,7 @@ from xhtml2pdf import pisa
 from flask import render_template, make_response
 
 from models import *
-
+import ldap
 cal = Calendar()
 
 def id_counter():
@@ -271,6 +271,20 @@ def get_user_by_id(id):
 
 ### @export "authenticate_login"
 def authenticate_login(email, password):
+    l = ldap.initialize('ldaps://ldaps-dev.nycid.nycnet:636/')
+    try:
+        user_dn = "cn=OpenFOILTestUser1,cn=OpenFOILserviceuser,ou=accounts,cn=services"
+        user_pw = ",D~X~vQQf627"
+        l.start_tls_s()
+        l.bind_s(user_dn, user_pw)
+    except ldap.INVALID_CREDENTIALS:
+        print "Your username or password is incorrect."
+    except ldap.LDAPError, e:
+        if type(e.message) == dict and e.message.has_key('desc'):
+            print e.message['desc']
+        else:
+            print e
+
     user = User.query.filter_by(email=email).first()
     if user and (user.is_staff or user.is_admin()):
         if user.check_password(password):
