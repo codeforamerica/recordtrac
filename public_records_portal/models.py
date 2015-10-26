@@ -299,8 +299,8 @@ class Request(db.Model):
     offline_submission_type = db.Column(db.String())
     prev_status = db.Column(db.String(400))  # The previous status of the request (open, closed, etc.)
     #Adding new privacy option for description field
-    # descriptionPrivacy=db.Column(db.Boolean, default=False)
-    # titlePrivacy=db.Column(db.Boolean, default=False)
+    descriptionPrivate=db.Column(db.Boolean, default=True)
+    titlePrivate=db.Column(db.Boolean, default=True)
     def __init__(
             self,
             id,
@@ -310,8 +310,8 @@ class Request(db.Model):
             offline_submission_type=None,
             date_received=None,
             agency=None,
-            descriptionPrivacy=False,
-            titlePRivacy=False
+            descriptionPrivate=True,
+            titlePrivate=True
     ):
         self.id = id
         self.summary = summary
@@ -322,8 +322,8 @@ class Request(db.Model):
         if date_received and type(date_received) is datetime:
             self.date_received = date_received
         self.department_id = agency
-        self.descriptionPrivacy = descriptionPrivacy
-        self.titlePrivacy=titlePrivacy
+        self.descriptionPrivacy = descriptionPrivate
+        self.titlePrivacy=titlePrivate
 
 
     def __repr__(self):
