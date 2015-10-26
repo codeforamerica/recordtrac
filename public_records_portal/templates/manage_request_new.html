@@ -41,12 +41,4 @@
 </div>
 {% endblock banner %}
 
-{% block status %}
-    {% set status = req.solid_status() %}
-    <div class="request-status-well well well-small r_sidebar_banner {{ status }}">
-        <h3 id="status-text">
-            {% if status == 'closed' %}<i class="icon-archive"></i>{% endif %}
-            {{ status }}
-        </h3>
-    </div>
-{% endblock status %}
+

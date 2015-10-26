@@ -27,38 +27,37 @@
 {% endif %}
 
 {% block requester_info %}
-  <div>
-    {% if not email %}
-      <span id="no_email">
-        <strong><i class="icon icon-exclamation-sign"></i> Requester's e-mail has not been provided.</strong>
-      </span>
-    <small>
-    {% endif %}
-      <br>
+  <div class="span8">
+      <div class="row-fluid">
+          <div class="span4">Requester's Name:</div>
+          <div class="span4"><span class="label">{{ alias or "Not provided" }}</span></div>
+      </div>
+      <div class="row-fluid">
+          <div class="span4">Requester's Phone Number:</div>
+      </div>
       <span>
-        Requester's Name: <span class="label">{{ alias or "Not provided" }}</span></span>
+          Requester's Email: <span class="label">{{ email or "Not provided" }}</span>
       </span>
-      <br>
+      <br />
       <span>
         Requester's Phone Number: <span class="label">{{ phone or "Not provided" }}</span>
       </span>
-      <br>
+      <br />
       <span>
         Requester's Street Address: <span class="label">{{ address1 or "Not provided" }}</span>
       </span>
-      <br>
+      <br />
       <span>
         Requester's City: <span class="label">{{ city or "Not provided" }}</span>
       </span>
-      <br>
+      <br />
       <span>
         Requester's State: <span class="label">{{ state or "Not provided" }}</span>
       </span>
-      <br>
+      <br />
       <span>
         Requester's Zipcode: <span class="label">{{ zipcode or "Not provided" }}</span>
       </span>
-    </small>
   </div>
 {% endblock requester_info %}
 
@@ -194,7 +193,7 @@
     </fieldset>
   </form>
   </form>
-  
+
   <!-- Generate PDF -->
   <form name="note" class="form-horizontal" id="note_pdf" method="post" action="/add_a_pdf">
     <input type="hidden" name="request_id" value="{{ req.id }}"/>
@@ -314,103 +313,18 @@
 
   {% block status %}
     {% set status = req.solid_status() %}
-    {% include '_manage_requests_status.html' %}
-  {% endblock status %}
+    <div class="request-status-well well well-small r_sidebar_banner {{ status }}">
+        <h3 id="status-text">
+            {% if status == 'closed' %}<i class="icon-archive"></i>{% endif %}
+            {{ status }}
+        </h3>
+    </div>
+{% endblock status %}
 
 
 
   <div class="b_sidebar">
-    <div class="row-fluid participantRow">
-
-        <div><h4 class="participantRow-title" style="color: #333333;">Point of Contact </h4>
-        </div>
-
-    </div>
-    <div class="row-fluid participantRow-poc">
-        {% include '_contact_popover.html' %}
-    </div>
-
-    <form id="rerouteForm" class="form-inline" method ="post" action="/update_a_owner">
-      <fieldset>
-        <!-- <label>Change point of contact</label> -->
-          <input type="hidden" name="request_id" value="{{ req.id }}"/>
-          <!--input id="rerouteEmail" class="input-block-level" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required /-->
-          </select>
-          <select class="span10" id="rerouteEmail" name="owner_email">
-            {% for data in agency_data %}
-              <option value="{{ data.email }}">{{ data.name}}</option>
-            {% endfor %}
-          </select>
-          <input id="rerouteReason" class="input-block-level" type="text" name="owner_reason" placeholder="Say why." required />
-          <button id="rerouteButton" class="btn input-block-level" type="submit"> <i class="icon-envelope"> </i> Change point of contact</button>
-      </fieldset>
-    </form>
-
-   <div><h4 class="participantRow-title" style="color: #333333;">Assignee</h4></div>
-
-    <form id="rerouteForm" class="form-inline" method ="post" action="/update_a_owner">
-      <fieldset>
-        <!-- <label>Change Assignee</label> -->
-          <input type="hidden" name="request_id" value="{{ req.id }}"/>
-          <!--input id="rerouteEmail" class="input-block-level" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required /-->
-          <select class="span10" id="rerouteEmail" name="owner_email">
-            {% for user in users %}
-              {{ user.email }}
-              <option value="{{ user.email }}">{{ user.alias}}</option>
-            {% endfor %}
-          </select>
-          <input id="rerouteReason" class="input-block-level" type="text" name="owner_reason" placeholder="Say why." required />
-          <button id="rerouteButtonAssignee" class="btn input-block-level" type="submit"> <i class="icon-envelope"> </i> Change Assignee</button>
-      </fieldset>
-    </form>
-
-    <div class="row-fluid participantRow">   
-      <div class="participantRow-helpers"><h4 class="participantRow-title">Helpers</h4></div>  
-    </div>
-    <div class="row-fluid participantRow-participants">
-      {% for owner in req.owners %}
-        {% if owner.active %}
-          {% set participant = (owner | display_staff_participant(req)) %} 
-          {% if participant %}
-            {% if current_user.is_authenticated %}
-              
-                <div>
-                  {{ participant }}
-                  <form id="unassignForm" class="form-inline" method ="post" action="/update_a_owner">
-                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                        <input type="hidden" name="owner_id" value="{{ owner.id }}"/>
-                        <input type="text" class="span8" name="reason_unassigned" value="Task complete" required />
-                        <button id="unassignButton" class="btn btn-mini" type="submit"> <i class="icon-envelope"> </i> Remove</button>
-                  </form>
-                </div> 
-                
-            {% else %}
-              <div>
-                {{ participant }}
-              </div>
-            {% endif %}
-          {% endif %}
-        {% endif %}
-      {% endfor %}
-    </div>
-
-    <form id="notifyForm" class="form-inline" method ="post" action="/add_a_owner">
-      <fieldset>
-        <input type="hidden" name="request_id" value="{{ req.id }}"/>
-        <input id="notifyEmail" class="input-block-level" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
-        <input id="notifyReason" class="input-block-level" type="text" name="owner_reason" placeholder="Say why." required />
-        <button id="notifyButton" class="btn input-block-level" type="submit"> <i class="icon-envelope"> </i> Add a helper</button>
-    </form>
-
-    <div class="row-fluid participantRow-history">
-      {% include '_history.html' %}
-    </div>
-
-    
-
-    
-
-
+    Sidebar
   </div>
 
 {% endblock sidebar %}
@@ -433,9 +347,9 @@
   <!-- used for the extension and close request multi-select boxes in city view -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-select.min.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/custom.bootstrap-select.js') }}"></script>
-  
 
-   
+
+
   <!-- For file uploads -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-fileupload.js') }}"></script>
 {% endblock custom_script_links %}
