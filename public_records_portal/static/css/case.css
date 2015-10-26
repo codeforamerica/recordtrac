@@ -10,6 +10,14 @@
   padding-top: 2%;
 }
 
+/* Radio checkboxes for privacy settings when managing a request */
+input[type=radio]{
+    width:0.5rem;
+    display:inline;
+    min-height:2.0rem;
+}
+
+
 /* bottom margin for page */
      #responses-container, #participant-container {
           margin-bottom: 5em;
