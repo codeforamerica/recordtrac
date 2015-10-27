@@ -860,11 +860,35 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 
     return results.order_by(models.Request.id.desc())
 
-@app.route("/city/tutorial/<int:tutorial_id>")
-def tutorial_agency(tutorial_id):
+@app.route("/tutorial")
+def tutorial_initial():
     user_id = get_user_id()
     app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
-    return render_template('tutorial_agency_' + str(tutorial_id).zfill(2) + '.html')
+    return render_template('tutorial_01.html')
+
+@app.route("/tutorial/<int:tutorial_id>")
+def tutorial(tutorial_id):
+    user_id = get_user_id()
+    app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
+    return render_template('tutorial_' + str(tutorial_id).zfill(2) + '.html')
+
+@app.route("/city/tutorial/<int:tutorial_id>")
+def tutorial_agency(tutorial_id):
+    if current_user.is_authenticated:
+        user_id = get_user_id()
+        app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
+        return render_template('tutorial_agency_' + str(tutorial_id).zfill(2) + '.html')
+    else:
+        return render_template("404.html"), 404
+ 
+@app.route("/city/tutorial")
+def tutorial_agency_initial():
+    if current_user.is_authenticated:
+        user_id = get_user_id()
+        app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
+        return render_template('tutorial_agency_01.html')
+    else:
+        return render_template("404.html"), 404
 
 @app.route("/about")
 def staff_card():
