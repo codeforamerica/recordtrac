@@ -275,8 +275,8 @@ def authenticate_login(email, password):
     try:
         user_dn = "cn=OpenFOILTestUser1,cn=OpenFOILserviceuser,ou=accounts,cn=services"
         user_pw = ",D~X~vQQf627"
-        CACERTFILE='/Users/swaag/Desktop/ldaps-dev.der'
-        ldap.set_option(ldap.OPT_X_TLS_CACERTFILE,'/Users/swaag/Desktop/ldaps-dev.der')
+        CACERTFILE='/Users/administrator/Desktop/ldaps-dev.crt'
+        ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT,ldap.OPT_X_TLS_DEMAND)
         l.start_tls_s()
         l.bind_s(user_dn, user_pw)
     except ldap.INVALID_CREDENTIALS:
