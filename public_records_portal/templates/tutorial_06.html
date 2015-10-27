@@ -348,7 +348,7 @@
 
 <script>
 $(document).ready(function(){
-    bootstro.start('',{items:
+    bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
        [{selector:'#request_summary',title:'Request Title',content:'You then enter a brief title for the request which will be visible to the public. This field is limited to 100 characters.',placement:'bottom',finishButton:'<a class="btn" href="/tutorial/05"> «Previous</a> <a class="btn" href="/tutorial/07">Next »</a>'}
        ]
     });

@@ -348,7 +348,7 @@
 
 <script>
 $(document).ready(function(){
-    bootstro.start('',{items:
+    bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
        [{selector:'#personal_information',title:'Personal Information',content:'The user is required to enter first and last name. The Role/Title and Organization fields are optional.',placement:'bottom',finishButton:'<a class="btn" href="/tutorial/07"> «Previous</a> <a class="btn" href="/tutorial/09">Next »</a>'}
        ]
     });

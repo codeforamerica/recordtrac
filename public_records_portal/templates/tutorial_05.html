@@ -348,7 +348,7 @@
 
 <script>
 $(document).ready(function(){
-    bootstro.start('',{items:
+    bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
        [{selector:'#request_agency',title:'Agency',content:'The public user then selects the agency from the list of agencies that would handle that request category.',placement:'bottom',finishButton:'<a class="btn" href="/tutorial/04"> «Previous</a> <a class="btn" href="/tutorial/06">Next »</a>'}
        ]
     });

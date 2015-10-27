@@ -202,7 +202,7 @@
 
 <script>
 $(document).ready(function(){
-    bootstro.start('',{items:
+    bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
        [{selector:'#view_reports',title:'View Reports',content:'Selecting this option will display the overall statistics for the number of requests received and completed.',placement:'right',finishButton:'<a class="btn" href="/tutorial/02"> «Previous</a> <a class="btn" href="/tutorial/04">Next »</a>'}
        ]
     });

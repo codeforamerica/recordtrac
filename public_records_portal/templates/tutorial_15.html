@@ -774,7 +774,7 @@
 
 <script>
 $(document).ready(function(){
-    bootstro.start('',{items:
+    bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
        [{selector:'#search_request_section',title:'All Requests',content:'Public users can search all requests. This search can be filtered by title text, status, date, and agency. There may be a similar request already in progress.',placement:'right',finishButton:'<a class="btn" href="/tutorial/14"> «Previous</a> <a class="btn" href="/tutorial/16">Next »</a>'}
        ]
     });
