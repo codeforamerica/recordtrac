@@ -338,7 +338,7 @@ $('.combobox').combobox();
 
 <script>
 $(document).ready(function(){
-    bootstro.start('',{items:
+    bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
        [{selector:'#requestButton',title:'Submit Request',content:'<font style="font-size:14px;">The agency user then clicks the Submit request button.</font>',placement:'top',finishButton:'<a class="btn" href="/city/tutorial/25"> «Previous</a>'}
        ]
     });

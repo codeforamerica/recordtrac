@@ -746,7 +746,7 @@
 
 <script>
 $(document).ready(function(){
-    bootstro.start('',{items:
+    bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
        [{selector:'#acknowledge_status',title:'Track a Request',content:'An agency user can acknowledge the request and select a response time from the dropdown.',placement:'left',finishButton:'<a class="btn" href="/city/tutorial/13"> «Previous</a> <a class="btn" href="/city/tutorial/15">Next »</a>'}
        ]
     });

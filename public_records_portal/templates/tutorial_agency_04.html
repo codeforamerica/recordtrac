@@ -554,7 +554,7 @@ rect:hover{
 
 <script>
 $(document).ready(function(){
-    bootstro.start('',{items:
+    bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
        [{selector:'#report',title:'Reports',content:'Selecting reports displays the agency version of the reports screen with more detailed statistics than the public view.',placement:'right',finishButton:'<a class="btn" href="/city/tutorial/03"> «Previous</a> <a class="btn" href="/city/tutorial/05">Next »</a>'}
        ]
     });

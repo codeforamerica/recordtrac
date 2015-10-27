@@ -552,7 +552,7 @@
 
 <script>
 $(document).ready(function(){
-    bootstro.start('',{items:
+    bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
        [{selector:'#all_requests_listed',title:'Export',content:'Each request listed is color coded to show the current status.',placement:'top',finishButton:'<a class="btn" href="/city/tutorial/08"> «Previous</a> <a class="btn" href="/city/tutorial/10">Next »</a>'}
        ]
     });

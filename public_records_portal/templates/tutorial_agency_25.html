@@ -335,7 +335,7 @@ $('.combobox').combobox();
 
 <script>
 $(document).ready(function(){
-    bootstro.start('',{items:
+    bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
        [{selector:'#create_new_request',title:'Create a New Request',content:'The agency user enters the request information including the format received and the request date. Documents can be attached along with a short note.',placement:'top',finishButton:'<a class="btn" href="/city/tutorial/24"> «Previous</a> <a class="btn" href="/city/tutorial/26">Next »</a>'}
        ]
     });
