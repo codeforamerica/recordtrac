@@ -1,8 +1,11 @@
-<div class="request-status-well well well-small r_sidebar_banner {{ status }}">
-    <h3 id="status-text">
-        {% if status == 'closed' %}<i class="icon-archive"></i>{% endif %}
-        {{ status }}
-    </h3>
+{% block status %}
+{% include '_manage_request_status.html' %}
+{% endblock status %}
+
+<div class="row-fluid participantRow">
+    <div>
+        <h4 class="participantRow-title">Point of Contact</h4>
+    </div>
 </div>
 
 <!-- Acknowledge a request -->

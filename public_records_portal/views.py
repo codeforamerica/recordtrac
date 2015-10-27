@@ -314,10 +314,7 @@ def show_request_for_city(request_id):
         audience = 'helper'
     else:
         audience = 'city'
-    if is_supported_browser():
-        return show_request(request_id=request_id, template="manage_request_%s.html" % (audience))
-    else:
-        return show_request(request_id=request_id, template="manage_request_%s_less_js.html" % (audience))
+    return show_request(request_id=request_id, template="manage_request_%s_less_js.html" % (audience))
 
 
 @app.route("/response/<string:request_id>")
