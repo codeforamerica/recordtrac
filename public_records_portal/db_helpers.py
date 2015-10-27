@@ -31,6 +31,10 @@ from models import *
 import ldap
 cal = Calendar()
 
+CACERTFILE='/Users/administrator/Desktop/ldaps-dev.crt'
+ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT,ldap.OPT_X_TLS_DEMAND)
+ldap.set_option(ldap.OPT_X_TLS_CACERTDIR,CACERTFILE)
+
 def id_counter():
     i = 0
     while 1:
@@ -277,6 +281,7 @@ def authenticate_login(email, password):
         user_pw = ",D~X~vQQf627"
         CACERTFILE='/Users/administrator/Desktop/ldaps-dev.crt'
         ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT,ldap.OPT_X_TLS_DEMAND)
+        ldap.set_option(ldap.OPT_X_TLS_CACERTFILE,CACERTFILE)
         l.start_tls_s()
         l.bind_s(user_dn, user_pw)
     except ldap.INVALID_CREDENTIALS:
