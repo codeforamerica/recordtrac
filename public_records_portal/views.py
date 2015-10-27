@@ -866,18 +866,20 @@ def tutorial_initial():
     app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
     return render_template('tutorial_01.html')
 
-@app.route("/tutorial/<int:tutorial_id>")
+@app.route("/tutorial/<string:tutorial_id>")
 def tutorial(tutorial_id):
     user_id = get_user_id()
+    tutorial_string_id = tutorial_id.split("_")[0]
     app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
-    return render_template('tutorial_' + str(tutorial_id).zfill(2) + '.html')
+    return render_template('tutorial_' + tutorial_string_id + '.html')
 
-@app.route("/city/tutorial/<int:tutorial_id>")
+@app.route("/city/tutorial/<string:tutorial_id>")
 def tutorial_agency(tutorial_id):
     if current_user.is_authenticated:
         user_id = get_user_id()
+        tutorial_string_id = tutorial_id.split("_")[0]
         app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
-        return render_template('tutorial_agency_' + str(tutorial_id).zfill(2) + '.html')
+        return render_template('tutorial_agency_' + tutorial_string_id + '.html')
     else:
         return render_template("404.html"), 404
  

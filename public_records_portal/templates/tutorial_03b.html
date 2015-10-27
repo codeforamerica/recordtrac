@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <!-- HTML5 shim for IE backwards compatibility -->
+    <!--[if lt IE 9]>
+      <script src="/static/js/plugins/html5.js"></script>
+    <![endif]-->
+
+    <link rel=stylesheet type=text/css href="/static/style/css/screen.css">
+
+    <!--[if lte IE 9]>
+    <link rel=stylesheet type=text/css href="/static/style/css/ie.css">
+    <![endif]-->
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32"
+          href="/static/images/favicon-32x32.png"/>
+		  
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstro.css') }}">
+    <link rel=stylesheet type=text/css href="/static/css/plugins/BootSwatchr6.css">
+    <link rel=stylesheet type=text/css href="/static/css/plugins/DT_bootstrap.css">
+    <link rel=stylesheet type=text/css href="/static/css/plugins/font-awesome.min.css">
+		
+    <!-- modernizr -->
+    <script type="text/javascript"
+            src="/static/js/plugins/modernizr-latest-min.js"></script>
+
+    <!-- auth_script requires jquery and Mozilla's 'include.js' shim -->
+    <script type="text/javascript" src="/static/js/plugins/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="/static/js/plugins/include.js"></script>
+    <script type="text/javascript"></script>
+
+    <!-- IE8 polyfill for CSS3 pseudo classes like :hover -->
+    <script type="text/javascript" src="/static/js/plugins/jquery-1.11.1.min.js"></script>
+    <!--[if (gte IE 6)&(lte IE 8)]>
+      <script type="text/javascript" src="/static/js/plugins/selectivizr-min.js"></script>
+      <noscript><link rel="stylesheet" href="[fallback css]" /></noscript>
+    <![endif]-->
+
+    <!-- transform and other prefixes polyfill -->
+    <script src="/static/js/plugins/jquery.css3finalize.min.js"></script>
+
+    <!-- REM unit polyfill -->
+    <script type="text/javascript" src="/static/js/plugins/rem.min.js"></script>
+
+    <script type='text/javascript' src="/static/js/plugins/d3.v3.min.js"
+            charset="utf-8"></script>
+
+</head>
+
+<body>
+<div class="agency-header">
+    <div class="upper-header-black">
+        <div class="container">
+          <span class="upper-header-left">
+            <a href="http://www1.nyc.gov"><img src="http://www1.nyc.gov/assets/home/images/global/nyc_white.png"
+                                               alt="NYC" class="small-nyc-logo"/></a>
+            <img src="http://www1.nyc.gov/assets/home/images/global/upper-header-divider.gif" alt=""/>
+            <span class="upper-header-black-title">OpenRecords</span>
+          </span>
+            <span class="upper-header-padding"></span>
+          <span class="upper-header-right">
+            <span class="upper-header-three-one-one">
+              <a href="http://www1.nyc.gov/311/index.page">311</a>
+            </span>
+            <img src="http://www1.nyc.gov/assets/home/images/global/upper-header-divider.gif" alt=""/>
+            <span class="upper-header-search">
+              <a href="http://www1.nyc.gov/home/search/index.page">Search all NYC.gov websites</a>
+            </span>
+          </span>
+        </div>
+    </div>
+</div>
+<div class="wrapper">
+    <div class="navbar">
+        <div class="navbar-inner">
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="/"><img id="logo_nav"
+                                           src="/static/images/logo.png"
+                                           alt="Your agency name logo"/></a>
+
+            <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
+                
+                    <div class="google_translate">
+                        <div id="google_translate_element"></div>
+                        <script type="text/javascript">
+                        function googleTranslateElementInit() {
+                        new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+                        }
+                        </script>
+                        <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+                        </script>
+                    </div>
+                    <ul class="nav tabs">
+                        <li><a href="/new">Request a Record</a></li>
+                        <li><a href="/view_requests">All Requests</a></li>
+                        <li><a href="/track">Track an Existing Request</a></li>
+                        <li><a href="/faq">FAQ</a></li>
+                        <li><a href="/about">About</a></li>
+                    </ul>
+                    <ul class="nav pull-right">
+                    </ul>
+                
+            </div>
+        </div>
+    </div>
+    <div id="container-fluid">
+        
+
+<style>
+	#tooltip {
+		position: absolute;
+		width: 95px;
+		height: auto;
+		padding: 10px;
+		background-color: white;
+		-webkit-border-radius: 10px;
+		-moz-border-radius: 10px;
+		border-radius: 10px;
+		-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+		-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+		box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+		pointer-events: none;
+	}
+#tooltip.hidden {
+	display: none;
+}
+#tooltip p {
+	margin: 0;
+	font-family: sans-serif;
+	font-size: 12px;
+	line-height: 16px;
+}
+.indent{
+	padding-left: 5px;
+}
+.heading{
+	font-weight: bold;
+}
+value{
+	color: red;
+	font-style: italic;
+}
+rect {
+	-moz-transition: all 0.3s;
+	-webkit-transition: all 0.3s;
+	-o-transition: all 0.3s;
+	transition: all 0.3s;
+}
+rect:hover{
+	fill: orange;
+}
+.axis path,
+.axis line {
+	fill: none;
+	stroke: black;
+	shape-rendering: crispEdges;
+}
+.axis text {
+	font-family: sans-serif;
+	font-size: 11px;
+}
+
+
+</style>
+<script type="text/javascript" src="/static/js/plugins/d3pie.min.js"></script>
+
+<div class="row-fluid" id="request_graph_section">
+    <div class="span10">
+		
+			
+
+                    
+		
+
+		<!--div id="report_div"></div-->
+		<div id="bar_chart"></div>
+		<br>
+		<button id="calendarYear" type="submit" class="btn btn-primary">Calendar Year</button>
+		<button id="fullYear" type="submit" class="btn btn-primary">Year to Date</button>
+        <button id="rolling" type="submit" class="btn btn-primary">Rolling 365</button>
+		<h5>Agency Filter</h5>
+		<select id="agency_filter" name="agency_filter">
+			<option value="0">None Selected</option>
+			
+                        	<option value="4">Commission on Human Rights</option>
+			
+                        	<option value="7">Department of Education</option>
+			
+                        	<option value="6">Department of Information Technology and Telecommunications</option>
+			
+                        	<option value="1">Department of Records and Information Services</option>
+			
+                        	<option value="11">Law Department</option>
+			
+                        	<option value="9">Mayor&#39;s Office of Operations</option>
+			
+                        	<option value="10">Mayor&#39;s Office of Technology and Innovation</option>
+			
+                        	<option value="3">Office of Administrative Trials and Hearings</option>
+			
+                        	<option value="5">Office of Emergency Management</option>
+			
+                        	<option value="2">Office of the Chief Medical Examiner</option>
+			
+                        	<option value="8">Office of the Mayor</option>
+			
+		</select>
+        
+
+        <br />
+		
+		<script type="text/javascript">
+
+			function draw_barchart(reportPath) {
+				
+				$("#bar_chart").empty();
+				var w = 500, h = 100;
+				var svg = d3.select("#bar_chart").append("svg").attr("width",w).attr("height",h);
+			        var barPadding = 1;
+	
+				d3.json(reportPath, function(report_data) {
+						var margin = {
+						top: 25,
+						right: 75,
+						bottom: 85,
+						left: 85
+						},
+						w = 600 - margin.left - margin.right,
+						h = 350 - margin.top - margin.bottom;
+						var padding = 10;
+						
+						var colors = {};
+						colors["Received"] = "#278ECF";
+						colors["Published"] = "#4BD762";
+						colors["Denied"] = "#FFCA1F";
+						colors["Granted And Closed"] = "#FF9416";
+                                                colors["Granted In Part"] = "#D42AE8";
+                                                colors["No Customer Response"] = "#535AD7";
+                                                colors["Out of Jurisdiction"] = "#FF402C";
+					        colors["Referred to NYC.gov"] = "#83BFFF";
+                                                colors["Referred to Open Data"] = "#6EDB8F";
+                                                colors["Referred to Other Agency"] = "#FFE366";
+                                                colors["Referred to Publications Portal"] = "#FFC266";
+	
+						var dataset = report_data.data;
+						dataset = dataset.filter(function(d){ return d.label == "Received" || d.label == "Published"; });
+	
+						var xScale = d3.scale.ordinal()
+						.domain(d3.range(dataset.length))
+						.rangeRoundBands([0, w], 0.05);
+						// ternary operator to determine if global or local has a larger scale
+						var yScale = d3.scale.linear()
+						.domain([0, d3.max(dataset, function (d) {
+										   return d.value;
+										   })])
+						.range([h, 0]);
+						var xAxis = d3.svg.axis()
+						.scale(xScale)
+						.tickFormat(function (d) {
+									return dataset[d].label;
+									})
+						.orient("bottom");
+						var yAxis = d3.svg.axis()
+						.scale(yScale)
+						.orient("left")
+						.ticks(5);
+
+						var commaFormat = d3.format(',');
+						
+						//SVG element
+						var svg = d3.select("#bar_chart")
+						.append("svg")
+						.attr("width", w + margin.left + margin.right)
+						.attr("height", h + margin.top + margin.bottom)
+						.append("g")
+						.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+						
+						// Graph Bars
+						var sets = svg.selectAll(".set")
+						.data(dataset)
+						.enter()
+						.append("g")
+						.attr("class", "set")
+						.attr("transform", function (d, i) {
+							  return "translate(" + xScale(i) + ",0)";
+							  });
+						
+						sets.append("rect")
+						.attr("class", "OverDue")
+						.attr("width", xScale.rangeBand() / 2)
+						.attr("y", function (d) {
+							  return yScale(d.value);
+							  })
+						.attr("x", xScale.rangeBand() / 2)
+						.attr("height", function (d) {
+							  return h - yScale(d.value);
+							  })
+						.attr("fill", function (d) {
+							  return colors[d.label];
+							  })
+						;
+						
+						// xAxis
+						svg.append("g") // Add the X Axis
+						.attr("class", "x axis")
+						.attr("transform", "translate(0," + (h) + ")")
+						.call(xAxis)
+						.selectAll("text")
+						.style("text-anchor", "end")
+						.attr("dx", "-.8em")
+						.attr("dy", ".15em")
+						.attr("transform", function (d) {
+							  return "rotate(-25)";
+							  });
+						// yAxis
+						svg.append("g")
+						.attr("class", "y axis")
+						.attr("transform", "translate(0 ,0)")
+						.call(yAxis);
+						// xAxis label
+						svg.append("text")
+						.attr("transform", "translate(" + (w / 2) + " ," + (h + margin.bottom - 5) + ")")
+						.style("text-anchor", "middle")
+						.text("Request Type");
+						
+						//yAxis label
+						svg.append("text")
+						.attr("transform", "rotate(-90)")
+						.attr("y", 0 - margin.left)
+						.attr("x", 0 - (h / 2))
+						.attr("dy", "1em")
+						.style("text-anchor", "middle")
+						.text("# of Requests");
+			
+						sets.append("text")
+						.text(function(d) {
+							if(d.value != 0) {
+								return d.value;
+							}
+						})
+						.attr("text-anchor", "middle")
+						.attr("y", function (d) {
+							return yScale(d.value) + 14;
+						})
+						.attr("x", function(d,i) {
+							return (xScale.rangeBand() / 2) + 50;
+						})
+						.attr("height", function (d) {
+							return h - yScale(d.value);
+						})
+						.attr("fill", function (d) {
+							return "black";
+							//colors[d.label];
+						});
+                                                
+	
+	
+						});
+			}
+		
+			draw_barchart("/api/report/all/all");
+
+			$("#calendarYear").click(function() {
+			    draw_barchart("/api/report/all/calendarYear");
+			});
+
+			$("#fullYear").click(function() {
+			    draw_barchart("/api/report/all/fullYear");
+			});
+			
+			$("#rolling").click(function() {
+				draw_barchart("/api/report/all/rolling");
+			});
+			
+			$("#agency_filter").change(function() {
+				selected = $(this).val();
+
+				draw_barchart("/api/report/all/agency_" + selected);
+			});
+			$("#staff_filter").change(function() {
+				selected = $(this).val();
+
+				draw_barchart("/api/report/all/staff_" + selected);
+			});
+
+
+		</script>
+
+	</div>
+</div>
+
+    </div>
+    <div class="push"></div>
+</div>
+<!-- // Wrapper -->
+<div class="iw_component" id="1422284559235">
+    <div class="row">
+        <footer>
+            <div class="container">
+                <div class="span9 footer-links">
+                    <a href="http://www1.nyc.gov/nyc-resources/agencies.page">Directory of City Agencies</a>
+                    <a href="http://www1.nyc.gov/home/contact-us.page">Contact NYC Government</a>
+                    <a href="https://a127-ess.nyc.gov">City Employees</a>
+                    <a href="http://www.nyc.gov/notifynyc">Notify NYC</a>
+                    <a href="http://a856-citystore.nyc.gov/">CityStore</a>
+                    <a href="http://www1.nyc.gov/connect/social-media.page">Stay Connected</a>
+                    <a href="http://www1.nyc.gov/connect/applications.page">NYC Mobile Apps</a>
+                    <a href="http://www1.nyc.gov/nyc-resources/nyc-maps.page">Maps</a>
+                    <a href="http://www1.nyc.gov/nyc-resources/resident-toolkit.page">Resident Toolkit</a>
+                </div>
+                <div class="span3">
+                    <span class="logo-nyc">NYC</span>
+
+                    <form class="form-search" method="get" action="http://www1.nyc.gov/home/search/index.page">
+                        <input placeholder="Search" class="input-search placeholder" name="search-terms" type="text"/>
+                        <button class="ico-search">Search</button>
+                    </form>
+                    <div class="copyright">
+                        <p>City of New York. 2015 All Rights Reserved,</p>
+
+                        <p>NYC is a trademark and service mark of the City of New York</p>
+
+                        <p><a href="http://www1.nyc.gov/home/privacy-policy.page" title="Privacy">Privacy Policy</a>.
+                            <a href="http://www1.nyc.gov/home/terms-of-use.page" title="TOU">Terms of Use</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script type="text/javascript" src="/static/js/plugins/jquery.placeholder.js"></script>
+<script type="text/javascript" src="/static/js/plugins/jquery.validate.js"></script>
+<script type="text/javascript" src="/static/js/plugins/bootstrap.js"></script>
+
+<!-- used for the tutorial -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstro.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/custom.bootstro.js') }}"></script>
+
+<script>
+$(document).ready(function(){
+    bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
+       [{selector:'#request_graph_section',title:'View Reports',content:'This is the report view with statistics about requests received and published.',placement:'top',finishButton:'<a class="btn" href="/tutorial/03"> «Previous</a> <a class="btn" href="/tutorial/04">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a>'}
+       ]
+    });
+});
+</script>
+
+</body>
+</html>
