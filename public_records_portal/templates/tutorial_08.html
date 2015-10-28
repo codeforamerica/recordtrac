@@ -34,7 +34,7 @@
     <link rel=stylesheet type=text/css href="/static/css/plugins/BootSwatchr6.css">
     <link rel=stylesheet type=text/css href="/static/css/plugins/DT_bootstrap.css">
     <link rel=stylesheet type=text/css href="/static/css/plugins/font-awesome.min.css">
-
+		
     <!-- modernizr -->
     <script type="text/javascript"
             src="/static/js/plugins/modernizr-latest-min.js"></script>
@@ -100,9 +100,6 @@
 
             <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
                 
-                    <div class="login btn">
-                      <p><a href="/login" >Login</a></p>
-                    </div>
                     <div class="google_translate">
                         <div id="google_translate_element"></div>
                         <script type="text/javascript">
@@ -141,12 +138,18 @@
         <fieldset>
           <div class="control-group">
             <h2>
+              <small id='categoryTitle'>Category</small>
+            </h2>
+            <select class="input-block-level" id="request_category" name="request_category"><option value=""></option><option value="Business">Business</option><option selected value="Civic Services">Civic Services</option><option value="Culture &amp; Recreation">Culture &amp; Recreation</option><option value="Education">Education</option><option value="Environment">Environment</option><option value="Health">Health</option><option value="Housing &amp; Development">Housing &amp; Development</option><option value="Public Safety">Public Safety</option><option value="Social Services">Social Services</option><option value="Transportation">Transportation</option></select>
+          </div>			
+          <div class="control-group">
+            <h2>
               <small>What agency has the records you want?*</small>
             </h2>
             <div class="missing_field alert alert-danger" id="missing_agency" style="width: calc(100% - 4.5rem);">
               Agency Missing
             </div>
-            <select class="input-block-level" id="request_agency" name="request_agency"><option selected value=""></option><option value="Commission on Human Rights">Commission on Human Rights</option><option value="Department of Education">Department of Education</option><option value="Department of Information Technology and Telecommunications">Department of Information Technology and Telecommunications</option><option value="Department of Records and Information Services">Department of Records and Information Services</option><option value="Law Department">Law Department</option><option value="Mayor's Office of Operations">Mayor's Office of Operations</option><option value="Mayor's Office of Technology and Innovation">Mayor's Office of Technology and Innovation</option><option value="Office of Administrative Trials and Hearings">Office of Administrative Trials and Hearings</option><option value="Office of Emergency Management">Office of Emergency Management</option><option value="Office of the Chief Medical Examiner">Office of the Chief Medical Examiner</option><option value="Office of the Mayor">Office of the Mayor</option></select>
+            <select class="input-block-level" id="request_agency" name="request_agency"><option value=""></option><option value="Commission on Human Rights">Commission on Human Rights</option><option value="Department of Education">Department of Education</option><option value="Department of Information Technology and Telecommunications">Department of Information Technology and Telecommunications</option><option selected value="Department of Records and Information Services">Department of Records and Information Services</option><option value="Law Department">Law Department</option><option value="Mayor's Office of Operations">Mayor's Office of Operations</option><option value="Mayor's Office of Technology and Innovation">Mayor's Office of Technology and Innovation</option><option value="Office of Administrative Trials and Hearings">Office of Administrative Trials and Hearings</option><option value="Office of Emergency Management">Office of Emergency Management</option><option value="Office of the Chief Medical Examiner">Office of the Chief Medical Examiner</option><option value="Office of the Mayor">Office of the Mayor</option></select>
           </div>
           <div class="control-group">
             <h2>
@@ -169,7 +172,8 @@
           <h2>
             <lead>Personal Information</lead>
           </h2>
-          <p id="personal_information">This information will not be publicly viewable on this site. You must provide contact information so that the agency can respond to your request for records.</p>
+          <p>This information will not be publicly viewable on this site. You must provide contact information so that the agency can respond to your request for records.</p>
+		  <div id="personal_information">
           <div class="row-fluid">
             <div class="control-group span6">
               <h2>
@@ -180,7 +184,7 @@
               </div>
               <input class="input-block-level" id="request_first_name" name="request_first_name" placeholder="John" type="text" value="">
             </div>
-            <div class="control-group span6">
+            <div class="control-group span6 personal_info">
               <h2>
                 <small>Last Name*</small>
               </h2>
@@ -202,6 +206,7 @@
             </h2>
             <input class="input-block-level" id="request_organization" name="request_organization" placeholder="Your organization (if applicable)" type="text" value="">
           </div>
+		  </div>
           <h2>
             <lead>Contact Information</lead>
           </h2>
@@ -349,7 +354,7 @@
 <script>
 $(document).ready(function(){
     bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
-       [{selector:'#personal_information',title:'Personal Information',content:'You are required to enter first and last name. The Role/Title and Organization fields are optional.',placement:'bottom',finishButton:'<a class="btn" href="/tutorial/07"> «Previous</a> <a class="btn" href="/tutorial/09">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a>'}
+       [{selector:'#personal_information',title:'Personal Information',content:'You are required to enter first and last name. The Role/Title and Organization fields are optional.',placement:'right',finishButton:'<a class="btn" href="/tutorial/07"> «Previous</a> <a class="btn" href="/tutorial/09">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a>'}
        ]
     });
 });

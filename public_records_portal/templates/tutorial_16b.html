@@ -158,7 +158,7 @@
 
             <form id="all_requests_form" name="all_requests" action="/requests" method="GET">
                 <div class="row-fluid" style="padding-bottom: 5%;">
-                    <div class="span4">
+                    <div class="span4" id="search_request_section">
                         <div class="well well-small" id="mobile-filter" style="padding-bottom: 6em;">
 
                             <h5>Search request text</h5>
@@ -174,7 +174,7 @@
 
                                     <div class="indent">
                                         <label class="checkbox">
-                                            <input type="checkbox" ID="checkbox" name="is_open" />
+                                            <input type="checkbox" ID="checkbox" name="is_open" checked />
                                             <em class="open_style">Open</em>
                                         </label>
                                         
@@ -263,7 +263,7 @@
                                 </div>
                             
                             <button class="btn btn-primary span12" style="margin-left: 0px;" type="submit"
-                                    value="Submit">Find
+                                    value="Submit" id="findButton">Find
                             </button>
                         </div>
                         
@@ -298,7 +298,257 @@
                                 
                             </tr>
                             </thead>
-                            <tbody id="tracking_a_request">
+                            <tbody>
+                            
+                                
+                                    <tr class="clickable-row" id="first_clickable_row" onclick="window.location='/request/FOIL-2015-002-00011'">
+                                
+                            <td class="status open">
+                                
+                            </td>
+                            <td>FOIL-2015-002-00011</td>
+                            <td class="hide-mobile">Oct 22, 2015</td>
+                            <td>
+                                
+                                    <a href="/request/FOIL-2015-002-00011">
+                                
+                                
+                                
+                                City Council meeting minutes 448
+                                </a>
+                            </td>
+                            <td>Department of Records and Information Services</td>
+                            <td class="hide-mobile">Adam Parker</td>
+                            <td >Nov 01, 2015</td>
+                            
+                                <td class="hide-mobile">&nbsp;</td>
+                            
+                            </tr>
+                            
+                                
+                                    <tr class="clickable-row" onclick="window.location='/request/FOIL-2015-017-00017'">
+                                
+                            <td class="status open">
+                                
+                            </td>
+                            <td>FOIL-2015-017-00017</td>
+                            <td class="hide-mobile">Oct 22, 2015</td>
+                            <td>
+                                
+                                    <a href="/request/FOIL-2015-017-00017">
+                                
+                                
+                                
+                                Communication between Councilmembers 644
+                                </a>
+                            </td>
+                            <td>Department of Information Technology and Telecommunications</td>
+                            <td class="hide-mobile">Tin Lau</td>
+                            <td >Nov 01, 2015</td>
+                            
+                                <td class="hide-mobile">&nbsp;</td>
+                            
+                            </tr>
+                            
+                                
+                                    <tr class="clickable-row" onclick="window.location='/request/FOIL-2015-025-00018'">
+                                
+                            <td class="status open">
+                                
+                            </td>
+                            <td>FOIL-2015-025-00018</td>
+                            <td class="hide-mobile">Oct 22, 2015</td>
+                            <td>
+                                
+                                    <a href="/request/FOIL-2015-025-00018">
+                                
+                                
+                                
+                                City Council meeting minutes 232
+                                </a>
+                            </td>
+                            <td>Department of Information Technology and Telecommunications</td>
+                            <td class="hide-mobile">Visham Subrath</td>
+                            <td >Nov 01, 2015</td>
+                            
+                                <td class="hide-mobile">&nbsp;</td>
+                            
+                            </tr>
+                            
+                                
+                                    <tr class="clickable-row" onclick="window.location='/request/FOIL-2015-040-00009'">
+                                
+                            <td class="status open">
+                                
+                            </td>
+                            <td>FOIL-2015-040-00009</td>
+                            <td class="hide-mobile">Oct 22, 2015</td>
+                            <td>
+                                
+                                    <a href="/request/FOIL-2015-040-00009">
+                                
+                                
+                                
+                                Police Report 172
+                                </a>
+                            </td>
+                            <td>Department of Information Technology and Telecommunications</td>
+                            <td class="hide-mobile">Jennifer Baek</td>
+                            <td >Nov 01, 2015</td>
+                            
+                                <td class="hide-mobile">&nbsp;</td>
+                            
+                            </tr>
+                            
+                                
+                                    <tr class="clickable-row" onclick="window.location='/request/FOIL-2015-040-00014'">
+                                
+                            <td class="status open">
+                                
+                            </td>
+                            <td>FOIL-2015-040-00014</td>
+                            <td class="hide-mobile">Oct 22, 2015</td>
+                            <td>
+                                
+                                    <a href="/request/FOIL-2015-040-00014">
+                                
+                                
+                                
+                                City Council meeting minutes 40
+                                </a>
+                            </td>
+                            <td>Office of Emergency Management</td>
+                            <td class="hide-mobile">Robert Wilson</td>
+                            <td >Nov 01, 2015</td>
+                            
+                                <td class="hide-mobile">&nbsp;</td>
+                            
+                            </tr>
+                            
+                                
+                                    <tr class="clickable-row" onclick="window.location='/request/FOIL-2015-040-00019'">
+                                
+                            <td class="status open">
+                                
+                            </td>
+                            <td>FOIL-2015-040-00019</td>
+                            <td class="hide-mobile">Oct 22, 2015</td>
+                            <td>
+                                
+                                    <a href="/request/FOIL-2015-040-00019">
+                                
+                                
+                                
+                                City Council meeting minutes 104
+                                </a>
+                            </td>
+                            <td>Department of Records and Information Services</td>
+                            <td class="hide-mobile">Adam Parker</td>
+                            <td >Nov 01, 2015</td>
+                            
+                                <td class="hide-mobile">&nbsp;</td>
+                            
+                            </tr>
+                            
+                                
+                                    <tr class="clickable-row" onclick="window.location='/request/FOIL-2015-816-00010'">
+                                
+                            <td class="status open">
+                                
+                            </td>
+                            <td>FOIL-2015-816-00010</td>
+                            <td class="hide-mobile">Oct 22, 2015</td>
+                            <td>
+                                
+                                    <a href="/request/FOIL-2015-816-00010">
+                                
+                                
+                                
+                                Communication between Councilmembers 760
+                                </a>
+                            </td>
+                            <td>Law Department</td>
+                            <td class="hide-mobile">Steven Goulden</td>
+                            <td >Nov 01, 2015</td>
+                            
+                                <td class="hide-mobile">&nbsp;</td>
+                            
+                            </tr>
+                            
+                                
+                                    <tr class="clickable-row" onclick="window.location='/request/FOIL-2015-858-00008'">
+                                
+                            <td class="status open">
+                                
+                            </td>
+                            <td>FOIL-2015-858-00008</td>
+                            <td class="hide-mobile">Oct 22, 2015</td>
+                            <td>
+                                
+                                    <a href="/request/FOIL-2015-858-00008">
+                                
+                                
+                                
+                                Incident Report 732
+                                </a>
+                            </td>
+                            <td>Department of Information Technology and Telecommunications</td>
+                            <td class="hide-mobile">Ugooma Daniel</td>
+                            <td >Nov 01, 2015</td>
+                            
+                                <td class="hide-mobile">&nbsp;</td>
+                            
+                            </tr>
+                            
+                                
+                                    <tr class="clickable-row" onclick="window.location='/request/FOIL-2015-858-00012'">
+                                
+                            <td class="status open">
+                                
+                            </td>
+                            <td>FOIL-2015-858-00012</td>
+                            <td class="hide-mobile">Oct 22, 2015</td>
+                            <td>
+                                
+                                    <a href="/request/FOIL-2015-858-00012">
+                                
+                                
+                                
+                                Communication between Councilmembers 100
+                                </a>
+                            </td>
+                            <td>Department of Records and Information Services</td>
+                            <td class="hide-mobile">Adam Parker</td>
+                            <td >Nov 01, 2015</td>
+                            
+                                <td class="hide-mobile">&nbsp;</td>
+                            
+                            </tr>
+                            
+                                
+                                    <tr class="clickable-row" onclick="window.location='/request/FOIL-2015-858-00015'">
+                                
+                            <td class="status open">
+                                
+                            </td>
+                            <td>FOIL-2015-858-00015</td>
+                            <td class="hide-mobile">Oct 22, 2015</td>
+                            <td>
+                                
+                                    <a href="/request/FOIL-2015-858-00015">
+                                
+                                
+                                
+                                Communication between Councilmembers 32
+                                </a>
+                            </td>
+                            <td>Department of Records and Information Services</td>
+                            <td class="hide-mobile">Haronil Estevez</td>
+                            <td >Nov 01, 2015</td>
+                            
+                                <td class="hide-mobile">&nbsp;</td>
+                            
+                            </tr>
                             
                                 
                                     <tr class="clickable-row" onclick="window.location='/request/FOIL-2015-860-00001'">
@@ -325,12 +575,87 @@
                             
                             </tr>
                             
+                                
+                                    <tr class="clickable-row" onclick="window.location='/request/FOIL-2015-860-00002'">
+                                
+                            <td class="status open">
+                                
+                            </td>
+                            <td>FOIL-2015-860-00002</td>
+                            <td class="hide-mobile">Oct 26, 2015</td>
+                            <td>
+                                
+                                    <a href="/request/FOIL-2015-860-00002">
+                                
+                                
+                                
+                                Public Advocate Emails from 2015
+                                </a>
+                            </td>
+                            <td>Department of Records and Information Services</td>
+                            <td class="hide-mobile">Kenneth Cobb</td>
+                            <td >Nov 05, 2015</td>
+                            
+                                <td class="hide-mobile">&nbsp;</td>
+                            
+                            </tr>
+                            
+                                
+                                    <tr class="clickable-row" onclick="window.location='/request/FOIL-2015-860-00007'">
+                                
+                            <td class="status open">
+                                
+                            </td>
+                            <td>FOIL-2015-860-00007</td>
+                            <td class="hide-mobile">Oct 22, 2015</td>
+                            <td>
+                                
+                                    <a href="/request/FOIL-2015-860-00007">
+                                
+                                
+                                
+                                Communication between Councilmembers 756
+                                </a>
+                            </td>
+                            <td>Mayor&#39;s Office of Technology and Innovation</td>
+                            <td class="hide-mobile">Jeff Merritt</td>
+                            <td >Nov 01, 2015</td>
+                            
+                                <td class="hide-mobile">&nbsp;</td>
+                            
+                            </tr>
+                            
+                                
+                                    <tr class="clickable-row" onclick="window.location='/request/FOIL-2015-860-00016'">
+                                
+                            <td class="status open">
+                                
+                            </td>
+                            <td>FOIL-2015-860-00016</td>
+                            <td class="hide-mobile">Oct 22, 2015</td>
+                            <td>
+                                
+                                    <a href="/request/FOIL-2015-860-00016">
+                                
+                                
+                                
+                                Police Report 624
+                                </a>
+                            </td>
+                            <td>Department of Information Technology and Telecommunications</td>
+                            <td class="hide-mobile">Ugooma Daniel</td>
+                            <td >Nov 01, 2015</td>
+                            
+                                <td class="hide-mobile">&nbsp;</td>
+                            
+                            </tr>
+                            
                             </tbody>
                         </table>
                         <div class="pull-left pagination">
                             <ul>
                                 
-                                <li>Showing 1 to 1 of 1 entries</li>
+                                <li>Showing 1 to 14 of 14 entries</li>
                                 
                             </ul>
                         </div>
@@ -450,11 +775,10 @@
 <script>
 $(document).ready(function(){
     bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
-       [{selector:'#requests',title:'Track a Request',content:'The search results for the tracking number are displayed.',placement:'left',finishButton:'<a class="btn" href="/tutorial/13"> «Previous</a> <a class="btn" href="/tutorial/15">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a>'}
+       [{selector:'#requests',title:'All Requests',content:'You can select a request from the search results to see the details for that request.',placement:'top',finishButton:'<a class="btn" href="/tutorial/16"> «Previous</a> <a class="btn" href="/tutorial/17">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a>'}
        ]
     });
 });
 </script>
-
 </body>
 </html>
