@@ -567,7 +567,7 @@
         <!-- <label>Change Assignee</label> -->
           <input type="hidden" name="request_id" value="FOIL-2015-860-00001"/>
           <!--input id="rerouteEmail" class="input-block-level" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required /-->
-          <select class="span10" id="rerouteEmail" name="owner_email">
+          <select class="span10" id="rerouteEmailAssignee" name="owner_email">
             
               jcastillo@records.nyc.gov
               <option value="jcastillo@records.nyc.gov">Joel Castillo</option>
@@ -746,8 +746,10 @@
 
 <script>
 $(document).ready(function(){
+    $('#rerouteEmailAssignee').attr('size',6);
+                  
     bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
-       [{selector:'#assignee_title',title:'Track a Request',content:'An agency user can change the Assignee for the request.',placement:'left',finishButton:'<a class="btn" href="/city/tutorial/15"> «Previous</a> <a class="btn" href="/city/tutorial/17">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a>'}
+       [{selector:'#rerouteEmailAssignee',title:'Manage a Request',content:'An agency user can change the Assignee for the request.',placement:'left',finishButton:'<a class="btn" href="/city/tutorial/15"> «Previous</a> <a class="btn" href="/city/tutorial/17">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a>'}
        ]
     });
 });
