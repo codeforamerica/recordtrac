@@ -19,6 +19,7 @@
   {% set email = user.email %}
   {% set alias = user.alias %}
   {% set phone = user.phone %}
+  {% set fax = user.fax %}
   {% set address1 = user.address1 %}
   {% set address2 = user.address2 %}
   {% set city = user.city %}
@@ -41,6 +42,10 @@
       <br>
       <span>
         Requester's Phone Number: <span class="label">{{ phone or "Not provided" }}</span>
+      </span>
+      <br>
+      <span>
+          Requester's Fax Number: <span class="label">{{ fax or "Not provided" }}</span>
       </span>
       <br>
       <span>
