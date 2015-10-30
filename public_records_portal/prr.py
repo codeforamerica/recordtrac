@@ -256,7 +256,7 @@ def add_offline_record(request_id, description, access, user_id, department_name
 
 
 ### @export "add_link"
-def add_link(request_id, url, description, user_id, request_body, department_name):
+def add_link(request_id, url, description, user_id, department_name=None):
     """ Creates a record with link attributes """
     record_id = create_record(url=url, request_id=request_id, user_id=user_id, description=description)
     if record_id:
@@ -327,7 +327,7 @@ def add_subscriber(request_id, email):
 
 
 ### @export "ask_a_question"
-def ask_a_question(request_id, user_id, question, department_name):
+def ask_a_question(request_id, user_id, question, department_name=None):
     """ City staff can ask a question about a request they are confused about."""
     req = get_obj("Request", request_id)
     qa_id = create_QA(request_id=request_id, question=question, user_id=user_id)
@@ -483,5 +483,8 @@ def close_request(request_id, reason="", user_id=None, request_body=None):
     change_request_status(request_id, "Closed")
     # Create a note to capture closed information:
     create_note(request_id, reason, user_id, privacy=1)
-    generate_prr_emails(request_id=request_id, notification_type="Request closed",text=request_body['additional_information'])
+    if (request_body):
+        generate_prr_emails(request_id=request_id, notification_type="Request closed",text=request_body['additional_information'])
+    else:
+        generate_prr_emails(request_id=request_id, notification_type="Request closed")
     add_staff_participant(request_id=request_id, user_id=user_id)
