@@ -10,8 +10,12 @@
 
 <p>
 {#    You can view the request and take any necessary action at the following webpage: <a href='{{ page }}'>{{ page }}</a>. Click <a href="FAQ PAGE">here</a> to learn about how the City Responds to FOIL requests.#}
-    A new update has been posted by a member of your staff.
-    {{ additional_information }}
+    Request {{ request_id }} has been acknowledged, {{ days }}.
+    {% if additional_information %}
+    <p>
+        Additional Information: {{ additional_information }}
+    </p>
+    {% endif %}
 </p>
                     </br>
 
