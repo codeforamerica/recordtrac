@@ -115,16 +115,30 @@ $(function() {
     });
 
     // displays characters remaining, highlights extra characters
+    function maxLength(el) {    
+        if (!('maxLength' in el)) {
+            var max = el.attributes.maxLength.value;
+            el.onkeypress = function () {
+                if (this.value.length >= max) return false;
+            };
+        }
+    }
+
+    maxLength(document.getElementById("request_summary"));
+
+    // displays characters remaining, highlights extra characters
     var text_max = 90;
     $('#summary_count').text(text_max + ' characters remaining');
 
     $('#request_summary').keyup(function() {
-        var summary = $('request_summary');
         var text_length = $('#request_summary').val().length;
         var text_remaining = text_max - text_length;
-        if (text_remaining < 0) {
-            //highlight range of summary (90:) red
-        }
         $('#summary_count').text(text_remaining + ' characters remaining');
+        console.log(text_remaining);
+        if (text_remaining < 0) {
+            document.getElementById("summary_count").style.color = "red";
+        } else {
+            document.getElementById("summary_count").style.color = "black";
+        }
     });
 });
