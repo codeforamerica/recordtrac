@@ -360,7 +360,6 @@ def show_request(request_id, template="manage_request_public.html"):
     departments_all = models.Department.query.all()
     agency_data = []
     for d in departments_all:
-        #firstUser = models.User.query.filter_by(department_id=d.id).first()
         primary_contact = d.primary_contact
         agency_data.append({'name': d.name, 'email': primary_contact.email})
 
@@ -372,7 +371,19 @@ def show_request(request_id, template="manage_request_public.html"):
     if req.status and "Closed" in req.status and template != "manage_request_feedback.html":
         template = "closed.html"
 
-    return render_template(template, req=req, agency_data=agency_data, users=users)
+    department = models.Department.query.filter_by(id=req.department_id).first()
+    assigned_user = models.User.query.filter_by(
+        id=models.Owner.query.filter_by(request_id=request_id, is_point_person=True).first().user_id).first()
+    helpers = []
+    for i in req.owners:
+        if i.is_point_person:
+            continue
+        helper = models.User.query.filter_by(id=i.user_id).first()
+        print helper
+        helpers.append({'name': helper.alias, 'email': helper.email})
+
+    return render_template(template, req=req, agency_data=agency_data, users=users,
+                           department=department, assigned_user=assigned_user, helpers=helpers)
 
 
 @app.route("/api/staff")
