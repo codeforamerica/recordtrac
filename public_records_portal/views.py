@@ -384,7 +384,7 @@ show_request_for_x.methods = ['GET', 'POST']
 @login_required
 @requires_roles('Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel', 'Agency Helpers')
 def show_request_for_city(request_id):
-    # req = get_obj("Request", request_id)
+    req = get_obj("Request", request_id)
     if current_user.role == 'Agency Helpers':
         audience = 'helper'
     else:
