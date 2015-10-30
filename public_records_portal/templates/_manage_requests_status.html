@@ -8,7 +8,7 @@
 <!-- Acknowledge a request -->
 {% if current_user.is_authenticated and req.solid_status() == 'open' %}
     <div class="r_sidebar_banner hidden-phone hidden-tablet">
-        <form name="note" class="form-horizontal" id="note" method="post" action="/update_a_request_acknowledge">
+        <form name="note" class="form-horizontal" id="AcknowledgeNote" method="post" action="/update_a_request_acknowledge">
             <input type="hidden" name="request_id" value="{{ req.id }}"/>
             <fieldset>
                 <h4>Acknowledge a request</h4>
@@ -24,7 +24,7 @@
                     <option value="Granted - In Part 90 days">Granted - In Part 90 days</option>
                     <option value="Granted - In Part 120 days">Granted - In Part 120 days</option>
                 </select>
-                <button id="rerouteButton" class="btn input-block-level" type="submit"><i class="icon-envelope"> </i>
+                <button id="rerouteButton" class="btn input-block-level" data-toggle="modal" data-target="#confirm-submit" type="submit"><i class="icon-envelope"> </i>
                     Acknowledge Request
                 </button>
             </fieldset>

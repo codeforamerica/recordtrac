@@ -1,65 +1,134 @@
 $(function() {
     $('#step1').fadeIn('fast');
-   
+
     var validContact = false;
     var validAddress = false;
 
-    $('#submitRequest').validate({
-        rules: {
-            request_agency: {
-                required: true
-            },
-            request_summary: {
-                required: true,
-                maxlength: 90
-            },
-            request_text: {
-                required: true
-            },
-            request_first_name: {
-                required: true
-            },
-            request_last_name: {
-                required: true
+    var addressValidator = new FormValidator('submitRequest', [{
+        name: 'address_1',
+        display: 'Address 1',
+        rules: 'required'
+    }, {
+        name: 'city',
+        display: 'City',
+        rules: 'required'
+    }, {
+        name: 'zip_code',
+        display: 'Zip Code',
+        rules: 'required'
+    }], function(errors, event) {
+        if(errors.length === 0) {
+            validAddress = true; 
+        }
+    });
+
+    var contactValidator = new FormValidator('submitRequest', [{
+        name: 'email',
+        display: 'Email',
+        rules: 'required'
+    }, {
+        name: 'phone',
+        display: 'Phone',
+        rules: 'required'
+    }, {
+        name: 'fax',
+        display: 'Fax',
+        rules: 'required'
+    }], function(errors, event) {
+        if(errors.length < 3) {
+            validContact = true;
+        }
+    });
+
+    var validator = new FormValidator('submitRequest', [{
+        name: 'request_agency',
+        display: 'Request Agency',
+        rules: 'required'
+    }, {
+        name: 'request_summary',
+        display: 'Topic',
+        rules: 'required'
+    }, {
+        name: 'request_text',
+        display: 'Request Details',
+        rules: 'required'
+    }, {
+        name: 'request_first_name',
+        display: 'Requester First Name',
+        rules: 'required'
+    }, {
+        name: 'request_last_name',
+        display: 'Request Last Name',
+        rules: 'required'
+    }, {
+        name: 'request_contact_information',
+        display: 'Request Contact Information',
+        rules: 'required'
+    }], function(errors, event) {
+        if (errors.length > 0) {
+            // Show the errors
+            $('#step2').fadeOut('fast', function() {});
+            var errorString = '';
+            for (var i = 0, errorLength = errors.length; i < errorLength; i++) {
+                errorString += errors[i].message + '<br />';
+                if (errors[i].name === 'request_agency') {
+                    $('#missing_agency').show();
+                }
+                if (errors[i].name === 'request_summary') {
+                    $('#missing_summary').show();
+                }
+                if (errors[i].name === 'request_text') {
+                    $('#missing_text').show();
+                }
+                if (errors[i].name === 'request_first_name') {
+                    $('#missing_first_name').show();
+                }
+                if (errors[i].name === 'request_last_name') {
+                    $('#missing_last_name').show();
+                }
+                if (!validContact && !validAddress) {
+                    $('#missing_contact_information').show();
+                }
             }
-        },
-        highlight: function (element) {
-            $(element).closest('.control-group').removeClass('success').addClass('error');
+            var stepId = '#step2';
+            var toolTipId = '#detailsTitle';
+
+            if (errorString.indexOf("Request Category") >= 0 || errorString.indexOf("Request Agency") >= 0 || errorString.indexOf("Topic") >= 0) {
+                stepId = '#step1';
+                toolTipId = '#categoryTitle';
+            }
+
+            $(stepId).fadeIn('slow', function() {
+                $('html, body').animate({
+                    scrollTop: $("#submitRequest").offset().top
+                }, 500);
+            });
+
         }
     });
 
     $('#button1').click(function() {
-
-      if($('#submitRequest').valid()) {
-          // scroll to the top of the form
-          $('html, body').animate({
+        // scroll to the top of the form
+        $('html, body').animate({
             scrollTop: $("#submitRequest").offset().top
-          }, 500);
-
-          // fade out step1, fade in step2
-          $('#step1').fadeOut('fast', function() {});
-          $('#step2').fadeIn('slow', function() {});
-          $('#s1').removeClass('active');
-          $('#s2').addClass('active');
-      }
-
+        }, 500);
+        confirmation=confirm('By selecting "OK" you are acknowledging that this information will be available to the public');
+        if(confirmation==true){
+            //Do nothing and continue with the transition
+        }
+        else{
+            exit();
+        }
+        // fade out step1, fade in step2
+        $('#step1').fadeOut('fast', function() {});
+        $('#step2').fadeIn('slow', function() {});
+        $('#s1').removeClass('active');
+        $('#s2').addClass('active');
     });
 
-    $('#button2').click(function(e) {
+    $('#button2').click(function() {
 
-        if($('#request_address_street_one').val() && $('#request_address_city').val() && $('#request_address_zip').val()) {
-            validAddress = true;
-        }
 
-        if($('#request_email').val() || $('#request_email').val() || $('#request_email').val() || validAddress) {
-            validContact = true;
-        }
-
-        if($('#submitRequest').valid() && !validContact) {
-            e.preventDefault();
-            $('#missing_contact_information').show();
-            $('#request_email').focus();
-        }
     });
 
     $('#back').click(function() {

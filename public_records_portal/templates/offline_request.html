@@ -37,23 +37,22 @@
                         </p>
                         <br/>
                         <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="off" novalidate="novalidate" enctype="multipart/form-data">
+                            <h2>Public Information</h2>
                             <fieldset>
-
                                 <div class="control-group">
-                                    <h1><small>{{ form.request_category.label.text}} </small></h1>
-                                    {{ form.request_category(class="input-block-level") }}
+                                    <h1><small>Request Title<small></h1>
+                                    {{ form.request_summary(class="input-block-level", placeholder="Please provide a title for this request") }}
+                                    {# {{ help("requestTitlePopover-content", "Request Title")}} #}
                                 </div>
                                 <div class="control-group">
-                                    <h1><small>What is the topic of this request?*</small></h1>
-                                    {{ form.request_summary(rows="3", class="input-block-level", placeholder="Please provide a short summary of the request") }}
-                                </div>
-                                <div class="control-group">
-                                    <h1><small>&nbsp;{{ form.request_text.label.text}}</small></h1>
+                                    <h1><small>Request Description</small></h1>
                                     <div>
-                                        {{ form.request_text(rows="3", class="input-block-level", placeholder="Describe the request. Be as specific as possible.") }}
-                                        {{ help("requestTextPopover-content", "Enter records request") }}
+                                        {{ form.request_text(rows="5", class="input-block-level", placeholder="Describe the request. Be as specific as possible.") }}
+                                        {# {{ help("requestTextPopover-content", "Request Description") }} #}
                                     </div>
                                 </div>
+                                <hr>
+                                <h2>Private Information</h2>
                                 <h1><small>Receipt Information</small></h1>
                                 <div class="control-group">
                                     {{ form.request_format.label.text }}
@@ -65,13 +64,9 @@
                                         {{ form.request_date(class ="input-block-level") }}
                                     </div>
                                 </div>
-                                <!-- upload a record -->
-                                <!-- name of record -->
                                 <div class="control-group">
                                     <h1><small>Attach documentation</small></h1>
-                                    <!-- upload a record -->
                                     {{ form.request_attachment_description(rows="3", class="input-block-level", placeholder="Add a short explanation of the record")}}
-{#                                    upload does not work!!!!!  #}
                                     {{ form.request_attachment(class="fileupload fileupload-new", method="post", dataprovides="fileupload")}}
 
                                 </div>
