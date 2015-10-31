@@ -18,6 +18,7 @@ from public_records_portal import app
 from db_helpers import *
 import helpers
 
+import urllib, mimetypes
 
 # Set flags:
 
@@ -29,7 +30,7 @@ if app.config['ENVIRONMENT'] == 'PRODUCTION':
     test = ""
 
 
-def generate_prr_emails(request_id, notification_type, text=None, text2=None,user_id=None, department_name=None, user_name=None, days_after=None):
+def generate_prr_emails(request_id, notification_type, text=None, text2=None,user_id=None, department_name=None, user_name=None, days_after=None,attached_file=None):
     # 'text=None' is used additional information. 'text2=None' is used if there are more variable text passed into email such as with 'close this request'
     # and being offered multiple reasons
     # Retrieves the name of the department/agency within the email using the request_id
@@ -39,6 +40,7 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
 
     app.logger.info("\n\n Generating e-mails for request with ID: %s, notification type: %s, and user ID: %s" % (
     request_id, notification_type, user_id))
+
     app_url = app.config['APPLICATION_URL']
     # Define the e-mail template:
     # print request_id
@@ -128,7 +130,7 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
                     if unfollow_link:
                         unfollow_link = unfollow_link + recipient
                     send_prr_email(page=page, recipients=[recipient], subject=email_subject, template=template,
-                                   include_unsubscribe_link=include_unsubscribe_link, unfollow_link=unfollow_link, additional_information=text, request_id=request_id, department_name=department_name, user_name=user_name, days_after=days_after,text2=text2)
+                                   include_unsubscribe_link=include_unsubscribe_link, unfollow_link=unfollow_link, additional_information=text, request_id=request_id, department_name=department_name, user_name=user_name, days_after=days_after,text2=text2,attached_file=attached_file)
             else:
                 app.logger.debug("\n\n No user ID provided")
         elif recipient_type == "Subscribers":
@@ -143,7 +145,7 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
                         unfollow_link = unfollow_link + recipient
                     send_prr_email(page=page, recipients=[recipient], subject=email_subject, template=template,
                                    include_unsubscribe_link=include_unsubscribe_link,
-                                   unfollow_link=unfollow_link, additional_information=text, request_id=request_id, department_name=department_name, user_name=user_name,days_after=days_after,text2=text2)  # Each subscriber needs to get a separate e-mail.
+                                   unfollow_link=unfollow_link, attached_file=attached_file,additional_information=text, request_id=request_id, department_name=department_name, user_name=user_name,days_after=days_after,text2=text2)  # Each subscriber needs to get a separate e-mail.
         elif recipient_type == "Staff participants":
             recipients = []
             participants = get_attribute(attribute="owners", obj_id=request_id, obj_type="Request")
@@ -154,14 +156,14 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
                         recipients.append(recipient)
             send_prr_email(page=page, recipients=recipients, subject=email_subject, template=template,
                            include_unsubscribe_link=include_unsubscribe_link, cc_everyone=False,
-                           unfollow_link=unfollow_link, additional_information=text, request_id=request_id, department_name=department_name, user_name=user_name,text2=text2)
+                           unfollow_link=unfollow_link,attached_file=attached_file, additional_information=text, request_id=request_id, department_name=department_name, user_name=user_name,text2=text2)
             app.logger.info("\n\nRecipients: %s" % recipients)
         else:
             app.logger.info("Not a valid recipient type: %s" % recipient_type)
 
 
 def send_prr_email(page, recipients, subject, template, include_unsubscribe_link=True, cc_everyone=False, password=None,
-                   unfollow_link=None, additional_information=None, request_id=None, department_name=None, user_name=None, days_after=None,
+                   unfollow_link=None, attached_file=None, additional_information=None, request_id=None, department_name=None, user_name=None, days_after=None,
                    text2=None):
     app.logger.info("\n\nAttempting to send an e-mail to %s with subject %s, referencing page %s and template %s" % (
     recipients, subject, page, template))
@@ -170,7 +172,7 @@ def send_prr_email(page, recipients, subject, template, include_unsubscribe_link
             try:
                 send_email(body=render_template(template, unfollow_link=unfollow_link, page=page, additional_information=additional_information, text2=text2, request_id=request_id,department_name=department_name, user_name=user_name, days=days_after),
                            recipients=recipients, subject=subject, include_unsubscribe_link=include_unsubscribe_link,
-                           cc_everyone=cc_everyone)
+                           cc_everyone=cc_everyone, attached_file=attached_file)
                 app.logger.info("\n\n E-mail sent successfully!")
             except Exception, e:
                 app.logger.info("\n\nThere was an error sending the e-mail: %s" % e)
@@ -178,7 +180,7 @@ def send_prr_email(page, recipients, subject, template, include_unsubscribe_link
             app.logger.info("\n\n E-mail flag turned off, no e-mails sent.")
 
 
-def send_email(body, recipients, subject, include_unsubscribe_link=True, cc_everyone=False):
+def send_email(body, recipients, subject, include_unsubscribe_link=True, cc_everyone=False, attached_file=None):
     mail = Mail(app)
 
     plaintext = ""
@@ -186,6 +188,13 @@ def send_email(body, recipients, subject, include_unsubscribe_link=True, cc_ever
 
     sender = app.config['DEFAULT_MAIL_SENDER']
     message = Message(sender=sender, subject=subject, html=html, body=plaintext, bcc=sender)
+
+    if attached_file is not None:
+      with app.open_resource(attached_file) as fp:
+        url = urllib.pathname2url(attached_file)
+        content_type = mimetypes.guess_type(url)[0]
+        filename = attached_file.split("/")[-1]
+        message.attach(filename=filename, content_type=content_type, data=fp.read())
 
     # if not include_unscubscribe_link:
     # message.add_filter('subscriptiontrack', 'enable', 0)

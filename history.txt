@@ -1,0 +1,500 @@
+   39  gs
+   40  git branch
+   41  git checkout OP-246
+   42  git status
+   43  python run.py
+   44  dropdb recordtrac
+   45  createdb recordtrac
+   46  python run honcho db_setup.py
+   47  honch run pythono db_setup.py
+   48  honcho run pythono db_setup.py
+   49  honcho run python db_setup.py
+   50  honcho run python db_users.py
+   51  honcho run python db_seed.py
+   52  python run.py
+   53  git checkout master
+   54  git branch
+   55  python run.py
+   56  git branch
+   57  python run.py
+   58  python run.py
+   59  git merge master
+   60  git status
+   61  git status
+   62  git merge origin/master
+   63  python run.py
+   64  git merge origin/master
+   65  git status
+   66  git branch
+   67  git merge origin/master
+   68  python run.py
+   69  createdb recordtrac
+   70  python run.py
+   71  python run.py
+   72  git status
+   73  git diff public_records_portal/templates/offline_request.html 
+   74  git status
+   75  pip freeze | xargs pip uninstall -y && pip install -r requirements.txt 
+   76  python run.py
+   77  python run.py
+   78  pwd
+   79  python run.py
+   80  python run.py
+   81  git branch
+   82  python run.py
+   83  python run.py
+   84  git checkout master
+   85  git pull master
+   86  git pull origin master
+   87  git checkout master
+   88  git merge OP-246
+   89  git merge OP-246
+   90  python run.py
+   91  python run.py
+   92  cp downloads/ngrok .
+   93  ./ngrok authtoken 2bhzHNpwz4S4Xb3DiSHkE_6SZDxcLGBDcYKMRdV3pnM
+   94  ./ngrok http 5000
+   95  set_proxy_doris
+   96  ./ngrok http 5000
+   97  ./ngrok http 5000
+   98  pwd
+   99  cd PycharmProjects/
+  100  tar -xf OP-199-old.tar -C openfoil2
+  101  mkdir openfoil2
+  102  tar -xf OP-199-old.tar -C openfoil2
+  103  cd openfoil2
+  104  ls
+  105  cd openfoil
+  106  print wd
+  107  pwd
+  108  psql recordtrac
+  109  exit
+  110  exit()
+  111  history
+  112  python run.py
+  113  source ~/.virtualenvs/openfoil/bin/activate
+  114  python run.py
+  115  git branch
+  116  python run.py
+  117  git branch
+  118  git branch
+  119  history
+  120  git checkout OP-217
+  121  git branch
+  122  git branch
+  123  python run.py
+  124  history
+  125  git checkout origin/master
+  126  git branch
+  127  git checkout OP-199
+  128  git status
+  129  git status
+  130  git push
+  131  git status
+  132  git checkout OP-217
+  133  git status
+  134  git add uploads
+  135  git status
+  136  git status
+  137  git checkout OP-199
+  138  python run.py
+  139  python run.py
+  140  python run.py
+  141  git merge origin/master
+  142  git merge origin/master
+  143  git merge origin/master
+  144  python run.py
+  145  git branch -m OP-199/old
+  146  status
+  147  git status
+  148  git branch
+  149  git checkout master
+  150  git status
+  151  git revert HEAD
+  152  git rever --hard HARD
+  153  git revert --hard HARD
+  154  git revert --hard HEAD
+  155  git reset --hard HEAD
+  156  git checkout origin/master
+  157  git checkout master
+  158  git pull
+  159  git checkout -b OP-199
+  160  git branch
+  161  git checkout OP-199/old
+  162  cd ../
+  163  tar cvf OP-199/old.tar openfoil
+  164  tar cvf OP-199-old.tar openfoil
+  165  cd openfoil
+  166  git branch -d
+  167  git branch -d OP-199
+  168  git branch
+  169  git branch -d OP-199/old
+  170  git checkout master
+  171  git branch -d OP-199/old
+  172  git branch -d OP-199
+  173  git checkout -b OP-199
+  174  pwd
+  175  python run.py
+  176  git fetch
+  177  git pull origin/master
+  178  git pull origin master
+  179  git reset --hard HEAD
+  180  git pull origin master
+  181  git branch
+  182  git status
+  183  git checkout OP-199
+  184  git merge master
+  185  git merge origin master
+  186  python run.py
+  187  python run.py
+  188  python run.py
+  189  python run.py
+  190  python run.py
+  191  dropdb recordtrac
+  192  dropdb recordtrac
+  193  dropdb recordtrac
+  194  dropdb recordtrac
+  195  dropdb recordtrac
+  196  history
+  197  createdb recordtrac
+  198  python run.py
+  199  python run.py
+  200  python run.py
+  201  history
+  202  createdb recordtrac
+  203  dropdb recordtrac
+  204  createdb recordtrac
+  205  python run.py
+  206  dropdb recordtrac
+  207  dropdb recordtrac
+  208  createdb recordtrac
+  209  honcho run python db_setup.py
+  210  honcho run python db_users.py
+  211  honcho run python db_seed.py
+  212  honcho run python db_seed.py
+  213  honcho run python db_seed.py
+  214  honcho run python db_seed.py
+  215  honcho run python db_seed.py
+  216  honcho run python db_seed.py
+  217  honcho run python db_seed.py
+  218  honcho start
+  219  honcho start
+  220  vi Procfile
+  221  which python
+  222  vi Procfile
+  223  honcho start
+  224  vi Procfile
+  225  honcho start
+  226  vi Procfile
+  227  honcho start
+  228  honcho start
+  229  honcho start
+  230  honcho start
+  231  git branch
+  232  python run.py
+  233  git branch
+  234  git push
+  235  git branch
+  236  git status
+  237  history
+  238  git branch
+  239  git add
+  240  gs
+  241  git status
+  242  git add .
+  243  git diff
+  244  git diff public_records_portal/prr.py
+  245  git status
+  246  git commit -m 'Working assignment of agency to request'
+  247  git push origin OP-199
+  248  git pull --help
+  249  git pull --help
+  250  git pull --ff-only
+  251  git pull origin OP-199 --ff-only
+  252  git pull origin OP-199 --dry-run
+  253  git pull origin OP-199
+  254  git revert
+  255  git --quit
+  256  git status
+  257  git reset --hard HEAD
+  258  gs
+  259  git status
+  260  git remote prune origin
+  261  git fetch origin
+  262  git status
+  263  git push origin OP-199
+  264  git branch
+  265  git branch
+  266  git status
+  267  git checkout OP-251
+  268  history
+  269  git checkout -b OP-251
+  270  git branch
+  271  python run.py
+  272  python
+  273  ls
+  274  python run.py
+  275  exit
+  276  virtualenv openfoil2
+  277  source openfoil2
+  278  source openfoil2/bin/activate
+  279  pip install -r requirements.txt
+  280  pip upgrde
+  281  pip upgrade
+  282  pip install --upgrade
+  283  pip install --upgrade pip
+  284  python run.py
+  285  createdb recordtrac
+  286  python run.py
+  287  git branch
+  288  python run.py
+  289  history
+  290  git checkout -b OP-271
+  291  python run.py
+  292  git branch
+  293  python run.py
+  294  python run.py
+  295  python run.py
+  296  python run.py
+  297  python run.py
+  298  python run.py
+  299  history
+  300  python run.py
+  301  python run.py
+  302  python run.py
+  303  git branch
+  304  git checkout OP-251
+  305  python run.py
+  306  git branch
+  307  git branch 
+  308  git checkout -b OP-282
+  309  git branch
+  310  python run.py
+  311  python run.py
+  312  git checkout -b OP 251
+  313  git checkout -b OP-251
+  314  git branch
+  315  git checkout OP-251
+  316  python run.py
+  317  python run.p
+  318  git branch
+  319  git checkout OP-282
+  320  python run.py
+  321  git branch
+  322  git checkout OP-199
+  323  python run.py
+  324  git checkout -b OP-214
+  325  python run.py
+  326  git branch
+  327  git checkout OP-214
+  328  python run.py
+  329  history
+  330  ./ngrok 5000
+  331  ./ngrok http 5000
+  332  cp downloads/ngrok
+  333  cp downloads/ngrok
+  334  ./ngrok authtoken 2bhzHNpwz4S4Xb3DiSHkE_6SZDxcLGBDcYKMRdV3pnM
+  335  ./ngrok http 5000
+  336  ./ngrok http 5000
+  337  set_proxy_doris 
+  338  ./ngrok http 5000
+  339  HISTORY
+  340  histoyr
+  341  history
+  342  source openfoil2/bin/activate
+  343  python run.py
+  344  exit
+  345  git branch
+  346  git branch OP-263
+  347  git branch
+  348  git checkout OP-263
+  349  python run.py
+  350  history
+  351  source openfoil2/bin/activate
+  352  python run.py
+  353  python run.py
+  354  python run.py
+  355  python run.py
+  356  git clone https://aot221@bitbucket.org/nycrecordswebdev/recordtrac.git recordtrac-OP-285
+  357  ls
+  358  cd recordtrac-OP-285
+  359  virtualenv openfoil
+  360  source openfoil/bin/activate
+  361  pip install -r requirements
+  362  pip install -r requirements.txt
+  363  vi .env
+  364  honcho run python db_setup.py;honcho run python db_users.py;honcho run python db_seed.py
+  365  python run.py
+  366  python run.py
+  367  python run.py
+  368  rm .env
+  369  vi .env
+  370  python run.py
+  371  exit
+  372  psql -5432
+  373  psql -p5432
+  374  vi public_records_portal/prr.py
+  375  ps -eaf | grep python
+  376  pkill python
+  377  ps -eaf | grep python
+  378  ps -eaf | grep python
+  379  pkill python
+  380  ps -eaf | grep python
+  381  '/Applications/Postgres.app/Contents/Versions/9.4/bin'/psql -p5432
+  382  psql -p5432
+  383  '/Applications/Postgres.app/Contents/Versions/9.4/bin'/psql -p5432
+  384  '/Applications/Postgres.app/Contents/Versions/9.4/bin'/psql -p5432
+  385  source openfoil/bin/activate
+  386  source openfoil/bin/activate
+  387  source openfoil2/bin/activate
+  388  ps -eaf | grep python
+  389  python run.py
+  390  which psqlOB
+  391  honcho run python db_setup.py;honcho run python db_users.py;honcho run python db_seed.py
+  392  honcho run python db_setup.py;honcho run python db_users.py;honcho run python db_seed.py;
+  393  createdb recordtrac
+  394  python run.py
+  395  python run.py
+  396  python run.py
+  397  createdb recordtrac
+  398  honcho run python db_setup.py;honcho run python db_users.py;honcho run python db_seed.py;
+  399  createdb recordtrac
+  400  honcho run python db_setup.py;honcho run python db_users.py;honcho run python db_seed.py;
+  401  '/Applications/Postgres.app/Contents/Versions/9.4/bin'/psql -p5432
+  402  '/Applications/Postgres.app/Contents/Versions/9.4/bin'/psql -p5432
+  403  su administrator
+  404  '/Applications/Postgres.app/Contents/Versions/9.4/bin'/psql -p5432
+  405  set_proxy_doris
+  406  env | grep http
+  407  source ~/.bash_profile
+  408  set_proxy_doris
+  409  ls
+  410  cd openfoil2
+  411  python run.py
+  412  ls
+  413  cd ..
+  414  '/Applications/Postgres.app/Contents/Versions/9.4/bin'/psql -p5432
+  415  source venv/bin/activate
+  416  dropdb recordtrac
+  417  createdb recordtrac
+  418  honcho run pyhton db_setup.py
+  419  honcho run python db_setup.py
+  420  psql
+  421  psql createdb recordtrac
+  422  /Applications/Postres.app/Contents/Versions/9.4/bin/psql -p5432
+  423  '/Applications/Postgres.app/Contents/Versions/9.4/bin'/psql -p5432
+  424  su -postgres
+  425  su - postgres
+  426  su - postgres
+  427  su - postgres
+  428  su - postgres
+  429  su - postgres
+  430  su - postgres
+  431  su - postgres
+  432  tey369069999
+  433  su - postgres
+  434  su - postgres
+  435  psql template1
+  436  python run.py
+  437  psql template1
+  438  honcho run python db_setup.py;honcho run python db_users.py;honcho run python db_seed.py
+  439  ls
+  440  python db_seed.py
+  441  python db_create
+  442  python db_create.py
+  443  python db_setup.py
+  444  python db_users.py
+  445  python db_users.py
+  446  python db_seed.py
+  447  python db_seed.py
+  448  python db_seed.py
+  449  python db_seed.py
+  450  python db_seed.py
+  451  python db_seed.py
+  452  python db_seed.py
+  453  python db_seed.py
+  454  python db_seed.py
+  455  python db_seed.py
+  456  history
+  457  psql
+  458  psql template1
+  459  history
+  460  psql -p5432
+  461  sudo - postgres
+  462  history
+  463  source openfoil/bin/activate
+  464  source openfoil2/bin/activate
+  465  python run.py
+  466  git branch
+  467  ?
+  468  git pull
+  469  git pull origin OP-282
+  470  git push
+  471  gs
+  472  git status
+  473  ll
+  474  ls
+  475  vi .gitignore
+  476  git rm --cached -r openfoil2
+  477  git rm --cached -r openfoil2
+  478  vi .gitignore
+  479  git rm --cached -r openfoil2
+  480  deactivate
+  481  rm -rf openfoil2/
+  482  git status
+  483  cat runserver2.txt 
+  484  vi .gitignore 
+  485  gs
+  486  git commit -am 'updated .gitignore'
+  487  gpsh
+  488  git push 
+  489  virtualenv venv
+  490  source venv/bin/activate
+  491  pip install -r requirements.txt 
+  492  set_proxy_doris 
+  493  pip install -r requirements.txt 
+  494  python run.py
+  495  git status
+  496  git add.
+  497  git add .
+  498  git status
+  499  python run.py
+  500  history
+  501  ps aux | grep python
+  502  pkill -f python
+  503  sudo pkill -f python
+  504  git fetch
+  505  git merge origin OP-285
+  506  git checkout OP-285
+  507  git checkout OP-285
+  508  git pull OP-285
+  509  git pull origin OP-285
+  510  ls
+  511  ls
+  512  git branch
+  513  git status
+  514  git checkout OP-282
+  515  ls
+  516  git pull OP-282
+  517  git merge OP-282
+  518  git merge origin OP-285
+  519  git merge origin OP-285
+  520  git conflict
+  521  git merge conflict
+  522  git merge origin OP-285
+  523  git diff
+  524  git diff --name-only --diff-filter=U
+  525  git diff public_records_portal/static/js/case.js 
+  526  git status
+  527  ga public_records_portal/static/js/case.js 
+  528  git add public_records_portal/static/js/case.js 
+  529  git status
+  530  git commit -m 'fixed acknolwedge request on manage_requests page'
+  531  git merge origin OP-285
+  532  git branch
+  533  python run.py
+  534  ls
+  535  history
+  536  source venv/bin/activate
+  537  python run.py
+  538  history > history.txt
