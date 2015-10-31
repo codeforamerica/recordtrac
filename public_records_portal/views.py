@@ -522,12 +522,12 @@ def public_add_a_resource(resource, passed_recaptcha = False, data = None):
 def update_a_resource(resource, passed_recaptcha=False, data=None):
     if (data or request.method == 'POST'):
         req=request.form
-        if 'owner' in resource:
-            print request.form
-            update_resource(resource, req)
         if not data:
             data = request.form.copy()
-        if 'qa' in resource:
+        if 'owner' in resource:
+            update_resource(resource, req)
+
+        elif 'qa' in resource:
             prr.answer_a_question(qa_id=int(data['qa_id']), answer=data['answer_text'], passed_spam_filter=True)
         else:
             update_resource(resource, data)

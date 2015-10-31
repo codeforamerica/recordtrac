@@ -85,10 +85,15 @@ def add_resource(resource, request_body, current_user_id=None):
                                                     reason=fields['owner_reason'])
         # if new:
         if request_body:
-            generate_prr_emails(request_id=fields['request_id'], notification_type="Staff participant added", text=request_body,
+
+            user = User.query.filter_by(email=request_body['owner_email']).first()
+            user_name=user.alias
+            generate_prr_emails(request_id=fields['request_id'], notification_type="Staff participant added", text=request_body,user_name=user_name,
                                 user_id=get_attribute("user_id", obj_id=participant_id, obj_type="Owner"))
         else:
-            generate_prr_emails(request_id=fields['request_id'], notification_type="Staff participant added",
+            user=User.query.get(current_user_id)
+            user_name=user.alias
+            generate_prr_emails(request_id=fields['request_id'], notification_type="Staff participant added",user_name=user_name,
                             user_id=get_attribute("user_id", obj_id=participant_id, obj_type="Owner"))
         return participant_id
     elif "subscriber" in resource:
@@ -102,15 +107,15 @@ def update_resource(resource, request_body):
     fields = request_body
     if "owner" in resource:
         if "change_assignee" in fields:
-            own=Owner.query.filter_by(user_id=fields['owner_id']).first()
-            user_name=(User.query.get(own.user_id)).alias
+            # own=Owner.query.filter_by(user_id=fields['owner_id']).first()
+            user_name=User.query.filter_by(id=Owner.query.filter_by(id=fields['owner_id']).first().user_id).first().alias
             generate_prr_emails(request_id=fields['request_id'],notification_type="Request assigned", text=request_body['owner_reason'],user_name=user_name)
-        if "remove_helper" in fields:
+        elif "remove_helper" in fields:
             owner = Owner.query.get(request_body['owner_id'])
             user_id=owner.user_id
             user_name=(User.query.get(user_id)).alias
             generate_prr_emails(request_id=fields['request_id'],notification_type="Helper removed", text=request_body,user_name=user_name)
-        if "reason_unassigned" in fields:
+        elif "reason_unassigned" in fields:
             return remove_staff_participant(owner_id=fields['owner_id'])
         else:
             change_request_status(fields['request_id'], "Rerouted")
@@ -153,19 +158,21 @@ def request_extension(request_id, extension_reasons, user_id, days_after=None, d
     req.extension(days_after, due_date)
     text = "Request extended:"
     if request_body is not None:
-        generate_prr_emails(request_id=request_id, notification_type="Public Notification Template 03", text=request_body)
+        generate_prr_emails(request_id=request_id, notification_type="Extend request", text=request_body)
     else:
-        generate_prr_emails(request_id=request_id, notification_type="Public Notification Template 03", text=extension_reasons)
+        generate_prr_emails(request_id=request_id, notification_type="Extend request", text=extension_reasons)
     for reason in extension_reasons:
         text = text + reason + "</br>"
     add_staff_participant(request_id=request_id, user_id=user_id)
-    return add_note(request_id=request_id, text=text, user_id=user_id)  # Bypass spam filter because they are logged in.
+    return add_note(request_id=request_id, text=text, user_id=user_id, extension=True)  # Bypass spam filter because they are logged in.
 
 
-def add_note(request_id, text,  privacy=1, request_body=None, user_id=None):
+def add_note(request_id, text,  privacy=1, request_body=None, user_id=None, extension=False):
+
     if text and text != "":
-        #THIS IS FUCKED
         note_id = create_note(request_id=request_id, text=text, user_id=user_id, privacy=privacy)
+        if extension:
+            return note_id
         if note_id:
             change_request_status(request_id, "A response has been added.")
             if user_id:
@@ -250,7 +257,7 @@ def add_offline_record(request_id, description, access, user_id, department_name
                               description=description)  # To create an offline record, we need to know the request ID to which it will be added, the user ID for the person adding the record, how it can be accessed, and a description/title of the record.
     if record_id:
         change_request_status(request_id, "A response has been added.")
-        generate_prr_emails(request_id=request_id, notification_type="City response added", text=description, department_name=department_name)
+        generate_prr_emails(request_id=request_id, notification_type="City response added", text=description, department_name=department_name,)
         add_staff_participant(request_id=request_id, user_id=user_id)
         return record_id
     return False
@@ -479,13 +486,13 @@ def set_department_contact(department_name, attribute_name, user_id):
 
 #needs additional information
 ### @export "close_request"
-def close_request(request_id, reason="", user_id=None, request_body=None):
+def close_request(request_id, reason="", user_id=None, request_body=None,):
     req = get_obj("Request", request_id)
     change_request_status(request_id, "Closed")
     # Create a note to capture closed information:
     create_note(request_id, reason, user_id, privacy=1)
     if (request_body):
-        generate_prr_emails(request_id=request_id, notification_type="Request closed",text=request_body['additional_information'])
+        generate_prr_emails(request_id=request_id, notification_type="Request closed",text=request_body['additional_information'],text2=reason)
     else:
         generate_prr_emails(request_id=request_id, notification_type="Request closed")
     add_staff_participant(request_id=request_id, user_id=user_id)

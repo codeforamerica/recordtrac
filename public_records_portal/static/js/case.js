@@ -146,12 +146,5 @@
     $('#modalQuestionTable').hide();
   });
 
-  $('#reopenrequestButton').on('click',function(){
-    $('#form_id').val('Reopen');
-    var modalQuestion = 'Are you sure you want to reopen the request for the and send an email to the requester?';
-    $('#modalquestionDiv').html(modalQuestion);
-    $('#modalQuestionTable').hide();
-  });
-
 
 })($);

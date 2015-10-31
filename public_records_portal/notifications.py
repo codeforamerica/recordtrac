@@ -29,11 +29,13 @@ if app.config['ENVIRONMENT'] == 'PRODUCTION':
     test = ""
 
 
-def generate_prr_emails(request_id, notification_type, text=None,user_id=None, department_name=None, user_name=None, days_after=None):
+def generate_prr_emails(request_id, notification_type, text=None, text2=None,user_id=None, department_name=None, user_name=None, days_after=None):
+    # 'text=None' is used additional information. 'text2=None' is used if there are more variable text passed into email such as with 'close this request'
+    # and being offered multiple reasons
     # Retrieves the name of the department/agency within the email using the request_id
-    req = Request.query.get(request_id)
-    if req.department_id is not None:
-        department_name=Department.query.get(req.department_id)
+    # req = Request.query.get(request_id)
+    # if req.department_id is not None:
+    #     department_name=Department.query.get(req.department_id)
 
     app.logger.info("\n\n Generating e-mails for request with ID: %s, notification type: %s, and user ID: %s" % (
     request_id, notification_type, user_id))
@@ -67,8 +69,8 @@ def generate_prr_emails(request_id, notification_type, text=None,user_id=None, d
         template="emtemplate_request_closed.html"
     #Adding a helper
     elif notification_type=="Staff participant added":
-        user = User.query.get(user_id)
-        user_name = user.alias
+        # user = User.query.get(user_id)
+        # user_name = user.alias
         text=text['owner_reason']
         template="emtemplate_helper_added.html"
     #Removing a helper
@@ -79,11 +81,14 @@ def generate_prr_emails(request_id, notification_type, text=None,user_id=None, d
         template="emtemplate_acknowledge_request.html"
     elif notification_type=="Reopen request":
         template="emtemplate_reopen_request.html"
-    elif "Public Notification Template" in notification_type:
+    elif notification_type=="Extend request":
         if 'days_after' in text:
             if text['days_after'] is not None:
                 days_after=text['days_after']
                 text = text['additional_information']
+        template="emtemplate_extend_request.html"
+    elif "Public Notification Template" in notification_type:
+
             template = "system_email_" + notification_type[-2:] + ".html"
     elif "Agency Notification Template" in notification_type:
         template = "agency_email_" + notification_type[-2:] + ".html"
@@ -123,7 +128,7 @@ def generate_prr_emails(request_id, notification_type, text=None,user_id=None, d
                     if unfollow_link:
                         unfollow_link = unfollow_link + recipient
                     send_prr_email(page=page, recipients=[recipient], subject=email_subject, template=template,
-                                   include_unsubscribe_link=include_unsubscribe_link, unfollow_link=unfollow_link, additional_information=text, request_id=request_id, department_name=department_name, user_name=user_name, days_after=days_after)
+                                   include_unsubscribe_link=include_unsubscribe_link, unfollow_link=unfollow_link, additional_information=text, request_id=request_id, department_name=department_name, user_name=user_name, days_after=days_after,text2=text2)
             else:
                 app.logger.debug("\n\n No user ID provided")
         elif recipient_type == "Subscribers":
@@ -138,7 +143,7 @@ def generate_prr_emails(request_id, notification_type, text=None,user_id=None, d
                         unfollow_link = unfollow_link + recipient
                     send_prr_email(page=page, recipients=[recipient], subject=email_subject, template=template,
                                    include_unsubscribe_link=include_unsubscribe_link,
-                                   unfollow_link=unfollow_link, additional_information=text, request_id=request_id, department_name=department_name, user_name=user_name,days_after=days_after)  # Each subscriber needs to get a separate e-mail.
+                                   unfollow_link=unfollow_link, additional_information=text, request_id=request_id, department_name=department_name, user_name=user_name,days_after=days_after,text2=text2)  # Each subscriber needs to get a separate e-mail.
         elif recipient_type == "Staff participants":
             recipients = []
             participants = get_attribute(attribute="owners", obj_id=request_id, obj_type="Request")
@@ -149,20 +154,21 @@ def generate_prr_emails(request_id, notification_type, text=None,user_id=None, d
                         recipients.append(recipient)
             send_prr_email(page=page, recipients=recipients, subject=email_subject, template=template,
                            include_unsubscribe_link=include_unsubscribe_link, cc_everyone=False,
-                           unfollow_link=unfollow_link, additional_information=text, request_id=request_id, department_name=department_name, user_name=user_name)
+                           unfollow_link=unfollow_link, additional_information=text, request_id=request_id, department_name=department_name, user_name=user_name,text2=text2)
             app.logger.info("\n\nRecipients: %s" % recipients)
         else:
             app.logger.info("Not a valid recipient type: %s" % recipient_type)
 
 
 def send_prr_email(page, recipients, subject, template, include_unsubscribe_link=True, cc_everyone=False, password=None,
-                   unfollow_link=None, additional_information=None, request_id=None, department_name=None, user_name=None, days_after=None):
+                   unfollow_link=None, additional_information=None, request_id=None, department_name=None, user_name=None, days_after=None,
+                   text2=None):
     app.logger.info("\n\nAttempting to send an e-mail to %s with subject %s, referencing page %s and template %s" % (
     recipients, subject, page, template))
     if recipients:
         if send_emails:
             try:
-                send_email(body=render_template(template, unfollow_link=unfollow_link, page=page, additional_information=additional_information, request_id=request_id,department_name=department_name, user_name=user_name, days=days_after),
+                send_email(body=render_template(template, unfollow_link=unfollow_link, page=page, additional_information=additional_information, text2=text2, request_id=request_id,department_name=department_name, user_name=user_name, days=days_after),
                            recipients=recipients, subject=subject, include_unsubscribe_link=include_unsubscribe_link,
                            cc_everyone=cc_everyone)
                 app.logger.info("\n\n E-mail sent successfully!")
