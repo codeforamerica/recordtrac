@@ -54,6 +54,21 @@ This template provides the header, footer, and envelope info for all pages excep
 </head>
 
 <body>
+{#{% set navigation_bar = [#}
+{#    ('/', 'index', 'Index'),#}
+{#    ('/downloads/', 'downloads', 'Downloads'),#}
+{#    ('/about/', 'about', 'About')#}
+{#] -%}#}
+{#{% set active_page = active_page|default('index') -%}#}
+{#...#}
+{#<ul id="navigation">#}
+{#{% for href, id, caption in navigation_bar %}#}
+{#  <li{% if id == active_page %} class="active"{% endif#}
+{#  %}><a href="{{ href|e }}">{{ caption|e }}</a></li>#}
+{#{% endfor %}#}
+{#</ul>#}
+{#...#}
+
 <div class="agency-header">
     <div class="upper-header-black">
         <div class="container">
