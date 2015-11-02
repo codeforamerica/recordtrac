@@ -10,21 +10,6 @@
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-fileupload.css') }}">
 {% endblock custom_css_links %}
 
-{% set alias = "Not provided" %}
-{% set phone = "Not provided" %}
-{% set requester = req.requester() %}
-{% if requester %}
-    {% set user = requester.user %}
-    {% set email = user.email %}
-    {% set alias = user.alias %}
-    {% set phone = user.phone %}
-    {% set address1 = user.address1 %}
-    {% set address2 = user.address2 %}
-    {% set city = user.city %}
-    {% set state = user.state %}
-    {% set zipcode = user.zipcode %}
-{% endif %}
-
 {% block requester_info %}
 {% include '_requester_info.html' %}
 {% endblock requester_info %}

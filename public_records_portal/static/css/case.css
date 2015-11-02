@@ -87,7 +87,7 @@
      }
 
      #responses-container {
-       margin-top: 3em;
+       margin-top: 1rem;
      }
 
      div.well {
@@ -138,4 +138,14 @@
     border-bottom: 4px solid #000000;
     position: relative;
     top: -3px;
+}
+
+#response-actions-container {
+    margin-bottom: 0;
+}
+
+#deny_request_option {
+    height: 20px;
+    display: inline;
+    width: 1rem;
 }
