@@ -18,6 +18,17 @@ import pytz
 from tzlocal import get_localzone
 
 
+import ssl
+
+LDAP_SERVER = 'ldaps://ldaps-dev.nycid.nycnet/'#Port 636
+LDAP_PORT = 636
+LDAP_BINDDN = 'cn=OpenFOILTestUser1,cn=OpenFOILserviceuser,ou=accounts,cn=services'
+# LDAP_SECRET = 'forty-two'
+LDAP_TIMEOUT = 10
+LDAP_USE_TLS = True  # default
+LDAP_REQUIRE_CERT = ssl.CERT_REQUIRED  # default: CERT_REQUIRED
+LDAP_TLS_VERSION = ssl.PROTOCOL_TLSv1_2  # default: PROTOCOL_TLSv1
+LDAP_CERT_PATH = '/Users/administrator/Desktop/ldaps-dev.crt'
 
 # Initialize Flask app
 app = Flask(__name__)
