@@ -6,6 +6,7 @@
     {% set email = user.email %}
     {% set alias = user.alias %}
     {% set phone = user.phone %}
+    {% set fax = user.fax %}
     {% set address1 = user.address1 %}
     {% set address2 = user.address2 %}
     {% set city = user.city %}
@@ -36,13 +37,33 @@
         <div class="row-fluid">
             <div class="span6">Requester's Phone Number:</div>
             <div class="span6">
-                <span class="label">{{ phone or "Not provided" }}</span>
+                {% if not phone %}
+                    <span class="label">{{ phone or "Not provided" }}</span>
+                {% else %}
+                    <span class="label">Not provided</span>
+                {% endif %}
             </div>
         </div>
         <div class="row-fluid">
-            <div class="span6">Requester's Street Address:</div>
+            <div class="span6">Requester's Fax Number:</div>
+            <div class="span6">
+                {% if not fax %}
+                    <span class="label">{{ fax or "Not provided" }}</span>
+                {% else %}
+                    <span class="label">Not provided</span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span6">Requester's Street Address (line 1):</div>
             <div class="span6">
                 <span class="label">{{ address1 or "Not provided" }}</span>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span6">Requester's Street Address (line 2):</div>
+            <div class="span6">
+                <span class="label">{{ address2 or "Not provided" }}</span>
             </div>
         </div>
         <div class="row-fluid">
@@ -54,7 +75,11 @@
         <div class="row-fluid">
             <div class="span6">Requester's State:</div>
             <div class="span6">
-                <span class="label">{{ state or "Not provided" }}</span>
+                {% if not address1 or not city or not zipcode %}
+                    <span class="label">Not provided</span>
+                {% else %}
+                    <span class="label">{{ state }}</span>
+                {% endif %}
             </div>
         </div>
         <div class="row-fluid">
