@@ -316,7 +316,6 @@ def show_request_for_city(request_id):
         audience = 'city'
     return show_request(request_id=request_id, template="manage_request_%s_less_js.html" % (audience))
 
-
 @app.route("/response/<string:request_id>")
 def show_response(request_id):
     req = get_obj("Request", request_id)
@@ -379,8 +378,8 @@ def show_request(request_id, template="manage_request_public.html"):
         if i.is_point_person:
             continue
         helper = models.User.query.filter_by(id=i.user_id).first()
-        print helper
-        helpers.append({'name': helper.alias, 'email': helper.email})
+        if helper:
+            helpers.append({'name': helper.alias, 'email': helper.email})
 
     return render_template(template, req=req, agency_data=agency_data, users=users,
                            department=department, assigned_user=assigned_user, helpers=helpers)
