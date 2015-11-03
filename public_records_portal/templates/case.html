@@ -36,7 +36,62 @@
                             <a href="{{config['APPLICATION_URL']}}request/{{ req.id }}">{{req.id}}</a>
                         </span>
                     </h3>
-                    {% block clarify_request %}{% endblock clarify_request %}
+                    {% block clarify_request %}
+                    <!-- ask a question -->
+                    <form name="ask_question" id="question" class="form-inline" style="margin: 10px 0px 15px 0px;"
+                          method="post" action="/add_a_qa" autocomplete="on">
+                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                        <fieldset>
+                            {% if email %}
+                            <label>Ask a question <span rel="tooltip" data-toggle="tooltip" data-placement="right"
+                                                        title="" data-original-title="{{" Ask a question" |
+                                explain_action }}">
+                                <small><i class="icon-info-sign"></i></small>
+                                </span></label>
+                            <textarea id="questionTextarea" name="question_text" class="input-xlarge"
+                                      placeholder="Ask the requester a question" required/></textarea>
+                            <button id="askQuestion" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#confirm-submit" type="submit">Ask
+                            </button>
+                            {% endif %}
+                        </fieldset>
+                    </form>
+
+                    <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog"
+                         aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    Confirmation
+                                </div>
+                                <div class="modal-body">
+                                    <div id="modalquestionDiv">Are you sure you want to make the following question
+                                        public and send an email to the requester?
+                                    </div>
+                                    <table id="modalQuestionTable" class="table">
+                                        <tr>
+                                            <th>Question</th>
+                                            <td id="question_text"></td>
+                                            <input type="hidden" id="form_id" value=""/>
+                                        </tr>
+                                    </table>
+                                    <table id="modalAdditionalInfoTable" class="table">
+                                        <tr>
+                                            <th>Additional Information</th>
+                                            <td><textarea id="additional_note" name="additional_note"
+                                                          class="input-xlarge"
+                                                          placeholder="Additional Information"/></textarea></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <a href="#" id="submit" class="btn btn-success success">Submit</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endblock clarify_request %}
                     <p class="lead" style="margin-bottom: 0rem;" truncateable="250"> Title </p>
 
                     <p truncateable="250"> {{ req.summary | new_lines }}</p>

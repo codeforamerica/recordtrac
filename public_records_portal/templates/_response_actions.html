@@ -44,7 +44,7 @@
             </form>
         </div>
         <div class="tab-pane" id="acknowledge_and_grant_request">
-            <form name="input_doc" style="margin-top: 2em;" class="form-horizontal" id="submitRecord" method="post"
+            <form name="input_doc" style="margin-top: 2em;" id="submitRecord" method="post"
                   action="/add_a_record_and_close" autocomplete="on" enctype="multipart/form-data">
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <fieldset>
@@ -121,7 +121,7 @@
                         <!-- submission -->
                         <div class="control-group">
                             <div class="controls">
-                                <button type="submit" class="btn btn-primary" data-toggle="modal"
+                                <button type="submit" class="btn btn-default btn-block" data-toggle="modal"
                                         data-target="#confirm-submit" id="addRecordButton">Grant Request
                                 </button>
                             </div>
@@ -220,7 +220,7 @@
                             <div class="controls">
                                 <button id="closeButton" data-toggle="modal" data-target="#confirm-submit"
                                         type="submit"
-                                        class="btn btn-inverse">Close this request
+                                        class="btn btn-default btn-block">Close this request
                                 </button>
                             </div>
                         </div>
@@ -235,7 +235,7 @@
     <div class="span12">
         <form name="reopen_request" id="question" method="post" action="/update_a_request_reopen">
             <input type="hidden" name="request_id" value="{{ req.id }}"/>
-            <button id="reopenRequest" class="btn btn-primary btn-block" type="submit">Reopen request</button>
+            <button id="reopenRequest" class="btn btn-default btn-block btn-block" type="submit">Reopen request</button>
         </form>
     </div>
 </div>
@@ -247,7 +247,7 @@
                 <small>Add Record</small>
             </a></li>
             <li><a href="#add_note" role="tab" data-toggle="tab">
-                <small>Internal Note</small>
+                <small>Add Note</small>
             </a></li>
             <li><a href="#extend_request" role="tab" data-toggle="tab">
                 <small>Extend Request</small>
@@ -258,8 +258,8 @@
             <li><a href="#close_request" role="tab" data-toggle="tab">
                 <small>Close Request</small>
             </a></li>
-            <li><a href="#add_helper" role="tab" data-toggle="tab">
-                <small>Add Helper</small>
+            <li><a href="#manage_helpers" role="tab" data-toggle="tab">
+                <small>Manage Helpers</small>
             </a></li>
             <li><a href="#change_assignee" role="tab" data-toggle="tab">
                 <small>Change Assignee</small>
@@ -270,7 +270,7 @@
 <div class="row-fluid">
     <div class="tab-content">
         <div class="tab-pane" id="add_record">
-            <form name="input_doc" style="margin-top: 2em;" class="form-horizontal" id="submitRecord" method="post"
+            <form name="input_doc" style="margin-top: 2em;" id="submitRecord" method="post"
                   action="/add_a_record_and_close" autocomplete="on" enctype="multipart/form-data">
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <fieldset>
@@ -347,7 +347,7 @@
                         <!-- submission -->
                         <div class="control-group">
                             <div class="controls">
-                                <button type="submit" class="btn btn-primary" data-toggle="modal"
+                                <button type="submit" class="btn btn-default btn-block" data-toggle="modal"
                                         data-target="#confirm-submit" id="addRecordButton">Add a Record
                                 </button>
                             </div>
@@ -357,7 +357,7 @@
             </form>
         </div>
         <div class="tab-pane" id="add_note">
-            <form name="note" class="form-horizontal" id="note" method="post" action="/add_a_note">
+            <form name="note" id="note" method="post" action="/add_a_note">
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <fieldset>
                     <div class="row-fluid">
@@ -375,7 +375,7 @@
                         </div>
                         <div class="control-group">
                             <div class="controls">
-                                <button type="submit" class="btn btn-primary" data-toggle="modal"
+                                <button type="submit" class="btn btn-default btn-block" data-toggle="modal"
                                         data-target="#confirm-submit" id="addNoteButton">Add note
                                 </button>
                             </div>
@@ -386,7 +386,7 @@
             </form>
         </div>
         <div class="tab-pane" id="extend_request">
-            <form name="extend_request" class="form-horizontal" id="extension" method="post" action="/add_a_extension">
+            <form name="extend_request" id="extension" method="post" action="/add_a_extension">
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <input type="hidden" name="extend_reason"
                        value="{{ 'Extension - Large Amount' | explain_action('What') }}"/>
@@ -428,7 +428,7 @@
                         <div class="control-group">
                             <div class="controls">
                                 <button id="extendButton" data-toggle="modal" data-target="#confirm-submit"
-                                        type="submit" class="btn btn-primary">Extend this request
+                                        type="submit" class="btn btn-default btn-block">Extend this request
                                 </button>
 
                             </div>
@@ -438,7 +438,7 @@
             </form>
         </div>
         <div class="tab-pane" id="generate_pdf">
-            <form name="note" class="form-horizontal" id="note_pdf" method="post" action="/add_a_pdf">
+            <form name="note" id="note_pdf" method="post" action="/add_a_pdf">
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <fieldset>
                     <div class="row-fluid">
@@ -466,7 +466,7 @@
                         </div>
                         <div class="control-group">
                             <div class="controls">
-                                <button type="submit" class="btn btn-primary">Generate PDF</button>
+                                <button type="submit" class="btn btn-default btn-block">Generate PDF</button>
                             </div>
                         </div>
                     </div>
@@ -474,7 +474,7 @@
             </form>
         </div>
         <div class="tab-pane" id="close_request">
-            <form name="close" class="form-horizontal" id="closeRequest" method="post" action="/close">
+            <form name="close" id="closeRequest" method="post" action="/close">
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <fieldset>
                     <legend>Close request</legend>
@@ -614,7 +614,7 @@
                             <div class="controls">
                                 <button id="closeButton" data-toggle="modal" data-target="#confirm-submit"
                                         type="submit"
-                                        class="btn btn-inverse">Close request
+                                        class="btn btn-default btn-block">Close request
                                 </button>
                             </div>
                         </div>
@@ -622,8 +622,19 @@
                 </fieldset>
             </form>
         </div>
-        <div class="tab-pane" id="add_helper">
+        <div class="tab-pane" id="manage_helpers">
 
+            <form id="notifyForm" method="post" action="/add_a_owner">
+                <fieldset>
+                    <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                    <input id="notifyEmail" class="input-block-level" type="email" name="owner_email"
+                           placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required/>
+                    <input id="notifyReason" class="input-block-level" type="text" name="owner_reason"
+                           placeholder="Say why." required/>
+                    <button id="notifyButton" class="btn btn-block btn-default" type="submit"><i
+                            class="icon-envelope"> </i> Add a helper
+                    </button>
+            </form>
         </div>
         <div class="tab-pane" id="change_assignee">
             <form id="rerouteForm" method="post" action="/update_a_owner">
@@ -634,11 +645,13 @@
                         <!--input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required /-->
                         <select class="span12" id="rerouteEmail" name="owner_email">
                             {% for user in users %}
-                                <option value="{{ user.email }}">{{ user.alias }}</option>
+                            <option value="{{ user.email }}">{{ user.alias }}</option>
                             {% endfor %}
                         </select>
                         <input id="rerouteReason" type="text" name="owner_reason" placeholder="Say why" required/>
-                        <button id="rerouteButton" class="btn btn-default input-block-level" type="submit"><i class="icon-envelope"></i>&nbsp;Change Assignee</button>
+                        <button id="rerouteButton" class="btn btn-default btn-block" type="submit"><i
+                                class="icon-envelope"></i>&nbsp;Change Assignee
+                        </button>
                     </div>
                 </div>
             </form>
