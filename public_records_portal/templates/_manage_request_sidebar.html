@@ -17,7 +17,7 @@
         <a href="mailto:{{ assigned_user.email }}">{{ assigned_user.alias }}</a>
     </div>
 </div>
-{% if current_user.is_authenticatd %}
+{% if current_user.is_authenticated %}
 <div>
     <h4 class="participantRow-title">Helpers</h4>
     {% for helper in helpers %}

@@ -381,6 +381,8 @@ def show_request(request_id, template="manage_request_public.html"):
         if helper:
             helpers.append({'name': helper.alias, 'email': helper.email})
 
+    print helpers
+
     return render_template(template, req=req, agency_data=agency_data, users=users,
                            department=department, assigned_user=assigned_user, helpers=helpers)
 
