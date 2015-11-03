@@ -1,3 +1,17 @@
+{% set alias = "Not provided" %}
+{% set phone = "Not provided" %}
+{% set requester = req.requester() %}
+{% if requester %}
+    {% set user = requester.user %}
+    {% set email = user.email %}
+    {% set alias = user.alias %}
+    {% set phone = user.phone %}
+    {% set address1 = user.address1 %}
+    {% set address2 = user.address2 %}
+    {% set city = user.city %}
+    {% set state = user.state %}
+    {% set zipcode = user.zipcode %}
+{% endif %}
 <div class="btn ">
     <div class="text-center" id="requesterInfoButton">Show Requester Contact Information<span class="caret"></span></div>
 </div>
