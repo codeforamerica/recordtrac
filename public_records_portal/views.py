@@ -1215,6 +1215,7 @@ def get_report_jsons(report_type,public_filter):
 @app.route("/report")
 def report():
     users=models.User.query.all()
+    users=models.User.query.order_by(models.User.alias.asc()).all()
     departments_all = models.Department.query.all()
     agency_data = []
     for d in departments_all:
