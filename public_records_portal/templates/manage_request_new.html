@@ -1,6 +1,7 @@
 <!-- This template is to display success banner immediately after a new requests gets submitted. -->
 
 {% extends "case.html" %}
+{% set active_page='new' %}
 {% block title %}Request {{ request_id }}{% endblock %}
 {% block head %}
 {{ super() }}
