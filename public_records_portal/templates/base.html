@@ -54,21 +54,22 @@ This template provides the header, footer, and envelope info for all pages excep
 </head>
 
 <body>
-{#{% set navigation_bar = [#}
-{#    ('/', 'index', 'Index'),#}
-{#    ('/downloads/', 'downloads', 'Downloads'),#}
-{#    ('/about/', 'about', 'About')#}
-{#] -%}#}
-{#{% set active_page = active_page|default('index') -%}#}
-{#...#}
-{#<ul id="navigation">#}
-{#{% for href, id, caption in navigation_bar %}#}
-{#  <li{% if id == active_page %} class="active"{% endif#}
-{#  %}><a href="{{ href|e }}">{{ caption|e }}</a></li>#}
-{#{% endfor %}#}
-{#</ul>#}
-{#...#}
+{#Contains all of the links to be used in the header#}
+{#First item in tuple is url, second item is value active_page is assigned to which can be found at top of each html file, third is the view of the tab from frontend#}
+{% set navigation_bar = [
 
+    ('/new', 'new', 'Request a Record'),
+    ('view_requests','view_requests','All Requests'),
+    ('/track','track','Track an Existing Record'),
+    ('/report','report','Report'),
+    ('/faq','faq','FAQ'),
+    ('/about','about','About'),
+] -%}
+{% if current_user.is_authenticated %}
+    {% set active_page = active_page|default('view_requests') -%}
+{% else %}
+    {% set active_page=active_page|default('') -%}
+{% endif %}
 <div class="agency-header">
     <div class="upper-header-black">
         <div class="container">
@@ -109,13 +110,12 @@ This template provides the header, footer, and envelope info for all pages excep
                     <div class="google_translate btn">
                         <p><a href="/logout">Logout</a></p>
                     </div>
+{#                    loops through the navigation_bar container for the label and definition of each tab#}
                     <ul class="nav tabs">
-                        <li><a href="/new">Request a Record</a></li>
-                        <li><a href="/view_requests">All Requests</a></li>
-                        <li><a href="/track">Track an Existing Request</a></li>
-                        <li><a href="/report">Report</a></li>
-                        <li><a href="/faq">FAQ</a></li>
-                        <li><a href="/about">About</a></li>
+                    {% for href, id, caption in navigation_bar %}
+                      <li{% if id == active_page %} class="active"{% endif%}>
+                      <a href="{{ href|e }}">{{ caption|e }}</a></li>
+                    {% endfor %}
                     </ul>
                     <ul class="nav pull-right">
                     </ul>
@@ -131,11 +131,10 @@ This template provides the header, footer, and envelope info for all pages excep
                         </script>
                     </div>
                     <ul class="nav tabs">
-                        <li><a href="/new">Request a Record</a></li>
-                        <li><a href="/view_requests">All Requests</a></li>
-                        <li><a href="/track">Track an Existing Request</a></li>
-                        <li><a href="/faq">FAQ</a></li>
-                        <li><a href="/about">About</a></li>
+                    {% for href, id, caption in navigation_bar %}
+                      <li{% if id == active_page %} class="active"{% endif%}
+                      ><a href="{{ href|e }}">{{ caption|e }}</a></li>
+                    {% endfor %}
                     </ul>
                     <ul class="nav pull-right">
                     </ul>

@@ -1,5 +1,7 @@
 <!-- This template is to initiate a new request. -->
-{% extends "base.html" %} {% from 'help_text.html' import help %} {% block title %}Public records{% endblock title %} {% block custom_css_links %}
+{% extends "base.html" %}
+{% set active_page="new" %}
+{% from 'help_text.html' import help %} {% block title %}Public records{% endblock title %} {% block custom_css_links %}
 <!-- used for department dropdown -->
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui-1.10.4.custom.css') }}">
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui.css') }}">
