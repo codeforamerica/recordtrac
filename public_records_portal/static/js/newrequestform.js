@@ -40,6 +40,16 @@ $(function() {
         }
     });
 
+    var privateValidator = new FormValidator('submitRequest', [{
+        name: 'format',
+        display: 'Format',
+        rules: 'required'
+    }, {
+        name: 'date',
+        display: 'Date',
+        rules: 'required'
+    }]);
+
     var validator = new FormValidator('submitRequest', [{
         name: 'request_agency',
         display: 'Request Agency',
@@ -88,6 +98,9 @@ $(function() {
                 }
                 if (!validContact && !validAddress) {
                     $('#missing_contact_information').show();
+                }
+                if (errors[i].name==''){
+
                 }
             }
             var stepId = '#step2';

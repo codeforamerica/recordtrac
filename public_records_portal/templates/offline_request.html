@@ -31,34 +31,45 @@
                     </div>
                 </div>
                 <div class="row-fluid">
+                  <div class="span10">
+                    <h1>Request a Record</h1>
+                    <p>Please make your request specific so you receive the fastest service. After you submit a FOIL request you will receive a confirmation number so you can track the status of the response. The agency will notify you about how much time is required to
+                      respond to your request.</p>
+                  </div>
+                  <div class="row-fluid">
                     <div class="span10">
-                        <h3>Create a New Request</h3>
-                        <p class="intro_text">
-                            Use this page to request public records that you received by phone, fax, mail, email, or in person on behalf of a resident.
-                        </p>
-                        <br/>
-                        <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="off" novalidate="novalidate" enctype="multipart/form-data">
-                            <h2>Public Information</h2>
-                            <fieldset>
-                                <div class="control-group">
-                                    <h1><small>Request Title<small></h1>
-                                    {{ form.request_summary(class="input-block-level", placeholder="Please provide a title for this request") }}
-                                    {# {{ help("requestTitlePopover-content", "Request Title")}} #}
-                                </div>
-                                <div class="control-group">
-                                    <h1><small>Request Description</small></h1>
-                                    <div>
-                                        {{ form.request_text(rows="5", class="input-block-level", placeholder="Describe the request. Be as specific as possible.") }}
-                                        {# {{ help("requestTextPopover-content", "Request Description") }} #}
-                                    </div>
-                                </div>
-                                <hr>
-                                <h2>Private Information</h2>
+                      <form name="newrequest" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="off" novalidate="novalidate" enctype="multipart/form-data">
+                        <fieldset>
+                          <div class="control-group">
+                            <h2>
+                              <small>Request Title*</small>
+                            </h2>
+                            <div class="missing_field alert alert-danger" id="missing_summary">
+                              Summary Missing
+                            </div>
+                            {{ form.request_summary(class="input-block-level", rows="2", id="request_summary", placeholder="Please provide a short summary of your request" ) }}
+                          </div>
+                          <div class="control-group">
+                            <h2>
+                              <small>Request*</small>
+                            </h2>
+                            <div class="missing_field alert alert-danger" id="missing_text">
+                              Details Missing
+                            </div>
+                            {{ form.request_text(class="input-block-level",rows="6",id="request_text",placeholder="Provide more information about your request to help the City locate the record. If don’t know the record name, describe type of information you think it would contain and the approximate date range. Do not include private info – such as social security # or credit card." ) }}
+                          </div>
+                          <h2>Private Information</h2>
                                 <h1><small>Receipt Information</small></h1>
                                 <div class="control-group">
+                                    <div class="missing_field alert alert-danger" id="missing_summary">
+                                      Please fill in the format received
+                                    </div>
                                     {{ form.request_format.label.text }}
                                     <div class="spacer">
                                         {{ form.request_format(class="input-block-level") }}
+                                    </div>
+                                    <div class="missing_field alert alert-danger" id="missing_summary">
+                                      Please fill out the request date
                                     </div>
                                     {{ form.request_date.label.text }}
                                     <div class="spacer">
@@ -72,91 +83,101 @@
 
                                 </div>
                                 <h2>
-                                <lead>Personal Information</lead>
-                                </h2>
-                                <p>Your name and contact information will not be posted to this site. This information
-                                    is required and will be shared only with a City Agency and only for the purpose of
-                                fulfilling your request. You must provide at least one way to reach you.</p>
-                                <div class="row-fluid">
-                                    <div class="control-group span6">
-                                        <h2>
-                                        <small>{{ form.request_first_name.label.text }}</small>
-                                        </h2>
-                                        {{ form.request_first_name(id="request_first_name", class="input-block-level", type="text", placeholder="John") }}
-                                    </div>
-                                    <div class="control-group span6">
-                                        <h2>
-                                        <small>{{ form.request_last_name.label.text }}</small>
-                                        </h2>
-                                        {{ form.request_last_name(id="request_last_name", class="input-block-level", type="text", placeholder="Doe")}}
-                                    </div>
+                          <h2>
+                            <lead>Personal Information</lead>
+                          </h2>
+                          <p>This information will not be publicly viewable on this site. You must provide contact information so that the agency can respond to your request for records.</p>
+                          <div class="row-fluid">
+                            <div class="control-group span6">
+                              <h2>
+                                <small>{{ form.request_first_name.label.text }}</small>
+                              </h2>
+                              <div class="missing_field alert alert-danger" id="missing_first_name">
+                                First Name Missing
+                              </div>
+                              {{ form.request_first_name(id="request_first_name", class="input-block-level", type="text", placeholder="John") }}
+                            </div>
+                            <div class="control-group span6">
+                              <h2>
+                                <small>{{ form.request_last_name.label.text }}</small>
+                              </h2>
+                              <div class="missing_field alert alert-danger" id="missing_last_name">
+                                Last Name Missing
+                              </div>
+                              {{ form.request_last_name(id="request_last_name", class="input-block-level", type="text", placeholder="Doe")}}
+                            </div>
+                          </div>
+                          <div class="control-group">
+                            <h2>
+                              <small>{{ form.request_role.label.text }}</small>
+                            </h2>
+                            {{ form.request_role( class="input-block-level", type="text", placeholder="Your role in your organization (if applicable)" ) }}
+                          </div>
+                          <div class="control-group">
+                            <h2>
+                              <small>{{ form.request_organization.label.text }}</small>
+                            </h2>
+                            {{ form.request_organization(class="input-block-level", type="text", placeholder="Your organization (if applicable)") }}
+                          </div>
+                          <h2>
+                            <lead>Contact Information</lead>
+                          </h2>
+                          <div class="missing_field alert alert-danger" id="missing_contact_information">
+                            At least one form of contact information needed.
+                          </div>
+                          <p>No information entered in this section will be visibile to the public.
+                            <em>Please Note: At least one method of communication is required</em>
+                          </p>
+                          <div class="control-group">
+                            <h2>
+                              <small>{{ form.request_email.label.text }}</small>
+                            </h2>
+                            {{ form.request_email(class="input-block-level" , type="email" , placeholder="requester@email.com") }}
+                            <h2>
+                              <small>{{ form.request_phone.label.text }}</small>
+                            </h2>
+                            {{ form.request_phone(class="input-block-level", type="tel", placeholder="(555) 555-5555")}}
+                            <h2>
+                              <small>{{ form.request_fax.label.text }}</small>
+                            </h2>
+                            {{form.request_fax(class="input-block-level", type="tel", placeholder="(555) 555-5555")}}
+                            <h2>
+                              <small>Address</small>
+                            </h2>
+                            <small>{{ form.request_address_street_one.label.text }}</small>
+                            {{form.request_address_street_one(class="input-block-level", type="text", placeholder="123 Main Street")}}
+                            <small>{{ form.request_address_street_two.label.text }}</small>
+                            {{form.request_address_street_two(class="input-block-level", type="text", placeholder="Apartment 3D")}}
+                            <div class="row-fluid">
+                              <div class="span5">
+                                <small>{{ form.request_address_city.label.text }}</small>
+                                <div class="spacer">
+                                  {{ form.request_address_city(class="input-block-level", type="text", placeholder="New York")}}
                                 </div>
-                                <div class="control-group">
-                                    <h2>
-                                    <small>{{ form.request_role.label.text }}</small>
-                                    </h2>
-                                    {{ form.request_role( class="input-block-level", type="text", placeholder="Your role in your organization (if applicable)" ) }}
+                              </div>
+                              <div class="span4">
+                                <small>{{ form.request_address_state.label.text }}</small>
+                                <div class="spacer">
+                                  {{ form.request_address_state(class="input-block-level combobox") }}
                                 </div>
-                                <div class="control-group">
-                                    <h2>
-                                    <small>{{ form.request_organization.label.text }}</small>
-                                    </h2>
-                                    {{ form.request_organization(class="input-block-level", type="text", placeholder="Your organization (if applicable)") }}
+                              </div>
+                              <div class="span3">
+                                <small>{{ form.request_address_zip.label.text }}</small>
+                                <div class="spacer">
+                                  {{form.request_address_zip(class="input-block-level",type="text", placeholder="12345")}}
                                 </div>
-                                <h2>
-                                <lead>Contact Information</lead>
-                                </h2>
-                                <p>No information entered in this section will be visibile to the public. <em>Please
-                                Note: At least one method of communication is required</em></p>
-                                <div class="control-group">
-                                    <h2>
-                                    <small>{{ form.request_email.label.text }}</small>
-                                    </h2>
-                                    {{ form.request_email(class="input-block-level" , type="email" , placeholder="requester@email.com") }}
-                                    <h2>
-                                    <small>{{ form.request_phone.label.text }}</small>
-                                    </h2>
-                                    {{ form.request_phone(class="input-block-level", type="tel", placeholder="(555) 555-5555")}}
-                                    <h2>
-                                    <small>{{ form.request_fax.label.text }}</small>
-                                    </h2>
-                                    {{form.request_fax(class="input-block-level", type="tel", placeholder="(555) 555-5555")}}
-                                    <h2>
-                                    <small>Address</small>
-                                    </h2>
-                                    <small>{{ form.request_address_street_one.label.text }}</small>
-                                    {{form.request_address_street_one(class="input-block-level", type="text", placeholder="123 Main Street")}}
-                                    <small>{{ form.request_address_street_two.label.text }}</small>
-                                    {{form.request_address_street_two(class="input-block-level", type="text", placeholder="Apartment 3D")}}
-                                    <div class="row-fluid">
-                                        <div class="span5">
-                                            <small>{{ form.request_address_city.label.text }}</small>
-                                            <div class="spacer">
-                                                {{ form.request_address_city(class="input-block-level", type="text", placeholder="New York")}}
-                                            </div>
-                                        </div>
-                                        <div class="span4">
-                                            <small>{{ form.request_address_state.label.text }}</small>
-                                            <div class="spacer">
-                                                {{ form.request_address_state(class="input-block-level combobox") }}
-                                            </div>
-                                        </div>
-                                        <div class="span3">
-                                            <small>{{ form.request_address_zip.label.text }}</small>
-                                            <div class="spacer">
-                                                {{form.request_address_zip(class="input-block-level",type="text", placeholder="12345")}}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="requestButton" class="control-group">
-                                    <div>
-                                        <button type="submit" title="submit_request_button" class="btn btn-primary btn-large input-block-level">Submit request</button>
-                                    </div>
-                                </div>
-                            </fieldset>
-                        </form>
+                              </div>
+                            </div>
+                          </div>
+                          <div id="requestButton" class="spacer">
+                            <button id="button2" title="submit_request_button" class="btn btn-primary btn-large input-block-level">
+                              Submit request
+                            </button>
+                          </div>
+                        </fieldset>
+                      </form>
                     </div>
+                  </div>
                 </div>
             </div>
         </div>
@@ -188,6 +209,8 @@ $(document).ready(function() {
 $('.combobox').combobox();
 });
 </script>
+<script type="text/javascript" src="{{ url_for('static', filename = 'js/newrequestform.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename = 'js/validate.js') }}"></script>
 <!-- For file uploads -->
 <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-fileupload.js') }}"></script>
 {% endblock custom_script_links %}
