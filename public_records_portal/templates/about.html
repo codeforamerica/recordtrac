@@ -11,26 +11,26 @@
                     <h1 id="about">About NYC Open Gov</h1>
 
                     <p class="lead">NYC Open Gov is a quick, simple way for you to submit a public records request to
-                        the {{ config['AGENCY_NAME'] }}.</p>
+                        a New York City Agency.</p>
 
-                    <p><strong>Most information on this site is public.</strong> Your contact information, and personal
-                        information that may be contained in government documetns will not be made available to the
+                    <p><strong>Most information on this site is public.</strong> Your contact information, and most personal
+                        information that may be contained in government documents will not be made available to the
                         public.</p>
                 </div>
                 <div class="bottombreathe">
                     <h4 id="what">What is NYC Open Gov?</h4>
 
                     <p>NYC Open Gov is a quick, simple way for individuals to submit Freedom of Information Law (FOIL)
-                        requests to {{ config['AGENCY_NAME'] }}. The web application also allows government employees
-                        manage, respond to, and fulfill incoming requests. By displaying all records requests and
+                        requests to a NYC agency. The web application also allows government employees
+                        to manage, respond to, and fulfill incoming requests. By displaying all records requests and
                         responsive documents, members of the public may find what they need without having to create a
                         new public record request.</p>
                 </div>
                 <div class="bottombreathe">
                     <h4 id="documents">Why aren't all documents uploaded on NYC Open Gov?</h4>
 
-                    <p>The {{ config['AGENCY_NAME'] }} will not publicly release records or information that violates
-                        your right to privacy. The {{ config['AGENCY_NAME'] }} will not make available records that have
+                    <p>City agencies will not publicly release records or information that violates
+                        your right to privacy. City agencies will not make available records that have
                         been exempted from disclosure by Federal, State, or Local statute, including records that would
                         impair contract awards or collective bargainaing negotiations, are trade secrets, are compiled
                         for law enforcement services and if disclosed would interfere with investigations or judicial
@@ -49,31 +49,28 @@
                         </div>
                     </div>
 
-                    <p>The 2013 Code for America fellows created RecordTrac with the City of Oakland. As public records
-                        requests became larger and more complex, city employees found coordinating a response to be
-                        difficult. The old software system no longer met their needs and many requests remained
-                        untracked.</p>
-
-                    <p>Members of the public complained they didn’t understand what happened after they submitted their
+                    <p>The 2013 Code for America fellows created RecordTrac with the City of Oakland. In response to public complaints that they didn’t understand what happened after they submitted their
                         requests and it took too long to get the records they needed.</p>
 
                     <p>By making everything completely transparent, you can know your request is fulfilled.</p>
                 </div>
 
                 <div class="footerbreathe">
-                    <h4 id="why">I'd like to know more about how to...</h4>
+                    <h4 id="why">To learn more about how to...</h4>
                     <ul>
-                        <li><a href="https://github.com/codeforamerica/recordtrac/blob/readme/readme/redeploy.md">Create
+                        <li><a href="https://github.com/codeforamerica/recordtrac/blob/master/docs/redeploy.md">Create
                             a RecordTrac for your own agency</a></li>
                         <li>
-                            <a href="https://github.com/codeforamerica/recordtrac/blob/readme/readme/redeploy.md#technical-details">Review
+                            <a href="https://github.com/codeforamerica/recordtrac/#technical-details">Review
                                 the technical details</a></li>
                         <li>
-                            <a href="https://github.com/codeforamerica/recordtrac/blob/readme/readme/recordtrac_readme.md#how-to-use-recordtrac-as-a-requester">Learn
+                            <a href="/tutorial/01">Learn
                                 to create a request</a></li>
-                        <li>
-                            <a href="https://github.com/codeforamerica/recordtrac/blob/readme/readme/recordtrac_readme.md#how-to-use-recordtrac-as-an-agency-employee">Learn
+                        {% if current_user.is_authenticated %}
+                            <li>
+                                <a href="/city/tutorial/01">Learn
                                 to manage requests</a></li>
+                        {% endif %}
                     </ul>
                     <p>For more information, please see the <a
                             href="https://github.com/codeforamerica/recordtrac/blob/readme/recordtrac_readme.md">full
