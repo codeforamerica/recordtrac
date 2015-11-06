@@ -375,7 +375,7 @@ def show_request(request_id, template="manage_request_public.html"):
         id=models.Owner.query.filter_by(request_id=request_id, is_point_person=True).first().user_id).first()
     helpers = []
     for i in req.owners:
-        if i.is_point_person:
+        if not i.active or i.is_point_person:
             continue
         helper = models.User.query.filter_by(id=i.user_id).first()
         if helper:
@@ -464,7 +464,7 @@ def update_a_resource(resource, passed_recaptcha=False, data=None):
             prr.answer_a_question(qa_id=int(data['qa_id']), answer=data['answer_text'], passed_spam_filter=True)
         else:
             update_resource(resource, data)
-        if current_user.is_anonymous == False:
+        if current_user.is_authenticated:
             return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
         else:
             return redirect(url_for('show_request', request_id=request.form['request_id']))
@@ -1247,6 +1247,9 @@ def any_page(page):
     except:
         return page_not_found(404)
 
+@app.errorhandler(400)
+def bad_request(e):
+    return render_template("400.html"), 400
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html"), 404
