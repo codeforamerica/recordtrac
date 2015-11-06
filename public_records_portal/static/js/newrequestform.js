@@ -3,6 +3,7 @@ $(function() {
 
     var validContact = false;
     var validAddress = false;
+    var valid
 
     var addressValidator = new FormValidator('submitRequest', [{
         name: 'address_1',
@@ -40,16 +41,6 @@ $(function() {
         }
     });
 
-    var privateValidator = new FormValidator('submitRequest', [{
-        name: 'format',
-        display: 'Format',
-        rules: 'required'
-    }, {
-        name: 'date',
-        display: 'Date',
-        rules: 'required'
-    }]);
-
     var validator = new FormValidator('submitRequest', [{
         name: 'request_agency',
         display: 'Request Agency',
@@ -69,6 +60,14 @@ $(function() {
     }, {
         name: 'request_last_name',
         display: 'Request Last Name',
+        rules: 'required'
+    }, {
+       name: 'request_format',
+       display: 'Request Format',
+       rules: 'required'
+    }, {
+        name:'request_date',
+        display: 'Request Date',
         rules: 'required'
     }, {
         name: 'request_contact_information',
@@ -96,11 +95,14 @@ $(function() {
                 if (errors[i].name === 'request_last_name') {
                     $('#missing_last_name').show();
                 }
+                if (errors[i].name == 'request_format'){
+                    $('#missing_format').show();
+                }
+                if (errors[i].name== 'request_date'){
+                    $('#missing_date').show();
+                }
                 if (!validContact && !validAddress) {
                     $('#missing_contact_information').show();
-                }
-                if (errors[i].name==''){
-
                 }
             }
             var stepId = '#step2';

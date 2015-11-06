@@ -61,19 +61,19 @@
                           <h2>Private Information</h2>
                                 <h1><small>Receipt Information</small></h1>
                                 <div class="control-group">
-                                    <div class="missing_field alert alert-danger" id="missing_summary">
-                                      Please fill in the format received
+                                    <div class="missing_field alert alert-danger" id="missing_format">
+                                      Format Received is missing
                                     </div>
                                     {{ form.request_format.label.text }}
                                     <div class="spacer">
-                                        {{ form.request_format(class="input-block-level") }}
+                                        {{ form.request_format(class="input-block-level", id="request_format") }}
                                     </div>
-                                    <div class="missing_field alert alert-danger" id="missing_summary">
-                                      Please fill out the request date
+                                    <div class="missing_field alert alert-danger" id="missing_date">
+                                      The date of this request is missing
                                     </div>
                                     {{ form.request_date.label.text }}
                                     <div class="spacer">
-                                        {{ form.request_date(class ="input-block-level") }}
+                                        {{ form.request_date(class ="input-block-level", id="request_date") }}
                                     </div>
                                 </div>
                                 <div class="control-group">
