@@ -139,18 +139,6 @@ This template provides the header, footer, and envelope info for all pages excep
                             src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
                     </script>
                 </div>
-                {% if current_user.is_authenticated %}
-                <ul class="nav tabs">
-                    <li><a href="/new">Request a Record</a></li>
-                    <li><a href="/view_requests">All Requests</a></li>
-                    <li><a href="/track">Track an Existing Request</a></li>
-                    <li><a href="/report">Report</a></li>
-                    <li><a href="/faq">FAQ</a></li>
-                    <li><a href="/about">About</a></li>
-                </ul>
-                <ul class="nav pull-right">
-                </ul>
-                {% else %}
                 <ul class="nav tabs">
                     <li><a href="/new">Request a Record</a></li>
                     <li><a href="/view_requests">All Requests</a></li>
@@ -160,23 +148,23 @@ This template provides the header, footer, and envelope info for all pages excep
                 </ul>
                 <ul class="nav pull-right">
                 </ul>
-                {% endif %}
-            </div>
+            {% endif %}
         </div>
     </div>
-    <div id="container-fluid">
-        {% block container %}
-        <div class="row-fluid">
-            <div class="span10">
-                {% block banner %}
+</div>
+<div id="container-fluid">
+    {% block container %}
+    <div class="row-fluid">
+        <div class="span10">
+            {% block banner %}
 
-                {% endblock banner %}
-            </div>
+            {% endblock banner %}
         </div>
-
-        {% endblock container %}
     </div>
-    <div class="push"></div>
+
+    {% endblock container %}
+</div>
+<div class="push"></div>
 </div>
 <!-- // Wrapper -->
 <div class="iw_component" id="1422284559235">
