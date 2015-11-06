@@ -86,7 +86,12 @@ def new_request(passed_recaptcha=False, data=None):
             elif len(request_summary) > 250:
                 errors.append(
                     'The request summary must be less than 250 characters')
-
+            # Check Description of Request
+            if not (request_text and request_text.strip()):
+                errors.append('You must enter a description for this request')
+            elif len(request_summary) > 5000:
+                errors.append(
+                    'The request description must be less than 5000 characters')
             try:
                 request_attachment = request.files['request_attachment']
             except:
