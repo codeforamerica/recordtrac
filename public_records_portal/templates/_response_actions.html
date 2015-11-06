@@ -529,8 +529,8 @@
             </form>
         </div>
         <div class="tab-pane" id="manage_helpers">
-            <p class="lead">Remove Helpers</p>
-
+            {% if helpers %}
+                <p class="lead">Remove Helpers</p>
             {% for owner in req.owners %}
             {% if owner.active %}
             {% set participant = (owner | display_staff_participant(req)) %}
@@ -556,6 +556,8 @@
             {% endif %}
             {% endfor %}
             <hr>
+
+            {% endif %}
             <p class="lead">Add Helper</p>
             <form id="notifyForm" method="post" action="/add_a_owner">
                 <fieldset>
