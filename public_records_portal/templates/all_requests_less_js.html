@@ -140,7 +140,7 @@
                                 <h5>Agency Name</h5>
                                 <div class="control-group">
                                     <select name="departments_selected" class="selectpicker span12">
-
+                                    <option>All Agencies</option>
                                         {% for department in departments %}
                                             {% if departments_selected and department.name in departments_selected %}
                                                 <option selected>{{ department.name }}</option>
