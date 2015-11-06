@@ -1109,7 +1109,9 @@ input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
 }
 
 .radio input[type="radio"], .checkbox input[type="checkbox"] {
-    margin-left: -20px
+    margin-left: -20px;
+    display: inline;
+    width:4rem
 }
 
 .controls > .radio:first-child, .controls > .checkbox:first-child {
