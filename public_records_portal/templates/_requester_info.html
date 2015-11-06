@@ -13,9 +13,11 @@
     {% set state = user.state %}
     {% set zipcode = user.zipcode %}
 {% endif %}
-<div class="btn ">
-    <div class="text-center" id="requesterInfoButton">Show Requester Contact Information<span class="caret"></span></div>
-</div>
+
+{#Small code change here to make the whole "Show Requester Conctact Information" button clickable instead of just the text.#}
+<div class="btn" id="requesterInfoButton">Show Requester Contact Information<span class="caret"></span></div>
+{#    <div class="text-center" id="requesterInfoButton">Show Requester Contact Information<span class="caret"></span></div>#}
+{#</div>#}
 <div class="row-fluid hide" id="requester_info">
     <div class="span8">
         <div class="row-fluid">
