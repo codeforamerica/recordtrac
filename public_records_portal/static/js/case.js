@@ -138,4 +138,9 @@
     $('#modalQuestionTable').hide();
   });
 
+
+  $("#requesterInfoButton").on('click', function() {
+    $('#requester_info').toggle();
+    $('#requesterInfoButton').innerHTML()
+  })
 })($);

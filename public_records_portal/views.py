@@ -86,7 +86,12 @@ def new_request(passed_recaptcha=False, data=None):
             elif len(request_summary) > 250:
                 errors.append(
                     'The request summary must be less than 250 characters')
-
+            # Check Description of Request
+            if not (request_text and request_text.strip()):
+                errors.append('You must enter a description for this request')
+            elif len(request_summary) > 5000:
+                errors.append(
+                    'The request description must be less than 5000 characters')
             try:
                 request_attachment = request.files['request_attachment']
             except:
@@ -314,11 +319,7 @@ def show_request_for_city(request_id):
         audience = 'helper'
     else:
         audience = 'city'
-    if is_supported_browser():
-        return show_request(request_id=request_id, template="manage_request_%s.html" % (audience))
-    else:
-        return show_request(request_id=request_id, template="manage_request_%s_less_js.html" % (audience))
-
+    return show_request(request_id=request_id, template="manage_request_%s_less_js.html" % (audience))
 
 @app.route("/response/<string:request_id>")
 def show_response(request_id):
@@ -363,7 +364,6 @@ def show_request(request_id, template="manage_request_public.html"):
     departments_all = models.Department.query.all()
     agency_data = []
     for d in departments_all:
-        #firstUser = models.User.query.filter_by(department_id=d.id).first()
         primary_contact = d.primary_contact
         agency_data.append({'name': d.name, 'email': primary_contact.email})
 
@@ -375,7 +375,21 @@ def show_request(request_id, template="manage_request_public.html"):
     if req.status and "Closed" in req.status and template != "manage_request_feedback.html":
         template = "closed.html"
 
-    return render_template(template, req=req, agency_data=agency_data, users=users)
+    department = models.Department.query.filter_by(id=req.department_id).first()
+    assigned_user = models.User.query.filter_by(
+        id=models.Owner.query.filter_by(request_id=request_id, is_point_person=True).first().user_id).first()
+    helpers = []
+    for i in req.owners:
+        if not i.active or i.is_point_person:
+            continue
+        helper = models.User.query.filter_by(id=i.user_id).first()
+        if helper:
+            helpers.append({'name': helper.alias, 'email': helper.email})
+
+    print helpers
+
+    return render_template(template, req=req, agency_data=agency_data, users=users,
+                           department=department, assigned_user=assigned_user, helpers=helpers)
 
 
 @app.route("/api/staff")
@@ -455,7 +469,7 @@ def update_a_resource(resource, passed_recaptcha=False, data=None):
             prr.answer_a_question(qa_id=int(data['qa_id']), answer=data['answer_text'], passed_spam_filter=True)
         else:
             update_resource(resource, data)
-        if current_user.is_anonymous == False:
+        if current_user.is_authenticated:
             return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
         else:
             return redirect(url_for('show_request', request_id=request.form['request_id']))
@@ -640,7 +654,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         requester_name = get_filter_value(filters_map, 'requester_name')
         page_number = int(get_filter_value(filters_map, 'page_number') or '1')
         request_id_search = get_filter_value(filters_map, 'request_id_search')
- 
+
     # Set initial checkboxes for mine_as_poc and mine_as_helper when redirected from login page
     if request.referrer and 'login' in request.referrer:
         if current_user.is_authenticated and (current_user.role in ['Portal Administrator', 'Agency Administrator'] or current_user.is_admin()):
@@ -1238,6 +1252,9 @@ def any_page(page):
     except:
         return page_not_found(404)
 
+@app.errorhandler(400)
+def bad_request(e):
+    return render_template("400.html"), 400
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html"), 404
