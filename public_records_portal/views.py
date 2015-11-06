@@ -1052,8 +1052,8 @@ def get_pdfs(resource):
     return send_from_directory(app.config["PDF_FOLDER"], resource, as_attachment=True)
 
 
-@app.route("/api/report/<string:report_type>/<string:public_filter>", methods=["GET"])
-def get_report_jsons(report_type,public_filter):
+@app.route("/api/report/<string:calendar_filter>/<string:report_type>/<string:agency_filter>/<string:staff_filter>", methods=["GET"])
+def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
     app.logger.info("\n\ngenerating report data")
 
     if not report_type:
@@ -1074,14 +1074,15 @@ def get_report_jsons(report_type,public_filter):
     referred_to_opendata_filter = models.Request.referred_to_opendata
     referred_to_other_agency_filter = models.Request.referred_to_other_agency
     referred_to_publications_portal_filter = models.Request.referred_to_publications_portal
+    
 
     if report_type == "all":
         try:
-            if public_filter == "all" or public_filter == "agency_0":
+            if agency_filter == "all":
                 overdue_request=models.Request.query.filter(overdue_filter).all()
                 notdue_request=models.Request.query.filter(notoverdue_filter).all()
-                received_request=models.Request.query.all()
-                published_request=models.Request.query.filter(published_filter).all()
+                received_request=models.Request.query
+                published_request=models.Request.query.filter(published_filter)
                 denied_request=models.Request.query.filter(denied_filter).all()
                 granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).all()
                 granted_in_part_request=models.Request.query.filter(granted_in_part_filter).all()
@@ -1091,13 +1092,12 @@ def get_report_jsons(report_type,public_filter):
                 referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
                 referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
                 referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).all()
-            elif "agency" in public_filter and "staff" not in public_filter:
-                agencyFilter = public_filter.split("_")[1]
-                agencyFilterInt = int(agencyFilter)
+            else:
+                agencyFilterInt = int(agency_filter)
                 overdue_request=models.Request.query.filter(overdue_filter).filter(models.Request.department_id == agencyFilterInt).all()
                 notdue_request=models.Request.query.filter(notoverdue_filter).filter(models.Request.department_id == agencyFilterInt).all()
-                received_request=models.Request.query.filter(models.Request.department_id == agencyFilterInt).all()
-                published_request=models.Request.query.filter(published_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                received_request=models.Request.query.filter(models.Request.department_id == agencyFilterInt)
+                published_request=models.Request.query.filter(published_filter).filter(models.Request.department_id == agencyFilterInt)
                 denied_request=models.Request.query.filter(denied_filter).filter(models.Request.department_id == agencyFilterInt).all()
                 granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).filter(models.Request.department_id == agencyFilterInt).all()
                 granted_in_part_request=models.Request.query.filter(granted_in_part_filter).filter(models.Request.department_id == agencyFilterInt).all()
@@ -1107,7 +1107,7 @@ def get_report_jsons(report_type,public_filter):
                 referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).filter(models.Request.department_id == agencyFilterInt).all()
                 referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).filter(models.Request.department_id == agencyFilterInt).all()
                 referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).filter(models.Request.department_id == agencyFilterInt).all()
-            elif "calendarYear" in public_filter:
+            if calendar_filter == "calendarYear":
                 overdue_request=models.Request.query.filter(overdue_filter).all()
                 notdue_request=models.Request.query.filter(notoverdue_filter).all()
                 received_request=models.Request.query.all()
@@ -1121,7 +1121,7 @@ def get_report_jsons(report_type,public_filter):
                 referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
                 referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
                 referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).all()
-            elif "fullYear" in public_filter:
+            if calendar_filter == "fullYear":
                 overdue_request=models.Request.query.filter(overdue_filter).all()
                 notdue_request=models.Request.query.filter(notoverdue_filter).all()
                 received_request=models.Request.query.all()
@@ -1135,7 +1135,7 @@ def get_report_jsons(report_type,public_filter):
                 referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
                 referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
                 referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).all()
-            elif "rolling" in public_filter:
+            if calendar_filter == "rolling":
                 overdue_request=models.Request.query.filter(overdue_filter).all()
                 notdue_request=models.Request.query.filter(notoverdue_filter).all()
                 received_request=models.Request.query.all()
@@ -1149,12 +1149,12 @@ def get_report_jsons(report_type,public_filter):
                 referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
                 referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
                 referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).all()
-            if "staff" in public_filter:
-                staff_id = int(public_filter.split("_")[1])
+            if staff_filter != "all":
+                staff_id = int(staff_filter)
                 overdue_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(overdue_filter).filter(models.Owner.is_point_person == True).all()
                 notdue_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(notoverdue_filter).filter(models.Owner.is_point_person == True).all()
-                received_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(models.Owner.user_id == staff_id).filter(models.Owner.is_point_person == True).all()
-                published_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(published_filter).filter(models.Owner.user_id == staff_id).filter(models.Owner.is_point_person == True).all()
+                received_request=received_request.filter(models.Request.id == models.Owner.request_id).filter(models.Owner.user_id == staff_id).filter(models.Owner.is_point_person == True)
+                published_request=published_request.filter(models.Request.id == models.Owner.request_id).filter(published_filter).filter(models.Owner.user_id == staff_id).filter(models.Owner.is_point_person == True)
                 denied_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(denied_filter).filter(models.Owner.user_id == staff_id).all()
                 granted_and_closed_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(granted_and_closed_filter).filter(models.Owner.user_id == staff_id).all()
                 granted_in_part_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(granted_in_part_filter).filter(models.Owner.user_id == staff_id).all()
@@ -1168,8 +1168,8 @@ def get_report_jsons(report_type,public_filter):
             response={
                 "status" : "ok",
                 "data" : [
-                    {"label" : "Received", "value" : len(received_request), "callback" : "received"},
-                    {"label" : "Published", "value" : len(published_request), "callback" : "received"},
+                    {"label" : "Received", "value" : len(received_request.all()), "callback" : "received"},
+                    {"label" : "Published", "value" : len(published_request.all()), "callback" : "received"},
                     {"label" : "Denied", "value" : len(denied_request), "callback" : "denied"},
                     {"label" : "Granted And Closed", "value" : len(granted_and_closed_request), "callback" : "granted_and_closed"},
                     {"label" : "Granted In Part", "value" : len(granted_in_part_request), "callback" : "granted_in_part"},

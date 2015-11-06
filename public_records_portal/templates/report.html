@@ -84,8 +84,9 @@ rect:hover{
 		<select id="staff_filter" name="staff_filter">
 			    <option value="0">None Selected</option>
 				{% for user in users %}
-				{{ user.email }}
-				<option value="{{ user.id }}">{{ user.alias}}</option>
+                    {%  if user.is_staff %}
+				        <option value="{{ user.id }}" department_id="{{ user.department_id }}">{{ user.alias}}</option>
+                    {% endif %}
 				{% endfor %}
 		</select>
         {% endif %}
@@ -241,29 +242,36 @@ rect:hover{
 						});
 			}
 		
-			draw_barchart("/api/report/all/all");
+			draw_barchart("/api/report/all/all/all/all");
 
 			$("#calendarYear").click(function() {
-			    draw_barchart("/api/report/all/calendarYear");
+			    draw_barchart("/api/report/calendarYear/all/all/all");
 			});
 
 			$("#fullYear").click(function() {
-			    draw_barchart("/api/report/all/fullYear");
+			    draw_barchart("/api/report/fullYear/all/all/all");
 			});
 			
 			$("#rolling").click(function() {
-				draw_barchart("/api/report/all/rolling");
+				draw_barchart("/api/report/rolling/all/all/all");
 			});
 			
 			$("#agency_filter").change(function() {
-				selected = $(this).val();
-
-				draw_barchart("/api/report/all/agency_" + selected);
+				selected_agency = $(this).val();
+                $("#staff_filter").val(0);
+                $('#staff_filter option[department_id!=' + selected_agency + ']').hide();
+                $('#staff_filter option[department_id=' + selected_agency + ']').show();
+				draw_barchart("/api/report/all/all/" + selected_agency + "/all");
 			});
 			$("#staff_filter").change(function() {
-				selected = $(this).val();
-
-				draw_barchart("/api/report/all/staff_" + selected);
+				selected_agency = $('#agency_filter').val();
+                selected_staff = $(this).val();
+				if(selected_agency == 0) {
+				  draw_barchart("/api/report/all/all/all/" + selected_staff);
+				}
+				else {
+				  draw_barchart("/api/report/all/all/" + selected_agency + "/" + selected_staff);
+				}
 			});
 
 
