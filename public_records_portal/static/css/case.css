@@ -133,3 +133,10 @@
 /* public note section indent */
      #public_note {margin-left: -5%;}
 
+.hidden {
+    visibility: hidden;
+    over-flow: hidden;
+    width: 0px;
+    height: 0px;
+}
+

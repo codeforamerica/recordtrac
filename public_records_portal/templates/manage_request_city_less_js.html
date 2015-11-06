@@ -204,6 +204,9 @@
         <div class="control-group">
           <label class="control-label">Template <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Generate PDF"}}"><small><i class="icon-info-sign"></i></small></span></label>
           <div class="controls">
+            <div class="missing_field alert alert-danger hidden" id="missing_pdf_template">
+                No Template Chosen
+            </div>
             <select id="response_template" name="response_template" required data-selected-text-format="count" size="9">
               <option value="template_02">Message Sent</option>
               <option value="template_03">Request Status</option>
@@ -219,7 +222,7 @@
         </div>
         <div class="control-group">
           <div class="controls">
-            <button type="submit" class="btn btn-primary">Generate PDF</button>
+            <button type="submit" class="btn btn-primary" id="generatePDFButton">Generate PDF</button>
           </div>
         </div>
       </div>
