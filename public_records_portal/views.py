@@ -1018,7 +1018,7 @@ def login():
                 app.logger.info(
                     "\n\nLogin failed (due to incorrect email/password combo) for email : %s" % form.username.data)
                 errors.append('Incorrect email/password combination. Please try again. If you forgot your password,'
-                              'please <a href="/reset_password">reque st a new password</a>.')
+                              'please <a href="/reset_password">request a new password</a>.')
                 return render_template('login.html', form=form, errors=errors)
         else:
             errors.append('Something went wrong')
