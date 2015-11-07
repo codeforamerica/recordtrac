@@ -170,7 +170,7 @@ $(document).ready(function() {
     $truncated_div.html($truncated_div.attr('truncated'));
     $(this).remove();
     $parent.append("<div class='more'>..more</div>");
-  });
+  })
 
 })
 
