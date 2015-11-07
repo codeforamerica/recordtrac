@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <div class="navbar navbar-fixed-top">
+        <div class="header">
+            <div class="container">
+                <img src="{{ url_for('static', filename='img/header_long.jpg') }}">
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block container %}
+    <div class="span10 offset1">
+        <h3>Sorry, that page was not found.</h3>
+
+        <p>Click <a href="{{ url_for('index') }}">here</a> to return home.</p>
+    </div>
+{% endblock container %}

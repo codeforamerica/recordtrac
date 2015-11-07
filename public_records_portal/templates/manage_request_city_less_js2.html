@@ -1,19 +1,51 @@
 {% extends "case.html" %}
 {% block title %}Request {{ req.id }}{% endblock %}
 {% block custom_css_links %}
-<!-- used for the extension and close request multi-select boxes in city view -->
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/manage_request_city_less_js.css') }}">
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bottom_sidebar.css') }}">
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.css') }}">
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-fileupload.css') }}">
+    <!-- used for the extension and close request multi-select boxes in city view -->
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/manage_request_city_less_js.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bottom_sidebar.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-fileupload.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/_response_widget.css') }}">
 {% endblock custom_css_links %}
+
+{% set alias = "Not provided" %}
+{% set phone = "Not provided" %}
+{% set requester = req.requester() %}
+{% if requester %}
+{% set user = requester.user %}
+{% set email = user.email %}
+{% set alias = user.alias %}
+{% set phone = user.phone %}
+{% set address1 = user.address1 %}
+{% set address2 = user.address2 %}
+{% set city = user.city %}
+{% set state = user.state %}
+{% set zipcode = user.zipcode %}
+{% endif %}
 
 {% block requester_info %}
 {% include '_requester_info.html' %}
 {% endblock requester_info %}
 
+{% block proxyrequester_info %}
+  {{ super() }}
+{% endblock proxyrequester_info %}
+
+{% block clarify_request %}
+    <!-- ask a question -->
+    <form name="ask_question" id="question" class="form-inline" style="margin: 10px 0px 15px 0px;" method="post" action="/add_a_qa" autocomplete="on">
+      <input type="hidden" name="request_id" value="{{ req.id }}"/>
+      <fieldset>
+      {% if email %}
+        <label>Ask a question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+          <textarea id="questionTextarea"  name="question_text" class="input-xlarge" placeholder="Ask the requester a question" required/></textarea>
+        <button id="askQuestion" class="btn btn-primary" data-toggle="modal" data-target="#confirm-submit" type="submit">Ask</button>
+       {% endif %}
+      </fieldset>
+    </form>
 
 	<div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
@@ -48,7 +80,25 @@
 
 {% block response_actions_lessjs %}
   <h3 style="margin-top:40px;">Response actions</h3>
+
+  <form class="form-horizontal">
+    <fieldset>
+
+    <!-- Form Name -->
+    <!-- Multiple Radios (inline) -->
+
+    <div clas="rw-container">
+
+        <div class="rw-btn-wrap">Add record</div>
+        <div class="rw-btn-wrap">Add note</div>
+        <div class="rw-btn-wrap">Generate PDF</div>
+        <div class="rw-btn-wrap">Close this request</div>
+    </div>
+    </fieldset>
+    </form>
+
   <!-- upload a record -->
+
   <form name="input_doc" style="margin-top: 2em;" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data">
     <input type="hidden" name="request_id" value="{{ req.id }}"/>
     <fieldset>
@@ -130,7 +180,7 @@
     </fieldset>
   </form>
   </form>
-  
+
   <!-- Generate PDF -->
   <form name="note" class="form-horizontal" id="note_pdf" method="post" action="/add_a_pdf">
     <input type="hidden" name="request_id" value="{{ req.id }}"/>
@@ -140,9 +190,6 @@
         <div class="control-group">
           <label class="control-label">Template <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Generate PDF"}}"><small><i class="icon-info-sign"></i></small></span></label>
           <div class="controls">
-            <div class="missing_field alert alert-danger hidden" id="missing_pdf_template">
-                No Template Chosen
-            </div>
             <select id="response_template" name="response_template" required data-selected-text-format="count" size="9">
               <option value="template_02">Message Sent</option>
               <option value="template_03">Request Status</option>
@@ -158,7 +205,7 @@
         </div>
         <div class="control-group">
           <div class="controls">
-            <button type="submit" class="btn btn-primary" id="generatePDFButton">Generate PDF</button>
+            <button type="submit" class="btn btn-primary">Generate PDF</button>
           </div>
         </div>
       </div>
@@ -250,10 +297,117 @@
 {% endblock response_actions_lessjs %}
 
 {% block sidebar %}
+
+  {% block status %}
+    {% set status = req.solid_status() %}
+    {% include '_manage_requests_status.html' %}
+  {% endblock status %}
+
+  <div class="b_sidebar">
+    <div class="row-fluid participantRow">
+
+        <div><h4 class="participantRow-title" style="color: #333333;">Point of Contact </h4>
+        </div>
+
+    </div>
+    <div class="row-fluid participantRow-poc">
+        {% include '_contact_popover.html' %}
+    </div>
+
+    <form id="rerouteForm" class="form-inline" method ="post" action="/update_a_owner">
+      <fieldset>
+        <!-- <label>Change point of contact</label> -->
+          <input type="hidden" name="request_id" value="{{ req.id }}"/>
+          <!--input id="rerouteEmail" class="input-block-level" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required /-->
+          </select>
+          <select class="span10" id="rerouteEmail" name="owner_email">
+            {% for data in agency_data %}
+              <option value="{{ data.email }}">{{ data.name}}</option>
+            {% endfor %}
+          </select>
+          <input id="rerouteReason" class="input-block-level" type="text" name="owner_reason" placeholder="Say why." required />
+          <button id="rerouteButton" class="btn input-block-level" type="submit"> <i class="icon-envelope"> </i> Change point of contact</button>
+      </fieldset>
+    </form>
+
+   <div><h4 class="participantRow-title" style="color: #333333;">Assignee</h4></div>
+
+    <form id="rerouteForm" class="form-inline" method ="post" action="/update_a_owner">
+      <fieldset>
+        <!-- <label>Change Assignee</label> -->
+          <input type="hidden" name="request_id" value="{{ req.id }}"/>
+          <!--input id="rerouteEmail" class="input-block-level" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required /-->
+          <select class="span10" id="rerouteEmail" name="owner_email">
+            {% for user in users %}
+              {{ user.email }}
+              <option value="{{ user.email }}">{{ user.alias}}</option>
+            {% endfor %}
+          </select>
+          <input id="rerouteReason" class="input-block-level" type="text" name="owner_reason" placeholder="Say why." required />
+          <button id="rerouteButtonAssignee" class="btn input-block-level" type="submit"> <i class="icon-envelope"> </i> Change Assignee</button>
+      </fieldset>
+    </form>
+
+    <div class="row-fluid participantRow">
+      <div class="participantRow-helpers"><h4 class="participantRow-title">Helpers</h4></div>
+    </div>
+    <div class="row-fluid participantRow-participants">
+      {% for owner in req.owners %}
+        {% if owner.active %}
+          {% set participant = (owner | display_staff_participant(req)) %}
+          {% if participant %}
+            {% if current_user.is_authenticated %}
+
+                <div>
+                  {{ participant }}
+                  <form id="unassignForm" class="form-inline" method ="post" action="/update_a_owner">
+                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                        <input type="hidden" name="owner_id" value="{{ owner.id }}"/>
+                        <input type="text" class="span8" name="reason_unassigned" value="Task complete" required />
+                        <button id="unassignButton" class="btn btn-mini" type="submit"> <i class="icon-envelope"> </i> Remove</button>
+                  </form>
+                </div>
+
+            {% else %}
+              <div>
+                {{ participant }}
+              </div>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <form id="notifyForm" class="form-inline" method ="post" action="/add_a_owner">
+      <fieldset>
+        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+        <input id="notifyEmail" class="input-block-level" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
+        <input id="notifyReason" class="input-block-level" type="text" name="owner_reason" placeholder="Say why." required />
+        <button id="notifyButton" class="btn input-block-level" type="submit"> <i class="icon-envelope"> </i> Add a helper</button>
+    </form>
+
+    <div class="row-fluid participantRow-history">
+      {% include '_history.html' %}
+    </div>
+
+
+
+
+
+
+  </div>
+
 {% include '_manage_request_sidebar.html' %}
 {% endblock sidebar %}
 
+{% block request_dates %}
+{{super()}}
+<div class="text-center">Due: <span class="label">{{ req.due_date | date }}</span></div>
+{% endblock request_dates %}
+
+
 {% block follow %}{% endblock follow %}
+
 
 {% block custom_script_links %}
 <script type="text/javascript" src="{{ url_for('static', filename='js/case.js') }}"></script>

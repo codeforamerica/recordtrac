@@ -175,4 +175,16 @@
         
   });
 
+  $('#notifyButton').on('click',function(){
+    $('#form_id').val('notifyForm');
+    var modalQuestion = 'Are you sure you want to add the helper and send an email to the requester? Please specify the reason below.';
+    modalQuestion += '<br><br>' + $('#notifyReason').val();
+    $('#modalquestionDiv').html(modalQuestion);
+    $('#modalQuestionTable').hide();
+  });
+
+  $("#requesterInfoButton").on('click', function() {
+    $('#requester_info').toggle();
+    $('#requesterInfoButton').innerHTML()
+  })
 })($);

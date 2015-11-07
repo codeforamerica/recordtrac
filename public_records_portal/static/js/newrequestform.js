@@ -3,6 +3,7 @@ $(function() {
 
     var validContact = false;
     var validAddress = false;
+    var valid
 
     var addressValidator = new FormValidator('submitRequest', [{
         name: 'address_1',
@@ -61,6 +62,14 @@ $(function() {
         display: 'Request Last Name',
         rules: 'required'
     }, {
+       name: 'request_format',
+       display: 'Request Format',
+       rules: 'required'
+    }, {
+        name:'request_date',
+        display: 'Request Date',
+        rules: 'required'
+    }, {
         name: 'request_contact_information',
         display: 'Request Contact Information',
         rules: 'required'
@@ -85,6 +94,12 @@ $(function() {
                 }
                 if (errors[i].name === 'request_last_name') {
                     $('#missing_last_name').show();
+                }
+                if (errors[i].name == 'request_format'){
+                    $('#missing_format').show();
+                }
+                if (errors[i].name== 'request_date'){
+                    $('#missing_date').show();
                 }
                 if (!validContact && !validAddress) {
                     $('#missing_contact_information').show();
