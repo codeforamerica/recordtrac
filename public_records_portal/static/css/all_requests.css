@@ -4,7 +4,6 @@
 
 }
 
-
 /* top area */
 .blurb {
 	padding-bottom: 1em;
@@ -53,8 +52,6 @@
 
 	table td {
 		padding: 3px 10px;
-        max-width:5rem;
-        overflow: auto;
 	}
 
 

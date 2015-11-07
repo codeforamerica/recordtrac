@@ -514,22 +514,6 @@ def close(request_id=None):
     return render_template('error.html', message="You can only close from a requests page!")
 
 
-def filter_agency(departments_selected, results):
-    if departments_selected and 'All departments' not in departments_selected:
-        app.logger.info("\n\nagency filters:%s." % departments_selected)
-        department_ids = []
-        for department_name in departments_selected:
-            if department_name:
-                department = models.Department.query.filter_by(name=department_name).first()
-                if department:
-                    department_ids.append(department.id)
-        if department_ids:
-            results = results.filter(models.Request.department_id.in_(department_ids))
-        else:
-            # Just return an empty query set
-            results = results.filter(models.Request.department_id < 0)
-    return results
-
 def filter_search_term(search_input, results):
     if search_input:
         app.logger.info("Searching for '%s'." % search_input)
@@ -609,6 +593,10 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
 
     user_id = get_user_id()
 
+    # Sets the search parameters. They are a dictionary that either came in through:
+    # 1) json_requests() (endpoint used by backbone)
+    # 2) request.args (arguments in the URL)
+    # 3) the form submitted
     if not filters_map:
         if request.args:
             if is_supported_browser():
@@ -700,8 +688,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
 
     results = results.limit(limit).offset(offset).all()
     requests = prepare_request_fields(results=results)
-    print requests
-    if output_results_only == True:
+    if output_results_only == True: # Used by json_requests()
         return requests, num_results, more_results, start_index, end_index
 
     return render_template("all_requests_less_js.html", total_requests_count=get_count("Request"), requests=requests,
@@ -738,19 +725,6 @@ def json_requests():
 
 
 def prepare_request_fields(results):
-    # if current_user.is_anonymous:
-    #     return map(lambda r: {
-    #         "id":           r.id, \
-    #         "text":         helpers.clean_text(r.text), \
-    #         "date_received": helpers.date(r.date_received or r.date_created), \
-    #         "agency":   r.department_name(), \
-    #         "status":       r.status, \
-    #         # The following two attributes are defined as model methods,
-    #         # and not regular SQLAlchemy attributes.
-    #         "contact_name": r.point_person_name(), \
-    #         "solid_status": r.solid_status()
-    #     }, results)
-    # else:
     return map(lambda r: {
         "id": r.id, \
         "summary": helpers.clean_text(r.summary), \
@@ -767,20 +741,20 @@ def prepare_request_fields(results):
 
 
 def filter_department(departments_selected, results):
-    if departments_selected and 'All departments' not in departments_selected:
-        app.logger.info("\n\nDepartment filters:%s." % departments_selected)
-        department_ids = []
-        for department_name in departments_selected:
-            if department_name:
-                department = models.Department.query.filter_by(name=department_name).first()
-                if department:
-                    department_ids.append(department.id)
-        if department_ids:
-            results = results.filter(models.Request.department_id.in_(department_ids))
-        else:
-            # Just return an empty query set
-            results = results.filter(models.Request.department_id < 0)
-    return results
+  if departments_selected and 'All Agencies' not in departments_selected:
+      app.logger.info("\n\nagency filters:%s." % departments_selected)
+      department_ids = []
+      for department_name in departments_selected:
+          if department_name:
+              department = models.Department.query.filter_by(name=department_name).first()
+              if department:
+                  department_ids.append(department.id)
+      if department_ids:
+          results = results.filter(models.Request.department_id.in_(department_ids))
+      else:
+          # Just return an empty query set
+          results = results.filter(models.Request.department_id < 0)
+  return results
 
 
 def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, overdue, mine_as_poc, mine_as_helper,

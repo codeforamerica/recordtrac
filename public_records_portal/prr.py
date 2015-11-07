@@ -25,7 +25,7 @@ from requires_roles import requires_roles
 
 agency_codes = {
 "Commission on Human Rights": "228",
-"Department of Education": "040",
+"Agency of Education": "040",
 "Department of Information Technology and Telecommunications": "858",
 "Department of Records and Information Services": "860",
 "Law Department": "025",
