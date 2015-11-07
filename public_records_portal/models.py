@@ -140,7 +140,7 @@ class User(db.Model):
         return 'N/A'
 
     def show_department_filters(self):
-        return self.current_department.name == "DORIS" or self.current_department.name == "Department of Records and Information Services" or self.current_department.name == "Mayor's Office"
+        return self.role in ['Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel']
 
     def __init__(
             self,
