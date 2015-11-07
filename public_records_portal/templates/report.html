@@ -84,8 +84,9 @@ rect:hover{
 		<select id="staff_filter" name="staff_filter">
 			    <option value="0">None Selected</option>
 				{% for user in users %}
-				{{ user.email }}
-				<option value="{{ user.id }}">{{ user.alias}}</option>
+					{% if user.alias and user.is_staff %}
+						<option value="{{ user.id }}">{{ user.alias}}</option>
+					{% endif %}
 				{% endfor %}
 		</select>
         {% endif %}
