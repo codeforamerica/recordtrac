@@ -124,10 +124,11 @@ def update_resource(resource, request_body):
         request_id = fields['request_id']
         change_request_status(request_id, "Reopened")
         req = get_obj("Request", request_id)
-        user_id = req.subscribers[0].user.id
-        #remove request_body['additionl_information'] to get this to work
-        generate_prr_emails(request_id=request_id, user_id=user_id, notification_type="Reopen request")
-
+        try:
+            user_id = req.subscribers[0].user.id
+            generate_prr_emails(request_id=request_id, user_id=user_id, notification_type="Public Notification Template 10")
+        except IndexError:
+            app.logger.error("No Subscribers")
     elif "acknowledge" in resource:
         change_request_status(fields['request_id'], fields['acknowledge_status'])
         generate_prr_emails(request_id=fields['request_id'], text=fields['additional_information'], days_after=fields['acknowledge_status'], notification_type="Acknowledge request")
@@ -325,6 +326,7 @@ def make_request(agency=None, summary=None, text=None, attachment=None,
         upload_record(request_id, attachment_description, user_id, attachment)
     return request_id, True
 
+
 #
 ### @export "add_subscriber"
 def add_subscriber(request_id, email):
@@ -361,6 +363,7 @@ def answer_a_question(qa_id, answer, subscriber_id=None, passed_spam_filter=Fals
         # We aren't changing the request status if someone's answered a question anymore, but we could change_request_status(request_id, "Pending")
         generate_prr_emails(request_id=request_id, notification_type="Question answered")
         return True
+
 
 #add email
 ### @export "open_request"

@@ -9,7 +9,7 @@ This template provides the header, footer, and envelope info for all pages excep
     <title>{% block title %}{% endblock title %}</title>
     <!-- HTML5 shim for IE backwards compatibility -->
     <!--[if lt IE 9]>
-      <script src="{{ url_for('static', filename='js/plugins/html5.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/plugins/html5.js') }}"></script>
     <![endif]-->
 
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style/css/screen.css') }}">
@@ -33,13 +33,19 @@ This template provides the header, footer, and envelope info for all pages excep
     <!-- auth_script requires jquery and Mozilla's 'include.js' shim -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.11.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/include.js') }}"></script>
-    <script type="text/javascript">{{ auth_script|safe }}</script>
+    <script type="text/javascript">{
+        {
+            auth_script | safe
+        }
+    }</script>
 
     <!-- IE8 polyfill for CSS3 pseudo classes like :hover -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.11.1.min.js') }}"></script>
     <!--[if (gte IE 6)&(lte IE 8)]>
-      <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/selectivizr-min.js') }}"></script>
-      <noscript><link rel="stylesheet" href="[fallback css]" /></noscript>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/selectivizr-min.js') }}"></script>
+    <noscript>
+        <link rel="stylesheet" href="[fallback css]"/>
+    </noscript>
     <![endif]-->
 
     <!-- transform and other prefixes polyfill -->
@@ -107,9 +113,10 @@ This template provides the header, footer, and envelope info for all pages excep
 
             <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
                 {% if current_user.is_authenticated %}
-                    <div class="google_translate btn">
-                        <p><a href="/logout">Logout</a></p>
-                    </div>
+                <div class="google_translate btn">
+                    <p><a href="/logout">Logout</a></p>
+                </div>
+                <ul class="nav tabs">
 {#                    loops through the navigation_bar container for the label and definition of each tab#}
                     <ul class="nav nav-pills">
                     {% for href, id, caption in navigation_bar %}
@@ -120,13 +127,17 @@ This template provides the header, footer, and envelope info for all pages excep
                     <ul class="nav pull-right">
                     </ul>
                 {% else %}
-                    <div class="google_translate">
-                        <div id="google_translate_element"></div>
-                        <script type="text/javascript">
+                <div class="google_translate">
+                    <div id="google_translate_element"></div>
+                    <script type="text/javascript">
                         function googleTranslateElementInit() {
-                        new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+                            new google.translate.TranslateElement({
+                                pageLanguage: 'en',
+                                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                            }, 'google_translate_element');
                         }
-                        </script>
+                    </script>
+                    <script type="text/javascript"
                         <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
                         </script>
                     </div>
@@ -136,21 +147,22 @@ This template provides the header, footer, and envelope info for all pages excep
                       ><a href="{{ href|e }}">{{ caption|e }}</a></li>
                     {% endfor %}
                     </ul>
-                    <ul class="nav pull-right">
-                    </ul>
+                </ul>
+                <ul class="nav pull-right">
+                </ul>
                 {% endif %}
             </div>
         </div>
     </div>
     <div id="container-fluid">
         {% block container %}
-            <div class="row-fluid">
-                <div class="span10">
-                    {% block banner %}
+        <div class="row-fluid">
+            <div class="span10">
+                {% block banner %}
 
-                    {% endblock banner %}
-                </div>
+                {% endblock banner %}
             </div>
+        </div>
 
         {% endblock container %}
     </div>
@@ -196,7 +208,6 @@ This template provides the header, footer, and envelope info for all pages excep
 <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.placeholder.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.validate.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap.js') }}"></script>
-
 {% block custom_script_links %}
 {% endblock custom_script_links %}
 </body>
