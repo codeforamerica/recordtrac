@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set active_page='view_requests' %}
 {% block title %}
     {{ title }} &#45; RecordTrac
 {% endblock title %}
@@ -27,26 +28,32 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/all_requests.js') }}"></script>
 {% endblock custom_script_links %}
 {% block container %}
+
     <div class="row-fluid">
         <div class="span12">
             <div class="row-fluid">
                 <div id="exploreTitle" class="span8">
-                    <h2>Explore <span class="badge">{{ total_requests_count }}</span> requests and counting</h2>
+                    <h2>Explore OpenRecords Requests</h2>
 
                     <p class="intro_text">NYC Open Gov makes every public records request available to the public,
                         including messages or documents uploaded by agency staff. By searching the reqeusts, you may
                         find the information you are interested in, which will save time for you and for
                         the {{ config['AGENCY_NAME'] }}</p>
-
                 </div>
+
                 <div class="span4">
                     <a href="/new" class="btn btn-primary btn-large pull-right">Request new record</a>
                 </div>
             </div>
+
+{#            Added a button to toggle filter on and earth (mobile only)#}
+            <button id="toggle" onclick="hideFilter()">Hide</button>
+
             <form id="all_requests_form" name="all_requests" action="/requests" method="GET">
                 <div class="row-fluid" style="padding-bottom: 5%;">
-                    <div class="span4">
-                        <div class="well well-small" style="padding-bottom: 6em;">
+                    <div class="span3">
+                        <div class="well well-small" id="mobile-filter" style="padding-bottom: 6em;">
+
                             <h5>Search request text</h5>
                             <div>
                                 <input class="span12" name="search_term" type="search" value="{{ search_term or '' }}"
@@ -134,6 +141,7 @@
                                 <h5>Agency Name</h5>
                                 <div class="control-group">
                                     <select name="departments_selected" class="selectpicker span12">
+                                    <option>All Agencies</option>
                                         {% for department in departments %}
                                             {% if departments_selected and department.name in departments_selected %}
                                                 <option selected>{{ department.name }}</option>
@@ -157,8 +165,8 @@
                             </div>
                         {% endif %}
                     </div>
-                    <div class="span7">
-                        <table id="requests">
+                    <div class="span9">
+                        <table width="100%" id="requests">
                             <thead id="headings">
                             <tr>
                                 <th class="status"></th>
@@ -167,7 +175,7 @@
                                             onclick="return insertInput('id');">#
                                     </button>
                                 </th>
-                                <th>
+                                <th class="hide-mobile">
                                     <button class="btn btn-link sortable" type="submit"
                                             onclick="return insertInput('date_received');">Received
                                     </button>
@@ -178,13 +186,15 @@
                                     </button>
                                 </th>
                                 <th>Assigned Agency</th>
-                                <th>Point of Contact</th>
+                                <th class="hide-mobile">Point of Contact</th>
                                 <th>
                                     <button class="btn btn-link sortable" type="submit"
                                             onclick="return insertInput('due_date');">Due
                                     </button>
                                 </th>
-                                <th>Requester</th>
+                                {% if current_user.is_authenticated %}
+                                    <th class="hide-mobile">Requester</th>
+                                {% endif %}
                             </tr>
                             </thead>
                             <tbody>
@@ -201,7 +211,7 @@
                                 {% endif %}
                             </td>
                             <td>{{ request.id }}</td>
-                            <td>{{ request.date_received }}</td>
+                            <td class="hide-mobile">{{ request.date_received }}</td>
                             <td>
                                 {% if current_user.is_authenticated %}
                                     <a href="/city/request/{{ request.id }}">
@@ -214,16 +224,16 @@
                                 {% elif request.solid_status == "overdue" %}
                                     <span style="background-color: #CA1A1A" class="label label-important">overdue</span>
                                 {% endif %}
-                                {{ summary }}
+                                {{ text }}
                                 </a>
                             </td>
                             <td>{{ request.department }}</td>
-                            <td>{{ request.contact_name }}</td>
-                            <td>{{ request.due_date }}</td>
-                            {% if request.privacy == 1 or request.privacy == 4 %}
-                                <td>{{ request.requester }}</td>
+                            <td class="hide-mobile">{{ request.contact_name }}</td>
+                            <td >{{ request.due_date }}</td>
+                            {% if current_user.is_authenticated %}
+                                <td class="hide-mobile">{{ request.requester }}</td>
                             {% else %}
-                                <td>&nbsp;</td>
+                                <td class="hide-mobile">&nbsp;</td>
                             {% endif %}
                             </tr>
                             {% endfor %}
@@ -247,6 +257,7 @@
                 </div>
             </form>
         </div>
+
     </div>
     <script type="text/javascript">
         var sort_direction = '{{sort_direction|safe}}';
@@ -281,6 +292,20 @@
             hiddenInput.value = new_num;
             document.getElementById('all_requests_form').appendChild(hiddenInput);
             return true;
+        }
+
+{#        Added javascript to hide and show filter for mobile only#}
+        var hidden = false;
+        function hideFilter(){
+            hidden = !hidden;
+            if(hidden) {
+                document.getElementById('mobile-filter').style.display = 'none';
+                document.getElementById('toggle').innerHTML = "Show";
+            } else {
+                document.getElementById('mobile-filter').style.display = 'block';
+                document.getElementById('toggle').innerHTML = "Hide";
+            }
+
         }
     </script>
 {% endblock container %}

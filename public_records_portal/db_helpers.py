@@ -401,6 +401,7 @@ def create_owner(request_id, reason, email=None, user_id=None):
     app.logger.info("\n\nCreated owner with id: %s" % participant.id)
     return participant.id
 
+
 # @export "change_request_status"
 def change_request_status(request_id, status):
     req = get_obj("Request", request_id)

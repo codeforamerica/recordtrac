@@ -3,6 +3,25 @@ $(function() {
    
     var validContact = false;
     var validAddress = false;
+    var valid
+
+    var addressValidator = new FormValidator('submitRequest', [{
+        name: 'address_1',
+        display: 'Address 1',
+        rules: 'required'
+    }, {
+        name: 'city',
+        display: 'City',
+        rules: 'required'
+    }, {
+        name: 'zip_code',
+        display: 'Zip Code',
+        rules: 'required'
+    }], function(errors, event) {
+        if(errors.length === 0) {
+            validAddress = true;
+        }
+    });
 
     $('#submitRequest').validate({
         rules: {
@@ -28,7 +47,72 @@ $(function() {
         }
     });
 
+    var validator = new FormValidator('submitRequest', [{
+        name: 'request_agency',
+        display: 'Request Agency',
+        rules: 'required'
+    }, {
+        name: 'request_summary',
+        display: 'Topic',
+        rules: 'required'
+    }, {
+        name: 'request_text',
+        display: 'Request Details',
+        rules: 'required'
+    }, {
+        name: 'request_first_name',
+        display: 'Requester First Name',
+        rules: 'required'
+    }, {
+        name: 'request_last_name',
+        display: 'Request Last Name',
+        rules: 'required'
+    }, {
+       name: 'request_format',
+       display: 'Request Format',
+       rules: 'required'
+    }, {
+        name:'request_date',
+        display: 'Request Date',
+        rules: 'required'
+    }, {
+        name: 'request_contact_information',
+        display: 'Request Contact Information',
+        rules: 'required'
+    }], function(errors, event) {
+        if (errors.length > 0) {
+            // Show the errors
     $('#button1').click(function() {
+            var errorString = '';
+            for (var i = 0, errorLength = errors.length; i < errorLength; i++) {
+                errorString += errors[i].message + '<br />';
+                if (errors[i].name === 'request_agency') {
+                    $('#missing_agency').show();
+                }
+                if (errors[i].name === 'request_summary') {
+                    $('#missing_summary').show();
+                }
+                if (errors[i].name === 'request_text') {
+                    $('#missing_text').show();
+                }
+                if (errors[i].name === 'request_first_name') {
+                    $('#missing_first_name').show();
+                }
+                if (errors[i].name === 'request_last_name') {
+                    $('#missing_last_name').show();
+                }
+                if (errors[i].name == 'request_format'){
+                    $('#missing_format').show();
+                }
+                if (errors[i].name== 'request_date'){
+                    $('#missing_date').show();
+                }
+                if (!validContact && !validAddress) {
+                    $('#missing_contact_information').show();
+                }
+            }
+            var stepId = '#step2';
+            var toolTipId = '#detailsTitle';
 
       if($('#submitRequest').valid()) {
           // scroll to the top of the form
@@ -43,6 +127,7 @@ $(function() {
           $('#s2').addClass('active');
       }
 
+        }
     });
 
     $('#button2').click(function(e) {
