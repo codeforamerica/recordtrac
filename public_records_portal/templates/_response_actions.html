@@ -1,4 +1,5 @@
 {% if current_user.is_authenticated %}
+{{ req.solid_status() }}
 {% if req.solid_status() == 'open' %}
 <div class="row-fluid">
     <div class="span12">
@@ -255,6 +256,7 @@
     <div class="span12">&nbsp;</div>
 </div>
 {% else %}
+{{ req.solid_status() }}
 <div class="row-fluid">
     <div class="span12">
         <ul class="nav nav-pills" role="tablist">
