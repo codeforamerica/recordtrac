@@ -72,8 +72,10 @@ def new_request(passed_recaptcha=False, data=None):
             request_role = form.request_role.data
             request_organization = form.request_organization.data
             request_email = form.request_email.data
-            request_phone = form.request_phone.data
-            request_fax = form.request_fax.data
+            request_phone = form.request_phone.raw_data
+            request_phone = re.sub("\D", "",str(request_phone))
+            request_fax = form.request_fax.raw_data
+            request_fax = re.sub("\D", "",str(request_fax))
             request_address_street_one = form.request_address_street_one.data
             request_address_street_two = form.request_address_street_two.data
             request_address_city = form.request_address_city.data
@@ -153,10 +155,6 @@ def new_request(passed_recaptcha=False, data=None):
             if not data:
                 data = request.form.copy()
 
-            phone_formatted = ""
-            if phone_valid:
-                phone_formatted = request_phone.international
-
             if errors:
                 if request_date:
                     return render_template('offline_request.html', form=form, date=request_date.strftime('%m/%d/%Y'),
@@ -207,8 +205,10 @@ def new_request(passed_recaptcha=False, data=None):
             request_role = form.request_role.data
             request_organization = form.request_organization.data
             request_email = form.request_email.data
-            request_phone = form.request_phone.data
-            request_fax = form.request_fax.data
+            request_phone = form.request_phone.raw_data
+            request_phone = re.sub("\D", "",str(request_phone))
+            request_fax = form.request_fax.raw_data
+            request_fax = re.sub("\D", "",str(request_fax))
             request_address_street_one = form.request_address_street_one.data
             request_address_street_two = form.request_address_street_two.data
             request_address_city = form.request_address_city.data
