@@ -171,10 +171,14 @@ a {
     background-color: #0A5999;
     over-flow: hidden;
     color: #FFFFFF;
-    height: 0px;
+    height: auto;
 }
 
 .nav-pills > .active > a, .nav-pills > .active > a:hover, .nav-pills > .active > a:focus {
     background-color: #0B60B1;
     color: #FFFFFF;
+}
+
+.in_progress {
+    background-color: forestgreen;
 }

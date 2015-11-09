@@ -2,7 +2,12 @@
 <div class="request-status-well well well-small r_sidebar_banner {{ status }}">
     <h3 id="status-text">
         {% if status == 'closed' %}
-            <i class="icon-archive"></i>{% endif %}
-        {{ status }}
+            <i class="icon-archive"></i>
+        {% endif %}
+        {% if status == 'in_progress' %}
+            In Progress
+        {% else %}
+            {{ status }}
+        {% endif %}
     </h3>
 </div>

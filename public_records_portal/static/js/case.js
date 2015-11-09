@@ -79,14 +79,14 @@
 
   $('#submit').on('click',function(event){
     form_id = '#' + $('#form_id').val();
-    if(form_id == "#note_pdf") {
+    if(!$('#modalAdditionalInfoTable').is(':visible') || $(form_id) == 'note_pdf') {
         $('#confirm-submit').modal('toggle');
         $(form_id).submit();
     }
     else {
+
       $('#modalAdditionalInfoTable').show();
       additional_information = $('#additional_note').val();
-                  alert(form_id);
       var input = $("<input>")
                .attr("type", "hidden")
                .attr("name", "additional_information").val(additional_information);
@@ -150,6 +150,15 @@
     $('#modalquestionDiv').html(modalQuestion);
     $('#modalQuestionTable').hide();
   });
+
+   $('#addPublicNoteButton').on('click', function () {
+      $('#modalAdditionalInfoTable').hide();
+      $('#form_id').val('note');
+      var modalQuestion = 'Are you sure you want to add the note below to this request?';
+      modalQuestion += '<br><br>' + $('#noteTextarea').val();
+      $('#modalquestionDiv').html(modalQuestion);
+      $('#modalQuestionTable').hide();
+    });
  
   $('#generatePDFButton').on('click',function(event){
     var selectedTemplate = $('#response_template option:selected').text();
