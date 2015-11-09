@@ -15,6 +15,12 @@
 	  <p>On this site you can file a records request with every agency of the City of New York.  Some government information is already available to the public and doesn’t require a FOIL request.  Examples of public information include copies of your own birth certificate and reports issued by City agencies.</p>
 	  <p>The site you see today is the beginning of a new approach to making records easily available.  In the coming months, we will be adding many new features.</p>
 	  <a href="/new"><button class="btn btn-primary btn-large input-block-level">Request a Record</button></a>
+      {% if current_user.is_authenticated %}
+          <a href="/tutorial"><button class="btn btn-primary btn-large input-block-level">Public Tutorial</button></a>
+          <a href="/city/tutorial"><button class="btn btn-primary btn-large input-block-level">Agency Tutorial</button></a>
+      {% else %}
+          <a href="/tutorial"><button class="btn btn-primary btn-large input-block-level">Tutorial</button></a>
+      {% endif %}
 	</div>
 	<div class="span4">
       <div class="sideblock">
@@ -26,16 +32,27 @@
            <li><a href="http://www.nyc.gov/html/exit-page.html?url=https://data.cityofnewyork.us/">NYC OpenData Portal</a> Discover open datasets</li>
         </ul>
       </div>
-      <div class="span4">
-<div class="row-fluid">
-<a href="/report" class="btn btn-link round_link">
-<img src="{{ url_for('static', filename='images/explore.png') }}" alt="Reports">
-<h4 class="text-center text-title">View Reports</h4>
-</a>
-</div>
-</div>    
-</div>
-</div>
+      <div class="span3">
+        <div class="row-fluid">
+          <a href="/report" class="btn btn-link round_link">
+            <img src="{{ url_for('static', filename='images/explore.png') }}" alt="Reports">
+            <h4 class="text-center text-title">View Reports</h4>
+          </a>
+        </div>
+      </div>
+      <div class="span6 offset2">
+        <div class="row-fluid">
+      {% if current_user.is_authenticated %}
+          <div class="login btn btn-large">
+            <a href="/logout" >Logout</a>
+          </div>
+      {% else %}
+          <div class="login btn btn-large">
+            <a href="/login" >Agency Login</a>
+          </div>
+      {% endif %}   
+        </div>
+      </div>
 
 
 {% endblock container %}
