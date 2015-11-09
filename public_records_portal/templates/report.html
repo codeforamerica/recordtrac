@@ -69,7 +69,6 @@ rect:hover{
 		<!--div id="report_div"></div-->
 		<div id="bar_chart"></div>
 		<br>
-		<button id="calendarYear" type="submit" class="btn btn-primary">Calendar Year</button>
 		<button id="fullYear" type="submit" class="btn btn-primary">Year to Date</button>
         <button id="rolling" type="submit" class="btn btn-primary">Rolling 365</button>
 		<h5>Agency Filter</h5>
@@ -243,29 +242,38 @@ rect:hover{
 			}
 		
 			draw_barchart("/api/report/all/all/all/all");
-
-			$("#calendarYear").click(function() {
-			    draw_barchart("/api/report/calendarYear/all/all/all");
-			});
-
+            
 			$("#fullYear").click(function() {
-			    draw_barchart("/api/report/fullYear/all/all/all");
+                selected_agency = $('#agency_filter').val();
+                selected_staff = $('#staff_filter').val();
+                                 
+                if(typeof selected_staff === 'undefined') {
+                        selected_staff = 'all'
+                }
+                draw_barchart("/api/report/fullYear/all/" + selected_agency + "/" + selected_staff);
 			});
 			
 			$("#rolling").click(function() {
-				draw_barchart("/api/report/rolling/all/all/all");
+                                selected_agency = $('#agency_filter').val();
+                                selected_staff = $('#staff_filter').val();
+				//draw_barchart("/api/report/rolling/all/all/all");
+                if(typeof selected_staff === 'undefined') {
+                        selected_staff = 'all'
+                }                                
+                draw_barchart("/api/report/rolling/all/" + selected_agency + "/" + selected_staff);
 			});
 			
 			$("#agency_filter").change(function() {
-				selected_agency = $(this).val();
+                                       selected_agency = $('#agency_filter').val();
+                                       selected_staff = $('#staff_filter').val();
                 $("#staff_filter").val(0);
                 $('#staff_filter option[department_id!=' + selected_agency + ']').hide();
                 $('#staff_filter option[department_id=' + selected_agency + ']').show();
 				draw_barchart("/api/report/all/all/" + selected_agency + "/all");
 			});
 			$("#staff_filter").change(function() {
-				selected_agency = $('#agency_filter').val();
-                selected_staff = $(this).val();
+                                      selected_agency = $('#agency_filter').val();
+                                      selected_staff = $('#staff_filter').val();
 				if(selected_agency == 0) {
 				  draw_barchart("/api/report/all/all/all/" + selected_staff);
 				}

@@ -33,7 +33,9 @@ import pytz
 from requires_roles import requires_roles
 from flask_login import LoginManager
 from models import AnonUser
-
+from datetime import datetime, timedelta, date
+from business_calendar import Calendar
+cal = Calendar()
 
 # Initialize login
 app.logger.info("\n\nInitialize login.")
@@ -1078,7 +1080,7 @@ def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
 
     if report_type == "all":
         try:
-            if agency_filter == "all":
+            if agency_filter == "all" or agency_filter=="0":
                 overdue_request=models.Request.query.filter(overdue_filter).all()
                 notdue_request=models.Request.query.filter(notoverdue_filter).all()
                 received_request=models.Request.query
@@ -1107,25 +1109,21 @@ def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
                 referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).filter(models.Request.department_id == agencyFilterInt).all()
                 referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).filter(models.Request.department_id == agencyFilterInt).all()
                 referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).filter(models.Request.department_id == agencyFilterInt).all()
-            if calendar_filter == "calendarYear":
-                overdue_request=models.Request.query.filter(overdue_filter).all()
-                notdue_request=models.Request.query.filter(notoverdue_filter).all()
-                received_request=models.Request.query.all()
-                published_request=models.Request.query.filter(published_filter).all()
-                denied_request=models.Request.query.filter(denied_filter).all()
-                granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).all()
-                granted_in_part_request=models.Request.query.filter(granted_in_part_filter).all()
-                no_customer_response_request=models.Request.query.filter(no_customer_response_filter).all()
-                out_of_jurisdiction_request=models.Request.query.filter(out_of_jurisdiction_filter).all()
-                referred_to_nyc_gov_request=models.Request.query.filter(referred_to_nyc_gov_filter).all()
-                referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
-                referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
-                referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).all()
             if calendar_filter == "fullYear":
+                date_format='%Y-%m-%d'
                 overdue_request=models.Request.query.filter(overdue_filter).all()
                 notdue_request=models.Request.query.filter(notoverdue_filter).all()
-                received_request=models.Request.query.all()
-                published_request=models.Request.query.filter(published_filter).all()
+                date_now = datetime.now()
+                date_start_of_year = a = date(date.today().year, 1, 1)
+                d_string = date_now.strftime(date_format)
+                d_string_2 = date_start_of_year.strftime(date_format)
+                min_date_received = str(datetime.strptime(d_string_2, date_format))
+                max_date_received = str(datetime.strptime(d_string, date_format))
+                min_date_received = min_date_received[0:-9]
+                max_date_received = max_date_received[0:-9]
+                received_request = received_request.filter(and_(models.Request.date_received >= min_date_received,
+                                          models.Request.date_received <= max_date_received))
+                published_request = published_request.filter(and_(models.Request.date_received >= min_date_received, models.Request.date_received <= max_date_received))
                 denied_request=models.Request.query.filter(denied_filter).all()
                 granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).all()
                 granted_in_part_request=models.Request.query.filter(granted_in_part_filter).all()
@@ -1136,10 +1134,18 @@ def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
                 referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
                 referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).all()
             if calendar_filter == "rolling":
+                date_format='%Y-%m-%d'
                 overdue_request=models.Request.query.filter(overdue_filter).all()
                 notdue_request=models.Request.query.filter(notoverdue_filter).all()
-                received_request=models.Request.query.all()
-                published_request=models.Request.query.filter(published_filter).all()
+                date_now = datetime.now()
+                d_string = date_now.strftime(date_format)
+                min_date_received = str(datetime.strptime(d_string, date_format) - timedelta(365))
+                max_date_received = str(datetime.strptime(d_string, date_format))
+                min_date_received = min_date_received[0:-9]
+                max_date_received = max_date_received[0:-9]
+                received_request = received_request.filter(and_(models.Request.date_received >= min_date_received,
+                                          models.Request.date_received <= max_date_received))
+                published_request = published_request.filter(and_(models.Request.date_received >= min_date_received, models.Request.date_received <= max_date_received))
                 denied_request=models.Request.query.filter(denied_filter).all()
                 granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).all()
                 granted_in_part_request=models.Request.query.filter(granted_in_part_filter).all()
