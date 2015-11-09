@@ -170,3 +170,7 @@ a {
     background-color: #0B60B1;
     color: #FFFFFF;
 }
+
+.in_progress {
+    background-color: forestgreen;
+}
