@@ -856,15 +856,18 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
     print results
     return results.order_by(models.Request.id.desc())
 
-
-def tutorial():
+@app.route("/tutorial/<int:tutorial_id>")
+def tutorial(tutorial_id):
     user_id = get_user_id()
     app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
-    return render_template('tutorial.html')
+    return render_template('tutorial_' + str(tutorial_id).zfill(2) + '.html')
 
+@app.route("/about")
+def staff_card():
+    return render_template('about.html')
 
 @app.route("/staff_card/<int:user_id>")
-def staff_card(user_id):
+def about(user_id):
     return render_template('staff_card.html', uid=user_id)
 
 
