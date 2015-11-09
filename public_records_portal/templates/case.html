@@ -16,6 +16,12 @@
       href="{{ url_for('static', filename='css/case.css') }}">
 {% endblock custom_css_links %}
 
+{% if req %}
+    {% if req.privacy==True %}
+    {% elif req.privacy==False %}
+    {% endif %}
+{% endif %}
+
 {% block container %}
 <!-- main content -->
 <div class="row-fluid">
@@ -141,12 +147,99 @@
                     
                     {% endblock clarify_request %}
                     <p class="lead" style="margin-bottom: 0rem;" truncateable="250"> Title </p>
-
-                    <p truncateable="250"> {{ req.summary | new_lines }}</p>
+                    {% if req %}
+                        {% if current_user.is_authenticated==True or req.titlePrivate==False%}
+                            <p class="lead" style="margin-bottom: 0rem;"
+                               truncateable="250"> Title:
+                            </p>
+{#                            If the request title is set to private then do not display the title#}
+                            <p truncateable="250"> {{ req.summary | new_lines }}</p>
+                     {% endif %}
+                    {% endif %}
+{#                    Form for changing field to public or private#}
                     {% if current_user.is_authenticated %}
-                    <p class="lead" truncateable="250" style="margin-bottom: 0rem;"> Request: </p>
+                    <form class="form-horizontal" method="post" action="/changeprivacy">
+                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                        <input type="hidden" name="fieldtype" value="title"/>
+                            <fieldset>
+                            <!-- Multiple Radios (inline) -->
+                            <div class="control-group">
+                              <label class="control-label" for="privacy setting" style="width:7rem; text-align:left;">Title Privacy:</label>
+                              <div class="controls" style="margin-left: 3rem">
 
-                    <p truncateable="250"> {{ req.text | new_lines }}</p>
+{#                                Set the private checkbox to be filled out if the request is private#}
+                                {% if req.titlePrivate %}
+                                <label class="radio inline" for="privacy setting-0">
+                                  <input type="radio" name="privacy setting" id="privacy setting-0" value="False" type="submit" onclick="action=this.form.submit();">
+{#                                  Value set to False means public#}
+                                  Public
+                                </label>
+                                <label class="radio inline" for="privacy setting-1">
+                                  <input type="radio" name="privacy setting" id="privacy setting-1" value="True" type="submit" checked onclick="action=this.form.submit();">
+{#                                  Value set to True means private#}
+                                  Private
+                                </label>
+{#                                Set the public checkbox to be filled out if the request is public#}
+                                {% elif req.titlePrivate==False %}
+                                <label class="radio inline" for="privacy setting-0">
+                                  <input type="radio" name="privacy setting" id="privacy setting-0" value="False" type="submit" checked onclick="action=this.form.submit();">
+{#                                  Value set to False means public#}
+                                  Public
+                                </label>
+                                <label class="radio inline" for="privacy setting-1">
+                                  <input type="radio" name="privacy setting" id="privacy setting-1" value="True" type="submit" onclick="action=this.form.submit();">
+{#                                  Value set to True means private#}
+                                  Private
+                                </label>
+                                {% endif %}
+
+                              </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                    {% endif %}
+
+                    {% if current_user.is_authenticated==True or req.descriptionPrivate==False %}
+                        <p class="lead" truncateable="250"
+                           style="margin-bottom: 0rem;"> Request: </p>
+                        <p truncateable="250"> {{ req.text | new_lines }}</p>
+                    {% endif %}
+                    {% if current_user.is_authenticated %}
+                    <form class="form-horizontal" method="post" action="/changeprivacy">
+                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                        <input type="hidden" name="fieldtype" value="description"/>
+                            <fieldset>
+                            <!-- Multiple Radios (inline) -->
+                            <div class="control-group">
+                              <label class="control-label" for="privacy setting" style="width:7rem; text-align:left;">Description Privacy:</label>
+                              <div class="controls" style="margin-left: 3rem">
+                              {% if req.descriptionPrivate==True %}
+                                <label class="radio inline" for="privacy setting-public">
+                                  <input type="radio" name="privacy setting" id="privacy setting-public" value="False" type="submit" onclick="action=this.form.submit();">
+{#                                  Value set to False means public#}
+                                  Public
+                                </label>
+                                <label class="radio inline" for="privacy setting-private">
+                                  <input type="radio" name="privacy setting" id="privacy setting-private" value="True" type="submit" checked onclick="action=this.form.submit();">
+{#                                  Value set to True means private#}
+                                  Private
+                                </label>
+                                {% else %}
+                                <label class="radio inline" for="privacy setting-public">
+                                  <input type="radio" name="privacy setting" id="privacy setting-public" value="False" type="submit" checked onclick="action=this.form.submit();">
+{#                                  Value set to False means public#}
+                                  Public
+                                </label>
+                                <label class="radio inline" for="privacy setting-private">
+                                  <input type="radio" name="privacy setting" id="privacy setting-private" value="True" type="submit" onclick="action=this.form.submit();">
+{#                                  Value set to True means private#}
+                                  Private
+                                </label>
+                                {% endif %}
+                              </div>
+                            </div>
+                        </fieldset>
+                    </form>
                     {% endif %}
                 </div>
                 <div>

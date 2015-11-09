@@ -501,3 +501,13 @@ def close_request(request_id, reason="", user_id=None, request_body=None,):
     else:
         generate_prr_emails(request_id=request_id, notification_type="Request closed")
     add_staff_participant(request_id=request_id, user_id=user_id)
+
+def change_privacy_setting(request_id, privacy, field):
+    req = get_obj("Request", request_id)
+    if field=="title":
+        #Set the title to private
+        update_obj(attribute="titlePrivate", val=privacy, obj_type="Request",obj_id=req.id)
+    elif field=="description":
+        #Set description to private
+        req.descriptionPrivate=privacy
+        update_obj(attribute="descriptionPrivate", val=privacy, obj_type="Request",obj_id=req.id)

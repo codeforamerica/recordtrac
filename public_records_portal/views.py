@@ -424,6 +424,7 @@ def edit_case(request_id):
 @app.route("/add_a_<string:resource>", methods=["GET", "POST"])
 @login_required
 def add_a_resource(resource):
+    req = request.form
     if request.method == 'POST':
         print "Resource is a ", resource
         if resource == 'pdf':
@@ -1226,6 +1227,18 @@ def submit():
         pass
     else:
         pass
+
+@app.route("/changeprivacy", methods=["POST","GET"])
+def change_privacy():
+    req=get_obj("Request",request.form['request_id'])
+    privacy=request.form['privacy setting']
+    field=request.form['fieldtype']
+    #field will either be title or description
+    print request.form
+    print "THE REQUEST PRIVACY SETTING IS BEING SET TO: " + str(privacy)
+    app.logger.info("Changing privacy function")
+    prr.change_privacy_setting(request_id=request.form['request_id'],privacy=privacy,field=field)
+    return redirect(url_for('show_request_for_city',request_id=request.form['request_id']))
 
 @app.route("/<page>")
 def any_page(page):
