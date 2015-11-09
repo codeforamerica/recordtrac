@@ -69,27 +69,23 @@ rect:hover{
 		<!--div id="report_div"></div-->
 		<div id="bar_chart"></div>
 		<br>
-		<button id="calendarYear" type="submit" class="btn btn-primary">Calendar Year</button>
 		<button id="fullYear" type="submit" class="btn btn-primary">Year to Date</button>
         <button id="rolling" type="submit" class="btn btn-primary">Rolling 365</button>
 		<h5>Agency Filter</h5>
 		<select id="agency_filter" name="agency_filter">
 			<option value="0">None Selected</option>
-			<option value="1">Department of Records and Information Services</option>
-			<option value="2">Office of the Chief Medical Examiner</option>
-			<option value="3">Mayor's Office</option>
-			<option value="4">Department of Education</option>
-			<option value="5">Department of Information Technology and Telecommunications</option>
-			<option value="5">Deputy Mayor</option>
+			{% for data in agency_data %}
+                        	<option value="{{data.id}}">{{data.name}}</option>
+			{% endfor %}
 		</select>
         {%  if current_user.is_authenticated %}
 		<h5>Staff Filter</h5>
 		<select id="staff_filter" name="staff_filter">
 			    <option value="0">None Selected</option>
 				{% for user in users %}
-					{% if user.alias and user.is_staff %}
-						<option value="{{ user.id }}">{{ user.alias}}</option>
-					{% endif %}
+                    {%  if user.is_staff %}
+				        <option value="{{ user.id }}" department_id="{{ user.department_id }}">{{ user.alias}}</option>
+                    {% endif %}
 				{% endfor %}
 		</select>
         {% endif %}
@@ -103,7 +99,7 @@ rect:hover{
 				$("#bar_chart").empty();
 				var w = 500, h = 100;
 				var svg = d3.select("#bar_chart").append("svg").attr("width",w).attr("height",h);
-				
+				    var barPadding = 1;
 				d3.json(reportPath, function(report_data) {
 						var margin = {
 						top: 25,
@@ -129,7 +125,8 @@ rect:hover{
                                                 colors["Referred to Publications Portal"] = "#FFC266";
 	
 						var dataset = report_data.data;
-						
+						dataset = dataset.filter(function(d){ return d.label == "Received" || d.label == "Published"; });
+	
 						var xScale = d3.scale.ordinal()
 						.domain(d3.range(dataset.length))
 						.rangeRoundBands([0, w], 0.05);
@@ -149,7 +146,7 @@ rect:hover{
 						.scale(yScale)
 						.orient("left")
 						.ticks(5);
-						
+
 						var commaFormat = d3.format(',');
 						
 						//SVG element
@@ -185,7 +182,6 @@ rect:hover{
 							  })
 						;
 						
-						
 						// xAxis
 						svg.append("g") // Add the X Axis
 						.attr("class", "x axis")
@@ -217,34 +213,72 @@ rect:hover{
 						.attr("dy", "1em")
 						.style("text-anchor", "middle")
 						.text("# of Requests");
-						
+			
+						sets.append("text")
+						.text(function(d) {
+							if(d.value != 0) {
+								return d.value;
+							}
+						})
+						.attr("text-anchor", "middle")
+						.attr("y", function (d) {
+							return yScale(d.value) + 14;
+						})
+						.attr("x", function(d,i) {
+							return (xScale.rangeBand() / 2) + 50;
+						})
+						.attr("height", function (d) {
+							return h - yScale(d.value);
+						})
+						.attr("fill", function (d) {
+							return "black";
+							//colors[d.label];
 						});
-						
+                                                
+	
+	
+						});
 			}
 		
-			draw_barchart("/api/report/all/all");
-
-			$("#calendarYear").click(function() {
-			    draw_barchart("/api/report/all/calendarYear");
-			});
-
+			draw_barchart("/api/report/all/all/all/all");
+            
 			$("#fullYear").click(function() {
-			    draw_barchart("/api/report/all/fullYear");
+                selected_agency = $('#agency_filter').val();
+                selected_staff = $('#staff_filter').val();
+                                 
+                if(typeof selected_staff === 'undefined') {
+                        selected_staff = 'all'
+                }
+                draw_barchart("/api/report/fullYear/all/" + selected_agency + "/" + selected_staff);
 			});
 			
 			$("#rolling").click(function() {
-				draw_barchart("/api/report/all/rolling");
+                                selected_agency = $('#agency_filter').val();
+                                selected_staff = $('#staff_filter').val();
+				//draw_barchart("/api/report/rolling/all/all/all");
+                if(typeof selected_staff === 'undefined') {
+                        selected_staff = 'all'
+                }                                
+                draw_barchart("/api/report/rolling/all/" + selected_agency + "/" + selected_staff);
 			});
 			
 			$("#agency_filter").change(function() {
-				selected = $(this).val();
-
-				draw_barchart("/api/report/all/agency_" + selected);
+                                       selected_agency = $('#agency_filter').val();
+                                       selected_staff = $('#staff_filter').val();
+                $("#staff_filter").val(0);
+                $('#staff_filter option[department_id!=' + selected_agency + ']').hide();
+                $('#staff_filter option[department_id=' + selected_agency + ']').show();
+				draw_barchart("/api/report/all/all/" + selected_agency + "/all");
 			});
 			$("#staff_filter").change(function() {
-				selected = $(this).val();
-
-				draw_barchart("/api/report/all/staff_" + selected);
+                                      selected_agency = $('#agency_filter').val();
+                                      selected_staff = $('#staff_filter').val();
+				if(selected_agency == 0) {
+				  draw_barchart("/api/report/all/all/all/" + selected_staff);
+				}
+				else {
+				  draw_barchart("/api/report/all/all/" + selected_agency + "/" + selected_staff);
+				}
 			});
 
 
