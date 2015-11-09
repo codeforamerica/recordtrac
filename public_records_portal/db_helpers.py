@@ -188,12 +188,12 @@ def create_QA(request_id, question, user_id):
     return qa.id
 
 # @export "create_request"
-def create_request(id=id, agency=None, category=None, summary=None, text=None, user_id=None, offline_submission_type=None,
+def create_request(id=id, agency=None, summary=None, text=None, user_id=None, offline_submission_type=None,
                    date_received=None):
     """ Create a Request object and return the ID. """
     agency_id = Department.query.filter_by(name=agency).first().id
     # print "agency_id is " + str(agency_id)
-    req = Request(id=id, agency=agency_id, category=category,  summary=summary, text=text, creator_id=user_id,
+    req = Request(id=id, agency=agency_id,  summary=summary, text=text, creator_id=user_id,
                   offline_submission_type=offline_submission_type, date_received=date_received)
     db.session.add(req)
     db.session.commit()

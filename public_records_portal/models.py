@@ -467,11 +467,12 @@ class Request(db.Model):
     @hybrid_property
     def open(self):
         two_days = datetime.now() + timedelta(days=2)
-        return and_(self.status == 'Open', ~self.due_soon, ~self.overdue, ~self.closed)
+        return and_(self.status == 'Open', ~self.due_soon, ~self.closed)
 
     @hybrid_property
     def in_progress(self):
-        return and_((self.status != 'Open'), ~self.closed, self.notoverdue, ~self.due_soon)
+        two_days = datetime.now() + timedelta(days=2)
+        return and_(~self.closed, self.due_date > two_days)
 
     @hybrid_property
     def due_soon(self):
