@@ -86,7 +86,12 @@ def new_request(passed_recaptcha=False, data=None):
             elif len(request_summary) > 250:
                 errors.append(
                     'The request summary must be less than 250 characters')
-
+            # Check Description of Request
+            if not (request_text and request_text.strip()):
+                errors.append('You must enter a description for this request')
+            elif len(request_summary) > 5000:
+                errors.append(
+                    'The request description must be less than 5000 characters')
             try:
                 request_attachment = request.files['request_attachment']
             except:
@@ -314,11 +319,7 @@ def show_request_for_city(request_id):
         audience = 'helper'
     else:
         audience = 'city'
-    if is_supported_browser():
-        return show_request(request_id=request_id, template="manage_request_%s.html" % (audience))
-    else:
-        return show_request(request_id=request_id, template="manage_request_%s_less_js.html" % (audience))
-
+    return show_request(request_id=request_id, template="manage_request_%s_less_js.html" % (audience))
 
 @app.route("/response/<string:request_id>")
 def show_response(request_id):
@@ -363,7 +364,6 @@ def show_request(request_id, template="manage_request_public.html"):
     departments_all = models.Department.query.all()
     agency_data = []
     for d in departments_all:
-        #firstUser = models.User.query.filter_by(department_id=d.id).first()
         primary_contact = d.primary_contact
         agency_data.append({'name': d.name, 'email': primary_contact.email})
 
@@ -375,7 +375,21 @@ def show_request(request_id, template="manage_request_public.html"):
     if req.status and "Closed" in req.status and template != "manage_request_feedback.html":
         template = "closed.html"
 
-    return render_template(template, req=req, agency_data=agency_data, users=users)
+    department = models.Department.query.filter_by(id=req.department_id).first()
+    assigned_user = models.User.query.filter_by(
+        id=models.Owner.query.filter_by(request_id=request_id, is_point_person=True).first().user_id).first()
+    helpers = []
+    for i in req.owners:
+        if not i.active or i.is_point_person:
+            continue
+        helper = models.User.query.filter_by(id=i.user_id).first()
+        if helper:
+            helpers.append({'name': helper.alias, 'email': helper.email})
+
+    print helpers
+
+    return render_template(template, req=req, agency_data=agency_data, users=users,
+                           department=department, assigned_user=assigned_user, helpers=helpers)
 
 
 @app.route("/api/staff")
@@ -450,13 +464,17 @@ def public_add_a_resource(resource, passed_recaptcha = False, data = None):
 @app.route("/update_a_<string:resource>", methods=["GET", "POST"])
 def update_a_resource(resource, passed_recaptcha=False, data=None):
     if (data or request.method == 'POST'):
+        req=request.form
         if not data:
             data = request.form.copy()
-        if 'qa' in resource:
+        if 'owner' in resource:
+            update_resource(resource, req)
+
+        elif 'qa' in resource:
             prr.answer_a_question(qa_id=int(data['qa_id']), answer=data['answer_text'], passed_spam_filter=True)
         else:
             update_resource(resource, data)
-        if current_user.is_anonymous == False:
+        if current_user.is_authenticated:
             return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
         else:
             return redirect(url_for('show_request', request_id=request.form['request_id']))
@@ -492,26 +510,10 @@ def close(request_id=None):
         elif 'close_reasons' in request.form:
             for close_reason in request.form.getlist('close_reasons'):
                 reason += close_reason + " "
-        close_request(request_id=request_id, reason=reason, user_id=get_user_id())
+        close_request(request_id=request_id, reason=reason, user_id=get_user_id(), request_body=request.form)
         return show_request(request_id, template=template)
     return render_template('error.html', message="You can only close from a requests page!")
 
-
-def filter_agency(departments_selected, results):
-    if departments_selected and 'All departments' not in departments_selected:
-        app.logger.info("\n\nagency filters:%s." % departments_selected)
-        department_ids = []
-        for department_name in departments_selected:
-            if department_name:
-                department = models.Department.query.filter_by(name=department_name).first()
-                if department:
-                    department_ids.append(department.id)
-        if department_ids:
-            results = results.filter(models.Request.department_id.in_(department_ids))
-        else:
-            # Just return an empty query set
-            results = results.filter(models.Request.department_id < 0)
-    return results
 
 def filter_search_term(search_input, results):
     if search_input:
@@ -592,6 +594,10 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
 
     user_id = get_user_id()
 
+    # Sets the search parameters. They are a dictionary that either came in through:
+    # 1) json_requests() (endpoint used by backbone)
+    # 2) request.args (arguments in the URL)
+    # 3) the form submitted
     if not filters_map:
         if request.args:
             if is_supported_browser():
@@ -641,7 +647,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         requester_name = get_filter_value(filters_map, 'requester_name')
         page_number = int(get_filter_value(filters_map, 'page_number') or '1')
         request_id_search = get_filter_value(filters_map, 'request_id_search')
- 
+
     # Set initial checkboxes for mine_as_poc and mine_as_helper when redirected from login page
     if request.referrer and 'login' in request.referrer:
         if current_user.is_authenticated and (current_user.role in ['Portal Administrator', 'Agency Administrator'] or current_user.is_admin()):
@@ -683,8 +689,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
 
     results = results.limit(limit).offset(offset).all()
     requests = prepare_request_fields(results=results)
-    print requests
-    if output_results_only == True:
+    if output_results_only == True: # Used by json_requests()
         return requests, num_results, more_results, start_index, end_index
 
     return render_template("all_requests_less_js.html", total_requests_count=get_count("Request"), requests=requests,
@@ -721,19 +726,6 @@ def json_requests():
 
 
 def prepare_request_fields(results):
-    # if current_user.is_anonymous:
-    #     return map(lambda r: {
-    #         "id":           r.id, \
-    #         "text":         helpers.clean_text(r.text), \
-    #         "date_received": helpers.date(r.date_received or r.date_created), \
-    #         "agency":   r.department_name(), \
-    #         "status":       r.status, \
-    #         # The following two attributes are defined as model methods,
-    #         # and not regular SQLAlchemy attributes.
-    #         "contact_name": r.point_person_name(), \
-    #         "solid_status": r.solid_status()
-    #     }, results)
-    # else:
     return map(lambda r: {
         "id": r.id, \
         "summary": helpers.clean_text(r.summary), \
@@ -750,20 +742,20 @@ def prepare_request_fields(results):
 
 
 def filter_department(departments_selected, results):
-    if departments_selected and 'All departments' not in departments_selected:
-        app.logger.info("\n\nDepartment filters:%s." % departments_selected)
-        department_ids = []
-        for department_name in departments_selected:
-            if department_name:
-                department = models.Department.query.filter_by(name=department_name).first()
-                if department:
-                    department_ids.append(department.id)
-        if department_ids:
-            results = results.filter(models.Request.department_id.in_(department_ids))
-        else:
-            # Just return an empty query set
-            results = results.filter(models.Request.department_id < 0)
-    return results
+  if departments_selected and 'All Agencies' not in departments_selected:
+      app.logger.info("\n\nagency filters:%s." % departments_selected)
+      department_ids = []
+      for department_name in departments_selected:
+          if department_name:
+              department = models.Department.query.filter_by(name=department_name).first()
+              if department:
+                  department_ids.append(department.id)
+      if department_ids:
+          results = results.filter(models.Request.department_id.in_(department_ids))
+      else:
+          # Just return an empty query set
+          results = results.filter(models.Request.department_id < 0)
+  return results
 
 
 def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, overdue, mine_as_poc, mine_as_helper,
@@ -1027,7 +1019,7 @@ def login():
                 app.logger.info(
                     "\n\nLogin failed (due to incorrect email/password combo) for email : %s" % form.username.data)
                 errors.append('Incorrect email/password combination. Please try again. If you forgot your password,'
-                              'please <a href="/reset_password">reque st a new password</a>.')
+                              'please <a href="/reset_password">request a new password</a>.')
                 return render_template('login.html', form=form, errors=errors)
         else:
             errors.append('Something went wrong')
@@ -1216,6 +1208,7 @@ def get_report_jsons(report_type,public_filter):
 @app.route("/report")
 def report():
     users=models.User.query.all()
+    users=models.User.query.order_by(models.User.alias.asc()).all()
     departments_all = models.Department.query.all()
     agency_data = []
     for d in departments_all:
@@ -1244,6 +1237,16 @@ def change_privacy():
     prr.change_privacy_setting(request_id=request.form['request_id'],privacy=privacy,field=field)
     return redirect(url_for('show_request_for_city',request_id=request.form['request_id']))
 
+@app.route("/<page>")
+def any_page(page):
+    try:
+        return render_template('%s.html' % (page))
+    except:
+        return page_not_found(404)
+
+@app.errorhandler(400)
+def bad_request(e):
+    return render_template("400.html"), 400
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html"), 404

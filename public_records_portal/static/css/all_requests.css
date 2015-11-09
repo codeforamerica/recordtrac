@@ -4,7 +4,6 @@
 
 }
 
-
 /* top area */
 .blurb {
 	padding-bottom: 1em;
@@ -53,8 +52,6 @@
 
 	table td {
 		padding: 3px 10px;
-        max-width:5rem;
-        overflow: auto;
 	}
 
 
@@ -137,7 +134,6 @@ h3 {
   font-size: 17.5px;
   display: inline;
 }
-
 
 #requests th, #requests td {
     text-align: left;
@@ -265,22 +261,4 @@ input#checkbox {
 input[type=date]{
     font-size:1rem;
     height:3rem;
-}
-
-#toggle{
-    display:none;
-}
-
-
-/*Added media query so app will work on mobile devices */
-@media
-only screen and (max-width: 760px),
-(min-device-width: 768px) and (max-device-width: 1024px)  {
-
-    .hide-mobile{
-        display: none;
-    }
-    #toggle{
-        display: block;
-    }
 }

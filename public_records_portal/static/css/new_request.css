@@ -80,3 +80,7 @@ line-height: 1.25;
 .missing_field {
 	display: none;
 }
+
+.highlight {
+	color: red;
+}

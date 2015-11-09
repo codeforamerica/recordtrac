@@ -38,12 +38,67 @@
                 <!-- Request Details -->
                 <div class="row-fluid">
                     <h3 class="control-widget">
-                                    <span class="muted">
-                                        <a href="{{config['APPLICATION_URL']}}request/{{ req.id }}">{{req.id}}</a>
-                                    </span>
+                        <span class="muted">
+                            <a href="{{config['APPLICATION_URL']}}request/{{ req.id }}">{{req.id}}</a>
+                        </span>
                     </h3>
+                    {% block clarify_request %}
+                    <!-- ask a question -->
+                    <form name="ask_question" id="question" class="form-inline" style="margin: 10px 0px 15px 0px;"
+                          method="post" action="/add_a_qa" autocomplete="on">
+                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                        <fieldset>
+                            {% if email %}
+                            <label>Ask a question <span rel="tooltip" data-toggle="tooltip" data-placement="right"
+                                                        title="" data-original-title="{{" Ask a question" |
+                                explain_action }}">
+                                <small><i class="icon-info-sign"></i></small>
+                                </span></label>
+                            <textarea id="questionTextarea" name="question_text" class="input-xlarge"
+                                      placeholder="Ask the requester a question" required/></textarea>
+                            <button id="askQuestion" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#confirm-submit" type="submit">Ask
+                            </button>
+                            {% endif %}
+                        </fieldset>
+                    </form>
 
-                    {% block clarify_request %}{% endblock clarify_request %}
+                    <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog"
+                         aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    Confirmation
+                                </div>
+                                <div class="modal-body">
+                                    <div id="modalquestionDiv">Are you sure you want to make the following question
+                                        public and send an email to the requester?
+                                    </div>
+                                    <table id="modalQuestionTable" class="table">
+                                        <tr>
+                                            <th>Question</th>
+                                            <td id="question_text"></td>
+                                            <input type="hidden" id="form_id" value=""/>
+                                        </tr>
+                                    </table>
+                                    <table id="modalAdditionalInfoTable" class="table">
+                                        <tr>
+                                            <th>Additional Information</th>
+                                            <td><textarea id="additional_note" name="additional_note"
+                                                          class="input-xlarge"
+                                                          placeholder="Additional Information"/></textarea></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <a href="#" id="submit" class="btn btn-success success">Submit</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endblock clarify_request %}
+                    <p class="lead" style="margin-bottom: 0rem;" truncateable="250"> Title </p>
                     {% if req %}
                         {% if current_user.is_authenticated==True or req.titlePrivate==False%}
                             <p class="lead" style="margin-bottom: 0rem;"
@@ -141,8 +196,7 @@
                 </div>
                 <div>
                     <!-- shows any existing Q&A or public notes -->
-                    {% set request_data = ( req |
-                    get_request_data_chronologically ) %}
+                    {% set request_data = ( req | get_request_data_chronologically ) %}
 
                     {% for response in request_data %}
                     {% set icon = response.get_icon() %}
@@ -158,8 +212,9 @@
                         <div class="span2 text-right request-date">
                             <div class="timestampPopoverContainer">
                                 <div class="row-fluid">
-                                                        <span class="timestampPopover"
-                                                              onmouseover="">{{ response.date() | date_granular }}</span>
+                                        <span class="timestampPopover" onmouseover="">
+                                            {{ response.date() | date_granular }}
+                                        </span>
 
                                     <div class="hide">
                                         {% include '_timestamp.html' %}
@@ -171,26 +226,28 @@
                     {% endfor %}
                     {% if request_data | length > 1 %}
                     <!-- SHOW/HIDE button; js is in case.js -->
-                    <div class="case-show-all show"><i
-                            class="icon-chevron-down"></i> See all <i
-                            class="icon-chevron-down"></i></div>
+                    <div class="case-show-all show">
+                        <i class="icon-chevron-down"></i> See all <i class="icon-chevron-down"></i>
+                    </div>
                     {% endif %}
                 </div>
             </div>
             {% endblock request %}
         </div>
         {% endblock well %}
-
-
         {% block requester_info %}{% endblock requester_info %}
-
         {% block subscribe %}
-            {% include '_subscribe_widget.html' %}
+        {% include '_subscribe_widget.html' %}
         {% endblock subscribe %}
         {% block responses_container %}
+        {% set responses = ( req | get_responses_chronologically ) %}
+
         <div id="responses-container" class="row-fluid">
-            {% set responses = ( req | get_responses_chronologically ) %}
+            {% block response_actions_lessjs %}
+            {% include '_response_actions.html' %}
+            {% endblock response_actions_lessjs %}
             {% if responses %}
+            {% set responses = ( req | get_responses_chronologically ) %}
             <h3 class="control-widget">Response</h3>
             {% for response in responses %}
             {% set uid = response.uid() %}
@@ -202,8 +259,7 @@
                 </div>
                 <div class="span9">
                     <p class="expandable" truncateable="200">
-                        {{ response.display_text() | safe }} - <a
-                            href="/staff_card/{{ uid }}"><span
+                        {{ response.display_text() | safe }} - <a href="/staff_card/{{ uid }}"><span
                             class="contactinfoPopover"
                             onmouseover="directoryPopover('{{ staff.email }}', '{{ staff.department }}', '{{ staff.phone }}', '#contactinfoPopoverResponse{{ loop.index }}')">{{ staff.alias or staff.email }}</span></a>
                     </p>
@@ -211,10 +267,9 @@
                 <div class="span2 text-right response-date">
                     <div class="timestampPopoverContainer">
                         <div class="row-fluid">
-                                    <span class="timestampPopover"
-                                          onmouseover="">{{
-                                        response.date() | date_granular }}</span>
-
+                                <span class="timestampPopover" onmouseover="">
+                                    {{ response.date() | date_granular }}
+                                </span>
                             <div class="hide">
                                 {% include '_timestamp.html' %}
                             </div>
@@ -230,36 +285,14 @@
             <p><em>No responses have been uploaded yet</em></p>
             {% endif %}
             {% endif %}
-
-            {% block response_actions_lessjs %}{% endblock
-            response_actions_lessjs %}
         </div>
         {% endblock responses_container %}
     </div>
-
     <div id="participant-container" class="span3">
         {% block sidebar %}
-
-        {% block status %}{% endblock status %}
-        {% if current_user.is_authenticated %}
-            <!-- Request Assignment Operations -->
-            <h4 class="case_participantRow">Assigned Officer</h4>
-            {% include '_contact_popover.html' %}
-        {% else %}
-            <h4 class="case_participantRow">Point of Contact</h4>
-            {% include '_contact_popover.html' %}
-        {% endif %}
+        {% include '_manage_request_sidebar.html' %}
         {% endblock sidebar %}
-
-        {% block request_dates %}
-        <div class="muted">Received: {{ (req.date_received or req.date_created)
-            | date }}
-        </div>
-        {% endblock request_dates %}
-
-
     </div>
-
 </div>
 
 
@@ -283,6 +316,8 @@
 
 <script type="text/javascript"
         src="{{ url_for('static', filename='js/plugins/jquery.ellipsis.js') }}"></script>
+
+
 {% endblock custom_script_links %}
 
 

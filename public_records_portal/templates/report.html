@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% set active_page="report" %}
 {% block container %}
 
 <style>
@@ -75,17 +75,21 @@ rect:hover{
 		<h5>Agency Filter</h5>
 		<select id="agency_filter" name="agency_filter">
 			<option value="0">None Selected</option>
-			{% for data in agency_data %}
-                        	<option value="{{data.id}}">{{data.name}}</option>
-			{% endfor %}
+			<option value="1">Department of Records and Information Services</option>
+			<option value="2">Office of the Chief Medical Examiner</option>
+			<option value="3">Mayor's Office</option>
+			<option value="4">Department of Education</option>
+			<option value="5">Department of Information Technology and Telecommunications</option>
+			<option value="5">Deputy Mayor</option>
 		</select>
         {%  if current_user.is_authenticated %}
 		<h5>Staff Filter</h5>
 		<select id="staff_filter" name="staff_filter">
 			    <option value="0">None Selected</option>
 				{% for user in users %}
-				{{ user.email }}
-				<option value="{{ user.id }}">{{ user.alias}}</option>
+					{% if user.alias and user.is_staff %}
+						<option value="{{ user.id }}">{{ user.alias}}</option>
+					{% endif %}
 				{% endfor %}
 		</select>
         {% endif %}
@@ -99,8 +103,7 @@ rect:hover{
 				$("#bar_chart").empty();
 				var w = 500, h = 100;
 				var svg = d3.select("#bar_chart").append("svg").attr("width",w).attr("height",h);
-			        var barPadding = 1;
-	
+				
 				d3.json(reportPath, function(report_data) {
 						var margin = {
 						top: 25,
@@ -126,8 +129,7 @@ rect:hover{
                                                 colors["Referred to Publications Portal"] = "#FFC266";
 	
 						var dataset = report_data.data;
-						dataset = dataset.filter(function(d){ return d.label == "Received" || d.label == "Published"; });
-	
+						
 						var xScale = d3.scale.ordinal()
 						.domain(d3.range(dataset.length))
 						.rangeRoundBands([0, w], 0.05);
@@ -147,7 +149,7 @@ rect:hover{
 						.scale(yScale)
 						.orient("left")
 						.ticks(5);
-
+						
 						var commaFormat = d3.format(',');
 						
 						//SVG element
@@ -183,6 +185,7 @@ rect:hover{
 							  })
 						;
 						
+						
 						// xAxis
 						svg.append("g") // Add the X Axis
 						.attr("class", "x axis")
@@ -214,31 +217,9 @@ rect:hover{
 						.attr("dy", "1em")
 						.style("text-anchor", "middle")
 						.text("# of Requests");
-			
-						sets.append("text")
-						.text(function(d) {
-							if(d.value != 0) {
-								return d.value;
-							}
-						})
-						.attr("text-anchor", "middle")
-						.attr("y", function (d) {
-							return yScale(d.value) + 14;
-						})
-						.attr("x", function(d,i) {
-							return (xScale.rangeBand() / 2) + 50;
-						})
-						.attr("height", function (d) {
-							return h - yScale(d.value);
-						})
-						.attr("fill", function (d) {
-							return "black";
-							//colors[d.label];
+						
 						});
-                                                
-	
-	
-						});
+						
 			}
 		
 			draw_barchart("/api/report/all/all");
