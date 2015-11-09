@@ -58,6 +58,7 @@ class User(db.Model):
     last_name = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True)
     phone = db.Column(db.String())
+    fax = db.Column(db.String())
     address1 = db.Column(db.String(500))
     address2 = db.Column(db.String(500))
     city = db.Column(db.String())
@@ -118,7 +119,11 @@ class User(db.Model):
         if self.phone and self.phone != '':
             return self.phone
         return 'N/A'
-
+    
+    def get_fax(self):
+        if self.fax and self.fax != '':
+            return self.fax
+        return 'N/A'
     def get_adddress1(self):
         if self.address1 and self.address1 != '':
             return self.address1
@@ -149,6 +154,7 @@ class User(db.Model):
             first_name=None,
             last_name=None,
             phone=None,
+            fax=None,
             address1=None,
             address2=None,
             city=None,
@@ -169,6 +175,8 @@ class User(db.Model):
         self.last_name = last_name
         if phone and phone != '':
             self.phone = phone
+        if fax and fax != '':
+            self.fax = fax
         if address1 and address1 != '':
             self.address1 = address1
         if address2 and address2 != '':
@@ -401,6 +409,12 @@ class Request(db.Model):
         requester = self.requester()
         if requester and requester.user:
             return requester.user.get_phone()
+        return 'N/A'
+    
+    def requester_fax(self):
+        requester = self.requester()
+        if requester and requester.user:
+            return requester.user.get_fax()
         return 'N/A'
 
     def requester_address1(self):
