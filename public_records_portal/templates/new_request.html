@@ -12,7 +12,8 @@
 <link rel=stylesheet type=text/css
       href="{{ url_for('static', filename='css/plugins/bootstrap-fileupload.css') }}">
 <link rel=stylesheet type=text/css
-      href="{{ url_for('static', filename='css/case.css') }}"> {% endblock custom_css_links %} {% block container %}
+      href="{{ url_for('static', filename='css/case.css') }}">
+{% endblock custom_css_links %} {% block container %}
 <!-- start of static form -->
 <div class="row-fluid">
     <div class="span8">
@@ -62,7 +63,7 @@
                                 {{
                                 form.request_summary(class="input-block-level",
                                 rows="2", id="request_summary",
-                                placeholder="Please provide a short summary of your request" ) }}
+                                placeholder="Please provide the name of your request" ) }}
                             </div>
                         </div>
                         <div class="span4">
@@ -88,7 +89,7 @@
                                     Details Missing
                                 </div>
                                 {{
-                                form.request_text(class="input-block-level",rows="6",id="request_text",placeholder="Provide more information about your request to help the City locate the record. If don’t know the record name, describe type of information you think it would contain and the approximate date range. Do not include private info – such as social security # or credit card." ) }}
+                                form.request_text(class="input-block-level",rows="6",id="request_text",placeholder="Provide more information about your request to help the City locate the record. If you don’t know the record name, describe the type of information you think it would contain and the approximate date range. Do not include private info – such as social security number or credit card number." ) }}
                             </div>
                         </div>
                         <div class="span4">
