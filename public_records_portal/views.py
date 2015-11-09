@@ -610,6 +610,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
     # Set defaults
     is_open = checkbox_value
     is_closed = None
+    in_progress = checkbox_value
     due_soon = checkbox_value
     overdue = checkbox_value
     mine_as_poc = checkbox_value
@@ -632,6 +633,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         departments_selected = get_filter_value(filters_map=filters_map, filter_name='departments_selected',
                                                 is_list=True) or get_filter_value(filters_map, 'department')
         is_open = get_filter_value(filters_map=filters_map, filter_name='is_open', is_boolean=True)
+        in_progress = get_filter_value(filters_map=filters_map, filter_name='in_progress', is_boolean=True)
         is_closed = get_filter_value(filters_map=filters_map, filter_name='is_closed', is_boolean=True)
         due_soon = get_filter_value(filters_map=filters_map, filter_name='due_soon', is_boolean=True)
         overdue = get_filter_value(filters_map=filters_map, filter_name='overdue', is_boolean=True)
@@ -659,7 +661,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         elif current_user.is_authenticated and current_user.role in ['Agency Helpers']:
             mine_as_poc = "on"
 
-    results = get_results_by_filters(departments_selected=departments_selected, is_open=is_open, is_closed=is_closed,
+    results = get_results_by_filters(departments_selected=departments_selected, is_open=is_open, is_closed=is_closed, in_progress=in_progress,
                                      due_soon=due_soon, overdue=overdue, mine_as_poc=mine_as_poc,
                                      mine_as_helper=mine_as_helper, sort_column=sort_column,
                                      sort_direction=sort_direction, search_term=search_term, min_due_date=min_due_date,
@@ -694,7 +696,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
 
     return render_template("all_requests_less_js.html", total_requests_count=get_count("Request"), requests=requests,
                            departments=db.session.query(models.Department).all(),
-                           departments_selected=departments_selected, is_open=is_open, is_closed=is_closed,
+                           departments_selected=departments_selected, is_open=is_open, is_closed=is_closed, in_progress=in_progress,
                            due_soon=due_soon, overdue=overdue, mine_as_poc=mine_as_poc, mine_as_helper=mine_as_helper,
                            sort_column=sort_column, sort_direction=sort_direction, search_term=search_term,
                            min_due_date=min_due_date, max_due_date=max_due_date, min_date_received=min_date_received,
@@ -758,7 +760,7 @@ def filter_department(departments_selected, results):
   return results
 
 
-def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, overdue, mine_as_poc, mine_as_helper,
+def get_results_by_filters(departments_selected, is_open, is_closed, in_progress, due_soon, overdue, mine_as_poc, mine_as_helper,
                            sort_column, sort_direction, search_term, min_due_date, max_due_date, min_date_received,
                            max_date_received, requester_name, page_number, user_id, date_format, checkbox_value, request_id_search):
     # Initialize query
@@ -796,6 +798,9 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 
     # Filters for agency staff only:
     if user_id:
+        if in_progress == checkbox_value:
+            print "In Progress: ", in_progress, "; Checkbox Value: ", checkbox_value
+            status_filters.append(models.Request.in_progress)
 
         if due_soon == checkbox_value:
             status_filters.append(models.Request.due_soon)
@@ -851,6 +856,7 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
         else:
             results = results.order_by((getattr(models.Request, sort_column)).asc())
 
+    print results
     return results.order_by(models.Request.id.desc())
 
 

@@ -226,6 +226,12 @@ h3 {
 	margin-left: 5px;
 }
 
+.in_progress_style {
+	border-left: 8px solid forestgreen;
+	padding-left: 5px;
+	margin-left: 5px;
+}
+
 /* Icon glips for sortalbe and sorted columns. */
 .sortable:after {
   font-family: FontAwesome;
@@ -258,7 +264,11 @@ input#checkbox {
     display: inline;
 }
 
-input[type=date]{
-    font-size:1rem;
-    height:3rem;
+input[type=date] {
+	font-size: 1rem;
+	height: 3rem;
+}
+
+.in_progress {
+	background-color: forestgreen;
 }

@@ -466,7 +466,7 @@ class Request(db.Model):
                                                  ])) >= self.due_date:
                         return 'due soon'
 
-        if 'Acknowledged' in self.status:
+        if 'Open' == self.status:
             return 'open'
         else:
             return 'in_progress'
@@ -474,15 +474,11 @@ class Request(db.Model):
     @hybrid_property
     def open(self):
         two_days = datetime.now() + timedelta(days=2)
-        return and_(~self.closed, ~self.in_progress, self.due_date > two_days)
+        return and_(self.status == 'Open', ~self.due_soon, ~self.overdue, ~self.closed)
 
     @hybrid_property
     def in_progress(self):
-        two_days = datetime.now() + timedelta(days=2)
-        not_due_soon = self.due_date > two_days
-        not_closed = ~self.closed
-        acknowledged = (self.solid_status() == 'open')
-        return and_(not_due_soon, not_closed, acknowledged)
+        return and_((self.status != 'Open'), ~self.closed, self.notoverdue, ~self.due_soon)
 
     @hybrid_property
     def due_soon(self):
