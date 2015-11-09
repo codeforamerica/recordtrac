@@ -72,18 +72,27 @@
   });
 
   $('#askQuestion').on('click',function(){
+    $('#modalAdditionalInfoTable').show();
     $('#modalQuestionTable').show();
     $('#question_text').html($('#questionTextarea').val());
   });
 
-  $('#submit').on('click',function(){
-    additional_information = $('#additional_note').val();
+  $('#submit').on('click',function(event){
     form_id = '#' + $('#form_id').val();
-    var input = $("<input>")
+    if(!$('#modalAdditionalInfoTable').is(':visible') || $(form_id) == 'note_pdf') {
+        $('#confirm-submit').modal('toggle');
+        $(form_id).submit();
+    }
+    else {
+
+      $('#modalAdditionalInfoTable').show();
+      additional_information = $('#additional_note').val();
+      var input = $("<input>")
                .attr("type", "hidden")
                .attr("name", "additional_information").val(additional_information);
-    $(form_id).append($(input));
-    $(form_id).submit();
+      $(form_id).append($(input));
+      $(form_id).submit();
+    }
    });
 
   $('#rerouteButton').on('click',function(){
@@ -95,6 +104,7 @@
   });
 
   $('#extendButton').on('click',function(){
+    $('#modalAdditionalInfoTable').show();
     $('#form_id').val('extension');
     days = $('#days_after').val();
     var modalQuestion = 'Are you sure you want to request an extension for the number of days below and send an email to the requester?';
@@ -115,6 +125,7 @@
   });
 
   $('#closeButton').on('click',function(){
+    $('#modalAdditionalInfoTable').show();
     $('#form_id').val('closeRequest');
     var modalQuestion = 'Are you sure you want to close the request for the reasons below and send an email to the requester?';
     modalQuestion += '<br><br>' + $('#close_reasons').val();
@@ -123,6 +134,7 @@
   });
 
   $('#addRecordButton').on('click',function(){
+    $('#modalAdditionalInfoTable').show();
     $('#form_id').val('submitRecord');
     var modalQuestion = 'Are you sure you want to add this record and send an email to the requester?';
     modalQuestion += '<br><br>' + $('#recordSummary').val();
@@ -131,6 +143,7 @@
   });
 
   $('#addNoteButton').on('click',function(){
+    $('#modalAdditionalInfoTable').show();
     $('#form_id').val('note');
     var modalQuestion = 'Are you sure you want to add the note below and send an email to the requester?';
     modalQuestion += '<br><br>' + $('#noteTextarea').val();
@@ -138,4 +151,49 @@
     $('#modalQuestionTable').hide();
   });
 
+   $('#addPublicNoteButton').on('click', function () {
+      $('#modalAdditionalInfoTable').hide();
+      $('#form_id').val('note');
+      var modalQuestion = 'Are you sure you want to add the note below to this request?';
+      modalQuestion += '<br><br>' + $('#noteTextarea').val();
+      $('#modalquestionDiv').html(modalQuestion);
+      $('#modalQuestionTable').hide();
+    });
+ 
+  $('#generatePDFButton').on('click',function(event){
+    var selectedTemplate = $('#response_template option:selected').text();
+    var modalQuestion = 'Are you sure you want to generate a PDF for the template below?';
+           
+    if (selectedTemplate === '') {
+      $('#missing_pdf_template').removeClass('hidden');
+    }
+    else {
+        $('#missing_pdf_template').addClass('hidden');
+        var attr = $('#generatePDFButton').attr('data-toggle');
+        $('#generatePDFButton').attr('data-toggle','modal');
+        $('#generatePDFButton').attr('data-target','#confirm-submit');
+                             
+        $('#modalAdditionalInfoTable').hide();
+        $('#form_id').val('note_pdf');
+        modalQuestion += '<br><br>' + selectedTemplate;
+        $('#modalquestionDiv').html(modalQuestion);
+        $('#modalQuestionTable').hide();
+    }
+                            
+        
+        
+  });
+
+  $('#notifyButton').on('click',function(){
+    $('#form_id').val('notifyForm');
+    var modalQuestion = 'Are you sure you want to add the helper and send an email to the requester? Please specify the reason below.';
+    modalQuestion += '<br><br>' + $('#notifyReason').val();
+    $('#modalquestionDiv').html(modalQuestion);
+    $('#modalQuestionTable').hide();
+  });
+
+  $("#requesterInfoButton").on('click', function() {
+    $('#requester_info').toggle();
+    $('#requesterInfoButton').innerHTML()
+  })
 })($);

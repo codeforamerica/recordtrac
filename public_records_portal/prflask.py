@@ -44,10 +44,7 @@ class HomeView(AdminIndexView):
         return self.render('admin.html')
 
     def is_accessible(self):
-        if current_user.is_authenticated:
-            return render_template("404.html"), 404
-        elif current_user.role in ['Portal Administrator', 'Agency Administrator']:
-            return current_user.role in ['Portal Administrator', 'Agency Administrator']
+        return current_user.role in ['Portal Administrator', 'Agency Administrator']
 
 # Create Admin
 admin = Admin(app, name='RecordTrac Admin', url='/admin', index_view=HomeView(name='Home'))

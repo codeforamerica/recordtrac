@@ -193,7 +193,7 @@ def create_request(id=id, agency=None, summary=None, text=None, user_id=None, of
     """ Create a Request object and return the ID. """
     agency_id = Department.query.filter_by(name=agency).first().id
     # print "agency_id is " + str(agency_id)
-    req = Request(id=id, agency=agency_id, summary=summary, text=text, creator_id=user_id,
+    req = Request(id=id, agency=agency_id,  summary=summary, text=text, creator_id=user_id,
                   offline_submission_type=offline_submission_type, date_received=date_received)
     db.session.add(req)
     db.session.commit()
@@ -400,6 +400,7 @@ def create_owner(request_id, reason, email=None, user_id=None):
     db.session.commit()
     app.logger.info("\n\nCreated owner with id: %s" % participant.id)
     return participant.id
+
 
 # @export "change_request_status"
 def change_request_status(request_id, status):

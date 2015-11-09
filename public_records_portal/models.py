@@ -49,6 +49,7 @@ class AnonUser:
     @property
     def role(self):
         return None
+
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
@@ -139,7 +140,7 @@ class User(db.Model):
         return 'N/A'
 
     def show_department_filters(self):
-        return self.current_department.name == "DORIS" or self.current_department.name == "Department of Records and Information Services" or self.current_department.name == "Mayor's Office"
+        return self.role in ['Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel']
 
     def __init__(
             self,
@@ -298,7 +299,9 @@ class Request(db.Model):
     date_received = db.Column(db.DateTime)
     offline_submission_type = db.Column(db.String())
     prev_status = db.Column(db.String(400))  # The previous status of the request (open, closed, etc.)
-
+    #Adding new privacy option for description field
+    descriptionPrivate=db.Column(db.Boolean, default=True)
+    titlePrivate=db.Column(db.Boolean, default=True)
     def __init__(
             self,
             id,
@@ -307,7 +310,9 @@ class Request(db.Model):
             creator_id=None,
             offline_submission_type=None,
             date_received=None,
-            agency=None
+            agency=None,
+            descriptionPrivate=True,
+            titlePrivate=True
     ):
         self.id = id
         self.summary = summary
@@ -318,6 +323,9 @@ class Request(db.Model):
         if date_received and type(date_received) is datetime:
             self.date_received = date_received
         self.department_id = agency
+        self.descriptionPrivacy = descriptionPrivate
+        self.titlePrivacy=titlePrivate
+
 
     def __repr__(self):
         return '<Request %r>' % self.text
@@ -458,13 +466,18 @@ class Request(db.Model):
                                                  ])) >= self.due_date:
                         return 'due soon'
 
-        if 'Granted' not in self.status:
+        if 'Open' == self.status:
             return 'open'
         else:
-            return self.status
+            return 'in_progress'
 
     @hybrid_property
     def open(self):
+        two_days = datetime.now() + timedelta(days=2)
+        return and_(~self.closed, self.due_date > two_days)
+
+    @hybrid_property
+    def in_progress(self):
         two_days = datetime.now() + timedelta(days=2)
         return and_(~self.closed, self.due_date > two_days)
 

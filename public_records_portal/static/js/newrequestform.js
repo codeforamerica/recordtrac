@@ -1,147 +1,82 @@
-$(function() {
+$(function () {
     $('#step1').fadeIn('fast');
 
     var validContact = false;
     var validAddress = false;
 
-    var addressValidator = new FormValidator('submitRequest', [{
-        name: 'address_1',
-        display: 'Address 1',
-        rules: 'required'
-    }, {
-        name: 'city',
-        display: 'City',
-        rules: 'required'
-    }, {
-        name: 'zip_code',
-        display: 'Zip Code',
-        rules: 'required'
-    }], function(errors, event) {
-        if(errors.length === 0) {
+    $('#submitRequest').validate({
+        rules: {
+            request_agency: {
+                required: true
+            },
+            request_summary: {
+                required: true,
+                maxlength: 90
+            },
+            request_text: {
+                required: true
+            },
+            request_first_name: {
+                required: true
+            },
+            request_last_name: {
+                required: true
+            }
+        },
+        highlight: function (element) {
+            $(element).closest('.control-group').removeClass('success').addClass('error');
+        }
+    });
+
+    $('#button1').click(function () {
+
+        if ($('#submitRequest').valid()) {
+            // scroll to the top of the form
+            $('html, body').animate({
+                scrollTop: $("#submitRequest").offset().top
+            }, 500);
+
+            // fade out step1, fade in step2
+            $('#step1').fadeOut('fast', function () {
+            });
+            $('#step2').fadeIn('slow', function () {
+            });
+            $('#s1').removeClass('active');
+            $('#s2').addClass('active');
+        }
+
+    });
+
+    $('#button2').click(function (e) {
+
+        if ($('#request_address_street_one').val() && $('#request_address_city').val() && $('#request_address_zip').val()) {
             validAddress = true;
         }
-    });
 
-    var contactValidator = new FormValidator('submitRequest', [{
-        name: 'email',
-        display: 'Email',
-        rules: 'required'
-    }, {
-        name: 'phone',
-        display: 'Phone',
-        rules: 'required'
-    }, {
-        name: 'fax',
-        display: 'Fax',
-        rules: 'required'
-    }], function(errors, event) {
-        if(errors.length < 3) {
+        if ($('#request_email').val() || $('#request_email').val() || $('#request_email').val() || validAddress) {
             validContact = true;
         }
-    });
 
-    var validator = new FormValidator('submitRequest', [{
-        name: 'request_agency',
-        display: 'Request Agency',
-        rules: 'required'
-    }, {
-        name: 'request_summary',
-        display: 'Topic',
-        rules: 'required'
-    }, {
-        name: 'request_text',
-        display: 'Request Details',
-        rules: 'required'
-    }, {
-        name: 'request_first_name',
-        display: 'Requester First Name',
-        rules: 'required'
-    }, {
-        name: 'request_last_name',
-        display: 'Request Last Name',
-        rules: 'required'
-    }, {
-        name: 'request_contact_information',
-        display: 'Request Contact Information',
-        rules: 'required'
-    }], function(errors, event) {
-        if (errors.length > 0) {
-            // Show the errors
-            $('#step2').fadeOut('fast', function() {});
-            var errorString = '';
-            for (var i = 0, errorLength = errors.length; i < errorLength; i++) {
-                errorString += errors[i].message + '<br />';
-                if (errors[i].name === 'request_agency') {
-                    $('#missing_agency').show();
-                }
-                if (errors[i].name === 'request_summary') {
-                    $('#missing_summary').show();
-                }
-                if (errors[i].name === 'request_text') {
-                    $('#missing_text').show();
-                }
-                if (errors[i].name === 'request_first_name') {
-                    $('#missing_first_name').show();
-                }
-                if (errors[i].name === 'request_last_name') {
-                    $('#missing_last_name').show();
-                }
-                if (!validContact && !validAddress) {
-                    $('#missing_contact_information').show();
-                }
-            }
-            var stepId = '#step2';
-            var toolTipId = '#detailsTitle';
-
-            if (errorString.indexOf("Request Category") >= 0 || errorString.indexOf("Request Agency") >= 0 || errorString.indexOf("Topic") >= 0) {
-                stepId = '#step1';
-                toolTipId = '#categoryTitle';
-            }
-
-            $(stepId).fadeIn('slow', function() {
-                $('html, body').animate({
-                    scrollTop: $("#submitRequest").offset().top
-                }, 500);
-            });
-
+        if ($('#submitRequest').valid() && !validContact) {
+            e.preventDefault();
+            $('#missing_contact_information').show();
+            $('#request_email').focus();
         }
     });
 
-    $('#button1').click(function() {
-        // scroll to the top of the form
-        $('html, body').animate({
-            scrollTop: $("#submitRequest").offset().top
-        }, 500);
-        confirmation=confirm('By selecting "OK" you are acknowledging that this information will be available to the public');
-        if(confirmation==true){
-            //Do nothing and continue with the transition
-        }
-        else{
-            exit();
-        }
-        // fade out step1, fade in step2
-        $('#step1').fadeOut('fast', function() {});
-        $('#step2').fadeIn('slow', function() {});
-        $('#s1').removeClass('active');
-        $('#s2').addClass('active');
-    });
-
-    $('#button2').click(function() {
-
-
-    });
-
-    $('#back').click(function() {
+    $('#back').click(function () {
         // scroll to the top of the form
         $('html, body').animate({
             scrollTop: $("#submitRequest").offset().top
         }, 500);
 
         // fade out step1, fade in step2
-        $('#step2').fadeOut('fast', function() {});
-        $('#step1').fadeIn('slow', function() {});
+        $('#step2').fadeOut('fast', function () {
+        });
+        $('#step1').fadeIn('slow', function () {
+        });
     });
-    $('#s1 a').click(function() {
+    $('#s1 a').click(function () {
         // when step one is clicked, go to step 1
 
         if (Modernizr.touch) {
@@ -153,13 +88,15 @@ $(function() {
         }
 
 
-        $('#step2').fadeOut('fast', function() {});
+        $('#step2').fadeOut('fast', function () {
+        });
         $("#s2").removeClass("active");
         $("#s1").addClass("active");
-        $('#step1').fadeIn('slow', function() {});
+        $('#step1').fadeIn('slow', function () {
+        });
     });
 
-    $('#s2 a').click(function() {
+    $('#s2 a').click(function () {
         // when step two is clicked, go to step 1
 
         // validation
@@ -177,10 +114,25 @@ $(function() {
             // don't scroll to the top
         }
 
-        $('#step1').fadeOut('fast', function() {});
+        $('#step1').fadeOut('fast', function () {
+        });
         $("#s1").removeClass("active");
         $("#s2").addClass("active");
-        $('#step2').fadeIn('slow', function() {});
+        $('#step2').fadeIn('slow', function () {
+        });
     });
 
+    // displays characters remaining, highlights extra characters
+    var text_max = 90;
+    $('#summary_count').text(text_max + ' characters remaining');
+
+    $('#request_summary').keyup(function () {
+        var summary = $('request_summary');
+        var text_length = $('#request_summary').val().length;
+        var text_remaining = text_max - text_length;
+        if (text_remaining < 0) {
+            //highlight range of summary (90:) red
+        }
+        $('#summary_count').text(text_remaining + ' characters remaining');
+    });
 });

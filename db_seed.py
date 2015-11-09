@@ -9,6 +9,8 @@ common_requests = ['City Council meeting minutes', 'Police Report', 'Incident Re
 
 departments = [d.name for d in models.Department.query.all()]
 people = [d.email for d in models.User.query.all()]
+categories = [
+    'Business', 'Civic Services', 'Culture & Recreation', 'Education', 'Environment', 'Health', 'Housing & Development', 'Public Safety', 'Social Services', 'Transportation']
 reasons = ['They have the document', 'They would know more about this', 'They are my backup', 'Can you look into this?']
 documents = ['Minutes', 'Report']
 answers = ["Yep, thanks so much!", "No, nevermind then."]
@@ -17,6 +19,7 @@ answers = ["Yep, thanks so much!", "No, nevermind then."]
 for i in range(20):
 	request_type = random.choice(common_requests)
 	request_department = random.choice(departments)
+	# request_category = random.choice(categories)
 	random_number = random.randrange(0, 901, 4)
 	another_random_number =  random.randrange(0, 901, 4)
 	request_text = "%(request_type)s %(random_number)s" % locals()
@@ -35,3 +38,5 @@ for i in range(20):
 				prr.close_request(request_id = request_id, reason = "Record does not exist.", user_id = 1)
 		prr.assign_owner(request_id = request_id, reason = random.choice(reasons), email = random.choice(people))
 		db_helpers.add_staff_participant(request_id = request_id, email = random.choice(people), reason = random.choice(reasons))
+
+
