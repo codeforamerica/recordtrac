@@ -30,7 +30,7 @@ from flask import render_template, make_response
 from models import *
 import ldap
 cal = Calendar()
-
+#CACERTFILE=os.path.join()
 CACERTFILE='/Users/administrator/Desktop/ldaps-dev.crt'
 
 def id_counter():
