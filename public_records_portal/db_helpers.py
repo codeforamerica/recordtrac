@@ -28,10 +28,14 @@ from xhtml2pdf import pisa
 from flask import render_template, make_response
 
 from models import *
-import ldap
+import ssl
+from flask_ldapconn import LDAPConn
+from ldap3 import SUBTREE
+
 cal = Calendar()
-#CACERTFILE=os.path.join()
-CACERTFILE='/Users/administrator/Desktop/ldaps-dev.crt'
+
+
+# CACERTFILE='/Users/administrator/Desktop/ldaps-dev.crt'
 
 def id_counter():
     i = 0
@@ -273,22 +277,43 @@ def get_user_by_id(id):
 
 ### @export "authenticate_login"
 def authenticate_login(email, password):
-    l = ldap.initialize('ldaps://ldaps-dev.nycid.nycnet:636/')
-    try:
-        user_dn = "cn=OpenFOILTestUser1,cn=OpenFOILserviceuser,ou=accounts,cn=services"
-        user_pw = ",D~X~vQQf627"
-        CACERTFILE='/Users/administrator/Desktop/ldaps-dev.crt'
-        ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT,ldap.OPT_X_TLS_DEMAND)
-        ldap.set_option(ldap.OPT_X_TLS_CACERTFILE,CACERTFILE)
-        l.start_tls_s()
-        l.bind_s(user_dn, user_pw)
-    except ldap.INVALID_CREDENTIALS:
-        print "Your username or password is incorrect."
-    except ldap.LDAPError, e:
-        if type(e.message) == dict and e.message.has_key('desc'):
-            print e.message['desc']
-        else:
-            print e
+    LDAP_SERVER = 'ldaps://ldaps-dev.nycid.nycnet'
+    LDAP_PORT = 636
+    LDAP_BINDDN = "cn=OpenFOILTestUser1,cn=OpenFOILserviceuser,ou=accounts,cn=services"
+    LDAP_SECRET = ''
+    LDAP_TIMEOUT = 10
+    LDAP_USE_TLS = True  # default
+    LDAP_REQUIRE_CERT = ssl.CERT_REQUIRED  # default: CERT_REQUIRED
+    LDAP_TLS_VERSION = ssl.PROTOCOL_TLSv1_2  # default: PROTOCOL_TLSv1
+    LDAP_CERT_PATH = '/Users/administrator/Desktop/ldaps-dev.crt'
+
+    username = email
+    password = password
+    # attribute = 'uid'
+    search_filter = ('(active=1)')
+
+    with app.app_context():
+    retval = ldap.authenticate(username, password, LDAP_BINDDN, search_filter')
+    if not retval:
+        return 'Invalid credentials.'
+    return 'Welcome %s.' % username
+
+    # l = ldap.initialize('ldaps://ldaps-dev.nycid.nycnet:636/')
+    # try:
+    #     user_dn = "cn=OpenFOILTestUser1,cn=OpenFOILserviceuser,ou=accounts,cn=services"
+    #     user_pw = ",D~X~vQQf627"
+    #     CACERTFILE='/Users/administrator/Desktop/ldaps-dev.crt'
+    #     ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT,ldap.OPT_X_TLS_DEMAND)
+    #     ldap.set_option(ldap.OPT_X_TLS_CACERTFILE,CACERTFILE)
+    #     l.start_tls_s()
+    #     l.bind_s(user_dn, user_pw)
+    # except ldap.INVALID_CREDENTIALS:
+    #     print "Your username or password is incorrect."
+    # except ldap.LDAPError, e:
+    #     if type(e.message) == dict and e.message.has_key('desc'):
+    #         print e.message['desc']
+    #     else:
+    #         print e
 
     user = User.query.filter_by(email=email).first()
     if user and (user.is_staff or user.is_admin()):
