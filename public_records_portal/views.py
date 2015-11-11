@@ -197,8 +197,6 @@ def new_request(passed_recaptcha=False, data=None):
 
         else:
             form = NewRequestForm(request.form)
-            print form.data
-            print request.form
             request_agency = form.request_agency.data
             request_summary = form.request_summary.data
             request_text = form.request_text.data
@@ -234,6 +232,52 @@ def new_request(passed_recaptcha=False, data=None):
                 city=request_address_city,
                 state=request_address_state,
                 zip=request_address_zip)
+
+            # Check Summary
+            if not (request_summary and request_summary.strip()):
+                errors.append('You must enter a summary for this request')
+            elif len(request_summary) > 250:
+                errors.append(
+                    'The request summary must be less than 250 characters')
+
+            # Check Description of Request
+            if not (request_text and request_text.strip()):
+                errors.append('You must enter a description for this request')
+            elif len(request_summary) > 5000:
+                errors.append(
+                    'The request description must be less than 5000 characters')
+            try:
+                request_attachment = request.files['request_attachment']
+            except:
+                app.logger.info("\n\nNo file passed in")
+
+            #Check first name and last name
+            if not (request_first_name and request_first_name.strip()):
+                errors.append("Please enter the requester's first name")
+            elif not (request_last_name and request_last_name.strip()):
+                errors.append("Please enter the requester's last name")
+            else:
+                alias = request_first_name + " " + request_last_name
+
+            #Check Contact Information
+            zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
+            email_valid = (request_email != '')
+            phone_valid = (request_phone is not None)
+            fax_valid = (request_fax is not None)
+            street_valid = (request_address_street_one != '')
+            city_valid = (request_address_city != '')
+            state_valid = (request_address_state != '')
+            zip_valid = (
+                request_address_zip != '' and zip_reg_ex.match(request_address_zip))
+            address_valid = (
+                street_valid and city_valid and state_valid and zip_valid)
+
+            if not (email_valid or phone_valid or fax_valid or address_valid):
+                errors.append(
+                    "Please enter at least one type of contact information")
+
+            if not data:
+                data = request.form.copy()
 
             if is_new == False:
                 errors.append(
