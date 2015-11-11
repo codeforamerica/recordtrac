@@ -42,6 +42,69 @@ def upload_file(document, request_id):
     if document:
         app.logger.info("\n\nbegin file upload")
         allowed = allowed_file(document.filename)
+        HOST    = 'CPVSCAN-STG.nycnet'
+        SERVICE = 'icap://CPVSCAN-STG.nycnet'
+        PORT    = 1344
+
+        # REQMOD, POST
+        print "----- REQMOD - POST -----"
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        except socket.error, msg:
+            print "Unable to bind socket and create connection to ICAP server."
+
+        try:
+            sock.connect((HOST, PORT))
+        except socket.error, msg:
+            print("[ERROR] %s\n" % msg[1])
+            print("Unable to verify file for malware. Please try again.")
+
+        sock.send( "REQMOD %s ICAP/1.0\r\n" % ( SERVICE ) )
+        sock.send( "Host: %s\r\n" % ( HOST ) )
+        sock.send( "Encapsulated: req-hdr=0, null-body=170\r\n" )
+        sock.send( "\r\n" )
+
+        sock.send( "POST / HTTP/1.1\r\n" )
+        sock.send( "Host: www.origin-server.com\r\n" )
+        sock.send( "Accept: text/html, text/plain\r\n" )
+        sock.send( "Accept-Encoding: compress\r\n" )
+        sock.send( "Cookie: ff39fk3jur@4ii0e02i\r\n" )
+        sock.send( "If-None-Match: \"xyzzy\", \"r2d2xxxe\"\r\n" )
+        sock.send( "\r\n" )
+
+
+        # Attempted to use base64 encoding to bypass signature and change it
+        # currently receiving 200 OK response to encar.com.
+        # with open('eicar.com','rb') as f:
+        #     encoded = base64.b64encode(f.read())
+
+        with open(document, "rb") as uploadedFile:
+          f = uploadedFile.read()
+          b = bytearray(f)
+
+        sock.send( uploadedFile )
+        sock.send( "OPTIONS icap://CPVSCAN-STG.nycnet:1344/wwrespmod?profile=default ICAP/1.0" )
+        sock.send( "Host: CPVSCAN-STG.nycnet" )
+        sock.send( "ICAP/1.0 200 OK" )
+        sock.send( "Methods: REQMOD, RESPMOD")
+        sock.send( "Options-TTL: 3600")
+        sock.send( "Encapsulated: null-body=0")
+        sock.send( "Max-Connections: 400")
+        sock.send( "Preview: 30")
+        sock.send( "Service: McAfee Web Gateway 7.5.2 build 20202")
+        sock.send( '''ISTag: "00004154-2.26.156-00007980"''')
+        sock.send( "Allow: 204")
+
+        data = sock.recv(1024)
+        string = ""
+        while len(data):
+            string = string + data
+            data = sock.recv(1024)
+        if "200 OK" in string:
+            continue
+        else:
+            # Loop not completed
+            print "Malware detected. Loop user around."
         app.logger.info("\n\n%s is allowed: %s" % (document.filename, allowed[0]))
         if allowed[0]:
             filename = secure_filename(document.filename)
