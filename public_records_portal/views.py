@@ -877,7 +877,7 @@ def about(user_id):
 @login_required
 def logout():
     logout_user()
-    return index()
+    return redirect(url_for('index'))
 
 def get_user_id():
     if current_user.is_authenticated:
