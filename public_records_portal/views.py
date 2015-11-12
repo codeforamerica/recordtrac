@@ -1267,7 +1267,7 @@ def internal_server_error(e):
     return render_template("500.html"), 500
 @app.errorhandler(403)
 def access_denied(e):
-    return render_template("403.html"), 403
+    return redirect(url_for('login'))
 @app.errorhandler(501)
 def unexplained_error(e):
     return render_template("501.html"), 501
