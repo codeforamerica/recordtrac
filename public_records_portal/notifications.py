@@ -2,7 +2,9 @@
     public_records_portal.notifications
     ~~~~~~~~~~~~~~~~
 
-    Implements e-mail notifications for RecordTrac. Flask-mail is a dependency, and the following environment variables need to be set in order for this to work: MAIL_SERVER, MAIL_PORT, MAIL_USE_TLS, MAIL_USERNAME, MAIL_PASSWORD, and DEFAULT_MAIL_SENDER.
+    Implements e-mail notifications for RecordTrac. Flask-mail is a dependency, and the following environment variables
+    need to be set in order for this to work: MAIL_SERVER, MAIL_PORT, MAIL_USE_TLS, MAIL_USERNAME, MAIL_PASSWORD,
+    and DEFAULT_MAIL_SENDER.
 
 """
 
@@ -181,6 +183,7 @@ def send_prr_email(page, recipients, subject, template, include_unsubscribe_link
 
 
 def send_email(body, recipients, subject, include_unsubscribe_link=True, cc_everyone=False, attached_file=None):
+
     mail = Mail(app)
 
     plaintext = ""
@@ -198,7 +201,7 @@ def send_email(body, recipients, subject, include_unsubscribe_link=True, cc_ever
 
     # if not include_unscubscribe_link:
     # message.add_filter('subscriptiontrack', 'enable', 0)
-    if 'DEV_EMAIL' in app.config:
+    if app.config['DEV_EMAIL'] != '':
         recipients = [app.config['DEV_EMAIL']]
     if cc_everyone:
         pass
@@ -208,7 +211,6 @@ def send_email(body, recipients, subject, include_unsubscribe_link=True, cc_ever
     # 		message.add_cc(recipient)
     else:
         for recipient in recipients:
-            # if should_notify(recipient):
             recipient = recipient.replace('\\','').replace("'",'')
             message.add_recipient(recipient)
 
