@@ -95,11 +95,8 @@ def upload_file(document, request_id):
         sock.send( '''ISTag: "00004154-2.26.156-00007980"''')
         sock.send( "Allow: 204")
 
-        data = sock.recv(1024)
+        data = sock.recv(2048)
         string = ""
-        while len(data):
-            string = string + data
-            data = sock.recv(1024)
         if "200 OK" in string:
             continue
         else:
