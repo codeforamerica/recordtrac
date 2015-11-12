@@ -23,12 +23,14 @@ categories = [
     ('Civic Services', 'Civic Services'),
     ('Culture & Recreation', 'Culture & Recreation'),
     ('Education', 'Education'),
+    ('Government Administration', 'Government Administration'),
     ('Environment', 'Environment'),
     ('Health', 'Health'),
     ('Housing & Development', 'Housing & Development'),
     ('Public Safety', 'Public Safety'),
     ('Social Services', 'Social Services'),
-    ('Transportation', 'Transportation')
+    ('Transportation', 'Transportation'),
+    ('')
 ]
 
 formats = [
