@@ -185,8 +185,8 @@
                                     </table>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                    <a href="#" id="submit" class="btn btn-success success">Submit</a>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal" disabled>Cancel</button disabled>
+                                    <a href="#" id="submit" class="btn btn-success success" disabled>Submit</a>
                                 </div>
                             </div>
                         </div>
@@ -411,13 +411,13 @@
                 </a>
             </li>
             <li>
-                <a href="#acknowledge_and_grant_request" role="tab"
+                <a href="#acknowledge_and_grant_request" id="grant_request_tab" role="tab"
                    data-toggle="tab">
                     <small>Grant Request</small>
                 </a>
             </li>
             <li>
-                <a href="#acknowledge_and_deny_request" role="tab"
+                <a href="#acknowledge_and_deny_request" id="deny_request_tab" role="tab"
                    data-toggle="tab">
                     <small>Deny Request</small>
                 </a>
@@ -858,10 +858,11 @@
 
 <script>
 $(document).ready(function(){
-    $('#acknowledge_request_tab').click();
-    $('#acknowledge_status').attr('size',6);
+    $('#deny_request_tab').click();
+    //$('#close_reasons').attr('size',6);
+    //$('#acknowledge_status').attr('size',6);
     bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
-       [{selector:'#acknowledge_status',title:'Manage a Request',content:'An estimated time to complete the request can be selected or a custom date can be entered.',placement:'right',finishButton:'<a class="btn" href="/city/tutorial/12"> «Previous</a> <a class="btn" href="/city/tutorial/14b">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a>'}
+       [{selector:'#acknowledge_and_deny_request',title:'Respond to a Request',content:'You can choose to deny a request by selecting a reason and then clicking the Close this request button.',placement:'right',finishButton:'<a class="btn" href="/city/tutorial/14e"> «Previous</a> <a class="btn" href="/city/tutorial/14g">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a>'}
        ]
     });
 });

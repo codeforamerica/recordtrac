@@ -185,11 +185,15 @@
                                     </table>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                    <a href="#" id="submit" class="btn btn-success success">Submit</a>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal" disabled>Cancel</button>
+                                    <a href="#" id="submit" class="btn btn-success success" disabled>Submit</a>
                                 </div>
                             </div>
                         </div>
+<div class="popover fade bottom in" style="top: 343.1875px; left: 118.453125px; display: block;"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title">Track a Request</h3><div class="popover-content">A confirmation box is displayed before an email notification is sent to the requestor.<div class="bootstro-nav-wrapper"></div><div class="bootstro-finish-btn-wrapper"><a class="btn" href="/city/tutorial/14"> «Previous</a> <a class="btn" href="/city/tutorial/14c">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a></div></div></div></div>
+			</div>
+		</div>
+	</div>
                     </div>
                     
                     <!-- Add a public note form -->
@@ -406,7 +410,7 @@
     <div class="span12">
         <ul class="nav nav-pills nav-justified" role="tablist">
             <li>
-                <a href="#acknowledge_request" id="acknowledge_request_tab" role="tab" data-toggle="tab">
+                <a href="#acknowledge_request" role="tab" data-toggle="tab">
                     <small>Acknowledge Request</small>
                 </a>
             </li>
@@ -435,7 +439,7 @@
                     <h4>Estimated Duration</h4>
                     <select class="span12" id="acknowledge_status"
                             name="acknowledge_status">
-                        <option value="Acknowledged - 15 days" id="acknowledge_request_15_days">Acknowledged - 15
+                        <option value="Acknowledged - 15 days">Acknowledged - 15
                             days
                         </option>
                         <option value="Acknowledged - 30 days">Acknowledged - 30
@@ -858,12 +862,7 @@
 
 <script>
 $(document).ready(function(){
-    $('#acknowledge_request_tab').click();
-    $('#acknowledge_status').attr('size',6);
-    bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
-       [{selector:'#acknowledge_status',title:'Manage a Request',content:'An estimated time to complete the request can be selected or a custom date can be entered.',placement:'right',finishButton:'<a class="btn" href="/city/tutorial/12"> «Previous</a> <a class="btn" href="/city/tutorial/14b">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a>'}
-       ]
-    });
+    $('#rerouteButton').click();              
 });
 </script>
 

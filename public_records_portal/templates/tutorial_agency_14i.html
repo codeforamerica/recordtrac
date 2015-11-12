@@ -411,7 +411,7 @@
                 </a>
             </li>
             <li>
-                <a href="#acknowledge_and_grant_request" role="tab"
+                <a href="#acknowledge_and_grant_request" id="grant_request_tab" role="tab"
                    data-toggle="tab">
                     <small>Grant Request</small>
                 </a>
@@ -648,7 +648,7 @@
             
             
             
-            <div class="row-fluid response-wrapper">
+            <div class="row-fluid response-wrapper" id="list_of_responses">
                 <div class="span1 text-left">
                     <i class="icon-edit icon-large"></i>
                 </div>
@@ -858,10 +858,10 @@
 
 <script>
 $(document).ready(function(){
-    $('#acknowledge_request_tab').click();
-    $('#acknowledge_status').attr('size',6);
+    //$('#grant_request_tab').click();
+    //$('#acknowledge_status').attr('size',6);
     bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
-       [{selector:'#acknowledge_status',title:'Manage a Request',content:'An estimated time to complete the request can be selected or a custom date can be entered.',placement:'right',finishButton:'<a class="btn" href="/city/tutorial/12"> «Previous</a> <a class="btn" href="/city/tutorial/14b">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a>'}
+       [{selector:'#list_of_responses',title:'Track a Request',content:'The response to the request to date are displayed.',placement:'right',finishButton:'<a class="btn" href="/city/tutorial/14h"> «Previous</a> <a class="btn" href="/city/tutorial/14j">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a>'}
        ]
     });
 });

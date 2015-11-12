@@ -185,11 +185,13 @@
                                     </table>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                    <a href="#" id="submit" class="btn btn-success success">Submit</a>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal" disabled>Cancel</button disabled>
+                                    <a href="#" id="submit" class="btn btn-success success" disabled>Submit</a>
                                 </div>
                             </div>
                         </div>
+<div class="popover fade bottom in" style="top: 250.1875px; left: 118.453125px; display: block;"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title">Track a Request</h3><div class="popover-content">A confirmation box is displayed before an email notification is sent to the requestor.<div class="bootstro-nav-wrapper"></div><div class="bootstro-finish-btn-wrapper"><a class="btn" href="/city/tutorial/14d"> «Previous</a> <a class="btn" href="/city/tutorial/14f">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a></div></div></div>
+	</div>
                     </div>
                     
                     <!-- Add a public note form -->
@@ -411,7 +413,7 @@
                 </a>
             </li>
             <li>
-                <a href="#acknowledge_and_grant_request" role="tab"
+                <a href="#acknowledge_and_grant_request" id="grant_request_tab" role="tab"
                    data-toggle="tab">
                     <small>Grant Request</small>
                 </a>
@@ -858,12 +860,13 @@
 
 <script>
 $(document).ready(function(){
-    $('#acknowledge_request_tab').click();
-    $('#acknowledge_status').attr('size',6);
-    bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
-       [{selector:'#acknowledge_status',title:'Manage a Request',content:'An estimated time to complete the request can be selected or a custom date can be entered.',placement:'right',finishButton:'<a class="btn" href="/city/tutorial/12"> «Previous</a> <a class="btn" href="/city/tutorial/14b">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a>'}
+    $('#grant_request_tab').click();
+    $('#addRecordButton').click();
+    //$('#acknowledge_status').attr('size',6);
+    /*bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
+       [{selector:'#confirm-submit',title:'Respond to a Request',content:'You can click the Grant Request button to provide the information to grant the request.',placement:'right',finishButton:'<a class="btn" href="/city/tutorial/14b"> «Previous</a> <a class="btn" href="/city/tutorial/14d">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a>'}
        ]
-    });
+    });*/
 });
 </script>
 
