@@ -320,7 +320,7 @@ class Request(db.Model):
             date_received=None,
             agency=None,
             descriptionPrivate=True,
-            titlePrivate=True
+            titlePrivate=False
     ):
         self.id = id
         self.summary = summary
