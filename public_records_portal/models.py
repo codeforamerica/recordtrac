@@ -346,8 +346,7 @@ class Request(db.Model):
                             + timedelta(
                 days=int(app.config['DAYS_AFTER_EXTENSION']))
         else:
-            self.due_date = self.date_received \
-                            + timedelta(days=int(app.config['DAYS_TO_FULFILL']))
+            self.due_date = cal.addbusdays(self.date_received, int(app.config['DAYS_TO_FULFILL']))
 
     def extension(self, days_after=int(app.config['DAYS_AFTER_EXTENSION']),
                   custom_due_date=None):
