@@ -37,8 +37,6 @@ from datetime import datetime, timedelta, date
 from business_calendar import Calendar
 cal = Calendar()
 
-
-
 # Initialize login
 app.logger.info("\n\nInitialize login.")
 app.logger.info("\n\nEnvironment is %s" % app.config['ENVIRONMENT'])
@@ -1049,7 +1047,6 @@ def get_attachments(resource):
     app.logger.info("\n\ngetting attachment file")
 
     return send_from_directory(app.config["UPLOAD_FOLDER"], resource, as_attachment=True)
-
 
 @app.route("/pdfs/<string:resource>", methods=["GET"])
 def get_pdfs(resource):
