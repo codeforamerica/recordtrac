@@ -76,6 +76,11 @@ envvars = [
     'RECAPTCHA_SECRET_KEY', # Secret key for Google ReCaptcha
     'RECAPTCHA_SITE_KEY', # Site key for Google ReCaptcha
 
+    # ICAP Variables
+    'HOST',
+    'SERVICE',
+    'PORT',
+
 ]
 
 for envvar in envvars:

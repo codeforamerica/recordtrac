@@ -22,9 +22,9 @@ def should_upload():
 # These are the extensions that can be uploaded:
 ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'rtf','odt', 'odp', 'ods', 'odg', 'odf',
                      'ppt', 'pps', 'xls', 'docx', 'pptx', 'ppsx', 'xlsx']
-HOST=app.config(['HOST'])
-SERVICE=app.config(['SERVICE'])
-PORT=app.config(['PORT'])
+HOST=app.config['HOST']
+SERVICE=app.config['SERVICE']
+PORT=app.config['PORT']
 
 def get_download_url(doc_id, record_id=None):
     if not should_upload():
