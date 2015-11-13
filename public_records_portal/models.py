@@ -319,8 +319,8 @@ class Request(db.Model):
             offline_submission_type=None,
             date_received=None,
             agency=None,
-            descriptionPrivate=True,
-            titlePrivate=False
+            descriptionPrivate=False,
+            titlePrivate=True
     ):
         self.id = id
         self.summary = summary
