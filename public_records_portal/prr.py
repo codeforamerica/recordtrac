@@ -321,7 +321,7 @@ def make_request(agency=None, summary=None, text=None, attachment=None,
         subscriber_id, is_new_subscriber = create_subscriber(request_id=request_id, user_id=subscriber_user_id)
         if subscriber_id:
             generate_prr_emails(request_id, notification_type="Public Notification Template 01",
-                                user_id=subscriber_user_id, text=summary)  # Send them an e-mail notification
+                                user_id=subscriber_user_id, text=summary,department_name=agency)  # Send them an e-mail notification
     if attachment:
         upload_record(request_id, attachment_description, user_id, attachment)
     return request_id, True
@@ -393,7 +393,9 @@ def assign_owner(request_id, reason=None, email=None):
     user_id = get_attribute(attribute="user_id", obj_id=owner_id, obj_type="Owner")
     # Send notifications
     if is_new_owner:
-        generate_prr_emails(request_id=request_id, notification_type="Request assigned", user_id=user_id)
+        user = User.query.get(user_id)
+        user_name = user.alias
+        generate_prr_emails(request_id=request_id, notification_type="Request assigned", user_id=user_id, user_name=user_name)
     return owner_id
 
 
