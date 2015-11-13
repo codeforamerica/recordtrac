@@ -7,10 +7,8 @@
 """
 
 import os
-
 from werkzeug import secure_filename
 import pyclamd
-
 from public_records_portal import app
 
 
@@ -22,10 +20,11 @@ def should_upload():
     return False
 
 # These are the extensions that can be uploaded:
-ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'ps', 'rtf', 'epub', 'key', 'odt', 'odp', 'ods', 'odg', 'odf', 'sxw', 'sxc',
-                      'sxi', 'sxd', 'ppt', 'pps', 'xls', 'zip', 'docx', 'pptx', 'ppsx', 'xlsx', 'tif', 'tiff']
-clamdiagnostic = pyclamd.ClamdAgnostic()
-
+ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'rtf','odt', 'odp', 'ods', 'odg', 'odf',
+                     'ppt', 'pps', 'xls', 'docx', 'pptx', 'ppsx', 'xlsx']
+HOST=app.config(['HOST'])
+SERVICE=app.config(['SERVICE'])
+PORT=app.config(['PORT'])
 
 def get_download_url(doc_id, record_id=None):
     if not should_upload():
@@ -39,13 +38,8 @@ def upload_file(document, request_id):
     if not should_upload():
         app.logger.info("\n\nshoud not upload file")
         return '1', None  # Don't need to do real uploads locally
-    if document:
+    if allowed_file(document.filename):
         app.logger.info("\n\nbegin file upload")
-        allowed = allowed_file(document.filename)
-        HOST    = 'CPVSCAN-STG.nycnet'
-        SERVICE = 'icap://CPVSCAN-STG.nycnet'
-        PORT    = 1344
-
         # REQMOD, POST
         print "----- REQMOD - POST -----"
         try:
@@ -71,20 +65,12 @@ def upload_file(document, request_id):
         sock.send( "Cookie: ff39fk3jur@4ii0e02i\r\n" )
         sock.send( "If-None-Match: \"xyzzy\", \"r2d2xxxe\"\r\n" )
         sock.send( "\r\n" )
-
-
-        # Attempted to use base64 encoding to bypass signature and change it
-        # currently receiving 200 OK response to encar.com.
-        # with open('eicar.com','rb') as f:
-        #     encoded = base64.b64encode(f.read())
-
         with open(document, "rb") as uploadedFile:
           f = uploadedFile.read()
           b = bytearray(f)
-
         sock.send( uploadedFile )
-        sock.send( "OPTIONS icap://CPVSCAN-STG.nycnet:1344/wwrespmod?profile=default ICAP/1.0" )
-        sock.send( "Host: CPVSCAN-STG.nycnet" )
+        sock.send( "OPTIONS icap://"+app.config(['HOST'])+":"+app.config(['PORT'])+"/wwrespmod?profile=default ICAP/1.0" )
+        sock.send( "Host: %s\r\n" % ( HOST ) )
         sock.send( "ICAP/1.0 200 OK" )
         sock.send( "Methods: REQMOD, RESPMOD")
         sock.send( "Options-TTL: 3600")
@@ -96,24 +82,16 @@ def upload_file(document, request_id):
         sock.send( "Allow: 204")
 
         data = sock.recv(2048)
-        string = ""
+        string = data
         if "200 OK" in string:
-            continue
-        else:
-            # Loop not completed
-            print "Malware detected. Loop user around."
-        app.logger.info("\n\n%s is allowed: %s" % (document.filename, allowed[0]))
-        if allowed[0]:
+            app.logger.info("\n\n%s is allowed: %s" % (document.filename, allowed[0]))
             filename = secure_filename(document.filename)
-            app.logger.info("\n\nfilename after secure_filename: %s" % (filename))
-            link_back = app.config['APPLICATION_URL'] + 'request/' + str(request_id)
-            app.logger.info("\n\nlink_back: %s" % (link_back));
-
             upload_path = upload_file_locally(document, filename, request_id)
             return upload_path, filename
-
         else:
-            return allowed  # Returns false and extension
+            # Loop not completed
+            app.logger.error("Malware detected. Loop user around.")
+            return None, None
     return None, None
 
 
@@ -126,10 +104,10 @@ def upload_file_locally(document, filename, request_id):
 
     document.save(upload_path)
 
-    if clamdiagnostic.scan_file(upload_path) is not None:
-        os.remove(upload_path)
-        app.logger.info("\n\nVirus found in uploaded file, file deleted")
-        return "VIRUS_FOUND"
+    # if clamdiagnostic.scan_file(upload_path) is not None:
+    #     os.remove(upload_path)
+    #     app.logger.info("\n\nVirus found in uploaded file, file deleted")
+    #     return "VIRUS_FOUND"
 
     app.logger.info("\n\nfile uploaded to local successfully")
 
@@ -139,4 +117,4 @@ def upload_file_locally(document, filename, request_id):
 ### @export "allowed_file"
 def allowed_file(filename):
     ext = filename.rsplit('.', 1)[1]
-    return ext in ALLOWED_EXTENSIONS, ext
+    return ext in ALLOWED_EXTENSIONS
