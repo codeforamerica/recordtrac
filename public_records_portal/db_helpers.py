@@ -30,10 +30,11 @@ from flask import render_template, make_response
 from models import *
 import ssl
 from flask_ldapconn import LDAPConn
-from ldap3 import SUBTREE
-
+from ldap3 import SUBTREE, Server, Connection, Tls
+import ldap
 cal = Calendar()
 
+ldap = LDAPConn(app)
 
 # CACERTFILE='/Users/administrator/Desktop/ldaps-dev.crt'
 
@@ -278,14 +279,24 @@ def get_user_by_id(id):
 ### @export "authenticate_login"
 def authenticate_login(email, password):
     LDAP_SERVER = 'ldaps://ldaps-dev.nycid.nycnet'
+    # app.config['LDAP_SERVER'] = LDAP_SERVER
     LDAP_PORT = 636
-    LDAP_BINDDN = "cn=OpenFOILTestUser1,cn=OpenFOILserviceuser,ou=accounts,cn=services"
+    # app.config['LDAP_PORT']= LDAP_PORT
+    LDAP_BINDDN = "cn=OpenFOILserviceuser,ou=accounts,o=services"
+    # app.config['LDAP_BINDDN'] = LDAP_BINDDN
     LDAP_SECRET = ''
     LDAP_TIMEOUT = 10
     LDAP_USE_TLS = True  # default
+    # app.config['LDAP_USE_TLS'] = LDAP_USE_TLS
     LDAP_REQUIRE_CERT = ssl.CERT_REQUIRED  # default: CERT_REQUIRED
     LDAP_TLS_VERSION = ssl.PROTOCOL_TLSv1_2  # default: PROTOCOL_TLSv1
-    LDAP_CERT_PATH = '/Users/administrator/Desktop/ldaps-dev.crt'
+    LDAP_CERT_PATH = '/Users/administrator/Downloads/ldaps-dev.pem'
+    app.config['LDAP_REQUIRE_CERT'] = LDAP_REQUIRE_CERT
+    app.config['LDAP_TLS_VERSION'] = LDAP_TLS_VERSION
+    app.config['LDAP_CERT_PATH'] = LDAP_CERT_PATH
+
+    ldap.tls = Tls(validate = ssl.CERT_REQUIRED, version = LDAP_TLS_VERSION, ca_certs_file = LDAP_CERT_PATH)
+    ldap.ldap_server = Server(host = LDAP_SERVER, port = LDAP_PORT, use_ssl = True, tls = ldap.tls)
 
     username = email
     password = password
@@ -293,7 +304,7 @@ def authenticate_login(email, password):
     search_filter = ('(active=1)')
 
     with app.app_context():
-    retval = ldap.authenticate(username, password, LDAP_BINDDN, search_filter')
+        retval = ldap.authenticate(username, password, LDAP_BINDDN, search_filter)
     if not retval:
         return 'Invalid credentials.'
     return 'Welcome %s.' % username
