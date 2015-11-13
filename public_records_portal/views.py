@@ -36,7 +36,7 @@ from models import AnonUser
 from datetime import datetime, timedelta, date
 from business_calendar import Calendar
 cal = Calendar()
-import socket
+
 
 
 # Initialize login
