@@ -331,7 +331,7 @@ class Request(db.Model):
         if date_received and type(date_received) is datetime:
             self.date_received = date_received
         self.department_id = agency
-        self.descriptionPrivacy = descriptionPrivate
+        self.descriptionPrivate = descriptionPrivate
         self.titlePrivacy=titlePrivate
 
 
