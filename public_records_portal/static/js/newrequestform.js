@@ -3,7 +3,7 @@
 $(function() {
 
             var business = ["Department of Consumer Affairs", "Mayor's Office of Contract Services", "Procurement Policy Board",
-            "Small Business Sercies"]
+            "Small Business Servcies"]
             var civicServices =["Department of Records"]
             var cultureAndRecreation = ["Art Commission","Department of Cultural Affairs", "Mayor's Office of Media and Entertainment",
                 "Department of Parks and Recreation"]
@@ -80,7 +80,9 @@ $(function() {
                 var $jsontwo = $("#agency");
                 $jsontwo.empty();
                 for (var i = 0 ; i < vals.length; i++){
-                    $jsontwo.append("<option>" + vals[i] + "</option>");
+                    $jsontwo.value=vals[i];
+                    $jsontwo.append("<option value=\"" + vals[i] + "\">"  + vals[i] + "</option>");
+
                 };
         });
 
