@@ -31,14 +31,26 @@
                   method="post" action="/new" autocomplete="off"
                   novalidate="novalidate" enctype="multipart/form-data">
                 <fieldset>
-
                     <div class="row-fluid">
                         <div class="span8">
                            <div class="control-group">
                                 <h2>
                                     <small id='categoryTitle' >Category</small>
                                 </h2>
-                                {{ form.request_category(class="input-block-level") }}
+                                    <select id="category" class="input-block-level">
+                                        <option selected value></option>
+                                        <option>Business</option>
+                                        <option>Civic Services</option>
+                                        <option>Culture and Recreation</option>
+                                        <option>Education</option>
+                                        <option>Environment</option>
+                                        <option>Government Administration</option>
+                                        <option>Health</option>
+                                        <option>Housing</option>
+                                        <option>Public</option>
+                                        <option>Social</option>
+                                        <option>Transportation</option>
+                                    </select>
                             </div>
                         </div>
                     </div>
@@ -56,9 +68,14 @@
                                      style="width: calc(100% - 4.5rem);">
                                     Agency Missing
                                 </div>
-                                {{
-                                form.request_agency(class="input-block-level")
-                                }}
+
+                                <select id="agency" class="input-block-level">
+                                    <option selected value></option>
+                                </select>
+{#                                {{#}
+{#                                form.request_agency(class="input-block-level")#}
+{#                                }}#}
+
                             </div>
                         </div>
                     </div>

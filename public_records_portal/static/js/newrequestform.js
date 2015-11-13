@@ -1,8 +1,99 @@
+
+
+$(function() {
+
+            var business = ["Department of Consumer Affairs", "Mayor's Office of Contract Services", "Procurement Policy Board",
+            "Small Business Sercies"]
+            var civicServices =["Department of Records"]
+            var cultureAndRecreation = ["Art Commission","Department of Cultural Affairs", "Mayor's Office of Media and Entertainment",
+                "Department of Parks and Recreation"]
+            var education = ["Department of Education", "School Construction Authroity"]
+            var environment = ["Department of Environmental Protection","Office of Environmental Remediation",
+                                   "Office of Long-Term Planning & Sustainability"]
+            var governmentAdministration=["NYC Office of the Actuary","Office of Administrative Trials and Hearings",
+                                                 "Business Integrity Commission","Department of Citywide Administrative Services",
+                                                 "Civil Service Commission", "Conflicts of Interest Board","Design Commission",
+                                                 "Department of Design and Construction","Equal Employment Practices Commission",
+                                                 "Department of Finance","City Commission on Human Rights",
+                                                 "Department of Information Technology and Telecommunications",
+                                                 "NYC Office of Labor Relations",
+                                                 "Law Department",
+                                                 "Office of Management and Budget",
+                                                 "Mayor's Office",
+                                                 "Office of Payroll Administration"]
+            var health = ["NYC Office of Chief Medical Examiner", "Health and Hospitals Corporation", "Department of Health and Mental Hygiene"]
+            var housingAndDevelopment = ["NYC Office of Chief Medical Examiner", "Health and Hospitals Corporation",
+                              "Department of Health and Mental Hygiene"]
+            var publicSafety = ["Department of Buildings","Department of City Planning", "New York City Housing Authroity",
+                "Housing Recovery Operations", "Landmarks Preservation Commission","Loft Board","Board of Standards and Appeals"]
+            var socialServices = ["Department for the Aging","Administration for Children's Services",
+                                       "Department of Homeless Services","Department of Housing Preservations and Development",
+                                       "Human Resources Administration","Department of Youth and Community Development"]
+            var transportation = ["Taxi and Limousine Commission","Department of Transportation"]
+
+
+        $("#category").change(function() {
+
+            var $dropdown = $(this);
+
+                var key = $dropdown.val();
+                var vals = [];
+
+                switch(key) {
+                    case 'Business':
+                        vals = business;
+                        break;
+                    case 'Civic Services':
+                        vals = civicServices;
+                        break;
+                    case 'Culture and Recreation':
+                        vals=cultureAndRecreation;
+                        break;
+                    case 'Education':
+                        vals=education;
+                        break;
+                    case 'Environment':
+                        vals=environment;
+                        break;
+                    case 'Government Administration':
+                        vals=governmentAdministration;
+                        break;
+                    case 'Health':
+                        vals=health;
+                        break;
+                    case 'Housing':
+                        vals=housingAndDevelopment;
+                        break;
+                    case 'Public':
+                        vals=publicSafety;
+                        break;
+                    case 'Social':
+                        vals=socialServices;
+                        break;
+                    case 'Transportation':
+                        vals=transportation;
+                        break;
+                    case 'base':
+                        vals = ['Please choose from above'];
+                }
+
+                var $jsontwo = $("#agency");
+                $jsontwo.empty();
+                for (var i = 0 ; i < vals.length; i++){
+                    $jsontwo.append("<option>" + vals[i] + "</option>");
+                };
+        });
+
+});
+
+
+
 $(function () {
     $('#step1').fadeIn('fast');
 
     var validContact = false;
     var validAddress = false;
+
 
     $('#submitRequest').validate({
         rules: {
@@ -27,6 +118,7 @@ $(function () {
             $(element).closest('.control-group').removeClass('success').addClass('error');
         }
     });
+
 
     $('#button1').click(function () {
 

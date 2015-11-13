@@ -29,8 +29,7 @@ categories = [
     ('Housing & Development', 'Housing & Development'),
     ('Public Safety', 'Public Safety'),
     ('Social Services', 'Social Services'),
-    ('Transportation', 'Transportation'),
-    ('')
+    ('Transportation', 'Transportation')
 ]
 
 formats = [
