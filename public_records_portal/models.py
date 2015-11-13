@@ -308,7 +308,7 @@ class Request(db.Model):
     offline_submission_type = db.Column(db.String())
     prev_status = db.Column(db.String(400))  # The previous status of the request (open, closed, etc.)
     #Adding new privacy option for description field
-    descriptionPrivate=db.Column(db.Boolean, default=True)
+    descriptionPrivate=db.Column(db.Boolean, default=False)
     titlePrivate=db.Column(db.Boolean, default=True)
     def __init__(
             self,

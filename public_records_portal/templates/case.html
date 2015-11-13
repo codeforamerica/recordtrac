@@ -41,6 +41,9 @@
                         <span class="muted">
                             <a href="{{config['APPLICATION_URL']}}request/{{ req.id }}">{{req.id}}</a>
                         </span>
+                        <div class="muted">
+                            {{req.summary}}
+                        </div>
                     </h3>
                     {% block clarify_request %}
                     <!-- ask a question -->
