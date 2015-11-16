@@ -8,9 +8,8 @@ from __future__ import generators
 
 import uuid
 
-from sqlalchemy import func
-
 import ldap
+from sqlalchemy import func
 
 from models import *
 
@@ -504,10 +503,9 @@ def change_request_status(request_id, status):
     date_created = req.date_received or req.date_created
     if "days" in status:
         days_to_fulfill = re.findall(r"(\d{2}) days", status)[0]
-            print cal.addbusdays(date_created, int(days_to_fulfill))
+        print cal.addbusdays(date_created, int(days_to_fulfill))
         req.due_date = cal.addbusdays(date_created, int(days_to_fulfill))
-
-    db.session.commit()
+        db.session.commit()
 
 
 # @export "find_request"
