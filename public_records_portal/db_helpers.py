@@ -8,9 +8,8 @@ from __future__ import generators
 
 import uuid
 
-from sqlalchemy import func
-
 import ldap
+from sqlalchemy import func
 
 from models import *
 
