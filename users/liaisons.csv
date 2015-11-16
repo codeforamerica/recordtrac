@@ -1,12 +1,66 @@
 department name,PRR liaison,PRR backup
-Commission on Human Rights,tsinha@cchr.nyc.gov,
-Department of Education,jbaranello3@schools.nyc.gov,
-Department of Information Technology and Telecommunications,jbaek@doitt.nyc.gov,cfraser@doitt.nyc.gov
-Department of Records and Information Services,kcobb@records.nyc.gov,lcjones@records.nyc.gov
-Law Department,slouis@law.nyc.gov,sgoulden@law.nyc.gov
-Mayor's Office of Operations,kvera@cityhall.nyc.gov
-Mayor's Office of Technology and Innovation,jmerritt@cto.nyc.gov,cfcarney@cto.nyc.gov
-Office of Administrative Trials and Hearings,fng@oath.nyc.gov,jmacron@oath.nyc.gov
-Office of Emergency Management,rwilson@oem.nyc.gov,
-Office of the Chief Medical Examiner,mpaulino@ocme.nyc.gov,fhutner@ocme.nyc.gov
-Office of the Mayor,kgopal@cityhall.nyc.gov,bchiu@cityhall.nyc.gov
+Open records coordinator,recordsit@records.nyc.gov
+Chief Medical Examiner,ocme@records.nyc.gov
+Department of Education,doe@records.nyc.gov
+Department of Records and Information Services,doris@records.nyc.gov
+Department of Info. Tech. and Telecom.,doitt@records.nyc.gov
+Mayor's Office,oom@records.nyc.gov
+NYC Office of the Actuary,foil@NYCOA.nyc.gov,openrecords@records.nyc.gov
+Office of Administrative Trials and Hearings,foil@OATH.nyc.gov,openrecords@records.nyc.gov
+Department for the Aging,foil@DFTA.nyc.gov,openrecords@records.nyc.gov
+Department of Buildings,foil@DOB.nyc.gov,openrecords@records.nyc.gov
+Business Integrity Commission,foil@BIC.nyc.gov,openrecords@records.nyc.gov
+NYC Office of Chief Medical Examiner,foil@OCME.nyc.gov,openrecords@records.nyc.gov
+Administration for Children's Services,foil@ACS.nyc.gov,openrecords@records.nyc.gov
+Department of City Planning,foil@DCP.nyc.gov,openrecords@records.nyc.gov
+Department of Citywide Administrative Services,foil@DCAS.nyc.gov,openrecords@records.nyc.gov
+Civil Service Commission,foil@CSC.nyc.gov,openrecords@records.nyc.gov
+Civilian Complaint Review Board,foil@CCRB.nyc.gov,openrecords@records.nyc.gov
+Commission to Combat Police Corruption,foil@CCPC.nyc.gov,openrecords@records.nyc.gov
+Conflicts of Interest Board,foil@COIB.nyc.gov,openrecords@records.nyc.gov
+Department of Consumer Affairs,foil@DCA.nyc.gov,openrecords@records.nyc.gov
+Mayor's Office of Contract Services,foil@MOCS.nyc.gov,openrecords@records.nyc.gov
+Board of Correction,foil@BOCS.nyc.gov,openrecords@records.nyc.gov
+Department of Correction,foil@DOC.nyc.gov,openrecords@records.nyc.gov
+Department of Cultural Affairs,foil@DCLA.nyc.gov,openrecords@records.nyc.gov
+Department of Design and Construction,foil@DDC.nyc.gov,openrecords@records.nyc.gov
+Design Commission,foil@DC.nyc.gov,openrecords@records.nyc.gov
+Department of Education,foil@DOE.nyc.gov,openrecords@records.nyc.gov
+Office of Emergency Management NYC,foil@OEM.nyc.gov,openrecords@records.nyc.gov
+Department of Environmental Protection,foil@DEP.nyc.gov,openrecords@records.nyc.gov
+Office of Environmental Remediation,foil@OER.nyc.gov,openrecords@records.nyc.gov
+Equal Employment Practices Commission,foil@EEPC.nyc.gov,openrecords@records.nyc.gov
+Department of Finance,foil@DOF.nyc.gov,openrecords@records.nyc.gov
+New York City Fire Department,foil@FDNY.nyc.gov,openrecords@records.nyc.gov
+Health and Hospitals Corporation,foil@HHC.nyc.gov,openrecords@records.nyc.gov
+Department of Health and Mental Hygiene,foil@DOHMH.nyc.gov,openrecords@records.nyc.gov
+Department of Homeless Services,foil@DHS.nyc.gov,openrecords@records.nyc.gov
+New York City Housing Authority,foil@NYCHA.nyc.gov,openrecords@records.nyc.gov
+Department of Housing Preservation and Development,foil@HPD.nyc.gov,openrecords@records.nyc.gov
+Housing Recovery Operations,foil@HRO.nyc.gov,openrecords@records.nyc.gov
+Human Resources Administration,foil@HRA.nyc.gov,openrecords@records.nyc.gov
+City Commission on Human Rights,foil@CCHR.nyc.gov,openrecords@records.nyc.gov
+Department of Information Technology and Telecommunications,foil@DOITT.nyc.gov,openrecords@records.nyc.gov
+Department of Investigation,foil@DOI.nyc.gov,openrecords@records.nyc.gov
+NYC Office of Labor Relations,foil@OLR.nyc.gov,openrecords@records.nyc.gov
+Landmarks Preservation Commission,foil@LPC.nyc.gov,openrecords@records.nyc.gov
+Law Department,foil@LAW.nyc.gov,openrecords@records.nyc.gov
+Loft Board,foil@LOFT.nyc.gov,openrecords@records.nyc.gov
+Office of Long-Term Planning & Sustainability,foil@OLTPS.nyc.gov,openrecords@records.nyc.gov
+Office of Management and Budget,foil@OMB.nyc.gov,openrecords@records.nyc.gov
+Mayor's Office,foil@OM.nyc.gov,openrecords@records.nyc.gov
+Mayor's Office of Media and Entertainment,foil@MOME.nyc.gov,openrecords@records.nyc.gov
+Department of Parks and Recreation,foil@DPR.nyc.gov,openrecords@records.nyc.gov
+Office of Payroll Administration,foil@OPA.nyc.gov,openrecords@records.nyc.gov
+Police Department,foil@NYPD.nyc.gov,openrecords@records.nyc.gov
+Department of Probation,foil@DOP.nyc.gov,openrecords@records.nyc.gov
+Procurement Policy Board,foil@PPB.nyc.gov,openrecords@records.nyc.gov
+Department of Records,foil@DOR.nyc.gov,openrecords@records.nyc.gov
+Department of Sanitation,foil@DSNY.nyc.gov,openrecords@records.nyc.gov
+School Construction Authority,foil@SCA.nyc.gov,openrecords@records.nyc.gov
+Small Business Services,foil@SBS.nyc.gov,openrecords@records.nyc.gov
+NYC Office of the Special Narcotics Prosecutor,foil@SNP.nyc.gov,openrecords@records.nyc.gov
+Board of Standards and Appeals,foil@BSA.nyc.gov,openrecords@records.nyc.gov
+Taxi and Limousine Commission,foil@TLC.nyc.gov,openrecords@records.nyc.gov
+Department of Transportation,foil@DOT.nyc.gov,openrecords@records.nyc.gov
+Department of Youth and Community Development,foil@DYCD.nyc.gov,openrecords@records.nyc.gov
