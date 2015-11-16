@@ -8,14 +8,13 @@ from __future__ import generators
 
 import uuid
 
-from flask_ldapconn import LDAPConn
 from sqlalchemy import func
+
+import ldap
 
 from models import *
 
 cal = Calendar()
-
-ldap = LDAPConn(app)
 
 
 def id_counter():
