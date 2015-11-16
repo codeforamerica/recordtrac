@@ -1044,8 +1044,8 @@ def login():
 @app.route("/attachments/<string:resource>", methods=["GET"])
 def get_attachments(resource):
     app.logger.info("\n\ngetting attachment file")
-    return send_from_directory(app.config["UPLOAD_FOLDER"], resource, as_attachment=True)
 
+    return send_from_directory(app.config["UPLOAD_FOLDER"], resource, as_attachment=True)
 
 @app.route("/pdfs/<string:resource>", methods=["GET"])
 def get_pdfs(resource):
