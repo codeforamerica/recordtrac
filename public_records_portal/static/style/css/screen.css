@@ -8786,3 +8786,7 @@ footer li a:hover
 {
 	clear:both
 }
+
+.nav-pills>li>a.openrecords_nav {
+	background-color: #FFFFFF;
+}

@@ -104,7 +104,9 @@ label.error {
 	}
 
 
-
+.nav-pills>li>a.openrecords_nav {
+	background-color: #FFFFFF;
+}
 
 
 /* ----- Sticky Footer ----- by Ryan Fait http://ryanfait.com/sticky-footer/ ----- */

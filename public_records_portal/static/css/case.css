@@ -162,12 +162,12 @@ a {
 }
 
 .nav-pills>li>a {
-    /*background-color: #0a5796;*/
+    background-color: #0a5796;
     color: #FFFFFF;
 }
 
 
-.nav-pills>li>a:hover {
+.nav-pills>li>a:hover{
     background-color: #0A5999;
     over-flow: hidden;
     color: #FFFFFF;
