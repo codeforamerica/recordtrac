@@ -14,7 +14,8 @@ $(function () {
                 maxlength: 90
             },
             request_text: {
-                required: true
+                required: true,
+                maxlength: 5000
             },
             request_first_name: {
                 required: true

@@ -126,7 +126,7 @@ def update_resource(resource, request_body):
         req = get_obj("Request", request_id)
         try:
             user_id = req.subscribers[0].user.id
-            generate_prr_emails(request_id=request_id, user_id=user_id, notification_type="Public Notification Template 10")
+            generate_prr_emails(request_id=request_id, user_id=user_id, notification_type="Reopen request")
         except IndexError:
             app.logger.error("No Subscribers")
     elif "acknowledge" in resource:
@@ -157,11 +157,15 @@ def request_extension(request_id, extension_reasons, user_id, days_after=None, d
     """
     req = Request.query.get(request_id)
     req.extension(days_after, due_date)
+    user = User.query.get(user_id)
+    user_name = user.alias
     text = "Request extended:"
     if request_body is not None:
-        generate_prr_emails(request_id=request_id, notification_type="Extend request", text=request_body)
+        generate_prr_emails(request_id=request_id, notification_type="Extend request", text=request_body,
+                            user_name=user_name, user_id=user_id)
     else:
-        generate_prr_emails(request_id=request_id, notification_type="Extend request", text=extension_reasons)
+        generate_prr_emails(request_id=request_id, notification_type="Extend request", text=extension_reasons,
+                            user_name=user_name, user_id=user_id)
     for reason in extension_reasons:
         text = text + reason + "</br>"
     add_staff_participant(request_id=request_id, user_id=user_id)
