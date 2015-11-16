@@ -221,7 +221,7 @@ def new_request(passed_recaptcha=False, data=None):
                     city=request_address_city,
                     state=request_address_state,
                     zip=request_address_zip)
-                if is_new == False:
+                if not is_new:
                     errors.append(
                         "Looks like your request is the same as /request/%s" % request_id)
                     return render_template('offline_request.html', form=form,
@@ -273,6 +273,9 @@ def new_request(passed_recaptcha=False, data=None):
                     "Looks like your request is the same as <a href=\"/request/%s\"" % request_id)
                 return render_template('new_request.html', form=form,
                                    routing_available=routing_available, departments=departments, errors=errors)
+            if not request_id:
+                    return render_template('manage_request_non_partner.html', agency=request_agency, email=(request_email != ''))
+
             return redirect(url_for('show_request_for_x', request_id=request_id,
                                     audience='new', email=(request_email is not None)))
 

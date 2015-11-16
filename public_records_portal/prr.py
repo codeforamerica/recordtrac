@@ -287,7 +287,7 @@ def make_request(agency=None, summary=None, text=None, attachment=None,
     try:
         is_partner_agency = agency_codes[agency]
     except KeyError:
-        return None, False
+        return None, True
     request_id = find_request(text)
     if request_id:  # Same request already exists
         return request_id, False
