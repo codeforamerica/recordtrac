@@ -516,6 +516,21 @@ def close(request_id=None):
         return show_request(request_id, template=template)
     return render_template('error.html', message="You can only close from a requests page!")
 
+def filter_agency(departments_selected, results):
+    if departments_selected and 'All departments' not in departments_selected:
+        app.logger.info("\n\nagency filters:%s." % departments_selected)
+        department_ids = []
+        for department_name in departments_selected:
+            if department_name:
+                department = models.Department.query.filter_by(name=department_name).first()
+                if department:
+                    department_ids.append(department.id)
+        if department_ids:
+            results = results.filter(models.Request.department_id.in_(department_ids))
+        else:
+            # Just return an empty query set
+            results = results.filter(models.Request.department_id < 0)
+    return results
 
 def filter_search_term(search_input, results):
     if search_input:
@@ -858,11 +873,37 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
     print results
     return results.order_by(models.Request.id.desc())
 
-@app.route("/tutorial/<int:tutorial_id>")
-def tutorial(tutorial_id):
+@app.route("/tutorial")
+def tutorial_initial():
     user_id = get_user_id()
     app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
-    return render_template('tutorial_' + str(tutorial_id).zfill(2) + '.html')
+    return render_template('tutorial_01.html')
+
+@app.route("/tutorial/<string:tutorial_id>")
+def tutorial(tutorial_id):
+    user_id = get_user_id()
+    tutorial_string_id = tutorial_id.split("_")[0]
+    app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
+    return render_template('tutorial_' + tutorial_string_id + '.html')
+
+@app.route("/city/tutorial/<string:tutorial_id>")
+def tutorial_agency(tutorial_id):
+    if current_user.is_authenticated:
+        user_id = get_user_id()
+        tutorial_string_id = tutorial_id.split("_")[0]
+        app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
+        return render_template('tutorial_agency_' + tutorial_string_id + '.html')
+    else:
+        return render_template("404.html"), 404
+ 
+@app.route("/city/tutorial")
+def tutorial_agency_initial():
+    if current_user.is_authenticated:
+        user_id = get_user_id()
+        app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
+        return render_template('tutorial_agency_01.html')
+    else:
+        return render_template("404.html"), 404
 
 @app.route("/about")
 def staff_card():
@@ -1109,7 +1150,20 @@ def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
                 referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).filter(models.Request.department_id == agencyFilterInt).all()
                 referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).filter(models.Request.department_id == agencyFilterInt).all()
             if calendar_filter == "fullYear":
+                overdue_request=models.Request.query.filter(overdue_filter).all()
+                notdue_request=models.Request.query.filter(notoverdue_filter).all()
+                received_request=models.Request.query.all()
+                published_request=models.Request.query.filter(published_filter).all()
+                denied_request=models.Request.query.filter(denied_filter).all()
+                granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).all()
+                granted_in_part_request=models.Request.query.filter(granted_in_part_filter).all()
+                no_customer_response_request=models.Request.query.filter(no_customer_response_filter).all()
+                out_of_jurisdiction_request=models.Request.query.filter(out_of_jurisdiction_filter).all()
+                referred_to_nyc_gov_request=models.Request.query.filter(referred_to_nyc_gov_filter).all()
+                referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
+                referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
                 date_format='%Y-%m-%d'
+            elif "fullYear" in public_filter:
                 overdue_request=models.Request.query.filter(overdue_filter).all()
                 notdue_request=models.Request.query.filter(notoverdue_filter).all()
                 date_now = datetime.now()

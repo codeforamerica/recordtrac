@@ -25,8 +25,8 @@
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstro.css') }}">
     <link rel=stylesheet type=text/css href="/static/css/plugins/BootSwatchr6.css">
     <link rel=stylesheet type=text/css href="/static/css/plugins/DT_bootstrap.css">
-    <link rel=stylesheet type=text/css href="/static/css/plugins/font-awesome.min.css">
-
+    <link rel=stylesheet type=text/css href="/static/css/plugins/font-awesome.min.css">    
+	
     <!-- modernizr -->
     <script type="text/javascript"
             src="/static/js/plugins/modernizr-latest-min.js"></script>
@@ -88,14 +88,10 @@
             </a>
             <a class="brand" href="/"><img id="logo_nav"
                                            src="/static/images/logo.png"
-                                           alt="Your agency name logo"/>
-                                                                                          </a>
+                                           alt="Your agency name logo"/></a>
 
             <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
                 
-                    <div class="login btn">
-                      <p><a href="/login" >Login</a></p>
-                    </div>
                     <div class="google_translate">
                         <div id="google_translate_element"></div>
                         <script type="text/javascript">
@@ -139,15 +135,24 @@
            <li><a href="http://www.nyc.gov/html/exit-page.html?url=https://data.cityofnewyork.us/">NYC OpenData Portal</a> Discover open datasets</li>
         </ul>
       </div>
-      <div class="span4">
-<div class="row-fluid">
-<a href="/report" class="btn btn-link round_link">
-<img src="/static/images/explore.png" alt="Reports">
-<h4 class="text-center text-title">View Reports</h4>
-</a>
-</div>
-</div>    
-</div>
+      <div class="span3">
+        <div class="row-fluid">
+          <a href="/report" class="btn btn-link round_link">
+            <img src="/static/images/explore.png" alt="Reports">
+            <h4 class="text-center text-title">View Reports</h4>
+          </a>
+        </div>
+      </div>
+      <div class="span6 offset2">
+        <div class="row-fluid">
+      
+          <div class="login btn btn-large">
+            <a href="/login" >Agency Login</a>
+          </div>
+         
+        </div>
+      </div> 
+  </div>
 </div>
 
 
@@ -203,14 +208,10 @@
 <script>
 $(document).ready(function(){
     bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
-       [{selector:'#logo_nav',title:'Welcome',content:'Welcome to the OpenRecords tutorial. This tutorial will step you through the process of submitting a request as a public user.',placement:'bottom',finishButton:'<a class="btn" href="/tutorial/02">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a>'}
+       [{selector:'#logo_nav',title:'Welcome',content:'Welcome to the OpenRecords tutorial for Agency users. This will step you through the process of responding to a request.',placement:'right',finishButton:'<a class="btn" href="/city/tutorial/02">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a>'}
        ]
     });
 });
 </script>
-
-
-
-
 </body>
 </html>

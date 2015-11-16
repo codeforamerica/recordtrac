@@ -1,12 +1,10 @@
-<!-- This ntemplate is for the landing page. -->
-
 <!DOCTYPE html>
 <html class="no-js" lang="en">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NYC Open Gov</title>
+    <title>Login</title>
     <!-- HTML5 shim for IE backwards compatibility -->
     <!--[if lt IE 9]>
       <script src="/static/js/plugins/html5.js"></script>
@@ -26,7 +24,7 @@
     <link rel=stylesheet type=text/css href="/static/css/plugins/BootSwatchr6.css">
     <link rel=stylesheet type=text/css href="/static/css/plugins/DT_bootstrap.css">
     <link rel=stylesheet type=text/css href="/static/css/plugins/font-awesome.min.css">
-
+		
     <!-- modernizr -->
     <script type="text/javascript"
             src="/static/js/plugins/modernizr-latest-min.js"></script>
@@ -88,14 +86,10 @@
             </a>
             <a class="brand" href="/"><img id="logo_nav"
                                            src="/static/images/logo.png"
-                                           alt="Your agency name logo"/>
-                                                                                          </a>
+                                           alt="Your agency name logo"/></a>
 
             <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
                 
-                    <div class="login btn">
-                      <p><a href="/login" >Login</a></p>
-                    </div>
                     <div class="google_translate">
                         <div id="google_translate_element"></div>
                         <script type="text/javascript">
@@ -121,36 +115,39 @@
     </div>
     <div id="container-fluid">
         
+    <div class="row-fluid" id="login_section">
+	    <div class="span8 ">
+	        <h1 class="lead">Login to NYC OpenRecords</h1>
 
-<div class="row-fluid">
-	<div class="span8 intro">
-	  <h1>Welcome to NYC Government’s home for filing Freedom of Information Law (FOIL) requests.</h1>
-	  <p>On this site you can file a records request with every agency of the City of New York.  Some government information is already available to the public and doesn’t require a FOIL request.  Examples of public information include copies of your own birth certificate and reports issued by City agencies.</p>
-	  <p>The site you see today is the beginning of a new approach to making records easily available.  In the coming months, we will be adding many new features.</p>
-	  <a href="/new"><button class="btn btn-primary btn-large input-block-level">Request a Record</button></a>
-	</div>
-	<div class="span4">
-      <div class="sideblock">
-        <h3>Looking for Something Else?</h3>
-        <ul>
-           <li><a href="http://nyc.gov/">NYC.gov</a> The official website of the City of New York</li>
-           <li><a href="http://nyc.gov/311">NYC 311</a> Get information about your neighborhood, and check the status of existing requests.</li>
-           <li><a href="http://nyc.gov/publications">NYC Government Publications Portal</a> An Open Data portal for the City of New York's publications</li>
-           <li><a href="http://www.nyc.gov/html/exit-page.html?url=https://data.cityofnewyork.us/">NYC OpenData Portal</a> Discover open datasets</li>
-        </ul>
-      </div>
-      <div class="span4">
-<div class="row-fluid">
-<a href="/report" class="btn btn-link round_link">
-<img src="/static/images/explore.png" alt="Reports">
-<h4 class="text-center text-title">View Reports</h4>
-</a>
-</div>
-</div>    
-</div>
-</div>
-
-
+	        <div class="row-fluid">
+	            
+	        </div>
+            <div class="row-fluid">
+                <form name="login" class="form-horizontal" id="submitRequest" method="post" action="/login"
+                      autocomplete="off" novalidate="novalidate">
+                    <div style="display:none;"><input id="csrf_token" name="csrf_token" type="hidden" value="1445957427##b5313b52912c6c98db86a123601bbf69c52c8fb9"></div>
+                    <div class="control-group">
+                        <h2>
+                            <small>Email</small>
+                        </h2>
+                        <input class="input-block-level form-control" id="username" name="username" placeholder="jdoe@city.gov" type="text" value="">
+                    </div>
+                    <div class="control-group">
+                        <h2>
+                            <small>Password</small>
+                        </h2>
+                        <input class="input-block-level form-control" id="password" name="password" placeholder="*******" type="password" value="">
+                    </div>
+                    <div class="control-group">
+                        <input class="btn btn-primary btn-large input-block-level" id="submit" name="submit" type="submit" value="Log In">
+                    </div>
+                    <div class="control-group">
+                        Forgot your password? Please email <a href="mailto:openrecords@records.nyc.gov">openrecords@records.nyc.gov</a> for assistance
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     </div>
     <div class="push"></div>
@@ -203,14 +200,10 @@
 <script>
 $(document).ready(function(){
     bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
-       [{selector:'#logo_nav',title:'Welcome',content:'Welcome to the OpenRecords tutorial. This tutorial will step you through the process of submitting a request as a public user.',placement:'bottom',finishButton:'<a class="btn" href="/tutorial/02">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a>'}
+       [{selector:'#login_section',title:'Login',content:'The Agency user enters an email address and password.',placement:'top',finishButton:'<a class="btn" href="/city/tutorial/02"> «Previous</a> <a class="btn" href="/city/tutorial/04">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a>'}
        ]
     });
 });
 </script>
-
-
-
-
 </body>
 </html>
