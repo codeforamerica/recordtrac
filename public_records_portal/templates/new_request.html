@@ -40,11 +40,6 @@
                                         want?*
                                     </small>
                                 </h2>
-                                <div class="missing_field alert alert-danger"
-                                     id="missing_agency"
-                                     style="width: calc(100% - 4.5rem);">
-                                    Agency Missing
-                                </div>
                                 {{
                                 form.request_agency(class="input-block-level")
                                 }}
@@ -57,10 +52,6 @@
                                 <h2>
                                     <small>Request Title*</small>
                                 </h2>
-                                <div class="missing_field alert alert-danger"
-                                     id="missing_summary">
-                                    Title Missing
-                                </div>
                                 {{
                                 form.request_summary(class="input-block-level",
                                 rows="2", id="request_summary",
@@ -86,10 +77,6 @@
                                 <h2>
                                     <small>Request*</small>
                                 </h2>
-                                <div class="missing_field alert alert-danger"
-                                     id="missing_text">
-                                    Details Missing
-                                </div>
                                 {{
                                 form.request_text(class="input-block-level",rows="6",id="request_text",placeholder="Provide more information about your request to help the City locate the record. If you don’t know the record name, describe the type of information you think it would contain and the approximate date range. Do not include private info – such as social security number or credit card number." ) }}
                             </div>
@@ -139,10 +126,6 @@
                                             }}
                                         </small>
                                     </h2>
-                                    <div class="missing_field alert alert-danger"
-                                         id="missing_first_name">
-                                        First Name Missing
-                                    </div>
                                     {{
                                     form.request_first_name(id="request_first_name",
                                     class="input-block-level", type="text",
@@ -154,10 +137,6 @@
                                             form.request_last_name.label.text }}
                                         </small>
                                     </h2>
-                                    <div class="missing_field alert alert-danger"
-                                         id="missing_last_name">
-                                        Last Name Missing
-                                    </div>
                                     {{
                                     form.request_last_name(id="request_last_name",
                                     class="input-block-level", type="text",
