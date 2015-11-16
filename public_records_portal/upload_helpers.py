@@ -52,63 +52,65 @@ def upload_file(document, request_id):
     if not should_upload():
         app.logger.info("\n\nshoud not upload file")
         return '1', None  # Don't need to do real uploads locally
-    if allowed_file(document.filename):
-        app.logger.info("\n\nbegin file upload")
-        # REQMOD, POST
-        print "----- REQMOD - POST -----"
-        try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        except socket.error, msg:
-            print "Unable to bind socket and create connection to ICAP server."
+    if app.config["SHOULD_SCAN_FILES"]:
+        if allowed_file(document.filename):
+            app.logger.info("\n\nbegin file upload")
+            # REQMOD, POST
+            print "----- REQMOD - POST -----"
+            try:
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            except socket.error, msg:
+                print "Unable to bind socket and create connection to ICAP server."
 
-        try:
-            sock.connect((HOST, PORT))
-        except socket.error, msg:
-            print("[ERROR] %s\n" % msg[1])
-            print("Unable to verify file for malware. Please try again.")
+            try:
+                sock.connect((HOST, PORT))
+            except socket.error, msg:
+                print("[ERROR] %s\n" % msg[1])
+                print("Unable to verify file for malware. Please try again.")
 
-        sock.send("REQMOD %s ICAP/1.0\r\n" % (SERVICE))
-        sock.send("Host: %s\r\n" % (HOST))
-        sock.send("Encapsulated: req-hdr=0, null-body=170\r\n")
-        sock.send("\r\n")
+            sock.send("REQMOD %s ICAP/1.0\r\n" % (SERVICE))
+            sock.send("Host: %s\r\n" % (HOST))
+            sock.send("Encapsulated: req-hdr=0, null-body=170\r\n")
+            sock.send("\r\n")
 
-        sock.send("POST / HTTP/1.1\r\n")
-        sock.send("Host: www.origin-server.com\r\n")
-        sock.send("Accept: text/html, text/plain\r\n")
-        sock.send("Accept-Encoding: compress\r\n")
-        sock.send("Cookie: ff39fk3jur@4ii0e02i\r\n")
-        sock.send("If-None-Match: \"xyzzy\", \"r2d2xxxe\"\r\n")
-        sock.send("\r\n")
-        with open(document, "rb") as uploadedFile:
-            f = uploadedFile.read()
-            b = bytearray(f)
-        sock.send(uploadedFile)
-        sock.send("OPTIONS icap://" + app.config(['HOST']) + ":" + app.config(
-            ['PORT']) + "/wwrespmod?profile=default ICAP/1.0")
-        sock.send("Host: %s\r\n" % (HOST))
-        sock.send("ICAP/1.0 200 OK")
-        sock.send("Methods: REQMOD, RESPMOD")
-        sock.send("Options-TTL: 3600")
-        sock.send("Encapsulated: null-body=0")
-        sock.send("Max-Connections: 400")
-        sock.send("Preview: 30")
-        sock.send("Service: McAfee Web Gateway 7.5.2 build 20202")
-        sock.send('''ISTag: "00004154-2.26.156-00007980"''')
-        sock.send("Allow: 204")
+            sock.send("POST / HTTP/1.1\r\n")
+            sock.send("Host: www.origin-server.com\r\n")
+            sock.send("Accept: text/html, text/plain\r\n")
+            sock.send("Accept-Encoding: compress\r\n")
+            sock.send("Cookie: ff39fk3jur@4ii0e02i\r\n")
+            sock.send("If-None-Match: \"xyzzy\", \"r2d2xxxe\"\r\n")
+            sock.send("\r\n")
+            with open(document, "rb") as uploadedFile:
+                f = uploadedFile.read()
+                b = bytearray(f)
+            sock.send(uploadedFile)
+            sock.send("OPTIONS icap://" + app.config(['HOST']) + ":" + app.config(
+                ['PORT']) + "/wwrespmod?profile=default ICAP/1.0")
+            sock.send("Host: %s\r\n" % (HOST))
+            sock.send("ICAP/1.0 200 OK")
+            sock.send("Methods: REQMOD, RESPMOD")
+            sock.send("Options-TTL: 3600")
+            sock.send("Encapsulated: null-body=0")
+            sock.send("Max-Connections: 400")
+            sock.send("Preview: 30")
+            sock.send("Service: McAfee Web Gateway 7.5.2 build 20202")
+            sock.send('''ISTag: "00004154-2.26.156-00007980"''')
+            sock.send("Allow: 204")
 
-        data = sock.recv(2048)
-        string = data
-        if "200 OK" in string:
-            app.logger.info(
-                "\n\n%s is allowed: %s" % (document.filename, string))
-            filename = secure_filename(document.filename)
-            upload_path = upload_file_locally(document, filename, request_id)
-            return upload_path, filename
-        else:
-            # Loop not completed
-            app.logger.error("Malware detected. Loop user around.")
-            return None, None
-    return None, None
+            data = sock.recv(2048)
+            string = data
+            if "200 OK" in string:
+                app.logger.info(
+                    "\n\n%s is allowed: %s" % (document.filename, string))
+                filename = secure_filename(document.filename)
+                upload_path = upload_file_locally(document, filename, request_id)
+                return upload_path, filename
+            else:
+                # Loop not completed
+                app.logger.error("Malware detected. Loop user around.")
+                return None, None
+        return None, None
+    return '1', None
 
 
 def upload_file_locally(document, filename, request_id):
