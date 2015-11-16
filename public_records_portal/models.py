@@ -309,7 +309,7 @@ class Request(db.Model):
     prev_status = db.Column(db.String(400))  # The previous status of the request (open, closed, etc.)
     #Adding new privacy option for description field
     descriptionPrivate=db.Column(db.Boolean, default=True)
-    titlePrivate=db.Column(db.Boolean, default=True)
+    titlePrivate=db.Column(db.Boolean, default=False)
     def __init__(
             self,
             id,
@@ -331,7 +331,7 @@ class Request(db.Model):
         if date_received and type(date_received) is datetime:
             self.date_received = date_received
         self.department_id = agency
-        self.descriptionPrivacy = descriptionPrivate
+        self.descriptionPrivate = descriptionPrivate
         self.titlePrivacy=titlePrivate
 
 
