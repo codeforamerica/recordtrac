@@ -143,3 +143,4 @@ Vagrantfile
 config.codekit
 runserver2.txt
 users/staff_pt.csv
+users/liaisons_pt.csv
