@@ -1232,20 +1232,7 @@ def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
                 referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).filter(models.Request.department_id == agencyFilterInt).all()
                 referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).filter(models.Request.department_id == agencyFilterInt).all()
             if calendar_filter == "fullYear":
-                overdue_request=models.Request.query.filter(overdue_filter).all()
-                notdue_request=models.Request.query.filter(notoverdue_filter).all()
-                received_request=models.Request.query.all()
-                published_request=models.Request.query.filter(published_filter).all()
-                denied_request=models.Request.query.filter(denied_filter).all()
-                granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).all()
-                granted_in_part_request=models.Request.query.filter(granted_in_part_filter).all()
-                no_customer_response_request=models.Request.query.filter(no_customer_response_filter).all()
-                out_of_jurisdiction_request=models.Request.query.filter(out_of_jurisdiction_filter).all()
-                referred_to_nyc_gov_request=models.Request.query.filter(referred_to_nyc_gov_filter).all()
-                referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
-                referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
                 date_format='%Y-%m-%d'
-            elif "fullYear" in public_filter:
                 overdue_request=models.Request.query.filter(overdue_filter).all()
                 notdue_request=models.Request.query.filter(notoverdue_filter).all()
                 date_now = datetime.now()
