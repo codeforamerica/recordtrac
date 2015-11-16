@@ -35,20 +35,10 @@ if app.config['ENVIRONMENT'] == 'PRODUCTION':
 def generate_prr_emails(request_id, notification_type, text=None, text2=None,user_id=None, department_name=None, user_name=None, days_after=None,attached_file=None):
     # 'text=None' is used additional information. 'text2=None' is used if there are more variable text passed into email such as with 'close this request'
     # and being offered multiple reasons
-    # Retrieves the name of the department/agency within the email using the request_id
-    # req = Request.query.get(request_id)
-    # if req.department_id is not None:
-    #     department_name=Department.query.get(req.department_id)
-
     app.logger.info("\n\n Generating e-mails for request with ID: %s, notification type: %s, and user ID: %s" % (
     request_id, notification_type, user_id))
 
     app_url = app.config['APPLICATION_URL']
-    # Define the e-mail template:
-    # print request_id
-    # print notification_type
-    # print text
-    # print user_id
     template = "generic_email.html"
 
     #making a new request
