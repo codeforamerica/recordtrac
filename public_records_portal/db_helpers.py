@@ -338,6 +338,14 @@ def create_or_return_user(email=None, alias=None, first_name=None,
                           backup_for=None, not_id=False, is_staff=None,
                           password=None, role=None):
     app.logger.info("\n\nCreating or returning user...")
+    try:
+        if phone is not None:
+            phone = str(phone.country_code) + str(phone.national_number)
+        if fax is not None:
+            fax = str(fax.country_code) + str(fax.national_number)
+    except AttributeError:
+        pass
+
     if email:
         user = User.query.filter(User.email == func.lower(email)).first()
         if department and type(department) != int and not department.isdigit():
@@ -373,7 +381,7 @@ def create_or_return_user(email=None, alias=None, first_name=None,
 
         else:
             # Update user if fields to update are provided
-            if alias or phone or department or contact_for or backup_for:
+            if alias or phone or fax or department or contact_for or backup_for:
                 # If no department is given, don't update staff user
                 if user.is_staff == True and user.department_id != None and department == None:
                     return user.id
@@ -431,6 +439,8 @@ def update_user(user, alias=None, first_name=None, last_name=None, phone=None,
         user.last_name = last_name
     if phone:
         user.phone = phone
+    if fax:
+        user.fax = fax
     if address1:
         user.address1 = address1
     if address2:
@@ -494,6 +504,7 @@ def change_request_status(request_id, status):
     date_created = req.date_received or req.date_created
     if "days" in status:
         days_to_fulfill = re.findall(r"(\d{2}) days", status)[0]
+            print cal.addbusdays(date_created, int(days_to_fulfill))
         req.due_date = cal.addbusdays(date_created, int(days_to_fulfill))
 
     db.session.commit()

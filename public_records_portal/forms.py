@@ -99,6 +99,15 @@ states = [
 
 
 class OfflineRequestForm(Form):
+    request_category = SelectField(u'Category*', choices=categories,
+                                   validators=[
+                                       DataRequired(
+                                           'The request category '
+                                           'is required')])
+    request_agency = SelectField(u'Agency*', choices=agencies,
+                                 validators=[
+                                     DataRequired('Please select an agency')],
+                                 default='')
     request_summary = TextAreaField(u'Summary*',
                                     validators=[
                                         DataRequired(
@@ -154,6 +163,9 @@ class OfflineRequestForm(Form):
 
 
 class NewRequestForm(Form):
+    request_category = SelectField(u'Category*', choices=categories,
+                                   validators=[DataRequired(
+                                       'The request category is required')])
     request_agency = SelectField(u'Agency*', choices=agencies, validators=[
         DataRequired('Please select an agency')],
                                  default='')

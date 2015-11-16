@@ -49,6 +49,7 @@ class AnonUser:
     @property
     def role(self):
         return None
+
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
@@ -57,6 +58,7 @@ class User(db.Model):
     last_name = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True)
     phone = db.Column(db.String())
+    fax = db.Column(db.String())
     address1 = db.Column(db.String(500))
     address2 = db.Column(db.String(500))
     city = db.Column(db.String())
@@ -117,7 +119,11 @@ class User(db.Model):
         if self.phone and self.phone != '':
             return self.phone
         return 'N/A'
-
+    
+    def get_fax(self):
+        if self.fax and self.fax != '':
+            return self.fax
+        return 'N/A'
     def get_adddress1(self):
         if self.address1 and self.address1 != '':
             return self.address1
@@ -139,7 +145,7 @@ class User(db.Model):
         return 'N/A'
 
     def show_department_filters(self):
-        return self.current_department.name == "DORIS" or self.current_department.name == "Department of Records and Information Services" or self.current_department.name == "Mayor's Office"
+        return self.role in ['Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel']
 
     def __init__(
             self,
@@ -148,6 +154,7 @@ class User(db.Model):
             first_name=None,
             last_name=None,
             phone=None,
+            fax=None,
             address1=None,
             address2=None,
             city=None,
@@ -168,6 +175,8 @@ class User(db.Model):
         self.last_name = last_name
         if phone and phone != '':
             self.phone = phone
+        if fax and fax != '':
+            self.fax = fax
         if address1 and address1 != '':
             self.address1 = address1
         if address2 and address2 != '':
@@ -298,7 +307,9 @@ class Request(db.Model):
     date_received = db.Column(db.DateTime)
     offline_submission_type = db.Column(db.String())
     prev_status = db.Column(db.String(400))  # The previous status of the request (open, closed, etc.)
-
+    #Adding new privacy option for description field
+    descriptionPrivate=db.Column(db.Boolean, default=True)
+    titlePrivate=db.Column(db.Boolean, default=False)
     def __init__(
             self,
             id,
@@ -307,7 +318,9 @@ class Request(db.Model):
             creator_id=None,
             offline_submission_type=None,
             date_received=None,
-            agency=None
+            agency=None,
+            descriptionPrivate=True,
+            titlePrivate=False
     ):
         self.id = id
         self.summary = summary
@@ -318,6 +331,9 @@ class Request(db.Model):
         if date_received and type(date_received) is datetime:
             self.date_received = date_received
         self.department_id = agency
+        self.descriptionPrivate = descriptionPrivate
+        self.titlePrivacy=titlePrivate
+
 
     def __repr__(self):
         return '<Request %r>' % self.text
@@ -330,8 +346,7 @@ class Request(db.Model):
                             + timedelta(
                 days=int(app.config['DAYS_AFTER_EXTENSION']))
         else:
-            self.due_date = self.date_received \
-                            + timedelta(days=int(app.config['DAYS_TO_FULFILL']))
+            self.due_date = cal.addbusdays(self.date_received, int(app.config['DAYS_TO_FULFILL']))
 
     def extension(self, days_after=int(app.config['DAYS_AFTER_EXTENSION']),
                   custom_due_date=None):
@@ -393,6 +408,12 @@ class Request(db.Model):
         requester = self.requester()
         if requester and requester.user:
             return requester.user.get_phone()
+        return 'N/A'
+    
+    def requester_fax(self):
+        requester = self.requester()
+        if requester and requester.user:
+            return requester.user.get_fax()
         return 'N/A'
 
     def requester_address1(self):
@@ -458,13 +479,18 @@ class Request(db.Model):
                                                  ])) >= self.due_date:
                         return 'due soon'
 
-        if 'Granted' not in self.status:
+        if 'Open' == self.status:
             return 'open'
         else:
-            return self.status
+            return 'in_progress'
 
     @hybrid_property
     def open(self):
+        two_days = datetime.now() + timedelta(days=2)
+        return and_(~self.closed, self.due_date > two_days)
+
+    @hybrid_property
+    def in_progress(self):
         two_days = datetime.now() + timedelta(days=2)
         return and_(~self.closed, self.due_date > two_days)
 

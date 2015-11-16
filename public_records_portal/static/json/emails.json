@@ -3,6 +3,21 @@
     ["Requester", "Subscribers", "Subscriber", "Staff owner", "Departmental backups", "Staff participants", "Staff participant"],
     "Notification types":
     {
+        "Extend request":
+        {
+          "Subject": "FOIL Time Extension Requested",
+          "Recipients": ["Requester"]
+        },
+        "Reopen request":
+        {
+          "Subject": "Request has been reopened",
+          "Recipients": ["Requester"]
+        },
+        "Helper removed":
+        {
+          "Subject": "A helper has been removed from your request",
+          "Recipients": ["Staff participants"]
+        },
         "Request assigned":
         {
             "Subject": "A request has been assigned to you",
@@ -20,7 +35,7 @@
         },
         "Question answered":
         {
-            "Subject": "A question about this request has been answered by the requester.",
+            "Subject": "The question you had about a request has received a response.",
             "Recipients": ["Staff participants"]
         },
         "Request closed":
@@ -30,7 +45,7 @@
         },
         "City response added":
         {
-            "Subject": "A response has been added to the request.",
+            "Subject": "There is a new inquiry or response to the information you provided.",
             "Recipients": ["Subscribers"]
         },
         "Request due":
@@ -57,6 +72,11 @@
         {
             "Subject": "You are now subscribed to this request.",
             "Recipients": ["Subscriber"]
+        },
+        "Acknowledge request":
+        {
+            "Subject": "The request has been Acknowledged",
+            "Recipients":["Subscribers","Requester"]
         },
         "Public Notification Template 01":
         {
@@ -108,6 +128,7 @@
             "Subject": "FOIL Time Extension Requested",
             "Recipients": ["Requester"]
         },
+
         "Agency Notification Template 01":
         {
             "Subject": "FOIL Acknowledgement Reminder",

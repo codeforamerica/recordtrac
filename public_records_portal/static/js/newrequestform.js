@@ -4,6 +4,39 @@ $(function() {
     var validContact = false;
     var validAddress = false;
 
+    $('#submitRequest').validate({
+    rules: {
+        request_agency: {
+            required: true,
+            minlength:1,
+            maxlength:5000
+
+        },
+        request_summary: {
+            required: true,
+            maxlength: 90
+        },
+        request_text: {
+            required: true,
+            minlength:1,
+            maxlength:5000
+        },
+        request_first_name: {
+            required: true,
+            minlength:1,
+            maxlength:5000
+        },
+        request_last_name: {
+            required: true,
+            minlength:1,
+            maxlength:5000
+        }
+    },
+        highlight: function (element) {
+            $(element).closest('.control-group').removeClass('success').addClass('error');
+        }
+    });
+
     var addressValidator = new FormValidator('submitRequest', [{
         name: 'address_1',
         display: 'Address 1',
@@ -61,6 +94,14 @@ $(function() {
         display: 'Request Last Name',
         rules: 'required'
     }, {
+       name: 'request_format',
+       display: 'Request Format',
+       rules: 'required'
+    }, {
+        name:'request_date',
+        display: 'Request Date',
+        rules: 'required'
+    }, {
         name: 'request_contact_information',
         display: 'Request Contact Information',
         rules: 'required'
@@ -85,6 +126,12 @@ $(function() {
                 }
                 if (errors[i].name === 'request_last_name') {
                     $('#missing_last_name').show();
+                }
+                if (errors[i].name == 'request_format'){
+                    $('#missing_format').show();
+                }
+                if (errors[i].name== 'request_date'){
+                    $('#missing_date').show();
                 }
                 if (!validContact && !validAddress) {
                     $('#missing_contact_information').show();
@@ -183,4 +230,31 @@ $(function() {
         $('#step2').fadeIn('slow', function() {});
     });
 
+    // displays characters remaining, highlights extra characters
+    function maxLength(el) {
+        if (!('maxLength' in el)) {
+            var max = el.attributes.maxLength.value;
+            el.onkeypress = function () {
+                if (this.value.length >= max) return false;
+            };
+        }
+    }
+
+    maxLength(document.getElementById("request_summary"));
+
+    // displays characters remaining, highlights extra characters
+    var text_max = 90;
+    $('#summary_count').text(text_max + ' characters remaining');
+
+    $('#request_summary').keyup(function() {
+        var text_length = $('#request_summary').val().length;
+        var text_remaining = text_max - text_length;
+        $('#summary_count').text(text_remaining + ' characters remaining');
+        console.log(text_remaining);
+        if (text_remaining < 0) {
+            document.getElementById("summary_count").style.color = "black";
+        } else {
+            document.getElementById("summary_count").style.color = "black";
+        }
+    });
 });

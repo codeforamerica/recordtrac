@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set active_page='view_requests' %}
 {% block title %}
     {{ title }} &#45; RecordTrac
 {% endblock title %}
@@ -32,7 +33,7 @@
         <div class="span12">
             <div class="row-fluid">
                 <div id="exploreTitle" class="span8">
-                    <h2>Explore <span class="badge">{{ total_requests_count }}</span> requests and counting</h2>
+                    <h2>Explore OpenRecords Requests</h2>
 
                     <p class="intro_text">NYC Open Gov makes every public records request available to the public,
                         including messages or documents uploaded by agency staff. By searching the reqeusts, you may
@@ -46,11 +47,11 @@
             </div>
 
 {#            Added a button to toggle filter on and earth (mobile only)#}
-            <button id="toggle" onclick="hideFilter()">Hide</button>
+{#            <button id="toggle" onclick="hideFilter()">Hide</button>#}
 
             <form id="all_requests_form" name="all_requests" action="/requests" method="GET">
                 <div class="row-fluid" style="padding-bottom: 5%;">
-                    <div class="span4">
+                    <div class="span3">
                         <div class="well well-small" id="mobile-filter" style="padding-bottom: 6em;">
 
                             <h5>Search request text</h5>
@@ -87,6 +88,10 @@
                                             <em class="open_style">Open</em>
                                         </label>
                                         {% if current_user.is_authenticated %}
+                                            <!--<label class="checkbox">-->
+                                                <!--<input type="checkbox" id="checkbox" name="in_progress" {% if in_progress %} {% endif %} />-->
+                                                <!--<em class="in_progress_style">In Progress</em>-->
+                                            <!--</label>-->
                                             <label class="checkbox">
                                                 <input type="checkbox" ID="checkbox"  name="due_soon" {% if due_soon %}
                                                        checked {% endif %} />
@@ -140,7 +145,7 @@
                                 <h5>Agency Name</h5>
                                 <div class="control-group">
                                     <select name="departments_selected" class="selectpicker span12">
-
+                                    <option>All Agencies</option>
                                         {% for department in departments %}
                                             {% if departments_selected and department.name in departments_selected %}
                                                 <option selected>{{ department.name }}</option>
@@ -164,7 +169,7 @@
                             </div>
                         {% endif %}
                     </div>
-                    <div class="span7">
+                    <div class="span9">
                         <table width="100%" id="requests">
                             <thead id="headings">
                             <tr>

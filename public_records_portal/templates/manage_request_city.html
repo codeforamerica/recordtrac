@@ -29,37 +29,42 @@
             {% set state = user.state %}
             {% set zipcode = user.zipcode %}
         {% endif %}
-        {% if not email %}
-            <span id="no_email">
-        <strong><i class="icon icon-exclamation-sign"></i> Requester's e-mail has not been provided.</strong>
-      </span>
-            <small>
-        {% endif %}
-        <br>
-      <span>
-        Requester's Name: <span class="label">{{ alias or "Not provided" }}</span></span>
-        </span>
-        <br>
-      <span>
-        Requester's Phone Number: <span class="label">{{ phone or "Not provided" }}</span>
-      </span>
-        <br>
-      <span>
-        Requester's Street Address: <span class="label">{{ address1 or "Not provided" }}</span>
-      </span>
-        <br>
-      <span>
-        Requester's City: <span class="label">{{ city or "Not provided" }}</span>
-      </span>
-        <br>
-      <span>
-        Requester's State: <span class="label">{{ state or "Not provided" }}</span>
-      </span>
-        <br>
-      <span>
-        Requester's Zipcode: <span class="label">{{ zipcode or "Not provided" }}</span>
-      </span>
-        </small>
+        <div class="row-fluid">
+            <div class="span6">Requester's Name:</div>
+            <div class="span6">
+                <span class="label">{{ alias or "Not provided" }}</span>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span6">Requester's Phone Number:</div>
+            <div class="span6">
+                <span class="label">{{ phone or "Not provided" }}</span>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span6">Requester's Street Address:</div>
+            <div class="span6">
+                <span class="label">{{ address1 or "Not provided" }}</span>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span6">Requester's City:</div>
+            <div class="span6">
+                <span class="label" style="align: left;">{{ city or "Not provided" }}</span>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span6">Requester's State:</div>
+            <div class="span6">
+                <span class="label">{{ state or "Not provided" }}</span>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span6">Requester's Zipcode:</div>
+            <div class="span6">
+                <span class="label">{{ zipcode or "Not provided" }}</span>
+            </div>
+        </div>
     </div>
 {% endblock requester_info %}
 

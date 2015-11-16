@@ -33,7 +33,9 @@ import pytz
 from requires_roles import requires_roles
 from flask_login import LoginManager
 from models import AnonUser
-
+from datetime import datetime, timedelta, date
+from business_calendar import Calendar
+cal = Calendar()
 
 # Initialize login
 app.logger.info("\n\nInitialize login.")
@@ -72,8 +74,10 @@ def new_request(passed_recaptcha=False, data=None):
             request_role = form.request_role.data
             request_organization = form.request_organization.data
             request_email = form.request_email.data
-            request_phone = form.request_phone.data
-            request_fax = form.request_fax.data
+            request_phone = form.request_phone.raw_data
+            request_phone = re.sub("\D", "",str(request_phone))
+            request_fax = form.request_fax.raw_data
+            request_fax = re.sub("\D", "",str(request_fax))
             request_address_street_one = form.request_address_street_one.data
             request_address_street_two = form.request_address_street_two.data
             request_address_city = form.request_address_city.data
@@ -86,7 +90,12 @@ def new_request(passed_recaptcha=False, data=None):
             elif len(request_summary) > 250:
                 errors.append(
                     'The request summary must be less than 250 characters')
-
+            # Check Description of Request
+            if not (request_text and request_text.strip()):
+                errors.append('You must enter a description for this request')
+            elif len(request_summary) > 5000:
+                errors.append(
+                    'The request description must be less than 5000 characters')
             try:
                 request_attachment = request.files['request_attachment']
             except:
@@ -148,10 +157,6 @@ def new_request(passed_recaptcha=False, data=None):
             if not data:
                 data = request.form.copy()
 
-            phone_formatted = ""
-            if phone_valid:
-                phone_formatted = request_phone.international
-
             if errors:
                 if request_date:
                     return render_template('offline_request.html', form=form, date=request_date.strftime('%m/%d/%Y'),
@@ -192,8 +197,6 @@ def new_request(passed_recaptcha=False, data=None):
 
         else:
             form = NewRequestForm(request.form)
-            print form.data
-            print request.form
             request_agency = form.request_agency.data
             request_summary = form.request_summary.data
             request_text = form.request_text.data
@@ -202,8 +205,10 @@ def new_request(passed_recaptcha=False, data=None):
             request_role = form.request_role.data
             request_organization = form.request_organization.data
             request_email = form.request_email.data
-            request_phone = form.request_phone.data
-            request_fax = form.request_fax.data
+            request_phone = form.request_phone.raw_data
+            request_phone = re.sub("\D", "",str(request_phone))
+            request_fax = form.request_fax.raw_data
+            request_fax = re.sub("\D", "",str(request_fax))
             request_address_street_one = form.request_address_street_one.data
             request_address_street_two = form.request_address_street_two.data
             request_address_city = form.request_address_city.data
@@ -227,6 +232,52 @@ def new_request(passed_recaptcha=False, data=None):
                 city=request_address_city,
                 state=request_address_state,
                 zip=request_address_zip)
+
+            # Check Summary
+            if not (request_summary and request_summary.strip()):
+                errors.append('You must enter a summary for this request')
+            elif len(request_summary) > 250:
+                errors.append(
+                    'The request summary must be less than 250 characters')
+
+            # Check Description of Request
+            if not (request_text and request_text.strip()):
+                errors.append('You must enter a description for this request')
+            elif len(request_summary) > 5000:
+                errors.append(
+                    'The request description must be less than 5000 characters')
+            try:
+                request_attachment = request.files['request_attachment']
+            except:
+                app.logger.info("\n\nNo file passed in")
+
+            #Check first name and last name
+            if not (request_first_name and request_first_name.strip()):
+                errors.append("Please enter the requester's first name")
+            elif not (request_last_name and request_last_name.strip()):
+                errors.append("Please enter the requester's last name")
+            else:
+                alias = request_first_name + " " + request_last_name
+
+            #Check Contact Information
+            zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
+            email_valid = (request_email != '')
+            phone_valid = (request_phone is not None)
+            fax_valid = (request_fax is not None)
+            street_valid = (request_address_street_one != '')
+            city_valid = (request_address_city != '')
+            state_valid = (request_address_state != '')
+            zip_valid = (
+                request_address_zip != '' and zip_reg_ex.match(request_address_zip))
+            address_valid = (
+                street_valid and city_valid and state_valid and zip_valid)
+
+            if not (email_valid or phone_valid or fax_valid or address_valid):
+                errors.append(
+                    "Please enter at least one type of contact information")
+
+            if not data:
+                data = request.form.copy()
 
             if is_new == False:
                 errors.append(
@@ -314,11 +365,7 @@ def show_request_for_city(request_id):
         audience = 'helper'
     else:
         audience = 'city'
-    if is_supported_browser():
-        return show_request(request_id=request_id, template="manage_request_%s.html" % (audience))
-    else:
-        return show_request(request_id=request_id, template="manage_request_%s_less_js.html" % (audience))
-
+    return show_request(request_id=request_id, template="manage_request_%s_less_js.html" % (audience))
 
 @app.route("/response/<string:request_id>")
 def show_response(request_id):
@@ -363,7 +410,6 @@ def show_request(request_id, template="manage_request_public.html"):
     departments_all = models.Department.query.all()
     agency_data = []
     for d in departments_all:
-        #firstUser = models.User.query.filter_by(department_id=d.id).first()
         primary_contact = d.primary_contact
         agency_data.append({'name': d.name, 'email': primary_contact.email})
 
@@ -375,7 +421,21 @@ def show_request(request_id, template="manage_request_public.html"):
     if req.status and "Closed" in req.status and template != "manage_request_feedback.html":
         template = "closed.html"
 
-    return render_template(template, req=req, agency_data=agency_data, users=users)
+    department = models.Department.query.filter_by(id=req.department_id).first()
+    assigned_user = models.User.query.filter_by(
+        id=models.Owner.query.filter_by(request_id=request_id, is_point_person=True).first().user_id).first()
+    helpers = []
+    for i in req.owners:
+        if not i.active or i.is_point_person:
+            continue
+        helper = models.User.query.filter_by(id=i.user_id).first()
+        if helper:
+            helpers.append({'name': helper.alias, 'email': helper.email})
+
+    print helpers
+
+    return render_template(template, req=req, agency_data=agency_data, users=users,
+                           department=department, assigned_user=assigned_user, helpers=helpers)
 
 
 @app.route("/api/staff")
@@ -410,6 +470,7 @@ def edit_case(request_id):
 @app.route("/add_a_<string:resource>", methods=["GET", "POST"])
 @login_required
 def add_a_resource(resource):
+    req = request.form
     if request.method == 'POST':
         print "Resource is a ", resource
         if resource == 'pdf':
@@ -449,13 +510,17 @@ def public_add_a_resource(resource, passed_recaptcha = False, data = None):
 @app.route("/update_a_<string:resource>", methods=["GET", "POST"])
 def update_a_resource(resource, passed_recaptcha=False, data=None):
     if (data or request.method == 'POST'):
+        req=request.form
         if not data:
             data = request.form.copy()
-        if 'qa' in resource:
+        if 'owner' in resource:
+            update_resource(resource, req)
+
+        elif 'qa' in resource:
             prr.answer_a_question(qa_id=int(data['qa_id']), answer=data['answer_text'], passed_spam_filter=True)
         else:
             update_resource(resource, data)
-        if current_user.is_anonymous == False:
+        if current_user.is_authenticated:
             return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
         else:
             return redirect(url_for('show_request', request_id=request.form['request_id']))
@@ -491,10 +556,9 @@ def close(request_id=None):
         elif 'close_reasons' in request.form:
             for close_reason in request.form.getlist('close_reasons'):
                 reason += close_reason + " "
-        close_request(request_id=request_id, reason=reason, user_id=get_user_id())
+        close_request(request_id=request_id, reason=reason, user_id=get_user_id(), request_body=request.form)
         return show_request(request_id, template=template)
     return render_template('error.html', message="You can only close from a requests page!")
-
 
 def filter_agency(departments_selected, results):
     if departments_selected and 'All departments' not in departments_selected:
@@ -591,6 +655,10 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
 
     user_id = get_user_id()
 
+    # Sets the search parameters. They are a dictionary that either came in through:
+    # 1) json_requests() (endpoint used by backbone)
+    # 2) request.args (arguments in the URL)
+    # 3) the form submitted
     if not filters_map:
         if request.args:
             if is_supported_browser():
@@ -603,6 +671,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
     # Set defaults
     is_open = checkbox_value
     is_closed = None
+    # in_progress = checkbox_value
     due_soon = checkbox_value
     overdue = checkbox_value
     mine_as_poc = checkbox_value
@@ -625,6 +694,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         departments_selected = get_filter_value(filters_map=filters_map, filter_name='departments_selected',
                                                 is_list=True) or get_filter_value(filters_map, 'department')
         is_open = get_filter_value(filters_map=filters_map, filter_name='is_open', is_boolean=True)
+        # in_progress = get_filter_value(filters_map=filters_map, filter_name='in_progress', is_boolean=True)
         is_closed = get_filter_value(filters_map=filters_map, filter_name='is_closed', is_boolean=True)
         due_soon = get_filter_value(filters_map=filters_map, filter_name='due_soon', is_boolean=True)
         overdue = get_filter_value(filters_map=filters_map, filter_name='overdue', is_boolean=True)
@@ -640,7 +710,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         requester_name = get_filter_value(filters_map, 'requester_name')
         page_number = int(get_filter_value(filters_map, 'page_number') or '1')
         request_id_search = get_filter_value(filters_map, 'request_id_search')
- 
+
     # Set initial checkboxes for mine_as_poc and mine_as_helper when redirected from login page
     if request.referrer and 'login' in request.referrer:
         if current_user.is_authenticated and (current_user.role in ['Portal Administrator', 'Agency Administrator'] or current_user.is_admin()):
@@ -682,8 +752,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
 
     results = results.limit(limit).offset(offset).all()
     requests = prepare_request_fields(results=results)
-    print requests
-    if output_results_only == True:
+    if output_results_only == True: # Used by json_requests()
         return requests, num_results, more_results, start_index, end_index
 
     return render_template("all_requests_less_js.html", total_requests_count=get_count("Request"), requests=requests,
@@ -720,19 +789,6 @@ def json_requests():
 
 
 def prepare_request_fields(results):
-    # if current_user.is_anonymous:
-    #     return map(lambda r: {
-    #         "id":           r.id, \
-    #         "text":         helpers.clean_text(r.text), \
-    #         "date_received": helpers.date(r.date_received or r.date_created), \
-    #         "agency":   r.department_name(), \
-    #         "status":       r.status, \
-    #         # The following two attributes are defined as model methods,
-    #         # and not regular SQLAlchemy attributes.
-    #         "contact_name": r.point_person_name(), \
-    #         "solid_status": r.solid_status()
-    #     }, results)
-    # else:
     return map(lambda r: {
         "id": r.id, \
         "summary": helpers.clean_text(r.summary), \
@@ -749,20 +805,20 @@ def prepare_request_fields(results):
 
 
 def filter_department(departments_selected, results):
-    if departments_selected and 'All departments' not in departments_selected:
-        app.logger.info("\n\nDepartment filters:%s." % departments_selected)
-        department_ids = []
-        for department_name in departments_selected:
-            if department_name:
-                department = models.Department.query.filter_by(name=department_name).first()
-                if department:
-                    department_ids.append(department.id)
-        if department_ids:
-            results = results.filter(models.Request.department_id.in_(department_ids))
-        else:
-            # Just return an empty query set
-            results = results.filter(models.Request.department_id < 0)
-    return results
+  if departments_selected and 'All Agencies' not in departments_selected:
+      app.logger.info("\n\nagency filters:%s." % departments_selected)
+      department_ids = []
+      for department_name in departments_selected:
+          if department_name:
+              department = models.Department.query.filter_by(name=department_name).first()
+              if department:
+                  department_ids.append(department.id)
+      if department_ids:
+          results = results.filter(models.Request.department_id.in_(department_ids))
+      else:
+          # Just return an empty query set
+          results = results.filter(models.Request.department_id < 0)
+  return results
 
 
 def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, overdue, mine_as_poc, mine_as_helper,
@@ -858,17 +914,47 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
         else:
             results = results.order_by((getattr(models.Request, sort_column)).asc())
 
+    print results
     return results.order_by(models.Request.id.desc())
 
-
-def tutorial():
+@app.route("/tutorial")
+def tutorial_initial():
     user_id = get_user_id()
     app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
-    return render_template('tutorial.html')
+    return render_template('tutorial_01.html')
 
+@app.route("/tutorial/<string:tutorial_id>")
+def tutorial(tutorial_id):
+    user_id = get_user_id()
+    tutorial_string_id = tutorial_id.split("_")[0]
+    app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
+    return render_template('tutorial_' + tutorial_string_id + '.html')
+
+@app.route("/city/tutorial/<string:tutorial_id>")
+def tutorial_agency(tutorial_id):
+    if current_user.is_authenticated:
+        user_id = get_user_id()
+        tutorial_string_id = tutorial_id.split("_")[0]
+        app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
+        return render_template('tutorial_agency_' + tutorial_string_id + '.html')
+    else:
+        return render_template("404.html"), 404
+ 
+@app.route("/city/tutorial")
+def tutorial_agency_initial():
+    if current_user.is_authenticated:
+        user_id = get_user_id()
+        app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
+        return render_template('tutorial_agency_01.html')
+    else:
+        return render_template("404.html"), 404
+
+@app.route("/about")
+def staff_card():
+    return render_template('about.html')
 
 @app.route("/staff_card/<int:user_id>")
-def staff_card(user_id):
+def about(user_id):
     return render_template('staff_card.html', uid=user_id)
 
 
@@ -876,7 +962,7 @@ def staff_card(user_id):
 @login_required
 def logout():
     logout_user()
-    return index()
+    return redirect(url_for('index'))
 
 def get_user_id():
     if current_user.is_authenticated:
@@ -1026,7 +1112,7 @@ def login():
                 app.logger.info(
                     "\n\nLogin failed (due to incorrect email/password combo) for email : %s" % form.username.data)
                 errors.append('Incorrect email/password combination. Please try again. If you forgot your password,'
-                              'please <a href="/reset_password">reque st a new password</a>.')
+                              'please <a href="/reset_password">request a new password</a>.')
                 return render_template('login.html', form=form, errors=errors)
         else:
             errors.append('Something went wrong')
@@ -1043,8 +1129,8 @@ def login():
 @app.route("/attachments/<string:resource>", methods=["GET"])
 def get_attachments(resource):
     app.logger.info("\n\ngetting attachment file")
-    return send_from_directory(app.config["UPLOAD_FOLDER"], resource, as_attachment=True)
 
+    return send_from_directory(app.config["UPLOAD_FOLDER"], resource, as_attachment=True)
 
 @app.route("/pdfs/<string:resource>", methods=["GET"])
 def get_pdfs(resource):
@@ -1052,8 +1138,8 @@ def get_pdfs(resource):
     return send_from_directory(app.config["PDF_FOLDER"], resource, as_attachment=True)
 
 
-@app.route("/api/report/<string:report_type>/<string:public_filter>", methods=["GET"])
-def get_report_jsons(report_type,public_filter):
+@app.route("/api/report/<string:calendar_filter>/<string:report_type>/<string:agency_filter>/<string:staff_filter>", methods=["GET"])
+def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
     app.logger.info("\n\ngenerating report data")
 
     if not report_type:
@@ -1074,14 +1160,15 @@ def get_report_jsons(report_type,public_filter):
     referred_to_opendata_filter = models.Request.referred_to_opendata
     referred_to_other_agency_filter = models.Request.referred_to_other_agency
     referred_to_publications_portal_filter = models.Request.referred_to_publications_portal
+    
 
     if report_type == "all":
         try:
-            if public_filter == "all" or public_filter == "agency_0":
+            if agency_filter == "all" or agency_filter=="0":
                 overdue_request=models.Request.query.filter(overdue_filter).all()
                 notdue_request=models.Request.query.filter(notoverdue_filter).all()
-                received_request=models.Request.query.all()
-                published_request=models.Request.query.filter(published_filter).all()
+                received_request=models.Request.query
+                published_request=models.Request.query.filter(published_filter)
                 denied_request=models.Request.query.filter(denied_filter).all()
                 granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).all()
                 granted_in_part_request=models.Request.query.filter(granted_in_part_filter).all()
@@ -1091,13 +1178,12 @@ def get_report_jsons(report_type,public_filter):
                 referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
                 referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
                 referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).all()
-            elif "agency" in public_filter and "staff" not in public_filter:
-                agencyFilter = public_filter.split("_")[1]
-                agencyFilterInt = int(agencyFilter)
+            else:
+                agencyFilterInt = int(agency_filter)
                 overdue_request=models.Request.query.filter(overdue_filter).filter(models.Request.department_id == agencyFilterInt).all()
                 notdue_request=models.Request.query.filter(notoverdue_filter).filter(models.Request.department_id == agencyFilterInt).all()
-                received_request=models.Request.query.filter(models.Request.department_id == agencyFilterInt).all()
-                published_request=models.Request.query.filter(published_filter).filter(models.Request.department_id == agencyFilterInt).all()
+                received_request=models.Request.query.filter(models.Request.department_id == agencyFilterInt)
+                published_request=models.Request.query.filter(published_filter).filter(models.Request.department_id == agencyFilterInt)
                 denied_request=models.Request.query.filter(denied_filter).filter(models.Request.department_id == agencyFilterInt).all()
                 granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).filter(models.Request.department_id == agencyFilterInt).all()
                 granted_in_part_request=models.Request.query.filter(granted_in_part_filter).filter(models.Request.department_id == agencyFilterInt).all()
@@ -1107,7 +1193,7 @@ def get_report_jsons(report_type,public_filter):
                 referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).filter(models.Request.department_id == agencyFilterInt).all()
                 referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).filter(models.Request.department_id == agencyFilterInt).all()
                 referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).filter(models.Request.department_id == agencyFilterInt).all()
-            elif "calendarYear" in public_filter:
+            if calendar_filter == "fullYear":
                 overdue_request=models.Request.query.filter(overdue_filter).all()
                 notdue_request=models.Request.query.filter(notoverdue_filter).all()
                 received_request=models.Request.query.all()
@@ -1120,12 +1206,21 @@ def get_report_jsons(report_type,public_filter):
                 referred_to_nyc_gov_request=models.Request.query.filter(referred_to_nyc_gov_filter).all()
                 referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
                 referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
-                referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).all()
+                date_format='%Y-%m-%d'
             elif "fullYear" in public_filter:
                 overdue_request=models.Request.query.filter(overdue_filter).all()
                 notdue_request=models.Request.query.filter(notoverdue_filter).all()
-                received_request=models.Request.query.all()
-                published_request=models.Request.query.filter(published_filter).all()
+                date_now = datetime.now()
+                date_start_of_year = a = date(date.today().year, 1, 1)
+                d_string = date_now.strftime(date_format)
+                d_string_2 = date_start_of_year.strftime(date_format)
+                min_date_received = str(datetime.strptime(d_string_2, date_format))
+                max_date_received = str(datetime.strptime(d_string, date_format))
+                min_date_received = min_date_received[0:-9]
+                max_date_received = max_date_received[0:-9]
+                received_request = received_request.filter(and_(models.Request.date_received >= min_date_received,
+                                          models.Request.date_received <= max_date_received))
+                published_request = published_request.filter(and_(models.Request.date_received >= min_date_received, models.Request.date_received <= max_date_received))
                 denied_request=models.Request.query.filter(denied_filter).all()
                 granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).all()
                 granted_in_part_request=models.Request.query.filter(granted_in_part_filter).all()
@@ -1135,11 +1230,19 @@ def get_report_jsons(report_type,public_filter):
                 referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
                 referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
                 referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).all()
-            elif "rolling" in public_filter:
+            if calendar_filter == "rolling":
+                date_format='%Y-%m-%d'
                 overdue_request=models.Request.query.filter(overdue_filter).all()
                 notdue_request=models.Request.query.filter(notoverdue_filter).all()
-                received_request=models.Request.query.all()
-                published_request=models.Request.query.filter(published_filter).all()
+                date_now = datetime.now()
+                d_string = date_now.strftime(date_format)
+                min_date_received = str(datetime.strptime(d_string, date_format) - timedelta(365))
+                max_date_received = str(datetime.strptime(d_string, date_format))
+                min_date_received = min_date_received[0:-9]
+                max_date_received = max_date_received[0:-9]
+                received_request = received_request.filter(and_(models.Request.date_received >= min_date_received,
+                                          models.Request.date_received <= max_date_received))
+                published_request = published_request.filter(and_(models.Request.date_received >= min_date_received, models.Request.date_received <= max_date_received))
                 denied_request=models.Request.query.filter(denied_filter).all()
                 granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).all()
                 granted_in_part_request=models.Request.query.filter(granted_in_part_filter).all()
@@ -1149,12 +1252,12 @@ def get_report_jsons(report_type,public_filter):
                 referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
                 referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
                 referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).all()
-            if "staff" in public_filter:
-                staff_id = int(public_filter.split("_")[1])
+            if staff_filter != "all":
+                staff_id = int(staff_filter)
                 overdue_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(overdue_filter).filter(models.Owner.is_point_person == True).all()
                 notdue_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(notoverdue_filter).filter(models.Owner.is_point_person == True).all()
-                received_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(models.Owner.user_id == staff_id).filter(models.Owner.is_point_person == True).all()
-                published_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(published_filter).filter(models.Owner.user_id == staff_id).filter(models.Owner.is_point_person == True).all()
+                received_request=received_request.filter(models.Request.id == models.Owner.request_id).filter(models.Owner.user_id == staff_id).filter(models.Owner.is_point_person == True)
+                published_request=published_request.filter(models.Request.id == models.Owner.request_id).filter(published_filter).filter(models.Owner.user_id == staff_id).filter(models.Owner.is_point_person == True)
                 denied_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(denied_filter).filter(models.Owner.user_id == staff_id).all()
                 granted_and_closed_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(granted_and_closed_filter).filter(models.Owner.user_id == staff_id).all()
                 granted_in_part_request=models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(granted_in_part_filter).filter(models.Owner.user_id == staff_id).all()
@@ -1168,8 +1271,8 @@ def get_report_jsons(report_type,public_filter):
             response={
                 "status" : "ok",
                 "data" : [
-                    {"label" : "Received", "value" : len(received_request), "callback" : "received"},
-                    {"label" : "Published", "value" : len(published_request), "callback" : "received"},
+                    {"label" : "Received", "value" : len(received_request.all()), "callback" : "received"},
+                    {"label" : "Published", "value" : len(published_request.all()), "callback" : "received"},
                     {"label" : "Denied", "value" : len(denied_request), "callback" : "denied"},
                     {"label" : "Granted And Closed", "value" : len(granted_and_closed_request), "callback" : "granted_and_closed"},
                     {"label" : "Granted In Part", "value" : len(granted_in_part_request), "callback" : "granted_in_part"},
@@ -1215,6 +1318,7 @@ def get_report_jsons(report_type,public_filter):
 @app.route("/report")
 def report():
     users=models.User.query.all()
+    users=models.User.query.order_by(models.User.alias.asc()).all()
     departments_all = models.Department.query.all()
     agency_data = []
     for d in departments_all:
@@ -1230,6 +1334,29 @@ def submit():
         pass
     else:
         pass
+
+@app.route("/changeprivacy", methods=["POST","GET"])
+def change_privacy():
+    req=get_obj("Request",request.form['request_id'])
+    privacy=request.form['privacy setting']
+    field=request.form['fieldtype']
+    #field will either be title or description
+    print request.form
+    print "THE REQUEST PRIVACY SETTING IS BEING SET TO: " + str(privacy)
+    app.logger.info("Changing privacy function")
+    prr.change_privacy_setting(request_id=request.form['request_id'],privacy=privacy,field=field)
+    return redirect(url_for('show_request_for_city',request_id=request.form['request_id']))
+
+@app.route("/<page>")
+def any_page(page):
+    try:
+        return render_template('%s.html' % (page))
+    except:
+        return page_not_found(404)
+
+@app.errorhandler(400)
+def bad_request(e):
+    return render_template("400.html"), 400
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html"), 404
@@ -1238,7 +1365,7 @@ def internal_server_error(e):
     return render_template("500.html"), 500
 @app.errorhandler(403)
 def access_denied(e):
-    return render_template("403.html"), 403
+    return redirect(url_for('login'))
 @app.errorhandler(501)
 def unexplained_error(e):
     return render_template("501.html"), 501

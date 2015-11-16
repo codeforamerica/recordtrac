@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <!-- HTML5 shim for IE backwards compatibility -->
+    <!--[if lt IE 9]>
+      <script src="/static/js/plugins/html5.js"></script>
+    <![endif]-->
+
+    <link rel=stylesheet type=text/css href="/static/style/css/screen.css">
+
+    <!--[if lte IE 9]>
+    <link rel=stylesheet type=text/css href="/static/style/css/ie.css">
+    <![endif]-->
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32"
+          href="/static/images/favicon-32x32.png"/>
+
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstro.css') }}">
+    <link rel=stylesheet type=text/css href="/static/css/plugins/BootSwatchr6.css">
+    <link rel=stylesheet type=text/css href="/static/css/plugins/DT_bootstrap.css">
+    <link rel=stylesheet type=text/css href="/static/css/plugins/font-awesome.min.css">    
+
+    <!-- modernizr -->
+    <script type="text/javascript"
+            src="/static/js/plugins/modernizr-latest-min.js"></script>
+
+    <!-- auth_script requires jquery and Mozilla's 'include.js' shim -->
+    <script type="text/javascript" src="/static/js/plugins/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="/static/js/plugins/include.js"></script>
+    <script type="text/javascript"></script>
+
+    <!-- IE8 polyfill for CSS3 pseudo classes like :hover -->
+    <script type="text/javascript" src="/static/js/plugins/jquery-1.11.1.min.js"></script>
+    <!--[if (gte IE 6)&(lte IE 8)]>
+      <script type="text/javascript" src="/static/js/plugins/selectivizr-min.js"></script>
+      <noscript><link rel="stylesheet" href="[fallback css]" /></noscript>
+    <![endif]-->
+
+    <!-- transform and other prefixes polyfill -->
+    <script src="/static/js/plugins/jquery.css3finalize.min.js"></script>
+
+    <!-- REM unit polyfill -->
+    <script type="text/javascript" src="/static/js/plugins/rem.min.js"></script>
+
+    <script type='text/javascript' src="/static/js/plugins/d3.v3.min.js"
+            charset="utf-8"></script>
+
+</head>
+
+<body>
+<div class="agency-header">
+    <div class="upper-header-black">
+        <div class="container">
+          <span class="upper-header-left">
+            <a href="http://www1.nyc.gov"><img src="http://www1.nyc.gov/assets/home/images/global/nyc_white.png"
+                                               alt="NYC" class="small-nyc-logo"/></a>
+            <img src="http://www1.nyc.gov/assets/home/images/global/upper-header-divider.gif" alt=""/>
+            <span class="upper-header-black-title">OpenRecords</span>
+          </span>
+            <span class="upper-header-padding"></span>
+          <span class="upper-header-right">
+            <span class="upper-header-three-one-one">
+              <a href="http://www1.nyc.gov/311/index.page">311</a>
+            </span>
+            <img src="http://www1.nyc.gov/assets/home/images/global/upper-header-divider.gif" alt=""/>
+            <span class="upper-header-search">
+              <a href="http://www1.nyc.gov/home/search/index.page">Search all NYC.gov websites</a>
+            </span>
+          </span>
+        </div>
+    </div>
+</div>
+<div class="wrapper">
+    <div class="navbar">
+        <div class="navbar-inner">
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="/"><img id="logo_nav"
+                                           src="/static/images/logo.png"
+                                           alt="Your agency name logo"/></a>
+
+            <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
+                
+                    <div class="login btn">
+                      <p><a href="/login" >Login</a></p>
+                    </div>
+                    <div class="google_translate">
+                        <div id="google_translate_element"></div>
+                        <script type="text/javascript">
+                        function googleTranslateElementInit() {
+                        new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+                        }
+                        </script>
+                        <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+                        </script>
+                    </div>
+                    <ul class="nav tabs">
+                        <li><a href="/new">Request a Record</a></li>
+                        <li><a href="/view_requests">All Requests</a></li>
+                        <li><a href="/track">Track an Existing Request</a></li>
+                        <li><a href="/faq">FAQ</a></li>
+                        <li><a href="/about">About</a></li>
+                    </ul>
+                    <ul class="nav pull-right">
+                    </ul>
+                
+            </div>
+        </div>
+    </div>
+    <div id="container-fluid">
+        
+    <link rel=stylesheet type=text/css href="/static/css/about.css">
+    <div class="row-fluid">
+        <div class="span8" id="about">
+
+            <div class="row-fluid">
+                <div class="bottombreathe">
+                    <h1 id="about">About NYC Open Gov</h1>
+
+                    <p class="lead">NYC Open Gov is a quick, simple way for you to submit a public records request to
+                        the Your agency name.</p>
+
+                    <p><strong>Most information on this site is public.</strong> Your contact information, and personal
+                        information that may be contained in government documetns will not be made available to the
+                        public.</p>
+                </div>
+                <div class="bottombreathe">
+                    <h4 id="what">What is NYC Open Gov?</h4>
+
+                    <p>NYC Open Gov is a quick, simple way for individuals to submit Freedom of Information Law (FOIL)
+                        requests to Your agency name. The web application also allows government employees
+                        manage, respond to, and fulfill incoming requests. By displaying all records requests and
+                        responsive documents, members of the public may find what they need without having to create a
+                        new public record request.</p>
+                </div>
+                <div class="bottombreathe">
+                    <h4 id="documents">Why aren't all documents uploaded on NYC Open Gov?</h4>
+
+                    <p>The Your agency name will not publicly release records or information that violates
+                        your right to privacy. The Your agency name will not make available records that have
+                        been exempted from disclosure by Federal, State, or Local statute, including records that would
+                        impair contract awards or collective bargainaing negotiations, are trade secrets, are compiled
+                        for law enforcement services and if disclosed would interfere with investigations or judicial
+                        proceedings, deprive a person to a fair trial, identify a confidential source, reveal
+                        investigative techniques, or endanger a person's life.</p>
+                </div>
+                <div class="bottombreathe">
+                    <h4 id="why">History of NYC Open Gov (Previously RecordTrac)</h4>
+
+                    <div class="row-fluid">
+                        <div id="about_image" class="span10">
+                            <img src="/static/images/nycseal.png"
+                                 alt="City of New York Seal" width="100" height="100"/>
+                            <!-- <i class="icon-plus icon-3x text-center muted"></i> -->
+                            <!-- <img src="/static/images/CfA_logo.png" width="20%" alt="Code for America"/> -->
+                        </div>
+                    </div>
+
+                    <p>The 2013 Code for America fellows created RecordTrac with the City of Oakland. As public records
+                        requests became larger and more complex, city employees found coordinating a response to be
+                        difficult. The old software system no longer met their needs and many requests remained
+                        untracked.</p>
+
+                    <p>Members of the public complained they didn’t understand what happened after they submitted their
+                        requests and it took too long to get the records they needed.</p>
+
+                    <p>By making everything completely transparent, you can know your request is fulfilled.</p>
+                </div>
+
+                <div class="footerbreathe">
+                    <h4 id="why">I'd like to know more about how to...</h4>
+                    <ul>
+                        <li><a href="https://github.com/codeforamerica/recordtrac/blob/readme/readme/redeploy.md">Create
+                            a RecordTrac for your own agency</a></li>
+                        <li>
+                            <a href="https://github.com/codeforamerica/recordtrac/blob/readme/readme/redeploy.md#technical-details">Review
+                                the technical details</a></li>
+                        <li>
+                            <a href="https://github.com/codeforamerica/recordtrac/blob/readme/readme/recordtrac_readme.md#how-to-use-recordtrac-as-a-requester">Learn
+                                to create a request</a></li>
+                        <li>
+                            <a href="https://github.com/codeforamerica/recordtrac/blob/readme/readme/recordtrac_readme.md#how-to-use-recordtrac-as-an-agency-employee">Learn
+                                to manage requests</a></li>
+                    </ul>
+                    <p>For more information, please see the <a
+                            href="https://github.com/codeforamerica/recordtrac/blob/readme/recordtrac_readme.md">full
+                        documentation</a> for the RecordTrac application.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    </div>
+    <div class="push"></div>
+</div>
+<!-- // Wrapper -->
+<div class="iw_component" id="1422284559235">
+    <div class="row">
+        <footer>
+            <div class="container">
+                <div class="span9 footer-links">
+                    <a href="http://www1.nyc.gov/nyc-resources/agencies.page">Directory of City Agencies</a>
+                    <a href="http://www1.nyc.gov/home/contact-us.page">Contact NYC Government</a>
+                    <a href="https://a127-ess.nyc.gov">City Employees</a>
+                    <a href="http://www.nyc.gov/notifynyc">Notify NYC</a>
+                    <a href="http://a856-citystore.nyc.gov/">CityStore</a>
+                    <a href="http://www1.nyc.gov/connect/social-media.page">Stay Connected</a>
+                    <a href="http://www1.nyc.gov/connect/applications.page">NYC Mobile Apps</a>
+                    <a href="http://www1.nyc.gov/nyc-resources/nyc-maps.page">Maps</a>
+                    <a href="http://www1.nyc.gov/nyc-resources/resident-toolkit.page">Resident Toolkit</a>
+                </div>
+                <div class="span3">
+                    <span class="logo-nyc">NYC</span>
+
+                    <form class="form-search" method="get" action="http://www1.nyc.gov/home/search/index.page">
+                        <input placeholder="Search" class="input-search placeholder" name="search-terms" type="text"/>
+                        <button class="ico-search">Search</button>
+                    </form>
+                    <div class="copyright">
+                        <p>City of New York. 2015 All Rights Reserved,</p>
+
+                        <p>NYC is a trademark and service mark of the City of New York</p>
+
+                        <p><a href="http://www1.nyc.gov/home/privacy-policy.page" title="Privacy">Privacy Policy</a>.
+                            <a href="http://www1.nyc.gov/home/terms-of-use.page" title="TOU">Terms of Use</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script type="text/javascript" src="/static/js/plugins/jquery.placeholder.js"></script>
+<script type="text/javascript" src="/static/js/plugins/jquery.validate.js"></script>
+<script type="text/javascript" src="/static/js/plugins/bootstrap.js"></script>
+
+<!-- used for the tutorial -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstro.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/custom.bootstro.js') }}"></script>
+
+<script>
+$(document).ready(function(){
+    bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
+       [{selector:'#about',title:'About',content:'Select the About option for an overview of OpenRecords as well as FAQs that provide additional information about the application.',placement:'right',finishButton:'<a class="btn" href="/tutorial/01"> «Previous</a> <a class="btn" href="/tutorial/03">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a>'}
+       ]
+    });
+});
+</script>
+
+</body>
+</html>

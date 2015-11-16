@@ -83,6 +83,12 @@ envvars = [
     'LDAP_SA_PASSWORD',  # Password for the LDAP Service Account
     'LDAP_BASE_DN',  # Base DN for searching for users
 
+    # ICAP Variables
+    'HOST',
+    'SERVICE',
+    'PORT',
+    'SHOULD_UPLOAD'
+
 ]
 
 for envvar in envvars:
