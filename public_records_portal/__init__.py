@@ -23,24 +23,9 @@ app.debug = True
 
 load_dotenv(abspath(join(join(dirname(__file__), pardir), '.env')))
 
-# LDAP Settings
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
-#app.config['WTF_CSRF_SECRET_KEY'] = 'random key for form'
-app.config['LDAP_PROVIDER_URL'] = 'ldaps://ldaps-dev.nycid.nycnet:636/'
-# Tester code
-def test_Ldap():
-    conn = ldap.initialize('ldaps://ldaps-dev.nycid.nycnet:636')
-    conn.start_tls_s()
-    # Gives server down
-
-# .ENV VARS
-# LDAP_PROVIDER_URL = 'ldaps://ldaps-dev.nycid.nycnet:636/'
-# LDAP_LOGIN_VIEW = 'login'
-# LDAP_LOGIN_TEMPLATE = 'login.html'
-
 
 def set_env(key, default=None):
-    ''' Used to set environment variables '''
+    """ Used to set environment variables """
     if key in environ:
         app.config[key] = environ[key]
     elif key in app.config:
@@ -94,6 +79,15 @@ envvars = [
     'SERVICE',
     'PORT',
     'SHOULD_SCAN_FILES',
+    
+    # LDAP
+    'LDAP_SERVER',  # LDAP Server URL
+    'LDAP_PORT',  # LDAP Connection Port
+    'LDAP_USE_TLS',  # Using TLS to connect to server
+    'LDAP_CERT_PATH',  # Path to certificate. Required if using TLS
+    'LDAP_SA_BIND_DN',  # Bind DN for the LDAP Service Account
+    'LDAP_SA_PASSWORD',  # Password for the LDAP Service Account
+    'LDAP_BASE_DN',  # Base DN for searching for users
 
 ]
 
