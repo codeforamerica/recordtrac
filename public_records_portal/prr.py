@@ -284,6 +284,10 @@ def make_request(agency=None, summary=None, text=None, attachment=None,
                  last_name=None, alias=None, role=None, organization=None, email=None, phone=None, fax=None,
                  street_address_one=None, street_address_two=None, city=None, state=None, zip=None, user_id=None):
     """ Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
+    try:
+        is_partner_agency = agency_codes[agency]
+    except KeyError:
+        return None, True
     request_id = find_request(text)
     if request_id:  # Same request already exists
         return request_id, False

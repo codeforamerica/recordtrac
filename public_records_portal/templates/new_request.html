@@ -34,15 +34,40 @@
                 <fieldset>
                     <div class="row-fluid">
                         <div class="span8">
+                           <div class="control-group">
+                                <h2>
+                                    <small id='categoryTitle' >Category</small>
+                                </h2>
+                                    <select id="category" class="input-block-level">
+                                        <option selected value></option>
+                                        <option>Business</option>
+                                        <option>Civic Services</option>
+                                        <option>Culture and Recreation</option>
+                                        <option>Education</option>
+                                        <option>Environment</option>
+                                        <option>Government Administration</option>
+                                        <option>Health</option>
+                                        <option>Housing</option>
+                                        <option>Public</option>
+                                        <option>Social</option>
+                                        <option>Transportation</option>
+                                    </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row-fluid">
+                        <div class="span8">
                             <div class="control-group">
                                 <h2>
                                     <small>What agency has the records you
                                         want?*
                                     </small>
                                 </h2>
-                                {{
-                                form.request_agency(class="input-block-level")
-                                }}
+                                </div>
+                                <select id="agency" name="request_agency" class="input-block-level">
+                                    <option selected value></option>
+                                </select>
                             </div>
                         </div>
                     </div>

@@ -55,6 +55,41 @@ def make_session_permanent():
 # Submitting a new request
 @app.route("/new", methods=["GET", "POST"])
 def new_request(passed_recaptcha=False, data=None):
+
+    category = {
+        'Business':['Department of Consumer Affairs', "Mayor's Office of Contract Services", "Procurement Policy Board",
+                    "Small Business Sercies"],
+        'Civic Services':["Department of Records"],
+        'Culture & Recreation':["Art Commission","Department of Cultural Affairs",
+                                "Mayor's Office of Media and Entertainment","Department of Parks and Recreation"],
+        'Education':["Department of Education","School Construction Authority"],
+        'Environment':["Department of Environmental Protection","Office of Environmental Remediation",
+                       "Office of Long-Term Planning & Sustainability"],
+        'Government Administration':["NYC Office of the Actuary","Office of Administrative Trials and Hearings",
+                                     "Business Integrity Commission","Department of Citywide Administrative Services",
+                                     "Civil Service Commission", "Conflicts of Interest Board","Design Commission",
+                                     "Department of Design and Construction","Equal Employment Practices Commission",
+                                     "Department of Finance","City Commission on Human Rights",
+                                     "Department of Information Technology and Telecommunications",
+                                     "NYC Office of Labor Relations",
+                                     "Law Department",
+                                     "Office of Management and Budget",
+                                     "Mayor's Office",
+                                     "Office of Payroll Administration"],
+        'Health':["NYC Office of Chief Medical Examiner", "Health and Hospitals Corporation",
+                  "Department of Health and Mental Hygiene"],
+        'Housing & Development':["Department of Buildings","Department of City Planning",
+                                 "New York City Housing Authroity","Housing Recovery Operations",
+                                 "Landmarks Preservation Commission","Loft Board","Board of Standards and Appeals"],
+        'Public Safety':["Civilian Complaint Review Board","Commission to Combat Police Corruption",
+                         "Board of Correction","Department of Correction", "NYC Office of Emergency Management",
+                         "New York City Fire Department","Department of Investigation","Police Department",
+                         "Department of Probation","NYC Office of the Special Narcotics Prosecutor"],
+        'Social services':["Department for the Aging","Administration for Children's Services",
+                           "Department of Homeless Services","Department of Housing Preservations and Development",
+                           "Human Resources Administration","Department of Youth and Community Development"],
+        'Transporation':["Taxi and Limousine Commission","Department of Transporation"]
+    }
     form = None
     departments = None
     routing_available = False
@@ -186,7 +221,7 @@ def new_request(passed_recaptcha=False, data=None):
                     city=request_address_city,
                     state=request_address_state,
                     zip=request_address_zip)
-                if is_new == False:
+                if not is_new:
                     errors.append(
                         "Looks like your request is the same as /request/%s" % request_id)
                     return render_template('offline_request.html', form=form,
@@ -284,6 +319,9 @@ def new_request(passed_recaptcha=False, data=None):
                     "Looks like your request is the same as <a href=\"/request/%s\"" % request_id)
                 return render_template('new_request.html', form=form,
                                    routing_available=routing_available, departments=departments, errors=errors)
+            if not request_id:
+                    return render_template('manage_request_non_partner.html', agency=request_agency, email=(request_email != ''))
+
             return redirect(url_for('show_request_for_x', request_id=request_id,
                                     audience='new', email=(request_email is not None)))
 
@@ -296,7 +334,7 @@ def new_request(passed_recaptcha=False, data=None):
             return render_template('offline_request.html', form=form, routing_available=routing_available)
         else:
             form = NewRequestForm()
-            return render_template('new_request.html', form=form, routing_available=routing_available)
+            return render_template('new_request.html', form=form, routing_available=routing_available,categories=category)
 
 @app.route("/faq")
 def faq():
@@ -1341,11 +1379,14 @@ def change_privacy():
     privacy=request.form['privacy setting']
     field=request.form['fieldtype']
     #field will either be title or description
-    print request.form
-    print "THE REQUEST PRIVACY SETTING IS BEING SET TO: " + str(privacy)
     app.logger.info("Changing privacy function")
     prr.change_privacy_setting(request_id=request.form['request_id'],privacy=privacy,field=field)
     return redirect(url_for('show_request_for_city',request_id=request.form['request_id']))
+
+@app.route("/changecategory", methods=["POST","GET"])
+def change_category():
+    category=request.form['category']
+    return redirect(render_template('new_request.html'))
 
 @app.route("/<page>")
 def any_page(page):
