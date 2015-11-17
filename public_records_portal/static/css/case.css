@@ -166,6 +166,11 @@ a {
     color: #FFFFFF;
 }
 
+.nav-pills>li>.tab {
+    background-color: transparent;
+}
+
+
 
 .nav-pills>li>a:hover{
     background-color: #0A5999;

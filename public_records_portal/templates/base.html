@@ -65,7 +65,7 @@ This template provides the header, footer, and envelope info for all pages excep
 {% set navigation_bar = [
 
     ('/new', 'new', 'Request a Record'),
-    ('view_requests','view_requests','All Requests'),
+    ('/view_requests','view_requests','All Requests'),
     ('/track','track','Track an Existing Record'),
     ('/report','report','Report'),
     ('/faq','faq','FAQ'),
@@ -123,7 +123,7 @@ This template provides the header, footer, and envelope info for all pages excep
                     <p><a href="/logout">Logout</a></p>
                 </div>
                 {#                    loops through the navigation_bar container for the label and definition of each tab#}
-                <ul class="nav nav-pills">
+                <ul class="nav nav-pills" >
                     {% for href, id, caption in navigation_bar %}
                       <li{% if id == active_page %} class="active openrecords_nav"{% endif%}>
                       <a class="openrecords_nav" href="{{ href|e }}">{{ caption|e }}</a></li>
@@ -146,7 +146,7 @@ This template provides the header, footer, and envelope info for all pages excep
                             src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
                     </script>
                 </div>
-                <ul class="nav nav-pills">
+                <ul class="nav nav-pills" >
                     {% for href, id, caption in navigation_bar %}
                       <li{% if id == active_page %} class="active openrecords_nav"{% endif%}>
                       <a class="openrecords_nav" href="{{ href|e }}">{{ caption|e }}</a></li>

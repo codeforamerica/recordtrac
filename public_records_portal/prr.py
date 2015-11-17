@@ -8,35 +8,33 @@
 
 import csv
 import urllib
-
-from flask import Flask, request, render_template, render_template_string, redirect, url_for, make_response
 from StringIO import StringIO
+
+from flask import request, render_template, make_response
 from xhtml2pdf import pisa
-from public_records_portal import db_helpers
+
+import upload_helpers
+from RequestPresenter import RequestPresenter
+from ResponsePresenter import ResponsePresenter
 from db_helpers import find_request, create_request, get_obj, add_staff_participant, remove_staff_participant, \
     update_obj, get_attribute, change_request_status, create_or_return_user, create_subscriber, create_record, \
-    create_note, create_QA, create_answer, update_user, id_generator, id_counter, get_user_by_id
+    create_note, create_QA, create_answer, update_user, id_generator, get_user_by_id
 from models import *
-from ResponsePresenter import ResponsePresenter
-from RequestPresenter import RequestPresenter
 from notifications import generate_prr_emails
-import upload_helpers
+from public_records_portal import db_helpers
 from requires_roles import requires_roles
 
-agency_codes = {
-"Commission on Human Rights": "228",
-"Department of Education": "040",
-"Department of Information Technology and Telecommunications": "858",
-"Department of Records and Information Services": "860",
-"Law Department": "025",
-"Mayor's Office of Operations": "002",
-"Mayor's Office of Technology and Innovation": "002",
-"Office of Administrative Trials and Hearings": "820",
-"Office of Emergency Management": "017",
-"Office of the Chief Medical Examiner": "816",
-"Office of the Mayor": "002",
-None: "000"
-}
+agency_codes = {"City Commission on Human Rights": "228",
+                "Department of Education": "040",
+                "Department of Information Technology and Telecommunications": "858",
+                "Department of Records and Information Services": "860",
+                "Mayor's Office": "002",
+                "Mayor's Office of Contract Services": "002",
+                "Mayor's Office of Media and Entertainment": "002",
+                "Office of Administrative Trials and Hearings": "820",
+                "Office of Chief Medical Examiner": "816",
+                "Office of Emergency Management": "017",
+                None: "000"}
 
 
 def add_public_note(request_id, text):
@@ -47,17 +45,18 @@ def add_public_note(request_id, text):
 ### @export "add_resource"
 def add_resource(resource, request_body, current_user_id=None):
     fields = request_body
-    department_name = Department.query.filter_by(id = Request.query.filter_by(id = fields['request_id']).first().department_id).first()
+    department_name = Department.query.filter_by(
+        id=Request.query.filter_by(id=fields['request_id']).first().department_id).first()
     if "extension" in resource:
         return request_extension(fields['request_id'], fields.getlist('extend_reason'), current_user_id,
-                              int(fields['days_after']), fields['due_date'], request_body=request_body)
+                                 int(fields['days_after']), fields['due_date'], request_body=request_body)
     if "note" in resource:
         return add_note(request_id=fields['request_id'], text=fields['note_text'], user_id=current_user_id,
-                        privacy=fields['note_privacy'],request_body=request_body)
+                        privacy=fields['note_privacy'], request_body=request_body)
 
     if "pdf" in resource:
         return add_pdf(request_id=fields['request_id'], text=fields['response_template'], user_id=current_user_id,
-                        passed_spam_filter=True)
+                       passed_spam_filter=True)
     elif "record" in resource:
         app.logger.info("\n\ninside add_resource method")
         if fields['record_description'] == "":
@@ -67,7 +66,8 @@ def add_resource(resource, request_body, current_user_id=None):
                                       current_user_id, department_name)
         elif 'link_url' in fields and fields['link_url'] != "":
             return add_link(request_id=fields['request_id'], url=fields['link_url'],
-                            description=fields['record_description'], user_id=current_user_id, department_name=department_name)
+                            description=fields['record_description'], user_id=current_user_id,
+                            department_name=department_name)
         else:
             app.logger.info("\n\neverything else...")
             document = None
@@ -87,14 +87,16 @@ def add_resource(resource, request_body, current_user_id=None):
         if request_body:
 
             user = User.query.filter_by(email=request_body['owner_email']).first()
-            user_name=user.alias
-            generate_prr_emails(request_id=fields['request_id'], notification_type="Staff participant added", text=request_body,user_name=user_name,
+            user_name = user.alias
+            generate_prr_emails(request_id=fields['request_id'], notification_type="Staff participant added",
+                                text=request_body, user_name=user_name,
                                 user_id=get_attribute("user_id", obj_id=participant_id, obj_type="Owner"))
         else:
-            user=User.query.get(current_user_id)
-            user_name=user.alias
-            generate_prr_emails(request_id=fields['request_id'], notification_type="Staff participant added",user_name=user_name,
-                            user_id=get_attribute("user_id", obj_id=participant_id, obj_type="Owner"))
+            user = User.query.get(current_user_id)
+            user_name = user.alias
+            generate_prr_emails(request_id=fields['request_id'], notification_type="Staff participant added",
+                                user_name=user_name,
+                                user_id=get_attribute("user_id", obj_id=participant_id, obj_type="Owner"))
         return participant_id
     elif "subscriber" in resource:
         return add_subscriber(request_id=fields['request_id'], email=fields['follow_email'])
@@ -108,30 +110,36 @@ def update_resource(resource, request_body):
     if "owner" in resource:
         if "change_assignee" in fields:
             # own=Owner.query.filter_by(user_id=fields['owner_id']).first()
-            user_name=User.query.filter_by(id=Owner.query.filter_by(id=fields['owner_id']).first().user_id).first().alias
-            generate_prr_emails(request_id=fields['request_id'],notification_type="Request assigned", text=request_body['owner_reason'],user_name=user_name)
+            user_name = User.query.filter_by(
+                id=Owner.query.filter_by(id=fields['owner_id']).first().user_id).first().alias
+            generate_prr_emails(request_id=fields['request_id'], notification_type="Request assigned",
+                                text=request_body['owner_reason'], user_name=user_name)
         elif "remove_helper" in fields:
             owner = Owner.query.get(request_body['owner_id'])
-            user_id=owner.user_id
-            user_name=(User.query.get(user_id)).alias
-            generate_prr_emails(request_id=fields['request_id'],notification_type="Helper removed", text=request_body,user_name=user_name)
+            user_id = owner.user_id
+            user_name = (User.query.get(user_id)).alias
+            generate_prr_emails(request_id=fields['request_id'], notification_type="Helper removed", text=request_body,
+                                user_name=user_name)
         elif "reason_unassigned" in fields:
             return remove_staff_participant(owner_id=fields['owner_id'])
         else:
             change_request_status(fields['request_id'], "Rerouted")
-            return assign_owner(request_id=fields['request_id'], reason=fields['owner_reason'], email=fields['owner_email'])
+            return assign_owner(request_id=fields['request_id'], reason=fields['owner_reason'],
+                                email=fields['owner_email'])
     elif "reopen" in resource:
         request_id = fields['request_id']
         change_request_status(request_id, "Reopened")
         req = get_obj("Request", request_id)
         try:
             user_id = req.subscribers[0].user.id
-            generate_prr_emails(request_id=request_id, user_id=user_id, notification_type="Public Notification Template 10")
+            generate_prr_emails(request_id=request_id, user_id=user_id,
+                                notification_type="Public Notification Template 10")
         except IndexError:
             app.logger.error("No Subscribers")
     elif "acknowledge" in resource:
         change_request_status(fields['request_id'], fields['acknowledge_status'])
-        generate_prr_emails(request_id=fields['request_id'], text=fields['additional_information'], days_after=fields['acknowledge_status'], notification_type="Acknowledge request")
+        generate_prr_emails(request_id=fields['request_id'], text=fields['additional_information'],
+                            days_after=fields['acknowledge_status'], notification_type="Acknowledge request")
         return fields['request_id']
     elif "request_text" in resource:
         update_obj(attribute="text", val=fields['request_text'], obj_type="Request", obj_id=fields['request_id'])
@@ -149,7 +157,7 @@ def update_resource(resource, request_body):
 
 ### @export "request_extension"
 @requires_roles('Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel')
-def request_extension(request_id, extension_reasons, user_id, days_after=None, due_date=None,request_body=None):
+def request_extension(request_id, extension_reasons, user_id, days_after=None, due_date=None, request_body=None):
     """
     This function allows portal admins, agency admins, and FOIL officers to request additonal time.
     Uses add_resource from prr.py and takes extension date from field retrived from that function.
@@ -157,19 +165,23 @@ def request_extension(request_id, extension_reasons, user_id, days_after=None, d
     """
     req = Request.query.get(request_id)
     req.extension(days_after, due_date)
+    user = User.query.get(user_id)
+    user_name = user.alias
     text = "Request extended:"
     if request_body is not None:
-        generate_prr_emails(request_id=request_id, notification_type="Extend request", text=request_body)
+        generate_prr_emails(request_id=request_id, notification_type="Extend request", text=request_body,
+                            user_name=user_name, user_id=user_id)
     else:
-        generate_prr_emails(request_id=request_id, notification_type="Extend request", text=extension_reasons)
+        generate_prr_emails(request_id=request_id, notification_type="Extend request", text=extension_reasons,
+                            user_name=user_name, user_id=user_id)
     for reason in extension_reasons:
         text = text + reason + "</br>"
     add_staff_participant(request_id=request_id, user_id=user_id)
-    return add_note(request_id=request_id, text=text, user_id=user_id, extension=True)  # Bypass spam filter because they are logged in.
+    return add_note(request_id=request_id, text=text, user_id=user_id,
+                    extension=True)  # Bypass spam filter because they are logged in.
 
 
-def add_note(request_id, text,  privacy=1, request_body=None, user_id=None, extension=False):
-
+def add_note(request_id, text, privacy=1, request_body=None, user_id=None, extension=False):
     if text and text != "":
         note_id = create_note(request_id=request_id, text=text, user_id=user_id, privacy=privacy)
         if extension:
@@ -179,48 +191,55 @@ def add_note(request_id, text,  privacy=1, request_body=None, user_id=None, exte
             if user_id:
                 add_staff_participant(request_id=request_id, user_id=user_id)
                 if request_body is not None:
-                    generate_prr_emails(request_id=request_id, notification_type="Public note added", text=request_body['note_text'],user_id=user_id)
+                    generate_prr_emails(request_id=request_id, notification_type="Public note added",
+                                        text=request_body['note_text'], user_id=user_id)
                 else:
-                    generate_prr_emails(request_id=request_id, notification_type="Public note added",user_id=user_id)
+                    generate_prr_emails(request_id=request_id, notification_type="Public note added", user_id=user_id)
             else:
                 if request_body is not None:
-                    generate_prr_emails(request_id=request_id, notification_type="Public note added", text=request_body['note_text'],user_id=user_id)
+                    generate_prr_emails(request_id=request_id, notification_type="Public note added",
+                                        text=request_body['note_text'], user_id=user_id)
                 else:
-                    generate_prr_emails(request_id=request_id, notification_type="Public note added",user_id=user_id)
+                    generate_prr_emails(request_id=request_id, notification_type="Public note added", user_id=user_id)
             return note_id
         return False
     return False
 
-### @export "add_pdf"
-def add_pdf(request_id, text, user_id = None, passed_spam_filter = False, privacy = 1):
-        if "template_" in text:
-            template_num = text.split("_")[1]
-            template_name = 'standard_response_' + template_num + ".html"
-            app.logger.info("\n\nPDF TEMPLATE:" + template_name)
-            date = datetime.now().strftime('%B %d, %Y')
-            req = Request.query.get(request_id)
-            department = Department.query.filter_by(id=req.department_id).first()
-            appeals_officer = "APPEALS OFFICER"
-            appeals_email = "APPEALS_EMAIL"
-            staff = req.point_person()
-            staff_alias = staff.user.alias
-            staff_signature = staff.user.staff_signature
-            print "subscribers123467" +str(req.subscribers)
-            if req.subscribers != []:
-                user_name = req.subscribers[0]
-            else:
-                user_name = "First Name Last Name"
 
-            html = make_response(render_template(template_name,user_name = user_name, date=date, req=req, department=department, appeals_officer=appeals_officer,appeals_email=appeals_email, staff_alias= staff_alias, staff_signature=staff_signature))
-            pdf = StringIO()
-            pisaStatus = pisa.CreatePDF(StringIO(html.get_data().encode('utf-8')), pdf)
-            if not pisaStatus.err:
-                resp = pdf.getvalue()
-                pdf.close()
-                response = make_response(resp)
-                response.headers['Content-Type'] = 'application/pdf'
-                response.headers["Content-Disposition"] = "attachment; filename = Response.pdf"
-                return response
+### @export "add_pdf"
+def add_pdf(request_id, text, user_id=None, passed_spam_filter=False, privacy=1):
+    if "template_" in text:
+        template_num = text.split("_")[1]
+        template_name = 'standard_response_' + template_num + ".html"
+        app.logger.info("\n\nPDF TEMPLATE:" + template_name)
+        date = datetime.now().strftime('%B %d, %Y')
+        req = Request.query.get(request_id)
+        department = Department.query.filter_by(id=req.department_id).first()
+        appeals_officer = "APPEALS OFFICER"
+        appeals_email = "APPEALS_EMAIL"
+        staff = req.point_person()
+        staff_alias = staff.user.alias
+        staff_signature = staff.user.staff_signature
+        print "subscribers123467" + str(req.subscribers)
+        if req.subscribers != []:
+            user_name = req.subscribers[0]
+        else:
+            user_name = "First Name Last Name"
+
+        html = make_response(
+            render_template(template_name, user_name=user_name, date=date, req=req, department=department,
+                            appeals_officer=appeals_officer, appeals_email=appeals_email, staff_alias=staff_alias,
+                            staff_signature=staff_signature))
+        pdf = StringIO()
+        pisaStatus = pisa.CreatePDF(StringIO(html.get_data().encode('utf-8')), pdf)
+        if not pisaStatus.err:
+            resp = pdf.getvalue()
+            pdf.close()
+            response = make_response(resp)
+            response.headers['Content-Type'] = 'application/pdf'
+            response.headers["Content-Disposition"] = "attachment; filename = Response.pdf"
+            return response
+
 
 ### @export "upload_record"
 def upload_record(request_id, description, user_id, request_body, document=None):
@@ -244,10 +263,13 @@ def upload_record(request_id, description, user_id, request_body, document=None)
             change_request_status(request_id, "A response has been added.")
             if request_body is not None:
                 attached_file = app.config['UPLOAD_FOLDER'] + "/" + filename
-                generate_prr_emails(request_id=request_id, notification_type="Public Notification Template 10", text=request_body['additional_information'],user_id=user_id,attached_file=attached_file)
+                generate_prr_emails(request_id=request_id, notification_type="Public Notification Template 10",
+                                    text=request_body['additional_information'], user_id=user_id,
+                                    attached_file=attached_file)
             else:
                 attached_file = app.config['UPLOAD_FOLDER'] + "/" + filename
-                generate_prr_emails(request_id=request_id, notification_type="Public Notification Template 10",user_id=user_id,attached_file=attached_file)
+                generate_prr_emails(request_id=request_id, notification_type="Public Notification Template 10",
+                                    user_id=user_id, attached_file=attached_file)
             add_staff_participant(request_id=request_id, user_id=user_id)
             return record_id
     return "There was an issue with your upload."
@@ -260,7 +282,8 @@ def add_offline_record(request_id, description, access, user_id, department_name
                               description=description)  # To create an offline record, we need to know the request ID to which it will be added, the user ID for the person adding the record, how it can be accessed, and a description/title of the record.
     if record_id:
         change_request_status(request_id, "A response has been added.")
-        generate_prr_emails(request_id=request_id, notification_type="City response added", text=description, department_name=department_name,)
+        generate_prr_emails(request_id=request_id, notification_type="City response added", text=description,
+                            department_name=department_name, )
         add_staff_participant(request_id=request_id, user_id=user_id)
         return record_id
     return False
@@ -272,7 +295,8 @@ def add_link(request_id, url, description, user_id, department_name=None):
     record_id = create_record(url=url, request_id=request_id, user_id=user_id, description=description)
     if record_id:
         change_request_status(request_id, "A response has been added.")
-        generate_prr_emails(request_id=request_id, notification_type="City response added", text=url+description, department_name = department_name)
+        generate_prr_emails(request_id=request_id, notification_type="City response added", text=url + description,
+                            department_name=department_name)
         add_staff_participant(request_id=request_id, user_id=user_id)
         return record_id
     return False
@@ -320,12 +344,13 @@ def make_request(agency=None, summary=None, text=None, attachment=None,
                                 email=assigned_to_email)  # Assign someone to the request
     open_request(request_id)  # Set the status of the incoming request to "Open"
     if email or alias or phone:
-        subscriber_user_id = create_or_return_user(email=email, alias=alias, first_name=first_name, last_name=last_name, phone=phone, fax=fax, address1=street_address_one,
+        subscriber_user_id = create_or_return_user(email=email, alias=alias, first_name=first_name, last_name=last_name,
+                                                   phone=phone, fax=fax, address1=street_address_one,
                                                    address2=street_address_two, city=city, state=state, zipcode=zip)
         subscriber_id, is_new_subscriber = create_subscriber(request_id=request_id, user_id=subscriber_user_id)
         if subscriber_id:
             generate_prr_emails(request_id, notification_type="Public Notification Template 01",
-                                user_id=subscriber_user_id, text=summary)  # Send them an e-mail notification
+                                user_id=subscriber_user_id, text=summary,department_name=agency)  # Send them an e-mail notification
     if attachment:
         upload_record(request_id, attachment_description, user_id, attachment)
     return request_id, True
@@ -351,7 +376,8 @@ def ask_a_question(request_id, user_id, question, department_name=None):
         change_request_status(request_id, "Pending")
         requester = req.requester()
         if requester:
-                generate_prr_emails(request_id, notification_type="Question asked", user_id=requester.user_id, department_name=department_name)
+            generate_prr_emails(request_id, notification_type="Question asked", user_id=requester.user_id,
+                                department_name=department_name)
         add_staff_participant(request_id=request_id, user_id=user_id)
         return qa_id
     return False
@@ -369,7 +395,7 @@ def answer_a_question(qa_id, answer, subscriber_id=None, passed_spam_filter=Fals
         return True
 
 
-#add email
+# add email
 ### @export "open_request"
 def open_request(request_id):
     change_request_status(request_id, "Open")
@@ -397,7 +423,9 @@ def assign_owner(request_id, reason=None, email=None):
     user_id = get_attribute(attribute="user_id", obj_id=owner_id, obj_type="Owner")
     # Send notifications
     if is_new_owner:
-        generate_prr_emails(request_id=request_id, notification_type="Request assigned", user_id=user_id)
+        user = User.query.get(user_id)
+        user_name = user.alias
+        generate_prr_emails(request_id=request_id, notification_type="Request assigned", user_id=user_id, user_name=user_name)
     return owner_id
 
 
@@ -430,9 +458,9 @@ def get_responses_chronologically(req):
             # Ensure private notes only available to appropriate users
             if note.privacy == 2 and (
                         current_user.is_anonymous or current_user.role not in ['Portal Administrator',
-                                                                                 'Agency Administrator',
-                                                                                 'Agency FOIL Personnel',
-                                                                                 'Agency Helpers']):
+                                                                               'Agency Administrator',
+                                                                               'Agency FOIL Personnel',
+                                                                               'Agency Helpers']):
                 pass
             else:
                 responses.append(ResponsePresenter(note=note))
@@ -485,6 +513,7 @@ def set_directory_fields():
         else:
             app.logger.info("\n\n Unable to create any users. No one will be able to log in.")
 
+
 ### @export "set_department_contact"
 def set_department_contact(department_name, attribute_name, user_id):
     department = Department.query.filter(Department.name == department_name).first()
@@ -493,25 +522,28 @@ def set_department_contact(department_name, attribute_name, user_id):
     app.logger.info("\n\nSetting %s For %s as %s" % (attribute_name, department.name, user_email))
     update_obj(attribute=attribute_name, val=user_id, obj_type="Department", obj_id=department.id)
 
-#needs additional information
+
+# needs additional information
 ### @export "close_request"
-def close_request(request_id, reason="", user_id=None, request_body=None,):
+def close_request(request_id, reason="", user_id=None, request_body=None, ):
     req = get_obj("Request", request_id)
     change_request_status(request_id, "Closed")
     # Create a note to capture closed information:
     create_note(request_id, reason, user_id, privacy=1)
     if (request_body):
-        generate_prr_emails(request_id=request_id, notification_type="Request closed",text=request_body['additional_information'],text2=reason)
+        generate_prr_emails(request_id=request_id, notification_type="Request closed",
+                            text=request_body['additional_information'], text2=reason)
     else:
         generate_prr_emails(request_id=request_id, notification_type="Request closed")
     add_staff_participant(request_id=request_id, user_id=user_id)
 
+
 def change_privacy_setting(request_id, privacy, field):
     req = get_obj("Request", request_id)
-    if field=="title":
-        #Set the title to private
-        update_obj(attribute="titlePrivate", val=privacy, obj_type="Request",obj_id=req.id)
-    elif field=="description":
-        #Set description to private
-        req.descriptionPrivate=privacy
-        update_obj(attribute="descriptionPrivate", val=privacy, obj_type="Request",obj_id=req.id)
+    if field == "title":
+        # Set the title to private
+        update_obj(attribute="titlePrivate", val=privacy, obj_type="Request", obj_id=req.id)
+    elif field == "description":
+        # Set description to private
+        req.descriptionPrivate = privacy
+        update_obj(attribute="descriptionPrivate", val=privacy, obj_type="Request", obj_id=req.id)

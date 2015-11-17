@@ -32,7 +32,8 @@ if app.config['ENVIRONMENT'] == 'PRODUCTION':
     test = ""
 
 
-def generate_prr_emails(request_id, notification_type, text=None, text2=None,user_id=None, department_name=None, user_name=None, days_after=None,attached_file=None):
+def generate_prr_emails(request_id, notification_type, text=None, text2=None,user_id=None, department_name=None,
+                        user_name=None, days_after=None,attached_file=None):
     # 'text=None' is used additional information. 'text2=None' is used if there are more variable text passed into email such as with 'close this request'
     # and being offered multiple reasons
     app.logger.info("\n\n Generating e-mails for request with ID: %s, notification type: %s, and user ID: %s" % (
@@ -82,8 +83,7 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
                 text = text['additional_information']
         template="emtemplate_extend_request.html"
     elif "Public Notification Template" in notification_type:
-
-            template = "system_email_" + notification_type[-2:] + ".html"
+        template = "system_email_" + notification_type[-2:] + ".html"
     elif "Agency Notification Template" in notification_type:
         template = "agency_email_" + notification_type[-2:] + ".html"
 
@@ -114,7 +114,6 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
             if notification_type == "Request closed":
                 page = "%sfeedback/request/%s" % (app_url, request_id)
         if recipient_type in ["Staff owner", "Requester", "Subscriber", "Staff participant"]:
-            user_id = "1"
             if user_id:
                 recipient = get_attribute(attribute="email", obj_id=user_id, obj_type="User")
                 # if recipient_type != "Subscriber" or get_attribute(attribute="")
@@ -122,7 +121,9 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
                     if unfollow_link:
                         unfollow_link = unfollow_link + recipient
                     send_prr_email(page=page, recipients=[recipient], subject=email_subject, template=template,
-                                   include_unsubscribe_link=include_unsubscribe_link, unfollow_link=unfollow_link, additional_information=text, request_id=request_id, department_name=department_name, user_name=user_name, days_after=days_after,text2=text2,attached_file=attached_file)
+                                   include_unsubscribe_link=include_unsubscribe_link, unfollow_link=unfollow_link,
+                                   additional_information=text, request_id=request_id, department_name=department_name,
+                                   user_name=user_name, days_after=days_after,text2=text2,attached_file=attached_file)
             else:
                 app.logger.debug("\n\n No user ID provided")
         elif recipient_type == "Subscribers":
