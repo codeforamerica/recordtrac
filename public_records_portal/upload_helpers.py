@@ -53,7 +53,6 @@ def upload_file(document, request_id):
     if not should_upload():
         app.logger.info("\n\nshoud not upload file")
         return '1', None  # Don't need to do real uploads locally
-<<<<<<< HEAD
     if app.config["SHOULD_SCAN_FILES"]:
         if allowed_file(document.filename):
             app.logger.info("\n\nbegin file upload")
