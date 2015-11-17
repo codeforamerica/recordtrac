@@ -8,7 +8,16 @@ print "Seeding database..."
 common_requests = ['City Council meeting minutes', 'Police Report', 'Incident Report',
                    'Communication between Councilmembers']
 
-departments = [d.name for d in models.Department.query.all()]
+departments = ["Commission on Human Rights",
+               "Department of Education",
+               "Department of Information Technology and Telecommunications",
+               "Department of Records and Information Services",
+               "Law Department",
+               "Mayor's Office of Operations",
+               "Mayor's Office of Technology and Innovation",
+               "Office of Administrative Trials and Hearings",
+               "Office of Emergency Management",
+               "Office of the Chief Medical Examiner", "Office of the Mayor"]
 people = [d.email for d in models.User.query.all()]
 categories = [
     'Business', 'Civic Services', 'Culture & Recreation', 'Education', 'Environment', 'Health', 'Housing & Development',
@@ -44,5 +53,3 @@ for i in range(20):
         prr.assign_owner(request_id=request_id, reason=random.choice(reasons), email=random.choice(people))
         db_helpers.add_staff_participant(request_id=request_id, email=random.choice(people),
                                          reason=random.choice(reasons))
-
-
