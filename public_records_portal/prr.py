@@ -23,17 +23,23 @@ from models import *
 from notifications import generate_prr_emails
 from public_records_portal import db_helpers
 from requires_roles import requires_roles
-agency_codes = {"City Commission on Human Rights": "228",
-                "Department of Education": "040",
-                "Department of Information Technology and Telecommunications": "858",
-                "Department of Records and Information Services": "860",
-                "Mayor's Office": "002",
-                "Mayor's Office of Contract Services": "002",
-                "Mayor's Office of Media and Entertainment": "002",
-                "Office of Administrative Trials and Hearings": "820",
-                "Office of Chief Medical Examiner": "816",
-                "Office of Emergency Management": "017",
-                None: "000"}
+import sys
+import traceback
+agency_codes = {
+"Commission on Human Rights": "228",
+"Department of Education": "040",
+"Department of Information Technology and Telecommunications": "858",
+"Department of Records and Information Services": "860",
+"Law Department": "025",
+"Mayor's Office of Operations": "002",
+"Mayor's Office of Technology and Innovation": "002",
+"Office of Administrative Trials and Hearings": "820",
+"Office of Emergency Management": "017",
+"Office of the Chief Medical Examiner": "816",
+"Office of the Mayor": "002",
+None: "000"
+}
+
 
 
 def add_public_note(request_id, text):
@@ -51,12 +57,7 @@ def add_resource(resource, request_body, current_user_id=None):
                                  int(fields['days_after']), fields['due_date'], request_body=request_body)
     if "note" in resource:
         return add_note(request_id=fields['request_id'], text=fields['note_text'], user_id=current_user_id,
-<<<<<<< 03eb216ab7076f1cadaf7398f931f9d8e92f018d
                         privacy=fields['note_privacy'], request_body=request_body)
-=======
-                        privacy=fields['note_privacy'])
->>>>>>> 	modified:   public_records_portal/prr.py
-
     if "pdf" in resource:
         return add_pdf(request_id=fields['request_id'], text=fields['response_template'], user_id=current_user_id,
                        passed_spam_filter=True)
@@ -78,7 +79,7 @@ def add_resource(resource, request_body, current_user_id=None):
                 document = request.files['record']
             except:
                 app.logger.info("\n\nNo file passed in")
-            return upload_record(request_id=fields['request_id'], document=document,
+            return upload_record(request_id=fields['request_id'], document=document, request_body=None,
                                  description=fields['record_description'], user_id=current_user_id)
     elif "qa" in resource:
         return ask_a_question(request_id=fields['request_id'], user_id=current_user_id,
@@ -252,6 +253,8 @@ def upload_record(request_id, description, user_id, request_body, document=None)
         # doc_id is upload_path
         doc_id, filename = upload_helpers.upload_file(document=document, request_id=request_id)
     except:
+        # print sys.exc_info()[0]
+        print traceback.format_exc()
         return "The upload timed out, please try again."
     if doc_id == False:
         return "Extension type '%s' is not allowed." % filename
