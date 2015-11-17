@@ -142,6 +142,3 @@ Vagrantfile
 .codekit-cache/
 config.codekit
 runserver2.txt
-users/staff_pt.csv
-users/liaisons_pt.csv
-users/pt_user_setup.py
