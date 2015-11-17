@@ -250,24 +250,6 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_state = form.request_address_state.data
             request_address_zip = form.request_address_zip.data
 
-            request_id, is_new = make_request(
-                agency=request_agency,
-                summary=request_summary,
-                text=request_text,
-                first_name=request_first_name,
-                last_name=request_last_name,
-                alias=str(request_first_name + ' ' + request_last_name),
-                role=request_role,
-                organization=request_organization,
-                email=request_email,
-                phone=request_phone,
-                fax=request_fax,
-                street_address_one=request_address_street_one,
-                street_address_two=request_address_street_two,
-                city=request_address_city,
-                state=request_address_state,
-                zip=request_address_zip)
-
             # Check Summary
             if not (request_summary and request_summary.strip()):
                 errors.append('You must enter a summary for this request')
@@ -311,8 +293,24 @@ def new_request(passed_recaptcha=False, data=None):
                 errors.append(
                     "Please enter at least one type of contact information")
 
-            if not data:
-                data = request.form.copy()
+
+            request_id, is_new = make_request(
+                agency=request_agency,
+                summary=request_summary,
+                text=request_text,
+                first_name=request_first_name,
+                last_name=request_last_name,
+                alias=str(request_first_name + ' ' + request_last_name),
+                role=request_role,
+                organization=request_organization,
+                email=request_email,
+                phone=request_phone,
+                fax=request_fax,
+                street_address_one=request_address_street_one,
+                street_address_two=request_address_street_two,
+                city=request_address_city,
+                state=request_address_state,
+                zip=request_address_zip)
 
             if is_new == False:
                 errors.append(
