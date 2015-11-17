@@ -114,7 +114,6 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
             if notification_type == "Request closed":
                 page = "%sfeedback/request/%s" % (app_url, request_id)
         if recipient_type in ["Staff owner", "Requester", "Subscriber", "Staff participant"]:
-            user_id = "1"
             if user_id:
                 recipient = get_attribute(attribute="email", obj_id=user_id, obj_type="User")
                 # if recipient_type != "Subscriber" or get_attribute(attribute="")

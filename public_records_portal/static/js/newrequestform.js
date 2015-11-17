@@ -1,33 +1,57 @@
 $(function () {
 
-    var business = ["Department of Consumer Affairs", "Mayor's Office of Contract Services", "Procurement Policy Board",
-        "Small Business Servcies"]
-    var civicServices = ["Department of Records"]
-    var cultureAndRecreation = ["Art Commission", "Department of Cultural Affairs", "Mayor's Office of Media and Entertainment",
+    var business = ["Department of Consumer Affairs",
+        "Mayor's Office of Contract Services",
+        "Procurement Policy Board",
+        "Small Business Services"]
+    var civicServices = ["Department of Records and Information Services"]
+    var cultureAndRecreation = ["Art Commission",
+        "Department of Cultural Affairs",
+        "Mayor's Office of Media and Entertainment",
         "Department of Parks and Recreation"]
-    var education = ["Department of Education", "School Construction Authroity"]
-    var environment = ["Department of Environmental Protection", "Office of Environmental Remediation",
+    var education = ["Department of Education",
+        "School Construction Authority"]
+    var environment = ["Department of Environmental Protection",
+        "Office of Environmental Remediation",
         "Office of Long-Term Planning & Sustainability"]
-    var governmentAdministration = ["NYC Office of the Actuary", "Office of Administrative Trials and Hearings",
-        "Business Integrity Commission", "Department of Citywide Administrative Services",
-        "Civil Service Commission", "Conflicts of Interest Board", "Design Commission",
-        "Department of Design and Construction", "Equal Employment Practices Commission",
-        "Department of Finance", "City Commission on Human Rights",
+    var governmentAdministration = ["Office of the Actuary",
+        "Office of Administrative Trials and Hearings",
+        "Business Integrity Commission",
+        "Department of Citywide Administrative Services",
+        "Civil Service Commission",
+        "Conflicts of Interest Board",
+        "Design Commission",
+        "Department of Design and Construction",
+        "Equal Employment Practices Commission",
+        "Department of Finance",
+        "City Commission on Human Rights",
         "Department of Information Technology and Telecommunications",
-        "NYC Office of Labor Relations",
+        "Office of Labor Relations",
         "Law Department",
         "Office of Management and Budget",
         "Mayor's Office",
         "Office of Payroll Administration"]
-    var health = ["NYC Office of Chief Medical Examiner", "Health and Hospitals Corporation", "Department of Health and Mental Hygiene"]
-    var housingAndDevelopment = ["NYC Office of Chief Medical Examiner", "Health and Hospitals Corporation",
+    var health = ["Office of Chief Medical Examiner",
+        "Health and Hospitals Corporation",
         "Department of Health and Mental Hygiene"]
-    var publicSafety = ["Department of Buildings", "Department of City Planning", "New York City Housing Authroity",
-        "Housing Recovery Operations", "Landmarks Preservation Commission", "Loft Board", "Board of Standards and Appeals"]
-    var socialServices = ["Department for the Aging", "Administration for Children's Services",
-        "Department of Homeless Services", "Department of Housing Preservations and Development",
-        "Human Resources Administration", "Department of Youth and Community Development"]
-    var transportation = ["Taxi and Limousine Commission", "Department of Transportation"]
+    var housingAndDevelopment = ["Office of Chief Medical Examiner",
+        "Health and Hospitals Corporation",
+        "Department of Health and Mental Hygiene"]
+    var publicSafety = ["Department of Buildings",
+        "Department of City Planning",
+        "New York City Housing Authority",
+        "Housing Recovery Operations",
+        "Landmarks Preservation Commission",
+        "Loft Board",
+        "Board of Standards and Appeals"]
+    var socialServices = ["Department for the Aging",
+        "Administration for Children's Services",
+        "Department of Homeless Services",
+        "Department of Housing Preservation and Development",
+        "Human Resources Administration",
+        "Department of Youth and Community Development"]
+    var transportation = ["Taxi and Limousine Commission",
+        "Department of Transportation"]
 
 
     $("#category").change(function () {
