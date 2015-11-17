@@ -8,20 +8,18 @@ print "Seeding database..."
 common_requests = ['City Council meeting minutes', 'Police Report', 'Incident Report',
                    'Communication between Councilmembers']
 
-departments = ["Commission on Human Rights",
+departments = ["City Commission on Human Rights",
                "Department of Education",
                "Department of Information Technology and Telecommunications",
                "Department of Records and Information Services",
-               "Law Department",
-               "Mayor's Office of Operations",
-               "Mayor's Office of Technology and Innovation",
+               "Mayor's Office",
+               "Mayor's Office of Contract Services",
+               "Mayor's Office of Media and Entertainment",
                "Office of Administrative Trials and Hearings",
-               "Office of Emergency Management",
-               "Office of the Chief Medical Examiner", "Office of the Mayor"]
+               "Office of Chief Medical Examiner",
+               "Office of Emergency Management"]
+
 people = [d.email for d in models.User.query.all()]
-categories = [
-    'Business', 'Civic Services', 'Culture & Recreation', 'Education', 'Environment', 'Health', 'Housing & Development',
-    'Public Safety', 'Social Services', 'Transportation']
 reasons = ['They have the document', 'They would know more about this', 'They are my backup', 'Can you look into this?']
 documents = ['Minutes', 'Report']
 answers = ["Yep, thanks so much!", "No, nevermind then."]
@@ -30,7 +28,7 @@ answers = ["Yep, thanks so much!", "No, nevermind then."]
 for i in range(20):
     request_type = random.choice(common_requests)
     request_department = random.choice(departments)
-    # request_category = random.choice(categories)
+    print request_department
     random_number = random.randrange(0, 901, 4)
     another_random_number = random.randrange(0, 901, 4)
     request_text = "%(request_type)s %(random_number)s" % locals()
