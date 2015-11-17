@@ -1,16 +1,15 @@
 department name,PRR liaison,PRR backup
-Open records coordinator,recordsit@records.nyc.gov
-Chief Medical Examiner,ocme@records.nyc.gov
+Office of Chief Medical Examiner,ocme@records.nyc.gov
 Department of Education,doe@records.nyc.gov
 Department of Records and Information Services,doris@records.nyc.gov
-Department of Info. Tech. and Telecom.,doitt@records.nyc.gov
+Department of Information Technology and Telecommunications,doitt@records.nyc.gov
 Mayor's Office,oom@records.nyc.gov
 NYC Office of the Actuary,foil@NYCOA.nyc.gov,openrecords@records.nyc.gov
 Office of Administrative Trials and Hearings,foil@OATH.nyc.gov,openrecords@records.nyc.gov
 Department for the Aging,foil@DFTA.nyc.gov,openrecords@records.nyc.gov
 Department of Buildings,foil@DOB.nyc.gov,openrecords@records.nyc.gov
 Business Integrity Commission,foil@BIC.nyc.gov,openrecords@records.nyc.gov
-NYC Office of Chief Medical Examiner,foil@OCME.nyc.gov,openrecords@records.nyc.gov
+Office of Chief Medical Examiner,foil@OCME.nyc.gov,openrecords@records.nyc.gov
 Administration for Children's Services,foil@ACS.nyc.gov,openrecords@records.nyc.gov
 Department of City Planning,foil@DCP.nyc.gov,openrecords@records.nyc.gov
 Department of Citywide Administrative Services,foil@DCAS.nyc.gov,openrecords@records.nyc.gov
@@ -26,7 +25,7 @@ Department of Cultural Affairs,foil@DCLA.nyc.gov,openrecords@records.nyc.gov
 Department of Design and Construction,foil@DDC.nyc.gov,openrecords@records.nyc.gov
 Design Commission,foil@DC.nyc.gov,openrecords@records.nyc.gov
 Department of Education,foil@DOE.nyc.gov,openrecords@records.nyc.gov
-Office of Emergency Management NYC,foil@OEM.nyc.gov,openrecords@records.nyc.gov
+Office of Emergency Management,foil@OEM.nyc.gov,openrecords@records.nyc.gov
 Department of Environmental Protection,foil@DEP.nyc.gov,openrecords@records.nyc.gov
 Office of Environmental Remediation,foil@OER.nyc.gov,openrecords@records.nyc.gov
 Equal Employment Practices Commission,foil@EEPC.nyc.gov,openrecords@records.nyc.gov
