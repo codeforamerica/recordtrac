@@ -34,20 +34,40 @@
                 <fieldset>
                     <div class="row-fluid">
                         <div class="span8">
+                           <div class="control-group">
+                                <h2>
+                                    <small id='categoryTitle' >Category</small>
+                                </h2>
+                                    <select id="category" class="input-block-level">
+                                        <option selected value></option>
+                                        <option>Business</option>
+                                        <option>Civic Services</option>
+                                        <option>Culture and Recreation</option>
+                                        <option>Education</option>
+                                        <option>Environment</option>
+                                        <option>Government Administration</option>
+                                        <option>Health</option>
+                                        <option>Housing</option>
+                                        <option>Public</option>
+                                        <option>Social</option>
+                                        <option>Transportation</option>
+                                    </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row-fluid">
+                        <div class="span8">
                             <div class="control-group">
                                 <h2>
                                     <small>What agency has the records you
                                         want?*
                                     </small>
                                 </h2>
-                                <div class="missing_field alert alert-danger"
-                                     id="missing_agency"
-                                     style="width: calc(100% - 4.5rem);">
-                                    Agency Missing
                                 </div>
-                                {{
-                                form.request_agency(class="input-block-level")
-                                }}
+                                <select id="agency" name="request_agency" class="input-block-level">
+                                    <option selected value></option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -57,14 +77,11 @@
                                 <h2>
                                     <small>Request Title*</small>
                                 </h2>
-                                <div class="missing_field alert alert-danger"
-                                     id="missing_summary">
-                                    Title Missing
-                                </div>
                                 {{
                                 form.request_summary(class="input-block-level",
                                 rows="2", id="request_summary",
                                 placeholder="Please provide the name of your request" ) }}
+                                <div id="summary_count"></div>
                             </div>
                         </div>
                         <div class="span4">
@@ -85,10 +102,6 @@
                                 <h2>
                                     <small>Request*</small>
                                 </h2>
-                                <div class="missing_field alert alert-danger"
-                                     id="missing_text">
-                                    Details Missing
-                                </div>
                                 {{
                                 form.request_text(class="input-block-level",rows="6",id="request_text",placeholder="Provide more information about your request to help the City locate the record. If you don’t know the record name, describe the type of information you think it would contain and the approximate date range. Do not include private info – such as social security number or credit card number." ) }}
                             </div>
@@ -121,6 +134,11 @@
                                 this site. You must provide contact information
                                 so that the agency can respond to your request
                                 for records.</p>
+
+                            <div class="missing_field alert alert-danger"
+                                id="missing_contact_information">
+                                At least one form of contact information needed.
+                            </div>
                         </div>
                     </div>
                     <div class="row-fluid">
@@ -133,10 +151,6 @@
                                             }}
                                         </small>
                                     </h2>
-                                    <div class="missing_field alert alert-danger"
-                                         id="missing_first_name">
-                                        First Name Missing
-                                    </div>
                                     {{
                                     form.request_first_name(id="request_first_name",
                                     class="input-block-level", type="text",
@@ -148,10 +162,6 @@
                                             form.request_last_name.label.text }}
                                         </small>
                                     </h2>
-                                    <div class="missing_field alert alert-danger"
-                                         id="missing_last_name">
-                                        Last Name Missing
-                                    </div>
                                     {{
                                     form.request_last_name(id="request_last_name",
                                     class="input-block-level", type="text",
@@ -207,10 +217,7 @@
                                 Alternate Contact Information
                             </h3>
 
-                            <div class="missing_field alert alert-danger"
-                                 id="missing_contact_information">
-                                At least one form of contact information needed.
-                            </div>
+
                             <p>No information entered in this section will be
                                 visibile to the public.</p>
                         </div>

@@ -55,6 +55,41 @@ def make_session_permanent():
 # Submitting a new request
 @app.route("/new", methods=["GET", "POST"])
 def new_request(passed_recaptcha=False, data=None):
+
+    category = {
+        'Business':['Department of Consumer Affairs', "Mayor's Office of Contract Services", "Procurement Policy Board",
+                    "Small Business Sercies"],
+        'Civic Services':["Department of Records"],
+        'Culture & Recreation':["Art Commission","Department of Cultural Affairs",
+                                "Mayor's Office of Media and Entertainment","Department of Parks and Recreation"],
+        'Education':["Department of Education","School Construction Authority"],
+        'Environment':["Department of Environmental Protection","Office of Environmental Remediation",
+                       "Office of Long-Term Planning & Sustainability"],
+        'Government Administration':["NYC Office of the Actuary","Office of Administrative Trials and Hearings",
+                                     "Business Integrity Commission","Department of Citywide Administrative Services",
+                                     "Civil Service Commission", "Conflicts of Interest Board","Design Commission",
+                                     "Department of Design and Construction","Equal Employment Practices Commission",
+                                     "Department of Finance","City Commission on Human Rights",
+                                     "Department of Information Technology and Telecommunications",
+                                     "NYC Office of Labor Relations",
+                                     "Law Department",
+                                     "Office of Management and Budget",
+                                     "Mayor's Office",
+                                     "Office of Payroll Administration"],
+        'Health':["Office of Chief Medical Examiner", "Health and Hospitals Corporation",
+                  "Department of Health and Mental Hygiene"],
+        'Housing & Development':["Department of Buildings","Department of City Planning",
+                                 "New York City Housing Authority","Housing Recovery Operations",
+                                 "Landmarks Preservation Commission","Loft Board","Board of Standards and Appeals"],
+        'Public Safety':["Civilian Complaint Review Board","Commission to Combat Police Corruption",
+                         "Board of Correction","Department of Correction", "NYC Office of Emergency Management",
+                         "New York City Fire Department","Department of Investigation","Police Department",
+                         "Department of Probation","NYC Office of the Special Narcotics Prosecutor"],
+        'Social services':["Department for the Aging","Administration for Children's Services",
+                           "Department of Homeless Services","Department of Housing Preservations and Development",
+                           "Human Resources Administration","Department of Youth and Community Development"],
+        'Transporation':["Taxi and Limousine Commission","Department of Transporation"]
+    }
     form = None
     departments = None
     routing_available = False
@@ -186,7 +221,7 @@ def new_request(passed_recaptcha=False, data=None):
                     city=request_address_city,
                     state=request_address_state,
                     zip=request_address_zip)
-                if is_new == False:
+                if not is_new:
                     errors.append(
                         "Looks like your request is the same as /request/%s" % request_id)
                     return render_template('offline_request.html', form=form,
@@ -197,8 +232,6 @@ def new_request(passed_recaptcha=False, data=None):
 
         else:
             form = NewRequestForm(request.form)
-            print form.data
-            print request.form
             request_agency = form.request_agency.data
             request_summary = form.request_summary.data
             request_text = form.request_text.data
@@ -235,11 +268,60 @@ def new_request(passed_recaptcha=False, data=None):
                 state=request_address_state,
                 zip=request_address_zip)
 
+            # Check Summary
+            if not (request_summary and request_summary.strip()):
+                errors.append('You must enter a summary for this request')
+            elif len(request_summary) > 250:
+                errors.append(
+                    'The request summary must be less than 250 characters')
+
+            # Check Description of Request
+            if not (request_text and request_text.strip()):
+                errors.append('You must enter a description for this request')
+            elif len(request_summary) > 5000:
+                errors.append(
+                    'The request description must be less than 5000 characters')
+            try:
+                request_attachment = request.files['request_attachment']
+            except:
+                app.logger.info("\n\nNo file passed in")
+
+            #Check first name and last name
+            if not (request_first_name and request_first_name.strip()):
+                errors.append("Please enter the requester's first name")
+            elif not (request_last_name and request_last_name.strip()):
+                errors.append("Please enter the requester's last name")
+            else:
+                alias = request_first_name + " " + request_last_name
+
+            #Check Contact Information
+            zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
+            email_valid = (request_email != '')
+            phone_valid = (request_phone is not None)
+            fax_valid = (request_fax is not None)
+            street_valid = (request_address_street_one != '')
+            city_valid = (request_address_city != '')
+            state_valid = (request_address_state != '')
+            zip_valid = (
+                request_address_zip != '' and zip_reg_ex.match(request_address_zip))
+            address_valid = (
+                street_valid and city_valid and state_valid and zip_valid)
+
+            if not (email_valid or phone_valid or fax_valid or address_valid):
+                errors.append(
+                    "Please enter at least one type of contact information")
+
+            if not data:
+                data = request.form.copy()
+
             if is_new == False:
                 errors.append(
                     "Looks like your request is the same as <a href=\"/request/%s\"" % request_id)
                 return render_template('new_request.html', form=form,
                                    routing_available=routing_available, departments=departments, errors=errors)
+            if not request_id:
+                    return render_template('manage_request_non_partner.html', agency=request_agency, email=(request_email != ''))
+
             return redirect(url_for('show_request_for_x', request_id=request_id,
                                     audience='new', email=(request_email is not None)))
 
@@ -252,7 +334,7 @@ def new_request(passed_recaptcha=False, data=None):
             return render_template('offline_request.html', form=form, routing_available=routing_available)
         else:
             form = NewRequestForm()
-            return render_template('new_request.html', form=form, routing_available=routing_available)
+            return render_template('new_request.html', form=form, routing_available=routing_available,categories=category)
 
 @app.route("/faq")
 def faq():
@@ -516,6 +598,21 @@ def close(request_id=None):
         return show_request(request_id, template=template)
     return render_template('error.html', message="You can only close from a requests page!")
 
+def filter_agency(departments_selected, results):
+    if departments_selected and 'All departments' not in departments_selected:
+        app.logger.info("\n\nagency filters:%s." % departments_selected)
+        department_ids = []
+        for department_name in departments_selected:
+            if department_name:
+                department = models.Department.query.filter_by(name=department_name).first()
+                if department:
+                    department_ids.append(department.id)
+        if department_ids:
+            results = results.filter(models.Request.department_id.in_(department_ids))
+        else:
+            # Just return an empty query set
+            results = results.filter(models.Request.department_id < 0)
+    return results
 
 def filter_search_term(search_input, results):
     if search_input:
@@ -858,11 +955,37 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
     print results
     return results.order_by(models.Request.id.desc())
 
-@app.route("/tutorial/<int:tutorial_id>")
-def tutorial(tutorial_id):
+@app.route("/tutorial")
+def tutorial_initial():
     user_id = get_user_id()
     app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
-    return render_template('tutorial_' + str(tutorial_id).zfill(2) + '.html')
+    return render_template('tutorial_01.html')
+
+@app.route("/tutorial/<string:tutorial_id>")
+def tutorial(tutorial_id):
+    user_id = get_user_id()
+    tutorial_string_id = tutorial_id.split("_")[0]
+    app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
+    return render_template('tutorial_' + tutorial_string_id + '.html')
+
+@app.route("/city/tutorial/<string:tutorial_id>")
+def tutorial_agency(tutorial_id):
+    if current_user.is_authenticated:
+        user_id = get_user_id()
+        tutorial_string_id = tutorial_id.split("_")[0]
+        app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
+        return render_template('tutorial_agency_' + tutorial_string_id + '.html')
+    else:
+        return render_template("404.html"), 404
+ 
+@app.route("/city/tutorial")
+def tutorial_agency_initial():
+    if current_user.is_authenticated:
+        user_id = get_user_id()
+        app.logger.info("\n\nTutorial accessed by user: %s." % user_id)
+        return render_template('tutorial_agency_01.html')
+    else:
+        return render_template("404.html"), 404
 
 @app.route("/about")
 def staff_card():
@@ -1044,8 +1167,8 @@ def login():
 @app.route("/attachments/<string:resource>", methods=["GET"])
 def get_attachments(resource):
     app.logger.info("\n\ngetting attachment file")
-    return send_from_directory(app.config["UPLOAD_FOLDER"], resource, as_attachment=True)
 
+    return send_from_directory(app.config["UPLOAD_FOLDER"], resource, as_attachment=True)
 
 @app.route("/pdfs/<string:resource>", methods=["GET"])
 def get_pdfs(resource):
@@ -1109,7 +1232,20 @@ def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
                 referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).filter(models.Request.department_id == agencyFilterInt).all()
                 referred_to_publications_portal_request=models.Request.query.filter(referred_to_publications_portal_filter).filter(models.Request.department_id == agencyFilterInt).all()
             if calendar_filter == "fullYear":
+                overdue_request=models.Request.query.filter(overdue_filter).all()
+                notdue_request=models.Request.query.filter(notoverdue_filter).all()
+                received_request=models.Request.query.all()
+                published_request=models.Request.query.filter(published_filter).all()
+                denied_request=models.Request.query.filter(denied_filter).all()
+                granted_and_closed_request=models.Request.query.filter(granted_and_closed_filter).all()
+                granted_in_part_request=models.Request.query.filter(granted_in_part_filter).all()
+                no_customer_response_request=models.Request.query.filter(no_customer_response_filter).all()
+                out_of_jurisdiction_request=models.Request.query.filter(out_of_jurisdiction_filter).all()
+                referred_to_nyc_gov_request=models.Request.query.filter(referred_to_nyc_gov_filter).all()
+                referred_to_opendata_request=models.Request.query.filter(referred_to_opendata_filter).all()
+                referred_to_other_agency_request=models.Request.query.filter(referred_to_other_agency_filter).all()
                 date_format='%Y-%m-%d'
+            elif "fullYear" in public_filter:
                 overdue_request=models.Request.query.filter(overdue_filter).all()
                 notdue_request=models.Request.query.filter(notoverdue_filter).all()
                 date_now = datetime.now()
@@ -1243,11 +1379,14 @@ def change_privacy():
     privacy=request.form['privacy setting']
     field=request.form['fieldtype']
     #field will either be title or description
-    print request.form
-    print "THE REQUEST PRIVACY SETTING IS BEING SET TO: " + str(privacy)
     app.logger.info("Changing privacy function")
     prr.change_privacy_setting(request_id=request.form['request_id'],privacy=privacy,field=field)
     return redirect(url_for('show_request_for_city',request_id=request.form['request_id']))
+
+@app.route("/changecategory", methods=["POST","GET"])
+def change_category():
+    category=request.form['category']
+    return redirect(render_template('new_request.html'))
 
 @app.route("/<page>")
 def any_page(page):

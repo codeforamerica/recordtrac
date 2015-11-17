@@ -172,7 +172,7 @@ a {
 
 
 
-.nav-pills>li>a:hover {
+.nav-pills>li>a:hover{
     background-color: #0A5999;
     over-flow: hidden;
     color: #FFFFFF;

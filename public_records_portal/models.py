@@ -309,7 +309,7 @@ class Request(db.Model):
     prev_status = db.Column(db.String(400))  # The previous status of the request (open, closed, etc.)
     #Adding new privacy option for description field
     descriptionPrivate=db.Column(db.Boolean, default=True)
-    titlePrivate=db.Column(db.Boolean, default=True)
+    titlePrivate=db.Column(db.Boolean, default=False)
     def __init__(
             self,
             id,
@@ -331,7 +331,7 @@ class Request(db.Model):
         if date_received and type(date_received) is datetime:
             self.date_received = date_received
         self.department_id = agency
-        self.descriptionPrivacy = descriptionPrivate
+        self.descriptionPrivate = descriptionPrivate
         self.titlePrivacy=titlePrivate
 
 
@@ -346,8 +346,7 @@ class Request(db.Model):
                             + timedelta(
                 days=int(app.config['DAYS_AFTER_EXTENSION']))
         else:
-            self.due_date = self.date_received \
-                            + timedelta(days=int(app.config['DAYS_TO_FULFILL']))
+            self.due_date = cal.addbusdays(self.date_received, int(app.config['DAYS_TO_FULFILL']))
 
     def extension(self, days_after=int(app.config['DAYS_AFTER_EXTENSION']),
                   custom_due_date=None):

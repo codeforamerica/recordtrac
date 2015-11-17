@@ -40,12 +40,12 @@ $(function () {
       var currentPage = stripTrailingSlash($(this).attr('href'));
 
       if (activePage == currentPage) {
-        $(this).parent().addClass('active'); 
+        $(this).parent(s).addClass('active');
       } 
     });
   });
 
-/* timestamp popover */
+/* timestamp popover */s
   $('.timestampPopover').popover({
       trigger: 'hover', 
       html : true,

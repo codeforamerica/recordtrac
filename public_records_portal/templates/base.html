@@ -23,8 +23,7 @@ This template provides the header, footer, and envelope info for all pages excep
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32"
           href="{{ url_for('static', filename='images/favicon-32x32.png') }}"/>
-
-    {% block custom_css_links %}
+        {% block custom_css_links %}
 
     {% endblock custom_css_links %}
 
@@ -37,11 +36,6 @@ This template provides the header, footer, and envelope info for all pages excep
             src="{{ url_for('static', filename='js/plugins/jquery-1.11.1.min.js') }}"></script>
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/plugins/include.js') }}"></script>
-    <script type="text/javascript">{
-        {
-            auth_script | safe
-        }
-    }</script>
 
     <!-- IE8 polyfill for CSS3 pseudo classes like :hover -->
     <script type="text/javascript"
@@ -131,18 +125,10 @@ This template provides the header, footer, and envelope info for all pages excep
                 {#                    loops through the navigation_bar container for the label and definition of each tab#}
                 <ul class="nav nav-pills" >
                     {% for href, id, caption in navigation_bar %}
-                      <li{% if id == active_page %} class="active"{% endif%}>
-                      <a href="{{ href|e }}" class="tab">{{ caption|e }}</a></li>
+                      <li{% if id == active_page %} class="active openrecords_nav"{% endif%}>
+                      <a class="openrecords_nav" href="{{ href|e }}">{{ caption|e }}</a></li>
                     {% endfor %}
                 </ul>
-{#                <ul class="nav tabs">#}
-{#                    <li><a href="/new">Request a Record</a></li>#}
-{#                    <li><a href="/view_requests">All Requests</a></li>#}
-{#                    <li><a href="/track">Track an Existing Request</a></li>#}
-{#                    <li><a href="/report">Report</a></li>#}
-{#                    <li><a href="/faq">FAQ</a></li>#}
-{#                    <li><a href="/about">About</a></li>#}
-{#                </ul>#}
                 <ul class="nav pull-right">
                 </ul>
                 {% else %}
@@ -162,17 +148,10 @@ This template provides the header, footer, and envelope info for all pages excep
                 </div>
                 <ul class="nav nav-pills" >
                     {% for href, id, caption in navigation_bar %}
-                      <li{% if id == active_page %} class="active"{% endif%}>
-                      <a href="{{ href|e }}" class="tab">{{ caption|e }}</a></li>
+                      <li{% if id == active_page %} class="active openrecords_nav"{% endif%}>
+                      <a class="openrecords_nav" href="{{ href|e }}">{{ caption|e }}</a></li>
                     {% endfor %}
                 </ul>
-{#                <ul class="nav tabs">#}
-{#                    <li><a href="/new">Request a Record</a></li>#}
-{#                    <li><a href="/view_requests">All Requests</a></li>#}
-{#                    <li><a href="/track">Track an Existing Request</a></li>#}
-{#                    <li><a href="/faq">FAQ</a></li>#}
-{#                    <li><a href="/about">About</a></li>#}
-{#                </ul>#}
                 <ul class="nav pull-right">
                 </ul>
             {% endif %}
