@@ -23,7 +23,6 @@ from models import *
 from notifications import generate_prr_emails
 from public_records_portal import db_helpers
 from requires_roles import requires_roles
-
 agency_codes = {"City Commission on Human Rights": "228",
                 "Department of Education": "040",
                 "Department of Information Technology and Telecommunications": "858",
@@ -52,7 +51,11 @@ def add_resource(resource, request_body, current_user_id=None):
                                  int(fields['days_after']), fields['due_date'], request_body=request_body)
     if "note" in resource:
         return add_note(request_id=fields['request_id'], text=fields['note_text'], user_id=current_user_id,
+<<<<<<< 03eb216ab7076f1cadaf7398f931f9d8e92f018d
                         privacy=fields['note_privacy'], request_body=request_body)
+=======
+                        privacy=fields['note_privacy'])
+>>>>>>> 	modified:   public_records_portal/prr.py
 
     if "pdf" in resource:
         return add_pdf(request_id=fields['request_id'], text=fields['response_template'], user_id=current_user_id,
