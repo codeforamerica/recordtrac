@@ -366,7 +366,7 @@ def new_request(passed_recaptcha=False, data=None):
                                        routing_available=routing_available, departments=departments, errors=errors)
             if not request_id:
                     prr.nonportal_request(request.form)
-                    return render_template('manage_request_non_partner.html', agency=request_agency, email=(request_email != ''))=======
+                    return render_template('manage_request_non_partner.html', agency=request_agency, email=(request_email != ''))
             return redirect(url_for('show_request_for_x', request_id=request_id,
                                     audience='new', email=(request_email is not None)))
 
