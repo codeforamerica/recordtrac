@@ -336,7 +336,7 @@ class Request(db.Model):
 
 
     def __repr__(self):
-        return '<Request %r>' % self.text
+        return '<Request %r>' % self.summary
 
     def set_due_date(self):
         if not self.date_received:

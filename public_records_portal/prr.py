@@ -7,6 +7,7 @@
 """
 
 import csv
+import traceback
 import urllib
 from StringIO import StringIO
 
@@ -28,11 +29,11 @@ agency_codes = {"City Commission on Human Rights": "228",
                 "Department of Education": "040",
                 "Department of Information Technology and Telecommunications": "858",
                 "Department of Records and Information Services": "860",
-                "Mayor's Office": "002",
+                "Office of the Mayor": "002",
                 "Mayor's Office of Contract Services": "002",
                 "Mayor's Office of Media and Entertainment": "002",
                 "Office of Administrative Trials and Hearings": "820",
-                "Office of Chief Medical Examiner": "816",
+                "Office of the Chief Medical Examiner": "816",
                 "Office of Emergency Management": "017",
                 None: "000"}
 
@@ -62,7 +63,6 @@ def add_resource(resource, request_body, current_user_id=None):
     if "note" in resource:
         return add_note(request_id=fields['request_id'], text=fields['note_text'], user_id=current_user_id,
                         privacy=fields['note_privacy'], request_body=request_body)
-
     if "pdf" in resource:
         return add_pdf(request_id=fields['request_id'], text=fields['response_template'], user_id=current_user_id,
                        passed_spam_filter=True)
@@ -84,7 +84,7 @@ def add_resource(resource, request_body, current_user_id=None):
                 document = request.files['record']
             except:
                 app.logger.info("\n\nNo file passed in")
-            return upload_record(request_id=fields['request_id'], document=document,
+            return upload_record(request_id=fields['request_id'], document=document, request_body=None,
                                  description=fields['record_description'], user_id=current_user_id)
     elif "qa" in resource:
         return ask_a_question(request_id=fields['request_id'], user_id=current_user_id,
@@ -258,6 +258,8 @@ def upload_record(request_id, description, user_id, request_body, document=None)
         # doc_id is upload_path
         doc_id, filename = upload_helpers.upload_file(document=document, request_id=request_id)
     except:
+        # print sys.exc_info()[0]
+        print traceback.format_exc()
         return "The upload timed out, please try again."
     if doc_id == False:
         return "Extension type '%s' is not allowed." % filename
@@ -360,7 +362,8 @@ def make_request(agency=None, summary=None, text=None, attachment=None,
 
         if subscriber_id:
             generate_prr_emails(request_id, notification_type="Public Notification Template 01",
-                                user_id=subscriber_user_id, text=summary,department_name=agency)  # Send them an e-mail notification
+                                user_id=subscriber_user_id, text=summary,
+                                department_name=agency)  # Send them an e-mail notification
     if attachment:
         upload_record(request_id, attachment_description, user_id, attachment)
     return request_id, True
@@ -435,7 +438,8 @@ def assign_owner(request_id, reason=None, email=None):
     if is_new_owner:
         user = User.query.get(user_id)
         user_name = user.alias
-        generate_prr_emails(request_id=request_id, notification_type="Request assigned", user_id=user_id, user_name=user_name)
+        generate_prr_emails(request_id=request_id, notification_type="Request assigned", user_id=user_id,
+                            user_name=user_name)
     return owner_id
 
 

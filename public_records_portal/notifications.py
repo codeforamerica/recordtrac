@@ -27,7 +27,7 @@ import urllib, mimetypes
 send_emails = False
 test = "[TEST] "
 
-if app.config['ENVIRONMENT'] == 'PRODUCTION':
+if app.config['SEND_EMAILS']:
     send_emails = True
     test = ""
 

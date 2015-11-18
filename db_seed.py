@@ -1,25 +1,24 @@
 import random
 from datetime import datetime, timedelta
 
-from public_records_portal import prr, db_helpers, models
+from public_records_portal import prr, db_helpers
 
 print "Seeding database..."
 
 common_requests = ['City Council meeting minutes', 'Police Report', 'Incident Report',
                    'Communication between Councilmembers']
 
-departments = ["City Commission on Human Rights",
-               "Department of Education",
+departments = ["City Commission on Human Rights", "Department of Education",
                "Department of Information Technology and Telecommunications",
-               "Department of Records and Information Services",
-               "Mayor's Office",
-               "Mayor's Office of Contract Services",
-               "Mayor's Office of Media and Entertainment",
-               "Office of Administrative Trials and Hearings",
-               "Office of Chief Medical Examiner",
+               "Department of Records and Information Services", "Office of the Mayor",
+               "Mayor's Office of Contract Services", "Mayor's Office of Media and Entertainment",
+               "Office of Administrative Trials and Hearings", "Office of the Chief Medical Examiner",
                "Office of Emergency Management"]
 
-people = [d.email for d in models.User.query.all()]
+people = ["cpuiptuser000131@mailinator.com", "cpuiptuser000209@mailinator.com", "cpuiptuser000245@mailinator.com",
+          "cpuiptuser000269@mailinator.com", "cpuiptuser000335@mailinator.com", "cpuiptuser000341@mailinator.com",
+          "cpuiptuser000359@mailinator.com", "cpuiptuser000365@mailinator.com", "cpuiptuser000371@mailinator.com",
+          "cpuiptuser000413@mailinator.com"]
 reasons = ['They have the document', 'They would know more about this', 'They are my backup', 'Can you look into this?']
 documents = ['Minutes', 'Report']
 answers = ["Yep, thanks so much!", "No, nevermind then."]
