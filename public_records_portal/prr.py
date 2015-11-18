@@ -46,10 +46,19 @@ def add_public_note(request_id, text):
 def nonportal_request(request_body):
     fields = request_body
     #pass back array with both the request summary and the request description
+    department = Department.query.filter_by(name=request_body['request_agency']).first()
+    user_id = department.primary_contact_id
+    recipient = User.query.get(user_id)
     text = [request_body['request_summary'], request_body['request_text']]
-    generate_prr_emails(request_id=None, notification_type="Nonportal agency", text=text, text2=request_body['request_email'])
-    generate_prr_emails(request_id=None, notification_type="Nonportal requester", department_name=request_body['department_name'])
-    return None
+    contact_info=None
+    if request_body['request_email']:
+        contact_info=request_body['request_email']
+    elif request_body['request_phone']:
+        contact_info=request_body['request_phone']
+    recipient_email = recipient['email']
+    generate_prr_emails(request_id=None, notification_type="Nonportal agency", text=text, text2=contact_info,recipients=recipient_email)
+    generate_prr_emails(request_id=None, notification_type="Nonportal requester", text=text, department_name=request_body['request_agency'],recipients=request_body['request_email'])
+    return 1
 
 
 ### @export "add_resource"
