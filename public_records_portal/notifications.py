@@ -76,6 +76,10 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
         template="emtemplate_acknowledge_request.html"
     elif notification_type=="Reopen request":
         template="emtemplate_reopen_request.html"
+    elif notification_type=="Nonportal agency":
+        template="emtemplate_nonportal_agency.html"
+    elif notification_type=="Nonportal requester":
+        template="emtemplate_nonportal_requester.html"
     elif notification_type=="Extend request":
         if 'days_after' in text:
             if text['days_after'] is not None:
@@ -93,6 +97,10 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
     recipient_types = email_info["Recipients"]
     include_unsubscribe_link = True
     unfollow_link = None
+
+    if recipient_type is None:
+
+        send_prr_email()
     for recipient_type in recipient_types:
         # Skip anyone that has unsubscribed
         if user_id and (recipient_type == "Requester" or recipient_type == "Subscriber"):
@@ -113,6 +121,8 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
             unfollow_link = "%sunfollow/%s/" % (app_url, request_id)
             if notification_type == "Request closed":
                 page = "%sfeedback/request/%s" % (app_url, request_id)
+
+
         if recipient_type in ["Staff owner", "Requester", "Subscriber", "Staff participant"]:
             if user_id:
                 recipient = get_attribute(attribute="email", obj_id=user_id, obj_type="User")
