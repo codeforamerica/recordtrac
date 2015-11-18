@@ -43,6 +43,15 @@ def add_public_note(request_id, text):
     return 1
 
 
+def nonportal_request(request_body):
+    fields = request_body
+    #pass back array with both the request summary and the request description
+    text = [request_body['request_summary'], request_body['request_text']]
+    generate_prr_emails(request_id=None, notification_type="Nonportal agency", text=text, text2=request_body['request_email'])
+    generate_prr_emails(request_id=None, notification_type="Nonportal requester", department_name=request_body['department_name'])
+    return None
+
+
 ### @export "add_resource"
 def add_resource(resource, request_body, current_user_id=None):
     fields = request_body
@@ -350,6 +359,7 @@ def make_request(agency=None, summary=None, text=None, attachment=None,
                                                    phone=phone, fax=fax, address1=street_address_one,
                                                    address2=street_address_two, city=city, state=state, zipcode=zip)
         subscriber_id, is_new_subscriber = create_subscriber(request_id=request_id, user_id=subscriber_user_id)
+
         if subscriber_id:
             generate_prr_emails(request_id, notification_type="Public Notification Template 01",
                                 user_id=subscriber_user_id, text=summary,
