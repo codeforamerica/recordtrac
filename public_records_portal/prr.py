@@ -28,11 +28,11 @@ agency_codes = {"City Commission on Human Rights": "228",
                 "Department of Education": "040",
                 "Department of Information Technology and Telecommunications": "858",
                 "Department of Records and Information Services": "860",
-                "Mayor's Office": "002",
+                "Office of the Mayor": "002",
                 "Mayor's Office of Contract Services": "002",
                 "Mayor's Office of Media and Entertainment": "002",
                 "Office of Administrative Trials and Hearings": "820",
-                "Office of Chief Medical Examiner": "816",
+                "Office of the Chief Medical Examiner": "816",
                 "Office of Emergency Management": "017",
                 None: "000"}
 
@@ -350,7 +350,8 @@ def make_request(agency=None, summary=None, text=None, attachment=None,
         subscriber_id, is_new_subscriber = create_subscriber(request_id=request_id, user_id=subscriber_user_id)
         if subscriber_id:
             generate_prr_emails(request_id, notification_type="Public Notification Template 01",
-                                user_id=subscriber_user_id, text=summary,department_name=agency)  # Send them an e-mail notification
+                                user_id=subscriber_user_id, text=summary,
+                                department_name=agency)  # Send them an e-mail notification
     if attachment:
         upload_record(request_id, attachment_description, user_id, attachment)
     return request_id, True
@@ -425,7 +426,8 @@ def assign_owner(request_id, reason=None, email=None):
     if is_new_owner:
         user = User.query.get(user_id)
         user_name = user.alias
-        generate_prr_emails(request_id=request_id, notification_type="Request assigned", user_id=user_id, user_name=user_name)
+        generate_prr_emails(request_id=request_id, notification_type="Request assigned", user_id=user_id,
+                            user_name=user_name)
     return owner_id
 
 
