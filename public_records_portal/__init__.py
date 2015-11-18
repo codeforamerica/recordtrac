@@ -63,7 +63,7 @@ envvars = [
     'MAIL_SERVER',  # Mail Server URL
     'MAIL_USE_TLS',  # TLS Setting for Mail Server
     'MAIL_PORT',  # Port for SMTP
-    'DEV_EMAIL',  # Enable email sending on Local environment
+    'SEND_EMAILS',  # Enable email sending on Local environment
 
     # Upload Settings
     'UPLOAD_DOCS',  # Enable uploads of documents on Local environment
