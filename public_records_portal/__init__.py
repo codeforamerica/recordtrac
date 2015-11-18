@@ -78,6 +78,7 @@ envvars = [
     'HOST',
     'SERVICE',
     'PORT',
+    'SHOULD_SCAN_FILES',
 
 ]
 

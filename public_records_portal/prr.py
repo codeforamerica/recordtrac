@@ -7,6 +7,7 @@
 """
 
 import csv
+import traceback
 import urllib
 from StringIO import StringIO
 
@@ -53,7 +54,6 @@ def add_resource(resource, request_body, current_user_id=None):
     if "note" in resource:
         return add_note(request_id=fields['request_id'], text=fields['note_text'], user_id=current_user_id,
                         privacy=fields['note_privacy'], request_body=request_body)
-
     if "pdf" in resource:
         return add_pdf(request_id=fields['request_id'], text=fields['response_template'], user_id=current_user_id,
                        passed_spam_filter=True)
@@ -75,7 +75,7 @@ def add_resource(resource, request_body, current_user_id=None):
                 document = request.files['record']
             except:
                 app.logger.info("\n\nNo file passed in")
-            return upload_record(request_id=fields['request_id'], document=document,
+            return upload_record(request_id=fields['request_id'], document=document, request_body=None,
                                  description=fields['record_description'], user_id=current_user_id)
     elif "qa" in resource:
         return ask_a_question(request_id=fields['request_id'], user_id=current_user_id,
@@ -249,6 +249,8 @@ def upload_record(request_id, description, user_id, request_body, document=None)
         # doc_id is upload_path
         doc_id, filename = upload_helpers.upload_file(document=document, request_id=request_id)
     except:
+        # print sys.exc_info()[0]
+        print traceback.format_exc()
         return "The upload timed out, please try again."
     if doc_id == False:
         return "Extension type '%s' is not allowed." % filename

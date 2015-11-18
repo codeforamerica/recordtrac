@@ -8,12 +8,13 @@
 
 import os
 import socket
-
+from datetime import datetime
 from werkzeug.utils import secure_filename
 
 from public_records_portal import app
-
-
+import sys
+import datetime
+import traceback
 def should_upload():
     if app.config['ENVIRONMENT'] != 'LOCAL':
         return True
@@ -26,9 +27,9 @@ def should_upload():
 ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'rtf', 'odt', 'odp', 'ods', 'odg',
                       'odf',
                       'ppt', 'pps', 'xls', 'docx', 'pptx', 'ppsx', 'xlsx']
-HOST = app.config['HOST']
+HOST=socket.gethostbyname(socket.gethostname())
 SERVICE = app.config['SERVICE']
-PORT = app.config['PORT']
+PORT = int(app.config['PORT'])
 
 
 def get_download_url(doc_id, record_id=None):
@@ -55,62 +56,70 @@ def upload_file(document, request_id):
     if app.config["SHOULD_SCAN_FILES"]:
         if allowed_file(document.filename):
             app.logger.info("\n\nbegin file upload")
-            # REQMOD, POST
-            print "----- REQMOD - POST -----"
             try:
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             except socket.error, msg:
                 print "Unable to bind socket and create connection to ICAP server."
 
             try:
-                sock.connect((HOST, PORT))
+                sock.connect((SERVICE, PORT))
             except socket.error, msg:
                 print("[ERROR] %s\n" % msg[1])
                 print("Unable to verify file for malware. Please try again.")
-
-            sock.send("REQMOD %s ICAP/1.0\r\n" % (SERVICE))
-            sock.send("Host: %s\r\n" % (HOST))
-            sock.send("Encapsulated: req-hdr=0, null-body=170\r\n")
-            sock.send("\r\n")
-
-            sock.send("POST / HTTP/1.1\r\n")
-            sock.send("Host: www.origin-server.com\r\n")
-            sock.send("Accept: text/html, text/plain\r\n")
-            sock.send("Accept-Encoding: compress\r\n")
-            sock.send("Cookie: ff39fk3jur@4ii0e02i\r\n")
-            sock.send("If-None-Match: \"xyzzy\", \"r2d2xxxe\"\r\n")
-            sock.send("\r\n")
-            with open(document, "rb") as uploadedFile:
-                f = uploadedFile.read()
-                b = bytearray(f)
-            sock.send(uploadedFile)
-            sock.send("OPTIONS icap://" + app.config(['HOST']) + ":" + app.config(
-                ['PORT']) + "/wwrespmod?profile=default ICAP/1.0")
-            sock.send("Host: %s\r\n" % (HOST))
-            sock.send("ICAP/1.0 200 OK")
-            sock.send("Methods: REQMOD, RESPMOD")
-            sock.send("Options-TTL: 3600")
-            sock.send("Encapsulated: null-body=0")
-            sock.send("Max-Connections: 400")
-            sock.send("Preview: 30")
-            sock.send("Service: McAfee Web Gateway 7.5.2 build 20202")
-            sock.send('''ISTag: "00004154-2.26.156-00007980"''')
-            sock.send("Allow: 204")
-
-            data = sock.recv(2048)
-            string = data
-            if "200 OK" in string:
-                app.logger.info(
-                    "\n\n%s is allowed: %s" % (document.filename, string))
+            print "----- RESPMOD -----"
+            try:
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            except socket.error, msg:
+                sys.stderr.write("[ERROR] %s\n" % msg[1])
+                sys.exit(1)
+            try:
+                sock.connect((SERVICE, PORT))
+            except socket.error, msg:
+                sys.stderr.write("[ERROR] %s\n" % msg[1])
+                sys.exit(2)
+            today = datetime.date.today()
+            cDate = today.strftime("%a, %d %b %Y")
+            time = datetime.datetime.now()
+            cTime = time.strftime("%H:%M:%S")
+            sock.send( "RESPMOD %s ICAP/1.0\r\n" % ( SERVICE ) )
+            sock.send( "Host: %s\r\n" % ( HOST ) )
+            sock.send( "Encapsulated: req-hdr=0, res-hdr=137, res-body=296\r\n" )
+            sock.send( "\r\n" )
+            sock.send( "GET /origin-resource HTTP/1.1\r\n" )
+            sock.send( "Host: www.origin-server.com\r\n" )
+            sock.send( "Accept: text/html, text/plain, image/gif\r\n" )
+            sock.send( "Accept-Encoding: gzip, compress\r\n" )
+            sock.send( "\r\n" )
+            sock.send( "HTTP/1.1 200 OK\r\n" )
+            sock.send( "Date: "+cDate +" "+cTime+" GMT\r\n" )
+            sock.send( "Server: Apache/1.3.6 (Unix)\r\n" )
+            sock.send( 'ETag: "63840-1ab7-378d415b"\r\n' )
+            sock.send( "Content-Type: text/html\r\n" )
+            sock.send( "Content-Length: "+ str(len(document.read()))+"\r\n" )
+            sock.send( "\r\n" )
+            sock.send( "33\r\n" )
+            sock.send(document.read()+"\r\n")
+            sock.send( "0\r\n" )
+            sock.send( "\r\n" )
+            document.seek(0)
+            try:
+                data = sock.recv(1024)
+                string = data
+                print data
+            except:
+                print traceback.format_exc()
+            if "200 OK"in string:
+                app.logger.info("\n\n%s is allowed: %s" % (document.filename, string))
                 filename = secure_filename(document.filename)
                 upload_path = upload_file_locally(document, filename, request_id)
                 return upload_path, filename
             else:
-                # Loop not completed
-                app.logger.error("Malware detected. Loop user around.")
+                app.logger.error("Malware detected. Upload failed")
+                sock.close()
                 return None, None
         return None, None
-    return '1', None
+    sock.close()
+    return "1", None
 
 
 def upload_file_locally(document, filename, request_id):
