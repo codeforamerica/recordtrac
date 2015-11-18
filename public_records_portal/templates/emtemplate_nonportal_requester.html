@@ -8,26 +8,23 @@
 				<span style="font-family: arial,helvetica,sans-serif;"><span
                         style="color: rgb(51, 51, 51); font-size: 14px;">
 <p>
-    Your message has been sent to {{ department_name }}. The Agency will contact you directly. No further status will be
-    available online.
-</p>
-<p>
-    You can view the request and take any necessary action at the following webpage: <a href='{{ page }}'>{{ page }}</a>
+    The {{ department_name }} is not currently using the OpenRECORDS program to respond to requests.
+    Your FOIL Request has been automatically sent to the agency. They will contact you directly.
+    Information about this request will not be maintained in this program.
 </p>
                     </br>
 
-                    {% if unfollow_link %}
-                        <p>
-                            You can always choose to <a href='{{ unfollow_link }}'>unfollow this request</a> if you
-                            don't want to receive more emails about it.
-                        </p>
-                    {% endif %}
+                    You can find the Agency FOIL Office contact information in the following listing:
+                    <a href="http://www.nyc.gov/html/records/downloads/pdf/FOIL%20Officer%20Contact%20Information_February%202015.pdf">
+                    NYC Agency FOIL Officers (February 2015)</a>
+                    (in <a href="http://www.nyc.gov/cgi-bin/exit.pl?url=http://www.adobe.com/products/acrobat/readstep2.htm"l>PDF</a>)
                     </br>
 
 		</span></span></div>
         </div>
-        <p>Additional information: {{ additional_information }}</p>
     </div>
+
+
 </div>
 </body>
 <footer>
