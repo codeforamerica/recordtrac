@@ -96,6 +96,7 @@ def upload_file(document, request_id):
             sock.send( 'ETag: "63840-1ab7-378d415b"\r\n' )
             sock.send( "Content-Type: text/html\r\n" )
             sock.send( "Content-Length: "+ str(len(document.read()))+"\r\n" )
+            document.seek(0)
             sock.send( "\r\n" )
             sock.send( "33\r\n" )
             sock.send(document.read()+"\r\n")
