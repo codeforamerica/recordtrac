@@ -192,8 +192,6 @@ def send_email(body, recipients, subject, include_unsubscribe_link=True, cc_ever
 
     # if not include_unscubscribe_link:
     # message.add_filter('subscriptiontrack', 'enable', 0)
-    if app.config['DEV_EMAIL'] != '':
-        recipients = [app.config['DEV_EMAIL']]
     if cc_everyone:
         pass
     # message.add_to(recipients[0])
