@@ -16,10 +16,9 @@
 	  <p>The site you see today is the beginning of a new approach to making records easily available.  In the coming months, we will be adding many new features.</p>
 	  <a href="/new"><button class="btn btn-primary btn-large input-block-level">Request a Record</button></a>
       {% if current_user.is_authenticated %}
-          <a href="/tutorial/01"><button class="btn btn-primary btn-large input-block-level">Public Tutorial</button></a>
-          <a href="/city/tutorial/01"><button class="btn btn-primary btn-large input-block-level">Agency Tutorial</button></a>
-      {% else %}
           <a href="/tutorial/01"><button class="btn btn-primary btn-large input-block-level">Tutorial</button></a>
+      {% else %}
+          <a href="/tutorial/01"><button class="btn btn-primary btn-large input-block-level">How To Use This Tool</button></a>
       {% endif %}
 	</div>
 	<div class="span4">
