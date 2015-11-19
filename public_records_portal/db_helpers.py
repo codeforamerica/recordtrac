@@ -301,7 +301,6 @@ def authenticate_login(email, password):
     if app.config['LDAP_USE_TLS']:
         # Provide the certificate for LDAP, if required
         ctx.set_option(ldap.OPT_X_TLS_CACERTFILE, app.config['LDAP_CERT_PATH'])
-
     # Bind to LDAP Server
     try:
         ctx.bind_s(app.config['LDAP_SA_BIND_DN'], app.config[
@@ -312,7 +311,7 @@ def authenticate_login(email, password):
 
     user = User.query.filter_by(email=email).first()
     if user and (user.is_staff or user.is_admin()):
-        # Check if user exists in LDAP
+        # charactersk if user exists in LDAP
         user_dn = ctx.search_s(app.config['LDAP_BASE_DN'], ctx.SCOPE_SUBTREE,
                                'mail=%s' % email)
         if user_dn:
