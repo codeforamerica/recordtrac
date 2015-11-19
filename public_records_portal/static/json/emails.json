@@ -3,18 +3,6 @@
     ["Requester", "Subscribers", "Subscriber", "Staff owner", "Departmental backups", "Staff participants", "Staff participant"],
     "Notification types":
     {
-
-//        the subject needs the request id appeneded at the end of it
-        "Nonportal agency":
-        {
-          "Subject": "OpenRecords Portal Request regarding ",
-          "Recipients": [""]
-        }
-      "Nonportal requester":
-      {
-        "Subject": "Your Request to " + {{ Agency Name }} " regarding " + {{ request_id}},
-        "Recipients": [""]
-      }
         "Extend request":
         {
           "Subject": "FOIL Time Extension Requested",
@@ -173,4 +161,3 @@
         }
     }
 }
-

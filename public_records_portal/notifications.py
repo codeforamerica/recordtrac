@@ -27,9 +27,9 @@ import urllib, mimetypes
 send_emails = False
 test = "[TEST] "
 
-# if app.config['SEND_EMAILS']:
-#     send_emails = True
-#     test = ""
+if app.config['SEND_EMAILS']:
+    send_emails = True
+    test = ""
 
 
 def generate_prr_emails(request_id, notification_type, text=None, text2=None,user_id=None, department_name=None,
@@ -91,6 +91,17 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
     elif "Agency Notification Template" in notification_type:
         template = "agency_email_" + notification_type[-2:] + ".html"
 
+    #Handles emails for nonportal agencies
+    if template is "emtemplate_nonportal_agency.html":
+        send_prr_email(page=None, recipients=recipients, template=template, additional_information=text, text2=text2,
+                       subject="OpenRecords Portal Request regarding " + text[0])
+        return True
+    elif template is "emtemplate_nonportal_requester.html":
+        send_prr_email(page=None, recipients=recipients, template=template, additional_information=text, text2=text2,
+                           subject="Your request to " + department_name + " regarding " + text[0],
+                           department_name=department_name)
+        return True
+
     # Get information on who to send the e-mail to and with what subject line based on the notification type:
     email_info = get_email_info(notification_type=notification_type)
     email_subject = "Public Records Request %s: %s" % (request_id, email_info["Subject"])
@@ -99,14 +110,14 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
     unfollow_link = None
 
     # Special case for when the nonportal agency is contacted
-    if recipient_types is None:
-        if template is "emtemplate_nonportal_agency.html":
-            send_prr_email(page=None, recipients=recipients, template=template, additional_information=text, text2=text2,
-                           subject="OpenRecords Portal Request regarding " + text[0])
-        elif template is "emtemplate_nonportal_requester.html":
-            send_prr_email(page=None, recipients=recipients, template=template, additional_information=text, text2=text2,
-                           subject="Your request to " + department_name + " regarding " + text[0],
-                           department_name=department_name)
+    # if recipient_types is None:
+    #     if template is "emtemplate_nonportal_agency.html":
+    #         send_prr_email(page=None, recipients=recipients, template=template, additional_information=text, text2=text2,
+    #                        subject="OpenRecords Portal Request regarding " + text[0])
+    #     elif template is "emtemplate_nonportal_requester.html":
+    #         send_prr_email(page=None, recipients=recipients, template=template, additional_information=text, text2=text2,
+    #                        subject="Your request to " + department_name + " regarding " + text[0],
+    #                        department_name=department_name)
 
     for recipient_type in recipient_types:
         # Skip anyone that has unsubscribed
