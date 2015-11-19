@@ -42,7 +42,8 @@ def add_public_note(request_id, text):
     print "Add Public Note"
     return 1
 
-
+#Handles requests made to nonportal agencies by sending email notifications to the agency user repsonsible for that
+# department and the user creating a notification
 def nonportal_request(request_body):
     fields = request_body
     #pass back array with both the request summary and the request description
