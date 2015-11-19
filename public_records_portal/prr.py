@@ -355,7 +355,7 @@ def make_request(agency=None, summary=None, text=None, attachment=None,
                                 user_id=subscriber_user_id, text=summary,
                                 department_name=agency)  # Send them an e-mail notification
     if attachment:
-        upload_record(request_id, attachment_description, user_id, attachment)
+        upload_record(request_id=request_id, description=attachment_description, user_id=user_id,request_body=None, document=attachment)
     return request_id, True
 
 
