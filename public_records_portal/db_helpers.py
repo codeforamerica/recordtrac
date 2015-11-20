@@ -311,7 +311,7 @@ def authenticate_login(email, password):
     user = User.query.filter_by(email=email).first()
     if user and (user.is_staff or user.is_admin()):
         # charactersk if user exists in LDAP
-        user_dn = ctx.search_s(app.config['LDAP_BASE_DN'], ctx.SCOPE_SUBTREE,
+        user_dn = ctx.search_s(app.config['LDAP_BASE_DN'], ldap.SCOPE_SUBTREE,
                                'mail=%s' % email)
         if user_dn:
             # If the user exists, get their dn
