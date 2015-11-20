@@ -26,10 +26,10 @@ import urllib, mimetypes
 
 send_emails = False
 test = "[TEST] "
-
-if app.config['SEND_EMAILS']:
-    send_emails = True
-    test = ""
+#
+# if app.config['SEND_EMAILS']:
+#     send_emails = True
+#     test = ""
 
 
 def generate_prr_emails(request_id, notification_type, text=None, text2=None,user_id=None, department_name=None,
