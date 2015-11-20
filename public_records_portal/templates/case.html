@@ -42,7 +42,8 @@
                             <a href="{{config['APPLICATION_URL']}}request/{{ req.id }}">{{req.id}}</a>
                         </span>
                         {% if req %}
-                        {% if current_user.is_anonymous %}
+                        {% if current_user.is_anonymous or audience == 'Public' %}
+                        {{ audience }}
                         {% if not req.titlePrivate %}
                         <p class="lead" style="margin-bottom: 0rem;"
                            truncateable="250"> Title: {{ req.summary | new_lines }}
@@ -128,68 +129,68 @@
                     </div>
 
                     <!-- Add a public note form -->
-                    {% if not current_user.is_authenticated %}
-                    <form name="note" class="form-inline" style="margin: 10px 0px 15px 0px;" id="note" method="post"
-                          action="/public_add_a_note">
-                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                        <fieldset>
-                            <legend>Add a note</legend>
-                            <div class="row-fluid">
-                                <div class="control-group" align="left">
-                                    <label class="control-label">Note <span rel="tooltip" data-toggle="tooltip"
-                                                                            data-placement="right" title=""
-                                                                            data-original-title="{{'Add a note'| explain_action }}">
-                                        <small><i class="icon-info-sign"></i></small>
-                                        </span></label>
+                    {% if not current_user.is_authenticated or audience == 'Public' %}
+                    <!--<form name="note" class="form-inline" style="margin: 10px 0px 15px 0px;" id="note" method="post"-->
+                          <!--action="/public_add_a_note">-->
+                        <!--<input type="hidden" name="request_id" value="{{ req.id }}"/>-->
+                        <!--<fieldset>-->
+                            <!--<legend>Add a note</legend>-->
+                            <!--<div class="row-fluid">-->
+                                <!--<div class="control-group" align="left">-->
+                                    <!--<label class="control-label">Note <span rel="tooltip" data-toggle="tooltip"-->
+                                                                            <!--data-placement="right" title=""-->
+                                                                            <!--data-original-title="{{'Add a note'| explain_action }}">-->
+                                        <!--<small><i class="icon-info-sign"></i></small>-->
+                                        <!--</span></label>-->
 
-                                    <div class="controls">
-                                        <textarea type="text" class="input-xxlarge" id="noteTextarea" name="note_text"
-                                                  placeholder="Notes visible to all public users."
-                                                  required/"></textarea>
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <div class="controls">
-                                        <button type="submit" class="btn btn-primary" data-toggle="modal"
-                                                data-target="#confirm-submit" id="addPublicNoteButton">Add note
-                                        </button>
-                                    </div>
-                                    <input type="hidden" name="note_privacy" value="1"/>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </form>
-                    <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog"
-                         aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    Confirmation
-                                </div>
-                                <div class="modal-body">
-                                    <div id="modalquestionDiv">Are you sure you want to make the following question
-                                        public?
-                                    </div>
-                                    <table id="modalQuestionTable" class="table">
-                                        <tr>
-                                            <th>Question</th>
-                                            <td id="question_text"></td>
-                                            <input type="hidden" id="form_id" value=""/>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                    <a href="#" id="submit" class="btn btn-success success">Submit</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                    <!--<div class="controls">-->
+                                        <!--<textarea type="text" class="input-xxlarge" id="noteTextarea" name="note_text"-->
+                                                  <!--placeholder="Notes visible to all public users."-->
+                                                  <!--required/"></textarea>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="control-group">-->
+                                    <!--<div class="controls">-->
+                                        <!--<button type="submit" class="btn btn-primary" data-toggle="modal"-->
+                                                <!--data-target="#confirm-submit" id="addPublicNoteButton">Add note-->
+                                        <!--</button>-->
+                                    <!--</div>-->
+                                    <!--<input type="hidden" name="note_privacy" value="1"/>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</fieldset>-->
+                    <!--</form>-->
+                    <!--<div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog"-->
+                         <!--aria-labelledby="myModalLabel" aria-hidden="true">-->
+                        <!--<div class="modal-dialog">-->
+                            <!--<div class="modal-content">-->
+                                <!--<div class="modal-header">-->
+                                    <!--Confirmation-->
+                                <!--</div>-->
+                                <!--<div class="modal-body">-->
+                                    <!--<div id="modalquestionDiv">Are you sure you want to make the following question-->
+                                        <!--public?-->
+                                    <!--</div>-->
+                                    <!--<table id="modalQuestionTable" class="table">-->
+                                        <!--<tr>-->
+                                            <!--<th>Question</th>-->
+                                            <!--<td id="question_text"></td>-->
+                                            <!--<input type="hidden" id="form_id" value=""/>-->
+                                        <!--</tr>-->
+                                    <!--</table>-->
+                                <!--</div>-->
+                                <!--<div class="modal-footer">-->
+                                    <!--<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>-->
+                                    <!--<a href="#" id="submit" class="btn btn-success success">Submit</a>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
                     {% endif %}
 
                     {% endblock clarify_request %}
                     {# Form for changing field to public or private#}
-                    {% if current_user.is_authenticated %}
+                    {% if current_user.is_authenticated and audience == 'City' %}
                     <form class="form-horizontal" method="post" action="/changeprivacy">
                         <input type="hidden" name="request_id" value="{{ req.id }}"/>
                         <input type="hidden" name="fieldtype" value="title"/>
@@ -235,7 +236,7 @@
                         </fieldset>
                     </form>
                     {% endif %}
-                    {% if current_user.is_authenticated %}
+                    {% if current_user.is_authenticated and audience == 'City' %}
                     <form class="form-horizontal" method="post" action="/changeprivacy">
                         <input type="hidden" name="request_id" value="{{ req.id }}"/>
                         <input type="hidden" name="fieldtype" value="description"/>
@@ -321,19 +322,19 @@
         </div>
         {% endblock well %}
         {% block requester_info %}{% endblock requester_info %}
-        {% block subscribe %}
-        {% include '_subscribe_widget.html' %}
-        {% endblock subscribe %}
         {% block responses_container %}
         {% set responses = ( req | get_responses_chronologically ) %}
 
         <div id="responses-container" class="row-fluid">
             {% block response_actions_lessjs %}
+
+            {% if audience == 'City' %}
             {% include '_response_actions.html' %}
+            {% endif %}
             {% endblock response_actions_lessjs %}
             {% if responses %}
             {% set responses = ( req | get_responses_chronologically ) %}
-            <h3 class="control-widget">Response</h3>
+            <h3 class="control-widget">Responses</h3>
             {% for response in responses %}
             {% set uid = response.uid() %}
             {% set staff = ("User" | get_obj(uid)) %}
@@ -365,7 +366,7 @@
             </div>
             {% endfor %}
             {% else %}
-            {% if current_user.is_authenticated %}
+            {% if current_user.is_authenticated and audience == 'City' %}
             <h3 class="control-widget">Response</h3>
 
             <p><em>No responses have been uploaded yet</em></p>
@@ -377,6 +378,9 @@
     <div id="participant-container" class="span3">
         {% block sidebar %}
         {% include '_manage_request_sidebar.html' %}
+        {% block subscribe %}
+        {% include '_subscribe_widget.html' %}
+        {% endblock subscribe %}
         {% endblock sidebar %}
     </div>
 </div>
