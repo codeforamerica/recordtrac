@@ -110,14 +110,14 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
     unfollow_link = None
 
     # Special case for when the nonportal agency is contacted
-    # if recipient_types is None:
-    #     if template is "emtemplate_nonportal_agency.html":
-    #         send_prr_email(page=None, recipients=recipients, template=template, additional_information=text, text2=text2,
-    #                        subject="OpenRecords Portal Request regarding " + text[0])
-    #     elif template is "emtemplate_nonportal_requester.html":
-    #         send_prr_email(page=None, recipients=recipients, template=template, additional_information=text, text2=text2,
-    #                        subject="Your request to " + department_name + " regarding " + text[0],
-    #                        department_name=department_name)
+    if recipient_types is None:
+        if template is "emtemplate_nonportal_agency.html":
+            send_prr_email(page=None, recipients=recipients, template=template, additional_information=text, text2=text2,
+                           subject="OpenRecords Portal Request regarding " + text[0])
+        elif template is "emtemplate_nonportal_requester.html":
+            send_prr_email(page=None, recipients=recipients, template=template, additional_information=text, text2=text2,
+                           subject="Your request to " + department_name + " regarding " + text[0],
+                           department_name=department_name)
 
     for recipient_type in recipient_types:
         # Skip anyone that has unsubscribed
