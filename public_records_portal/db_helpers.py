@@ -324,7 +324,7 @@ def authenticate_login(email, password):
             except ldap.INVALID_CREDENTIALS as e:
                 app.logger.info("User: %s failed to authenticate", user)
                 return None
-        return user
+        return None
     return None
 
 def create_or_return_user(email=None, alias=None, first_name=None, last_name=None, phone=None, fax=None, address1=None, address2=None, city=None, state=None,
