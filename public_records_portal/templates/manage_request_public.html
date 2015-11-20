@@ -2,10 +2,6 @@
 
 {% extends "case.html" %}
 
-{% block public_note %}
-    {% include '_public_note.html' %}
-{% endblock public_note %}
-
 {% block status %}
     {% set status = req.solid_status() %}
     {% include '_manage_requests_status.html' %}
