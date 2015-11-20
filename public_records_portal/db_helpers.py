@@ -316,7 +316,7 @@ def authenticate_login(email, password):
         if user_dn:
             # Bind as the user with the provided password
             try:
-                user_dn, attributes = user_dn[0]
+                user_dn, attributes = user_dn
                 authenticated = ctx.bind_s(user_dn, password)
                 app.logger.info("User: %s authenticated", user)
             except ldap.INVALID_CREDENTIALS as e:
