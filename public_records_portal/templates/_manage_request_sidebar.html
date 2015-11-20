@@ -8,7 +8,7 @@
 
         <div class="participantRow-participants">{{ department.name }}</div>
     </div>
-    {% if current_user.is_authenticated %}
+    {% if current_user.is_authenticated and audience == 'city' %}
     <h4 class="participantRow-title">Assigned User</h4>
     {% else %}
     <h4 class="participantRow-title">Point of Contact</h4>
@@ -17,7 +17,7 @@
         <a href="mailto:{{ assigned_user.email }}">{{ assigned_user.alias }}</a>
     </div>
 </div>
-{% if current_user.is_authenticated %}
+{% if current_user.is_authenticated and audience == 'city' %}
 <div>
     <h4 class="participantRow-title">Helpers</h4>
     {% for helper in helpers %}
@@ -27,7 +27,7 @@
     {% endfor %}
 </div>
 {% endif %}
-{% if current_user.is_authenticated and status == 'closed' %}
+{% if current_user.is_authenticated and status == 'closed' and audience == 'city' %}
 <div class="r_sidebar_banner hidden-phone hidden-tablet">
     <form name="reopen_request" class="form-inline" id="question" method="post" action="/update_a_request_reopen">
         <input type="hidden" name="request_id" value="{{ req.id }}"/>
@@ -42,3 +42,4 @@
 </div>
 {% endblock request_dates %}
 <div class="text-center">Due: <span class="label">{{ req.due_date | date }}</span></div>
+<div class="span12"><br /></div>

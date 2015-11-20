@@ -7,7 +7,7 @@
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bottom_sidebar.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jasny-bootstrap.css') }}">
 {% endblock custom_css_links %}
 
@@ -111,7 +111,7 @@
 
   {% block status %}
     {% set status = req.solid_status() %}
-    {% include '_manage_requests_status.html' %}
+    {% include '_manage_request_status.html' %}
   {% endblock status %}
 
   <div class="b_sidebar">

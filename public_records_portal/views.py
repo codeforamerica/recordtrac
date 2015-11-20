@@ -449,11 +449,21 @@ show_request_for_x.methods = ['GET', 'POST']
 @requires_roles('Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel', 'Agency Helpers')
 def show_request_for_city(request_id):
     req = get_obj("Request", request_id)
-    if current_user.role == 'Agency Helpers':
-        audience = 'helper'
-    else:
+    print current_user.role
+    if current_user.role == 'Portal Administrator':
         audience = 'city'
-    return show_request(request_id=request_id, template="manage_request_%s_less_js.html" % (audience))
+    elif current_user.department_id == req.department_id:
+        print "User Dep: %s; Req Dep: %s" % (current_user.department_id, req.department_id)
+        if current_user.role in ['Agency Administrator', 'Agency FOIL Personnel']:
+            print "User Role: %s" % current_user.role
+            audience = 'city'
+        else:
+            audience = 'helper'
+    else:
+        audience = 'public'
+        return show_request_for_x(audience, request_id)
+
+    return show_request(request_id=request_id, template="manage_request_%s_less_js.html" % audience)
 
 @app.route("/response/<string:request_id>")
 def show_response(request_id):
@@ -513,6 +523,11 @@ def show_request(request_id, template="manage_request_public.html"):
     if req.status and "Closed" in req.status and template != "manage_request_feedback.html":
         template = "closed.html"
 
+    if template == 'manage_request_public.html':
+        audience = 'public'
+    else:
+        audience = 'city'
+
     department = models.Department.query.filter_by(id=req.department_id).first()
     assigned_user = models.User.query.filter_by(
         id=models.Owner.query.filter_by(request_id=request_id, is_point_person=True).first().user_id).first()
@@ -527,7 +542,7 @@ def show_request(request_id, template="manage_request_public.html"):
     print helpers
 
     return render_template(template, req=req, agency_data=agency_data, users=users,
-                           department=department, assigned_user=assigned_user, helpers=helpers)
+                           department=department, assigned_user=assigned_user, helpers=helpers, audience=audience)
 
 
 @app.route("/api/staff")
