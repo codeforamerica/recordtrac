@@ -49,7 +49,7 @@ zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
 
 @app.before_request
 def make_session_permanent():
-    app.permanent_session_lifetime = timedelta(minutes=120)
+    app.permanent_session_lifetime = timedelta(minutes=180)
 
 
 # Submitting a new request
@@ -365,9 +365,8 @@ def new_request(passed_recaptcha=False, data=None):
                 return render_template('new_request.html', form=form,
                                        routing_available=routing_available, departments=departments, errors=errors)
             if not request_id:
-                return render_template('manage_request_non_partner.html', agency=request_agency,
-                                       email=(request_email != ''))
-
+                    prr.nonportal_request(request.form)
+                    return render_template('manage_request_non_partner.html', agency=request_agency, email=(request_email != ''))
             return redirect(url_for('show_request_for_x', request_id=request_id,
                                     audience='new', email=(request_email is not None)))
 
@@ -382,7 +381,6 @@ def new_request(passed_recaptcha=False, data=None):
             form = NewRequestForm()
             return render_template('new_request.html', form=form, routing_available=routing_available,
                                    categories=category)
-
 
 @app.route("/faq")
 def faq():
@@ -456,7 +454,6 @@ def show_request_for_city(request_id):
     else:
         audience = 'city'
     return show_request(request_id=request_id, template="manage_request_%s_less_js.html" % (audience))
-
 
 @app.route("/response/<string:request_id>")
 def show_response(request_id):
@@ -582,7 +579,6 @@ def add_a_resource(resource):
             return render_template('help_with_uploads.html', message=resource_id)
     return render_template('error.html', message="You can only update requests from a request page!")
 
-
 @app.route("/public_add_a_<string:resource>", methods=["GET", "POST"])
 def public_add_a_resource(resource, passed_recaptcha=False, data=None):
     if (data or request.method == 'POST') and ('note' in resource or 'subscriber' in resource):
@@ -689,7 +685,6 @@ def filter_search_term(search_input, results):
         search_query = search_query + search_terms[num_terms - 1] + ":*"  # Catch substrings
         results = results.filter("to_tsvector(text) @@ to_tsquery('%s')" % search_query)
     return results
-
 
 def filter_request_id(request_id_search, results):
     if request_id_search:
@@ -958,6 +953,7 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
             app.logger.info('There was an error parsing the request date filters. Received Min: {0}, Max {1}'.format(
                 min_date_received, max_date_received))
 
+
     # Filters for agency staff only:
     if user_id:
 
@@ -1017,7 +1013,6 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 
     print results
     return results.order_by(models.Request.id.desc())
-
 
 @app.route("/tutorial")
 def tutorial_initial():
@@ -1095,7 +1090,6 @@ def is_public_record():
         return json_data["Divorce"]
     return ''
 
-
 def get_redirect_target():
     """ Taken from http://flask.pocoo.org/snippets/62/ """
     for target in request.values.get('next'), request.referrer:
@@ -1103,7 +1097,6 @@ def get_redirect_target():
             continue
         if is_safe_url(target):
             return target
-
 
 def is_safe_url(target):
     """ Taken from http://flask.pocoo.org/snippets/62/ """
@@ -1271,6 +1264,7 @@ def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
     referred_to_opendata_filter = models.Request.referred_to_opendata
     referred_to_other_agency_filter = models.Request.referred_to_other_agency
     referred_to_publications_portal_filter = models.Request.referred_to_publications_portal
+
 
     if report_type == "all":
         try:
@@ -1472,14 +1466,12 @@ def report():
     app.logger.info("\n\nOverdue Requests %s" % (len(overdue_request)))
     return render_template('report.html', users=users, agency_data=agency_data)
 
-
 @app.route("/submit", methods=["POST"])
 def submit():
     if recaptcha.verify():
         pass
     else:
         pass
-
 
 @app.route("/changeprivacy", methods=["POST", "GET"])
 def change_privacy():
@@ -1497,14 +1489,12 @@ def change_category():
     category = request.form['category']
     return redirect(render_template('new_request.html'))
 
-
 @app.route("/<page>")
 def any_page(page):
     try:
         return render_template('%s.html' % (page))
     except:
         return page_not_found(404)
-
 
 @app.errorhandler(400)
 def bad_request(e):

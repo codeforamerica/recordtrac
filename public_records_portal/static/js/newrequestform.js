@@ -104,7 +104,6 @@ $(function () {
         for (var i = 0; i < vals.length; i++) {
             $jsontwo.value = vals[i];
             $jsontwo.append("<option value=\"" + vals[i] + "\">" + vals[i] + "</option>");
-
         }
         ;
     });

@@ -43,6 +43,37 @@ def add_public_note(request_id, text):
     return 1
 
 
+# Handles requests made to nonportal agencies by sending email notifications to the agency user repsonsible for that
+# department and the user creating a notification
+def nonportal_request(request_body):
+    # query with all the fields
+    department = Department.query.filter_by(name=request_body['request_agency']).first()
+    user_id = department.primary_contact_id
+    recipient = User.query.get(user_id)
+    # pass back array with both the request title and the request description
+    text = [request_body['request_summary'], request_body['request_text']]
+    # checks for the contact information left by the requester
+    contact_info = {
+        'alias': str(request_body['request_first_name'] + ' ' + request_body['request_last_name']),
+        'request_role': request_body['request_role'],
+        'request_organization': request_body['request_organization'],
+        'request_email': request_body['request_email'],
+        'request_phone': request_body['request_phone'],
+        'request_fax': request_body['request_fax'],
+        'request_address_street_one': request_body['request_address_street_one'],
+        'request_address_street_two': request_body['request_address_street_two'],
+        'request_address_city': request_body['request_address_city'],
+        'request_address_state': request_body['request_address_state'],
+        'request_address_zip': request_body['request_address_zip']
+    }
+    recipient_email = recipient.email
+    generate_prr_emails(request_id=None, notification_type="Nonportal agency", text=text, text2=contact_info,
+                        recipients=recipient_email)
+    generate_prr_emails(request_id=None, notification_type="Nonportal requester", text=text,
+                        department_name=request_body['request_agency'], recipients=request_body['request_email'])
+    return 1
+
+
 ### @export "add_resource"
 def add_resource(resource, request_body, current_user_id=None):
     fields = request_body
@@ -350,6 +381,7 @@ def make_request(agency=None, summary=None, text=None, attachment=None,
                                                    phone=phone, fax=fax, address1=street_address_one,
                                                    address2=street_address_two, city=city, state=state, zipcode=zip)
         subscriber_id, is_new_subscriber = create_subscriber(request_id=request_id, user_id=subscriber_user_id)
+
         if subscriber_id:
             generate_prr_emails(request_id, notification_type="Public Notification Template 01",
                                 user_id=subscriber_user_id, text=summary,
