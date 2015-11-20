@@ -49,7 +49,7 @@ zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
 
 @app.before_request
 def make_session_permanent():
-    app.permanent_session_lifetime = timedelta(minutes=120)
+    app.permanent_session_lifetime = timedelta(minutes=180)
 
 
 # Submitting a new request
