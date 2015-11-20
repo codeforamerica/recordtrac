@@ -71,6 +71,7 @@ rect:hover{
 		<br>
 		<button id="fullYear" type="submit" class="btn btn-primary">Year to Date</button>
         <button id="rolling" type="submit" class="btn btn-primary">Rolling 365</button>
+        <button id="clear_filter" type="submit" class="btn btn-primary">Clear Filters</button>
 		<h5>Agency Filter</h5>
 		<select id="agency_filter" name="agency_filter">
 			<option value="0">None Selected</option>
@@ -261,7 +262,13 @@ rect:hover{
                 }                                
                 draw_barchart("/api/report/rolling/all/" + selected_agency + "/" + selected_staff);
 			});
-			
+            
+			$("#clear_filter").click(function() {
+                $("#staff_filter").val(0);
+                $("#agency_filter").val(0);
+                draw_barchart("/api/report/all/all/all/all");
+			});
+            
 			$("#agency_filter").change(function() {
                                        selected_agency = $('#agency_filter').val();
                                        selected_staff = $('#staff_filter').val();
