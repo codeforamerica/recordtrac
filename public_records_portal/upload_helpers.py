@@ -28,8 +28,8 @@ ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'rtf', 'odt', 'odp', 'ods', 'odg',
                       'odf',
                       'ppt', 'pps', 'xls', 'docx', 'pptx', 'ppsx', 'xlsx']
 HOST=socket.gethostbyname(socket.gethostname())
-SERVICE = app.config['SERVICE']
-PORT = int(app.config['PORT'])
+# SERVICE = app.config['SERVICE']
+# PORT = int(app.config['PORT'])
 
 
 def get_download_url(doc_id, record_id=None):
