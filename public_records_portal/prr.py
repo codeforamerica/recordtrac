@@ -151,6 +151,7 @@ def update_resource(resource, request_body):
             user_name = (User.query.get(user_id)).alias
             generate_prr_emails(request_id=fields['request_id'], notification_type="Helper removed", text=request_body,
                                 user_name=user_name)
+            return remove_staff_participant(owner_id=owner.id, reason=fields['reason_unassigned'])
         elif "reason_unassigned" in fields:
             return remove_staff_participant(owner_id=fields['owner_id'])
         else:
