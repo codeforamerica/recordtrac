@@ -524,9 +524,9 @@ def show_request(request_id, template="manage_request_public.html"):
         template = "closed.html"
 
     if template == 'manage_request_public.html':
-        audience = 'Public'
+        audience = 'public'
     else:
-        audience = 'City'
+        audience = 'city'
 
     department = models.Department.query.filter_by(id=req.department_id).first()
     assigned_user = models.User.query.filter_by(

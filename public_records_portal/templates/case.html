@@ -42,7 +42,7 @@
                             <a href="{{config['APPLICATION_URL']}}request/{{ req.id }}">{{req.id}}</a>
                         </span>
                         {% if req %}
-                        {% if current_user.is_anonymous or audience == 'Public' %}
+                        {% if current_user.is_anonymous or audience == 'public' %}
                         {{ audience }}
                         {% if not req.titlePrivate %}
                         <p class="lead" style="margin-bottom: 0rem;"
@@ -129,7 +129,7 @@
                     </div>
 
                     <!-- Add a public note form -->
-                    {% if not current_user.is_authenticated or audience == 'Public' %}
+                    {% if not current_user.is_authenticated or audience == 'public' %}
                     <!--<form name="note" class="form-inline" style="margin: 10px 0px 15px 0px;" id="note" method="post"-->
                           <!--action="/public_add_a_note">-->
                         <!--<input type="hidden" name="request_id" value="{{ req.id }}"/>-->
@@ -190,7 +190,7 @@
 
                     {% endblock clarify_request %}
                     {# Form for changing field to public or private#}
-                    {% if current_user.is_authenticated and audience == 'City' %}
+                    {% if current_user.is_authenticated and audience == 'city' %}
                     <form class="form-horizontal" method="post" action="/changeprivacy">
                         <input type="hidden" name="request_id" value="{{ req.id }}"/>
                         <input type="hidden" name="fieldtype" value="title"/>
@@ -236,7 +236,7 @@
                         </fieldset>
                     </form>
                     {% endif %}
-                    {% if current_user.is_authenticated and audience == 'City' %}
+                    {% if current_user.is_authenticated and audience == 'city' %}
                     <form class="form-horizontal" method="post" action="/changeprivacy">
                         <input type="hidden" name="request_id" value="{{ req.id }}"/>
                         <input type="hidden" name="fieldtype" value="description"/>
@@ -328,7 +328,7 @@
         <div id="responses-container" class="row-fluid">
             {% block response_actions_lessjs %}
 
-            {% if audience == 'City' %}
+            {% if audience == 'city' %}
             {% include '_response_actions.html' %}
             {% endif %}
             {% endblock response_actions_lessjs %}
@@ -366,7 +366,7 @@
             </div>
             {% endfor %}
             {% else %}
-            {% if current_user.is_authenticated and audience == 'City' %}
+            {% if current_user.is_authenticated and audience == 'city' %}
             <h3 class="control-widget">Response</h3>
 
             <p><em>No responses have been uploaded yet</em></p>

@@ -1,5 +1,5 @@
 {% block subscribe %}
-{% if current_user.is_anonymous or audience == 'Public' %}
+{% if current_user.is_anonymous or audience == 'public' %}
 {% set requester = req.requester() %}
 {% if (requester) %}
 {% set email = requester.user.email %}
