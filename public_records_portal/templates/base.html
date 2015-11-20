@@ -62,15 +62,29 @@ This template provides the header, footer, and envelope info for all pages excep
 </head>
 
 <body>
-{% set navigation_bar = [
+{% if current_user.is_authenticated %}
+    {% set navigation_bar = [
 
-    ('/new', 'new', 'Request a Record'),
-    ('/view_requests','view_requests','All Requests'),
-    ('/track','track','Track an Existing Record'),
-    ('/report','report','Report'),
-    ('/faq','faq','FAQ'),
-    ('/about','about','About'),
-] -%}
+        ('/new', 'new', 'Request a Record'),
+        ('/view_requests','view_requests','View Requests'),
+        ('/track','track','Track an Existing Record'),
+        ('/report','report','Report'),
+        ('/city/tutorial/01','tutorial','Tutorial'),
+        ('/faq','faq','FAQ'),
+        ('/about','about','About'),
+    ] -%}
+{% else %}
+    {% set navigation_bar = [
+
+        ('/new', 'new', 'Request a Record'),
+        ('/view_requests','view_requests','View Requests'),
+        ('/track','track','Track an Existing Record'),
+        ('/report','report','Report'),
+        ('/faq','faq','FAQ'),
+        ('/about','about','About'),
+    ] -%}
+{% endif %}
+
 {% if current_user.is_authenticated %}
     {% set active_page = active_page|default('view_requests') -%}
 {% else %}
