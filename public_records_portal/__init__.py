@@ -16,10 +16,17 @@ from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask_recaptcha import ReCaptcha
 from tzlocal import get_localzone
+import logging
+from logging.handlers import TimedRotatingFileHandler
+import time
 
 # Initialize Flask app
 app = Flask(__name__)
 app.debug = True
+log_filename =  "openrecords_"+time.strftime("%Y%m%d")+".log"
+handler = TimedRotatingFileHandler(log_filename, when='D', interval=60)
+handler.setLevel(logging.WARNING)
+app.logger.addHandler(handler)
 
 load_dotenv(abspath(join(join(dirname(__file__), pardir), '.env')))
 
