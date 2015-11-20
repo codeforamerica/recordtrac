@@ -58,6 +58,7 @@ $(function () {
         vals = [];
         vals=business.concat(civicServices,cultureAndRecreation,education,environment,governmentAdministration,
                 health,housingAndDevelopment,publicSafety,socialServices,transportation);
+        vals.sort();
         for (var i = 0; i < vals.length; i++) {
             $("#agency").value = vals[i];
             $("#agency").append("<option value=\"" + vals[i] + "\">" + vals[i] + "</option>");
