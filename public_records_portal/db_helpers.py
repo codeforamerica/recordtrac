@@ -9,6 +9,7 @@ from __future__ import generators
 import uuid
 
 import ldap
+from . import app
 from sqlalchemy import func
 
 from models import *
@@ -288,7 +289,7 @@ def authenticate_login(email, password):
     if app.config['LDAP_USE_TLS']:
         # Sets up TLS for LDAP connection
         ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT,
-                        ldap.OPT_X_TLS_DEMAND)
+                        ldap.OPT_X_TLS_NEVER)
     if app.debug:
         # Sets up verbose logging for LDAP debugging
         ldap.set_option(ldap.OPT_DEBUG_LEVEL, 255)
