@@ -5,31 +5,17 @@
 """
 
 from __future__ import generators
-from public_records_portal import db, app
-from models import *
-from datetime import datetime, timedelta
-from business_calendar import Calendar
-from sqlalchemy.exc import IntegrityError, InvalidRequestError
-from sqlalchemy import func, not_, and_, or_
-from sqlalchemy.dialects import postgresql
+
 import uuid
-import os
 
-from StringIO import StringIO
-import re
-
+import ldap
+from . import app
 from sqlalchemy import func
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import portrait
-from PyPDF2 import PdfFileWriter, PdfFileReader
-import StringIO
-
-from xhtml2pdf import pisa
-from flask import render_template, make_response
 
 from models import *
 
 cal = Calendar()
+
 
 def id_counter():
     i = 0
@@ -37,14 +23,17 @@ def id_counter():
         yield i
         i = i + 1
 
+
 id_generator = id_counter()
 currentRequestId = id_generator.next()
+
 
 # @export "get_subscriber"
 def get_subscriber(request_id, user_id):
     # Returns the subscriber for a given request by user ID
     if request_id and user_id:
-        return Subscriber.query.filter_by(user_id=user_id).filter_by(request_id=request_id).first()
+        return Subscriber.query.filter_by(user_id=user_id).filter_by(
+            request_id=request_id).first()
     return None
 
 
@@ -94,7 +83,8 @@ def get_avg_response_time(department):
         if request.status and 'Closed' in request.status:
             if response_time:
                 response_time = response_time + \
-                                (request.status_updated - date_created).total_seconds()
+                                (
+                                    request.status_updated - date_created).total_seconds()
             else:
                 response_time = (
                     request.status_updated - date_created).total_seconds()
@@ -122,19 +112,22 @@ def get_owners_by_user_id(user_id):
 
 
 def get_contact_by_dept(dept):
-	""" Return the contact for a given department. """
-	d = Department.query.filter(Department.name == dept).first()
-	if d and d.primary_contact:
-		return d.primary_contact.email
-	return None
+    """ Return the contact for a given department. """
+    d = Department.query.filter(Department.name == dept).first()
+    if d and d.primary_contact:
+        return d.primary_contact.email
+    return None
+
 
 ### @export "get_backup_by_dept"
 def get_backup_by_dept(dept):
-	""" Return the backup for a given department. """
-	d = Department.query.filter(Department.name == dept).first()
-	if d and d.backup_contact:
-		return d.backup_contact.email
-	return None
+    """ Return the backup for a given department. """
+    d = Department.query.filter(Department.name == dept).first()
+    if d and d.backup_contact:
+        return d.backup_contact.email
+    return None
+
+
 ### @export "put_obj"
 
 
@@ -147,6 +140,7 @@ def put_obj(obj):
         app.logger.info("\n\nCommitted object to database: %s" % obj)
         return True
     return False
+
 
 # @export "get_attribute"
 def get_attribute(attribute, obj_id=None, obj_type=None, obj=None):
@@ -164,8 +158,9 @@ def get_attribute(attribute, obj_id=None, obj_type=None, obj=None):
 # @export "update_obj"
 def update_obj(attribute, val, obj_type=None, obj_id=None, obj=None):
     """ Obtain the object by obj_id and obj_type if obj is not provided, and update the specified attribute for that object. Return true if successful. """
-    app.logger.info("\n\nUpdating attribute: %s with value: %s for obj_type: %s, obj_id: %s, obj: %s" % (
-        attribute, val, obj_type, obj_id, obj))
+    app.logger.info(
+        "\n\nUpdating attribute: %s with value: %s for obj_type: %s, obj_id: %s, obj: %s" % (
+            attribute, val, obj_type, obj_id, obj))
     if obj_id and obj_type:
         obj = get_obj(obj_type, obj_id)
     if obj:
@@ -187,8 +182,10 @@ def create_QA(request_id, question, user_id):
     db.session.commit()
     return qa.id
 
+
 # @export "create_request"
-def create_request(id=id, agency=None, summary=None, text=None, user_id=None, offline_submission_type=None,
+def create_request(id=id, agency=None, summary=None, text=None, user_id=None,
+                   offline_submission_type=None,
                    date_received=None):
     """ Create a Request object and return the ID. """
     agency_id = Department.query.filter_by(name=agency).first().id
@@ -218,20 +215,24 @@ def create_subscriber(request_id, user_id):
 def create_note(request_id, text, user_id, privacy):
     """ Create a Note object and return the ID. """
     try:
-        note = Note(request_id=request_id, text=text, user_id=user_id, privacy=privacy)
+        note = Note(request_id=request_id, text=text, user_id=user_id,
+                    privacy=privacy)
         put_obj(note)
         return note.id
     except Exception, e:
         app.logger.info(
-            "\n\nThere was an issue with creating a note with text: %s %s" % (text, e))
+            "\n\nThere was an issue with creating a note with text: %s %s" % (
+                text, e))
         return None
 
 
 # @export "create_record"
-def create_record(request_id, user_id, description, doc_id=None, filename=None, access=None, url=None):
+def create_record(request_id, user_id, description, doc_id=None, filename=None,
+                  access=None, url=None):
     try:
         record = Record(doc_id=doc_id, request_id=request_id, user_id=user_id,
-                        description=description, filename=filename, url=url, access=access)
+                        description=description, filename=filename, url=url,
+                        access=access)
         put_obj(record)
         return record.id
     except Exception, e:
@@ -244,6 +245,7 @@ def remove_obj(obj_type, obj_id):
     obj = get_obj(obj_type, obj_id)
     db.session.delete(obj)
     db.session.commit()
+
 
 # @export "create_answer"
 def create_answer(qa_id, subscriber_id, answer):
@@ -262,7 +264,9 @@ def create_answer(qa_id, subscriber_id, answer):
 
 # @export "get_user"
 def get_user(kwargs):
-    return User.query.filter(User.email == kwargs.get('email')).filter(User.is_staff == True).first()
+    return User.query.filter(User.email == kwargs.get('email')).filter(
+        User.is_staff == True).first()
+
 
 # @export "get_user_by_id"
 def get_user_by_id(id):
@@ -271,15 +275,56 @@ def get_user_by_id(id):
 
 ### @export "authenticate_login"
 def authenticate_login(email, password):
+    """
+
+    :param email: Users email address
+    :type email: string
+    :param password: Users password
+    :type password: string
+    :return: The user object, if the user is authenticated, otherwise None
+    :rtype: User object
+    """
+
+    # Setup the LDAP Options
+    if app.config['LDAP_USE_TLS']:
+        # Sets up TLS for LDAP connection
+        ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT,
+                        ldap.OPT_X_TLS_NEVER)
+    if app.debug:
+        # Sets up verbose logging for LDAP debugging
+        ldap.set_option(ldap.OPT_DEBUG_LEVEL, 255)
+
+    # Create the LDAP Context
+    ctx = ldap.initialize('%s:%s' % (app.config['LDAP_SERVER'], app.config[
+        'LDAP_PORT']))
+    if app.config['LDAP_USE_TLS']:
+        # Provide the certificate for LDAP, if required
+        ctx.set_option(ldap.OPT_X_TLS_CACERTFILE, app.config['LDAP_CERT_PATH'])
+    # Bind to LDAP Server
+    try:
+        ctx.bind_s(app.config['LDAP_SA_BIND_DN'], app.config[
+            'LDAP_SA_PASSWORD'])
+    except ldap.LDAPError as e:
+        app.logger.error("Failed to bind to LDAP: %s", e)
+        return None
+
     user = User.query.filter_by(email=email).first()
     if user and (user.is_staff or user.is_admin()):
-        if user.check_password(password):
-            return user
-        if user.password == password:  # Hash it
-            user.set_password(password)
-            db.session.add(user)
-            db.session.commit()
-        return user
+        # charactersk if user exists in LDAP
+        user_dn = ctx.search_s(app.config['LDAP_BASE_DN'], ctx.SCOPE_SUBTREE,
+                               'mail=%s' % email)
+        if user_dn:
+            # If the user exists, get their dn
+            user_dn = user_dn[0]
+
+            # Bind as the user with the provided password
+            try:
+                authenticated = ctx.bind_s(user_dn, password)
+                app.logger.info("User: %s authenticated", user)
+            except ldap.INVALID_CREDENTIALS as e:
+                app.logger.info("User: %s failed to authenticate", user)
+                return None
+        return None
     return None
 
 def create_or_return_user(email=None, alias=None, first_name=None, last_name=None, phone=None, fax=None, address1=None, address2=None, city=None, state=None,
@@ -309,13 +354,19 @@ def create_or_return_user(email=None, alias=None, first_name=None, last_name=Non
             if not password:
                 user = create_user(email=email.lower(), alias=alias, first_name=first_name, last_name=last_name, phone=str(phone), fax=str(fax),address1=address1,
                                    address2=address2, city=city,
-                                   state=state, zipcode=zipcode, department=department, contact_for=contact_for,
-                                   backup_for=backup_for, password='admin', is_staff=is_staff, role=role)
+                                   state=state, zipcode=zipcode,
+                                   department=department,
+                                   contact_for=contact_for,
+                                   backup_for=backup_for, password='admin',
+                                   is_staff=is_staff, role=role)
             else:
                 user = create_user(email=email.lower(), alias=alias, first_name=first_name, last_name=last_name, phone=str(phone), fax=str(fax),address1=address1,
                                    address2=address2, city=city,
-                                   state=state, zipcode=zipcode, department=department, contact_for=contact_for,
-                                   backup_for=backup_for, password=password, is_staff=is_staff, role=role)
+                                   state=state, zipcode=zipcode,
+                                   department=department,
+                                   contact_for=contact_for,
+                                   backup_for=backup_for, password=password,
+                                   is_staff=is_staff, role=role)
 
         else:
             # Update user if fields to update are provided
@@ -326,8 +377,10 @@ def create_or_return_user(email=None, alias=None, first_name=None, last_name=Non
 
                 user = update_user(user=user, alias=alias, first_name=first_name, last_name=last_name, phone=str(phone), fax=str(fax), address1=address1, address2=address2,
                                    city=city, state=state,
-                                   zipcode=zipcode, department=department, contact_for=contact_for,
-                                   backup_for=backup_for, is_staff=is_staff, role=role)
+                                   zipcode=zipcode, department=department,
+                                   contact_for=contact_for,
+                                   backup_for=backup_for, is_staff=is_staff,
+                                   role=role)
         if not_id:
             return user
         return user.id
@@ -336,12 +389,14 @@ def create_or_return_user(email=None, alias=None, first_name=None, last_name=Non
                            address2=address2, city=city, state=state, zipcode=zipcode, is_staff=is_staff, role=role)
         return user.id
 
+
 # @export "create_user"
 def create_user(email=None, alias=None, first_name=None, last_name=None, phone=None, fax=None, address1=None, address2=None, city=None, state=None, zipcode=None,
                 department=None, contact_for=None, backup_for=None, password=None, is_staff=None, role=None):
     user = User(email=email, alias=alias, first_name=first_name, last_name=last_name, phone=phone, fax=fax, address1=address1,
                 address2=address2, city=city, state=state,
-                zipcode=zipcode, department=department, contact_for=contact_for, backup_for=backup_for,
+                zipcode=zipcode, department=department, contact_for=contact_for,
+                backup_for=backup_for,
                 password=password, is_staff=is_staff, role=role)
     db.session.add(user)
     db.session.commit()
@@ -394,8 +449,9 @@ def update_user(user, alias=None, first_name=None, last_name=None, phone=None, f
         user.set_role(role)
     db.session.add(user)
     db.session.commit()
-    app.logger.info("\n\nUpdated user %s, alias: %s phone: %s department: %s" % (
-        user.id, alias, phone, department))
+    app.logger.info(
+        "\n\nUpdated user %s, alias: %s phone: %s department: %s" % (
+            user.id, alias, phone, department))
     return user
 
 
@@ -427,8 +483,8 @@ def change_request_status(request_id, status):
             days_to_fulfill = re.findall(r"(\d{2}) days",status)[0]
             print cal.addbusdays(date_created, int(days_to_fulfill))
             req.due_date = cal.addbusdays(date_created, int(days_to_fulfill))
-
     db.session.commit()
+
 
 # @export "find_request"
 def find_request(text):
@@ -439,7 +495,8 @@ def find_request(text):
 
 
 # @export "add_staff_participant"
-def add_staff_participant(request_id, is_point_person=False, email=None, user_id=None, reason=None):
+def add_staff_participant(request_id, is_point_person=False, email=None,
+                          user_id=None, reason=None):
     """ Creates an owner for the request if it doesn't exist, and returns the owner ID and True if a new one was created. Returns the owner ID and False if existing."""
     is_new = True
     if not user_id:
@@ -450,21 +507,25 @@ def add_staff_participant(request_id, is_point_person=False, email=None, user_id
         if not reason:
             reason = "Added a response"
         participant = Owner(
-            request_id=request_id, user_id=user_id, reason=reason, is_point_person=is_point_person)
-        app.logger.info("\n\nStaff participant with owner ID: %s added to request %s. Is point of contact: %s" % (
-            participant.id, request_id, is_point_person))
+            request_id=request_id, user_id=user_id, reason=reason,
+            is_point_person=is_point_person)
+        app.logger.info(
+            "\n\nStaff participant with owner ID: %s added to request %s. Is point of contact: %s" % (
+                participant.id, request_id, is_point_person))
     else:
         if is_point_person and not participant.is_point_person:
             participant.is_point_person = True
             participant.date_updated = datetime.now().isoformat()
             if reason:  # Update the reason
                 participant.reason = reason
-            app.logger.info("\n\nStaff participant with owner ID: %s is now the point of contact for request %s" % (
-                participant.id, request_id))
+            app.logger.info(
+                "\n\nStaff participant with owner ID: %s is now the point of contact for request %s" % (
+                    participant.id, request_id))
         else:
             is_new = False
-            app.logger.info("\n\nStaff participant with owner ID: %s already active on request %s" % (
-                participant.id, request_id))
+            app.logger.info(
+                "\n\nStaff participant with owner ID: %s already active on request %s" % (
+                    participant.id, request_id))
     db.session.add(participant)
     db.session.commit()
     return participant.id, is_new
@@ -479,7 +540,8 @@ def remove_staff_participant(owner_id, reason=None):
     db.session.add(participant)
     db.session.commit()
     app.logger.info(
-        "\n\n Staff participant with owner ID: %s has been removed for following reason %s" % (owner_id, reason))
+        "\n\n Staff participant with owner ID: %s has been removed for following reason %s" % (
+            owner_id, reason))
     return owner_id
 
 
@@ -492,8 +554,10 @@ def update_subscriber(request_id, alias, phone):
     sub.user_id = user_id
     db.session.add(sub)
     db.session.commit()
-    app.logger.info("\n\nUpdated subscriber for request %s with alias: %s and phone: %s" % (
-        request_id, alias, phone))
+    app.logger.info(
+        "\n\nUpdated subscriber for request %s with alias: %s and phone: %s" % (
+            request_id, alias, phone))
+
 
 ### @export "set_random_password"
 def set_random_password(email):

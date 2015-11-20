@@ -33,7 +33,7 @@ if app.config['SEND_EMAILS']:
 
 
 def generate_prr_emails(request_id, notification_type, text=None, text2=None,user_id=None, department_name=None,
-                        user_name=None, days_after=None,attached_file=None):
+                        user_name=None, days_after=None,attached_file=None, recipients=None):
     # 'text=None' is used additional information. 'text2=None' is used if there are more variable text passed into email such as with 'close this request'
     # and being offered multiple reasons
     app.logger.info("\n\n Generating e-mails for request with ID: %s, notification type: %s, and user ID: %s" % (
@@ -76,6 +76,10 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
         template="emtemplate_acknowledge_request.html"
     elif notification_type=="Reopen request":
         template="emtemplate_reopen_request.html"
+    elif notification_type=="Nonportal agency":
+        template="emtemplate_nonportal_agency.html"
+    elif notification_type=="Nonportal requester":
+        template="emtemplate_nonportal_requester.html"
     elif notification_type=="Extend request":
         if 'days_after' in text:
             if text['days_after'] is not None:
@@ -87,12 +91,34 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
     elif "Agency Notification Template" in notification_type:
         template = "agency_email_" + notification_type[-2:] + ".html"
 
+    #Handles emails for nonportal agencies
+    if template is "emtemplate_nonportal_agency.html":
+        send_prr_email(page=None, recipients=recipients, template=template, additional_information=text, text2=text2,
+                       subject="OpenRecords Portal Request regarding " + text[0])
+        return True
+    elif template is "emtemplate_nonportal_requester.html":
+        send_prr_email(page=None, recipients=recipients, template=template, additional_information=text, text2=text2,
+                           subject="Your request to " + department_name + " regarding " + text[0],
+                           department_name=department_name)
+        return True
+
     # Get information on who to send the e-mail to and with what subject line based on the notification type:
     email_info = get_email_info(notification_type=notification_type)
     email_subject = "Public Records Request %s: %s" % (request_id, email_info["Subject"])
     recipient_types = email_info["Recipients"]
     include_unsubscribe_link = True
     unfollow_link = None
+
+    # Special case for when the nonportal agency is contacted
+    if recipient_types is None:
+        if template is "emtemplate_nonportal_agency.html":
+            send_prr_email(page=None, recipients=recipients, template=template, additional_information=text, text2=text2,
+                           subject="OpenRecords Portal Request regarding " + text[0])
+        elif template is "emtemplate_nonportal_requester.html":
+            send_prr_email(page=None, recipients=recipients, template=template, additional_information=text, text2=text2,
+                           subject="Your request to " + department_name + " regarding " + text[0],
+                           department_name=department_name)
+
     for recipient_type in recipient_types:
         # Skip anyone that has unsubscribed
         if user_id and (recipient_type == "Requester" or recipient_type == "Subscriber"):
@@ -113,6 +139,7 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
             unfollow_link = "%sunfollow/%s/" % (app_url, request_id)
             if notification_type == "Request closed":
                 page = "%sfeedback/request/%s" % (app_url, request_id)
+
         if recipient_type in ["Staff owner", "Requester", "Subscriber", "Staff participant"]:
             if user_id:
                 recipient = get_attribute(attribute="email", obj_id=user_id, obj_type="User")
@@ -157,13 +184,16 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
 
 def send_prr_email(page, recipients, subject, template, include_unsubscribe_link=True, cc_everyone=False, password=None,
                    unfollow_link=None, attached_file=None, additional_information=None, request_id=None, department_name=None, user_name=None, days_after=None,
-                   text2=None):
+                   text2=None, contact=None):
     app.logger.info("\n\nAttempting to send an e-mail to %s with subject %s, referencing page %s and template %s" % (
     recipients, subject, page, template))
     if recipients:
         if send_emails:
             try:
-                send_email(body=render_template(template, unfollow_link=unfollow_link, page=page, additional_information=additional_information, text2=text2, request_id=request_id,department_name=department_name, user_name=user_name, days=days_after),
+                send_email(body=render_template(template, unfollow_link=unfollow_link, page=page,
+                                                additional_information=additional_information, text2=text2,
+                                                request_id=request_id,department_name=department_name,
+                                                user_name=user_name, days=days_after),
                            recipients=recipients, subject=subject, include_unsubscribe_link=include_unsubscribe_link,
                            cc_everyone=cc_everyone, attached_file=attached_file)
                 app.logger.info("\n\n E-mail sent successfully!")
@@ -192,8 +222,6 @@ def send_email(body, recipients, subject, include_unsubscribe_link=True, cc_ever
 
     # if not include_unscubscribe_link:
     # message.add_filter('subscriptiontrack', 'enable', 0)
-    if app.config['DEV_EMAIL'] != '':
-        recipients = [app.config['DEV_EMAIL']]
     if cc_everyone:
         pass
     # message.add_to(recipients[0])
