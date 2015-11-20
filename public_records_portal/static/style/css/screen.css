@@ -5286,12 +5286,16 @@ button.btn.btn-mini,input[type="submit"].btn.btn-mini
 	filter:alpha(opacity=80)
 }
 
+.modal-dialog
+{
+	padding-top:-10rem;
+
+}
 .modal
 {
 	position:fixed;
-	top:10%;
+	top:30%;
 	left:50%;
-	z-index:1050;
 	width:560px;
 	margin-left:-280px;
 	background-color:#fff;
@@ -5312,6 +5316,7 @@ button.btn.btn-mini,input[type="submit"].btn.btn-mini
 
 .modal.fade
 {
+	z-index:-1050;
 	-webkit-transition:opacity .3s linear,top .3s ease-out;
 	-moz-transition:opacity .3s linear,top .3s ease-out;
 	-o-transition:opacity .3s linear,top .3s ease-out;
@@ -5321,6 +5326,7 @@ button.btn.btn-mini,input[type="submit"].btn.btn-mini
 
 .modal.fade.in
 {
+	z-index:1050;
 	top:10%
 }
 
@@ -7454,11 +7460,13 @@ a.label:hover,a.label:focus,a.badge:hover,a.badge:focus
 	.modal
 	{
 		position:fixed;
+		padding-top:20rem;
 		top:20px;
 		left:20px;
 		right:20px;
 		width:auto;
-		margin:0
+		margin:0;
+		z-index: -100000;
 	}
 	
 	.modal.fade
