@@ -26,10 +26,10 @@ import urllib, mimetypes
 
 send_emails = False
 test = "[TEST] "
-#
-# if app.config['SEND_EMAILS']:
-#     send_emails = True
-#     test = ""
+
+if app.config['SEND_EMAILS']:
+    send_emails = True
+    test = ""
 
 
 def generate_prr_emails(request_id, notification_type, text=None, text2=None,user_id=None, department_name=None,
@@ -74,12 +74,16 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
     #Acknowledging a Request
     elif notification_type=="Acknowledge request":
         template="emtemplate_acknowledge_request.html"
+    #Reopening a request
     elif notification_type=="Reopen request":
         template="emtemplate_reopen_request.html"
+    #Nonportal request for agency user
     elif notification_type=="Nonportal agency":
         template="emtemplate_nonportal_agency.html"
+    #Nonportal request for requster
     elif notification_type=="Nonportal requester":
         template="emtemplate_nonportal_requester.html"
+    #Extending a request
     elif notification_type=="Extend request":
         if 'days_after' in text:
             if text['days_after'] is not None:
