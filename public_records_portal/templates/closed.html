@@ -2,7 +2,7 @@
 <!-- This template should be eventually updated so that status/owner info is a consistent block between "case" and "closed". -->
 
 {% extends "case.html" %}
-{% block title %}Request {{ req.id }}{% endblock %}
+{% block title %}OpenRecords - Request {{ req.id }}{% endblock %}
 
 {% block status %}
     {% set status = req.solid_status() %}
