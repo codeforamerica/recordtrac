@@ -114,10 +114,12 @@
                             <h5>Date received</h5>
 
                             <div class="control-group">
+                                <label>From: </label>
                                 <input type="date"
                                        name="min_date_received"
                                        value="{{ min_date_received }}"
                                        class="span12">
+                                <label>To:</label>
                                 <input type="date"
                                        name="max_date_received"
                                        value="{{ max_date_received }}"
@@ -126,10 +128,12 @@
                             {% if current_user.is_authenticated %}
                                 <h5>Due date</h5>
                                 <div class="control-group">
+                                    <label>From: </label>
                                     <input type="date"
                                            name="min_due_date"
                                            value="{{ min_due_date }}"
                                            class="span12">
+                                    <label>To:</label>
                                     <input type="date"
                                            name="max_due_date"
                                            value="{{ max_due_date }}"
