@@ -36,7 +36,7 @@
                         <div class="span8">
                            <div class="control-group">
                                 <h2>
-                                    <small id='categoryTitle'>Category (*optional)</small>
+                                    <small id='categoryTitle'>Category (optional)</small>
                                 </h2>
                                     <select id="category" class="input-block-level">
                                         <option selected value></option>
@@ -61,7 +61,7 @@
                             <div class="control-group">
                                 <h2>
                                     <small>What agency has the records you
-                                        want? (*required)
+                                        want? (required)
                                     </small>
                                 </h2>
                                 </div>
@@ -79,7 +79,7 @@
                         <div class="span8">
                             <div class="control-group">
                                 <h2>
-                                    <small>Request Title (*required)</small>
+                                    <small>Request Title (required)</small>
                                 </h2>
                                 {{
                                 form.request_summary(class="input-block-level",
@@ -104,7 +104,7 @@
                         <div class="span8">
                             <div class="control-group">
                                 <h2>
-                                    <small>Request (*required)</small>
+                                    <small>Request (required)</small>
                                 </h2>
                                 {{
                                 form.request_text(class="input-block-level",rows="6",id="request_text",placeholder="Provide more information about your request to help the City locate the record. If you don’t know the record name, describe the type of information you think it would contain and the approximate date range. Do not include private info – such as social security number or credit card number." ) }}
@@ -174,7 +174,19 @@
                             </div>
                         </div>
                     </div>
-
+                    <div class="row-fluid">
+                        <div class="span8">
+                            <div class="control-group">
+                                <h2>
+                                    <small>{{ form.request_email.label.text }}
+                                    </small>
+                                </h2>
+                                {{ form.request_email(class="input-block-level"
+                                , type="email" ,
+                                placeholder="requester@email.com") }}
+                            </div>
+                        </div>
+                    </div>
 {#                    <div class="row-fluid">#}
 {#                        <div class="span8">#}
 {#                            <div class="control-group">#}
@@ -224,21 +236,6 @@
 
                             <p>No information entered in this section will be
                                 visibile to the public.</p>
-                        </div>
-                    </div>
-
-
-                    <div class="row-fluid">
-                        <div class="span8">
-                            <div class="control-group">
-                                <h2>
-                                    <small>{{ form.request_email.label.text }}
-                                    </small>
-                                </h2>
-                                {{ form.request_email(class="input-block-level"
-                                , type="email" ,
-                                placeholder="requester@email.com") }}
-                            </div>
                         </div>
                     </div>
                     <div class="row-fluid">
