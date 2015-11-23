@@ -134,11 +134,11 @@ class OfflineRequestForm(Form):
                              validators=[DataRequired(
                                  'You must enter the date this request '
                                  'was received.')])
-    request_first_name = StringField(u'First Name (*required)',
+    request_first_name = StringField(u'First Name (required)',
                                      validators=[DataRequired(
                                          'Please enter the requestor\'s '
                                          'first name')])
-    request_last_name = StringField(u'Last Name (*required)', validators=[
+    request_last_name = StringField(u'Last Name (required)', validators=[
         DataRequired('Please enter the requestor\'s last name')])
     request_role = StringField(u'Role/Title')
     request_organization = StringField(u'Organization')
@@ -178,11 +178,11 @@ class NewRequestForm(Form):
         Length(1, 5000,
                'The detailed description of this request must be less than'
                ' 5000 characters')])
-    request_first_name = StringField(u'First Name (*required)',
+    request_first_name = StringField(u'First Name (required)',
                                      validators=[DataRequired(
                                          'Please enter the requestor\'s'
                                          ' first name')])
-    request_last_name = StringField(u'Last Name (*required)', validators=[
+    request_last_name = StringField(u'Last Name (required)', validators=[
         DataRequired('Please enter the requestor\'s last name')])
     request_role = StringField(u'Role/Title')
     request_organization = StringField(u'Organization')
