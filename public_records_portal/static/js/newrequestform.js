@@ -54,6 +54,16 @@ $(function () {
         "Department of Transportation"]
 
 
+    $(function(){
+        vals = [];
+        vals=business.concat(civicServices,cultureAndRecreation,education,environment,governmentAdministration,
+                health,housingAndDevelopment,publicSafety,socialServices,transportation);
+        vals.sort();
+        for (var i = 0; i < vals.length; i++) {
+            $("#agency").value = vals[i];
+            $("#agency").append("<option value=\"" + vals[i] + "\">" + vals[i] + "</option>");
+        }
+    });
     $("#category").change(function () {
 
         var $dropdown = $(this);
@@ -95,12 +105,15 @@ $(function () {
             case 'Transportation':
                 vals = transportation;
                 break;
-            case 'base':
-                vals = ['Please choose from above'];
+            default:
+                vals=business.concat(civicServices,cultureAndRecreation,education,environment,governmentAdministration,
+                    health,housingAndDevelopment,publicSafety,socialServices,transportation);
+                break;
         }
 
         var $jsontwo = $("#agency");
         $jsontwo.empty();
+        vals.sort();
         for (var i = 0; i < vals.length; i++) {
             $jsontwo.value = vals[i];
             $jsontwo.append("<option value=\"" + vals[i] + "\">" + vals[i] + "</option>");

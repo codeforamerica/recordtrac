@@ -36,7 +36,7 @@
                         <div class="span8">
                            <div class="control-group">
                                 <h2>
-                                    <small id='categoryTitle' >Category</small>
+                                    <small id='categoryTitle'>Category (optional)</small>
                                 </h2>
                                     <select id="category" class="input-block-level">
                                         <option selected value></option>
@@ -61,10 +61,14 @@
                             <div class="control-group">
                                 <h2>
                                     <small>What agency has the records you
-                                        want?*
+                                        want? (required)
                                     </small>
                                 </h2>
                                 </div>
+{#                                {{ form.request_agency(class="input-block-level", id="agency") }}#}
+
+
+
                                 <select id="agency" name="request_agency" class="input-block-level">
                                     <option selected value></option>
                                 </select>
@@ -75,7 +79,7 @@
                         <div class="span8">
                             <div class="control-group">
                                 <h2>
-                                    <small>Request Title*</small>
+                                    <small>Request Title (required)</small>
                                 </h2>
                                 {{
                                 form.request_summary(class="input-block-level",
@@ -100,7 +104,7 @@
                         <div class="span8">
                             <div class="control-group">
                                 <h2>
-                                    <small>Request*</small>
+                                    <small>Request (required)</small>
                                 </h2>
                                 {{
                                 form.request_text(class="input-block-level",rows="6",id="request_text",placeholder="Provide more information about your request to help the City locate the record. If you don’t know the record name, describe the type of information you think it would contain and the approximate date range. Do not include private info – such as social security number or credit card number." ) }}
@@ -170,7 +174,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="row-fluid">
                         <div class="span8">
                             <div class="control-group">
@@ -182,6 +185,57 @@
                                 , type="email" ,
                                 placeholder="requester@email.com") }}
                             </div>
+                        </div>
+                    </div>
+{#                    <div class="row-fluid">#}
+{#                        <div class="span8">#}
+{#                            <div class="control-group">#}
+{#                                <h2>#}
+{#                                    <small>{{ form.request_email.label.text }}#}
+{#                                    </small>#}
+{#                                </h2>#}
+{#                                {{ form.request_email(class="input-block-level"#}
+{#                                , type="email" ,#}
+{#                                placeholder="requester@email.com") }}#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="row-fluid">#}
+{#                        <div class="span8">#}
+{#                            <div class="control-group">#}
+{#                                <h2>#}
+{#                                    <small>{{ form.request_role.label.text }}#}
+{#                                    </small>#}
+{#                                </h2>#}
+{#                                {{ form.request_role( class="input-block-level",#}
+{#                                type="text", placeholder="Your role in your organization (if applicable)" ) }}#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="row-fluid">#}
+{#                        <div class="span8">#}
+{#                            <div class="control-group">#}
+{#                                <h2>#}
+{#                                    <small>{{#}
+{#                                        form.request_organization.label.text }}#}
+{#                                    </small>#}
+{#                                </h2>#}
+{#                                {{#}
+{#                                form.request_organization(class="input-block-level",#}
+{#                                type="text", placeholder="Your organization (if applicable)") }}#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+
+                    <div class="row-fluid">
+                        <div class="span8">
+                            <h3>
+                                Alternate Contact Information
+                            </h3>
+
+
+                            <p>No information entered in this section will be
+                                visibile to the public.</p>
                         </div>
                     </div>
                     <div class="row-fluid">
@@ -211,17 +265,6 @@
                         </div>
                     </div>
 
-                    <div class="row-fluid">
-                        <div class="span8">
-                            <h3>
-                                Alternate Contact Information
-                            </h3>
-
-
-                            <p>No information entered in this section will be
-                                visibile to the public.</p>
-                        </div>
-                    </div>
                     <div class="row-fluid">
                         <div class="span8">
                             <div class="control-group">
@@ -290,8 +333,8 @@
                             </div>
                         </div>
                     </div>
-{#                    {% if config['ENVIRONMENT'] != 'LOCAL' %} {{ recaptcha }} {%#}
-{#                    endif %}#}
+                    {% if config['ENVIRONMENT'] != 'LOCAL' %} {{ recaptcha }} {%
+                    endif %}
                     <div id="requestButton" class="spacer">
                         <button id="button2" title="submit_request_button"
                                 class="btn btn-primary btn-large input-block-level">
