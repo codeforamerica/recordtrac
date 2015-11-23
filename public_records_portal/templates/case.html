@@ -280,43 +280,43 @@
                     </form>
                     {% endif %}
                 </div>
-                <div>
-                    <!-- shows any existing Q&A or public notes -->
-                    {% set request_data = ( req | get_request_data_chronologically ) %}
+                <!--<div>-->
+                    <!--&lt;!&ndash; shows any existing Q&A or public notes &ndash;&gt;-->
+                    <!--{% set request_data = ( req | get_request_data_chronologically ) %}-->
 
-                    {% for response in request_data %}
-                    {% set icon = response.get_icon() %}
-                    <div class="row-fluid response">
-                        <div class="span1 text-left">
-                            <i class="{{ icon }}"></i>
-                        </div>
-                        <div class="span9">
-                            <p truncateable="175">
-                                {{ response.display_text() | safe }}
-                            </p>
-                        </div>
-                        <div class="span2 text-right request-date">
-                            <div class="timestampPopoverContainer">
-                                <div class="row-fluid">
-                                        <span class="timestampPopover" onmouseover="">
-                                            {{ response.date() | date_granular }}
-                                        </span>
+                    <!--{% for response in request_data %}-->
+                    <!--{% set icon = response.get_icon() %}-->
+                    <!--<div class="row-fluid response">-->
+                        <!--<div class="span1 text-left">-->
+                            <!--<i class="{{ icon }}"></i>-->
+                        <!--</div>-->
+                        <!--<div class="span9">-->
+                            <!--<p truncateable="175">-->
+                                <!--{{ response.display_text() | safe }}-->
+                            <!--</p>-->
+                        <!--</div>-->
+                        <!--<div class="span2 text-right request-date">-->
+                            <!--<div class="timestampPopoverContainer">-->
+                                <!--<div class="row-fluid">-->
+                                        <!--<span class="timestampPopover" onmouseover="">-->
+                                            <!--{{ response.date() | date_granular }}-->
+                                        <!--</span>-->
 
-                                    <div class="hide">
-                                        {% include '_timestamp.html' %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                    {% if request_data | length > 1 %}
-                    <!-- SHOW/HIDE button; js is in case.js -->
-                    <div class="case-show-all show">
-                        <i class="icon-chevron-down"></i> See all <i class="icon-chevron-down"></i>
-                    </div>
-                    {% endif %}
-                </div>
+                                    <!--<div class="hide">-->
+                                        <!--{% include '_timestamp.html' %}-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--{% endfor %}-->
+                    <!--{% if request_data | length > 1 %}-->
+                    <!--&lt;!&ndash; SHOW/HIDE button; js is in case.js &ndash;&gt;-->
+                    <!--<div class="case-show-all show">-->
+                        <!--<i class="icon-chevron-down"></i> See all <i class="icon-chevron-down"></i>-->
+                    <!--</div>-->
+                    <!--{% endif %}-->
+                <!--</div>-->
             </div>
             {% endblock request %}
         </div>
