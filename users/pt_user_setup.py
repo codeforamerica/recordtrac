@@ -62,13 +62,22 @@ partner_agencies = [
     "Office of the Mayor",
 ]
 
-k = 101
+k = 1
 staff = open("staff_pt.csv", "w")
 liaisons = open("liaisons_pt.csv", "w")
 
+liaisons.write('department name,PRR liaison,PRR backup')
+staff.write('name,email,department name,phone number')
+
 for i in range(len(partner_agencies) - 1):
-    liaisons.write("%s,cpuiptuser000%s@mailinator.com\n" % (partner_agencies[i], k))
+    liaisons.write("%s,psstestuser%02d@mailinator.com\n" % (partner_agencies[i], k))
     for j in range(30):
-        staff.write("PTFname PTLname,cpuiptuser000%s@mailinator.com,%s,311\n" %
+        staff.write("PTFname PTLname,psstestuser000%02d@mailinator.com,%s,311\n" %
                     (k, partner_agencies[i]))
         k += 1
+for i in range(len(non_partner_agencies) - 1):
+    staff.write("PTFname PTLname,psstestuser000%02d@mailinator.com,%s,311\n" %
+                    (k, non_partner_agencies[i]))
+    liaisons.write("%s,psstestuser%02d@mailinator.com\n" % (non_partner_agencies[i], k))
+    k += 1
+
