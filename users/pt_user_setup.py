@@ -74,12 +74,15 @@ for i in range(len(partner_agencies) - 1):
     for j in range(4):
         staff.write("PTFname PTLname,bladerunnerperftest%02d@dsny.nyc.gov,%s,311,Portal Administrator\n" %
                     (k, partner_agencies[i]))
+        k += 1
     for j in range(4):
         staff.write("PTFname PTLname,bladerunnerperftest%02d@dsny.nyc.gov,%s,311,Agency Administrator\n" %
                     (k, partner_agencies[i]))
+        k += 1
     for j in range(11):
         staff.write("PTFname PTLname,bladerunnerperftest%02d@dsny.nyc.gov,%s,311,Agency FOIL Officer\n" %
                     (k, partner_agencies[i]))
+        k += 1
     for j in range(11):
         staff.write("PTFname PTLname,bladerunnerperftest%02d@dsny.nyc.gov,%s,311,Agency Helpers\n" %
                     (k, partner_agencies[i]))
