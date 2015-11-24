@@ -625,10 +625,19 @@
                 <fieldset>
                     <input type="hidden" name="request_id"
                            value="{{ req.id }}"/>
-                    <input id="notifyEmail" class="input-block-level"
+                    <!--input id="notifyEmail" class="input-block-level"
                            type="email" name="owner_email"
                            placeholder="name@email.com" data-provide="typeahead"
                            autocomplete="off" required/>
+                    autocomplete="off" required /-->
+                    <select class="span12" id="notifyEmail"
+                                name="owner_email">
+                                    {% for user in users %}
+                                        {%  if user.is_staff %}
+                                            <option value="{{ user.email }}" department_id="{{ user.department_id }}">{{ user.alias}}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                    </select>                       
                     <input id="notifyReason" class="input-block-level"
                            type="text" name="owner_reason"
                            placeholder="Say why." required/>
