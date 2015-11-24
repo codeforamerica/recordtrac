@@ -54,20 +54,20 @@ $(function () {
         "Department of Transportation"]
 
 
-    $(function(){
+    $("#agency").ready(function(){
         vals = [];
         vals=business.concat(civicServices,cultureAndRecreation,education,environment,governmentAdministration,
                 health,housingAndDevelopment,publicSafety,socialServices,transportation);
         vals.sort();
+
         for (var i = 0; i < vals.length; i++) {
             $("#agency").value = vals[i];
             $("#agency").append("<option value=\"" + vals[i] + "\">" + vals[i] + "</option>");
         }
     });
+
     $("#category").change(function () {
-
         var $dropdown = $(this);
-
         var key = $dropdown.val();
         var vals = [];
 
@@ -367,7 +367,7 @@ $(function () {
     // displays characters remaining, highlights extra characters
     function maxLength(el) {
         if (!('maxLength' in el)) {
-            var max = el.attributes.maxLength.value;
+            var max = el.attributes.maxLength;
             el.onkeypress = function () {
                 if (this.value.length >= max) return false;
             };
