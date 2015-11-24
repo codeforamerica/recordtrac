@@ -67,17 +67,26 @@ staff = open("staff_pt.csv", "w")
 liaisons = open("liaisons_pt.csv", "w")
 
 liaisons.write('department name,PRR liaison,PRR backup')
-staff.write('name,email,department name,phone number')
+staff.write('name,email,department name,phone number,role')
 
 for i in range(len(partner_agencies) - 1):
-    liaisons.write("%s,psstestuser%02d@mailinator.com\n" % (partner_agencies[i], k))
-    for j in range(30):
-        staff.write("PTFname PTLname,psstestuser000%02d@mailinator.com,%s,311\n" %
+    liaisons.write("%s,bladerunnerperftest%02d@dsny.nyc.gov\n" % (partner_agencies[i], k))
+    for j in range(4):
+        staff.write("PTFname PTLname,bladerunnerperftest%02d@dsny.nyc.gov,%s,311,'Portal Administrator'\n" %
+                    (k, partner_agencies[i]))
+    for j in range(4):
+        staff.write("PTFname PTLname,bladerunnerperftest%02d@dsny.nyc.gov,%s,311,'Agency Administrator'\n" %
+                    (k, partner_agencies[i]))
+    for j in range(11):
+        staff.write("PTFname PTLname,bladerunnerperftest%02d@dsny.nyc.gov,%s,311,'Agency FOIL Officer'\n" %
+                    (k, partner_agencies[i]))
+    for j in range(11):
+        staff.write("PTFname PTLname,bladerunnerperftest%02d@dsny.nyc.gov,%s,311,'Agency Helpers'\n" %
                     (k, partner_agencies[i]))
         k += 1
 for i in range(len(non_partner_agencies) - 1):
-    staff.write("PTFname PTLname,psstestuser000%02d@mailinator.com,%s,311\n" %
+    staff.write("PTFname PTLname,bladerunnerperftest%02d@dsny.nyc.gov,%s,311,'Agency Administrator'\n" %
                     (k, non_partner_agencies[i]))
-    liaisons.write("%s,psstestuser%02d@mailinator.com\n" % (non_partner_agencies[i], k))
+    liaisons.write("%s,bladerunnerperftest%02d@dsny.nyc.gov\n" % (non_partner_agencies[i], k))
     k += 1
 
