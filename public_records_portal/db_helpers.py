@@ -311,7 +311,7 @@ def authenticate_login(email, password):
 
         user = User.query.filter_by(email=email).first()
         if user and (user.is_staff or user.is_admin()):
-            # charactersk if user exists in LDAP
+            # check if user exists in LDAP
             user_dn = ctx.search_s(app.config['LDAP_BASE_DN'], ldap.SCOPE_SUBTREE,
                                    'mail=%s' % email)
             if user_dn and len(user_dn) == 1:
@@ -320,11 +320,13 @@ def authenticate_login(email, password):
                     user_dn, attributes = user_dn[0]
                     authenticated = ctx.bind_s(user_dn, password)
                     app.logger.info("User: %s authenticated", user)
+                    return user
                 except ldap.INVALID_CREDENTIALS as e:
                     app.logger.info("User: %s failed to authenticate", user)
                     return None
-            app.logger.info("User: %s not found", user)
-            return None
+            else:
+                app.logger.info("User: %s not found", user)
+                return None
         return None
     else:
         user = User.query.filter_by(email=email).first()
