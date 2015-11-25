@@ -330,6 +330,8 @@
 
             {% if audience == 'city' %}
             {% include '_response_actions.html' %}
+            {% elif audience == 'helper' %}
+            {% include '_response_actions_helper.html' %}
             {% endif %}
             {% endblock response_actions_lessjs %}
             {% if responses %}

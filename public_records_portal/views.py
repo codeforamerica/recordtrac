@@ -524,6 +524,8 @@ def show_request(request_id, template="manage_request_public.html"):
 
     if template == 'manage_request_public.html':
         audience = 'public'
+    elif template == 'manage_request_helper_less_js.html':
+        audience = 'helper'        
     else:
         audience = 'city'
 
