@@ -78,6 +78,8 @@ class ResponsePresenter:
             return self.response.text
         elif self.type == "link":
             if self.response.description and self.response.url and not(self.response.filename):
+                if 'http' not in self.response.url:
+                    self.response.url = 'http://' + self.response.url
                 return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s'>%s </a>" % (self.response.url, self.response.url, self.response.description)
             else:
                 download_url = "/attachments/" + str(self.response.filename)
