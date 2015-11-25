@@ -1,145 +1,164 @@
 /* custom css for case.html and child templates */
 
 /* "requester" gray */
-     /*span.requester {
-          font-style: italic;
-     }*/
+/*span.requester {
+     font-style: italic;
+}*/
 
 /* gives the responses a bit more white space between */
 .response {
-  padding-top: 2%;
+    padding-top: 2%;
 }
 
 /* Radio checkboxes for privacy settings when managing a request */
-input[type=radio]{
-    width:0.5rem;
-    display:inline;
-    min-height:2.0rem;
+input[type=radio] {
+    width: 0.5rem;
+    display: inline;
+    min-height: 2.0rem;
 }
 
-
 /* bottom margin for page */
-     #responses-container, #participant-container {
-          margin-bottom: 5em;
-     }
+#responses-container, #participant-container {
+    margin-bottom: 5em;
+}
 
 /* follow button area */
-     #whatisfollow {
-          display: inline;
-          margin-left: 0.25em;
-     }
-     div.input-append {
-          display: inline;
-     }
-     div.follow {
-          margin-bottom: 1em;
-     }
-     i.icon-question.icon-large {
-          color: #666;
-     }
-     div.row-fluid.follow {
-      margin-top: 1em;
-     }
+#whatisfollow {
+    display: inline;
+    margin-left: 0.25em;
+}
+
+div.input-append {
+    display: inline;
+}
+
+div.follow {
+    margin-bottom: 1em;
+}
+
+i.icon-question.icon-large {
+    color: #666;
+}
+
+div.row-fluid.follow {
+    margin-top: 1em;
+}
 
 /* PoC and Helper area */
-     h4.case_participantRow {
-          margin-bottom: 0.25em;
-     }
+h4.case_participantRow {
+    margin-bottom: 0.25em;
+}
 
-     div.participantRow-history {
-          margin-top: 0.5em;
-          margin-bottom: 1em;
-     }
-     /*div.participantRow {
-          padding: 5px;
-     }*/
+div.participantRow-history {
+    margin-top: 0.5em;
+    margin-bottom: 1em;
+}
+
+/*div.participantRow {
+     padding: 5px;
+}*/
 
 /* change hover cursor for history popover */
-     a.historyPopover:hover {
-          cursor: text;
-          text-decoration: none;
-     }
+a.historyPopover:hover {
+    cursor: text;
+    text-decoration: none;
+}
 
 /* deemphasize text and carets for request area truncation */
-     div.case-show-all {
-          color: #666;
-     }
+div.case-show-all {
+    color: #666;
+}
 
 /* truncation bar for request area */
-     .case-show-all {
-       background-color: #bdbdbd;
-       text-align: center;
-       margin: 0 -19px -19px -19px;
-       padding: 3px 0;
-       border-radius: 0 0 3px 3px;
-     }
-     .case-show-all:hover {
-       background-color: #cdcdcd;
-       cursor: hand;
-       cursor: pointer;
-     }
+.case-show-all {
+    background-color: #bdbdbd;
+    text-align: center;
+    margin: 0 -19px -19px -19px;
+    padding: 3px 0;
+    border-radius: 0 0 3px 3px;
+}
+
+.case-show-all:hover {
+    background-color: #cdcdcd;
+    cursor: hand;
+    cursor: pointer;
+}
 
 /* general case page layout tweaks*/
-     h3 {
-       line-height: 20px !important;
-     }
+h3 {
+    line-height: 20px !important;
+}
 
-     #status-text {
-       margin-top: 5px;
-       margin-bottom: 8px;
-     }
+#status-text {
+    margin-top: 5px;
+    margin-bottom: 8px;
+}
 
-     div.request-status-well {
-     	margin-bottom: 10px;
-      padding: 0;
-     }
+div.request-status-well {
+    margin-bottom: 10px;
+    padding: 0;
+}
 
-     #responses-container {
-       margin-top: 1rem;
-     }
+#responses-container {
+    margin-top: 1rem;
+}
 
-     div.well {
-       margin-bottom: 1em;
-     }
+div.well {
+    margin-bottom: 1em;
+}
 
-     form {
-       margin-bottom: 0;
-     }
+form {
+    margin-bottom: 0;
+}
 
-     #no-records {
-       margin-bottom: 5em;
-       margin-top: 0.5em;
-     }
+#no-records {
+    margin-bottom: 5em;
+    margin-top: 0.5em;
+}
 
 /* _public_note.html */
-     div.button-margin {
-        margin-bottom: 0.5em !important;
-     }
+div.button-margin {
+    margin-bottom: 0.5em !important;
+}
 
 /* online document link icon */
-     i[class|="icon-external-link"] {
-          vertical-align: super;
-          font-size:10px;
-     }
+i[class|="icon-external-link"] {
+    vertical-align: super;
+    font-size: 10px;
+}
 
 /* move the response text closer to the response icon */
-     div.span9 {margin-left: 0px !important;}
+div.span9 {
+    margin-left: 0px !important;
+}
 
 /* make history popover wider */
-     /*.historyPopover {
+/*.historyPopover {
 
-     }*/
+}*/
 
 /* contact info link */
-     span[class|="contactinfoPopover"] {color: #666666;}
-     span[class|="timestampPopover"] {color: #666666;}
+span[class|="contactinfoPopover"] {
+    color: #666666;
+}
+
+span[class|="timestampPopover"] {
+    color: #666666;
+}
 
 /* info hover link */
-     .contactinfoPopover span {color: #3a87ad;}
-     .timestampPopover span {color: #3a87ad;}
+.contactinfoPopover span {
+    color: #3a87ad;
+}
+
+.timestampPopover span {
+    color: #3a87ad;
+}
 
 /* public note section indent */
-     #public_note {margin-left: -5%;}
+#public_note {
+    margin-left: -5%;
+}
 
 #requesterInfoButton .shown .caret {
     border-top-color: transparent;
@@ -161,18 +180,16 @@ a {
     color: #333333;
 }
 
-.nav-pills>li>a {
+.nav-pills > li > a {
     background-color: #0a5796;
     color: #FFFFFF;
 }
 
-.nav-pills>li>.tab {
+.nav-pills > li > .tab {
     background-color: transparent;
 }
 
-
-
-.nav-pills>li>a:hover{
+.nav-pills > li > a:hover {
     background-color: #0A5999;
     over-flow: hidden;
     color: #FFFFFF;
@@ -188,14 +205,26 @@ a {
     background-color: forestgreen;
 }
 
-#request-container{
+#request-container {
     word-wrap: break-word;
 }
+
 input[name=reason_unassigned] {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    height: 62px; // Increase height as required
-    margin-bottom: 30px;
-    padding: 0 20px; // Now only left & right padding
+    height: 62px;
+/ / Increase height as required margin-bottom: 30 px;
+    padding: 0 20px;
+/ / Now only left & right padding
+}
+
+input[name=follow_email] {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 32px;
+/ / Increase height as required margin-bottom: 30 px;
+    padding: 0 20px;
+/ / Now only left & right padding
 }
