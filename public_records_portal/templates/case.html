@@ -345,9 +345,7 @@
                 </div>
                 <div class="span9">
                     <p class="expandable" truncateable="200">
-                        {{ response.display_text() | safe }} - <a href="/staff_card/{{ uid }}"><span
-                            class="contactinfoPopover"
-                            onmouseover="directoryPopover('{{ staff.email }}', '{{ staff.department }}', '{{ staff.phone }}', '#contactinfoPopoverResponse{{ loop.index }}')">{{ staff.alias or staff.email }}</span></a>
+                        {{ response.display_text() | safe }} - <a href="mailto:{{staff.email}}">{{ staff.alias or staff.email }}</a>
                     </p>
                 </div>
                 <div class="span2 text-right response-date">

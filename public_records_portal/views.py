@@ -545,13 +545,13 @@ def show_request(request_id, template="manage_request_public.html"):
                            department=department, assigned_user=assigned_user, helpers=helpers, audience=audience)
 
 
-@app.route("/api/staff")
-def staff_to_json():
-    users = models.User.query.filter(models.User.is_staff == True).all()
-    staff_data = []
-    for u in users:
-        staff_data.append({'alias': u.alias, 'email': u.email})
-    return jsonify(**{'objects': staff_data})
+# @app.route("/api/staff")
+# def staff_to_json():
+#     users = models.User.query.filter(models.User.is_staff == True).all()
+#     staff_data = []
+#     for u in users:
+#         staff_data.append({'alias': u.alias, 'email': u.email})
+#     return jsonify(**{'objects': staff_data})
 
 
 @app.route("/api/departments")
@@ -1066,13 +1066,13 @@ def tutorial_agency_initial():
 
 
 @app.route("/about")
-def staff_card():
+def about():
     return render_template('about.html')
 
 
-@app.route("/staff_card/<int:user_id>")
-def about(user_id):
-    return render_template('staff_card.html', uid=user_id)
+# @app.route("/staff_card/<int:user_id>")
+# def about(user_id):
+#     return render_template('staff_card.html', uid=user_id)
 
 
 @app.route("/logout")
