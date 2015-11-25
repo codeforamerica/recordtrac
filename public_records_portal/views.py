@@ -373,8 +373,7 @@ def new_request(passed_recaptcha=False, data=None):
     elif request.method == 'GET':
         if 'LIAISONS_URL' in app.config:
             routing_available = True
-        if current_user.is_authenticated and current_user.role in ['Portal Administrator', 'Agency Administrator',
-                                                                   'Agency FOIL Personnel']:
+        if current_user.is_authenticated:
             form = OfflineRequestForm()
             return render_template('offline_request.html', form=form, routing_available=routing_available)
         else:
