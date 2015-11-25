@@ -605,10 +605,10 @@
                             <div class="span8">
                                 <input type="text" class="span12"
                                        name="reason_unassigned"
-                                       value="Task complete" required="">
+                                       value="Task complete" required="" style="height:100%">
                             </div>
                             <div class="span4 align-left">
-                                <button class="btn btn-default" type="submit">
+                                <button class="btn btn-default" type="submit" >
                                     Remove Helper: {{ participant }}&nbsp;&nbsp;<i
                                         class="icon-envelope"></i></button>
                             </div>
@@ -634,7 +634,7 @@
                            autocomplete="off" required/>
                     autocomplete="off" required /-->
                     <select class="span12" id="notifyEmail"
-                                name="owner_email">
+                                name="owner_email" style="height:100%;">
                                     {% for user in users %}
                                         {%  if user.is_staff %}
                                             <option value="{{ user.email }}" department_id="{{ user.department_id }}">{{ user.alias}}</option>
