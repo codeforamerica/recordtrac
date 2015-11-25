@@ -71,7 +71,7 @@ liaisons = open("liaisons_pt.csv", "w")
 liaisons.write('department name,PRR liaison,PRR backup\n')
 staff.write('name,email,department name,phone number,role\n')
 
-for i in range(len(partner_agencies) - 1):
+for i in range(len(partner_agencies)):
     liaisons.write("%s,bladerunnerperftest%02d@dsny.nyc.gov\n" % (partner_agencies[i], k))
     for j in range(4):
         staff.write("%s,bladerunnerperftest%02d@dsny.nyc.gov,%s,311,Portal Administrator\n" %
