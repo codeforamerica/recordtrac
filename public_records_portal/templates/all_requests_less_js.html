@@ -174,7 +174,7 @@
                         {% endif %}
                     </div>
                     <div class="span9">
-                        <table width="100%" id="requests">
+                        <table width="100%" id="requests" >
                             <thead id="headings">
                             <tr>
                                 <th class="status"></th>
@@ -220,19 +220,19 @@
                             </td>
                             <td>{{ request.id }}</td>
                             <td class="hide-mobile">{{ request.date_received }}</td>
-                            <td>
+                            <td style="word-break: break-all">
                                 {% if current_user.is_authenticated %}
                                     <a href="/city/request/{{ request.id }}">
                                 {% else %}
                                     <a href="/request/{{ request.id }}">
                                 {% endif %}
                                 {% set text = request.summary %}
+                                {{ text }}
                                 {% if request.solid_status == "due soon" %}
                                     <span style="background-color: #FB991B" class="label label-warning">due soon</span>
                                 {% elif request.solid_status == "overdue" %}
                                     <span style="background-color: #CA1A1A" class="label label-important">overdue</span>
                                 {% endif %}
-                                {{ text }}
                                 </a>
                             </td>
                             <td>{{ request.department }}</td>
