@@ -328,7 +328,7 @@ class Request(db.Model):
         self.date_created = datetime.now().isoformat()
         self.creator_id = creator_id
         self.offline_submission_type = offline_submission_type
-        if date_received and type(date_received) is datetime:
+        if date_received and str(type(date_received)) == "<type 'datetime.date'>":
             self.date_received = date_received
         self.department_id = agency
         self.descriptionPrivate = descriptionPrivate
@@ -342,11 +342,10 @@ class Request(db.Model):
         if not self.date_received:
             self.date_received = self.date_created
         if self.extended == True:
-            self.due_date = self.date_received \
-                            + timedelta(
-                days=int(app.config['DAYS_AFTER_EXTENSION']))
+            self.due_date = cal.addbusdays(self.date_received, int(app.config['DAYS_AFTER_EXTENSION']))                
         else:
             self.due_date = cal.addbusdays(self.date_received, int(app.config['DAYS_TO_FULFILL']))
+
 
     def extension(self, days_after=int(app.config['DAYS_AFTER_EXTENSION']),
                   custom_due_date=None):

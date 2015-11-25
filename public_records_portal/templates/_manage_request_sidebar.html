@@ -38,8 +38,8 @@
 <div class="row-fluid">&nbsp;</div>
 {% block request_dates %}
 <div class="muted participantRow-participants text-center">
-    Received: {{ (req.date_received or req.date_created) | date }}
+    Received: {{ req.date_received.strftime('%Y-%m-%d') }}
 </div>
 {% endblock request_dates %}
-<div class="text-center">Due: <span class="label">{{ req.due_date | date }}</span></div>
+<div class="text-center">Due: <span class="label">{{ req.due_date.strftime('%Y-%m-%d') }}</span></div>
 <div class="span12"><br /></div>

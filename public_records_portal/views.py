@@ -904,10 +904,10 @@ def prepare_request_fields(results):
     return map(lambda r: {
         "id": r.id, \
         "summary": helpers.clean_text(r.summary), \
-        "date_received": helpers.date(r.date_received or r.date_created), \
+        "date_received": r.date_received.strftime('%b %d, %Y') or r.date_created.strftime('%b %d, %Y'), \
         "department": r.department_name(), \
         "requester": r.requester_name(), \
-        "due_date": format_date(r.due_date), \
+        "due_date": r.due_date.strftime('%b %d, %Y'), \
         "status": r.status, \
         # The following two attributes are defined as model methods,
         # and not regular SQLAlchemy attributes.
