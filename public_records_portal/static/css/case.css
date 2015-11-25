@@ -187,3 +187,12 @@ a {
 .in_progress {
     background-color: forestgreen;
 }
+
+input[name=reason_unassigned] {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 62px; // Increase height as required
+    margin-bottom: 30px;
+    padding: 0 20px; // Now only left & right padding
+}
