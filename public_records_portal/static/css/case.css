@@ -188,6 +188,9 @@ a {
     background-color: forestgreen;
 }
 
+#request-container{
+    word-wrap: break-word;
+}
 input[name=reason_unassigned] {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
