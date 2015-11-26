@@ -392,4 +392,22 @@ $(function () {
             document.getElementById("summary_count").style.color = "black";
         }
     });
+
+    maxLength(document.getElementById("request_text"));
+
+    // displays characters remaining, highlights extra characters
+    var text_max2 = 5000;
+    $('#text_count').text(text_max2 + ' characters remaining');
+
+    $('#request_text').keyup(function () {
+        var text_length = $('#request_text').val().length;
+        var text_remaining = text_max2 - text_length;
+        $('#text_count').text(text_remaining + ' characters remaining');
+        console.log(text_remaining);
+        if (text_remaining < 0) {
+            document.getElementById("text_count").style.color = "black";
+        } else {
+            document.getElementById("text_count").style.color = "black";
+        }
+    });
 });
