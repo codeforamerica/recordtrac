@@ -1541,3 +1541,11 @@ def internal_server_error(e):
 @app.errorhandler(501)
 def unexplained_error(e):
     return render_template("501.html"), 501
+
+@app.errorhandler(502)
+def bad_gateway(e):
+    render_template("500.html"),502
+
+@app.errorhandler(503)
+def service_unavailable(e):
+    render_template("500.html"),503
