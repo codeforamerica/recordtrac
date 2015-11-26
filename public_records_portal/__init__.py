@@ -87,7 +87,7 @@ envvars = [
     'SERVICE',
     'PORT',
     'SHOULD_SCAN_FILES',
-    
+
     # LDAP
     'USE_LDAP', # Determines if LDAP or Flask-Login is used
     'LDAP_SERVER',  # LDAP Server URL
