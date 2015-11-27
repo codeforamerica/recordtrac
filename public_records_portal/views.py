@@ -32,6 +32,7 @@ from flask_login import LoginManager
 from models import AnonUser
 from datetime import datetime, timedelta, date
 from business_calendar import Calendar
+import operator
 
 cal = Calendar()
 
@@ -1480,7 +1481,10 @@ def report():
 
     overdue_request = models.Request.query.filter(models.Request.overdue == True).all()
     app.logger.info("\n\nOverdue Requests %s" % (len(overdue_request)))
-    return render_template('report.html', users=users, agency_data=agency_data)
+    # users_sort = sorted(users.val)
+    agency_data_sorted=sorted(agency_data, key=operator.itemgetter('name'))
+    user_sort=sorted(users, key=operator.attrgetter('alias'))
+    return render_template('report.html', users=user_sort, agency_data=agency_data_sorted)
 
 @app.route("/submit", methods=["POST"])
 def submit():
