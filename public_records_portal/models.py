@@ -664,6 +664,7 @@ class Record(db.Model):
         db.String())  # Where it can be downloaded on the internet.
     access = db.Column(
         db.String())  # How to access it. Probably only defined on offline docs for now.
+    privacy=db.Column(db.Boolean, default=True)
 
     def __init__(
             self,
@@ -674,6 +675,7 @@ class Record(db.Model):
             doc_id=None,
             description=None,
             access=None,
+            privacy=True
     ):
         self.doc_id = doc_id
         self.request_id = request_id
@@ -683,6 +685,7 @@ class Record(db.Model):
         self.url = url
         self.filename = filename
         self.access = access
+        self.privacy = privacy
 
     def __repr__(self):
         return '<Record %r>' % self.description

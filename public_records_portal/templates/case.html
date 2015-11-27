@@ -341,6 +341,7 @@
             {% set uid = response.uid() %}
             {% set staff = ("User" | get_obj(uid)) %}
             {% set icon = response.get_icon() %}
+            {% if audience != 'public' or (audience == 'helper') or not(response.response.privacy)%}
             <div class="row-fluid response-wrapper">
                 <div class="span1 text-left">
                     <i class="{{ icon }}"></i>
@@ -364,6 +365,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
             {% endfor %}
             {% else %}
             {% if current_user.is_authenticated and audience == 'city' %}
