@@ -53,6 +53,7 @@ $(function () {
     var transportation = ["Taxi and Limousine Commission",
         "Department of Transportation"]
 
+    $("#category_info").tooltip();
 
     $("#agency").ready(function(){
         vals = [];
