@@ -4,7 +4,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>NYC Open Gov</title>
     <!-- HTML5 shim for IE backwards compatibility -->
     <!--[if lt IE 9]>
       <script src="/static/js/plugins/html5.js"></script>
@@ -23,7 +23,7 @@
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstro.css') }}">
     <link rel=stylesheet type=text/css href="/static/css/plugins/BootSwatchr6.css">
     <link rel=stylesheet type=text/css href="/static/css/plugins/DT_bootstrap.css">
-    <link rel=stylesheet type=text/css href="/static/css/plugins/font-awesome.min.css">    
+    <link rel=stylesheet type=text/css href="/static/css/plugins/font-awesome.min.css">
 
     <!-- modernizr -->
     <script type="text/javascript"
@@ -53,23 +53,32 @@
 </head>
 
 <body>
+
+    
+
+
+    
 <div class="agency-header">
     <div class="upper-header-black">
         <div class="container">
           <span class="upper-header-left">
-            <a href="http://www1.nyc.gov"><img src="http://www1.nyc.gov/assets/home/images/global/nyc_white.png"
-                                               alt="NYC" class="small-nyc-logo"/></a>
-            <img src="http://www1.nyc.gov/assets/home/images/global/upper-header-divider.gif" alt=""/>
+            <a href="http://nyc-stg-web.csc.nycnet"><img
+                    src="http://nyc-stg-web.csc.nycnet/assets/home/images/global/nyc_white.png"
+                    alt="NYC" class="small-nyc-logo"/></a>
+            <img src="http://nyc-stg-web.csc.nycnet/assets/home/images/global/upper-header-divider.gif"
+                 alt=""/>
             <span class="upper-header-black-title">OpenRecords</span>
           </span>
             <span class="upper-header-padding"></span>
           <span class="upper-header-right">
             <span class="upper-header-three-one-one">
-              <a href="http://www1.nyc.gov/311/index.page">311</a>
+              <a href="http://nyc-stg-web.csc.nycnet/311/index.page">311</a>
             </span>
-            <img src="http://www1.nyc.gov/assets/home/images/global/upper-header-divider.gif" alt=""/>
+            <img src="http://nyc-stg-web.csc.nycnet/assets/home/images/global/upper-header-divider.gif"
+                 alt=""/>
             <span class="upper-header-search">
-              <a href="http://www1.nyc.gov/home/search/index.page">Search all NYC.gov websites</a>
+              <a href="http://nyc-stg-web.csc.nycnet/home/search/index.page">Search all
+                  NYC.gov websites</a>
             </span>
           </span>
         </div>
@@ -79,74 +88,91 @@
     <div class="navbar">
         <div class="navbar-inner">
             <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+            <a class="btn btn-navbar" data-toggle="collapse"
+               data-target=".navbar-responsive-collapse">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
             <a class="brand" href="/"><img id="logo_nav"
                                            src="/static/images/logo.png"
-                                           alt="Your agency name logo"/></a>
+                                           alt="City Name logo"/></a>
 
-            <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
+            <div class="nav-collapse navbar-responsive-collapse collapse"
+                 style="height: 0px;">
                 
-                    <div class="login btn">
-                      <p><a href="/login" >Login</a></p>
-                    </div>
-                    <div class="google_translate">
-                        <div id="google_translate_element"></div>
-                        <script type="text/javascript">
+                <div class="google_translate">
+                    <div id="google_translate_element"></div>
+                    <script type="text/javascript">
                         function googleTranslateElementInit() {
-                        new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+                            new google.translate.TranslateElement({
+                                pageLanguage: 'en',
+                                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                            }, 'google_translate_element');
                         }
-                        </script>
-                        <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
-                        </script>
-                    </div>
-                    <ul class="nav tabs">
-                        <li><a href="/new">Request a Record</a></li>
-                        <li><a href="/view_requests">All Requests</a></li>
-                        <li><a href="/track">Track an Existing Request</a></li>
-                        <li><a href="/faq">FAQ</a></li>
-                        <li><a href="/about">About</a></li>
-                    </ul>
-                    <ul class="nav pull-right">
-                    </ul>
-                
-            </div>
+                    </script>
+                    <script type="text/javascript"
+                            src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+                    </script>
+                </div>
+                <ul class="nav nav-pills" >
+                    
+                      <li>
+                      <a class="openrecords_nav" href="/new">Request a Record</a></li>
+                    
+                      <li>
+                      <a class="openrecords_nav" href="/view_requests">View Requests</a></li>
+                    
+                      <li>
+                      <a class="openrecords_nav" href="/track">Track an Existing Record</a></li>
+                    
+                      <li>
+                      <a class="openrecords_nav" href="/report">Report</a></li>
+                    
+                      <li>
+                      <a class="openrecords_nav" href="/faq">FAQ</a></li>
+                    
+                      <li class="active openrecords_nav">
+                      <a class="openrecords_nav" href="/about">About</a></li>
+                    
+                </ul>
+                <ul class="nav pull-right">
+                </ul>
+            
         </div>
     </div>
-    <div id="container-fluid">
-        
+</div>
+<div id="container-fluid">
+    
     <link rel=stylesheet type=text/css href="/static/css/about.css">
     <div class="row-fluid">
-        <div class="span8" id="about">
+        <div class="span8">
 
-            <div class="row-fluid">
+            <div class="row-fluid" id="about">
                 <div class="bottombreathe">
-                    <h1 id="about">About NYC Open Gov</h1>
+                    <h1 id="about">About OpenRECORDS</h1>
 
-                    <p class="lead">NYC Open Gov is a quick, simple way for you to submit a public records request to
-                        the Your agency name.</p>
+                    <p class="lead">OpenRECORDS is a quick, simple way for you to submit a public records request to
+                        a New York City Agency.</p>
 
-                    <p><strong>Most information on this site is public.</strong> Your contact information, and personal
-                        information that may be contained in government documetns will not be made available to the
+                    <p><strong>Most information on this site is public.</strong> Your contact information, and most personal
+                        information that may be contained in government documents will not be made available to the
                         public.</p>
                 </div>
                 <div class="bottombreathe">
-                    <h4 id="what">What is NYC Open Gov?</h4>
+                    <h4 id="what">What is OpenRECORDS?</h4>
 
-                    <p>NYC Open Gov is a quick, simple way for individuals to submit Freedom of Information Law (FOIL)
-                        requests to Your agency name. The web application also allows government employees
-                        manage, respond to, and fulfill incoming requests. By displaying all records requests and
+                    <p>OpenRECORDS is a quick, simple way for individuals to submit Freedom of Information Law (FOIL)
+                        requests to a NYC agency. The web application also allows government employees
+                        to manage, respond to, and fulfill incoming requests. By displaying all records requests and
                         responsive documents, members of the public may find what they need without having to create a
                         new public record request.</p>
                 </div>
                 <div class="bottombreathe">
-                    <h4 id="documents">Why aren't all documents uploaded on NYC Open Gov?</h4>
+                    <h4 id="documents">Why aren't all documents uploaded on OpenRECORDS?</h4>
 
-                    <p>The Your agency name will not publicly release records or information that violates
-                        your right to privacy. The Your agency name will not make available records that have
+                    <p>City agencies will not publicly release records or information that violates
+                        your right to privacy. City agencies will not make records available that have
                         been exempted from disclosure by Federal, State, or Local statute, including records that would
                         impair contract awards or collective bargainaing negotiations, are trade secrets, are compiled
                         for law enforcement services and if disclosed would interfere with investigations or judicial
@@ -154,7 +180,7 @@
                         investigative techniques, or endanger a person's life.</p>
                 </div>
                 <div class="bottombreathe">
-                    <h4 id="why">History of NYC Open Gov (Previously RecordTrac)</h4>
+                    <h4 id="why">History of OpenRECORDS (Previously RecordTrac)</h4>
 
                     <div class="row-fluid">
                         <div id="about_image" class="span10">
@@ -165,12 +191,7 @@
                         </div>
                     </div>
 
-                    <p>The 2013 Code for America fellows created RecordTrac with the City of Oakland. As public records
-                        requests became larger and more complex, city employees found coordinating a response to be
-                        difficult. The old software system no longer met their needs and many requests remained
-                        untracked.</p>
-
-                    <p>Members of the public complained they didn’t understand what happened after they submitted their
+                    <p>The 2013 Code for America fellows created RecordTrac with the City of Oakland in response to public complaints that they didn’t understand what happened after they submitted their
                         requests and it took too long to get the records they needed.</p>
 
                     <p>By making everything completely transparent, you can know your request is fulfilled.</p>
@@ -187,6 +208,7 @@
                         <li>
                             <a href="/tutorial/01">Learn
                                 to create a request</a></li>
+                        
                     </ul>
                     <p>For more information, please see the <a
                             href="https://github.com/codeforamerica/recordtrac#recordtrac">full
@@ -197,8 +219,8 @@
         </div>
     </div>
 
-    </div>
-    <div class="push"></div>
+</div>
+<div class="push"></div>
 </div>
 <!-- // Wrapper -->
 <div class="iw_component" id="1422284559235">
@@ -206,30 +228,42 @@
         <footer>
             <div class="container">
                 <div class="span9 footer-links">
-                    <a href="http://www1.nyc.gov/nyc-resources/agencies.page">Directory of City Agencies</a>
-                    <a href="http://www1.nyc.gov/home/contact-us.page">Contact NYC Government</a>
+                    <a href="http://nyc-stg-web.csc.nycnet/nyc-resources/agencies.page">Directory
+                        of City Agencies</a>
+                    <a href="http://nyc-stg-web.csc.nycnet/home/contact-us.page">Contact
+                        NYC Government</a>
                     <a href="https://a127-ess.nyc.gov">City Employees</a>
                     <a href="http://www.nyc.gov/notifynyc">Notify NYC</a>
                     <a href="http://a856-citystore.nyc.gov/">CityStore</a>
-                    <a href="http://www1.nyc.gov/connect/social-media.page">Stay Connected</a>
-                    <a href="http://www1.nyc.gov/connect/applications.page">NYC Mobile Apps</a>
-                    <a href="http://www1.nyc.gov/nyc-resources/nyc-maps.page">Maps</a>
-                    <a href="http://www1.nyc.gov/nyc-resources/resident-toolkit.page">Resident Toolkit</a>
+                    <a href="http://nyc-stg-web.csc.nycnet/connect/social-media.page">Stay
+                        Connected</a>
+                    <a href="http://nyc-stg-web.csc.nycnet/connect/applications.page">NYC
+                        Mobile Apps</a>
+                    <a href="http://nyc-stg-web.csc.nycnet/nyc-resources/nyc-maps.page">Maps</a>
+                    <a href="http://nyc-stg-web.csc.nycnet/nyc-resources/resident-toolkit.page">Resident
+                        Toolkit</a>
                 </div>
                 <div class="span3">
                     <span class="logo-nyc">NYC</span>
 
-                    <form class="form-search" method="get" action="http://www1.nyc.gov/home/search/index.page">
-                        <input placeholder="Search" class="input-search placeholder" name="search-terms" type="text"/>
+                    <form class="form-search" method="get"
+                          action="http://nyc-stg-web.csc.nycnet/home/search/index.page">
+                        <input placeholder="Search"
+                               class="input-search placeholder"
+                               name="search-terms" type="text"/>
                         <button class="ico-search">Search</button>
                     </form>
                     <div class="copyright">
                         <p>City of New York. 2015 All Rights Reserved,</p>
 
-                        <p>NYC is a trademark and service mark of the City of New York</p>
+                        <p>NYC is a trademark and service mark of the City of
+                            New York</p>
 
-                        <p><a href="http://www1.nyc.gov/home/privacy-policy.page" title="Privacy">Privacy Policy</a>.
-                            <a href="http://www1.nyc.gov/home/terms-of-use.page" title="TOU">Terms of Use</a>.</p>
+                        <p>
+                            <a href="http://nyc-stg-web.csc.nycnet/home/privacy-policy.page"
+                               title="Privacy">Privacy Policy</a>.
+                            <a href="http://nyc-stg-web.csc.nycnet/home/terms-of-use.page"
+                               title="TOU">Terms of Use</a>.</p>
                     </div>
                 </div>
             </div>
@@ -237,9 +271,12 @@
     </div>
 </div>
 
-<script type="text/javascript" src="/static/js/plugins/jquery.placeholder.js"></script>
-<script type="text/javascript" src="/static/js/plugins/jquery.validate.js"></script>
-<script type="text/javascript" src="/static/js/plugins/bootstrap.js"></script>
+<script type="text/javascript"
+        src="/static/js/plugins/jquery.placeholder.js"></script>
+<script type="text/javascript"
+        src="/static/js/plugins/jquery.validate.js"></script>
+<script type="text/javascript"
+        src="/static/js/plugins/bootstrap.js"></script>
 
 <!-- used for the tutorial -->
 <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstro.js') }}"></script>
