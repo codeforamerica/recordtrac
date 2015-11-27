@@ -351,7 +351,7 @@ class Request(db.Model):
                   custom_due_date=None):
         self.extended = True
         if days_after != None and days_after != '':
-            self.due_date = self.due_date + timedelta(days=days_after)
+            self.due_date = cal.addbusdays(self.due_date, days_after)
         elif custom_due_date != None and custom_due_date != '':
             self.due_date = custom_due_date
 
