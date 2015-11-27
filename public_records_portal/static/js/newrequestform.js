@@ -55,10 +55,10 @@ $(function () {
 
     $("#category_info").tooltip();
 
-    $("#agency").ready(function(){
+    $("#agency").ready(function () {
         vals = [];
-        vals=business.concat(civicServices,cultureAndRecreation,education,environment,governmentAdministration,
-                health,housingAndDevelopment,publicSafety,socialServices,transportation);
+        vals = business.concat(civicServices, cultureAndRecreation, education, environment, governmentAdministration,
+            health, housingAndDevelopment, publicSafety, socialServices, transportation);
         vals.sort();
 
         for (var i = 0; i < vals.length; i++) {
@@ -107,8 +107,8 @@ $(function () {
                 vals = transportation;
                 break;
             default:
-                vals=business.concat(civicServices,cultureAndRecreation,education,environment,governmentAdministration,
-                    health,housingAndDevelopment,publicSafety,socialServices,transportation);
+                vals = business.concat(civicServices, cultureAndRecreation, education, environment, governmentAdministration,
+                    health, housingAndDevelopment, publicSafety, socialServices, transportation);
                 break;
         }
 
@@ -260,9 +260,9 @@ $(function () {
                 if (errors[i].name == 'request_date') {
                     $('#missing_date').show();
                 }
-                if (!validContact && !validAddress) {
-                    $('#missing_contact_information').show();
-                }
+            }
+            if (validContact || validAddress) {
+                $('#missing_contact_information').show();
             }
             var stepId = '#step2';
             var toolTipId = '#detailsTitle';
