@@ -416,9 +416,9 @@ def unauthorized():
     return render_template("alpha.html")
 
 
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('404.html'), 404
+# @app.errorhandler(404)
+# def page_not_found(e):
+#     return render_template('404.html')
 
 
 def explain_all_actions():
@@ -504,6 +504,8 @@ def unfollow(request_id, email):
 @app.route("/request/<string:request_id>")
 def show_request(request_id, template="manage_request_public.html"):
     req = get_obj("Request", request_id)
+    if not req:
+        return page_not_found(494)
     departments_all = models.Department.query.all()
     agency_data = []
     for d in departments_all:
