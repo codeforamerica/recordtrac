@@ -438,8 +438,23 @@
                             </div>
                             {% endif %}
                         </div>
-                        <!-- submission -->
+                        <!-- privacy -->
                         <div class="control-group">
+                            <div class="controls">
+                                    <label class="radio inline" for="privacy setting-0">
+                                        <input type="radio" name="record_privacy" value="False">
+                                        {# Value set to False means public#}
+                                        Public
+                                    </label>
+                                    <label class="radio inline" for="privacy setting-1">
+                                        <input type="radio" name="record_privacy" value="True">
+                                        {# Value set to True means private#}
+                                        Private
+                                    </label>
+                            </div>                           
+                        </div>                        
+                        <!-- submission -->
+                        <div class="control-group">                         
                             <div class="controls">
                                 <button type="submit"
                                         class="btn btn-default btn-block"

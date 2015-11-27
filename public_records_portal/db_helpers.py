@@ -228,11 +228,11 @@ def create_note(request_id, text, user_id, privacy):
 
 # @export "create_record"
 def create_record(request_id, user_id, description, doc_id=None, filename=None,
-                  access=None, url=None):
+                  access=None, url=None, privacy=True):
     try:
         record = Record(doc_id=doc_id, request_id=request_id, user_id=user_id,
                         description=description, filename=filename, url=url,
-                        access=access)
+                        access=access, privacy=privacy)
         put_obj(record)
         return record.id
     except Exception, e:
