@@ -164,15 +164,15 @@ $(function () {
     });
 
     var addressValidator = new FormValidator('submitRequest', [{
-        name: 'request_address_street_one',
+        name: 'Address 1',
         display: 'Address 1',
         rules: 'required'
     }, {
-        name: 'request_address_city',
+        name: 'city',
         display: 'City',
         rules: 'required'
     }, {
-        name: 'request_address_zip',
+        name: 'zip',
         display: 'Zip Code',
         rules: 'required'
     }], function (errors, event) {
@@ -182,15 +182,15 @@ $(function () {
     });
 
     var contactValidator = new FormValidator('submitRequest', [{
-        name: 'request_email',
+        name: 'email',
         display: 'Email',
         rules: 'required'
     }, {
-        name: 'request_phone',
+        name: 'phone',
         display: 'Phone',
         rules: 'required'
     }, {
-        name: 'request_fax',
+        name: 'fax',
         display: 'Fax',
         rules: 'required'
     }], function (errors, event) {
