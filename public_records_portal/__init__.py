@@ -60,7 +60,8 @@ envvars = [
     'NYC_GOV_BASE', # Base URL for NYC.gov links/assets
 
     # Flask Settings
-    'APPLICATION_URL',  # Application URL
+    'PUBLIC_APPLICATION_URL',  # Application URL for Public Users
+    'AGENCY_APPLICATION_URL',  # Application URL for Agency Users
     'ENVIRONMENT',  # Local Environemnt (LOCAL, STAGING, TESTING, PRODUCTION)
     'SECRET_KEY',  # Secret key for cookie signing (sessions)
     'DATABASE_URL',  # URL to access Postgres database

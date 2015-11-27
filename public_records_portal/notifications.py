@@ -39,7 +39,8 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
     app.logger.info("\n\n Generating e-mails for request with ID: %s, notification type: %s, and user ID: %s" % (
     request_id, notification_type, user_id))
 
-    app_url = app.config['APPLICATION_URL']
+    agency_app_url = app.config['AGENCY_APPLICATION_URL']
+    public_app_url = app.confg['PUBLIC_APPLICATION_URL']
     template = "generic_email.html"
 
     #making a new request
@@ -135,14 +136,14 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
                     app.logger.info("\n\nSubscriber %s unsubscribed, no notification sent." % subscriber.id)
                     continue
         # Set up the e-mail
-        page = "%srequest/%s" % (app_url, request_id)  # The request URL
+        page = "%srequest/%s" % (public_app_url, request_id)  # The request URL
         if "Staff" in recipient_type:
-            page = "%scity/request/%s" % (app_url, request_id)
+            page = "%scity/request/%s" % (agency_app_url, request_id)
             include_unsubscribe_link = False  # Gets excluded for city staff
         else:
-            unfollow_link = "%sunfollow/%s/" % (app_url, request_id)
+            unfollow_link = "%sunfollow/%s/" % (public_app_url, request_id)
             if notification_type == "Request closed":
-                page = "%sfeedback/request/%s" % (app_url, request_id)
+                page = "%sfeedback/request/%s" % (public_app_url, request_id)
 
         if recipient_type in ["Staff owner", "Requester", "Subscriber", "Staff participant"]:
             if user_id:
