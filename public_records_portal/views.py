@@ -475,14 +475,17 @@ def show_response(request_id):
 @app.route("/track", methods=["GET", "POST"])
 def track(request_id=None):
     if request.method == 'POST':
-        if not request_id:
+        if not re.match("FOIL-\d{4}-\d{3}-\d{5}", request.form["request_id"]):
             request_id = request.form['request_id']
+            if len(str(request_id)) > 20:
+                error="You have entered more than the allowed character length. A FOIL request should be in the format of FOIL-XXXX-XXX-XXXXX.\n Please try again!"
+                return render_template("track.html", error=error)
         if not current_user.is_anonymous:
             audience = 'city'
         else:
             audience = 'public'
 
-        return redirect(url_for('fetch_requests', request_id_search=request_id))
+        return redirect(url_for('fetch_requests', request_id_search=request.form['request_id']))
     else:
         return render_template("track.html")
 
@@ -822,7 +825,11 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         max_date_received = get_filter_value(filters_map, 'max_date_received')
         requester_name = get_filter_value(filters_map, 'requester_name')
         page_number = int(get_filter_value(filters_map, 'page_number') or '1')
-        request_id_search = get_filter_value(filters_map, 'request_id_search')
+        if not re.match("FOIL-\d{4}-\d{3}-\d{5}", get_filter_value(filters_map, 'request_id_search')):
+            request_id_search = None
+        else:
+            request_id_search = get_filter_value(filters_map, 'request_id_search')
+
 
     # Set initial checkboxes for mine_as_poc and mine_as_helper when redirected from login page
     if request.referrer and 'login' in request.referrer:
