@@ -196,3 +196,5 @@ input[name=reason_unassigned] {
     margin-bottom: 30px;
     padding: 0 20px; // Now only left & right padding
 }
+
+#notifyForm { overflow-x: hidden; overflow-y: hidden;}
