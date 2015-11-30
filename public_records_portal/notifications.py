@@ -40,7 +40,7 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None,use
     request_id, notification_type, user_id))
 
     agency_app_url = app.config['AGENCY_APPLICATION_URL']
-    public_app_url = app.confg['PUBLIC_APPLICATION_URL']
+    public_app_url = app.config['PUBLIC_APPLICATION_URL']
     template = "generic_email.html"
 
     #making a new request
