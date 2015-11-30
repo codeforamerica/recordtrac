@@ -239,9 +239,16 @@
 <div class="row-fluid">
     <div class="span12">
         <ul class="nav nav-pills" role="tablist">
+            {% if form %}
+            <li class="active"><a href="#add_record" role="tab" data-toggle="tab">
+                <small>Add Record</small>
+            </a></li>
+            {% else %}
             <li><a href="#add_record" role="tab" data-toggle="tab">
                 <small>Add Record</small>
             </a></li>
+            {% endif %}
+
             <li><a href="#add_note" role="tab" data-toggle="tab">
                 <small>Add Note</small>
             </a></li>
@@ -265,7 +272,11 @@
 </div>
 <div class="row-fluid">
     <div class="tab-content">
+    {% if form %}
+        <div class="active tab-pane" id="add_record">
+    {% else %}
         <div class="tab-pane" id="add_record">
+    {% endif %}
             <form name="input_doc" style="margin-top: 2em;" id="submitRecord"
                   method="post"
                   action="/add_a_record_and_close" autocomplete="on"
@@ -286,15 +297,25 @@
                             <label class="control-label" for="recordSummary">Name
                                 of record</label>
 
-                            <div class="controls">
-                                        <textarea class="input-xxlarge"
-                                                  name="record_description"
-                                                  type="text"
-                                                  id="recordSummary"
-                                                  placeholder="Add a short explanation of the record"
-                                                  required/>{{ form['record_description'] }}
-                                        </textarea>
-                            </div>
+                            {% if form %}
+                                    <div class="controls">
+                                                <textarea class="input-xxlarge"
+                                                          name="record_description"
+                                                          type="text"
+                                                          id="recordSummary"
+                                                          placeholder="Add a short explanation of the record"
+                                                          required/>{{ form['record_description'] }}</textarea>
+                                    </div>
+                            {% else %}
+                                <div class="controls">
+                                    <textarea class="input-xxlarge"
+                                              name="record_description"
+                                              type="text"
+                                              id="recordSummary"
+                                              placeholder="Add a short explanation of the record"
+                                              required/></textarea>
+                                </div>
+                            {% endif %}
                         </div>
                         <!-- upload a record -->
                         <div class="control-group">
@@ -328,6 +349,8 @@
                         </div>
                         <!-- link to a record -->
                         <div class="control-group">
+
+                            {% if form %}
                             <label class="control-label">Or provide a link to a
                                 record <span rel="tooltip"
                                              data-toggle="tooltip"
@@ -341,14 +364,37 @@
 
                             <div class="row-fluid">
                                 <div class="controls">
+                                <input type="text" name="link_url" value="{{ form['link_url'] }}"
+                                           id="inputUrl" class="input-xxlarge"/>
+
+                                    <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
+                                </div>
+                            </div>
+                            {% else %}
+                            <label class="control-label">Or provide a link to a
+                            record <span rel="tooltip"
+                                         data-toggle="tooltip"
+                                         data-placement="right"
+                                         title=""
+                                         data-original-title="{{'Add a link' |
+                                    explain_action}}">
+                                    <small><i class="icon-info-sign"></i>
+                                    </small>
+                            </span></label>
+
+                            <div class="row-fluid">
+                                <div class="controls">
                                     <input type="text" name="link_url"
                                            id="inputUrl" class="input-xxlarge"/>
                                     <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
                                 </div>
                             </div>
+                            {% endif %}
+
                         </div>
                         <!-- offline record -->
                         <div class="control-group button-margin">
+                            {% if form %}
                             <label class="control-label">Or indicate how the
                                 record can be accessed offline <span
                                         id="offlinedocTooltip" rel="tooltip"
@@ -365,9 +411,30 @@
                                             <textarea class="input-xxlarge"
                                                       id="offlineDoc_textarea"
                                                       name="record_access"
-                                                      placeholder="How can the requester get this record?  Ex. 'Sent via mail on a CD', 'Print out awaiting requester at City Clerk desk'"></textarea>
+                                                      placeholder="How can the requester get this record? Ex. 'Sent via mail on a CD', 'Print out awaiting requester at City Clerk desk'">{{ form['record_access'] }}</textarea>
                                 </div>
                             </div>
+                            {% else %}
+                            <label class="control-label">Or indicate how the
+                                record can be accessed offline <span
+                                        id="offlinedocTooltip" rel="tooltip"
+                                        data-toggle="tooltip"
+                                        data-placement="right"
+                                        title=""
+                                        data-original-title="{{'Describe hard copies' | explain_action}}">
+                                        <small><i class="icon-info-sign"></i>
+                                        </small>
+                                    </span></label>
+
+                            <div class="row-fluid">
+                                <div class="controls">
+                                            <textarea class="input-xxlarge"
+                                                      id="offlineDoc_textarea"
+                                                      name="record_access"
+                                                      placeholder="How can the requester get this record? Ex. 'Sent via mail on a CD', 'Print out awaiting requester at City Clerk desk'"></textarea>
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
                         <!-- submission -->
                         <div class="control-group">

@@ -597,15 +597,14 @@ def add_a_resource(resource):
             return add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
         #Field validation for adding a recored
         elif resource == 'record_and_close':
-            if not ((req['link_url']) or (req['record_access'])):
-                errors['missing_record_access']="Please include a method for retrieving this record"
-                return show_request(request_id=req['request_id'], template="manage_request_city_less_js.html", errors=errors,
-                                    form=req)
+            if not ((req['link_url']) or (req['record_access']) or (request.files['record'])):
+                errors['missing_record_access']="You must upload a record, provide a link to a record, or indicate how the record can be accessed"
             elif not ((req['record_description'])):
                 errors['missing_record_description']="Please include a name for this record"
-                return show_request(request_id=req['request_id'], template="manage_request_city_less_js.html", errors=errors,
-                                    form=req)
+
         resource_id = add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
+        return show_request(request_id=req['request_id'], template="manage_request_city_less_js.html", errors=errors,
+                    form=req)
         if type(resource_id) == int or str(resource_id).isdigit():
             app.logger.info("\n\nSuccessfully added resource: %s with id: %s" % (resource, resource_id))
             return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
