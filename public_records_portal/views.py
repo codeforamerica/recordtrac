@@ -166,6 +166,7 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_state = form.request_address_state.data
             request_address_zip = form.request_address_zip.data
 
+
             # Check Summary
             if not (request_summary and request_summary.strip()):
                 errors['missing_summary'] = 'You must enter a summary for this request'
@@ -176,12 +177,13 @@ def new_request(passed_recaptcha=False, data=None):
                 errors['missing_description'] = 'You must enter a description for this request'
             elif len(request_summary) > 5000:
                 errors['description_length'] = 'The request description must be less than 5000 characters'
+
+            # Check Attachment
             try:
                 request_attachment = request.files['request_attachment']
             except:
                 app.logger.info("\n\nNo file passed in")
 
-            # Check Attachment
             if request_attachment_description and not (request_attachment):
                 errors['missing_attachment'] = 'Please select a file to upload as attachment.'
 
@@ -207,17 +209,18 @@ def new_request(passed_recaptcha=False, data=None):
             else:
                 errors['invalid_date'] = "Please use the datepicker to select a date."
 
+
             if not (request_first_name and request_first_name.strip()):
-                errors['missing_first_name'] = "Please enter the requester's first name"
-            elif not (request_last_name and request_last_name.strip()):
-                errors['missing_last_name'] = "Please enter the requester's last name"
-            else:
+                errors['missing_first_name'] = "Please enter the your first name"
+            if not (request_last_name and request_last_name.strip()):
+                errors['missing_last_name'] = "Please enter the your last name"
+            if 'missing_first_name' not in errors and 'missing_last_name' not in errors:
                 alias = request_first_name + " " + request_last_name
 
             zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
             email_valid = (request_email != '')
-            phone_valid = (request_phone is not None)
-            fax_valid = (request_fax is not None)
+            phone_valid = (request_phone != '')
+            fax_valid = (request_fax != '')
             street_valid = (request_address_street_one != '')
             city_valid = (request_address_city != '')
             state_valid = (request_address_state != '')
