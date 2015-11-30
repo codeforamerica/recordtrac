@@ -506,7 +506,7 @@ def unfollow(request_id, email):
 
 
 @app.route("/request/<string:request_id>")
-def show_request(request_id, template="manage_request_public.html",errors=None, form=None):
+def show_request(request_id, template="manage_request_public.html",errors=None, form=None, file=None):
     req = get_obj("Request", request_id)
     if not req:
         return page_not_found(494)
@@ -551,7 +551,7 @@ def show_request(request_id, template="manage_request_public.html",errors=None, 
     if (errors):
         return render_template(template, req=req, agency_data=agency_data, users=users,
                                department=department, assigned_user=assigned_user, helpers=helpers, audience=audience
-                               ,errors=errors,form=form)
+                               ,errors=errors,form=form,file=file)
     else:
         return render_template(template, req=req, agency_data=agency_data, users=users,
                            department=department, assigned_user=assigned_user, helpers=helpers, audience=audience)
@@ -606,16 +606,16 @@ def add_a_resource(resource):
         if type(resource_id) == int or str(resource_id).isdigit():
             app.logger.info("\n\nSuccessfully added resource: %s with id: %s" % (resource, resource_id))
             return show_request(request_id=req['request_id'], template="manage_request_%s_less_js.html" % (req['audience']), errors=errors,
-                    form=req)
+                    form=req,file=request.files['record'])
         elif resource_id == False:
             app.logger.info("\n\nThere was an issue with adding resource: %s" % resource)
 
             return show_request(request_id=req['request_id'], template="manage_request_%s_less_js.html" % (req['audience']), errors=errors,
-                    form=req)
+                    form=req,file=request.files['record'])
         else:
             app.logger.info("\n\nThere was an issue with the upload: %s" % resource_id)
             return show_request(request_id=req['request_id'], template="manage_request_%s_less_js.html" % (req['audience']), errors=errors,
-                    form=req)
+                    form=req,file=request.files['record'])
     return render_template('error.html', message="You can only update requests from a request page!")
 
 @app.route("/public_add_a_<string:resource>", methods=["GET", "POST"])
