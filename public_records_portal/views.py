@@ -435,10 +435,10 @@ def explain_all_actions():
 
 
 @app.route("/<string:audience>/request/<string:request_id>")
-def show_request_for_x(audience, request_id):
+def show_request_for_x(audience, request_id, errors):
     if "city" in audience:
         return show_request_for_city(request_id=request_id)
-    return show_request(request_id=request_id, template="manage_request_%s.html" % (audience))
+    return show_request(request_id=request_id, template="manage_request_%s.html" % (audience), errors=errors)
 
 
 show_request_for_x.methods = ['GET', 'POST']
@@ -506,7 +506,7 @@ def unfollow(request_id, email):
 
 
 @app.route("/request/<string:request_id>")
-def show_request(request_id, template="manage_request_public.html"):
+def show_request(request_id, template="manage_request_public.html",errors=None, form=None):
     req = get_obj("Request", request_id)
     if not req:
         return page_not_found(494)
@@ -548,7 +548,12 @@ def show_request(request_id, template="manage_request_public.html"):
 
     print helpers
 
-    return render_template(template, req=req, agency_data=agency_data, users=users,
+    if (errors):
+        return render_template(template, req=req, agency_data=agency_data, users=users,
+                               department=department, assigned_user=assigned_user, helpers=helpers, audience=audience
+                               ,errors=errors,form=form)
+    else:
+        return render_template(template, req=req, agency_data=agency_data, users=users,
                            department=department, assigned_user=assigned_user, helpers=helpers, audience=audience)
 
 
@@ -585,16 +590,28 @@ def edit_case(request_id):
 @login_required
 def add_a_resource(resource):
     req = request.form
+    errors={}
     if request.method == 'POST':
         print "Resource is a ", resource
         if resource == 'pdf':
             return add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
+        #Field validation for adding a recored
+        elif resource == 'record_and_close':
+            if not ((req['link_url']) or (req['record_access'])):
+                errors['missing_record_access']="Please include a method for retrieving this record"
+                return show_request(request_id=req['request_id'], template="manage_request_city_less_js.html", errors=errors,
+                                    form=req)
+            elif not ((req['record_description'])):
+                errors['missing_record_description']="Please include a name for this record"
+                return show_request(request_id=req['request_id'], template="manage_request_city_less_js.html", errors=errors,
+                                    form=req)
         resource_id = add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
         if type(resource_id) == int or str(resource_id).isdigit():
             app.logger.info("\n\nSuccessfully added resource: %s with id: %s" % (resource, resource_id))
             return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
         elif resource_id == False:
             app.logger.info("\n\nThere was an issue with adding resource: %s" % resource)
+
             return render_template('error.html')
         else:
             app.logger.info("\n\nThere was an issue with the upload: %s" % resource_id)

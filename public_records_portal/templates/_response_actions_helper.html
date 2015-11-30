@@ -15,8 +15,16 @@
                   method="post"
                   action="/add_a_record_and_close" autocomplete="on"
                   enctype="multipart/form-data">
+                {% if "missing_record_description" in errors %}
+                    <div class="alert alert-danger" id="missing_record_description">
+                        {{ errors['missing_record_description'] }}</div>
+                {% endif %}
+                {% if "missing_record_access" in errors %}
+                    <div class="alert alert-danger" id="missing_record_access">{{ errors['missing_record_access'] }}</div>
+                {% endif %}
                 <p>Please provide a short explanation of the record along with at least a file upload, a link to the record, or instructions on how to access the record offline.</p> 
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                <input type="hidden" name="audience" value="helper"/>
                 <fieldset>
                     <div class="row-fluid">
                         <!-- name of record -->
@@ -30,7 +38,7 @@
                                                   type="text"
                                                   id="recordSummary"
                                                   placeholder="Add a short explanation of the record"
-                                                  required/></textarea>
+                                                  required/>form.</textarea>
                             </div>
                         </div>
                         <!-- upload a record -->
