@@ -599,22 +599,23 @@ def add_a_resource(resource):
         elif resource == 'record_and_close':
             if not ((req['link_url']) or (req['record_access']) or (request.files['record'])):
                 errors['missing_record_access']="You must upload a record, provide a link to a record, or indicate how the record can be accessed"
-            elif not ((req['record_description'])):
+            if not ((req['record_description'])):
                 errors['missing_record_description']="Please include a name for this record"
 
         resource_id = add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
-        return show_request(request_id=req['request_id'], template="manage_request_city_less_js.html", errors=errors,
-                    form=req)
         if type(resource_id) == int or str(resource_id).isdigit():
             app.logger.info("\n\nSuccessfully added resource: %s with id: %s" % (resource, resource_id))
-            return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
+            return show_request(request_id=req['request_id'], template="manage_request_%s_less_js.html" % (req['audience']), errors=errors,
+                    form=req)
         elif resource_id == False:
             app.logger.info("\n\nThere was an issue with adding resource: %s" % resource)
 
-            return render_template('error.html')
+            return show_request(request_id=req['request_id'], template="manage_request_%s_less_js.html" % (req['audience']), errors=errors,
+                    form=req)
         else:
             app.logger.info("\n\nThere was an issue with the upload: %s" % resource_id)
-            return render_template('help_with_uploads.html', message=resource_id)
+            return show_request(request_id=req['request_id'], template="manage_request_%s_less_js.html" % (req['audience']), errors=errors,
+                    form=req)
     return render_template('error.html', message="You can only update requests from a request page!")
 
 @app.route("/public_add_a_<string:resource>", methods=["GET", "POST"])
