@@ -922,7 +922,8 @@ def prepare_request_fields(results):
         # The following two attributes are defined as model methods,
         # and not regular SQLAlchemy attributes.
         "contact_name": r.point_person_name(), \
-        "solid_status": r.solid_status()
+        "solid_status": r.solid_status(),
+        "titlePrivate": r.titlePrivate
     }, results)
 
 
