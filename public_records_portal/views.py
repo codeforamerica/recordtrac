@@ -6,33 +6,38 @@
 
 """
 
-from flask import flash
+import json
+import operator
+import os
+import re
+from datetime import datetime, timedelta, date
+from time import time
+from urlparse import urlparse, urljoin
+from uuid import uuid4
+
+import anyjson
+import pytz
+from business_calendar import Calendar
+from flask import flash, session
+from flask import jsonify, request, Response
 from flask import render_template, redirect, url_for, send_from_directory
 from flask.ext.login import login_user, logout_user, current_user, login_required
-# from flaskext.browserid import BrowserID
-from public_records_portal import db, models, recaptcha
-from prr import add_resource, update_resource, make_request, close_request
-from db_helpers import authenticate_login, get_user_by_id
-import os
-import json
-from urlparse import urlparse, urljoin
-from time import time
-from flask import jsonify, request, Response
-import anyjson
-import csv_export
-from filters import *
-import re
-from db_helpers import get_count, get_obj
-from sqlalchemy import func, and_, or_, text
-from forms import OfflineRequestForm, NewRequestForm, LoginForm, EditUserForm
-import pytz
-from requires_roles import requires_roles
 from flask_login import LoginManager
+from sqlalchemy import func, and_, or_, text
+
+import csv_export
+from db_helpers import authenticate_login, get_user_by_id
+from db_helpers import get_count, get_obj
+from filters import *
+from forms import OfflineRequestForm, NewRequestForm, LoginForm, EditUserForm
 from models import AnonUser
 from datetime import datetime, timedelta, date
 from business_calendar import Calendar
 import operator
 import bleach
+from prr import add_resource, update_resource, make_request, close_request
+from public_records_portal import db, models, recaptcha
+from requires_roles import requires_roles
 
 cal = Calendar()
 
@@ -51,6 +56,23 @@ zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
 @app.before_request
 def make_session_permanent():
     app.permanent_session_lifetime = timedelta(minutes=180)
+
+
+@app.before_request
+def csrf_protect():
+    if request.method == "POST":
+        token = session.pop("_csrf_token", None)
+        if not token or token != request.form.get('_csrf_token'):
+            return access_denied(403)
+
+
+def generate_csrf_token():
+    if '_csrf_token' not in session:
+        session['_csrf_token'] = str(uuid4())
+    return session['_csrf_token']
+
+
+app.jinja_env.globals['csrf_token'] = generate_csrf_token
 
 
 # Submitting a new request
@@ -886,8 +908,8 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
             page_number = 1
         request_id_search = get_filter_value(filters_map, 'request_id_search')
         request_id_search = bleach.clean(request_id_search);
-        print request_id_search
-        if not request_id_search or not re.match("FOIL-\d{4}-\d{3}-\d{5}", request_id_search):
+
+        if not re.match("FOIL-\d{4}-\d{3}-\d{5}", get_filter_value(filters_map, 'request_id_search')):
             request_id_search = None
 
     # Set initial checkboxes for mine_as_poc and mine_as_helper when redirected from login page
