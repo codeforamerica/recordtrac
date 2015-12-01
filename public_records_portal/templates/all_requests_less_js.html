@@ -57,7 +57,7 @@
                             <h5>Search request text</h5>
                             <div>
                                 <input class="span12" name="search_term" type="search" value="{{ search_term or '' }}"
-                                       placeholder="I'd like to find...">
+                                       placeholder="I'd like to find..." style="height:100%;">
                             </div>
                             <div class="row-fluid">
                                 <!-- <h4 class="underline">ADVANCED FILTER</h4> -->
@@ -142,7 +142,7 @@
                                 <h5>Requester name</h5>
                                 <div>
                                     <input class="span12" name="requester_name" type="search" placeholder="Enter name"
-                                           value="{{ requester_name or '' }}">
+                                           value="{{ requester_name or '' }}" style="height:100%;">
                                 </div>
                             {% endif %}
                             {% if current_user.is_anonymous or (current_user.is_authenticated and current_user.show_department_filters()) %}
@@ -223,11 +223,19 @@
                             <td style="word-break: break-all">
                                 {% if current_user.is_authenticated %}
                                     <a href="/city/request/{{ request.id }}">
+                                    {% set text = request.summary %}
+                                    {{ text }}
                                 {% else %}
                                     <a href="/request/{{ request.id }}">
+                                    {% if request.titlePrivate %}
+                                    {% set text = "Private" %}
+                                    {{ text }}
+                                    {% else %}
+                                    {% set text = request.summary %}
+                                    {{ text }}
+                                    {% endif %}
                                 {% endif %}
-                                {% set text = request.summary %}
-                                {{ text }}
+
                                 {% if request.solid_status == "due soon" %}
                                     <span style="background-color: #FB991B" class="label label-warning">due soon</span>
                                 {% elif request.solid_status == "overdue" %}
