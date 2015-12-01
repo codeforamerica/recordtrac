@@ -340,7 +340,7 @@
             {% set uid = response.uid() %}
             {% set staff = ("User" | get_obj(uid)) %}
             {% set icon = response.get_icon() %}
-            {% if audience != 'public' or (audience == 'helper') or not(response.response.privacy)%}
+            {% if response.type == 'document' or response.type == 'note' or response.type == 'extension' or audience != 'public' or (audience == 'helper') or not(response.response.privacy)%}
             <div class="row-fluid response-wrapper">
                 <div class="span1 text-left">
                     <i class="{{ icon }}"></i>
