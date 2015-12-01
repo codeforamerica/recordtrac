@@ -16,7 +16,6 @@ from db_helpers import authenticate_login, get_user_by_id
 import os
 import json
 from urlparse import urlparse, urljoin
-from notifications import format_date
 from time import time
 from flask import jsonify, request, Response
 import anyjson
@@ -142,7 +141,7 @@ def new_request(passed_recaptcha=False, data=None):
     form = None
     departments = None
     routing_available = False
-    errors = []
+    errors = {}
     if request.method == 'POST':
         if current_user.is_authenticated:
             form = OfflineRequestForm(request.form)
@@ -168,34 +167,33 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_state = form.request_address_state.data
             request_address_zip = form.request_address_zip.data
 
+
             # Check Summary
             if not (request_summary and request_summary.strip()):
-                errors.append('You must enter a summary for this request')
+                errors['missing_summary'] = 'You must enter a summary for this request'
             elif len(request_summary) > 250:
-                errors.append(
-                    'The request summary must be less than 250 characters')
+                errors['summary_length'] = 'The request title must be less than 250 characters'
             # Check Description of Request
             if not (request_text and request_text.strip()):
-                errors.append('You must enter a description for this request')
+                errors['missing_description'] = 'You must enter a description for this request'
             elif len(request_summary) > 5000:
-                errors.append(
-                    'The request description must be less than 5000 characters')
+                errors['description_length'] = 'The request description must be less than 5000 characters'
+
+            # Check Attachment
             try:
                 request_attachment = request.files['request_attachment']
             except:
                 app.logger.info("\n\nNo file passed in")
 
-            # Check Attachment
             if request_attachment_description and not (request_attachment):
-                errors.append('Please select a file to upload as attachment.')
+                errors['missing_attachment'] = 'Please select a file to upload as attachment.'
 
             if not (request_text and request_text.strip()):
-                errors.append('Please fill out the request description.')
+                errors['missing_attachment_description'] = 'Please fill out the request description.'
 
             # Check Format
             if not (request_format and request_format.strip()):
-                errors.append(
-                    'You must enter the format in which the request was received')
+                errors['missing_format'] = 'You must enter the format in which the request was received'
 
             # Check Date
             if request_date:
@@ -203,29 +201,27 @@ def new_request(passed_recaptcha=False, data=None):
                     tz = pytz.timezone(str(app.config['TIMEZONE']))
                     offset = tz.utcoffset(datetime.now())
                     offset = (offset.days * 86400 + offset.seconds) / 3600
-                    # request_date = request_date - timedelta(hours=offset)
                 except TypeError:
-                    errors.append(
-                        "Please use the datepicker to select a date.")
+                    errors['invalid_date'] = "Please use the datepicker to select a date."
                     request_date = None
                 except ValueError:
-                    errors.append(
-                        "Please use the datepicker to select a date.")
+                    errors['invalid_date'] = "Please use the datepicker to select a date."
                     request_date = None
             else:
-                errors.append("Please use the datepicker to select a date.")
+                errors['invalid_date'] = "Please use the datepicker to select a date."
+
 
             if not (request_first_name and request_first_name.strip()):
-                errors.append("Please enter the requester's first name")
-            elif not (request_last_name and request_last_name.strip()):
-                errors.append("Please enter the requester's last name")
-            else:
+                errors['missing_first_name'] = "Please enter the your first name"
+            if not (request_last_name and request_last_name.strip()):
+                errors['missing_last_name'] = "Please enter the your last name"
+            if 'missing_first_name' not in errors and 'missing_last_name' not in errors:
                 alias = request_first_name + " " + request_last_name
 
             zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
             email_valid = (request_email != '')
-            phone_valid = (request_phone is not None)
-            fax_valid = (request_fax is not None)
+            phone_valid = (request_phone != '')
+            fax_valid = (request_fax != '')
             street_valid = (request_address_street_one != '')
             city_valid = (request_address_city != '')
             state_valid = (request_address_state != '')
@@ -235,8 +231,7 @@ def new_request(passed_recaptcha=False, data=None):
                 street_valid and city_valid and state_valid and zip_valid)
 
             if not (email_valid or phone_valid or fax_valid or address_valid):
-                errors.append(
-                    "Please enter at least one type of contact information")
+                errors['missing_contact_info'] = "Please enter at least one type of contact information"
 
             if not data:
                 data = request.form.copy()
@@ -271,8 +266,7 @@ def new_request(passed_recaptcha=False, data=None):
                     state=request_address_state,
                     zip=request_address_zip)
                 if not is_new:
-                    errors.append(
-                        "Looks like your request is the same as /request/%s" % request_id)
+                    errors['duplicate_request'] = "Looks like your request is the same as /request/%s" % request_id
                     return render_template('offline_request.html', form=form,
                                            routing_available=routing_available, departments=departments, errors=errors)
 
@@ -299,37 +293,30 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_state = form.request_address_state.data
             request_address_zip = form.request_address_zip.data
 
+            if not request_agency:
+                errors['missing_agency'] = 'You must select an agency'
             # Check Summary
             if not (request_summary and request_summary.strip()):
-                errors.append('You must enter a summary for this request')
+                errors['missing_summary'] = 'You must enter a summary for this request'
             elif len(request_summary) > 250:
-                errors.append(
-                    'The request summary must be less than 250 characters')
-
+                errors['summary_length'] = 'The request title must be less than 250 characters'
             # Check Description of Request
             if not (request_text and request_text.strip()):
-                errors.append('You must enter a description for this request')
+                errors['missing_description'] = 'You must enter a description for this request'
             elif len(request_summary) > 5000:
-                errors.append(
-                    'The request description must be less than 5000 characters')
-            try:
-                request_attachment = request.files['request_attachment']
-            except:
-                app.logger.info("\n\nNo file passed in")
+                errors['description_length'] = 'The request description must be less than 5000 characters'
 
-            # Check first name and last name
             if not (request_first_name and request_first_name.strip()):
-                errors.append("Please enter the requester's first name")
-            elif not (request_last_name and request_last_name.strip()):
-                errors.append("Please enter the requester's last name")
-            else:
+                errors['missing_first_name'] = "Please enter the your first name"
+            if not (request_last_name and request_last_name.strip()):
+                errors['missing_last_name'] = "Please enter the your last name"
+            if 'missing_first_name' not in errors and 'missing_last_name' not in errors:
                 alias = request_first_name + " " + request_last_name
 
-            # Check Contact Information
             zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
             email_valid = (request_email != '')
-            phone_valid = (request_phone is not None)
-            fax_valid = (request_fax is not None)
+            phone_valid = (request_phone != '')
+            fax_valid = (request_fax != '')
             street_valid = (request_address_street_one != '')
             city_valid = (request_address_city != '')
             state_valid = (request_address_state != '')
@@ -339,8 +326,11 @@ def new_request(passed_recaptcha=False, data=None):
                 street_valid and city_valid and state_valid and zip_valid)
 
             if not (email_valid or phone_valid or fax_valid or address_valid):
-                errors.append(
-                    "Please enter at least one type of contact information")
+                errors['missing_contact_info'] = "Please enter at least one type of contact information"
+
+            if errors:
+                return render_template('new_request.html', form=form, routing_available=routing_available,
+                                       departments=departments, errors=errors)
 
             request_id, is_new = make_request(
                 agency=request_agency,
@@ -348,7 +338,7 @@ def new_request(passed_recaptcha=False, data=None):
                 text=request_text,
                 first_name=request_first_name,
                 last_name=request_last_name,
-                alias=str(request_first_name + ' ' + request_last_name),
+                alias=alias,
                 role=request_role,
                 organization=request_organization,
                 email=request_email,
@@ -361,13 +351,14 @@ def new_request(passed_recaptcha=False, data=None):
                 zip=request_address_zip)
 
             if is_new == False:
-                errors.append(
-                    "Looks like your request is the same as <a href=\"/request/%s\"" % request_id)
+                errors[
+                    'duplicate_request'] = "Looks like your request is the same as <a href=\"/request/%s\"" % request_id
                 return render_template('new_request.html', form=form,
                                        routing_available=routing_available, departments=departments, errors=errors)
             if not request_id:
-                    prr.nonportal_request(request.form)
-                    return render_template('manage_request_non_partner.html', agency=request_agency, email=(request_email != ''))
+                prr.nonportal_request(request.form)
+                return render_template('manage_request_non_partner.html', agency=request_agency,
+                                       email=(request_email != ''))
             return redirect(url_for('show_request_for_x', request_id=request_id,
                                     audience='new', email=(request_email is not None)))
 
@@ -381,6 +372,7 @@ def new_request(passed_recaptcha=False, data=None):
             form = NewRequestForm()
             return render_template('new_request.html', form=form, routing_available=routing_available,
                                    categories=category)
+
 
 @app.route("/faq")
 def faq():
@@ -465,6 +457,7 @@ def show_request_for_city(request_id):
 
     return show_request(request_id=request_id, template="manage_request_%s_less_js.html" % audience)
 
+
 @app.route("/response/<string:request_id>")
 def show_response(request_id):
     req = get_obj("Request", request_id)
@@ -531,7 +524,7 @@ def show_request(request_id, template="manage_request_public.html"):
     if template == 'manage_request_public.html':
         audience = 'public'
     elif template == 'manage_request_helper_less_js.html':
-        audience = 'helper'        
+        audience = 'helper'
     else:
         audience = 'city'
 
@@ -600,6 +593,7 @@ def add_a_resource(resource):
             app.logger.info("\n\nThere was an issue with the upload: %s" % resource_id)
             return render_template('help_with_uploads.html', message=resource_id)
     return render_template('error.html', message="You can only update requests from a request page!")
+
 
 @app.route("/public_add_a_<string:resource>", methods=["GET", "POST"])
 def public_add_a_resource(resource, passed_recaptcha=False, data=None):
@@ -707,6 +701,7 @@ def filter_search_term(search_input, results):
         search_query = search_query + search_terms[num_terms - 1] + ":*"  # Catch substrings
         results = results.filter("to_tsvector(text) @@ to_tsquery('%s')" % search_query)
     return results
+
 
 def filter_request_id(request_id_search, results):
     if request_id_search:
@@ -835,7 +830,8 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
     # Set initial checkboxes for mine_as_poc and mine_as_helper when redirected from login page
     if request.referrer and 'login' in request.referrer:
         if current_user.is_authenticated and (
-                current_user.role in ['Portal Administrator', 'Agency Administrator'] or current_user.is_admin()):
+                        current_user.role in ['Portal Administrator',
+                                              'Agency Administrator'] or current_user.is_admin()):
             mine_as_poc = None
             mine_as_helper = None
         elif current_user.is_authenticated and current_user.role in ['Agency FOIL Personnel']:
@@ -980,7 +976,6 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
             app.logger.info('There was an error parsing the request date filters. Received Min: {0}, Max {1}'.format(
                 min_date_received, max_date_received))
 
-
     # Filters for agency staff only:
     if user_id:
 
@@ -1040,6 +1035,7 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
 
     print results
     return results.order_by(models.Request.id.desc())
+
 
 @app.route("/tutorial")
 def tutorial_initial():
@@ -1117,6 +1113,7 @@ def is_public_record():
         return json_data["Divorce"]
     return ''
 
+
 def get_redirect_target():
     """ Taken from http://flask.pocoo.org/snippets/62/ """
     for target in request.values.get('next'), request.referrer:
@@ -1124,6 +1121,7 @@ def get_redirect_target():
             continue
         if is_safe_url(target):
             return target
+
 
 def is_safe_url(target):
     """ Taken from http://flask.pocoo.org/snippets/62/ """
@@ -1291,7 +1289,6 @@ def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
     referred_to_opendata_filter = models.Request.referred_to_opendata
     referred_to_other_agency_filter = models.Request.referred_to_other_agency
     referred_to_publications_portal_filter = models.Request.referred_to_publications_portal
-
 
     if report_type == "all":
         try:
@@ -1496,12 +1493,14 @@ def report():
     user_sort=sorted(users, key=operator.attrgetter('alias'))
     return render_template('report.html', users=user_sort, agency_data=agency_data_sorted)
 
+
 @app.route("/submit", methods=["POST"])
 def submit():
     if recaptcha.verify():
         pass
     else:
         pass
+
 
 @app.route("/changeprivacy", methods=["POST", "GET"])
 def change_privacy():
@@ -1519,12 +1518,14 @@ def change_category():
     category = request.form['category']
     return redirect(render_template('new_request.html'))
 
+
 @app.route("/<page>")
 def any_page(page):
     try:
         return render_template('%s.html' % (page))
     except:
         return page_not_found(404)
+
 
 @app.errorhandler(400)
 def bad_request(e):
