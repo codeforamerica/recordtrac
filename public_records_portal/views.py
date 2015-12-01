@@ -32,6 +32,7 @@ from flask_login import LoginManager
 from models import AnonUser
 from datetime import datetime, timedelta, date
 from business_calendar import Calendar
+import operator
 
 cal = Calendar()
 
@@ -416,9 +417,9 @@ def unauthorized():
     return render_template("alpha.html")
 
 
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('404.html'), 404
+# @app.errorhandler(404)
+# def page_not_found(e):
+#     return render_template('404.html')
 
 
 def explain_all_actions():
@@ -475,14 +476,17 @@ def show_response(request_id):
 @app.route("/track", methods=["GET", "POST"])
 def track(request_id=None):
     if request.method == 'POST':
-        if not request_id:
+        if not re.match("FOIL-\d{4}-\d{3}-\d{5}", request.form["request_id"]):
             request_id = request.form['request_id']
+            if len(str(request_id)) > 20:
+                error="You have entered more than the allowed character length. A FOIL request should be in the format of FOIL-XXXX-XXX-XXXXX.\n Please try again!"
+                return render_template("track.html", error=error)
         if not current_user.is_anonymous:
             audience = 'city'
         else:
             audience = 'public'
 
-        return redirect(url_for('fetch_requests', request_id_search=request_id))
+        return redirect(url_for('fetch_requests', request_id_search=request.form['request_id']))
     else:
         return render_template("track.html")
 
@@ -504,6 +508,8 @@ def unfollow(request_id, email):
 @app.route("/request/<string:request_id>")
 def show_request(request_id, template="manage_request_public.html"):
     req = get_obj("Request", request_id)
+    if not req:
+        return page_not_found(494)
     departments_all = models.Department.query.all()
     agency_data = []
     for d in departments_all:
@@ -820,7 +826,11 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         max_date_received = get_filter_value(filters_map, 'max_date_received')
         requester_name = get_filter_value(filters_map, 'requester_name')
         page_number = int(get_filter_value(filters_map, 'page_number') or '1')
-        request_id_search = get_filter_value(filters_map, 'request_id_search')
+        if not re.match("FOIL-\d{4}-\d{3}-\d{5}", get_filter_value(filters_map, 'request_id_search')):
+            request_id_search = None
+        else:
+            request_id_search = get_filter_value(filters_map, 'request_id_search')
+
 
     # Set initial checkboxes for mine_as_poc and mine_as_helper when redirected from login page
     if request.referrer and 'login' in request.referrer:
@@ -912,7 +922,8 @@ def prepare_request_fields(results):
         # The following two attributes are defined as model methods,
         # and not regular SQLAlchemy attributes.
         "contact_name": r.point_person_name(), \
-        "solid_status": r.solid_status()
+        "solid_status": r.solid_status(),
+        "titlePrivate": r.titlePrivate
     }, results)
 
 
@@ -1480,7 +1491,10 @@ def report():
 
     overdue_request = models.Request.query.filter(models.Request.overdue == True).all()
     app.logger.info("\n\nOverdue Requests %s" % (len(overdue_request)))
-    return render_template('report.html', users=users, agency_data=agency_data)
+    # users_sort = sorted(users.val)
+    agency_data_sorted=sorted(agency_data, key=operator.itemgetter('name'))
+    user_sort=sorted(users, key=operator.attrgetter('alias'))
+    return render_template('report.html', users=user_sort, agency_data=agency_data_sorted)
 
 @app.route("/submit", methods=["POST"])
 def submit():
@@ -1516,10 +1530,21 @@ def any_page(page):
 def bad_request(e):
     return render_template("400.html"), 400
 
+@app.errorhandler(401)
+def unauthorized(e):
+    return render_template("401.html"), 401
+
+@app.errorhandler(403)
+def access_denied(e):
+    return redirect(url_for('login'))
 
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html"), 404
+
+@app.errorhandler(405)
+def method_not_allowed(e):
+    return render_template("405.html"), 405
 
 
 @app.errorhandler(500)
@@ -1527,11 +1552,14 @@ def internal_server_error(e):
     return render_template("500.html"), 500
 
 
-@app.errorhandler(403)
-def access_denied(e):
-    return redirect(url_for('login'))
-
-
 @app.errorhandler(501)
 def unexplained_error(e):
     return render_template("501.html"), 501
+
+@app.errorhandler(502)
+def bad_gateway(e):
+    render_template("500.html"),502
+
+@app.errorhandler(503)
+def service_unavailable(e):
+    render_template("500.html"),503
