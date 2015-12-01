@@ -213,10 +213,9 @@ input[name=reason_unassigned] {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    height: 62px;
-/ / Increase height as required margin-bottom: 30 px;
-    padding: 0 20px;
-/ / Now only left & right padding
+    height: 62px; // Increase height as required
+    margin-bottom: 30px;
+    padding: 0 20px; // Now only left & right padding
 }
 
 input[name=follow_email] {
@@ -228,3 +227,5 @@ input[name=follow_email] {
     padding: 0 20px;
 / / Now only left & right padding
 }
+
+#manageHelpers { overflow-x: hidden; overflow-y: hidden;}
