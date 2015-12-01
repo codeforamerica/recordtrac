@@ -888,6 +888,22 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         else:
             end_index = num_results
 
+        if not request_id_search or not re.match("FOIL-\d{4}-\d{3}-\d{5}", request_id_search):
+            request_id_search = None
+
+
+    # Set initial checkboxes for mine_as_poc and mine_as_helper when redirected from login page
+    if request.referrer and 'login' in request.referrer:
+        if current_user.is_authenticated and (
+                        current_user.role in ['Portal Administrator', 'Agency Administrator'] or current_user.is_admin()):
+            mine_as_poc = None
+            mine_as_helper = None
+        elif current_user.is_authenticated and current_user.role in ['Agency FOIL Personnel']:
+            mine_as_poc = "on"
+            mine_as_helper = "on"
+        elif current_user.is_authenticated and current_user.role in ['Agency Helpers']:
+            mine_as_poc = "on"
+
     results = results.limit(limit).offset(offset).all()
     requests = prepare_request_fields(results=results)
     if output_results_only == True:  # Used by json_requests()
@@ -1514,6 +1530,7 @@ def report():
     agency_data_sorted = sorted(agency_data, key=operator.itemgetter('name'))
     user_sort = sorted(users, key=operator.attrgetter('alias'))
     return render_template('report.html', users=user_sort, agency_data=agency_data_sorted)
+
 
 
 @app.route("/submit", methods=["POST"])
