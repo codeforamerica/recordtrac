@@ -860,7 +860,10 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         max_date_received = bleach.clean(max_date_received); print max_date_received
         requester_name = get_filter_value(filters_map, 'requester_name')
         requester_name = bleach.clean(requester_name); print requester_name
-        page_number = int(get_filter_value(filters_map, 'page_number') or '1')
+        try:
+            page_number = int(get_filter_value(filters_map, 'page_number') or '1')
+        except:
+            page_number = 1
         request_id_search = get_filter_value(filters_map, 'request_id_search')
         request_id_search = bleach.clean(request_id_search); print request_id_search
         if not request_id_search or not re.match("FOIL-\d{4}-\d{3}-\d{5}", request_id_search):
