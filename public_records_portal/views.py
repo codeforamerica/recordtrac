@@ -210,7 +210,6 @@ def new_request(passed_recaptcha=False, data=None):
             else:
                 errors['invalid_date'] = "Please use the datepicker to select a date."
 
-
             if not (request_first_name and request_first_name.strip()):
                 errors['missing_first_name'] = "Please enter the your first name"
             if not (request_last_name and request_last_name.strip()):
@@ -306,7 +305,7 @@ def new_request(passed_recaptcha=False, data=None):
             elif len(request_summary) > 5000:
                 errors['description_length'] = 'The request description must be less than 5000 characters'
 
-
+            # Check first name and last name
             if not (request_first_name and request_first_name.strip()):
                 errors['missing_first_name'] = "Please enter the your first name"
             if not (request_last_name and request_last_name.strip()):
@@ -428,7 +427,7 @@ def explain_all_actions():
 
 
 @app.route("/<string:audience>/request/<string:request_id>")
-def show_request_for_x(audience, request_id):
+def show_request_for_x(audience, request_id, errors):
     if audience == 'new':
         proper_request_id = re.match("FOIL-\d{4}-\d{3}-\d{5}", request_id)
     if proper_request_id:
@@ -503,7 +502,7 @@ def unfollow(request_id, email):
 
 
 @app.route("/request/<string:request_id>")
-def show_request(request_id, template="manage_request_public.html"):
+def show_request(request_id, template="manage_request_public.html",errors=None, form=None, file=None):
     req = get_obj("Request", request_id)
     if not req:
         return page_not_found(494)
@@ -545,7 +544,12 @@ def show_request(request_id, template="manage_request_public.html"):
 
     print helpers
 
+    if (errors):
     return render_template(template, req=req, agency_data=agency_data, users=users,
+                               department=department, assigned_user=assigned_user, helpers=helpers, audience=audience
+                               ,errors=errors,form=form,file=file)
+    else:
+        return render_template(template, req=req, agency_data=agency_data, users=users,
                            department=department, assigned_user=assigned_user, helpers=helpers, audience=audience)
 
 
@@ -582,20 +586,32 @@ def edit_case(request_id):
 @login_required
 def add_a_resource(resource):
     req = request.form
+    errors={}
     if request.method == 'POST':
         print "Resource is a ", resource
         if resource == 'pdf':
             return add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
+        #Field validation for adding a recored
+        elif resource == 'record_and_close':
+            if not ((req['link_url']) or (req['record_access']) or (request.files['record'])):
+                errors['missing_record_access']="You must upload a record, provide a link to a record, or indicate how the record can be accessed"
+            if not ((req['record_description'])):
+                errors['missing_record_description']="Please include a name for this record"
+
         resource_id = add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
         if type(resource_id) == int or str(resource_id).isdigit():
             app.logger.info("\n\nSuccessfully added resource: %s with id: %s" % (resource, resource_id))
-            return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
+            return show_request(request_id=req['request_id'], template="manage_request_%s_less_js.html" % (req['audience']), errors=errors,
+                    form=req,file=request.files['record'])
         elif resource_id == False:
             app.logger.info("\n\nThere was an issue with adding resource: %s" % resource)
-            return render_template('error.html')
+
+            return show_request(request_id=req['request_id'], template="manage_request_%s_less_js.html" % (req['audience']), errors=errors,
+                    form=req,file=request.files['record'])
         else:
             app.logger.info("\n\nThere was an issue with the upload: %s" % resource_id)
-            return render_template('help_with_uploads.html', message=resource_id)
+            return show_request(request_id=req['request_id'], template="manage_request_%s_less_js.html" % (req['audience']), errors=errors,
+                    form=req,file=request.files['record'])
     return render_template('error.html', message="You can only update requests from a request page!")
 
 
