@@ -43,7 +43,6 @@
                         </span>
                         {% if req %}
                         {% if current_user.is_anonymous or audience == 'public' %}
-                        {{ audience }}
                         {% if not req.titlePrivate %}
                         <p class="lead" style="margin-bottom: 0rem;"
                            truncateable="250"> Title: {{ req.summary | new_lines }}
