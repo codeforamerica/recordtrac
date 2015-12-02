@@ -1222,6 +1222,8 @@ def edit_user_info():
 def login():
     form = LoginForm()
     errors = []
+    if request.host_url != app.config['AGENCY_APPLICATION_URL']:
+        return redirect(url_for('landing'))
     if request.method == 'POST':
         print form.username.data
         print form.password.data
