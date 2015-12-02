@@ -29,7 +29,7 @@ $(function () {
         "Office of Labor Relations",
         "Law Department",
         "Office of Management and Budget",
-        "Mayor's Office",
+        "Office of the Mayor",
         "Office of Payroll Administration"]
     var health = ["Office of Chief Medical Examiner",
         "Health and Hospitals Corporation",

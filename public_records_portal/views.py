@@ -306,6 +306,7 @@ def new_request(passed_recaptcha=False, data=None):
             elif len(request_summary) > 5000:
                 errors['description_length'] = 'The request description must be less than 5000 characters'
 
+
             if not (request_first_name and request_first_name.strip()):
                 errors['missing_first_name'] = "Please enter the your first name"
             if not (request_last_name and request_last_name.strip()):
@@ -360,7 +361,7 @@ def new_request(passed_recaptcha=False, data=None):
                 return render_template('manage_request_non_partner.html', agency=request_agency,
                                        email=(request_email != ''))
             return redirect(url_for('show_request_for_x', request_id=request_id,
-                                    audience='new', email=(request_email is not None)))
+                                    audience='new', email=email_valid))
 
     elif request.method == 'GET':
         if 'LIAISONS_URL' in app.config:
@@ -428,10 +429,13 @@ def explain_all_actions():
 
 @app.route("/<string:audience>/request/<string:request_id>")
 def show_request_for_x(audience, request_id):
-    if "city" in audience:
-        return show_request_for_city(request_id=request_id)
-    return show_request(request_id=request_id, template="manage_request_%s.html" % (audience))
-
+    if audience == 'new':
+        proper_request_id = re.match("FOIL-\d{4}-\d{3}-\d{5}", request_id)
+    if proper_request_id:
+        if "city" in audience:
+            return show_request_for_city(request_id=request_id)
+        return show_request(request_id=request_id, template="manage_request_%s.html" % (audience))
+    return bad_request(400)
 
 show_request_for_x.methods = ['GET', 'POST']
 
@@ -821,10 +825,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         max_date_received = get_filter_value(filters_map, 'max_date_received')
         requester_name = get_filter_value(filters_map, 'requester_name')
         page_number = int(get_filter_value(filters_map, 'page_number') or '1')
-        if not re.match("FOIL-\d{4}-\d{3}-\d{5}", get_filter_value(filters_map, 'request_id_search')):
-            request_id_search = None
-        else:
-            request_id_search = get_filter_value(filters_map, 'request_id_search')
+        request_id_search = get_filter_value(filters_map, 'request_id_search')
 
 
     # Set initial checkboxes for mine_as_poc and mine_as_helper when redirected from login page
