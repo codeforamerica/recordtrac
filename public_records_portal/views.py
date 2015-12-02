@@ -167,7 +167,6 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_state = form.request_address_state.data
             request_address_zip = form.request_address_zip.data
 
-
             # Check Summary
             if not (request_summary and request_summary.strip()):
                 errors['missing_summary'] = 'You must enter a summary for this request'
@@ -436,6 +435,7 @@ def show_request_for_x(audience, request_id, errors):
         return show_request(request_id=request_id, template="manage_request_%s.html" % (audience))
     return bad_request(400)
 
+
 show_request_for_x.methods = ['GET', 'POST']
 
 
@@ -475,7 +475,7 @@ def track(request_id=None):
         if not re.match("FOIL-\d{4}-\d{3}-\d{5}", request.form["request_id"]):
             request_id = request.form['request_id']
             if len(str(request_id)) > 20:
-                error="You have entered more than the allowed character length. A FOIL request should be in the format of FOIL-XXXX-XXX-XXXXX.\n Please try again!"
+                error = "You have entered more than the allowed character length. A FOIL request should be in the format of FOIL-XXXX-XXX-XXXXX.\n Please try again!"
                 return render_template("track.html", error=error)
         if not current_user.is_anonymous:
             audience = 'city'
@@ -502,7 +502,7 @@ def unfollow(request_id, email):
 
 
 @app.route("/request/<string:request_id>")
-def show_request(request_id, template="manage_request_public.html",errors=None, form=None, file=None):
+def show_request(request_id, template="manage_request_public.html", errors=None, form=None, file=None):
     req = get_obj("Request", request_id)
     if not req:
         return page_not_found(494)
@@ -545,12 +545,12 @@ def show_request(request_id, template="manage_request_public.html",errors=None, 
     print helpers
 
     if (errors):
-    return render_template(template, req=req, agency_data=agency_data, users=users,
+        return render_template(template, req=req, agency_data=agency_data, users=users,
                                department=department, assigned_user=assigned_user, helpers=helpers, audience=audience
-                               ,errors=errors,form=form,file=file)
+                               , errors=errors, form=form, file=file)
     else:
         return render_template(template, req=req, agency_data=agency_data, users=users,
-                           department=department, assigned_user=assigned_user, helpers=helpers, audience=audience)
+                               department=department, assigned_user=assigned_user, helpers=helpers, audience=audience)
 
 
 # @app.route("/api/staff")
@@ -586,32 +586,36 @@ def edit_case(request_id):
 @login_required
 def add_a_resource(resource):
     req = request.form
-    errors={}
+    errors = {}
     if request.method == 'POST':
         print "Resource is a ", resource
         if resource == 'pdf':
             return add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
-        #Field validation for adding a recored
+        # Field validation for adding a recored
         elif resource == 'record_and_close':
             if not ((req['link_url']) or (req['record_access']) or (request.files['record'])):
-                errors['missing_record_access']="You must upload a record, provide a link to a record, or indicate how the record can be accessed"
+                errors[
+                    'missing_record_access'] = "You must upload a record, provide a link to a record, or indicate how the record can be accessed"
             if not ((req['record_description'])):
-                errors['missing_record_description']="Please include a name for this record"
+                errors['missing_record_description'] = "Please include a name for this record"
 
         resource_id = add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
         if type(resource_id) == int or str(resource_id).isdigit():
             app.logger.info("\n\nSuccessfully added resource: %s with id: %s" % (resource, resource_id))
-            return show_request(request_id=req['request_id'], template="manage_request_%s_less_js.html" % (req['audience']), errors=errors,
-                    form=req,file=request.files['record'])
+            return show_request(request_id=req['request_id'],
+                                template="manage_request_%s_less_js.html" % (req['audience']), errors=errors,
+                                form=req, file=request.files['record'])
         elif resource_id == False:
             app.logger.info("\n\nThere was an issue with adding resource: %s" % resource)
 
-            return show_request(request_id=req['request_id'], template="manage_request_%s_less_js.html" % (req['audience']), errors=errors,
-                    form=req,file=request.files['record'])
+            return show_request(request_id=req['request_id'],
+                                template="manage_request_%s_less_js.html" % (req['audience']), errors=errors,
+                                form=req, file=request.files['record'])
         else:
             app.logger.info("\n\nThere was an issue with the upload: %s" % resource_id)
-            return show_request(request_id=req['request_id'], template="manage_request_%s_less_js.html" % (req['audience']), errors=errors,
-                    form=req,file=request.files['record'])
+            return show_request(request_id=req['request_id'],
+                                template="manage_request_%s_less_js.html" % (req['audience']), errors=errors,
+                                form=req, file=request.files['record'])
     return render_template('error.html', message="You can only update requests from a request page!")
 
 
@@ -842,7 +846,6 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         requester_name = get_filter_value(filters_map, 'requester_name')
         page_number = int(get_filter_value(filters_map, 'page_number') or '1')
         request_id_search = get_filter_value(filters_map, 'request_id_search')
-
 
     # Set initial checkboxes for mine_as_poc and mine_as_helper when redirected from login page
     if request.referrer and 'login' in request.referrer:
@@ -1508,8 +1511,8 @@ def report():
     overdue_request = models.Request.query.filter(models.Request.overdue == True).all()
     app.logger.info("\n\nOverdue Requests %s" % (len(overdue_request)))
     # users_sort = sorted(users.val)
-    agency_data_sorted=sorted(agency_data, key=operator.itemgetter('name'))
-    user_sort=sorted(users, key=operator.attrgetter('alias'))
+    agency_data_sorted = sorted(agency_data, key=operator.itemgetter('name'))
+    user_sort = sorted(users, key=operator.attrgetter('alias'))
     return render_template('report.html', users=user_sort, agency_data=agency_data_sorted)
 
 
@@ -1550,17 +1553,21 @@ def any_page(page):
 def bad_request(e):
     return render_template("400.html"), 400
 
+
 @app.errorhandler(401)
 def unauthorized(e):
     return render_template("401.html"), 401
+
 
 @app.errorhandler(403)
 def access_denied(e):
     return redirect(url_for('login'))
 
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html"), 404
+
 
 @app.errorhandler(405)
 def method_not_allowed(e):
@@ -1576,10 +1583,12 @@ def internal_server_error(e):
 def unexplained_error(e):
     return render_template("501.html"), 501
 
+
 @app.errorhandler(502)
 def bad_gateway(e):
-    render_template("500.html"),502
+    render_template("500.html"), 502
+
 
 @app.errorhandler(503)
 def service_unavailable(e):
-    render_template("500.html"),503
+    render_template("500.html"), 503
