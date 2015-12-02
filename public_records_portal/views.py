@@ -588,7 +588,7 @@ def add_a_resource(resource):
     req = request.form
     errors = {}
     if request.method == 'POST':
-        print "Resource is a ", resource
+        print "Resource is a", resource
         if resource == 'pdf':
             return add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
         # Field validation for adding a recored
@@ -601,20 +601,27 @@ def add_a_resource(resource):
 
         resource_id = add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
         if type(resource_id) == int or str(resource_id).isdigit():
+            template = "manage_request_%s_less_js.html" % req['audience']
             app.logger.info("\n\nSuccessfully added resource: %s with id: %s" % (resource, resource_id))
-            return show_request(request_id=req['request_id'],
-                                template="manage_request_%s_less_js.html" % (req['audience']), errors=errors,
+            if resource == 'record_and_close':
+                return show_request(request_id=req['request_id'],
+                                template=template, errors=errors,
                                 form=req, file=request.files['record'])
-        elif resource_id == False:
-            app.logger.info("\n\nThere was an issue with adding resource: %s" % resource)
 
             return show_request(request_id=req['request_id'],
-                                template="manage_request_%s_less_js.html" % (req['audience']), errors=errors,
+                                template=template, errors=errors,
+                                form=req)
+        elif resource_id == False:
+            app.logger.info("\n\nThere was an issue with adding resource: %s" % resource)
+            template = "manage_request_%s_less_js.html" % req['audience']
+            return show_request(request_id=req['request_id'],
+                                template=template, errors=errors,
                                 form=req, file=request.files['record'])
         else:
             app.logger.info("\n\nThere was an issue with the upload: %s" % resource_id)
+            template = "manage_request_%s_less_js.html" % req['audience']
             return show_request(request_id=req['request_id'],
-                                template="manage_request_%s_less_js.html" % (req['audience']), errors=errors,
+                                template=template, errors=errors,
                                 form=req, file=request.files['record'])
     return render_template('error.html', message="You can only update requests from a request page!")
 
@@ -1534,15 +1541,17 @@ def change_privacy():
     prr.change_privacy_setting(request_id=request.form['request_id'], privacy=privacy, field=field)
     return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
 
+
 @app.route("/switchRecordPrivacy", methods=["POST", "GET"])
 def switch_record_privacy():
     record = get_obj("Record", request.form['record_id'])
     privacy = request.form['privacy_setting']
-    app.logger.info("Changing Record Privacy for Request %s, Record_Id %s to %s" % (record, request.form['record_id'], privacy))
+    app.logger.info(
+        "Changing Record Privacy for Request %s, Record_Id %s to %s" % (record, request.form['record_id'], privacy))
     if record is not None and privacy is not None:
         prr.change_record_privacy(record_id=request.form['record_id'], privacy=privacy)
-    record.privacy = not(record.privacy)
-    return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))    
+    record.privacy = not (record.privacy)
+    return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
 
 
 @app.route("/changecategory", methods=["POST", "GET"])

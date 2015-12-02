@@ -350,7 +350,7 @@ class Request(db.Model):
     def extension(self, days_after=int(app.config['DAYS_AFTER_EXTENSION']),
                   custom_due_date=None):
         self.extended = True
-        if days_after != None and days_after != '':
+        if days_after != None and days_after != -1:
             self.due_date = cal.addbusdays(self.due_date, days_after)
         elif custom_due_date != None and custom_due_date != '':
             self.due_date = custom_due_date
