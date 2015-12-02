@@ -32,6 +32,7 @@ from models import AnonUser
 from datetime import datetime, timedelta, date
 from business_calendar import Calendar
 import operator
+import bleach
 
 cal = Calendar()
 
@@ -827,25 +828,46 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
     request_id_search = None
 
     if filters_map:
-        departments_selected = get_filter_value(filters_map=filters_map, filter_name='departments_selected',
-                                                is_list=True) or get_filter_value(filters_map, 'department')
+        departments_selected = get_filter_value(filters_map=filters_map, filter_name='departments_selected', is_list=True) or get_filter_value(filters_map, 'department')
+        departments_selected = bleach.clean(departments_selected); print departments_selected
         is_open = get_filter_value(filters_map=filters_map, filter_name='is_open', is_boolean=True)
+        is_open = bleach.clean(is_open); print is_open
         # in_progress = get_filter_value(filters_map=filters_map, filter_name='in_progress', is_boolean=True)
+        # in_progress = bleach.clean(# in_progress); print # in_progress
         is_closed = get_filter_value(filters_map=filters_map, filter_name='is_closed', is_boolean=True)
+        is_closed = bleach.clean(is_closed); print is_closed
         due_soon = get_filter_value(filters_map=filters_map, filter_name='due_soon', is_boolean=True)
+        due_soon = bleach.clean(due_soon); print due_soon
         overdue = get_filter_value(filters_map=filters_map, filter_name='overdue', is_boolean=True)
+        overdue = bleach.clean(overdue); print overdue
         mine_as_poc = get_filter_value(filters_map=filters_map, filter_name='mine_as_poc', is_boolean=True)
+        mine_as_poc = bleach.clean(mine_as_poc); print mine_as_poc
         mine_as_helper = get_filter_value(filters_map=filters_map, filter_name='mine_as_helper', is_boolean=True)
+        mine_as_helper = bleach.clean(mine_as_helper); print mine_as_helper
         sort_column = get_filter_value(filters_map, 'sort_column') or 'id'
+        sort_column = bleach.clean(sort_column); print sort_column
         sort_direction = get_filter_value(filters_map, 'sort_direction') or 'asc'
+        sort_direction = bleach.clean(sort_direction); print sort_direction
         search_term = get_filter_value(filters_map, 'search_term')
+        search_term = bleach.clean(search_term); print search_term
         min_due_date = get_filter_value(filters_map, 'min_due_date')
+        min_due_date = bleach.clean(min_due_date); print min_due_date
         max_due_date = get_filter_value(filters_map, 'max_due_date')
+        max_due_date = bleach.clean(max_due_date); print max_due_date
         min_date_received = get_filter_value(filters_map, 'min_date_received')
+        min_date_received = bleach.clean(min_date_received); print min_date_received
         max_date_received = get_filter_value(filters_map, 'max_date_received')
+        max_date_received = bleach.clean(max_date_received); print max_date_received
         requester_name = get_filter_value(filters_map, 'requester_name')
-        page_number = int(get_filter_value(filters_map, 'page_number') or '1')
+        requester_name = bleach.clean(requester_name); print requester_name
+        try:
+            page_number = int(get_filter_value(filters_map, 'page_number') or '1')
+        except:
+            page_number = 1
         request_id_search = get_filter_value(filters_map, 'request_id_search')
+        request_id_search = bleach.clean(request_id_search); print request_id_search
+        if not request_id_search or not re.match("FOIL-\d{4}-\d{3}-\d{5}", request_id_search):
+            request_id_search = None
 
     # Set initial checkboxes for mine_as_poc and mine_as_helper when redirected from login page
     if request.referrer and 'login' in request.referrer:
@@ -1514,6 +1536,7 @@ def report():
     agency_data_sorted = sorted(agency_data, key=operator.itemgetter('name'))
     user_sort = sorted(users, key=operator.attrgetter('alias'))
     return render_template('report.html', users=user_sort, agency_data=agency_data_sorted)
+
 
 
 @app.route("/submit", methods=["POST"])
