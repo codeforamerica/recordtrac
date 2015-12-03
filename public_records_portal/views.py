@@ -350,8 +350,7 @@ def new_request(passed_recaptcha=False, data=None):
                 zip=request_address_zip)
 
             if is_new == False:
-                errors[
-                    'duplicate_request'] = "Looks like your request is the same as <a href=\"/request/%s\"" % request_id
+                errors['duplicate_request'] = "Looks like your request is the same as <a href=\"/request/%s\"" % request_id
                 return render_template('new_request.html', form=form,
                                        routing_available=routing_available, departments=departments, errors=errors)
             if not request_id:
@@ -359,7 +358,7 @@ def new_request(passed_recaptcha=False, data=None):
                 return render_template('manage_request_non_partner.html', agency=request_agency,
                                        email=(request_email != ''))
             return redirect(url_for('show_request_for_x', request_id=request_id,
-                                    audience='new', email=email_valid))
+                                    audience='new'))
 
     elif request.method == 'GET':
         if 'LIAISONS_URL' in app.config:
@@ -426,7 +425,7 @@ def explain_all_actions():
 
 
 @app.route("/<string:audience>/request/<string:request_id>")
-def show_request_for_x(audience, request_id, errors):
+def show_request_for_x(audience, request_id):
     if audience == 'new':
         proper_request_id = re.match("FOIL-\d{4}-\d{3}-\d{5}", request_id)
     if proper_request_id:
