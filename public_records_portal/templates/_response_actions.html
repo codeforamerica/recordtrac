@@ -29,6 +29,7 @@
             <form name="note" id="AcknowledgeNote" method="post"
                   action="/update_a_request_acknowledge">
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <fieldset>
                     <h4>Estimated Duration</h4>
                     <select class="span12" id="acknowledge_status"
@@ -65,6 +66,7 @@
                   enctype="multipart/form-data">
                   <p>Please provide a short explanation of the record along with at least a file upload, a link to the record, or instructions on how to access the record offline.</p>                  
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <fieldset>
                     <div class="row-fluid">
                         <!-- name of record -->
@@ -173,6 +175,7 @@
         <div class="tab-pane" id="acknowledge_and_deny_request">
             <form name="close" id="closeRequest" method="post" action="/close">
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <fieldset>
                     <div class="row-fluid">
                         <div class="control-group">
@@ -224,6 +227,7 @@
         <form name="reopen_request" id="question" method="post"
               action="/update_a_request_reopen">
             <input type="hidden" name="request_id" value="{{ req.id }}"/>
+            <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
             <button id="reopenRequest"
                     class="btn btn-default btn-block btn-block" type="submit">
                 Reopen request
@@ -281,6 +285,7 @@
                   action="/add_a_record_and_close" autocomplete="on"
                   enctype="multipart/form-data">
                 <input type="hidden" name="audience" value="city"/>
+                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 {% if "missing_record_description" in errors %}
                     <div class="alert alert-danger" id="missing_record_description">
                         {{ errors['missing_record_description'] }}</div>
@@ -471,6 +476,7 @@
         <div class="tab-pane" id="add_note">
             <form name="note" id="note" method="post" action="/add_a_note">
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <fieldset>
                     <div class="row-fluid">
                         <div class="control-group">
@@ -508,6 +514,7 @@
                   action="/add_a_extension">
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <input type="hidden" name="audience" value="city"/>
+                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <input type="hidden" name="extend_reason"
                        value="{{ 'Extension - Large Amount' | explain_action('What') }}"/>
                 <fieldset>
@@ -566,6 +573,7 @@
         <div class="tab-pane" id="generate_pdf">
             <form name="note" id="note_pdf" method="post" action="/add_a_pdf">
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <fieldset>
                     <div class="row-fluid">
                         <div class="control-group">
@@ -623,6 +631,7 @@
         <div class="tab-pane" id="close_request">
             <form name="close" id="closeRequest" method="post" action="/close">
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <fieldset>
                     <legend>Close request</legend>
                     <div class="row-fluid">

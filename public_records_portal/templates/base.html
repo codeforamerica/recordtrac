@@ -220,6 +220,7 @@ This template provides the header, footer, and envelope info for all pages excep
                         <input placeholder="Search"
                                class="input-search placeholder"
                                name="search-terms" type="text"/>
+                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                         <button class="ico-search">Search</button>
                     </form>
                     <div class="copyright">

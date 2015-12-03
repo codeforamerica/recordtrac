@@ -30,6 +30,7 @@
 <div class="r_sidebar_banner hidden-phone hidden-tablet">
     <form name="reopen_request" class="form-inline" id="question" method="post" action="/update_a_request_reopen">
         <input type="hidden" name="request_id" value="{{ req.id }}"/>
+        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
         <button id="reopenRequest" class="btn btn-primary btn-block" type="submit">Reopen request</button>
     </form>
 </div>

@@ -380,7 +380,9 @@ def new_request(passed_recaptcha=False, data=None):
                 prr.nonportal_request(request.form)
                 return render_template('manage_request_non_partner.html', agency=request_agency,
                                        email=(request_email != ''))
-            return redirect(url_for('show_request_for_x', audience='new', request_id=request_id))
+
+            return redirect(url_for('show_request_for_x', audience='new',request_id=request_id))
+
 
     elif request.method == 'GET':
         if 'LIAISONS_URL' in app.config:
@@ -448,7 +450,12 @@ def explain_all_actions():
 
 @app.route("/<string:audience>/request/<string:request_id>")
 def show_request_for_x(audience, request_id):
+<<<<<<< HEAD
     proper_request_id = re.match("FOIL-\d{4}-\d{3}-\d{5}", request_id)
+=======
+    if audience == 'new':
+        proper_request_id = re.match("FOIL-\d{4}-\d{3}-\d{5}", request_id)
+>>>>>>> added _csrf_token to all tokens
     if proper_request_id:
         if "city" in audience:
             return show_request_for_city(request_id=request_id)
