@@ -57,6 +57,11 @@ zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
 def make_session_permanent():
     app.permanent_session_lifetime = timedelta(minutes=180)
 
+def generate_csrf_token():
+    if '_csrf_token' not in session:
+        session['_csrf_token'] = str(uuid4())
+    return session['_csrf_token']
+app.jinja_env.globals['csrf_token'] = generate_csrf_token
 
 @app.before_request
 def csrf_protect():
@@ -66,13 +71,6 @@ def csrf_protect():
             return access_denied(403)
 
 
-def generate_csrf_token():
-    if '_csrf_token' not in session:
-        session['_csrf_token'] = str(uuid4())
-    return session['_csrf_token']
-
-
-app.jinja_env.globals['csrf_token'] = generate_csrf_token
 
 
 # Submitting a new request
