@@ -89,8 +89,6 @@ This template provides the header, footer, and envelope info for all pages excep
     ] -%}
 {% endif %}
 
-<form method=post action="">
-    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
 
 {% if current_user.is_authenticated %}
     {% set active_page = active_page|default('view_requests') -%}
@@ -251,5 +249,7 @@ This template provides the header, footer, and envelope info for all pages excep
 
 {% block custom_script_links %}
 {% endblock custom_script_links %}
+<form method=post action="">
+    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
 </body>
 </html>
