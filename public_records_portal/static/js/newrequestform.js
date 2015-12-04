@@ -4,7 +4,6 @@ $(function () {
         "Mayor's Office of Contract Services",
         "Procurement Policy Board",
         "Small Business Services"]
-    var civicServices = ["Department of Records and Information Services"]
     var cultureAndRecreation = ["Art Commission",
         "Department of Cultural Affairs",
         "Mayor's Office of Media and Entertainment",
@@ -30,7 +29,8 @@ $(function () {
         "Law Department",
         "Office of Management and Budget",
         "Office of the Mayor",
-        "Office of Payroll Administration"]
+        "Office of Payroll Administration",
+        "Department of Records and Information Services"]
     var health = ["Office of Chief Medical Examiner",
         "Health and Hospitals Corporation",
         "Department of Health and Mental Hygiene"]
@@ -57,7 +57,7 @@ $(function () {
 
     $("#agency").ready(function () {
         vals = [];
-        vals = business.concat(civicServices, cultureAndRecreation, education, environment, governmentAdministration,
+        vals = business.concat(cultureAndRecreation, education, environment, governmentAdministration,
             health, housingAndDevelopment, publicSafety, socialServices, transportation);
         vals.sort();
 
@@ -75,9 +75,6 @@ $(function () {
         switch (key) {
             case 'Business':
                 vals = business;
-                break;
-            case 'Civic Services':
-                vals = civicServices;
                 break;
             case 'Culture and Recreation':
                 vals = cultureAndRecreation;
@@ -100,14 +97,14 @@ $(function () {
             case 'Public':
                 vals = publicSafety;
                 break;
-            case 'Social':
+            case 'Social Services':
                 vals = socialServices;
                 break;
             case 'Transportation':
                 vals = transportation;
                 break;
             default:
-                vals = business.concat(civicServices, cultureAndRecreation, education, environment, governmentAdministration,
+                vals = business.concat(cultureAndRecreation, education, environment, governmentAdministration,
                     health, housingAndDevelopment, publicSafety, socialServices, transportation);
                 break;
         }
