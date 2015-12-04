@@ -1474,7 +1474,7 @@ def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
                 "status": "ok",
                 "data": [
                     {"label": "Received", "value": len(received_request.all()), "callback": "received"},
-                    {"label": "Published", "value": len(published_request.all()), "callback": "received"},
+                    {"label": "Reports Published", "value": len(published_request.all()), "callback": "received"},
                     {"label": "Denied", "value": len(denied_request), "callback": "denied"},
                     {"label": "Granted And Closed", "value": len(granted_and_closed_request),
                      "callback": "granted_and_closed"},
