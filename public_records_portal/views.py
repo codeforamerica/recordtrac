@@ -349,8 +349,8 @@ def new_request(passed_recaptcha=False, data=None):
                 state=request_address_state,
                 zip=request_address_zip)
 
-            if is_new == False:
-                errors['duplicate_request'] = "Looks like your request is the same as <a href=\"/request/%s\"" % request_id
+            if not is_new:
+                errors['duplicate_request'] = request_id
                 return render_template('new_request.html', form=form,
                                        routing_available=routing_available, departments=departments, errors=errors)
             if not request_id:

@@ -21,6 +21,11 @@
                 respond to your request.</p>
         </div>
     </div>
+    {% if 'duplicate_request' in errors %}
+        <div class="alert alert-danger" id="duplicate_request">
+            Whoops! Looks like your request is the same as <a href="/request/{{ errors['duplicate_request'] }}">{{ errors['duplicate_request'] }}</a>
+        </div>
+    {% endif %}
     <div class="row-fluid">
         <form name="newrequest" class="form-horizontal" id="submitRequest" method="post" action="/new"
               autocomplete="off" novalidate="novalidate" enctype="multipart/form-data">

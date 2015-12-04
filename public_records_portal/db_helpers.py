@@ -501,9 +501,9 @@ def change_request_status(request_id, status):
 
 # @export "find_request"
 def find_request(text):
-    req = Request.query.filter_by(text=text).first()
+    req = Request.query.filter_by(summary=text).first()
     if req:
-        return req.id
+        return req
     return None
 
 
