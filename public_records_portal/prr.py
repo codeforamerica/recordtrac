@@ -346,9 +346,10 @@ def make_request(agency=None, summary=None, text=None, attachment=None,
         is_partner_agency = agency_codes[agency]
     except KeyError:
         return None, True
-    request_id = find_request(text)
-    if request_id:  # Same request already exists
-        return request_id, False
+    request = find_request(summary)
+    if request:  # Same request already exists
+        if agency == request.department_name():
+            return request.id, False
     assigned_to_email = app.config['DEFAULT_OWNER_EMAIL']
     assigned_to_reason = app.config['DEFAULT_OWNER_REASON']
     if agency:
