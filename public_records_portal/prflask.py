@@ -6,17 +6,13 @@
 
 """
 
-from datetime import date
-
-from flask.ext.restless import APIManager
 from flask.ext.admin import Admin, expose, AdminIndexView
 from flask.ext.admin.contrib.sqla import ModelView
+from flask.ext.restless import APIManager
 from jinja2.filters import do_mark_safe
 from wtforms.validators import ValidationError
 
 from views import *  # Import all the functions that render templates
-
-
 
 # Create API
 manager = APIManager(app, flask_sqlalchemy_db=db)

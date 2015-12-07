@@ -8,19 +8,16 @@
 
 """
 
-from datetime import datetime, timedelta
-import os
 import json
-import logging
+import mimetypes
+import os
+import urllib
 
 from flask import render_template
 from flask_mail import Mail, Message
 
-from public_records_portal import app
-from db_helpers import *
 import helpers
-
-import urllib, mimetypes
+from db_helpers import *
 
 # Set flags:
 

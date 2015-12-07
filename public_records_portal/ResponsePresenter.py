@@ -6,9 +6,10 @@
 
 """
 
-from models import Record, Note
-import upload_helpers
 from flask.ext.login import current_user
+
+import upload_helpers
+
 
 class ResponsePresenter:
     def __init__(self, record=None, note=None):
