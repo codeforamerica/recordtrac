@@ -32,6 +32,7 @@ from models import AnonUser
 from datetime import datetime, timedelta, date
 from business_calendar import Calendar
 import operator
+import bleach
 
 cal = Calendar()
 
@@ -167,7 +168,6 @@ def new_request(passed_recaptcha=False, data=None):
             request_address_state = form.request_address_state.data
             request_address_zip = form.request_address_zip.data
 
-
             # Check Summary
             if not (request_summary and request_summary.strip()):
                 errors['missing_summary'] = 'You must enter a summary for this request'
@@ -209,7 +209,6 @@ def new_request(passed_recaptcha=False, data=None):
                     request_date = None
             else:
                 errors['invalid_date'] = "Please use the datepicker to select a date."
-
 
             if not (request_first_name and request_first_name.strip()):
                 errors['missing_first_name'] = "Please enter the your first name"
@@ -270,8 +269,7 @@ def new_request(passed_recaptcha=False, data=None):
                     return render_template('offline_request.html', form=form,
                                            routing_available=routing_available, departments=departments, errors=errors)
 
-                return redirect(url_for('show_request_for_x', request_id=request_id,
-                                        audience='new', email=(request_email is not None)))
+                return redirect(url_for('show_request_for_x',audience='new',request_id=request_id))
 
         else:
             form = NewRequestForm(request.form)
@@ -306,6 +304,7 @@ def new_request(passed_recaptcha=False, data=None):
             elif len(request_summary) > 5000:
                 errors['description_length'] = 'The request description must be less than 5000 characters'
 
+            # Check first name and last name
             if not (request_first_name and request_first_name.strip()):
                 errors['missing_first_name'] = "Please enter the your first name"
             if not (request_last_name and request_last_name.strip()):
@@ -350,17 +349,15 @@ def new_request(passed_recaptcha=False, data=None):
                 state=request_address_state,
                 zip=request_address_zip)
 
-            if is_new == False:
-                errors[
-                    'duplicate_request'] = "Looks like your request is the same as <a href=\"/request/%s\"" % request_id
+            if not is_new:
+                errors['duplicate_request'] = request_id
                 return render_template('new_request.html', form=form,
                                        routing_available=routing_available, departments=departments, errors=errors)
             if not request_id:
                 prr.nonportal_request(request.form)
                 return render_template('manage_request_non_partner.html', agency=request_agency,
                                        email=(request_email != ''))
-            return redirect(url_for('show_request_for_x', request_id=request_id,
-                                    audience='new', email=(request_email is not None)))
+            return redirect(url_for('show_request_for_x', audience='new', request_id=request_id))
 
     elif request.method == 'GET':
         if 'LIAISONS_URL' in app.config:
@@ -428,9 +425,12 @@ def explain_all_actions():
 
 @app.route("/<string:audience>/request/<string:request_id>")
 def show_request_for_x(audience, request_id):
-    if "city" in audience:
-        return show_request_for_city(request_id=request_id)
-    return show_request(request_id=request_id, template="manage_request_%s.html" % (audience))
+    proper_request_id = re.match("FOIL-\d{4}-\d{3}-\d{5}", request_id)
+    if proper_request_id:
+        if "city" in audience:
+            return show_request_for_city(request_id=request_id)
+        return show_request(request_id=request_id, template="manage_request_%s.html" % (audience))
+    return bad_request(400)
 
 
 show_request_for_x.methods = ['GET', 'POST']
@@ -472,7 +472,7 @@ def track(request_id=None):
         if not re.match("FOIL-\d{4}-\d{3}-\d{5}", request.form["request_id"]):
             request_id = request.form['request_id']
             if len(str(request_id)) > 20:
-                error="You have entered more than the allowed character length. A FOIL request should be in the format of FOIL-XXXX-XXX-XXXXX.\n Please try again!"
+                error = "You have entered more than the allowed character length. A FOIL request should be in the format of FOIL-XXXX-XXX-XXXXX.\n Please try again!"
                 return render_template("track.html", error=error)
         if not current_user.is_anonymous:
             audience = 'city'
@@ -499,7 +499,7 @@ def unfollow(request_id, email):
 
 
 @app.route("/request/<string:request_id>")
-def show_request(request_id, template="manage_request_public.html"):
+def show_request(request_id, template="manage_request_public.html", errors=None, form=None, file=None):
     req = get_obj("Request", request_id)
     if not req:
         return page_not_found(494)
@@ -541,8 +541,13 @@ def show_request(request_id, template="manage_request_public.html"):
 
     print helpers
 
-    return render_template(template, req=req, agency_data=agency_data, users=users,
-                           department=department, assigned_user=assigned_user, helpers=helpers, audience=audience)
+    if (errors):
+        return render_template(template, req=req, agency_data=agency_data, users=users,
+                               department=department, assigned_user=assigned_user, helpers=helpers, audience=audience
+                               , errors=errors, form=form, file=file)
+    else:
+        return render_template(template, req=req, agency_data=agency_data, users=users,
+                               department=department, assigned_user=assigned_user, helpers=helpers, audience=audience)
 
 
 # @app.route("/api/staff")
@@ -578,20 +583,43 @@ def edit_case(request_id):
 @login_required
 def add_a_resource(resource):
     req = request.form
+    errors = {}
     if request.method == 'POST':
-        print "Resource is a ", resource
+        print "Resource is a", resource
         if resource == 'pdf':
             return add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
+        # Field validation for adding a recored
+        elif resource == 'record_and_close':
+            if not ((req['link_url']) or (req['record_access']) or (request.files['record'])):
+                errors[
+                    'missing_record_access'] = "You must upload a record, provide a link to a record, or indicate how the record can be accessed"
+            if not ((req['record_description'])):
+                errors['missing_record_description'] = "Please include a name for this record"
+
         resource_id = add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
         if type(resource_id) == int or str(resource_id).isdigit():
+            template = "manage_request_%s_less_js.html" % req['audience']
             app.logger.info("\n\nSuccessfully added resource: %s with id: %s" % (resource, resource_id))
-            return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
+            if resource == 'record_and_close':
+                return show_request(request_id=req['request_id'],
+                                template=template, errors=errors,
+                                form=req, file=request.files['record'])
+
+            return show_request(request_id=req['request_id'],
+                                template=template, errors=errors,
+                                form=req)
         elif resource_id == False:
             app.logger.info("\n\nThere was an issue with adding resource: %s" % resource)
-            return render_template('error.html')
+            template = "manage_request_%s_less_js.html" % req['audience']
+            return show_request(request_id=req['request_id'],
+                                template=template, errors=errors,
+                                form=req, file=request.files['record'])
         else:
             app.logger.info("\n\nThere was an issue with the upload: %s" % resource_id)
-            return render_template('help_with_uploads.html', message=resource_id)
+            template = "manage_request_%s_less_js.html" % req['audience']
+            return show_request(request_id=req['request_id'],
+                                template=template, errors=errors,
+                                form=req, file=request.files['record'])
     return render_template('error.html', message="You can only update requests from a request page!")
 
 
@@ -803,26 +831,46 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
     request_id_search = None
 
     if filters_map:
-        departments_selected = get_filter_value(filters_map=filters_map, filter_name='departments_selected',
-                                                is_list=True) or get_filter_value(filters_map, 'department')
+        departments_selected = get_filter_value(filters_map=filters_map, filter_name='departments_selected', is_list=True) or get_filter_value(filters_map, 'department')
+        departments_selected = bleach.clean(departments_selected); print departments_selected
         is_open = get_filter_value(filters_map=filters_map, filter_name='is_open', is_boolean=True)
+        is_open = bleach.clean(is_open); print is_open
         # in_progress = get_filter_value(filters_map=filters_map, filter_name='in_progress', is_boolean=True)
+        # in_progress = bleach.clean(# in_progress); print # in_progress
         is_closed = get_filter_value(filters_map=filters_map, filter_name='is_closed', is_boolean=True)
+        is_closed = bleach.clean(is_closed); print is_closed
         due_soon = get_filter_value(filters_map=filters_map, filter_name='due_soon', is_boolean=True)
+        due_soon = bleach.clean(due_soon); print due_soon
         overdue = get_filter_value(filters_map=filters_map, filter_name='overdue', is_boolean=True)
+        overdue = bleach.clean(overdue); print overdue
         mine_as_poc = get_filter_value(filters_map=filters_map, filter_name='mine_as_poc', is_boolean=True)
+        mine_as_poc = bleach.clean(mine_as_poc); print mine_as_poc
         mine_as_helper = get_filter_value(filters_map=filters_map, filter_name='mine_as_helper', is_boolean=True)
+        mine_as_helper = bleach.clean(mine_as_helper); print mine_as_helper
         sort_column = get_filter_value(filters_map, 'sort_column') or 'id'
+        sort_column = bleach.clean(sort_column); print sort_column
         sort_direction = get_filter_value(filters_map, 'sort_direction') or 'asc'
+        sort_direction = bleach.clean(sort_direction); print sort_direction
         search_term = get_filter_value(filters_map, 'search_term')
+        search_term = bleach.clean(search_term); print search_term
         min_due_date = get_filter_value(filters_map, 'min_due_date')
+        min_due_date = bleach.clean(min_due_date); print min_due_date
         max_due_date = get_filter_value(filters_map, 'max_due_date')
+        max_due_date = bleach.clean(max_due_date); print max_due_date
         min_date_received = get_filter_value(filters_map, 'min_date_received')
+        min_date_received = bleach.clean(min_date_received); print min_date_received
         max_date_received = get_filter_value(filters_map, 'max_date_received')
+        max_date_received = bleach.clean(max_date_received); print max_date_received
         requester_name = get_filter_value(filters_map, 'requester_name')
-        page_number = int(get_filter_value(filters_map, 'page_number') or '1')
+        requester_name = bleach.clean(requester_name); print requester_name
+        try:
+            page_number = int(get_filter_value(filters_map, 'page_number') or '1')
+        except:
+            page_number = 1
         request_id_search = get_filter_value(filters_map, 'request_id_search')
-
+        request_id_search = bleach.clean(request_id_search); print request_id_search
+        if not request_id_search or not re.match("FOIL-\d{4}-\d{3}-\d{5}", request_id_search):
+            request_id_search = None
 
     # Set initial checkboxes for mine_as_poc and mine_as_helper when redirected from login page
     if request.referrer and 'login' in request.referrer:
@@ -1218,8 +1266,6 @@ def edit_user_info():
 def login():
     form = LoginForm()
     errors = []
-    if request.host_url != app.config['AGENCY_APPLICATION_URL']:
-        return redirect(url_for('landing'))
     if request.method == 'POST':
         print form.username.data
         print form.password.data
@@ -1243,13 +1289,18 @@ def login():
         else:
             errors.append('Something went wrong')
             return render_template('login.html', form=form, errors=errors)
-    else:
+
+    elif request.method == 'GET':
+        if request.host_url != app.config['AGENCY_APPLICATION_URL']:
+            return redirect(url_for('landing'))
         user_id = get_user_id()
         if user_id:
             redirect_url = get_redirect_target()
             return redirect(redirect_url)
         else:
             return render_template('login.html', form=form)
+    else:
+        return bad_request(400)
 
 
 @app.route("/attachments/<string:resource>", methods=["GET"])
@@ -1426,7 +1477,7 @@ def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
                 "status": "ok",
                 "data": [
                     {"label": "Received", "value": len(received_request.all()), "callback": "received"},
-                    {"label": "Published", "value": len(published_request.all()), "callback": "received"},
+                    {"label": "Reports Published", "value": len(published_request.all()), "callback": "received"},
                     {"label": "Denied", "value": len(denied_request), "callback": "denied"},
                     {"label": "Granted And Closed", "value": len(granted_and_closed_request),
                      "callback": "granted_and_closed"},
@@ -1488,9 +1539,10 @@ def report():
     overdue_request = models.Request.query.filter(models.Request.overdue == True).all()
     app.logger.info("\n\nOverdue Requests %s" % (len(overdue_request)))
     # users_sort = sorted(users.val)
-    agency_data_sorted=sorted(agency_data, key=operator.itemgetter('name'))
-    user_sort=sorted(users, key=operator.attrgetter('alias'))
+    agency_data_sorted = sorted(agency_data, key=operator.itemgetter('name'))
+    user_sort = sorted(users, key=operator.attrgetter('alias'))
     return render_template('report.html', users=user_sort, agency_data=agency_data_sorted)
+
 
 
 @app.route("/submit", methods=["POST"])
@@ -1512,6 +1564,18 @@ def change_privacy():
     return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
 
 
+@app.route("/switchRecordPrivacy", methods=["POST", "GET"])
+def switch_record_privacy():
+    record = get_obj("Record", request.form['record_id'])
+    privacy = request.form['privacy_setting']
+    app.logger.info(
+        "Changing Record Privacy for Request %s, Record_Id %s to %s" % (record, request.form['record_id'], privacy))
+    if record is not None and privacy is not None:
+        prr.change_record_privacy(record_id=request.form['record_id'], privacy=privacy)
+    record.privacy = not (record.privacy)
+    return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
+
+
 @app.route("/changecategory", methods=["POST", "GET"])
 def change_category():
     category = request.form['category']
@@ -1530,17 +1594,21 @@ def any_page(page):
 def bad_request(e):
     return render_template("400.html"), 400
 
+
 @app.errorhandler(401)
 def unauthorized(e):
     return render_template("401.html"), 401
+
 
 @app.errorhandler(403)
 def access_denied(e):
     return redirect(url_for('login'))
 
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html"), 404
+
 
 @app.errorhandler(405)
 def method_not_allowed(e):
@@ -1556,10 +1624,12 @@ def internal_server_error(e):
 def unexplained_error(e):
     return render_template("501.html"), 501
 
+
 @app.errorhandler(502)
 def bad_gateway(e):
-    render_template("500.html"),502
+    render_template("500.html"), 502
+
 
 @app.errorhandler(503)
 def service_unavailable(e):
-    render_template("500.html"),503
+    render_template("500.html"), 503
