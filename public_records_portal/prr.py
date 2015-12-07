@@ -94,11 +94,11 @@ def add_resource(resource, request_body, current_user_id=None):
             return "When uploading a record, please fill out the 'summary' field."
         if 'record_access' in fields and fields['record_access'] != "":
             return add_offline_record(fields['request_id'], fields['record_description'], fields['record_access'],
-                                      current_user_id, department_name)
+                                      current_user_id, department_name, privacy=fields['record_privacy'])
         elif 'link_url' in fields and fields['link_url'] != "":
             return add_link(request_id=fields['request_id'], url=fields['link_url'],
                             description=fields['record_description'], user_id=current_user_id,
-                            department_name=department_name)
+                            department_name=department_name, privacy=fields['record_privacy'])
         else:
             app.logger.info("\n\neverything else...")
             document = None
@@ -107,7 +107,7 @@ def add_resource(resource, request_body, current_user_id=None):
             except:
                 app.logger.info("\n\nNo file passed in")
             return upload_record(request_id=fields['request_id'], document=document, request_body=None,
-                                 description=fields['record_description'], user_id=current_user_id)
+                                 description=fields['record_description'], user_id=current_user_id, privacy=fields['record_privacy'])
     elif "qa" in resource:
         return ask_a_question(request_id=fields['request_id'], user_id=current_user_id,
                               question=fields['question_text'], department_name=department_name)
@@ -274,7 +274,7 @@ def add_pdf(request_id, text, user_id=None, passed_spam_filter=False, privacy=1)
 
 
 ### @export "upload_record"
-def upload_record(request_id, description, user_id, request_body, document=None):
+def upload_record(request_id, description, user_id, request_body, document=None, privacy=True):
     """ Creates a record with upload/download attributes """
     app.logger.info("\n\nBegins Upload_record method")
     try:
@@ -293,7 +293,7 @@ def upload_record(request_id, description, user_id, request_body, document=None)
         if doc_id:
             # record_id = create_record(doc_id = doc_id, request_id = request_id, user_id = user_id, description = description, filename = filename, url = app.config['HOST_URL'] + doc_id)
             record_id = create_record(doc_id=None, request_id=request_id, user_id=user_id, description=description,
-                                      filename=filename, url=app.config['HOST_URL'] + doc_id)
+                                      filename=filename, url=app.config['HOST_URL'] + doc_id, privacy=privacy)
             change_request_status(request_id, "A response has been added.")
             if request_body is not None:
                 attached_file = app.config['UPLOAD_FOLDER'] + "/" + filename
@@ -310,10 +310,10 @@ def upload_record(request_id, description, user_id, request_body, document=None)
 
 
 ### @export "add_offline_record"
-def add_offline_record(request_id, description, access, user_id, department_name, request_body=None):
+def add_offline_record(request_id, description, access, user_id, department_name, request_body=None, privacy=True):
     """ Creates a record with offline attributes """
     record_id = create_record(request_id=request_id, user_id=user_id, access=access,
-                              description=description)  # To create an offline record, we need to know the request ID to which it will be added, the user ID for the person adding the record, how it can be accessed, and a description/title of the record.
+                              description=description, privacy=privacy)  # To create an offline record, we need to know the request ID to which it will be added, the user ID for the person adding the record, how it can be accessed, and a description/title of the record.
     if record_id:
         change_request_status(request_id, "A response has been added.")
         generate_prr_emails(request_id=request_id, notification_type="City response added", text=description,
@@ -324,9 +324,9 @@ def add_offline_record(request_id, description, access, user_id, department_name
 
 
 ### @export "add_link"
-def add_link(request_id, url, description, user_id, department_name=None):
+def add_link(request_id, url, description, user_id, department_name=None, privacy=True):
     """ Creates a record with link attributes """
-    record_id = create_record(url=url, request_id=request_id, user_id=user_id, description=description)
+    record_id = create_record(url=url, request_id=request_id, user_id=user_id, description=description, privacy=privacy)
     if record_id:
         change_request_status(request_id, "A response has been added.")
         generate_prr_emails(request_id=request_id, notification_type="City response added", text=url + description,
@@ -346,9 +346,10 @@ def make_request(agency=None, summary=None, text=None, attachment=None,
         is_partner_agency = agency_codes[agency]
     except KeyError:
         return None, True
-    request_id = find_request(text)
-    if request_id:  # Same request already exists
-        return request_id, False
+    request = find_request(summary)
+    if request:  # Same request already exists
+        if agency == request.department_name():
+            return request.id, False
     assigned_to_email = app.config['DEFAULT_OWNER_EMAIL']
     assigned_to_reason = app.config['DEFAULT_OWNER_REASON']
     if agency:
@@ -584,3 +585,7 @@ def change_privacy_setting(request_id, privacy, field):
         # Set description to private
         req.descriptionPrivate = privacy
         update_obj(attribute="descriptionPrivate", val=privacy, obj_type="Request", obj_id=req.id)
+
+def change_record_privacy(record_id, privacy):
+    record = get_obj("Record", record_id)
+    update_obj(attribute="privacy", val=privacy, obj_type="Record", obj_id=record.id)

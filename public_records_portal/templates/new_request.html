@@ -21,6 +21,11 @@
                 respond to your request.</p>
         </div>
     </div>
+    {% if 'duplicate_request' in errors %}
+        <div class="alert alert-danger" id="duplicate_request">
+            Whoops! Looks like your request is the same as <a href="/request/{{ errors['duplicate_request'] }}">{{ errors['duplicate_request'] }}</a>
+        </div>
+    {% endif %}
     <div class="row-fluid">
         <form name="newrequest" class="form-horizontal" id="submitRequest" method="post" action="/new"
               autocomplete="off" novalidate="novalidate" enctype="multipart/form-data">
@@ -30,12 +35,11 @@
                     <div class="span8">
                         <div class="control-group">
                             <h2>
-                                <small id='categoryTitle'>Category (optional)</small>
+                                <small id='categoryTitle'>Category (optional)&nbsp;<a href="#" data-toggle="tooltip" data-placement="right" id="category_info" title="Select to display the agency list for the category to help find the agency you want."><icon style="vertical-align: middle;" class="icon-info-sign"></icon></a> </small>
                             </h2>
                             <select id="category" class="input-block-level">
                                 <option selected value></option>
                                 <option>Business</option>
-                                <option>Civic Services</option>
                                 <option>Culture and Recreation</option>
                                 <option>Education</option>
                                 <option>Environment</option>
@@ -43,7 +47,7 @@
                                 <option>Health</option>
                                 <option>Housing</option>
                                 <option>Public</option>
-                                <option>Social</option>
+                                <option>Social Services</option>
                                 <option>Transportation</option>
                             </select>
                         </div>
@@ -82,15 +86,15 @@
                                 {{ errors['summary_length'] }}
                             </div>
                             {% endif %}
-                            {{ form.request_summary(class="input-block-level", rows="2", id="request_summary", placeholder="Please provide a short summary of your request" ) }}
-                            <div id="summary_count"></div>
+                            {{ form.request_summary(class="input-block-level", rows="2", maxlength="90", id="request_summary", placeholder="Please provide a short summary of your request" ) }}
+                            <!--<div id="summary_count"></div>-->
                         </div>
                     </div>
                     <div class="span4">
                         <br></br>
                         <div class="sideblock">
 
-                            <h3>Example Topic</h3>
+                            <h3>Example Title</h3>
 
                             <p>Public Advocate Emails from 2015</p>
                         </div>
@@ -117,8 +121,8 @@
                                 {{ errors['summary_length'] }}
                             </div>
                             {% endif %}
-                            {{ form.request_text(class="input-block-level",rows="6",id="request_text",placeholder="Provide more information about your request to help the City locate the record. If donâ€™t know the record name, describe type of information you think it would contain and the approximate date range. Do not include private info such as social security # or credit card." ) }}
-                            <div id="text_count"></div>
+                            {{ form.request_text(class="input-block-level",rows="6",id="request_text",maxlength="5000",placeholder="Provide more information about your request to help the City locate the record. If donâ€™t know the record name, describe type of information you think it would contain and the approximate date range. Do not include private info such as social security # or credit card." ) }}
+                            <!--<div id="text_count"></div>-->
                         </div>
 
                     </div>

@@ -286,7 +286,7 @@ class Request(db.Model):
     qas = relationship('QA', cascade='all,delete',
                        order_by='QA.date_created.desc()')  # The list of QA units for this request
     status_updated = db.Column(db.DateTime)
-    summary = db.Column(db.String(5000), nullable=False)
+    summary = db.Column(db.String(90), nullable=False)
     text = db.Column(db.String(5000),
                      nullable=False)  # The actual request text.
     owners = relationship('Owner', cascade='all, delete',
@@ -350,7 +350,7 @@ class Request(db.Model):
     def extension(self, days_after=int(app.config['DAYS_AFTER_EXTENSION']),
                   custom_due_date=None):
         self.extended = True
-        if days_after != None and days_after != '':
+        if days_after != None and days_after != -1:
             self.due_date = cal.addbusdays(self.due_date, days_after)
         elif custom_due_date != None and custom_due_date != '':
             self.due_date = custom_due_date
@@ -664,6 +664,7 @@ class Record(db.Model):
         db.String())  # Where it can be downloaded on the internet.
     access = db.Column(
         db.String())  # How to access it. Probably only defined on offline docs for now.
+    privacy=db.Column(db.Boolean, default=True)
 
     def __init__(
             self,
@@ -674,6 +675,7 @@ class Record(db.Model):
             doc_id=None,
             description=None,
             access=None,
+            privacy=True
     ):
         self.doc_id = doc_id
         self.request_id = request_id
@@ -683,6 +685,7 @@ class Record(db.Model):
         self.url = url
         self.filename = filename
         self.access = access
+        self.privacy = privacy
 
     def __repr__(self):
         return '<Record %r>' % self.description

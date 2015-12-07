@@ -5,7 +5,6 @@
 <div class="row-fluid participantRow">
     <div>
         <h4 class="participantRow-title">Assigned Agency</h4>
-
         <div class="participantRow-participants">{{ department.name }}</div>
     </div>
     {% if current_user.is_authenticated and audience == 'city' %}
@@ -41,5 +40,5 @@
     Received: {{ req.date_received.strftime('%Y-%m-%d') }}
 </div>
 {% endblock request_dates %}
-<div class="text-center">Due: <span class="label">{{ req.due_date.strftime('%Y-%m-%d') }}</span></div>
+<div class="text-center">Acknowledgement Due: <span class="label">{{ req.due_date.strftime('%Y-%m-%d') }}</span></div>
 <div class="span12"><br /></div>

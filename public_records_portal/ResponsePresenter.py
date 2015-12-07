@@ -8,7 +8,7 @@
 
 from models import Record, Note
 import upload_helpers
-
+from flask.ext.login import current_user
 
 class ResponsePresenter:
     def __init__(self, record=None, note=None):
@@ -62,8 +62,16 @@ class ResponsePresenter:
         return get_attribute(attribute="email", obj_id=self.response.uid, obj_type="User")
 
     def display_text(self):
+        print current_user.is_anonymous
         if self.type == "offline":
-            return "Name of Record: %s<br> How to Access Record: %s" % (self.response.description, self.response.access)
+            if current_user.role not in ['Agency Helpers'] and current_user.role is not None:
+                if self.response.privacy:
+                    return "Name of Record: %s<br> How to Access Record: %s <form method='post' action='/switchRecordPrivacy'><input type='hidden' name='request_id' value='%s'/><input type='hidden' name='record_id' value='%s'/><input class='radio inline' type='radio' name='privacy_setting' value='False' type='submit' onclick='action=this.form.submit();'> Public</input><input class='radio inline' type='radio' name='privacy_setting' value='True' type='submit' onclick='action=this.form.submit();' checked> Private</input></form>" % (self.response.description, self.response.access, self.response.request_id, self.response.id)
+                else:
+                    return "Name of Record: %s<br> How to Access Record: %s <form method='post' action='/switchRecordPrivacy'><input type='hidden' name='request_id' value='%s'/><input type='hidden' name='record_id' value='%s'/><input class='radio inline' type='radio' name='privacy_setting' value='False' type='submit' onclick='action=this.form.submit();' checked> Public</input><input class='radio inline' type='radio' name='privacy_setting' value='True' type='submit' onclick='action=this.form.submit();'> Private</input></form>" % (self.response.description, self.response.access, self.response.request_id, self.response.id)
+            else:
+                    if current_user.role in ['Agency Helpers'] or not(self.response.privacy):
+                        return "Name of Record: %s<br> How to Access Record: %s" % (self.response.description, self.response.access)         
         elif self.type == "document":
             download_url = self.response.download_url
             if not download_url:
@@ -80,11 +88,24 @@ class ResponsePresenter:
             if self.response.description and self.response.url and not(self.response.filename):
                 if 'http' not in self.response.url:
                     self.response.url = 'http://' + self.response.url
-                return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s'>%s </a>" % (self.response.url, self.response.url, self.response.description)
+                if current_user.role not in ['Agency Helpers'] and current_user.role is not None:    
+                    if self.response.privacy: 
+                        return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s'>%s </a><form method='post' action='/switchRecordPrivacy'><input type='hidden' name='request_id' value='%s'/><input type='hidden' name='record_id' value='%s'/><input class='radio inline' type='radio' name='privacy_setting' value='False' type='submit' onclick='action=this.form.submit();'> Public</input><input class='radio inline' type='radio' name='privacy_setting' value='True' type='submit' onclick='action=this.form.submit();' checked> Private</input></form>" % (self.response.url, self.response.url, self.response.description, self.response.request_id, self.response.id)
+                    else:
+                        return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s'>%s </a><form method='post' action='/switchRecordPrivacy'><input type='hidden' name='request_id' value='%s'/><input type='hidden' name='record_id' value='%s'/><input class='radio inline' type='radio' name='privacy_setting' value='False' type='submit' onclick='action=this.form.submit();' checked> Public</input><input class='radio inline' type='radio' name='privacy_setting' value='True' type='submit' onclick='action=this.form.submit();'> Private</input></form>" % (self.response.url, self.response.url, self.response.description, self.response.request_id, self.response.id)
+                else:
+                        if current_user.role in ['Agency Helpers'] or not(self.response.privacy):
+                            return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s'>%s </a>" % (self.response.url, self.response.url, self.response.description)      
             else:
                 download_url = "/attachments/" + str(self.response.filename)
-                return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s'>%s </a>" % (
-                download_url, download_url, self.response.description)
+                if current_user.role not in ['Agency Helpers']  and current_user.role is not None:
+                    if self.response.privacy:
+                        return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s'>%s </a><form method='post' action='/switchRecordPrivacy'><input type='hidden' name='request_id' value='%s'/><input type='hidden' name='record_id' value='%s'/><input class='radio inline' type='radio' name='privacy_setting' value='False' type='submit' onclick='action=this.form.submit();'> Public</input><input class='radio inline' type='radio' name='privacy_setting' value='True' type='submit' onclick='action=this.form.submit();' checked> Private</input></form>" % (download_url, download_url, self.response.description, self.response.request_id, self.response.id)
+                    else:
+                        return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s'>%s </a><form method='post' action='/switchRecordPrivacy'><input type='hidden' name='request_id' value='%s'/><input type='hidden' name='record_id' value='%s'/><input class='radio inline' type='radio' name='privacy_setting' value='False' type='submit' onclick='action=this.form.submit();' checked> Public</input><input class='radio inline' type='radio' name='privacy_setting' value='True' type='submit' onclick='action=this.form.submit();'> Private</input></form>" % (download_url, download_url, self.response.description, self.response.request_id, self.response.id)
+                else:
+                        if current_user.role in ['Agency Helpers'] or not(self.response.privacy):
+                            return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s'>%s </a>" % (download_url, download_url, self.response.description)
         elif self.type == "extension":
             text = self.response.text.strip("Request extended:")
             return text
