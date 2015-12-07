@@ -115,7 +115,7 @@ rect:hover{
 						
 						var colors = {};
 						colors["Received"] = "#278ECF";
-						colors["Published"] = "#4BD762";
+						colors["Reports Published"] = "#4BD762";
 						colors["Denied"] = "#FFCA1F";
 						colors["Granted And Closed"] = "#FF9416";
                                                 colors["Granted In Part"] = "#D42AE8";
@@ -127,7 +127,7 @@ rect:hover{
                                                 colors["Referred to Publications Portal"] = "#FFC266";
 	
 						var dataset = report_data.data;
-						dataset = dataset.filter(function(d){ return d.label == "Received" || d.label == "Published"; });
+						dataset = dataset.filter(function(d){ return d.label == "Received" || d.label == "Reports Published"; });
 	
 						var xScale = d3.scale.ordinal()
 						.domain(d3.range(dataset.length))
