@@ -1,5 +1,4 @@
 $(function () {
-
     var business = ["Department of Consumer Affairs",
         "Mayor's Office of Contract Services",
         "Procurement Policy Board",
@@ -41,7 +40,8 @@ $(function () {
         "Housing Recovery Operations",
         "Department of City Planning",
         "New York City Housing Authority",
-        "Department of Buildings"]
+        "Department of Buildings",
+        "New York City Housing Development Corporation"]
     var publicSafety = ["Civilian Complaint Review Board",
         "Commission to Combat POlice Corruption",
         "Board of Correction",
@@ -70,8 +70,13 @@ $(function () {
         vals.sort();
 
         for (var i = 0; i < vals.length; i++) {
-            $("#agency").value = vals[i];
-            $("#agency").append("<option value=\"" + vals[i] + "\">" + vals[i] + "</option>");
+            if (vals[i]==($("#agency option:selected").text())){
+                continue;
+            }
+            else{
+                $("#agency").value = vals[i];
+                $("#agency").append("<option value=\"" + vals[i] + "\">" + vals[i] + "</option>");
+            }
         }
     });
 
@@ -118,11 +123,18 @@ $(function () {
         }
 
         var $jsontwo = $("#agency");
+
         $jsontwo.empty();
         vals.sort();
         for (var i = 0; i < vals.length; i++) {
-            $jsontwo.value = vals[i];
-            $jsontwo.append("<option value=\"" + vals[i] + "\">" + vals[i] + "</option>");
+            if (vals[i]==($("#agency option:selected").text())){
+                $jsontwo.append("repeat agency");
+                return;
+            }
+            else {
+                $jsontwo.value = vals[i];
+                $jsontwo.append("<option value=\"" + vals[i] + "\">" + vals[i] + "</option>");
+            }
         }
         ;
     });
