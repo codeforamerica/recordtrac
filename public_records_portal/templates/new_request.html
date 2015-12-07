@@ -86,8 +86,8 @@
                                 {{ errors['summary_length'] }}
                             </div>
                             {% endif %}
-                            {{ form.request_summary(class="input-block-level", rows="2", id="request_summary", placeholder="Please provide a short summary of your request" ) }}
-                            <div id="summary_count"></div>
+                            {{ form.request_summary(class="input-block-level", rows="2", maxlength="90", id="request_summary", placeholder="Please provide a short summary of your request" ) }}
+                            <!--<div id="summary_count"></div>-->
                         </div>
                     </div>
                     <div class="span4">
@@ -121,8 +121,8 @@
                                 {{ errors['summary_length'] }}
                             </div>
                             {% endif %}
-                            {{ form.request_text(class="input-block-level",rows="6",id="request_text",placeholder="Provide more information about your request to help the City locate the record. If donâ€™t know the record name, describe type of information you think it would contain and the approximate date range. Do not include private info such as social security # or credit card." ) }}
-                            <div id="text_count"></div>
+                            {{ form.request_text(class="input-block-level",rows="6",id="request_text",maxlength="5000",placeholder="Provide more information about your request to help the City locate the record. If donâ€™t know the record name, describe type of information you think it would contain and the approximate date range. Do not include private info such as social security # or credit card." ) }}
+                            <!--<div id="text_count"></div>-->
                         </div>
 
                     </div>
