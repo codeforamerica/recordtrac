@@ -16,6 +16,7 @@
                                 <div class="controls">
                                     <input type="hidden" name="request_id" value="{{ req.id }}"/>
                                     <input type="hidden" name="owner_id" value="{{ owner.id }}"/>
+                                    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                                     <button id="unassignButton" class="btn" type="submit"><i class="icon-envelope"> </i>
                                     </button>
                                 </div>
