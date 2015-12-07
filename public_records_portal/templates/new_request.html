@@ -65,9 +65,16 @@
                                     {{ errors['missing_agency'] }}
                                 </div>
                             {% endif %}
+                        {% if form.request_agency.data %}
+                            <select id="agency" name="request_agency" class="input-block-level">
+                                <option></option>
+                                <option selected value>{{ form.request_agency.data }}</option>
+                            </select>
+                        {% else %}
                             <select id="agency" name="request_agency" class="input-block-level">
                                 <option selected value></option>
                             </select>
+                        {% endif %}
                         </div>
                     </div>
                 </div>
