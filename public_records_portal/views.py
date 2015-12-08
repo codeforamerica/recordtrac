@@ -912,7 +912,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         request_id_search = get_filter_value(filters_map, 'request_id_search')
         request_id_search = bleach.clean(request_id_search);
 
-        if not re.match("FOIL-\d{4}-\d{3}-\d{5}", get_filter_value(filters_map, 'request_id_search')):
+        if not request_id_search or not re.match("FOIL-\d{4}-\d{3}-\d{5}", get_filter_value(filters_map, 'request_id_search')):
             request_id_search = None
 
     # Set initial checkboxes for mine_as_poc and mine_as_helper when redirected from login page
