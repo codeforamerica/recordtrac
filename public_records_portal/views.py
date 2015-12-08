@@ -448,12 +448,9 @@ def explain_all_actions():
 
 @app.route("/<string:audience>/request/<string:request_id>")
 def show_request_for_x(audience, request_id):
-<<<<<<< HEAD
     proper_request_id = re.match("FOIL-\d{4}-\d{3}-\d{5}", request_id)
-=======
     if audience == 'new':
         proper_request_id = re.match("FOIL-\d{4}-\d{3}-\d{5}", request_id)
->>>>>>> added _csrf_token to all tokens
     if proper_request_id:
         if "city" in audience:
             return show_request_for_city(request_id=request_id)
