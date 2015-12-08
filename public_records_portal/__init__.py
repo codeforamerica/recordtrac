@@ -83,6 +83,7 @@ envvars = [
     'ENVIRONMENT',  # Local Environemnt (LOCAL, STAGING, TESTING, PRODUCTION)
     'SECRET_KEY',  # Secret key for cookie signing (sessions)
     'DATABASE_URL',  # URL to access Postgres database
+    'SESSION_COOKIE_SECURE', # Sets Flask cookie to true
 
     # Flask Mail Settings
     'MAIL_USERNAME',  # Username for mail server
