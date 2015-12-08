@@ -24,6 +24,7 @@ from flask import render_template, redirect, url_for, send_from_directory
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from flask_login import LoginManager
 from sqlalchemy import func, and_, or_, text
+from flask.ext.session import Session
 
 import csv_export
 from db_helpers import authenticate_login, get_user_by_id
@@ -50,6 +51,9 @@ login_manager.anonymous_user = AnonUser
 login_manager.init_app(app)
 
 app.session_interface = ItsdangerousSessionInterface()
+SESSION_COOKIE_SECURE=True
+app.config.fron_object(__name__)
+Session(app)
 
 zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
 
@@ -57,10 +61,6 @@ zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
 @app.before_request
 def make_session_permanent():
     app.permanent_session_lifetime = timedelta(minutes=180)
-@app.before_request
-def set_cookie():
-    app.session_cookie_secure=True
-
 @app.before_request
 def csrf_protect():
     if request.method == "POST":
