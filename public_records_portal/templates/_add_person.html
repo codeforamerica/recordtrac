@@ -8,6 +8,7 @@
                 <input id="notifyEmail" type="email" name="owner_email" placeholder="name@email.com"
                        data-provide="typeahead" autocomplete="off" required/>
                 <input id="notifyReason" type="text" name="owner_reason" placeholder="Say why." required/>
+                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <button id="notifyButton" class="btn" type="submit"><i class="icon-envelope"> </i></button>
             </div>
         </div>

@@ -29,6 +29,7 @@
     <div class="row-fluid">
         <form name="newrequest" class="form-horizontal" id="submitRequest" method="post" action="/new"
               autocomplete="off" novalidate="novalidate" enctype="multipart/form-data">
+            <input name=_csrf_token type=hidden value="{{ csrf_token() }}">  
             <fieldset>
 
                 <div class="row-fluid">
@@ -65,9 +66,16 @@
                                     {{ errors['missing_agency'] }}
                                 </div>
                             {% endif %}
+                        {% if form.request_agency.data %}
+                            <select id="agency" name="request_agency" class="input-block-level">
+                                <option></option>
+                                <option selected value>{{ form.request_agency.data }}</option>
+                            </select>
+                        {% else %}
                             <select id="agency" name="request_agency" class="input-block-level">
                                 <option selected value></option>
                             </select>
+                        {% endif %}
                         </div>
                     </div>
                 </div>

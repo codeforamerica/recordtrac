@@ -5,6 +5,7 @@
         <div class="control-group">
             <div class="controls">
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <!--input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required /-->
                 <select class="span10" id="rerouteEmail" name="owner_email">
                     {% for data in department_data %}
@@ -22,6 +23,7 @@
         <div class="control-group">
             <div class="controls">
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <!--input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required /-->
                 <select class="span10" id="rerouteEmail" name="owner_email">
                     {% for user in users %}

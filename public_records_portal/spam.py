@@ -8,8 +8,8 @@
 
 from flask.ext.login import current_user
 
-from public_records_portal import app
 import akismet
+from public_records_portal import app
 
 
 def check_for_spam():

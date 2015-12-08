@@ -1,5 +1,4 @@
 $(function () {
-
     var business = ["Department of Consumer Affairs",
         "Mayor's Office of Contract Services",
         "Procurement Policy Board",
@@ -12,7 +11,8 @@ $(function () {
         "School Construction Authority"]
     var environment = ["Department of Environmental Protection",
         "Office of Environmental Remediation",
-        "Office of Long-Term Planning & Sustainability"]
+        "Office of Long-Term Planning & Sustainability",
+        "Department of Sanitation"]
     var governmentAdministration = ["Office of the Actuary",
         "Office of Administrative Trials and Hearings",
         "Business Integrity Commission",
@@ -34,16 +34,24 @@ $(function () {
     var health = ["Office of Chief Medical Examiner",
         "Health and Hospitals Corporation",
         "Department of Health and Mental Hygiene"]
-    var housingAndDevelopment = ["Office of Chief Medical Examiner",
-        "Health and Hospitals Corporation",
-        "Department of Health and Mental Hygiene"]
-    var publicSafety = ["Department of Buildings",
+    var housingAndDevelopment = ["Loft Board",
+        "Landmarks Preservation Commission",
+        "Board of Standards and Appeals",
+        "Housing Recovery Operations",
         "Department of City Planning",
         "New York City Housing Authority",
-        "Housing Recovery Operations",
-        "Landmarks Preservation Commission",
-        "Loft Board",
-        "Board of Standards and Appeals"]
+        "Department of Buildings",
+        "New York City Housing Development Corporation"]
+    var publicSafety = ["Civilian Complaint Review Board",
+        "Commission to Combat POlice Corruption",
+        "Board of Correction",
+        "Department of Correction",
+        "NYC Office of Emergency Management",
+        "New York City Fire Department",
+        "Department of Investigation",
+        "Police Department",
+        "Department of Probation",
+        "NYC Office of the Special Narcotics Prosecutor"]
     var socialServices = ["Department for the Aging",
         "Administration for Children's Services",
         "Department of Homeless Services",
@@ -62,8 +70,13 @@ $(function () {
         vals.sort();
 
         for (var i = 0; i < vals.length; i++) {
-            $("#agency").value = vals[i];
-            $("#agency").append("<option value=\"" + vals[i] + "\">" + vals[i] + "</option>");
+            if (vals[i]==($("#agency option:selected").text())){
+                continue;
+            }
+            else{
+                $("#agency").value = vals[i];
+                $("#agency").append("<option value=\"" + vals[i] + "\">" + vals[i] + "</option>");
+            }
         }
     });
 
@@ -110,11 +123,18 @@ $(function () {
         }
 
         var $jsontwo = $("#agency");
+
         $jsontwo.empty();
         vals.sort();
         for (var i = 0; i < vals.length; i++) {
-            $jsontwo.value = vals[i];
-            $jsontwo.append("<option value=\"" + vals[i] + "\">" + vals[i] + "</option>");
+            if (vals[i]==($("#agency option:selected").text())){
+                $jsontwo.append("repeat agency");
+                return;
+            }
+            else {
+                $jsontwo.value = vals[i];
+                $jsontwo.append("<option value=\"" + vals[i] + "\">" + vals[i] + "</option>");
+            }
         }
         ;
     });

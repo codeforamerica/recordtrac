@@ -17,6 +17,7 @@
             <form name="ask_question" class="form-horizontal" id="question" method="post" action="/add_a_qa"
                   autocomplete="on">
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <fieldset>
                     <div class="row-fluid">
 

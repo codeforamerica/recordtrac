@@ -13,6 +13,7 @@
             </div>
             <div id="recaptcha" class="row-fluid">
                 <form name="input" action="/recaptcha_answer" method="POST">
+                    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                     <fieldset>
                         <script type="text/javascript"
                                 src="http://www.google.com/recaptcha/api/challenge?k={{ config['RECAPTCHA_PUBLIC_KEY'] }}">

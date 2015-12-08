@@ -18,6 +18,7 @@
             <div class="row-fluid">
                 <form name="login" class="form-horizontal" id="submitRequest" method="post" action="/login"
                       autocomplete="off" novalidate="novalidate">
+                    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                     {{ form.hidden_tag() }}
                     <div class="control-group">
                         <h2>
@@ -30,6 +31,9 @@
                             <small>{{ form.password.label.text }}</small>
                         </h2>
                         {{ form.password(class="input-block-level form-control", type="password", placeholder="*******") }}
+                    </div>
+                    <div class="control-group">
+                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                     </div>
                     <div class="control-group">
                         {{ form.submit(class="btn btn-primary btn-large input-block-level") }}

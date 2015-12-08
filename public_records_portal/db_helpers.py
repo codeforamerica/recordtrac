@@ -9,13 +9,10 @@ from __future__ import generators
 import uuid
 
 import ldap
-from . import app
 from sqlalchemy import func
 
 from models import *
-
-cal = Calendar()
-
+from public_records_portal import cal
 
 def id_counter():
     i = 0

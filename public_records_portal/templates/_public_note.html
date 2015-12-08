@@ -18,6 +18,7 @@
 
             <form name="public_note" class="form-horizontal" id="public_note" method="post" action="/public_add_a_note">
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <fieldset>
                     <div class="row-fluid">
 

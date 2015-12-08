@@ -16,6 +16,7 @@
                     <input type="hidden" name="date_received" value="{{ form.date_received }}"/>
                     <input type="hidden" name="format_received" value="{{ form.format_received }}"/>
                     <input type="hidden" name="request_department" value="{{ form.request_department }}"/>
+                    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                     <input name="request_email" type="email" id="inputEmail" placeholder="yourname@email.com"/>
                     <input type="hidden" name="ignore_email"/>
                     <button id='submit' class='btn btn-primary' type='submit'>Submit my request</button>

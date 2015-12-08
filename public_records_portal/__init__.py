@@ -7,18 +7,19 @@ Initializes application and all of its environment variables.
 
 """
 
+import logging
+import time
+from logging.handlers import TimedRotatingFileHandler
 from os import environ, pardir
 from os.path import abspath, dirname, join
 
 import pytz
+from business_calendar import Calendar, MO, TU, WE, TH, FR
 from dotenv import load_dotenv
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask_recaptcha import ReCaptcha
 from tzlocal import get_localzone
-import logging
-from logging.handlers import TimedRotatingFileHandler
-import time
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -30,6 +31,23 @@ app.logger.addHandler(handler)
 
 load_dotenv(abspath(join(join(dirname(__file__), pardir), '.env')))
 
+# Setup Calendar
+cal = Calendar(
+    workdays=[MO,TU,WE,TH,FR],
+    holidays=[
+        '2015-01-01',
+        '2015-01-19',
+        '2015-02-16',
+        '2015-05-25',
+        '2015-07-03',
+        '2015-09-7',
+        '2015-10-12',
+        '2015-11-03',
+        '2015-11-11',
+        '2015-11-26',
+        '2015-12-25'
+    ]
+)
 
 def set_env(key, default=None):
     """ Used to set environment variables """
