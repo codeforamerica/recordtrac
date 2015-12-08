@@ -83,7 +83,6 @@ envvars = [
     'ENVIRONMENT',  # Local Environemnt (LOCAL, STAGING, TESTING, PRODUCTION)
     'SECRET_KEY',  # Secret key for cookie signing (sessions)
     'DATABASE_URL',  # URL to access Postgres database
-    'SESSION_COOKIE_SECURE', # Sets Flask cookie to true
 
     # Flask Mail Settings
     'MAIL_USERNAME',  # Username for mail server
@@ -125,7 +124,7 @@ for envvar in envvars:
 
 # Database gets set slightly differently, to support difference between Flask and Heroku naming:
 app.config['SQLALCHEMY_DATABASE_URI'] = environ['DATABASE_URL']
-
+app.config.update(SESSION_COOKIE_SECURE=True)
 # Initialize database
 db = SQLAlchemy(app)
 
