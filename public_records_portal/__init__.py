@@ -124,7 +124,7 @@ for envvar in envvars:
 
 # Database gets set slightly differently, to support difference between Flask and Heroku naming:
 app.config['SQLALCHEMY_DATABASE_URI'] = environ['DATABASE_URL']
-app.config.update(SESSION_COOKIE_SECURE=True)
+
 # Initialize database
 db = SQLAlchemy(app)
 
