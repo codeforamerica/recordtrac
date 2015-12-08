@@ -862,7 +862,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
     if filters_map:
         departments_selected = get_filter_value(filters_map=filters_map, filter_name='departments_selected',
                                                 is_list=True) or get_filter_value(filters_map, 'department')
-        departments_selected = bleach.clean(departments_selected);
+        # departments_selected = bleach.clean(departments_selected);
         print departments_selected
         is_open = get_filter_value(filters_map=filters_map, filter_name='is_open', is_boolean=True)
         is_open = bleach.clean(is_open);
@@ -1013,7 +1013,6 @@ def prepare_request_fields(results):
         "titlePrivate": r.titlePrivate
     }, results)
 
-
 def filter_department(departments_selected, results):
     if departments_selected and 'All Agencies' not in departments_selected:
         app.logger.info("\n\nagency filters:%s." % departments_selected)
@@ -1025,6 +1024,7 @@ def filter_department(departments_selected, results):
                     department_ids.append(department.id)
         if department_ids:
             results = results.filter(models.Request.department_id.in_(department_ids))
+            # results = models.Department.query.filter_by(id=department_ids)
         else:
             # Just return an empty query set
             results = results.filter(models.Request.department_id < 0)
