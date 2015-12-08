@@ -14,7 +14,7 @@ from os import environ, pardir
 from os.path import abspath, dirname, join
 
 import pytz
-from business_calendar import Calendar
+from business_calendar import Calendar, MO, TU, WE, TH, FR
 from dotenv import load_dotenv
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
