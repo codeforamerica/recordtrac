@@ -9,22 +9,19 @@
 
 """
 
-from datetime import datetime, timedelta
 import re
+from datetime import datetime, timedelta
 
-from business_calendar import Calendar
 from flask.ext.login import current_user
 from sqlalchemy import Column, Integer, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import and_, or_
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.orm import relationship
+from validate_email import validate_email
 from werkzeug.security import generate_password_hash, \
     check_password_hash
-from validate_email import validate_email
-from sqlalchemy import and_, or_
 
-from public_records_portal import db, app
-
-cal = Calendar()
+from public_records_portal import db, app, cal
 
 
 class notePrivacy:

@@ -8,19 +8,16 @@
 
 """
 
-from datetime import datetime, timedelta
-import os
 import json
-import logging
+import mimetypes
+import os
+import urllib
 
 from flask import render_template
 from flask_mail import Mail, Message
 
-from public_records_portal import app
-from db_helpers import *
 import helpers
-
-import urllib, mimetypes
+from db_helpers import *
 
 # Set flags:
 
@@ -32,71 +29,71 @@ if app.config['SEND_EMAILS']:
     test = ""
 
 
-def generate_prr_emails(request_id, notification_type, text=None, text2=None,user_id=None, department_name=None,
+def generate_prr_emails(request_id, notification_type, text=None, text2=None, user_id=None, department_name=None,
                         user_name=None, days_after=None,attached_file=None, recipients=None):
     # 'text=None' is used additional information. 'text2=None' is used if there are more variable text passed into email such as with 'close this request'
     # and being offered multiple reasons
-    app.logger.info("\n\n Generating e-mails for request with ID: %s, notification type: %s, and user ID: %s" % (
-    request_id, notification_type, user_id))
+    app.logger.info("\n\n Generating e-mails for request with ID: %s, notification type: %s, and user ID: %s"
+                    % (request_id, notification_type, user_id))
 
     agency_app_url = app.config['AGENCY_APPLICATION_URL']
     public_app_url = app.config['PUBLIC_APPLICATION_URL']
     template = "generic_email.html"
 
-    #making a new request
+    # making a new request
     if notification_type == "Request made":
         template = "emtemplate_new_request.html"
-    #asking a question
-    elif notification_type=="Question asked":
+    # asking a question
+    elif notification_type == "Question asked":
         template = "emtemplate_question_asked.html"
-    #respond to question
-    elif notification_type=="Question answered":
+    # respond to question
+    elif notification_type == "Question answered":
         template = "emtemplate_question_answered.html"
-    elif notification_type=="City response added":
-        template="emtemplate_city_response_added.html"
-    #adding a note
-    elif notification_type=="Public note added":
-        template="emtemplate_public_note_added.html"
-    #Changing Assignee
-    elif notification_type=="Request assigned":
-        template="emtemplate_request_assigned.html"
-    #Closing a request
-    elif notification_type=="Request closed":
-        template="emtemplate_request_closed.html"
-    #Adding a helper
-    elif notification_type=="Staff participant added":
+    elif notification_type == "City response added":
+        template = "emtemplate_city_response_added.html"
+    # adding a note
+    elif notification_type == "Public note added":
+        template = "emtemplate_public_note_added.html"
+    # Changing Assignee
+    elif notification_type == "Request assigned":
+        template = "emtemplate_request_assigned.html"
+    # Closing a request
+    elif notification_type == "Request closed":
+        template = "emtemplate_request_closed.html"
+    # Adding a helper
+    elif notification_type == "Staff participant added":
         # user = User.query.get(user_id)
         # user_name = user.alias
         text=text['owner_reason']
-        template="emtemplate_helper_added.html"
-    #Removing a helper
-    elif notification_type=="Helper removed":
-        template="emtemplate_helper_removed.html"
-    #Acknowledging a Request
-    elif notification_type=="Acknowledge request":
-        template="emtemplate_acknowledge_request.html"
-    #Reopening a request
-    elif notification_type=="Reopen request":
-        template="emtemplate_reopen_request.html"
-    #Nonportal request for agency user
-    elif notification_type=="Nonportal agency":
-        template="emtemplate_nonportal_agency.html"
-    #Nonportal request for requster
-    elif notification_type=="Nonportal requester":
-        template="emtemplate_nonportal_requester.html"
-    #Extending a request
-    elif notification_type=="Extend request":
+        template = "emtemplate_helper_added.html"
+    # Removing a helper
+    elif notification_type == "Helper removed":
+        template = "emtemplate_helper_removed.html"
+    # Acknowledging a Request
+    elif notification_type == "Acknowledge request":
+        template = "emtemplate_acknowledge_request.html"
+    # Reopening a request
+    elif notification_type == "Reopen request":
+        template = "emtemplate_reopen_request.html"
+    # Nonportal request for agency user
+    elif notification_type == "Nonportal agency":
+        template = "emtemplate_nonportal_agency.html"
+    # Nonportal request for requster
+    elif notification_type == "Nonportal requester":
+        template = "emtemplate_nonportal_requester.html"
+    # Extending a request
+    elif notification_type == "Extend request":
         if 'days_after' in text:
             if text['days_after'] is not None:
                 days_after=text['days_after']
                 text = text['additional_information']
-        template="emtemplate_extend_request.html"
+        template = "emtemplate_extend_request.html"
     elif "Public Notification Template" in notification_type:
         template = "system_email_" + notification_type[-2:] + ".html"
     elif "Agency Notification Template" in notification_type:
         template = "agency_email_" + notification_type[-2:] + ".html"
 
-    #Handles emails for nonportal agencies
+    # Handles emails for nonportal agencies
     if template is "emtemplate_nonportal_agency.html":
         send_prr_email(page=None, recipients=recipients, template=template, additional_information=text, text2=text2,
                        subject="OpenRecords Portal Request regarding " + text[0])

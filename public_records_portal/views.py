@@ -32,7 +32,6 @@ from filters import *
 from forms import OfflineRequestForm, NewRequestForm, LoginForm, EditUserForm
 from models import AnonUser
 from datetime import datetime, timedelta, date
-from business_calendar import Calendar
 import operator
 import bleach
 from prr import add_resource, update_resource, make_request, close_request
@@ -40,7 +39,6 @@ from public_records_portal import db, models, recaptcha
 from requires_roles import requires_roles
 from secureCookie import *
 
-cal = Calendar()
 
 # Initialize login
 app.logger.info("\n\nInitialize login.")

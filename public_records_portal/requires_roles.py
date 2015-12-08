@@ -1,6 +1,9 @@
 from functools import wraps
+
 from flask.ext.login import current_user
+
 from unauthorized_handler import unauthorized
+
 
 def requires_roles(*roles):
     def wrapper(f):
