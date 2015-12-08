@@ -1309,8 +1309,6 @@ def edit_user_info():
 def login():
     form = LoginForm()
     errors = []
-    if request.host_url != app.config['AGENCY_APPLICATION_URL']:
-        return redirect(url_for('landing'))
     if request.method == 'POST':
         print form.username.data
         print form.password.data
@@ -1334,13 +1332,18 @@ def login():
         else:
             errors.append('Something went wrong')
             return render_template('login.html', form=form, errors=errors)
-    else:
+
+    elif request.method == 'GET':
+        if request.host_url != app.config['AGENCY_APPLICATION_URL']:
+            return redirect(url_for('landing'))
         user_id = get_user_id()
         if user_id:
             redirect_url = get_redirect_target()
             return redirect(redirect_url)
         else:
             return render_template('login.html', form=form)
+    else:
+        return bad_request(400)
 
 
 @app.route("/attachments/<string:resource>", methods=["GET"])
