@@ -52,7 +52,7 @@ login_manager.init_app(app)
 
 app.session_interface = ItsdangerousSessionInterface()
 SESSION_COOKIE_SECURE=True
-app.config.fron_object(__name__)
+app.config.from_object(__name__)
 Session(app)
 
 zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')

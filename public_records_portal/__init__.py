@@ -116,7 +116,7 @@ envvars = [
     'LDAP_SA_BIND_DN',  # Bind DN for the LDAP Service Account
     'LDAP_SA_PASSWORD',  # Password for the LDAP Service Account
     'LDAP_BASE_DN',  # Base DN for searching for users
-
+    'SECRET_KEY'
 ]
 
 for envvar in envvars:
@@ -130,3 +130,7 @@ db = SQLAlchemy(app)
 
 # Initialiaze ReCapthca
 recaptcha = ReCaptcha(app)
+
+app.config['SECRET_KEY'] = environ['SECRET_KEY']
+app.secret_key = app.config['SECRET_KEY']
+app.config['SESSION_TYPE'] = 'filesystem'
