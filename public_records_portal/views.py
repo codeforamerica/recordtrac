@@ -1334,7 +1334,7 @@ def login():
             return render_template('login.html', form=form, errors=errors)
 
     elif request.method == 'GET':
-        if request.host_url != app.config['AGENCY_APPLICATION_URL']:
+        if request.host_url.split('//')[1] != app.config['AGENCY_APPLICATION_URL'].split('//')[1]:
             return redirect(url_for('landing'))
         user_id = get_user_id()
         if user_id:
