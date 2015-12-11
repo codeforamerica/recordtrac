@@ -1,8 +1,8 @@
 {% extends "base.html" %}
-{% block title %}Actions{% endblock %}
+{% block title %}{% trans %}Actions{% endtrans %}{% endblock %}
 {% block head %} {% endblock head %}
 {% block body %}
-<p>These are the actions you can take on this site. They may change.</p> </br>
+<p>{% trans %}These are the actions you can take on this site. They may change.{% endtrans %}</p> </br>
 	{% for action in actions %}
 		<p> {{action}} </p>
 	{% endfor %}

@@ -6,7 +6,7 @@
     <div class="rw-controller-btns-container">
       <div class="rw-btn-wrap" data-target="1">
         <div class="rw-btn"><i class="icon-question"></i></div>
-        <div class="rw-btn-expand">Ask a Question</div>
+        <div class="rw-btn-expand">{% trans %}Ask a Question{% endtrans %}</div>
       </div>
     </div>
   </div>
@@ -20,15 +20,15 @@
             <div class="row-fluid">
 
               <div class="control-group button-margin">
-                <label class="control-label">Question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+                <label class="control-label">{% trans %}Question{% endtrans %} <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
                 <div class="controls">
-                  <textarea id="questionTextarea"  name="question_text" rows="2" class="input-xlarge" placeholder="Ask the requester a question" required/></textarea>
+                  <textarea id="questionTextarea"  name="question_text" rows="2" class="input-xlarge" placeholder="{% trans %}Ask the requester a question{% endtrans %}" required/></textarea>
                 </div>
               </div>
 
               <div class="control-group button-margin">
                 <div class="controls">
-                  <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
+                  <button id="askQuestion" class="btn btn-primary" type="submit">{% trans %}Ask{% endtrans %}</button>
                 </div>
               </div>
 
@@ -39,5 +39,3 @@
     </div>
   </div>
 </div>
-
-

@@ -1,0 +1,191 @@
+{
+    "Ask a question":
+        {
+            "What":"x",
+            "Who":"x",
+            "Action":"x"
+        },
+    "Add a note":
+        {
+            "What":"x",
+            "Who":"x",
+            "Action":"x"
+        },
+    "Add a public note":
+        {
+            "What":"x",
+            "Who":"x",
+            "Action":"x"
+        },
+    "Enter records request":
+        {
+            "What":"x",
+            "Who":"x",
+            "Action":"x"
+        },
+    "Enter email address":
+        {
+            "What":"x",
+            "Who":"x",
+            "Action":"x"
+        },
+    "Enter name":
+        {
+            "What":"x",
+            "Who":"x",
+            "Action":"x"
+        },
+   "Enter phone number":
+        {
+            "What":"x",
+            "Who":"x",
+            "Action":"x"
+        },
+    "Enter department or document type":
+        {
+            "What":"x",
+            "Who":"x",
+            "Action":"x"
+        },
+    "Upload a document":
+        {
+            "What":"x",
+            "Who":"x",
+            "Action":"x"
+        },
+    "Describe hard copies":
+        {
+            "What":"x",
+            "Who":"x",
+            "Action":"x"
+        },
+    "Add an offline document":
+        {
+            "What":"x",
+            "Who":"x",
+            "Action":"x"
+        },
+    "Add a link":
+        {
+            "What":"x",
+            "Who":"x",
+            "Action":"x"
+        },
+    "Close a request":
+        {
+            "What":"x",
+            "Who":"x",
+            "Action":"x"
+        },
+
+        "Fulfilled":
+            {
+                "What":"x",
+                "Who":"x",
+                "Action":"x"
+            },
+
+         "Fulfilled - Private Documents Not Uploaded":
+            {
+                "What":"x",
+                "Who":"x",
+                "Action":"x"
+            },
+        "Fulfilled - Information Redacted":
+            {
+                "What":"x",
+                "Who":"x",
+                "Action":"x"
+            },
+        "Fulfilled - Identity of Citizens Making Complaints Removed":
+            {
+                "What":"x",
+                "Who":"x",
+                "Action":"x"
+            },
+        "Not a public records request":
+            {
+                "What":"x",
+                "Who":"x",
+                "Action":"x"
+            },
+
+        "Record Does Not Exist":
+            {
+                "What":"x",
+                "Who":"x",
+                "Action":"x"
+            },
+        "Contact Another Government Agency":
+            {
+                "What":"x",
+                "Who":"x",
+                "Action":"x"
+            },
+        "Can Not Release - Personal Records":
+            {
+                "What":"x",
+                "Who":"x",
+                "Action":"x"
+            },
+        "Can Not Release - Ongoing Litigation":
+            {
+                "What":"x",
+                "Who":"x",
+                "Action":"x"
+            },
+        "Can Not Release - Investigative Records":
+            {
+                "What":"x",
+                "Who":"x",
+                "Action":"x"
+            },
+        "Can Not Release - Attorney-Client Privilege":
+            {
+                "What":"x",
+                "Who":"x",
+                "Action":"x"
+            },
+        "Requester Not Interested":
+            {
+                "What":"x",
+                "Who":"x",
+                "Action":"x"
+            },
+        "Unable to contact the requester":
+            {
+                "What":"x",
+                "Who":"x",
+                "Action":"x"
+            },
+    "Request an extension":
+        {
+            "What":"x",
+            "Who":"x",
+            "Action":"x"
+        },
+            "Extension - Large Amount":
+                {
+                    "What":"x",
+                    "Who":"x",
+                    "Action":"x"
+                },
+            "Extension - Separate Facility":
+                {
+                    "What":"x",
+                    "Who":"x",
+                    "Action":"x"
+                },
+            "Extension - Another Agency":
+                {
+                    "What":"x",
+                    "Who":"x",
+                    "Action":"x"
+                },
+            "Extension - Data":
+                {
+                    "What":"x",
+                    "Who":"x",
+                    "Action":"x"
+                }
+    }

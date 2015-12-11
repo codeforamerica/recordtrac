@@ -1,8 +1,11 @@
 
   <div class="request-status-well well well-small r_sidebar_banner {{ status }}">
     <h3 id="status-text">
-      {% if status == 'closed' %}<i class="icon-archive"></i>{% endif%}
-      {{ status }}
+      {% if status == 'closed' %}
+        <i class="icon-archive"></i> {% trans %}closed{% endtrans %}
+      {% else %}
+        {% trans %}open{% endtrans %}
+      {% endif%}
     </h3>
   </div>
 
@@ -10,11 +13,9 @@
     <div class="r_sidebar_banner hidden-phone hidden-tablet">
       <form name="reopen_request" class="form-inline" id="question" method="post" action="/update_a_request_reopen">
         <input type="hidden" name="request_id" value="{{ req.id }}"/>
-        <button id="reopenRequest" class="btn btn-primary btn-block" type="submit">Reopen request</button>
+        <button id="reopenRequest" class="btn btn-primary btn-block" type="submit">{% trans %}Reopen request{% endtrans %}</button>
       </form>
     </div>
   {% endif %}
 
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
-
-

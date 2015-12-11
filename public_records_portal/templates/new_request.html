@@ -3,7 +3,7 @@
 {% extends "base.html" %}
 {% from 'help_text.html' import help %}
 
-{% block title %}Public records{% endblock title%}
+{% block title %}{% trans %}Public records{% endtrans %}{% endblock title%}
 {% block custom_css_links %}
     <!-- used for the extension and close request multi-select boxes in city view -->
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.min.css') }}">
@@ -19,18 +19,18 @@
     <div class="span8">
       <div class="row-fluid">
         <div class="span8">
-          <h3>Request a new record</h3>
-          <p class="intro_text">Use RecordTrac to request copies of specific documents, photos, emails, texts, audio recordings, electronic information and data in the {{config['AGENCY_NAME']}}'s databases.</p>
+          <h3>{% trans %}Request a new record{% endtrans %}</h3>
+          <p class="intro_text">{% trans agency_name=config['AGENCY_NAME'] %}Use RecordTrac to request copies of specific documents, photos, emails, texts, audio recordings, electronic information and data from {{agency_name}}.{% endtrans %}</p>
 
           <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="off"novalidate="novalidate">
             <fieldset>
 
-              <p class="lead">What are you trying to find?</p>
+              <p class="lead">{% trans %}What are you trying to find?{% endtrans %}</p>
 
               <div class="control-group">
-                <label for="requestTextarea"><strong><i class="icon-exclamation-sign"></i> Everything in this request box will be displayed publicly. </strong></label>
+                <label for="requestTextarea"><strong><i class="icon-exclamation-sign"></i> {% trans %}Everything in this request box will be displayed publicly.{% endtrans %}</strong></label>
                 <div >
-                  <textarea id="requestTextarea" name="request_text" rows="3" class="input-block-level" placeholder="Describe your request. Be as specific as possible."></textarea>
+                  <textarea id="requestTextarea" name="request_text" rows="3" class="input-block-level" placeholder="{% trans %}Describe your request. Be as specific as possible.{% endtrans %}"></textarea>
                   {{ help("requestPopover-content", "Enter records request") }}
                 </div>
 <!--                 <div id="not_public_record">
@@ -38,7 +38,7 @@
                 </div> -->
               </div>
               {% if routing_available %}
-              <p class="lead">Select a department<small class="department_optional"> (optional)</small></p>
+              <p class="lead">{% trans %}Select a department{% endtrans %}<small class="department_optional"> {% trans %}(optional){% endtrans %}</small></p>
               <div class="control-group">
                   <select id="inputDepartment" class="input-block-level" title="select_department" name="request_department" type="text">
                     <option value=""></option>
@@ -49,28 +49,28 @@
               </div>
               {% endif %}
 
-              <p class="lead">Contact information</p>
+              <p class="lead">{% trans %}Contact information{% endtrans %}</p>
               <div class="control-group">
-                <label for="inputEmail">Your email</label>
+                <label for="inputEmail">{% trans %}Your email{% endtrans %}</label>
                 <div class="spacer">
-                  <input class="input-block-level" title="input_email" name="request_email" type="email" id="inputEmail" placeholder="yourname@email.com" />
+                  <input class="input-block-level" title="input_email" name="request_email" type="email" id="inputEmail" placeholder="{% trans %}name@email.com{% endtrans %}" />
                   {{ help("emailPopover-content", "Enter email address") }}
                 </div>
-                <label for="inputName">Your name <small>(optional)</small></label>
+                <label for="inputName">{% trans %}Your name{% endtrans %} <small>{% trans %}(optional){% endtrans %}</small></label>
                 <div class="spacer">
-                  <input class="input-block-level" title="input_name" name="request_alias" type="text" id="inputName" placeholder="Your Name" />
+                  <input class="input-block-level" title="input_name" name="request_alias" type="text" id="inputName" placeholder="{% trans %}Your Name{% endtrans %}" />
                   {{ help("namePopover-content", "Enter name") }}
                 </div>
-                <label for="inputPhone">Your phone number <small>(optional)</small></label>
+                <label for="inputPhone">{% trans %}Your phone number{% endtrans %} <small>{% trans %}(optional){% endtrans %}</small></label>
                 <div class="spacer spacer_phone">
-                  <input class="input-block-level" title="input_telephone_number" name="request_phone" type="tel" id="inputPhone" placeholder="(510) 555-1234" maxlength="14" />
+                  <input class="input-block-level" title="input_telephone_number" name="request_phone" type="tel" id="inputPhone" placeholder="{% trans %}(510) 555-1234{% endtrans %}" maxlength="14" />
                   {{ help("phonePopover-content", "Enter phone number") }}
                 </div>
               </div>
 
               <div id="requestButton" class="control-group">
                 <div>
-                  <button type="submit" title="submit_request_button" class="btn btn-primary btn-large input-block-level">Submit my request</button>
+                  <button type="submit" title="submit_request_button" class="btn btn-primary btn-large input-block-level">{% trans %}Submit my request{% endtrans %}</button>
                 </div>
               </div>
 
@@ -84,15 +84,16 @@
       <div class="row-fluid">
       {% block sidebar %}
         <div class="well r_sidebar hidden-phone">
-          <h4>Example</h4>
+          <h4>{% trans %}Example{% endtrans %}</h4>
           <!-- needs to be hooked up to prr_help.json PLEASE DELETE THIS COMMENT WHEN DONE -->
-            <p class="example">I need a copy of the Mayor’s emails sent to the Department of Public Works between July 30, 2013 and August 8, 2013.</p><p class="example">The emails should contain the words “bridge project” or “bridge development”.</p>
-          <h4>Tips</h4>
+            <p class="example">{% trans %}I need a copy of the Mayor’s emails sent to the Department of Public Works between July 30, 2013 and August 8, 2013.{% endtrans %}</p>
+            <p class="example">{% trans %}The emails should contain the words “bridge project” or “bridge development”.{% endtrans %}</p>
+          <h4>{% trans %}Tips{% endtrans %}</h4>
             <ul>
-              <li>Don't reveal personal information, like your social security number or home address.</li>
-              <li>Limit your request by a date range.</li>
-              <li>Provide the name of the record or take a guess.</li>
-              <li>If you don't know the name of the record, describe the information you believe is contained in it.</li>
+              <li>{% trans %}Don't reveal personal information, like your social security number or home address.{% endtrans %}</li>
+              <li>{% trans %}Limit your request by a date range.{% endtrans %}</li>
+              <li>{% trans %}Provide the name of the record or take a guess.{% endtrans %}</li>
+              <li>{% trans %}If you don't know the name of the record, describe the information you believe is contained in it.{% endtrans %}</li>
             </ul>
         </div>
       {% endblock sidebar %}
@@ -106,6 +107,6 @@
 
 {% block custom_script_links %}
     <!-- used for department dropdown -->
-  <script type="text/javascript" src="{{ url_for('static', filename = 'js/plugins/bootstrap-combobox.js') }}"></script>  
+  <script type="text/javascript" src="{{ url_for('static', filename = 'js/plugins/bootstrap-combobox.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/new_request.js') }}"></script>
 {% endblock custom_script_links %}

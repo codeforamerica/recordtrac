@@ -1,7 +1,7 @@
 <!-- This template is to display success banner immediately after a new requests gets submitted. -->
 
 {% extends "case.html" %}
-{% block title %}Request {{ request_id }}{% endblock %}
+{% block title %}{% trans %}Request ID:{% endtrans %} {{ request_id }}{% endblock %}
 {% block head %}
   {{ super() }}
 {% endblock %}
@@ -12,11 +12,7 @@
       <button type="button" class="close" data-dismiss="alert">x</button>
       <div class="span1 text-right"><i class="icon-ok-sign icon-2x"> </i></div>
       <div class="offset1">
-        <p> <strong>You are now subscribed! </strong> You will be contacted via e-mail at with any updates to this request. 
+        <p> <strong>{% trans %}You are now subscribed!{% endtrans %} </strong> {% trans %}You will be contacted via e-mail with any updates to this request.{% endtrans %}
       </div>
     </div>
 {% endblock banner %}
-
-
-
-

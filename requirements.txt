@@ -19,3 +19,4 @@ anyjson
 newrelic
 git+https://github.com/garbados/flask-browserid.git
 validate-email==1.2
+Flask-Babel==0.9

@@ -1,16 +1,16 @@
 <!-- history -->
 <div>
-  <a data-placement="left" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"><i class="icon-time" ></i> History</a>
+  <a data-placement="left" data-toggle="popover" href="#" class="historyPopover hidden-phone hidden-tablet"><i class="icon-time" ></i> {% trans %}History{% endtrans %}</a>
 </div>
-<div id="historyPopover-head" class="hide">Routing history</div>
-<div id="historyPopover-content" class="hide">              
+<div id="historyPopover-head" class="hide">{% trans %}Routing history{% endtrans %}</div>
+<div id="historyPopover-content" class="hide">
   <table class="table table-condensed">
     <thead>
       <tr>
-        <th>Name</th>
+        <th>{% trans %}Name{% endtrans %}</th>
         <th></th>
-        <th>Date</th>
-        <th>Note</th>
+        <th>{% trans %}Date{% endtrans %}</th>
+        <th>{% trans %}Note{% endtrans %}</th>
       </tr>
     </thead>
     <tbody>
@@ -21,16 +21,16 @@
         <td>{{ alias }}</td>
         <td><i class="icon-plus-sign"></i></td>
         <td>{{ owner.date_updated | date }}</td>
-        <td>{{ owner.reason or "N/A" }}</td>
+        <td>{{ owner.reason or _("N/A") }}</td>
       </tr>
        {% if not owner.active %}
       <tr>
         <td>{{ alias }}</td>
         <td><i class="icon-remove-sign"></i></td>
         <td>{{ owner.date_updated | date }}</td>
-        <td>{{ owner.reason_unassigned or "Unassigned" }}</td>
+        <td>{{ owner.reason_unassigned or _("Unassigned") }}</td>
       </tr>
-       {% endif %}           
+       {% endif %}
       {% endfor %}
     </tbody>
   </table>

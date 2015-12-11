@@ -30,7 +30,7 @@ Backbone.history.start({pushState: true})
       min_date_received:   "",
       max_date_received:   "",
       requester_name:     "",
-      department: "All departments",
+      department: $("#all_departments").text(),
       page_number:        1,
       more_results:       false,
       start_index:        0,
@@ -384,7 +384,7 @@ Backbone.history.start({pushState: true})
     model: query,
     min_field: 'min_date_received',
     max_field: 'max_date_received',
-    title: 'Request Date'
+    title: $("#date_received_title").text()
   });
 
   var due_date = new DateFilter({

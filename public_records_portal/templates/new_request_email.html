@@ -7,25 +7,27 @@
 			<div style="clear:both;">
 				<span style="font-family: arial,helvetica,sans-serif;"><span style="color: rgb(51, 51, 51); font-size: 14px;">
 					<p>
-					Thank you for submitting a public records request to the {{config['AGENCY_NAME']}}. You will receive email updates about your request, but you can always view any activity on the request page, <a href='{{page}}'>{{page}}</a>.
+					{% trans agency_name=config['AGENCY_NAME'] %}Thank you for submitting a public records request to the {{agency_name}}.{% endtrans %}
+					{% trans %}You will receive email updates about your request.{% endtrans %}
+					{% trans %}You can also view any activity on the request page, <a href='{{page}}'>{{page}}</a>.{% endtrans %}
 				</p>
-				<p>In the next {{config['DAYS_TO_FULFILL']}} days, you can expect a response from {{config['AGENCY_NAME']}}.</br>
-				A response can be the following:<ul>
-				<li>a question about your request</li>
-				<li>an estimate on when your records will be delivered</li>
-				<li>a note explaining why the records cannot be released</li>
-				<li>the documents you requested</li></ul></p>
-			<p>This email is an automated notification, which is unable to receive replies. Please contact {{config['DEFAULT_OWNER_EMAIL']}} with any questions or concerns.</p>
+				<p>{% trans agency_name=config['AGENCY_NAME'] %}In the next {{config['DAYS_TO_FULFILL']}} days, you can expect a response from {{agency_name}}.{% endtrans %}</br>
+					{% trans %}A response can be the following:{% endtrans %}<ul>
+ 				<li>{% trans %}a question about your request{% endtrans %}</li>
+ 				<li>{% trans %}an estimate on when your records will be delivered{% endtrans %}</li>
+ 				<li>{% trans %}a note explaining why the records cannot be released{% endtrans %}</li>
+ 				<li>{% trans %}the documents you requested{% endtrans %}</li></ul></p>
+			<p>{% trans owner_email=config['DEFAULT_OWNER_EMAIL'] %}This email is an automated notification. Please contact {{owner_email}} with any questions or concerns.{% endtrans %}</p>
 <br/>
 <p>
 <hr>
 <br />
 <br />
 <span style="font-family: arial,helvetica,sans-serif;"><span style="color: rgb(51, 51, 51); font-size: 11px;">
-<center>
-<i>For more information about RecordTrac, visit <a href="http://recordtrac.com">http://recordtrac.com</a>.</i>
-</center>
-</span>
+ <center>
+ <i>{% trans %}For more information about RecordTrac, visit <a href="http://recordtrac.com">http://recordtrac.com</a>.{% endtrans %}</i>
+ </center>
+ </span>
 </p>
 
 		</span></span></div>

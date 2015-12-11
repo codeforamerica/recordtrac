@@ -10,12 +10,11 @@ import logging
 from os import environ
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.babel import Babel
 
 # Initialize Flask app
 app = Flask(__name__)
 app.debug = True
-
-
 
 # Set environment variables
 def set_env(key, default = None):
@@ -48,6 +47,8 @@ set_env(key = 'DAYS_AFTER_EXTENSION', default = '14')
 set_env(key = 'DAYS_UNTIL_OVERDUE', default = '2')
 
 set_env(key = 'TIMEZONE', default = "US/Pacific")
+set_env(key = 'BABEL_DEFAULT_LOCALE', default = "en")
+set_env(key = 'BABEL_DEFAULT_TIMEZONE', default = "US/Pacific")
 
 # Set rest of the variables that don't have defaults:
 envvars = [
@@ -79,3 +80,4 @@ app.config['SQLALCHEMY_DATABASE_URI'] = environ['DATABASE_URL']
 # Initialize database
 db = SQLAlchemy(app)
 
+babel = Babel(app)

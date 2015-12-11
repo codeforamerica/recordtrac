@@ -7,7 +7,7 @@
 
       <div class="rw-btn-wrap" data-target="1">
         <div class="rw-btn"><i class="icon-edit"></i></div>
-        <div class="rw-btn-expand">Add a Note</div>
+        <div class="rw-btn-expand">{% trans %}Add a Note{% endtrans %}</div>
       </div>
 
     </div>
@@ -22,13 +22,13 @@
           <div class="row-fluid">
 
             <div class="control-group button-margin">
-              <label class="control-label" for="public_noteTextarea">Add a note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a public note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+              <label class="control-label" for="public_noteTextarea">{% trans %}Add a Note{% endtrans %} <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a public note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
               <div class="controls">
-                <textarea id="public_noteTextarea" name="note_text" class="input-xlarge" type="text" rows="3" placeholder="Use this field to note anything else the city should know about your request." required/></textarea>
-                <button type="submit" class="btn btn-primary">Add note</button>
+                <textarea id="public_noteTextarea" name="note_text" class="input-xlarge" type="text" rows="3" placeholder="{% trans %}Use this field to note anything else the city should know about your request.{% endtrans %}" required/></textarea>
+                <button type="submit" class="btn btn-primary">{% trans %}Add note{% endtrans %}</button>
               </div>
             </div>
-            
+
           </div>
         </fieldset>
       </form>
@@ -37,12 +37,3 @@
   </div>
 
 </div>
-
-
-
-
-
-
-
-
-
