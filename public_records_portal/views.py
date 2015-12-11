@@ -1,3 +1,4 @@
+
 """
     public_records_portal.views
     ~~~~~~~~~~~~~~~~
@@ -170,26 +171,46 @@ def new_request(passed_recaptcha=False, data=None):
         if current_user.is_authenticated:
             form = OfflineRequestForm(request.form)
             request_agency = current_user.current_department.name
+            request_agency = bleach.clean(request_agency)
             request_summary = form.request_summary.data
+            request_summary = bleach.clean(request_summary)
             request_text = form.request_text.data
+            request_text = bleach.clean(request_text)
             request_attachment_description = form.request_attachment_description.data
+            request_attachment_description = bleach.clean(request_attachment_description)
             request_attachment = form.request_attachment.data
+            request_attachment = bleach.clean(request_attachment)
             request_format = form.request_format.data
+            request_format = bleach.clean(request_format)
             request_date = form.request_date.data
             request_first_name = form.request_first_name.data
+            request_first_name = bleach.clean(request_first_name)
             request_last_name = form.request_last_name.data
+            request_last_name = bleach.clean(request_last_name)
             request_role = form.request_role.data
+            request_role = bleach.clean(request_role)
             request_organization = form.request_organization.data
+            request_organization = bleach.clean(request_organization)
             request_email = form.request_email.data
+            request_email = bleach.clean(request_email)
             request_phone = form.request_phone.raw_data
+            request_phone = bleach.clean(request_phone)
             request_phone = re.sub("\D", "", str(request_phone))
+            request_phone = bleach.clean(request_phone)
             request_fax = form.request_fax.raw_data
+            request_fax = bleach.clean(request_fax)
             request_fax = re.sub("\D", "", str(request_fax))
+            request_fax = bleach.clean(request_fax)
             request_address_street_one = form.request_address_street_one.data
+            request_address_street_one = bleach.clean(request_address_street_one)
             request_address_street_two = form.request_address_street_two.data
+            request_address_street_two = bleach.clean(request_address_street_two)
             request_address_city = form.request_address_city.data
+            request_address_city = bleach.clean(request_address_city)
             request_address_state = form.request_address_state.data
+            request_address_state = bleach.clean(request_address_state)
             request_address_zip = form.request_address_zip.data
+            request_address_zip = bleach.clean(request_address_zip)
 
             # Check Summary
             if not (request_summary and request_summary.strip()):
@@ -297,22 +318,39 @@ def new_request(passed_recaptcha=False, data=None):
         else:
             form = NewRequestForm(request.form)
             request_agency = form.request_agency.data
+            request_agency = bleach.clean(request_agency)
             request_summary = form.request_summary.data
+            request_summary = bleach.clean(request_summary)
             request_text = form.request_text.data
+            request_text = bleach.clean(request_text)
             request_first_name = form.request_first_name.data
+            request_first_name = bleach.clean(request_first_name)
             request_last_name = form.request_last_name.data
+            request_last_name = bleach.clean(request_last_name)
             request_role = form.request_role.data
+            request_role = bleach.clean(request_role)
             request_organization = form.request_organization.data
+            request_organization = bleach.clean(request_organization)
             request_email = form.request_email.data
+            request_email = bleach.clean(request_email)
             request_phone = form.request_phone.raw_data
+            request_phone = bleach.clean(request_phone)
             request_phone = re.sub("\D", "", str(request_phone))
+            request_phone = bleach.clean(request_phone)
             request_fax = form.request_fax.raw_data
+            request_fax = bleach.clean(request_fax)
             request_fax = re.sub("\D", "", str(request_fax))
+            request_fax = bleach.clean(request_fax)
             request_address_street_one = form.request_address_street_one.data
+            request_address_street_one = bleach.clean(request_address_street_one)
             request_address_street_two = form.request_address_street_two.data
+            request_address_street_two = bleach.clean(request_address_street_two)
             request_address_city = form.request_address_city.data
+            request_address_city = bleach.clean(request_address_city)
             request_address_state = form.request_address_state.data
+            request_address_state = bleach.clean(request_address_state)
             request_address_zip = form.request_address_zip.data
+            request_address_zip = bleach.clean(request_address_zip)
 
             if not request_agency:
                 errors['missing_agency'] = 'You must select an agency'
