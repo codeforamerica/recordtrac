@@ -50,6 +50,7 @@
 {#            <button id="toggle" onclick="hideFilter()">Hide</button>#}
 
             <form id="all_requests_form" name="all_requests" action="/requests" method="GET">
+                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <div class="row-fluid" style="padding-bottom: 5%;">
                     <div class="span3">
                         <div class="well well-small" id="mobile-filter" style="padding-bottom: 6em;">

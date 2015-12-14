@@ -28,6 +28,7 @@
 			</div>
 			<div class="span7">
 				<form name="edit_user_info" class="form-horizontal" method="post" action="/edit_user_info" autocomplete="off" novalidate="novalidate">
+				<input name=_csrf_token type=hidden value="{{ csrf_token() }}">
 					{{ form.username.label.text }}
 					<div class="spacer">
 						{{ form.username(placeholder=current_user.email) }}

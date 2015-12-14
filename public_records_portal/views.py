@@ -17,6 +17,7 @@ import os
 import json
 from urlparse import urlparse, urljoin
 from time import time
+from flask import flash, session
 from flask import jsonify, request, Response
 import anyjson
 import csv_export
@@ -34,6 +35,8 @@ from business_calendar import Calendar
 import operator
 import bleach
 from flask.ext.session import Session
+from secureCookie import *
+from uuid import uuid4
 
 cal = Calendar()
 
@@ -57,6 +60,19 @@ zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
 def make_session_permanent():
     app.permanent_session_lifetime = timedelta(minutes=180)
 
+@app.before_request
+def csrf_protect():
+    if request.method == "POST":
+        token = session.pop("_csrf_token", None)
+        if not token or token != request.form.get('_csrf_token'):
+            return access_denied(403)
+
+def generate_csrf_token():
+    if '_csrf_token' not in session:
+        session['_csrf_token'] = str(uuid4())
+        print session['_csrf_token']
+    return session['_csrf_token']
+app.jinja_env.globals['csrf_token'] = generate_csrf_token
 
 # Submitting a new request
 @app.route("/new", methods=["GET", "POST"])

@@ -29,6 +29,7 @@
     <div class="row-fluid">
         <form name="newrequest" class="form-horizontal" id="submitRequest" method="post" action="/new"
               autocomplete="off" novalidate="novalidate" enctype="multipart/form-data">
+            <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
             <fieldset>
 
                 <div class="row-fluid">

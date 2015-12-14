@@ -26,6 +26,9 @@
                         {{ form.username(class="input-block-level form-control", type="text", placeholder="jdoe@city.gov") }}
                     </div>
                     <div class="control-group">
+                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                    </div>                    
+                    <div class="control-group">
                         <h2>
                             <small>{{ form.password.label.text }}</small>
                         </h2>

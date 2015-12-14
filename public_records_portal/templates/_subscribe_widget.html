@@ -7,6 +7,7 @@
 {% endif %}
 <form name="follow" id="follow" method="post" action="/public_add_a_subscriber">
     <input type="hidden" name="request_id" value="{{ req.id }}"/>
+    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
     <fieldset>
         <div class="row-fluid follow">
             <div class="span12">

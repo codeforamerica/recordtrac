@@ -76,6 +76,7 @@
                     <form name="ask_question" id="question" class="form-inline" style="margin: 10px 0px 15px 0px;"
                           method="post" action="/add_a_qa" autocomplete="on">
                         <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                         <fieldset>
                             {% if email %}
                             <label>Ask a question <span rel="tooltip" data-toggle="tooltip" data-placement="right"
@@ -192,6 +193,7 @@
                     {% if current_user.is_authenticated and audience == 'city' %}
                     <form class="form-horizontal" method="post" action="/changeprivacy">
                         <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                         <input type="hidden" name="fieldtype" value="title"/>
                         <fieldset>
                             <!-- Multiple Radios (inline) -->
@@ -238,6 +240,7 @@
                     {% if current_user.is_authenticated and audience == 'city' %}
                     <form class="form-horizontal" method="post" action="/changeprivacy">
                         <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                         <input type="hidden" name="fieldtype" value="description"/>
                         <fieldset>
                             <!-- Multiple Radios (inline) -->
