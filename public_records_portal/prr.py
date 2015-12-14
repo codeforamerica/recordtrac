@@ -279,7 +279,7 @@ def upload_record(request_id, description, user_id, request_body, document=None,
     app.logger.info("\n\nBegins Upload_record method")
     try:
         # doc_id is upload_path
-        doc_id, filename = upload_helpers.upload_file(document=document, request_id=request_id)
+        doc_id, filename, error = upload_helpers.upload_file(document=document, request_id=request_id)
     except:
         # print sys.exc_info()[0]
         print traceback.format_exc()

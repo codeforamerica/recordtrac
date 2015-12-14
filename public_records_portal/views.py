@@ -33,6 +33,7 @@ from datetime import datetime, timedelta, date
 from business_calendar import Calendar
 import operator
 import bleach
+from flask.ext.session import Session
 
 cal = Calendar()
 
@@ -44,6 +45,10 @@ login_manager = LoginManager()
 login_manager.user_loader(get_user_by_id)
 login_manager.anonymous_user = AnonUser
 login_manager.init_app(app)
+
+#SESSION_COOKIE_SECURE=True
+#app.config.from_object(__name__)
+#Session(app)
 
 zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
 
@@ -834,7 +839,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
     if filters_map:
         departments_selected = get_filter_value(filters_map=filters_map, filter_name='departments_selected',
                                                 is_list=True) or get_filter_value(filters_map, 'department')
-        departments_selected = bleach.clean(departments_selected);
+        #departments_selected = bleach.clean(departments_selected);
         print departments_selected
         is_open = get_filter_value(filters_map=filters_map, filter_name='is_open', is_boolean=True)
         is_open = bleach.clean(is_open);
@@ -1284,8 +1289,6 @@ def edit_user_info():
 def login():
     form = LoginForm()
     errors = []
-    if request.host_url != app.config['AGENCY_APPLICATION_URL']:
-        return redirect(url_for('landing'))
     if request.method == 'POST':
         print form.username.data
         print form.password.data
@@ -1309,13 +1312,17 @@ def login():
         else:
             errors.append('Something went wrong')
             return render_template('login.html', form=form, errors=errors)
-    else:
+    elif request.method == 'GET':
+        if request.host_url.split('//')[1] != app.config['AGENCY_APPLICATION_URL'].split('//')[1]:
+            return redirect(url_for('landing'))            
         user_id = get_user_id()
         if user_id:
             redirect_url = get_redirect_target()
             return redirect(redirect_url)
         else:
-            return render_template('login.html', form=form)
+            return render_template('login.html', form=form)    
+    else:
+        return bad_request(400)
 
 
 @app.route("/attachments/<string:resource>", methods=["GET"])
