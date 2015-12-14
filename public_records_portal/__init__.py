@@ -116,4 +116,4 @@ recaptcha = ReCaptcha(app)
 app.config['SECRET_KEY'] = environ['SECRET_KEY']
 app.secret_key = app.config['SECRET_KEY']
 app.config['SESSION_TYPE'] = 'sqlalchemy'
-app.config['PERMANENT_SESSION_LIFETIME'] = environ['PERMANENT_SESSION_LIFETIME']
+app.config['PERMANENT_SESSION_LIFETIME'] = int(environ['PERMANENT_SESSION_LIFETIME'])
