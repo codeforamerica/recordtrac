@@ -57,6 +57,7 @@ class RequestPresenter:
                     if self.public:
                         text = text + """
 						<form name='respond_question' class='form-inline' id='answer' method='post' action='/update_a_qa' autocomplete='on'>
+                            <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
 							<label class='control-label'>Answer</label><input type='hidden' name='qa_id' value='%s'/><input type='hidden' name='request_id' value='%s'/>
 							<textarea id='answerTextarea' name='answer_text' class='input-xlarge' rows="2" type='text' rows='1' placeholder='Can you respond to the above question?' required/></textarea>
 							<button id='askQuestion' class='btn btn-primary' type='submit'>Respond</button>

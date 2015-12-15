@@ -34,8 +34,6 @@
                     <h4>Estimated Duration</h4>
                     <select class="span12" id="acknowledge_status"
                             name="acknowledge_status" style="height:100%">
-                        <option value="Acknowledged - 15 days">Acknowledged - 15
-                            business days
                         <option value="Acknowledged - 20 days">Acknowledged - 20
                             business days
                         </option>
@@ -295,8 +293,12 @@
                 {% if "missing_record_access" in errors %}
                     <div class="alert alert-danger" id="missing_record_access">{{ errors['missing_record_access'] }}</div>
                 {% endif %}
+                {% if "filesize" in errors %}
+                    <div class="alert alert-danger" id="filesize">{{ errors['filesize'] }}</div>
+                {% endif %}    
                 <p>Please provide a short explanation of the record along with at least a file upload, a link to the record, or instructions on how to access the record offline.</p> 
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <input type="hidden" name="audience" value="city"/>
                 <fieldset>
                     <div class="row-fluid">
@@ -515,6 +517,7 @@
             <form name="extend_request" id="extension" method="post"
                   action="/add_a_extension">
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <input type="hidden" name="audience" value="city"/>
                 <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <input type="hidden" name="extend_reason"
@@ -701,6 +704,7 @@
                     <div class="controls">
                         <input type="hidden" name="request_id"
                                value="{{ req.id }}"/>
+                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}"> 
                         <input type="hidden" name="owner_id"
                                value="{{ owner.id }}"/>
                         <input type="hidden" name="remove_helper"
@@ -732,6 +736,7 @@
                 <fieldset>
                     <input type="hidden" name="request_id"
                            value="{{ req.id }}"/>
+                    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                     <!--input id="notifyEmail" class="input-block-level"
                            type="email" name="owner_email"
                            placeholder="name@email.com" data-provide="typeahead"
@@ -761,6 +766,7 @@
                     <div class="controls">
                         <input type="hidden" name="request_id"
                                value="{{ req.id }}"/>
+                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">       
                         <!--input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required /-->
                         <select class="span12" id="rerouteEmail"
                                 name="owner_email" style="height:100%">

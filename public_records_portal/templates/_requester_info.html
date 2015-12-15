@@ -39,7 +39,7 @@
         <div class="row-fluid">
             <div class="span6">Requester's Phone Number:</div>
             <div class="span6">
-                {% if not phone %}
+                {% if phone %}
                     <span class="label">{{ phone or "Not provided" }}</span>
                 {% else %}
                     <span class="label">Not provided</span>
@@ -49,7 +49,7 @@
         <div class="row-fluid">
             <div class="span6">Requester's Fax Number:</div>
             <div class="span6">
-                {% if not fax %}
+                {% if fax %}
                     <span class="label">{{ fax or "Not provided" }}</span>
                 {% else %}
                     <span class="label">Not provided</span>

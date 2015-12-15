@@ -30,8 +30,8 @@ ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'rtf', 'odt', 'odp', 'ods', 'odg',
                       'odf',
                       'ppt', 'pps', 'xls', 'docx', 'pptx', 'ppsx', 'xlsx']
 HOST=socket.gethostbyname(socket.gethostname())
-# SERVICE = app.config['SERVICE']
-# PORT = int(app.config['PORT'])
+SERVICE = app.config['SERVICE']
+PORT = int(app.config['PORT'])
 
 
 def get_download_url(doc_id, record_id=None):
@@ -54,8 +54,12 @@ def upload_file(document, request_id):
     app.logger.info("\n\nLocal upload file")
     if not should_upload():
         app.logger.info("\n\nshoud not upload file")
-        return '1', None  # Don't need to do real uploads locally
+        return '1', None, None  # Don't need to do real uploads locally
     if app.config["SHOULD_SCAN_FILES"]:
+        if allowed_file(document.filename) and len(document.read()) > 10000000:
+            app.logger.error("Error with filesize.")
+            error = "Error with the file size. Check to make sure it is less than 10 MB."
+            return None, None, error
         if allowed_file(document.filename):
             app.logger.info("\n\nbegin file upload")
             try:
@@ -73,12 +77,12 @@ def upload_file(document, request_id):
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             except socket.error, msg:
                 sys.stderr.write("[ERROR] %s\n" % msg[1])
-                sys.exit(1)
+                app.logger.error("Error at socket.")
             try:
                 sock.connect((SERVICE, PORT))
             except socket.error, msg:
                 sys.stderr.write("[ERROR] %s\n" % msg[1])
-                sys.exit(2)
+                app.logger.error("Error at socket.")
             today = datetime.date.today()
             cDate = today.strftime("%a, %d %b %Y")
             time = datetime.datetime.now()
@@ -111,18 +115,18 @@ def upload_file(document, request_id):
                 print data
             except:
                 print traceback.format_exc()
-            if "200 OK"in string:
+            if "200 OK" in string:
                 app.logger.info("\n\n%s is allowed: %s" % (document.filename, string))
                 filename = secure_filename(document.filename)
                 upload_path = upload_file_locally(document, filename, request_id)
-                return upload_path, filename
+                return upload_path, filename, None
             else:
                 app.logger.error("Malware detected. Upload failed")
                 sock.close()
-                return None, None
-        return None, None
+                return None, None, None
+        return None, None, None
     sock.close()
-    return "1", None
+    return "1", None, None
 
 
 def upload_file_locally(document, filename, request_id):
