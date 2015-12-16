@@ -23,7 +23,7 @@
         </ul>
     </div>
 </div>
-<div class="row-fluid">
+<div class="row-fluid" style="width:98%;">
     <div class="tab-content">
         <div class="tab-pane" id="acknowledge_request">
             <form name="note" id="AcknowledgeNote" method="post"
@@ -68,7 +68,7 @@
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <fieldset>
-                    <div class="row-fluid">
+                    <div class="row-fluid" style="width:98%;">
                         <!-- name of record -->
                         <div class="control-group">
                             <label class="control-label" for="recordSummary">Name
@@ -94,7 +94,7 @@
                                         </small>
                                     </span></label>
 
-                            <div class="row-fluid">
+                            <div class="row-fluid" style="width:98%;">
                                 <div class="controls">
                                     <div class="fileinput fileinput-new"
                                          data-provides="fileinput">
@@ -127,7 +127,7 @@
                                         </small>
                                     </span></label>
 
-                            <div class="row-fluid">
+                            <div class="row-fluid" style="width:98%;">
                                 <div class="controls">
                                     <input type="text" name="link_url"
                                            id="inputUrl" class="input-xxlarge"/>
@@ -148,7 +148,7 @@
                                         </small>
                                     </span></label>
 
-                            <div class="row-fluid">
+                            <div class="row-fluid" style="width:98%;">
                                 <div class="controls">
                                             <textarea class="input-xxlarge"
                                                       id="offlineDoc_textarea"
@@ -177,7 +177,7 @@
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <fieldset>
-                    <div class="row-fluid">
+                    <div class="row-fluid" style="width:98%;">
                         <div class="control-group">
                             <label class="control-label">Reason <span
                                     rel="tooltip" data-toggle="tooltip"
@@ -235,7 +235,7 @@
         </form>
     </div>
 </div>
-<div class="row-fluid">
+<div class="row-fluid" style="width:98%;">
     <div class="span12">&nbsp;</div>
 </div>
 {% else %}
@@ -273,7 +273,7 @@
         </ul>
     </div>
 </div>
-<div class="row-fluid">
+<div class="row-fluid" style="width:98%;">
     <div class="tab-content">
     {% if form %}
         <div class="active tab-pane" id="add_record">
@@ -301,7 +301,7 @@
                 <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <input type="hidden" name="audience" value="city"/>
                 <fieldset>
-                    <div class="row-fluid">
+                    <div class="row-fluid" style="width:98%;">
                         <!-- name of record -->
                         <div class="control-group">
                             <label class="control-label" for="recordSummary">Name
@@ -338,7 +338,7 @@
                                         </small>
                                     </span></label>
 
-                            <div class="row-fluid">
+                            <div class="row-fluid" style="width:98%;">
                                 <div class="controls">
                                     <div class="fileinput fileinput-new"
                                          data-provides="fileinput">
@@ -373,7 +373,7 @@
                                         </small>
                                     </span></label>
 
-                            <div class="row-fluid">
+                            <div class="row-fluid" style="width:98%;">
                                 <div class="controls">
                                 <input type="text" name="link_url" value="{{ form['link_url'] }}"
                                            id="inputUrl" class="input-xxlarge"/>
@@ -393,7 +393,7 @@
                                     </small>
                             </span></label>
 
-                            <div class="row-fluid">
+                            <div class="row-fluid" style="width:98%;">
                                 <div class="controls">
                                     <input type="text" name="link_url"
                                            id="inputUrl" class="input-xxlarge"/>
@@ -417,7 +417,7 @@
                                         </small>
                                     </span></label>
 
-                            <div class="row-fluid">
+                            <div class="row-fluid" style="width:98%;">
                                 <div class="controls">
                                             <textarea class="input-xxlarge"
                                                       id="offlineDoc_textarea"
@@ -437,7 +437,7 @@
                                         </small>
                                     </span></label>
 
-                            <div class="row-fluid">
+                            <div class="row-fluid" style="width:98%;">
                                 <div class="controls">
                                             <textarea class="input-xxlarge"
                                                       id="offlineDoc_textarea"
@@ -482,7 +482,7 @@
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <fieldset>
-                    <div class="row-fluid">
+                    <div class="row-fluid" style="width:98%;">
                         <div class="control-group">
                             <label class="control-label">Note <span
                                     rel="tooltip" data-toggle="tooltip"
@@ -524,7 +524,7 @@
                        value="{{ 'Extension - Large Amount' | explain_action('What') }}"/>
                 <fieldset>
                     <legend>Extend request</legend>
-                    <div class="row-fluid">
+                    <div class="row-fluid" style="width:98%;">
                         <div class="control-group">
                             <label class="control-label">Length <span
                                     rel="tooltip" data-toggle="tooltip"
@@ -580,7 +580,7 @@
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <fieldset>
-                    <div class="row-fluid">
+                    <div class="row-fluid" style="width:98%;">
                         <div class="control-group">
                             <label class="control-label">Template <span
                                     rel="tooltip" data-toggle="tooltip"
@@ -639,7 +639,7 @@
                 <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <fieldset>
                     <legend>Close request</legend>
-                    <div class="row-fluid">
+                    <div class="row-fluid" style="width:98%;">
                         <div class="control-group">
                             <label class="control-label">Reason (CTRL + click to
                                 select multiple reasons) <span
@@ -690,7 +690,7 @@
                 </fieldset>
             </form>
         </div>
-        <div class="tab-pane" id="manage_helpers">
+        <div class="tab-pane" id="manage_helpers" style="width: 98%;">
             {% if helpers %}
             <p class="lead">Remove Helpers</p>
             {% for owner in req.owners %}
@@ -709,7 +709,7 @@
                                value="{{ owner.id }}"/>
                         <input type="hidden" name="remove_helper"
                                 value="remove_helper"/>
-                        <div class="row-fluid">
+                        <div class="row-fluid" style="width:98%;">
                             <div class="span8">
                                 <input type="text" class="span12"
                                        name="reason_unassigned"
@@ -762,7 +762,7 @@
         <div class="tab-pane" id="change_assignee">
             <form id="rerouteForm" method="post" action="/update_a_owner">
                 <!-- my form -->
-                <div class="control-group">
+                <div class="control-group" style="width: 98%;">
                     <div class="controls">
                         <input type="hidden" name="request_id"
                                value="{{ req.id }}"/>
