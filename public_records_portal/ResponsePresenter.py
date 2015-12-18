@@ -6,12 +6,13 @@
 
 """
 
-from models import Record, Note
-import upload_helpers
 from flask.ext.login import current_user
 from flask import flash, session
 from flask.ext.session import Session
 from secureCookie import *
+
+import upload_helpers
+
 
 class ResponsePresenter:
     def __init__(self, record=None, note=None):

@@ -6,8 +6,6 @@
 
 """
 
-from public_records_portal import models
-from models import Note, QA
 from db_helpers import get_obj
 
 

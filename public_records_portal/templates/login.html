@@ -33,6 +33,9 @@
                         {{ form.password(class="input-block-level form-control", type="password", placeholder="*******") }}
                     </div>
                     <div class="control-group">
+                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                    </div>
+                    <div class="control-group">
                         {{ form.submit(class="btn btn-primary btn-large input-block-level") }}
                     </div>
                     <div class="control-group">

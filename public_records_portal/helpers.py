@@ -6,16 +6,14 @@
 
 """
 
-from datetime import datetime, timedelta
-import os
 import json
+import os
 
-from jinja2 import Markup
 import pytz
+from jinja2 import Markup
 
-from public_records_portal import app
-from db_helpers import *
 import notifications
+from db_helpers import *
 
 
 def localize(datetime_str):

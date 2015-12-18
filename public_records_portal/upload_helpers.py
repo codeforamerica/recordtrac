@@ -6,15 +6,17 @@
 
 """
 
+import datetime
 import os
 import socket
-from datetime import datetime
+import sys
+import traceback
+
 from werkzeug.utils import secure_filename
 
 from public_records_portal import app
-import sys
-import datetime
-import traceback
+
+
 def should_upload():
     if app.config['ENVIRONMENT'] != 'LOCAL':
         return True
