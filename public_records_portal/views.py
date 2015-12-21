@@ -884,8 +884,8 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         print sort_column
         sort_direction = get_filter_value(filters_map, 'sort_direction') or 'asc'
         sort_direction = bleach.clean(sort_direction);
-        sort_direction = str(utils.escape(sort_direction))
-        sort_direction = clean_html(sort_direction)
+        #sort_direction = str(utils.escape(sort_direction))
+        #sort_direction = clean_html(sort_direction)
         print sort_direction
         search_term = get_filter_value(filters_map, 'search_term')
         search_term = bleach.clean(search_term);
