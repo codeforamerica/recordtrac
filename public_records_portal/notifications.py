@@ -66,6 +66,7 @@ def generate_prr_emails(request_id, notification_type, text=None, text2=None, us
         # user_name = user.alias
         text=text['owner_reason']
         template = "emtemplate_helper_added.html"
+
     # Removing a helper
     elif notification_type == "Helper removed":
         template = "emtemplate_helper_removed.html"
