@@ -51,9 +51,9 @@ login_manager.user_loader(get_user_by_id)
 login_manager.anonymous_user = AnonUser
 login_manager.init_app(app)
 
-#SESSION_COOKIE_SECURE=True
-#app.config.from_object(__name__)
-#Session(app)
+SESSION_COOKIE_SECURE=True
+app.config.from_object(__name__)
+Session(app)
 
 zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
 
