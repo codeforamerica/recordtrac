@@ -603,6 +603,7 @@ def edit_case(request_id):
 @app.route("/add_a_<string:resource>", methods=["GET", "POST"])
 @login_required
 def add_a_resource(resource):
+    import pdb; pdb.set_trace()
     req = request.form
     errors = {}
     if request.method == 'POST':
@@ -1330,13 +1331,13 @@ def login():
             return render_template('login.html', form=form, errors=errors)
     elif request.method == 'GET':
         if request.host_url.split('//')[1] != app.config['AGENCY_APPLICATION_URL'].split('//')[1]:
-            return redirect(url_for('landing'))            
+            return redirect(url_for('landing'))
         user_id = get_user_id()
         if user_id:
             redirect_url = get_redirect_target()
             return redirect(redirect_url)
         else:
-            return render_template('login.html', form=form)    
+            return render_template('login.html', form=form)
     else:
         return bad_request(400)
 
