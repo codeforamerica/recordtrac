@@ -145,3 +145,6 @@ config.codekit
 runserver2.txt
 *.pem
 *.cer
+*.csr
+*.crt
+*.key
