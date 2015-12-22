@@ -24,6 +24,7 @@ from models import *
 from notifications import generate_prr_emails
 from public_records_portal import db_helpers
 from requires_roles import requires_roles
+import bleach
 
 agency_codes = {"City Commission on Human Rights": "228",
                 "Department of Education": "040",
@@ -93,12 +94,12 @@ def add_resource(resource, request_body, current_user_id=None):
         if fields['record_description'] == "":
             return "When uploading a record, please fill out the 'summary' field."
         if 'record_access' in fields and fields['record_access'] != "":
-            return add_offline_record(fields['request_id'], fields['record_description'], fields['record_access'],
-                                      current_user_id, department_name, privacy=fields['record_privacy'])
+            return add_offline_record(fields['request_id'], bleach.clean(fields['record_description']), bleach.clean(fields['record_access']),
+                                      current_user_id, department_name, privacy=bleach.clean(fields['record_privacy']))
         elif 'link_url' in fields and fields['link_url'] != "":
-            return add_link(request_id=fields['request_id'], url=fields['link_url'],
-                            description=fields['record_description'], user_id=current_user_id,
-                            department_name=department_name, privacy=fields['record_privacy'])
+            return add_link(request_id=bleach.clean(fields['request_id']), url=bleach.clean(fields['link_url']),
+                            description=bleach.clean(fields['record_description']), user_id=current_user_id,
+                            department_name=department_name, privacy=bleach.clean(fields['record_privacy']))
         else:
             app.logger.info("\n\neverything else...")
             document = None
