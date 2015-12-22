@@ -37,7 +37,6 @@ import bleach
 from flask.ext.session import Session
 from secureCookie import *
 from uuid import uuid4
-from lxml.html.clean import clean_html
 from jinja2 import utils
 
 cal = Calendar()
