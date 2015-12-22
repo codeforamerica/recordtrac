@@ -137,8 +137,8 @@
     $('#modalAdditionalInfoTable').show();
     $('#form_id').val('submitRecord');
     var modalQuestion = 'Are you sure you want to add this record and send an email to the requester?';
-    modalQuestion += '<br><br>' + $('#recordSummary').val();
-    $('#modalquestionDiv').html(modalQuestion);
+    modalQuestion += $('#recordSummary').text();
+    $('#modalquestionDiv').text(modalQuestion);
     $('#modalQuestionTable').hide();
   });
 

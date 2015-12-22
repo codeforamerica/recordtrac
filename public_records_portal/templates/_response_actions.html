@@ -298,7 +298,6 @@
                 {% endif %}    
                 <p>Please provide a short explanation of the record along with at least a file upload, a link to the record, or instructions on how to access the record offline.</p> 
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <input type="hidden" name="audience" value="city"/>
                 <fieldset>
                     <div class="row-fluid" style="width:98%;">

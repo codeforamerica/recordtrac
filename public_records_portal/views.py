@@ -1175,6 +1175,11 @@ def about():
 @login_required
 def logout():
     logout_user()
+    if request.referrer and request.referrer.split('/')[2] != app.config['AGENCY_APPLICATION_URL'].split('/')[2]:
+        return bad_request(400)
+    referer_header = request.headers.get("Referer")
+    if referer_header and referer_header.split('/')[2] != app.config['AGENCY_APPLICATION_URL'].split('/')[2]:
+        return bad_request(400)
     return redirect(url_for('index'))
 
 

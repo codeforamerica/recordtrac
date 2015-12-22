@@ -45,7 +45,7 @@
                         {% if current_user.is_anonymous or audience == 'public' %}
                         {% if not req.titlePrivate %}
                         <p class="lead" style="margin-bottom: 0rem;"
-                           truncateable="250"> Title: {{ req.summary | new_lines }}
+                           truncateable="250"> Title: {{ req.summary | e | new_lines }}
                         </p>
                         {% else %}
                         <p class="lead" style="margin-bottom: 0rem;" truncateable="250">
@@ -55,7 +55,7 @@
                         {% endif %}
                         {% if not req.descriptionPrivate %}
                         <p class="lead" style="margin-bottom: 0rem;"
-                           truncateable="250"> Request: {{ req.text | new_lines }}
+                           truncateable="250"> Request: {{ req.text | e | new_lines }}
                         </p>
                         {% else %}
                         <p class="lead" style="margin-bottom: 0rem;" truncateable="250">
@@ -63,10 +63,10 @@
                         {% endif %}
                         {% else %}
                         <p class="lead" style="margin-bottom: 0rem;"
-                           truncateable="250"> Title: {{ req.summary | new_lines }}
+                           truncateable="250"> Title: {{ req.summary | e | new_lines }}
                         </p>
                         <p class="lead" style="margin-bottom: 0rem;"
-                           truncateable="250"> Request: {{ req.text | new_lines }}
+                           truncateable="250"> Request: {{ req.text | e | new_lines }}
                         </p>
                         {% endif %}
                         {% endif %}
