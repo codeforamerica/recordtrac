@@ -37,6 +37,8 @@ import bleach
 from flask.ext.session import Session
 from secureCookie import *
 from uuid import uuid4
+from lxml.html.clean import clean_html
+from jinja2 import utils
 
 cal = Calendar()
 
@@ -49,9 +51,9 @@ login_manager.user_loader(get_user_by_id)
 login_manager.anonymous_user = AnonUser
 login_manager.init_app(app)
 
-#SESSION_COOKIE_SECURE=True
-#app.config.from_object(__name__)
-#Session(app)
+SESSION_COOKIE_SECURE=True
+app.config.from_object(__name__)
+Session(app)
 
 zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
 
@@ -882,6 +884,8 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         print sort_column
         sort_direction = get_filter_value(filters_map, 'sort_direction') or 'asc'
         sort_direction = bleach.clean(sort_direction);
+        #sort_direction = str(utils.escape(sort_direction))
+        #sort_direction = clean_html(sort_direction)
         print sort_direction
         search_term = get_filter_value(filters_map, 'search_term')
         search_term = bleach.clean(search_term);
