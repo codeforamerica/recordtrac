@@ -37,7 +37,6 @@ import bleach
 from flask.ext.session import Session
 from secureCookie import *
 from uuid import uuid4
-from lxml.html.clean import clean_html
 from jinja2 import utils
 
 cal = Calendar()
@@ -452,7 +451,7 @@ def show_request_for_x(audience, request_id):
     if proper_request_id:
         if "city" in audience:
             return show_request_for_city(request_id=request_id)
-        return show_request(request_id=request_id, template="manage_request_%s.html" % (audience))
+        return show_request(request_id=request_id, template="manage_request_%s.html" % (audience))   
     return bad_request(400)
 
 
@@ -1175,6 +1174,9 @@ def about():
 @login_required
 def logout():
     logout_user()
+    session.pop("_csrf_token", None)
+    session.pop('username', None)
+    session.pop('_id', None)
     if request.referrer and request.referrer.split('/')[2] != app.config['AGENCY_APPLICATION_URL'].split('/')[2]:
         return bad_request(400)
     referer_header = request.headers.get("Referer")
@@ -1321,6 +1323,9 @@ def login():
             user_to_login = authenticate_login(form.username.data, form.password.data)
             if user_to_login:
                 login_user(user_to_login)
+                session.pop("_csrf_token", None)
+                session.pop('_id', None)
+                session['username'] = form.username.data
                 redirect_url = get_redirect_target()
                 if 'login' in redirect_url or 'logout' in redirect_url:
                     return redirect(url_for('display_all_requests'))
