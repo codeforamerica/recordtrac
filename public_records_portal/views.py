@@ -414,7 +414,7 @@ def index():
     if current_user.is_anonymous == False:
         return redirect(url_for('display_all_requests'))
     else:
-        app.permanent_session_lifetime = timedelta(seconds=0)
+        #app.permanent_session_lifetime = timedelta(seconds=0)
         return landing()
 
 
@@ -1175,6 +1175,7 @@ def about():
 @login_required
 def logout():
     logout_user()
+    session.clear()
     session.pop("_csrf_token", None)
     session.pop('username', None)
     session.pop('_id', None)
