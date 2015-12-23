@@ -1448,13 +1448,13 @@ def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
                 d_string = date_now.strftime(date_format)
                 d_string_2 = date_start_of_year.strftime(date_format)
                 min_date_received = str(datetime.strptime(d_string_2, date_format))
-                max_date_received = str(datetime.strptime(d_string, date_format))
+                max_date_received = str(datetime.strptime(d_string, date_format) + timedelta(days=1))
                 min_date_received = min_date_received[0:-9]
                 max_date_received = max_date_received[0:-9]
                 received_request = received_request.filter(and_(models.Request.date_received >= min_date_received,
                                                                 models.Request.date_received <= max_date_received))
                 published_request = published_request.filter(and_(models.Request.date_received >= min_date_received,
-                                                                  models.Request.date_received <= max_date_received))
+                                                                  models.Request.date_received <= max_date_received))                
                 denied_request = models.Request.query.filter(denied_filter).all()
                 granted_and_closed_request = models.Request.query.filter(granted_and_closed_filter).all()
                 granted_in_part_request = models.Request.query.filter(granted_in_part_filter).all()
@@ -1472,14 +1472,15 @@ def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
                 date_now = datetime.now()
                 d_string = date_now.strftime(date_format)
                 min_date_received = str(datetime.strptime(d_string, date_format) - timedelta(365))
-                max_date_received = str(datetime.strptime(d_string, date_format))
+                max_date_received = str(datetime.strptime(d_string, date_format) + timedelta(days=1))
                 min_date_received = min_date_received[0:-9]
                 max_date_received = max_date_received[0:-9]
                 received_request = received_request.filter(and_(models.Request.date_received >= min_date_received,
                                                                 models.Request.date_received <= max_date_received))
+
                 published_request = published_request.filter(and_(models.Request.date_received >= min_date_received,
                                                                   models.Request.date_received <= max_date_received))
-                denied_request = models.Request.query.filter(denied_filter).all()
+                denied_request = models.Request.query.filter(denied_filter).all()           
                 granted_and_closed_request = models.Request.query.filter(granted_and_closed_filter).all()
                 granted_in_part_request = models.Request.query.filter(granted_in_part_filter).all()
                 no_customer_response_request = models.Request.query.filter(no_customer_response_filter).all()
@@ -1499,7 +1500,7 @@ def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
                     models.Owner.user_id == staff_id).filter(models.Owner.is_point_person == True)
                 published_request = published_request.filter(models.Request.id == models.Owner.request_id).filter(
                     published_filter).filter(models.Owner.user_id == staff_id).filter(
-                    models.Owner.is_point_person == True)
+                    models.Owner.is_point_person == True)                   
                 denied_request = models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(
                     denied_filter).filter(models.Owner.user_id == staff_id).all()
                 granted_and_closed_request = models.Request.query.filter(
