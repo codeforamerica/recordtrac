@@ -1477,7 +1477,6 @@ def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
                 max_date_received = max_date_received[0:-9]
                 received_request = received_request.filter(and_(models.Request.date_received >= min_date_received,
                                                                 models.Request.date_received <= max_date_received))
-
                 published_request = published_request.filter(and_(models.Request.date_received >= min_date_received,
                                                                   models.Request.date_received <= max_date_received))
                 denied_request = models.Request.query.filter(denied_filter).all()
