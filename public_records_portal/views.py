@@ -414,6 +414,7 @@ def index():
     if current_user.is_anonymous == False:
         return redirect(url_for('display_all_requests'))
     else:
+        app.permanent_session_lifetime = timedelta(seconds=0)
         return landing()
 
 
