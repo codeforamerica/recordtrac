@@ -35,14 +35,7 @@ if app.config['SEND_EMAILS']:
 def generate_prr_emails(
     request_id,
     notification_type,
-    text=None,
-    text2=None,
-    user_id=None,
-    department_name=None,
-    user_name=None,
-    days_after=None,
-    attached_file=None,
-    recipients=None,
+    notification_content
     ):
     # 'text=None' is used additional information.
     # 'text2=None' is used if there are more variable text passed into email such as with 'close this request' and being offered multiple reasons
@@ -59,8 +52,8 @@ def generate_prr_emails(
 
     if notification_type == 'Request made':
         template = 'emtemplate_new_request.html'
-    elif notification_type == 'Question asked':
 
+    elif notification_type == 'Question asked':
     # asking a question
 
         template = 'emtemplate_question_asked.html'

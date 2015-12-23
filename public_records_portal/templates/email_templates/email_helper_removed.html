@@ -7,25 +7,17 @@
                         <span style="font-family: arial,helvetica,sans-serif;">
                             <span style="color: rgb(51, 51, 51); font-size: 14px;">
                                 <p>
-                                    We are still in the process of searching for the documents you requested under the Freedom of Information Law
-                                    (FOIL). You can expect a response on or about {{ notification_content['due_date'] }}
-                                </p>
-                                <p>
-                                    Additional Information: <br />
-                                    {{ notification_content['additional_information'] }}
+                                {{ user_name }} has been removed as a helper from {{ request_id }}.
                                 </p>
                                 <p>
                                     You can view the request and take any necessary action at the following webpage:
                                     <a href='{{ page }}'>{{ page }}</a>.
                                 </p>
-                                <p>
-                                    Click <a href="app.config['PUBLIC_APPLICATION_URL']faq">here</a> to learn about how the City responds to FOIL requests.
-                                </p>
                                 </br>
                                 {% if unfollow_link %}
                                     <p>
                                         You can always choose to
-                                        <a href='{{ unfollow_link }}'>unfollow this request</a> if you
+                                        <a href='{{ unfollow_link }}s'>unfollow this request</a> if you
                                         don't want to receive more emails about it.
                                     </p>
                                 {% endif %}

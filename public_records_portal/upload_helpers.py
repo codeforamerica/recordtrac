@@ -29,7 +29,8 @@ def should_upload():
 ALLOWED_EXTENSIONS = ['txt', 'pdf', 'doc', 'rtf', 'odt', 'odp', 'ods', 'odg',
                       'odf',
                       'ppt', 'pps', 'xls', 'docx', 'pptx', 'ppsx', 'xlsx']
-HOST=socket.gethostbyname(socket.gethostname())
+# HOST=socket.gethostbyname(socket.gethostname())
+HOST="127.0.0.1"
 SERVICE = app.config['SERVICE']
 PORT = int(app.config['PORT'])
 
