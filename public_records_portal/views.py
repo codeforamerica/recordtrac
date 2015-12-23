@@ -1448,7 +1448,7 @@ def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
                 d_string = date_now.strftime(date_format)
                 d_string_2 = date_start_of_year.strftime(date_format)
                 min_date_received = str(datetime.strptime(d_string_2, date_format))
-                max_date_received = str(datetime.strptime(d_string, date_format))
+                max_date_received = str(datetime.strptime(d_string, date_format) + timedelta(days=1))
                 min_date_received = min_date_received[0:-9]
                 max_date_received = max_date_received[0:-9]
                 received_request = received_request.filter(and_(models.Request.date_received >= min_date_received,
@@ -1472,7 +1472,7 @@ def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
                 date_now = datetime.now()
                 d_string = date_now.strftime(date_format)
                 min_date_received = str(datetime.strptime(d_string, date_format) - timedelta(365))
-                max_date_received = str(datetime.strptime(d_string, date_format))
+                max_date_received = str(datetime.strptime(d_string, date_format) + timedelta(days=1))
                 min_date_received = min_date_received[0:-9]
                 max_date_received = max_date_received[0:-9]
                 received_request = received_request.filter(and_(models.Request.date_received >= min_date_received,
