@@ -95,12 +95,12 @@
     "Action": "We'll notify the requester via email."
   },
   "Fulfilled in Whole": {
-    "What": "Your request under the Freedom of Information Law (FOIL) has been reviewed and the documents you reqeusted have been posted on the OpenRecords portal.",
+    "What": "Your request under the Freedom of Information Law (FOIL) has been reviewed and the documents you requested have been posted on the OpenRecords portal.",
     "Who": "",
     "Action": ""
   },
   "Fulfilled in Part": {
-    "What": "Your request under the Freedom of Information Law (FOIL) has been reviewed and is granted in part and denied in part becasue some of the records or portions of records are disclosable and others are exempt forom disclosure under FOIL.",
+    "What": "Your request under the Freedom of Information Law (FOIL) has been reviewed and is granted in part and denied in part because some of the records or portions of records are disclosable and others are exempt form disclosure under FOIL.",
     "Who": "",
     "Action": ""
   },

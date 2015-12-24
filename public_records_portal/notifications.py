@@ -39,7 +39,8 @@ def generate_prr_emails(
     ):
     # 'text=None' is used additional information.
     # 'text2=None' is used if there are more variable text passed into email such as with 'close this request' and being offered multiple reasons
-
+    if 'user_id' not in notification_content:
+        notification_content['user_id']=None
     app.logger.info('''
                     Generating e-mails for request with ID: %s, notification type: %s, and user ID: %s'''
                     % (request_id, notification_type, notification_content['user_id']))

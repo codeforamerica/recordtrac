@@ -269,7 +269,7 @@ def update_resource(resource, request_body):
         notification_content['acknowledge_status']=request_body['acknowledge_status']
         generate_prr_emails(request_id=fields['request_id'],
                             notification_content=notification_content,
-                            notification_type='Acknowledge request')
+                            notification_type='acknowledgement')
         return fields['request_id']
     elif 'request_text' in resource:
         update_obj(attribute='text', val=fields['request_text'],
@@ -662,13 +662,15 @@ Agency chosen: %s''' % agency)
                               user_id=subscriber_user_id)
         notification_content['user_id'] = subscriber_user_id
         notification_content['summary'] = summary
-        notification_content['department'] = agency
-        notification_content['department_name'] = agency.name
+        notification_content['department_name'] = agency
+        notification_content['due_date'] = Request.query.filter_by(id=id).first().due_date
         if subscriber_id:
             generate_prr_emails(request_id,
-                                notification_type='Public Notification Template 01'
-                                , user_id=subscriber_user_id,
+                                notification_type='confirmation',
                                 notification_content=notification_content)  # Send them an e-mail notification
+            generate_prr_emails(request_id,
+                                notification_type='confirmation_agency',
+                                notification_content=notification_content)
     if attachment:
         upload_record(request_id=request_id,
                       description=attachment_description,
@@ -940,6 +942,8 @@ def close_request(
     user_id=None,
     request_body=None,
     ):
+    print request_body['close_reasons']
+    print request_body
     req = get_obj('Request', request_id)
     change_request_status(request_id, 'Closed')
 
@@ -947,6 +951,7 @@ def close_request(
     # Create a note to capture closed information:
     notification_content['additional_information']=request_body['additional_information']
     notification_content['reason']=reason
+    notification_content['user_id']=user_id
     create_note(request_id, reason, user_id, privacy=1)
     if request_body:
         generate_prr_emails(request_id=request_id,
@@ -954,7 +959,8 @@ def close_request(
                             notification_content=notification_content)
     else:
         generate_prr_emails(request_id=request_id,
-                            notification_type='Request closed',)
+                            notification_type='Request closed',
+                            notification_content=notification_content)
     add_staff_participant(request_id=request_id, user_id=user_id)
 
 
