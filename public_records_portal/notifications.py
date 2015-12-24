@@ -42,112 +42,108 @@ def generate_prr_emails(
 
     app.logger.info('''
                     Generating e-mails for request with ID: %s, notification type: %s, and user ID: %s'''
-                    % (request_id, notification_type, user_id))
+                    % (request_id, notification_type, notification_content['user_id']))
 
     agency_app_url = app.config['AGENCY_APPLICATION_URL']
     public_app_url = app.config['PUBLIC_APPLICATION_URL']
-    template = 'generic_email.html'
-
+    template = template_prefix + 'email_%s.html' % (notification_type)
     # making a new request
-
-    if notification_type == 'Request made':
-        template = 'emtemplate_new_request.html'
-
-    elif notification_type == 'Question asked':
-    # asking a question
-
-        template = 'emtemplate_question_asked.html'
-    elif notification_type == 'Question answered':
-
-    # respond to question
-
-        template = 'emtemplate_question_answered.html'
-    elif notification_type == 'City response added':
-        template = 'emtemplate_city_response_added.html'
-    elif notification_type == 'Public note added':
-
-    # adding a note
-
-        template = 'emtemplate_public_note_added.html'
-    elif notification_type == 'Request assigned':
-
-    # Changing Assignee
-
-        template = 'emtemplate_request_assigned.html'
-    elif notification_type == 'Request closed':
-
-    # Closing a request
-
-        template = 'emtemplate_request_closed.html'
-    elif notification_type == 'Staff participant added':
-
-    # Adding a helper
-        # user = User.query.get(user_id)
-        # user_name = user.alias
-
-        text = text['owner_reason']
-        template = 'emtemplate_helper_added.html'
-    elif notification_type == 'Helper removed':
-
-    # Removing a helper
-
-        template = 'emtemplate_helper_removed.html'
-    elif notification_type == 'Acknowledge request':
-
-    # Acknowledging a Request
-
-        template = 'emtemplate_acknowledge_request.html'
-    elif notification_type == 'Reopen request':
-
-    # Reopening a request
-
-        template = 'emtemplate_reopen_request.html'
-    elif notification_type == 'Nonportal agency':
-
-    # Nonportal request for agency user
-
-        template = 'emtemplate_nonportal_agency.html'
-    elif notification_type == 'Nonportal requester':
-
-    # Nonportal request for requster
-
-        template = 'emtemplate_nonportal_requester.html'
-    elif notification_type == 'Extend request':
-
-    # Extending a request
-
-        if 'days_after' in text:
-            if text['days_after'] is not None:
-                days_after = text['days_after']
-                text = text['additional_information']
-        template = 'emtemplate_extend_request.html'
-    elif 'Public Notification Template' in notification_type:
-        template = 'system_email_' + notification_type[-2:] + '.html'
-    elif 'Agency Notification Template' in notification_type:
-        template = 'agency_email_' + notification_type[-2:] + '.html'
+    #
+    # if notification_type == 'Request made':
+    #     template = 'emtemplate_new_request.html'
+    #
+    # elif notification_type == 'Question asked':
+    # # asking a question
+    #
+    #     template = 'emtemplate_question_asked.html'
+    # elif notification_type == 'Question answered':
+    #
+    # # respond to question
+    #
+    #     template = 'emtemplate_question_answered.html'
+    # elif notification_type == 'City response added':
+    #     template = 'emtemplate_city_response_added.html'
+    # elif notification_type == 'Public note added':
+    #
+    # # adding a note
+    #
+    #     template = 'emtemplate_public_note_added.html'
+    # elif notification_type == 'Request assigned':
+    #
+    # # Changing Assignee
+    #
+    #     template = 'emtemplate_request_assigned.html'
+    # elif notification_type == 'Request closed':
+    #
+    # # Closing a request
+    #
+    #     template = 'emtemplate_request_closed.html'
+    # elif notification_type == 'Staff participant added':
+    #
+    # # Adding a helper
+    #     # user = User.query.get(user_id)
+    #     # user_name = user.alias
+    #
+    #     text = text['owner_reason']
+    #     template = 'emtemplate_helper_added.html'
+    # elif notification_type == 'Helper removed':
+    #
+    # # Removing a helper
+    #
+    #     template = 'emtemplate_helper_removed.html'
+    # elif notification_type == 'Acknowledge request':
+    #
+    # # Acknowledging a Request
+    #
+    #     template = 'emtemplate_acknowledge_request.html'
+    # elif notification_type == 'Reopen request':
+    #
+    # # Reopening a request
+    #
+    #     template = 'emtemplate_reopen_request.html'
+    # elif notification_type == 'Nonportal agency':
+    #
+    # # Nonportal request for agency user
+    #
+    #     template = 'email_nonportal_agency.html'
+    # elif notification_type == 'Nonportal requester':
+    #
+    # # Nonportal request for requster
+    #
+    #     template = 'emtemplate_nonportal_requester.html'
+    # elif notification_type == 'Extend request':
+    #
+    # # Extending a request
+    #
+    #     if 'days_after' in notification_content:
+    #         if notification_content['days_after'] is not None:
+    #             days_after = notification_content['days_after']
+    #             additional_information = notification_content['additional_information']
+    #     template = 'emtemplate_extend_request.html'
+    # elif 'Public Notification Template' in notification_type:
+    #     template = 'system_email_' + notification_type[-2:] + '.html'
+    # elif 'Agency Notification Template' in notification_type:
+    #     template = 'agency_email_' + notification_type[-2:] + '.html'
 
     # Handles emails for nonportal agencies
 
-    if template is 'emtemplate_nonportal_agency.html':
+    if "email_non-portal-agency_agency.html" in template:
         send_prr_email(
             page=None,
-            recipients=recipients,
+            recipients=[notification_content['recipient']],
             template=template,
-            additional_information=text,
-            text2=text2,
-            subject='OpenRecords Portal Request regarding ' + text[0],
+            notification_content=notification_content,
+            subject='OpenRecords Portal Request regarding ' + notification_content['text']['request_summary'],
             )
         return True
-    elif template is 'emtemplate_nonportal_requester.html':
+    elif 'email_non-portal-agency_requester.html' in template:
         send_prr_email(
             page=None,
-            recipients=recipients,
+            recipients=[notification_content['recipient']],
             template=template,
-            additional_information=text,
-            text2=text2,
-            subject='Your request to ' + department_name + ' regarding '
-                 + text[0],
-            department_name=department_name,
+            notification_content=notification_content,
+            subject='Your request to ' + notification_content['department'].name + ' regarding '
+                 + notification_content['text']['request_summary'],
             )
         return True
 
@@ -155,40 +151,40 @@ def generate_prr_emails(
 
     email_info = get_email_info(notification_type=notification_type)
     email_subject = 'Public Records Request %s: %s' % (request_id,
-            email_info['Subject'])
+    email_info['Subject'])
     recipient_types = email_info['Recipients']
     include_unsubscribe_link = True
     unfollow_link = None
 
     # Special case for when the nonportal agency is contacted
 
-    if recipient_types is None:
-        if template is 'emtemplate_nonportal_agency.html':
-            send_prr_email(
-                page=None,
-                recipients=recipients,
-                template=template,
-                additional_information=text,
-                text2=text2,
-                subject='OpenRecords Portal Request regarding '
-                    + text[0],
-                )
-        elif template is 'emtemplate_nonportal_requester.html':
-            send_prr_email(
-                page=None,
-                recipients=recipients,
-                template=template,
-                additional_information=text,
-                text2=text2,
-                subject='Your request to ' + department_name
-                    + ' regarding ' + text[0],
-                department_name=department_name,
-                )
+    # if recipient_types is None:
+    #     if template in 'emtemplate_nonportal_agency.html':
+    #         send_prr_email(
+    #             page=None,
+    #             recipients=notification_content['recipient'],
+    #             template=template,
+    #             notification_content=notification_content,
+    #             subject='OpenRecords Portal Request regarding '
+    #                 + notification_content['text']['request_summary']
+    #             )
+    #     elif template in 'emtemplate_nonportal_requester.html':
+    #         send_prr_email(
+    #             page=None,
+    #             recipients=notification_content['recipient'],
+    #             template=template,
+    #             notification_content=notification_content,
+    #             subject='Your request to ' + notification_content['department']
+    #                 + ' regarding ' + notification_content['text']['request_sumamry'],
+    #             )
+
+    if notification_content['user_id']:
+        user_id = notification_content['user_id']
+    else:
+        user_id = None
 
     for recipient_type in recipient_types:
-
         # Skip anyone that has unsubscribed
-
         if user_id and (recipient_type == 'Requester' or recipient_type
                         == 'Subscriber'):
             subscriber = get_subscriber(request_id=request_id,
@@ -236,13 +232,7 @@ Subscriber %s unsubscribed, no notification sent.'''
                         template=template,
                         include_unsubscribe_link=include_unsubscribe_link,
                         unfollow_link=unfollow_link,
-                        additional_information=text,
-                        request_id=request_id,
-                        department_name=department_name,
-                        user_name=user_name,
-                        days_after=days_after,
-                        text2=text2,
-                        attached_file=attached_file,
+                        notification_content=notification_content
                         )
             else:
                 app.logger.debug('''
@@ -270,13 +260,7 @@ Subscriber %s unsubscribed, no notification sent.'''
                         template=template,
                         include_unsubscribe_link=include_unsubscribe_link,
                         unfollow_link=unfollow_link,
-                        attached_file=attached_file,
-                        additional_information=text,
-                        request_id=request_id,
-                        department_name=department_name,
-                        user_name=user_name,
-                        days_after=days_after,
-                        text2=text2,
+                        notification_content=notification_content
                         )
         elif recipient_type == 'Staff participants':
             recipients = []
@@ -296,12 +280,7 @@ Subscriber %s unsubscribed, no notification sent.'''
                 include_unsubscribe_link=include_unsubscribe_link,
                 cc_everyone=False,
                 unfollow_link=unfollow_link,
-                attached_file=attached_file,
-                additional_information=text,
-                request_id=request_id,
-                department_name=department_name,
-                user_name=user_name,
-                text2=text2,
+                notification_content=notification_content
                 )
             app.logger.info('''
 
@@ -316,18 +295,12 @@ def send_prr_email(
     recipients,
     subject,
     template,
+    notification_content,
     include_unsubscribe_link=True,
     cc_everyone=False,
     password=None,
     unfollow_link=None,
-    attached_file=None,
-    additional_information=None,
-    request_id=None,
-    department_name=None,
-    user_name=None,
-    days_after=None,
-    text2=None,
-    contact=None,
+    attached_file=None
     ):
 
     app.logger.info('''
@@ -342,12 +315,7 @@ Attempting to send an e-mail to %s with subject %s, referencing page %s and temp
                         template,
                         unfollow_link=unfollow_link,
                         page=page,
-                        additional_information=additional_information,
-                        text2=text2,
-                        request_id=request_id,
-                        department_name=department_name,
-                        user_name=user_name,
-                        days=days_after,
+                        notification_content=notification_content
                         ),
                     recipients=recipients,
                     subject=subject,
@@ -355,9 +323,7 @@ Attempting to send an e-mail to %s with subject %s, referencing page %s and temp
                     cc_everyone=cc_everyone,
                     attached_file=attached_file,
                     )
-                app.logger.info('''
-
- E-mail sent successfully!''')
+                app.logger.info('''E-mail sent successfully!''')
             except Exception, e:
                 app.logger.info('''
 

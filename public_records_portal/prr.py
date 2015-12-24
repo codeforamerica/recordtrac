@@ -58,8 +58,9 @@ def nonportal_request(request_body):
     # query with all the fields
     notification_content = {}
     notification_content['department'] = \
-        Department.query.filter_by(namerequest_body['request_agency'
+        Department.query.filter_by(name=request_body['request_agency'
                                    ]).first()
+    notification_content['department_name'] = notification_content['department'].name
     notification_content['user_id'] = notification_content['department'].primary_contact_id
     notification_content['recipient'] = User.query.get(notification_content['department'].primary_contact_id).email
 
@@ -95,7 +96,7 @@ def nonportal_request(request_body):
 
     notification_content['recipient'] = request_body['request_email']
     generate_prr_emails(request_id=None,
-                        notification_type='Nonportal requester',
+                        notification_type='non-portal-agency_requester',
                         notification_content=notification_content)
     return 1
 
@@ -103,6 +104,7 @@ def nonportal_request(request_body):
 ### @export "add_resource"
 
 def add_resource(resource, request_body, current_user_id=None):
+    notification_content={}
     fields = request_body
     department_name = \
         Department.query.filter_by(id=Request.query.filter_by(id=fields['request_id'
@@ -187,22 +189,22 @@ No file passed in''')
             user = User.query.filter_by(email=request_body['owner_email'
                     ]).first()
             user_name = user.alias
+            notification_content['user_name'] = user_name
+            notification_content['user_id'] = get_attribute('user_id',
+                                obj_id=participant_id, obj_type='Owner')
+            notification_content['request_body'] = request_body
             generate_prr_emails(request_id=fields['request_id'],
                                 notification_type='Staff participant added'
-                                , text=request_body,
-                                user_name=user_name,
-                                user_id=get_attribute('user_id',
-                                obj_id=participant_id, obj_type='Owner'
-                                ))
+                                , notification_content=notification_content)
         else:
             user = User.query.get(current_user_id)
             user_name = user.alias
+            notification_content['user_name'] = user_name
+            notification_content['user_id'] = get_attribute('user_id',
+                                obj_id=participant_id, obj_type='Owner')
             generate_prr_emails(request_id=fields['request_id'],
                                 notification_type='Staff participant added'
-                                , user_name=user_name,
-                                user_id=get_attribute('user_id',
-                                obj_id=participant_id, obj_type='Owner'
-                                ))
+                                , notification_content=notification_content)
         return participant_id
     elif 'subscriber' in resource:
         return add_subscriber(request_id=fields['request_id'],
@@ -254,7 +256,8 @@ def update_resource(resource, request_body):
         req = get_obj('Request', request_id)
         try:
             user_id = req.subscribers[0].user.id
-            generate_prr_emails(request_id=request_id, user_id=user_id,
+            notification_content['user_id'] = user_id
+            generate_prr_emails(request_id=request_id, notification_content=notification_content,
                                 notification_type='Public Notification Template 10'
                                 )
         except IndexError:
@@ -262,9 +265,10 @@ def update_resource(resource, request_body):
     elif 'acknowledge' in resource:
         change_request_status(fields['request_id'],
                               fields['acknowledge_status'])
+        notification_content['additional_information']=request_body['additional_information']
+        notification_content['acknowledge_status']=request_body['acknowledge_status']
         generate_prr_emails(request_id=fields['request_id'],
-                            text=fields['additional_information'],
-                            days_after=fields['acknowledge_status'],
+                            notification_content=notification_content,
                             notification_type='Acknowledge request')
         return fields['request_id']
     elif 'request_text' in resource:
@@ -309,7 +313,7 @@ def request_extension(
     user_name = user.alias
     text = 'Request extended:'
     notification_content = {}
-    notification_content['days'] = days_after
+    notification_content['days_after'] = days_after
     notification_content['additional_information'] = extension_reasons
     notification_content['due_date'] = due_date
 
@@ -445,6 +449,7 @@ def upload_record(
     app.logger.info('''
 
 Begins Upload_record method''')
+    notification_content={}
     try:
 
         # doc_id is upload_path
@@ -481,9 +486,13 @@ Begins Upload_record method''')
                 )
             change_request_status(request_id,
                                   'A response has been added.')
+            notification_content['additional_information']=request_body['additional_information']
+            notification_content['user_id'] = user_id
+
             if request_body is not None:
                 attached_file = app.config['UPLOAD_FOLDER'] + '/' \
                     + filename
+                notification_content['attached_file'] = attached_file
                 generate_prr_emails(request_id=request_id,
                                     notification_type='Public Notification Template 10'
                                     ,
@@ -493,6 +502,7 @@ Begins Upload_record method''')
             else:
                 attached_file = app.config['UPLOAD_FOLDER'] + '/' \
                     + filename
+                notification_content['attached_file'] = attached_file
                 generate_prr_emails(request_id=request_id,
                                     notification_type='Public Notification Template 10'
                                     , user_id=user_id,
@@ -550,7 +560,7 @@ def add_link(
         change_request_status(request_id, 'A response has been added.')
         notification_content['url'] = url
         notification_content['description'] = description
-        notification_content['department'] = department
+        notification_content['department_name'] = department_name
         generate_prr_emails(request_id=request_id,
                             notification_type='City response added',
                             notification_content=notification_content)
@@ -586,6 +596,7 @@ def make_request(
     ):
     """ Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
 
+    notification_content={}
     try:
         is_partner_agency = agency_codes[agency]
     except KeyError:
@@ -649,12 +660,15 @@ Agency chosen: %s''' % agency)
         (subscriber_id, is_new_subscriber) = \
             create_subscriber(request_id=request_id,
                               user_id=subscriber_user_id)
-
+        notification_content['user_id'] = subscriber_user_id
+        notification_content['summary'] = summary
+        notification_content['department'] = agency
+        notification_content['department_name'] = agency.name
         if subscriber_id:
             generate_prr_emails(request_id,
                                 notification_type='Public Notification Template 01'
                                 , user_id=subscriber_user_id,
-                                text=summary, department_name=agency)  # Send them an e-mail notification
+                                notification_content=notification_content)  # Send them an e-mail notification
     if attachment:
         upload_record(request_id=request_id,
                       description=attachment_description,
@@ -695,7 +709,7 @@ def ask_a_question(
     qa_id = create_QA(request_id=request_id, question=question,
                       user_id=user_id)
     notification_content['user_id'] = user_id
-    notification_content['department']=department
+    notification_content['department_name']=department_name
     if qa_id:
         change_request_status(request_id, 'Pending')
         requester = req.requester()
@@ -741,7 +755,7 @@ def open_request(request_id):
 
 def assign_owner(request_id, reason=None, email=None):
     """ Called any time a new owner is assigned. This will overwrite the current owner."""
-
+    notification_content={}
     req = get_obj('Request', request_id)
     past_owner_id = None
 
@@ -773,11 +787,12 @@ A new owner has been assigned: Owner: %s'''
 
     # Send notifications
 
-    notification_content['user_id'] = user_id
-    notification_content['user_name'] = user_name
+
     if is_new_owner:
         user = User.query.get(user_id)
         user_name = user.alias
+        notification_content['user_id'] = user_id
+        notification_content['user_name'] = user.alias
         generate_prr_emails(request_id=request_id,
                             notification_type='Request assigned',
                             notification_content=notification_content)
@@ -928,17 +943,18 @@ def close_request(
     req = get_obj('Request', request_id)
     change_request_status(request_id, 'Closed')
 
+    notification_content={}
     # Create a note to capture closed information:
-
+    notification_content['additional_information']=request_body['additional_information']
+    notification_content['reason']=reason
     create_note(request_id, reason, user_id, privacy=1)
     if request_body:
         generate_prr_emails(request_id=request_id,
                             notification_type='Request closed',
-                            text=request_body['additional_information'
-                            ], text2=reason)
+                            notification_content=notification_content)
     else:
         generate_prr_emails(request_id=request_id,
-                            notification_type='Request closed')
+                            notification_type='Request closed',)
     add_staff_participant(request_id=request_id, user_id=user_id)
 
 
@@ -947,7 +963,6 @@ def change_privacy_setting(request_id, privacy, field):
     if field == 'title':
 
         # Set the title to private
-
         update_obj(attribute='titlePrivate', val=privacy,
                    obj_type='Request', obj_id=req.id)
     elif field == 'description':

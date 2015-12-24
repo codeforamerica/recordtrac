@@ -6,11 +6,11 @@
                     <div style="clear:both;">
                         <span style="font-family: arial,helvetica,sans-serif;">
                             <span style="color: rgb(51, 51, 51); font-size: 14px;">
-                                A request was submitted to the {{ notification_content['department_name'] }} through the OpenRecords Portal. Please see the request details below.
+                                A request was submitted to the {{ notification_content['department'].name }} through the OpenRecords Portal. Please see the request details below.
                                 <p>
                                     Request Title: {{ notification_content['text']['request_summary'] }}
                                     <br/>
-                                    Request Description: {{ notification_content['text']['request_description'] }}
+                                    Request Description: {{ notification_content['text']['request_text'] }}
                                     <br/>
                                     Contact Information:
                                     <br/>
@@ -32,7 +32,7 @@
                                                     {% if notification_content['contact_info']['request_email']  %}
 
                                                     <span class="label">
-                                                        <a href="mailto:{{ notification_content['contact_info']['request_email'] or "Not Provided" }}">{{ [notification_content['contact_info']['request_email'] }}</a>
+                                                        <a href="mailto:{{ notification_content['contact_info']['request_email'] or "Not Provided" }}">{{ notification_content['contact_info']['request_email'] }}</a>
                                                     </span>
                                                     {% else %}
 

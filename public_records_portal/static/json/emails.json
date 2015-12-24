@@ -3,6 +3,7 @@
     ["Requester", "Subscribers", "Subscriber", "Staff owner", "Departmental backups", "Staff participants", "Staff participant"],
     "Notification types":
     {
+
         "Extend request":
         {
           "Subject": "FOIL Time Extension Requested",
