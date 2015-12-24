@@ -751,7 +751,7 @@ def filter_search_term(search_input, results):
             for x in range(num_terms - 1):
                 search_query = search_query + search_terms[x] + ' & '
         search_query = search_query + search_terms[num_terms - 1] + ":*"  # Catch substrings
-        results = results.filter("to_tsvector(text) @@ to_tsquery('%s')" % search_query)
+        results = results.filter("to_tsvector(summary) @@ to_tsquery('%s')" % search_query)
     return results
 
 
