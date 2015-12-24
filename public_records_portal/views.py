@@ -1489,7 +1489,7 @@ def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
                 referred_to_other_agency_request = models.Request.query.filter(referred_to_other_agency_filter).all()
                 referred_to_publications_portal_request = models.Request.query.filter(
                     referred_to_publications_portal_filter).all()
-            if staff_filter != "all":
+            if staff_filter != "all" and staff_filter != "0":
                 staff_id = int(staff_filter)
                 overdue_request = models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(
                     overdue_filter).filter(models.Owner.is_point_person == True).all()
