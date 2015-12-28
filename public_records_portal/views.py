@@ -296,8 +296,8 @@ def new_request(passed_recaptcha=False, data=None):
         else:
             form = NewRequestForm(request.form)
             request_agency = form.request_agency.data
-            request_summary = form.request_summary.data
-            request_text = form.request_text.data
+            request_summary = form.request_summary.data.replace("\r\n", "\n")
+            request_text = form.request_text.data.replace("\r\n", "\n")
             request_first_name = form.request_first_name.data
             request_last_name = form.request_last_name.data
             request_role = form.request_role.data
