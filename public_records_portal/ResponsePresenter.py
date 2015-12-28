@@ -66,7 +66,7 @@ class ResponsePresenter:
         return get_attribute(attribute="email", obj_id=self.response.uid, obj_type="User")
 
     def display_text(self):
-        print current_user.is_anonymous
+        app.logger.info("Current User Anonymous: %s" % current_user.is_anonymous)
         if self.type == "offline":
             if current_user.role not in ['Agency Helpers'] and current_user.role is not None:
                 if self.response.privacy:

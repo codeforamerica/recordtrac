@@ -71,7 +71,7 @@ def csrf_protect():
 def generate_csrf_token():
     if '_csrf_token' not in session:
         session['_csrf_token'] = str(uuid4())
-        print session['_csrf_token']
+        app.logger.info('CSRF Token: %s' % session['_csrf_token'])
     return session['_csrf_token']
 app.jinja_env.globals['csrf_token'] = generate_csrf_token
 
@@ -464,13 +464,13 @@ show_request_for_x.methods = ['GET', 'POST']
 @requires_roles('Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel', 'Agency Helpers')
 def show_request_for_city(request_id):
     req = get_obj("Request", request_id)
-    print current_user.role
+    app.logger.info("Current User Role: %s" % current_user.role)
     if current_user.role == 'Portal Administrator':
         audience = 'city'
     elif current_user.department_id == req.department_id:
-        print "User Dep: %s; Req Dep: %s" % (current_user.department_id, req.department_id)
+        app.logger.info("User Dep: %s; Req Dep: %s" % (current_user.department_id, req.department_id))
         if current_user.role in ['Agency Administrator', 'Agency FOIL Personnel']:
-            print "User Role: %s" % current_user.role
+            app.logger.info("User Role: %s" % current_user.role)
             audience = 'city'
         else:
             audience = 'helper'
@@ -562,7 +562,7 @@ def show_request(request_id, template="manage_request_public.html", errors=None,
         if helper:
             helpers.append({'name': helper.alias, 'email': helper.email})
 
-    print helpers
+    app.logger.info("Helpers: %s" % helpers)
 
     if (errors):
         return render_template(template, req=req, agency_data=agency_data, users=users,
@@ -608,7 +608,7 @@ def add_a_resource(resource):
     req = request.form
     errors = {}
     if request.method == 'POST':
-        print "Resource is a", resource
+        app.logger.info("Resource is a %s" % resource)
         if resource == 'pdf':
             return add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
         # Field validation for adding a recored
@@ -858,60 +858,58 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         departments_selected = get_filter_value(filters_map=filters_map, filter_name='departments_selected',
                                                 is_list=True) or get_filter_value(filters_map, 'department')
         #departments_selected = bleach.clean(departments_selected);
-        print departments_selected
+        app.loger.info("Department Selected: %s" % departments_selected)
         is_open = get_filter_value(filters_map=filters_map, filter_name='is_open', is_boolean=True)
         is_open = bleach.clean(is_open);
-        print is_open
-        # in_progress = get_filter_value(filters_map=filters_map, filter_name='in_progress', is_boolean=True)
-        # in_progress = bleach.clean(# in_progress); print # in_progress
+        app.logger.info(is_open)
         is_closed = get_filter_value(filters_map=filters_map, filter_name='is_closed', is_boolean=True)
         is_closed = bleach.clean(is_closed);
-        print is_closed
+        app.logger.info(is_closed)
         due_soon = get_filter_value(filters_map=filters_map, filter_name='due_soon', is_boolean=True)
         due_soon = bleach.clean(due_soon);
-        print due_soon
+        app.logger.info(due_soon)
         overdue = get_filter_value(filters_map=filters_map, filter_name='overdue', is_boolean=True)
         overdue = bleach.clean(overdue);
-        print overdue
+        app.logger.info(overdue)
         mine_as_poc = get_filter_value(filters_map=filters_map, filter_name='mine_as_poc', is_boolean=True)
         mine_as_poc = bleach.clean(mine_as_poc);
-        print mine_as_poc
+        app.logger.info(mine_as_poc)
         mine_as_helper = get_filter_value(filters_map=filters_map, filter_name='mine_as_helper', is_boolean=True)
         mine_as_helper = bleach.clean(mine_as_helper);
-        print mine_as_helper
+        app.logger.info(mine_as_helper)
         sort_column = get_filter_value(filters_map, 'sort_column') or 'id'
         sort_column = bleach.clean(sort_column);
-        print sort_column
+        app.logger.info(sort_column)
         sort_direction = get_filter_value(filters_map, 'sort_direction') or 'asc'
         sort_direction = bleach.clean(sort_direction);
         #sort_direction = str(utils.escape(sort_direction))
         #sort_direction = clean_html(sort_direction)
-        print sort_direction
+        app.logger.info(sort_direction)
         search_term = get_filter_value(filters_map, 'search_term')
         search_term = bleach.clean(search_term);
-        print search_term
+        app.logger.info(search_term)
         min_due_date = get_filter_value(filters_map, 'min_due_date')
         min_due_date = bleach.clean(min_due_date);
-        print min_due_date
+        app.logger.info(min_due_date)
         max_due_date = get_filter_value(filters_map, 'max_due_date')
         max_due_date = bleach.clean(max_due_date);
-        print max_due_date
+        app.logger.info(max_due_date)
         min_date_received = get_filter_value(filters_map, 'min_date_received')
         min_date_received = bleach.clean(min_date_received);
-        print min_date_received
+        app.logger.info(min_date_received)
         max_date_received = get_filter_value(filters_map, 'max_date_received')
         max_date_received = bleach.clean(max_date_received);
-        print max_date_received
+        app.logger.info(max_date_received)
         requester_name = get_filter_value(filters_map, 'requester_name')
         requester_name = bleach.clean(requester_name);
-        print requester_name
+        app.logger.info(requester_name)
         try:
             page_number = int(get_filter_value(filters_map, 'page_number') or '1')
         except:
             page_number = 1
         request_id_search = get_filter_value(filters_map, 'request_id_search')
         request_id_search = bleach.clean(request_id_search);
-        print request_id_search
+        app.logger.info(request_id_search)
         if not request_id_search or not re.match("FOIL-\d{4}-\d{3}-\d{5}", request_id_search):
             request_id_search = None
 
@@ -1121,7 +1119,7 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
         else:
             results = results.order_by((getattr(models.Request, sort_column)).asc())
 
-    print results
+    app.logger.info(results)
     return results.order_by(models.Request.id.desc())
 
 
@@ -1319,8 +1317,6 @@ def login():
     form = LoginForm()
     errors = []
     if request.method == 'POST':
-        print form.username.data
-        print form.password.data
         if form.validate_on_submit():
             user_to_login = authenticate_login(form.username.data, form.password.data)
             if user_to_login:

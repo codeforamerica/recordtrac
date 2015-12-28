@@ -40,7 +40,7 @@ agency_codes = {"City Commission on Human Rights": "228",
 
 
 def add_public_note(request_id, text):
-    print "Add Public Note"
+    app.logger.info("Add Public Note")
     return 1
 
 
@@ -253,7 +253,7 @@ def add_pdf(request_id, text, user_id=None, passed_spam_filter=False, privacy=1)
         staff = req.point_person()
         staff_alias = staff.user.alias
         staff_signature = staff.user.staff_signature
-        print "subscribers123467" + str(req.subscribers)
+        app.logger.info("Subscribers: %s" % str(req.subscribers))
         if req.subscribers != []:
             user_name = req.subscribers[0]
         else:
@@ -283,7 +283,7 @@ def upload_record(request_id, description, user_id, request_body, document=None,
         doc_id, filename, error = upload_helpers.upload_file(document=document, request_id=request_id)
     except:
         # print sys.exc_info()[0]
-        print traceback.format_exc()
+        app.logger.error(traceback.format_exc())
         return "The upload timed out, please try again."
     if doc_id == False:
         return "Extension type '%s' is not allowed." % filename

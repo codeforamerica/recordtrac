@@ -186,7 +186,6 @@ def create_request(id=id, agency=None, summary=None, text=None, user_id=None,
                    date_received=None):
     """ Create a Request object and return the ID. """
     agency_id = Department.query.filter_by(name=agency).first().id
-    # print "agency_id is " + str(agency_id)
     req = Request(id=id, agency=agency_id,  summary=summary, text=text, creator_id=user_id,
                   offline_submission_type=offline_submission_type, date_received=date_received)
     db.session.add(req)
@@ -282,7 +281,7 @@ def authenticate_login(email, password):
     :rtype: User object
     """
     if app.config['USE_LDAP'] == 'True':
-        print app.config['USE_LDAP']
+        app.logger.info("Use LDAP: %s" % app.config['USE_LDAP'])
         # # Setup the LDAP Options
         if app.config['LDAP_USE_TLS']:
             # Sets up TLS for LDAP connection
@@ -491,7 +490,7 @@ def change_request_status(request_id, status):
     date_created = req.date_received or req.date_created
     if "days" in status:
             days_to_fulfill = re.findall(r"(\d{2}) days",status)[0]
-            print cal.addbusdays(date_created, int(days_to_fulfill))
+            app.logger.info("Changing Due Date: %s " % cal.addbusdays(date_created, int(days_to_fulfill)))
             req.due_date = cal.addbusdays(date_created, int(days_to_fulfill))
     db.session.commit()
 

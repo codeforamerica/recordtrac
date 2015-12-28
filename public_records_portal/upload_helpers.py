@@ -65,14 +65,14 @@ def upload_file(document, request_id):
             try:
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             except socket.error, msg:
-                print "Unable to bind socket and create connection to ICAP server."
+                app.logger.error("Unable to bind socket and create connection to ICAP server.")
 
             try:
                 sock.connect((SERVICE, PORT))
             except socket.error, msg:
-                print("[ERROR] %s\n" % msg[1])
-                print("Unable to verify file for malware. Please try again.")
-            print "----- RESPMOD -----"
+                app.logger.error("[ERROR] %s\n" % msg[1])
+                app.logger.error("Unable to verify file for malware. Please try again.")
+            app.logger.info("----- RESPMOD -----")
             try:
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             except socket.error, msg:
@@ -112,9 +112,9 @@ def upload_file(document, request_id):
             try:
                 data = sock.recv(1024)
                 string = data
-                print data
+                app.logger.info(data)
             except:
-                print traceback.format_exc()
+                app.logger.error(traceback.format_exc())
             if "200 OK" in string:
                 app.logger.info("\n\n%s is allowed: %s" % (document.filename, string))
                 filename = secure_filename(document.filename)
