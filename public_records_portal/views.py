@@ -141,7 +141,7 @@ def new_request(passed_recaptcha=False, data=None):
             "Commission to Combat Police Corruption",
             "Board of Correction",
             "Department of Correction",
-            "Office of Emergency Management",
+            "NYC Emergency Management",
             "New York City Fire Department",
             "Department of Investigation",
             "Police Department",
@@ -452,7 +452,7 @@ def show_request_for_x(audience, request_id):
     if proper_request_id:
         if "city" in audience:
             return show_request_for_city(request_id=request_id)
-        return show_request(request_id=request_id, template="manage_request_%s.html" % (audience))   
+        return show_request(request_id=request_id, template="manage_request_%s.html" % (audience))
     return bad_request(400)
 
 
@@ -1346,13 +1346,13 @@ def login():
             return render_template('login.html', form=form, errors=errors)
     elif request.method == 'GET':
         if request.host_url.split('//')[1] != app.config['AGENCY_APPLICATION_URL'].split('//')[1]:
-            return redirect(url_for('landing'))            
+            return redirect(url_for('landing'))
         user_id = get_user_id()
         if user_id:
             redirect_url = get_redirect_target()
             return redirect(redirect_url)
         else:
-            return render_template('login.html', form=form)    
+            return render_template('login.html', form=form)
     else:
         return bad_request(400)
 
