@@ -858,7 +858,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         departments_selected = get_filter_value(filters_map=filters_map, filter_name='departments_selected',
                                                 is_list=True) or get_filter_value(filters_map, 'department')
         #departments_selected = bleach.clean(departments_selected);
-        app.loger.info("Department Selected: %s" % departments_selected)
+        app.logger.info("Department Selected: %s" % departments_selected)
         is_open = get_filter_value(filters_map=filters_map, filter_name='is_open', is_boolean=True)
         is_open = bleach.clean(is_open);
         app.logger.info(is_open)
