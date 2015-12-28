@@ -522,13 +522,14 @@ def add_offline_record(
     """ Creates a record with offline attributes """
     notification_content={}
     notification_content['description'] = description
+    notification_content['department_name'] = department_name
     record_id = create_record(request_id=request_id, user_id=user_id,
                               access=access, description=description,
                               privacy=privacy)  # To create an offline record, we need to know the request ID to which it will be added, the user ID for the person adding the record, how it can be accessed, and a description/title of the record.
     if record_id:
         change_request_status(request_id, 'A response has been added.')
         generate_prr_emails(request_id=request_id,
-                            notification_type='City response added',
+                            notification_type='city_response_added',
                             text=description,
                             department_name=department_name)
         add_staff_participant(request_id=request_id, user_id=user_id)
@@ -557,7 +558,7 @@ def add_link(
         notification_content['description'] = description
         notification_content['department_name'] = department_name
         generate_prr_emails(request_id=request_id,
-                            notification_type='City response added',
+                            notification_type='city_response_added',
                             notification_content=notification_content)
         add_staff_participant(request_id=request_id, user_id=user_id)
         return record_id

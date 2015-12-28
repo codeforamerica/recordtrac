@@ -12,6 +12,7 @@
                                 <p>
                                     You may appeal this decision to the agency FOIL Appeals Officer within 30 days whose contact information is shown below.
                                 </p>
+                            <br><br>
                                 <p>
                                     {% for reason in notification_content['reasons'] %}
                                         <p>{{ reason }}</p>
@@ -23,6 +24,7 @@
                                         {{ notification_content['additional_information'] }}
                                     {% endif %}
                                 </p>
+                            <br><br>
                                 <p>
                                     You can view the request and take any necessary action at the following webpage:
                                     <a href='{{ page }}'>{{ page }}</a>.
