@@ -29,21 +29,20 @@ from models import *
 from notifications import generate_prr_emails
 from public_records_portal import db_helpers
 from requires_roles import requires_roles
+import bleach
 
-agency_codes = {
-    'City Commission on Human Rights': '228',
-    'Department of Education': '040',
-    'Department of Information Technology and Telecommunications': '858',
-    'Department of Records and Information Services': '860',
-    'Office of the Mayor': '002',
-    "Mayor's Office of Contract Services": '002',
-    "Mayor's Office of Media and Entertainment": '002',
-    'Office of Administrative Trials and Hearings': '820',
-    'Office of the Chief Medical Examiner': '816',
-    'Office of Emergency Management': '017',
-    None: '000',
-    }
 
+agency_codes = {"City Commission on Human Rights": "228",
+                "Department of Education": "040",
+                "Department of Information Technology and Telecommunications": "858",
+                "Department of Records and Information Services": "860",
+                "Office of the Mayor": "002",
+                "Mayor's Office of Contract Services": "002",
+                "Mayor's Office of Media and Entertainment": "002",
+                "Office of Administrative Trials and Hearings": "820",
+                "Office of the Chief Medical Examiner": "816",
+                "NYC Emergency Management": "017",
+                None: "000"}
 
 def add_public_note(request_id, text):
     print 'Add Public Note'
@@ -134,24 +133,13 @@ def add_resource(resource, request_body, current_user_id=None):
 inside add_resource method''')
         if fields['record_description'] == '':
             return "When uploading a record, please fill out the 'summary' field."
-        if 'record_access' in fields and fields['record_access'] != '':
-            return add_offline_record(
-                fields['request_id'],
-                fields['record_description'],
-                fields['record_access'],
-                current_user_id,
-                department_name,
-                privacy=fields['record_privacy'],
-                )
-        elif 'link_url' in fields and fields['link_url'] != '':
-            return add_link(
-                request_id=fields['request_id'],
-                url=fields['link_url'],
-                description=fields['record_description'],
-                user_id=current_user_id,
-                department_name=department_name,
-                privacy=fields['record_privacy'],
-                )
+        if 'record_access' in fields and fields['record_access'] != "":
+            return add_offline_record(fields['request_id'], bleach.clean(fields['record_description']), bleach.clean(fields['record_access']),
+                                      current_user_id, department_name, privacy=bleach.clean(fields['record_privacy']))
+        elif 'link_url' in fields and fields['link_url'] != "":
+            return add_link(request_id=bleach.clean(fields['request_id']), url=bleach.clean(fields['link_url']),
+                            description=bleach.clean(fields['record_description']), user_id=current_user_id,
+                            department_name=department_name, privacy=bleach.clean(fields['record_privacy']))
         else:
             app.logger.info('''
 
@@ -342,10 +330,12 @@ def add_note(
     user_id=None,
     extension=False,
     ):
+    fields=request_body
     notification_content = {}
-    notification_content['user_id'] = user_id
-    notification_content['text']=request_body['note_text']
-    notification_content['additional_information']=request_body['additional_information']
+    if request_body:
+        notification_content['user_id'] = user_id
+        notification_content['text']=request_body['note_text']
+        notification_content['additional_information']=request_body['additional_information']
     if text and text != '':
         note_id = create_note(request_id=request_id, text=text,
                               user_id=user_id, privacy=privacy)
@@ -525,7 +515,7 @@ def add_offline_record(
     privacy=True,
     ):
     """ Creates a record with offline attributes """
-
+    notification_content={}
     notification_content['description'] = description
     record_id = create_record(request_id=request_id, user_id=user_id,
                               access=access, description=description,
@@ -942,14 +932,13 @@ def close_request(
     user_id=None,
     request_body=None,
     ):
-    print request_body['close_reasons']
-    print request_body
     req = get_obj('Request', request_id)
     change_request_status(request_id, 'Closed')
 
     notification_content={}
     # Create a note to capture closed information:
-    notification_content['additional_information']=request_body['additional_information']
+    if request_body:
+        notification_content['additional_information']=request_body['additional_information']
     notification_content['reason']=reason
     notification_content['user_id']=user_id
     create_note(request_id, reason, user_id, privacy=1)
@@ -981,10 +970,5 @@ def change_privacy_setting(request_id, privacy, field):
 
 
 def change_record_privacy(record_id, privacy):
-    record = get_obj('Record', record_id)
-    update_obj(attribute='privacy', val=privacy, obj_type='Record',
-               obj_id=record.id)
-
-
-
-
+    record = get_obj("Record", record_id)
+    update_obj(attribute="privacy", val=privacy, obj_type="Record", obj_id=record.id)

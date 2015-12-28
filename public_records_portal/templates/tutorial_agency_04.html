@@ -89,7 +89,7 @@
                                            alt="Your agency name logo"/></a>
 
             <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
-                
+
                     <div class="google_translate btn">
                         <p><a href="/logout">Logout</a></p>
                     </div>
@@ -103,12 +103,12 @@
                     </ul>
                     <ul class="nav pull-right">
                     </ul>
-                
+
             </div>
         </div>
     </div>
     <div id="container-fluid">
-        
+
 
 <style>
 	#tooltip {
@@ -170,11 +170,11 @@ rect:hover{
 
 <div class="row-fluid">
     <div class="span10">
-		
-			
 
-                    
-		
+
+
+
+
 
 		<!--div id="report_div"></div-->
 		<div id="bar_chart"></div>
@@ -185,154 +185,154 @@ rect:hover{
 		<h5>Agency Filter</h5>
 		<select id="agency_filter" name="agency_filter">
 			<option value="0">None Selected</option>
-			
+
                         	<option value="4">Commission on Human Rights</option>
-			
+
                         	<option value="7">Department of Education</option>
-			
+
                         	<option value="6">Department of Information Technology and Telecommunications</option>
-			
+
                         	<option value="1">Department of Records and Information Services</option>
-			
+
                         	<option value="11">Law Department</option>
-			
+
                         	<option value="9">Mayor&#39;s Office of Operations</option>
-			
+
                         	<option value="10">Mayor&#39;s Office of Technology and Innovation</option>
-			
+
                         	<option value="3">Office of Administrative Trials and Hearings</option>
-			
-                        	<option value="5">Office of Emergency Management</option>
-			
+
+                        	<option value="5">NYC Emergency Management</option>
+
                         	<option value="2">Office of the Chief Medical Examiner</option>
-			
+
                         	<option value="8">Office of the Mayor</option>
-			
+
 		</select>
-        
+
 		<h5>Staff Filter</h5>
 		<select id="staff_filter" name="staff_filter">
 			    <option value="0">None Selected</option>
-				
+
 				tsinha@cchr.nyc.gov
 				<option value="11">Tito Sinha</option>
-				
+
 				jbaranello3@schools.nyc.gov
 				<option value="16">Joseph Baranello</option>
-				
+
 				vsubrath@doitt.nyc.gov
 				<option value="32">Visham Subrath</option>
-				
+
 				tlau@doitt.nyc.gov
 				<option value="31">Tin Lau</option>
-				
+
 				clong@doitt.nyc.gov
 				<option value="30">Chris Long</option>
-				
+
 				llast@doitt.nyc.gov
 				<option value="29">Lois Last</option>
-				
+
 				udaniel@doitt.nyc.gov
 				<option value="15">Ugooma Daniel</option>
-				
+
 				cfraser@doitt.nyc.gov
 				<option value="14">Charles Fraser</option>
-				
+
 				jbaek@doitt.nyc.gov
 				<option value="13">Jennifer Baek</option>
-				
+
 				zack@reboot.org
 				<option value="28">Zack Brisson</option>
-				
+
 				adam.parker@reboot.org
 				<option value="27">Adam Parker</option>
-				
+
 				patrick@reboot.org
 				<option value="26">Patrick Ainslie</option>
-				
+
 				hestevez@records.nyc.gov
 				<option value="6">Haronil Estevez</option>
-				
+
 				lcjones@records.nyc.gov
 				<option value="5">LaTonya Jones</option>
-				
+
 				kcobb@records.nyc.gov
 				<option value="4">Kenneth Cobb</option>
-				
+
 				ptoole@records.nyc.gov
 				<option value="3">Pauline Toole</option>
-				
+
 				mbatey@records.nyc.gov
 				<option value="2">Martin Batey</option>
-				
+
 				jcastillo@records.nyc.gov
 				<option value="1">Joel Castillo</option>
-				
+
 				slouis@law.nyc.gov
 				<option value="25">Stephen Louis</option>
-				
+
 				sgoulden@law.nyc.gov
 				<option value="24">Steven Goulden</option>
-				
+
 				kvera@cityhall.nyc.gov
 				<option value="21">Katherine Vera</option>
-				
+
 				cfcarney@cto.nyc.gov
 				<option value="23">Caroline Carney</option>
-				
+
 				jmerritt@cto.nyc.gov
 				<option value="22">Jeff Merritt</option>
-				
+
 				jmacron@oath.nyc.gov
 				<option value="10">James Macron</option>
-				
+
 				fng@oath.nyc.gov
 				<option value="9">Frank Ng</option>
-				
+
 				rwilson@oem.nyc.gov
 				<option value="12">Robert Wilson</option>
-				
+
 				mpaulino@ocme.nyc.gov
 				<option value="8">Maureen Paulino</option>
-				
+
 				fhutner@ocme.nyc.gov
 				<option value="7">Florence Hutner</option>
-				
+
 				bchiu@cityhall.nyc.gov
 				<option value="20">Bess Chiu</option>
-				
+
 				bjoseph@cityhall.nyc.gov
 				<option value="19">Brandon Joseph</option>
-				
+
 				kgopal@cityhall.nyc.gov
 				<option value="18">Kiren Gopal</option>
-				
+
 				ibassin@cityhall.nyc.gov
 				<option value="17">Ian Bassin</option>
-				
+
 				None
 				<option value="35">None</option>
-				
+
 				None
 				<option value="34">None</option>
-				
+
 				None
 				<option value="33">None</option>
-				
+
 		</select>
-        
+
 
         <br />
-		
+
 		<script type="text/javascript">
 
 			function draw_barchart(reportPath) {
-				
+
 				$("#bar_chart").empty();
 				var w = 500, h = 100;
 				var svg = d3.select("#bar_chart").append("svg").attr("width",w).attr("height",h);
 			        var barPadding = 1;
-	
+
 				d3.json(reportPath, function(report_data) {
 						var margin = {
 						top: 25,
@@ -343,7 +343,7 @@ rect:hover{
 						w = 600 - margin.left - margin.right,
 						h = 350 - margin.top - margin.bottom;
 						var padding = 10;
-						
+
 						var colors = {};
 						colors["Received"] = "#278ECF";
 						colors["Published"] = "#4BD762";
@@ -356,10 +356,10 @@ rect:hover{
                                                 colors["Referred to Open Data"] = "#6EDB8F";
                                                 colors["Referred to Other Agency"] = "#FFE366";
                                                 colors["Referred to Publications Portal"] = "#FFC266";
-	
+
 						var dataset = report_data.data;
 						dataset = dataset.filter(function(d){ return d.label == "Received" || d.label == "Published"; });
-	
+
 						var xScale = d3.scale.ordinal()
 						.domain(d3.range(dataset.length))
 						.rangeRoundBands([0, w], 0.05);
@@ -381,7 +381,7 @@ rect:hover{
 						.ticks(5);
 
 						var commaFormat = d3.format(',');
-						
+
 						//SVG element
 						var svg = d3.select("#bar_chart")
 						.append("svg")
@@ -389,7 +389,7 @@ rect:hover{
 						.attr("height", h + margin.top + margin.bottom)
 						.append("g")
 						.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-						
+
 						// Graph Bars
 						var sets = svg.selectAll(".set")
 						.data(dataset)
@@ -399,7 +399,7 @@ rect:hover{
 						.attr("transform", function (d, i) {
 							  return "translate(" + xScale(i) + ",0)";
 							  });
-						
+
 						sets.append("rect")
 						.attr("class", "OverDue")
 						.attr("width", xScale.rangeBand() / 2)
@@ -414,7 +414,7 @@ rect:hover{
 							  return colors[d.label];
 							  })
 						;
-						
+
 						// xAxis
 						svg.append("g") // Add the X Axis
 						.attr("class", "x axis")
@@ -437,7 +437,7 @@ rect:hover{
 						.attr("transform", "translate(" + (w / 2) + " ," + (h + margin.bottom - 5) + ")")
 						.style("text-anchor", "middle")
 						.text("Request Type");
-						
+
 						//yAxis label
 						svg.append("text")
 						.attr("transform", "rotate(-90)")
@@ -446,7 +446,7 @@ rect:hover{
 						.attr("dy", "1em")
 						.style("text-anchor", "middle")
 						.text("# of Requests");
-			
+
 						sets.append("text")
 						.text(function(d) {
 							if(d.value != 0) {
@@ -467,12 +467,12 @@ rect:hover{
 							return "black";
 							//colors[d.label];
 						});
-                                                
-	
-	
+
+
+
 						});
 			}
-		
+
 			draw_barchart("/api/report/all/all");
 
 			$("#calendarYear").click(function() {
@@ -482,11 +482,11 @@ rect:hover{
 			$("#fullYear").click(function() {
 			    draw_barchart("/api/report/all/fullYear");
 			});
-			
+
 			$("#rolling").click(function() {
 				draw_barchart("/api/report/all/rolling");
 			});
-			
+
 			$("#agency_filter").change(function() {
 				selected = $(this).val();
 

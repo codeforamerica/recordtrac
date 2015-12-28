@@ -19,12 +19,12 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32"
           href="/static/images/favicon-32x32.png"/>
-		  
+
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstro.css') }}">
     <link rel=stylesheet type=text/css href="/static/css/plugins/BootSwatchr6.css">
     <link rel=stylesheet type=text/css href="/static/css/plugins/DT_bootstrap.css">
     <link rel=stylesheet type=text/css href="/static/css/plugins/font-awesome.min.css">
-		
+
     <!-- modernizr -->
     <script type="text/javascript"
             src="/static/js/plugins/modernizr-latest-min.js"></script>
@@ -89,7 +89,7 @@
                                            alt="Your agency name logo"/></a>
 
             <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
-                
+
                     <div class="google_translate">
                         <div id="google_translate_element"></div>
                         <script type="text/javascript">
@@ -109,12 +109,12 @@
                     </ul>
                     <ul class="nav pull-right">
                     </ul>
-                
+
             </div>
         </div>
     </div>
     <div id="container-fluid">
-        
+
 
 <style>
 	#tooltip {
@@ -176,11 +176,11 @@ rect:hover{
 
 <div class="row-fluid" id="request_graph_section">
     <div class="span10">
-		
-			
 
-                    
-		
+
+
+
+
 
 		<!--div id="report_div"></div-->
 		<div id="bar_chart"></div>
@@ -190,38 +190,38 @@ rect:hover{
 		<h5>Agency Filter</h5>
 		<select id="agency_filter" name="agency_filter">
 			<option value="0">None Selected</option>
-			
+
                         	<option value="4">Commission on Human Rights</option>
-			
+
                         	<option value="7">Department of Education</option>
-			
+
                         	<option value="6">Department of Information Technology and Telecommunications</option>
-			
+
                         	<option value="1">Department of Records and Information Services</option>
-			
+
                         	<option value="11">Law Department</option>
-			
+
                         	<option value="9">Mayor&#39;s Office of Operations</option>
-			
+
                         	<option value="10">Mayor&#39;s Office of Technology and Innovation</option>
-			
+
                         	<option value="3">Office of Administrative Trials and Hearings</option>
-			
-                        	<option value="5">Office of Emergency Management</option>
-			
+
+                        	<option value="5">NYC Emergency Management</option>
+
                         	<option value="2">Office of the Chief Medical Examiner</option>
-			
+
                         	<option value="8">Office of the Mayor</option>
-			
+
 		</select>
-        
+
 
         <br />
-		
+
 		<script type="text/javascript">
 
 			function draw_barchart(reportPath) {
-				
+
 				$("#bar_chart").empty();
 				var w = 500, h = 100;
 				var svg = d3.select("#bar_chart").append("svg").attr("width",w).attr("height",h);
@@ -236,7 +236,7 @@ rect:hover{
 						w = 600 - margin.left - margin.right,
 						h = 350 - margin.top - margin.bottom;
 						var padding = 10;
-						
+
 						var colors = {};
 						colors["Received"] = "#278ECF";
 						colors["Published"] = "#4BD762";
@@ -249,10 +249,10 @@ rect:hover{
                                                 colors["Referred to Open Data"] = "#6EDB8F";
                                                 colors["Referred to Other Agency"] = "#FFE366";
                                                 colors["Referred to Publications Portal"] = "#FFC266";
-	
+
 						var dataset = report_data.data;
 						dataset = dataset.filter(function(d){ return d.label == "Received" || d.label == "Published"; });
-	
+
 						var xScale = d3.scale.ordinal()
 						.domain(d3.range(dataset.length))
 						.rangeRoundBands([0, w], 0.05);
@@ -274,7 +274,7 @@ rect:hover{
 						.ticks(5);
 
 						var commaFormat = d3.format(',');
-						
+
 						//SVG element
 						var svg = d3.select("#bar_chart")
 						.append("svg")
@@ -282,7 +282,7 @@ rect:hover{
 						.attr("height", h + margin.top + margin.bottom)
 						.append("g")
 						.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-						
+
 						// Graph Bars
 						var sets = svg.selectAll(".set")
 						.data(dataset)
@@ -292,7 +292,7 @@ rect:hover{
 						.attr("transform", function (d, i) {
 							  return "translate(" + xScale(i) + ",0)";
 							  });
-						
+
 						sets.append("rect")
 						.attr("class", "OverDue")
 						.attr("width", xScale.rangeBand() / 2)
@@ -307,7 +307,7 @@ rect:hover{
 							  return colors[d.label];
 							  })
 						;
-						
+
 						// xAxis
 						svg.append("g") // Add the X Axis
 						.attr("class", "x axis")
@@ -330,7 +330,7 @@ rect:hover{
 						.attr("transform", "translate(" + (w / 2) + " ," + (h + margin.bottom - 5) + ")")
 						.style("text-anchor", "middle")
 						.text("Request Type");
-						
+
 						//yAxis label
 						svg.append("text")
 						.attr("transform", "rotate(-90)")
@@ -339,7 +339,7 @@ rect:hover{
 						.attr("dy", "1em")
 						.style("text-anchor", "middle")
 						.text("# of Requests");
-			
+
 						sets.append("text")
 						.text(function(d) {
 							if(d.value != 0) {
@@ -360,34 +360,34 @@ rect:hover{
 							return "black";
 							//colors[d.label];
 						});
-                                                
-	
-	
+
+
+
 						});
 			}
-		
+
 			draw_barchart("/api/report/all/all/all/all");
-            
+
 			$("#fullYear").click(function() {
                 selected_agency = $('#agency_filter').val();
                 selected_staff = $('#staff_filter').val();
-                                 
+
                 if(typeof selected_staff === 'undefined') {
                         selected_staff = 'all'
                 }
                 draw_barchart("/api/report/fullYear/all/" + selected_agency + "/" + selected_staff);
 			});
-			
+
 			$("#rolling").click(function() {
                                 selected_agency = $('#agency_filter').val();
                                 selected_staff = $('#staff_filter').val();
 				//draw_barchart("/api/report/rolling/all/all/all");
                 if(typeof selected_staff === 'undefined') {
                         selected_staff = 'all'
-                }                                
+                }
                 draw_barchart("/api/report/rolling/all/" + selected_agency + "/" + selected_staff);
 			});
-			
+
 			$("#agency_filter").change(function() {
                                        selected_agency = $('#agency_filter').val();
                                        selected_staff = $('#staff_filter').val();

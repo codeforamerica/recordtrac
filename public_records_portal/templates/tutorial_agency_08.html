@@ -22,7 +22,7 @@
     <link rel="icon" type="image/png" sizes="32x32"
           href="/static/images/favicon-32x32.png"/>
 
-    
+
     <link rel=stylesheet type=text/css href="/static/css/all_requests.css">
     <link rel=stylesheet type=text/css href="/static/css/all_requests_noresults.css">
     <link rel=stylesheet type=text/css href="/static/css/sidebar.css">
@@ -41,7 +41,7 @@
     <link rel=stylesheet type=text/css href="/static/css/plugins/BootSwatchr6.css">
     <link rel=stylesheet type=text/css href="/static/css/plugins/DT_bootstrap.css">
     <link rel=stylesheet type=text/css href="/static/css/plugins/font-awesome.min.css">
-		
+
     <!-- modernizr -->
     <script type="text/javascript"
             src="/static/js/plugins/modernizr-latest-min.js"></script>
@@ -106,7 +106,7 @@
                                            alt="Your agency name logo"/></a>
 
             <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
-                
+
                     <div class="google_translate btn">
                         <p><a href="/logout">Logout</a></p>
                     </div>
@@ -120,12 +120,12 @@
                     </ul>
                     <ul class="nav pull-right">
                     </ul>
-                
+
             </div>
         </div>
     </div>
     <div id="container-fluid">
-        
+
 
     <div class="row-fluid">
         <div class="span12">
@@ -159,24 +159,24 @@
                             </div>
                             <div class="row-fluid">
                                 <!-- <h4 class="underline">ADVANCED FILTER</h4> -->
-                                
+
                                     <div class="span6" id="my_requests">
                                         <h5>My requests</h5>
                                         <div class="indent">
                                             <label class="checkbox">
-                                                <input type="checkbox" ID="checkbox" name="mine_as_poc" 
+                                                <input type="checkbox" ID="checkbox" name="mine_as_poc"
                                                        checked  />
                                                 <em>&nbsp as Point of Contact</em>
                                                 <br><br>
                                             </label>
                                             <label class="checkbox">
-                                                <input type="checkbox" ID="checkbox" name="mine_as_helper" 
+                                                <input type="checkbox" ID="checkbox" name="mine_as_helper"
                                                        checked  />
                                                 <em>&nbsp as Helper</em>
                                             </label>
                                         </div>
                                     </div>
-                                
+
                                 <div class="span6">
                                     <h5>Status</h5>
 
@@ -185,18 +185,18 @@
                                             <input type="checkbox" ID="checkbox" name="is_open" checked />
                                             <em class="open_style">Open</em>
                                         </label>
-                                        
+
                                             <label class="checkbox">
-                                                <input type="checkbox" ID="checkbox"  name="due_soon" 
+                                                <input type="checkbox" ID="checkbox"  name="due_soon"
                                                        checked  />
                                                 <em class="duesoon_style">Due Soon</em>
                                             </label>
                                             <label class="checkbox">
-                                                <input type="checkbox" ID="checkbox" name="overdue" 
+                                                <input type="checkbox" ID="checkbox" name="overdue"
                                                        checked  />
                                                 <em class="overdue_style">Overdue</em>
                                             </label>
-                                        
+
                                         <label class="checkbox">
                                             <input type="checkbox" ID="checkbox"  name="is_closed"  />
                                             <em class="closed_style">Closed</em>
@@ -216,7 +216,7 @@
                                        value="None"
                                        class="span12">
                             </div>
-                            
+
                                 <h5>Due date</h5>
                                 <div class="control-group">
                                     <input type="date"
@@ -233,82 +233,82 @@
                                     <input class="span12" name="requester_name" type="search" placeholder="Enter name"
                                            value="">
                                 </div>
-                            
-                            
+
+
                                 <h5>Agency Name</h5>
                                 <div class="control-group">
                                     <select name="departments_selected" class="selectpicker span12">
 
-                                        
-                                            
+
+
                                                 <option>Commission on Human Rights</option>
-                                            
 
-                                        
-                                            
+
+
+
                                                 <option>Department of Education</option>
-                                            
 
-                                        
-                                            
+
+
+
                                                 <option>Department of Information Technology and Telecommunications</option>
-                                            
 
-                                        
-                                            
+
+
+
                                                 <option selected>Department of Records and Information Services</option>
-                                            
 
-                                        
-                                            
+
+
+
                                                 <option>Law Department</option>
-                                            
 
-                                        
-                                            
+
+
+
                                                 <option>Mayor&#39;s Office of Operations</option>
-                                            
 
-                                        
-                                            
+
+
+
                                                 <option>Mayor&#39;s Office of Technology and Innovation</option>
-                                            
 
-                                        
-                                            
+
+
+
                                                 <option>Office of Administrative Trials and Hearings</option>
-                                            
 
-                                        
-                                            
-                                                <option>Office of Emergency Management</option>
-                                            
 
-                                        
-                                            
+
+
+                                                <option>NYC Emergency Management</option>
+
+
+
+
                                                 <option>Office of the Chief Medical Examiner</option>
-                                            
 
-                                        
-                                            
+
+
+
                                                 <option>Office of the Mayor</option>
-                                            
 
-                                        
+
+
                                     </select>
                                 </div>
-                            
+
                             <button class="btn btn-primary span12" style="margin-left: 0px;" type="submit"
                                     value="Submit">Find
                             </button>
                         </div>
-                        
+
                             <div class="row-fluid" id="export">
                                 <p class="text-center">
                                     <a href="/export"> <i class="icon-download"></i> Export data</a>
                                 </p>
                             </div>
-                        
+
                     </div>
                     <div class="span7">
                         <table width="100%" id="requests">
@@ -337,104 +337,104 @@
                                             onclick="return insertInput('due_date');">Due
                                     </button>
                                 </th>
-                                
+
                                     <th class="hide-mobile">Requester</th>
-                                
+
                             </tr>
                             </thead>
                             <tbody>
-                            
-                                
+
+
                                     <tr class="clickable-row"
                                         onclick="window.location='/city/request/FOIL-2015-002-00015'">
-                                        
+
                             <td class="status due soon">
-                                
+
                             </td>
                             <td>FOIL-2015-002-00015</td>
                             <td class="hide-mobile">Oct 23, 2015</td>
                             <td>
-                                
+
                                     <a href="/city/request/FOIL-2015-002-00015">
-                                
-                                
-                                
+
+
+
                                     <span style="background-color: #FB991B" class="label label-warning">due soon</span>
-                                
+
                                 Police Report 288
                                 </a>
                             </td>
                             <td>Department of Records and Information Services</td>
                             <td class="hide-mobile">Joel Castillo</td>
                             <td >Nov 02, 2015</td>
-                            
+
                                 <td class="hide-mobile">N/A</td>
-                            
+
                             </tr>
-                            
-                                
+
+
                                     <tr class="clickable-row"
                                         onclick="window.location='/city/request/FOIL-2015-040-00005'">
-                                        
+
                             <td class="status due soon">
-                                
+
                             </td>
                             <td>FOIL-2015-040-00005</td>
                             <td class="hide-mobile">Oct 23, 2015</td>
                             <td>
-                                
+
                                     <a href="/city/request/FOIL-2015-040-00005">
-                                
-                                
-                                
+
+
+
                                     <span style="background-color: #FB991B" class="label label-warning">due soon</span>
-                                
+
                                 Incident Report 36
                                 </a>
                             </td>
                             <td>Department of Records and Information Services</td>
                             <td class="hide-mobile">Haronil Estevez</td>
                             <td >Nov 02, 2015</td>
-                            
+
                                 <td class="hide-mobile">N/A</td>
-                            
+
                             </tr>
-                            
-                                
+
+
                                     <tr class="clickable-row"
                                         onclick="window.location='/city/request/FOIL-2015-820-00001'">
-                                        
+
                             <td class="status due soon">
-                                
+
                             </td>
                             <td>FOIL-2015-820-00001</td>
                             <td class="hide-mobile">Oct 23, 2015</td>
                             <td>
-                                
+
                                     <a href="/city/request/FOIL-2015-820-00001">
-                                
-                                
-                                
+
+
+
                                     <span style="background-color: #FB991B" class="label label-warning">due soon</span>
-                                
+
                                 City Council meeting minutes 284
                                 </a>
                             </td>
                             <td>Department of Records and Information Services</td>
                             <td class="hide-mobile">LaTonya Jones</td>
                             <td >Nov 02, 2015</td>
-                            
+
                                 <td class="hide-mobile">N/A</td>
-                            
+
                             </tr>
-                            
+
                             </tbody>
                         </table>
                         <div class="pull-left pagination">
                             <ul>
-                                
+
                                 <li>Showing 1 to 3 of 3 entries</li>
-                                
+
                             </ul>
                         </div>
                     </div>
@@ -545,7 +545,7 @@
             src="/static/js/plugins/jquery-ui-1.10.4.custom.min.js"></script>
     <script type="text/javascript" src="/static/js/date_picker.js"></script>
     <script type="text/javascript" src="/static/js/all_requests.js"></script>
-	
+
 <!-- used for the tutorial -->
 <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstro.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/custom.bootstro.js') }}"></script>

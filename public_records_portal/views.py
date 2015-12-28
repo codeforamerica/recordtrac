@@ -37,6 +37,7 @@ import bleach
 from flask.ext.session import Session
 from secureCookie import *
 from uuid import uuid4
+from jinja2 import utils
 
 cal = Calendar()
 
@@ -49,9 +50,9 @@ login_manager.user_loader(get_user_by_id)
 login_manager.anonymous_user = AnonUser
 login_manager.init_app(app)
 
-#SESSION_COOKIE_SECURE=True
-#app.config.from_object(__name__)
-#Session(app)
+SESSION_COOKIE_SECURE=True
+app.config.from_object(__name__)
+Session(app)
 
 zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
 
@@ -140,7 +141,7 @@ def new_request(passed_recaptcha=False, data=None):
             "Commission to Combat Police Corruption",
             "Board of Correction",
             "Department of Correction",
-            "Office of Emergency Management",
+            "NYC Emergency Management",
             "New York City Fire Department",
             "Department of Investigation",
             "Police Department",
@@ -413,6 +414,7 @@ def index():
     if current_user.is_anonymous == False:
         return redirect(url_for('display_all_requests'))
     else:
+        #app.permanent_session_lifetime = timedelta(seconds=0)
         return landing()
 
 
@@ -750,7 +752,7 @@ def filter_search_term(search_input, results):
             for x in range(num_terms - 1):
                 search_query = search_query + search_terms[x] + ' & '
         search_query = search_query + search_terms[num_terms - 1] + ":*"  # Catch substrings
-        results = results.filter("to_tsvector(text) @@ to_tsquery('%s')" % search_query)
+        results = results.filter("to_tsvector(summary) @@ to_tsquery('%s')" % search_query)
     return results
 
 
@@ -883,6 +885,8 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         print sort_column
         sort_direction = get_filter_value(filters_map, 'sort_direction') or 'asc'
         sort_direction = bleach.clean(sort_direction);
+        #sort_direction = str(utils.escape(sort_direction))
+        #sort_direction = clean_html(sort_direction)
         print sort_direction
         search_term = get_filter_value(filters_map, 'search_term')
         search_term = bleach.clean(search_term);
@@ -1172,6 +1176,15 @@ def about():
 @login_required
 def logout():
     logout_user()
+    session.clear()
+    session.pop("_csrf_token", None)
+    session.pop('username', None)
+    session.pop('_id', None)
+    if request.referrer and request.referrer.split('/')[2] != app.config['AGENCY_APPLICATION_URL'].split('/')[2]:
+        return bad_request(400)
+    referer_header = request.headers.get("Referer")
+    if referer_header and referer_header.split('/')[2] != app.config['AGENCY_APPLICATION_URL'].split('/')[2]:
+        return bad_request(400)
     return redirect(url_for('index'))
 
 
@@ -1313,6 +1326,9 @@ def login():
             user_to_login = authenticate_login(form.username.data, form.password.data)
             if user_to_login:
                 login_user(user_to_login)
+                session.pop("_csrf_token", None)
+                session.pop('_id', None)
+                session['username'] = form.username.data
                 redirect_url = get_redirect_target()
                 if 'login' in redirect_url or 'logout' in redirect_url:
                     return redirect(url_for('display_all_requests'))
@@ -1433,7 +1449,7 @@ def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
                 d_string = date_now.strftime(date_format)
                 d_string_2 = date_start_of_year.strftime(date_format)
                 min_date_received = str(datetime.strptime(d_string_2, date_format))
-                max_date_received = str(datetime.strptime(d_string, date_format))
+                max_date_received = str(datetime.strptime(d_string, date_format) + timedelta(days=1))
                 min_date_received = min_date_received[0:-9]
                 max_date_received = max_date_received[0:-9]
                 received_request = received_request.filter(and_(models.Request.date_received >= min_date_received,
@@ -1457,7 +1473,7 @@ def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
                 date_now = datetime.now()
                 d_string = date_now.strftime(date_format)
                 min_date_received = str(datetime.strptime(d_string, date_format) - timedelta(365))
-                max_date_received = str(datetime.strptime(d_string, date_format))
+                max_date_received = str(datetime.strptime(d_string, date_format) + timedelta(days=1))
                 min_date_received = min_date_received[0:-9]
                 max_date_received = max_date_received[0:-9]
                 received_request = received_request.filter(and_(models.Request.date_received >= min_date_received,
@@ -1474,7 +1490,7 @@ def get_report_jsons(calendar_filter, report_type, agency_filter, staff_filter):
                 referred_to_other_agency_request = models.Request.query.filter(referred_to_other_agency_filter).all()
                 referred_to_publications_portal_request = models.Request.query.filter(
                     referred_to_publications_portal_filter).all()
-            if staff_filter != "all":
+            if staff_filter != "all" and staff_filter != "0":
                 staff_id = int(staff_filter)
                 overdue_request = models.Request.query.filter(models.Request.id == models.Owner.request_id).filter(
                     overdue_filter).filter(models.Owner.is_point_person == True).all()
