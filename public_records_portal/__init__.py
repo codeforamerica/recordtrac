@@ -26,7 +26,7 @@ app = Flask(__name__)
 app.debug = True
 log_filename =  "openrecords_"+time.strftime("%Y%m%d")+".log"
 handler = TimedRotatingFileHandler(log_filename, when='D', interval=60)
-handler.setLevel(logging.WARNING)
+handler.setLevel(logging.DEBUG)
 app.logger.addHandler(handler)
 
 load_dotenv(abspath(join(join(dirname(__file__), pardir), '.env')))

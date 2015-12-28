@@ -31,7 +31,7 @@ $(function () {
         "Office of the Mayor",
         "Office of Payroll Administration",
         "Department of Records and Information Services"]
-    var health = ["Office of Chief Medical Examiner",
+    var health = ["Office of the Chief Medical Examiner",
         "Health and Hospitals Corporation",
         "Department of Health and Mental Hygiene"]
     var housingAndDevelopment = ["Loft Board",
