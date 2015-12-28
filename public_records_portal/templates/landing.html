@@ -46,7 +46,7 @@
             <a href="/logout" >Logout</a>
           </div>
       {% else %}
-        {% if request.host == config['AGENCY_APPLICATION_URL'] %}
+        {% if request.base_url == config['AGENCY_APPLICATION_URL'] %}
           <div class="login btn btn-large">
             <a href="/login" >Agency Login</a>
           </div>
