@@ -20,6 +20,9 @@ from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask_recaptcha import ReCaptcha
 from tzlocal import get_localzone
+from simplekv.db.sql import SQLAlchemyStore
+from simplekv.db.sql import SQLAlchemyStore
+from flask.ext.kvsession import KVSessionExtension
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -135,3 +138,6 @@ app.config['SECRET_KEY'] = environ['SECRET_KEY']
 app.secret_key = app.config['SECRET_KEY']
 app.config['SESSION_TYPE'] = 'sqlalchemy'
 app.config['PERMANENT_SESSION_LIFETIME'] = int(environ['PERMANENT_SESSION_LIFETIME'])
+
+store = SQLAlchemyStore(db.engine, db.metadata, 'sessions')
+kvsession = KVSessionExtension(store, app)

@@ -34,7 +34,7 @@ from datetime import datetime, timedelta, date
 from business_calendar import Calendar
 import operator
 import bleach
-from flask.ext.session import Session
+#from flask.ext.session import Session
 from secureCookie import *
 from uuid import uuid4
 from jinja2 import utils
@@ -50,12 +50,17 @@ login_manager.user_loader(get_user_by_id)
 login_manager.anonymous_user = AnonUser
 login_manager.init_app(app)
 
-SESSION_COOKIE_SECURE=True
-app.config.from_object(__name__)
-Session(app)
+#SESSION_COOKIE_SECURE=True
+#app.config.from_object(__name__)
+#Session(app)
+
+app.config['SESSION_COOKIE_SECURE'] = True
 
 zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
 
+@app.before_first_request
+def create_user():
+    db.create_all()
 
 @app.before_request
 def make_session_permanent():
@@ -1173,6 +1178,7 @@ def about():
 @login_required
 def logout():
     logout_user()
+    session.regenerate()
     session.clear()
     session.pop("_csrf_token", None)
     session.pop('username', None)
@@ -1321,6 +1327,7 @@ def login():
             user_to_login = authenticate_login(form.username.data, form.password.data)
             if user_to_login:
                 login_user(user_to_login)
+                session.regenerate()
                 session.pop("_csrf_token", None)
                 session.pop('_id', None)
                 session['username'] = form.username.data
