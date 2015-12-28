@@ -9,11 +9,15 @@
                                 <p>
                                 A note has been added to request {{ notification_content['request_id'] }}.
 
+                                </p>
+                                <p>
                                 {{ notification_content['text'] }}
                                 </p>
-
                                 <p>
-                                Additional information: notification_content['additional_information']
+                                    {% if additional_information %}
+                                        Additional Information: <br />
+                                        {{ notification_content['additional_information'] }}
+                                    {% endif %}
                                 </p>
                                 <p>
                                     You can view the request and take any necessary action at the following webpage:

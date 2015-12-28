@@ -11,8 +11,10 @@
                                     (FOIL). You can expect a response on or about {{ notification_content['due_date'] }}
                                 </p>
                                 <p>
-                                    Additional Information: <br />
-                                    {{ notification_content['additional_information'] }}
+                                    {% if additional_information %}
+                                        Additional Information: <br />
+                                        {{ notification_content['additional_information'] }}
+                                    {% endif %}
                                 </p>
                                 <p>
                                     You can view the request and take any necessary action at the following webpage:

@@ -7,7 +7,13 @@
                         <span style="font-family: arial,helvetica,sans-serif;">
                             <span style="color: rgb(51, 51, 51); font-size: 14px;">
                                 <p>
-                                {{ notification_content['user_name']}} has been removed as a helper from {{ request_id }}.
+                                {{ notification_content['user_name']}} has been removed as a helper from {{ notification_content['request_id'] }}.
+                                </p>
+                                <p>
+                                    {% if additional_information %}
+                                        Additional Information: <br />
+                                        {{ notification_content['additional_information'] }}
+                                    {% endif %}
                                 </p>
                                 <p>
                                     You can view the request and take any necessary action at the following webpage:

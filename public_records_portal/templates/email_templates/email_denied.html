@@ -13,8 +13,15 @@
                                     You may appeal this decision to the agency FOIL Appeals Officer within 30 days whose contact information is shown below.
                                 </p>
                                 <p>
-                                    Additional Information: <br />
-                                    {{ additional_information }}
+                                    {% for reason in notification_content['reasons'] %}
+                                        <p>{{ reason }}</p>
+                                    {% endfor %}
+                                </p>
+                                <p>
+                                    {% if additional_information %}
+                                        Additional Information: <br />
+                                        {{ notification_content['additional_information'] }}
+                                    {% endif %}
                                 </p>
                                 <p>
                                     You can view the request and take any necessary action at the following webpage:

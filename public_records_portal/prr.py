@@ -16,7 +16,6 @@ from StringIO import StringIO
 
 from flask import request, render_template, make_response
 from xhtml2pdf import pisa
-
 import upload_helpers
 from RequestPresenter import RequestPresenter
 from ResponsePresenter import ResponsePresenter
@@ -29,6 +28,7 @@ from models import *
 from notifications import generate_prr_emails
 from public_records_portal import db_helpers
 from requires_roles import requires_roles
+from helpers import explain_action
 import bleach
 
 
@@ -181,17 +181,19 @@ No file passed in''')
             notification_content['user_id'] = get_attribute('user_id',
                                 obj_id=participant_id, obj_type='Owner')
             notification_content['request_body'] = request_body
+            notification_content['request_id'] = request_body['request_id']
             generate_prr_emails(request_id=fields['request_id'],
-                                notification_type='Staff participant added'
+                                notification_type='helper_added'
                                 , notification_content=notification_content)
         else:
             user = User.query.get(current_user_id)
             user_name = user.alias
             notification_content['user_name'] = user_name
+            notification_content['request_id'] = request_body['request_id']
             notification_content['user_id'] = get_attribute('user_id',
                                 obj_id=participant_id, obj_type='Owner')
             generate_prr_emails(request_id=fields['request_id'],
-                                notification_type='Staff participant added'
+                                notification_type='helper_removed'
                                 , notification_content=notification_content)
         return participant_id
     elif 'subscriber' in resource:
@@ -226,8 +228,9 @@ def update_resource(resource, request_body):
             notification_content['user_id'] = user_id
             notification_content['user_name'] = user_name
             notification_content['request_body'] = request_body
+            notification_content['request_id'] = request_body['request_id']
             generate_prr_emails(request_id=fields['request_id'],
-                                notification_type='Helper removed',
+                                notification_type='helper_removed',
                                 notification_content=notification_content)
             return remove_staff_participant(owner_id=owner.id,
                     reason=fields['reason_unassigned'])
@@ -344,25 +347,27 @@ def add_note(
         if note_id:
             change_request_status(request_id,
                                   'A response has been added.')
+
             if user_id:
                 add_staff_participant(request_id=request_id,
                         user_id=user_id)
+                notification_content['request_id'] = request_id
                 if request_body is not None:
                     generate_prr_emails(request_id=request_id,
-                            notification_type='Public note added',
+                            notification_type='add_note',
                             notification_content=notification_content)
                 else:
                     generate_prr_emails(request_id=request_id,
-                            notification_type='Public note added',
+                            notification_type='add_note',
                             notification_content=notification_content)
             else:
                 if request_body is not None:
                     generate_prr_emails(request_id=request_id,
-                            notification_type='Public note added',
+                            notification_type='add_note',
                             notification_content=notification_content)
                 else:
                     generate_prr_emails(request_id=request_id,
-                            notification_type='Public note added',
+                            notification_type='add_note',
                             notification_content=notification_content)
             return note_id
         return False
@@ -928,27 +933,51 @@ Setting %s For %s as %s'''
 
 def close_request(
     request_id,
-    reason='',
+    reasons='',
     user_id=None,
     request_body=None,
     ):
     req = get_obj('Request', request_id)
     change_request_status(request_id, 'Closed')
-
     notification_content={}
     # Create a note to capture closed information:
     if request_body:
         notification_content['additional_information']=request_body['additional_information']
-    notification_content['reason']=reason
+    notification_content['explanations'] = []
+    notification_content['reasons']=reasons
+    # for reason in reasons:
+    #     notification_content['explanations'].append(explain_action(reason, explanation_type='What'))
     notification_content['user_id']=user_id
-    create_note(request_id, reason, user_id, privacy=1)
+    create_note(request_id, reasons, user_id, privacy=1)
+    if "Your request under the Freedom of Information Law (FOIL) has been reviewed and the documents you requested have " \
+       "been posted on the OpenRecords portal." in notification_content['reasons']:
+        notification_type="closed_fulfilled_in_whole"
+    elif "Your request under the Freedom of Information Law (FOIL) has been reviewed and is granted in part and denied " \
+         "in part because some of the records or portions of records are disclosable and others are exempt form " \
+         "disclosure under FOIL." in notification_content['reasons']:
+        notification_type="closed_fulfilled_in_part"
+    elif "Your request under the Freedom of Information Law (FOIL) has been fulfilled and the documents you requested " \
+         "have been emailed to you." in notification_content['reasons']:
+        notification_type="closed_by_email"
+    elif "Your request under the Freedom of Information Law (FOIL) has been fulfilled and the documents you requested " \
+         "have been faxed to you." in notification_content['reasons']:
+        notification_type="closed_by_fax"
+    elif "Your request under the Freedom of Information Law (FOIL) has been been fulfilled and the documents you " \
+         "requested have been mailed to you. Please allow 7 - 10 days for receipt." in notification_content['reasons']:
+        notification_type="closed_by_mail"
+    elif "Your request under the Freedom of Information Law has been fulfilled and the documents you requested are " \
+         "available to you for pickup." in notification_content['reasons']:
+        notification_type="closed_by_pickup"
+    else:
+        #If request is not one of the fulfilled categories, it is assumed to have been denied
+        notification_type="denied"
     if request_body:
         generate_prr_emails(request_id=request_id,
-                            notification_type='Request closed',
+                            notification_type=notification_type,
                             notification_content=notification_content)
     else:
         generate_prr_emails(request_id=request_id,
-                            notification_type='Request closed',
+                            notification_type=notification_type,
                             notification_content=notification_content)
     add_staff_participant(request_id=request_id, user_id=user_id)
 

@@ -26,11 +26,13 @@ currentRequestId = id_generator.next()
 
 
 # @export "get_subscriber"
-def get_subscriber(request_id, user_id):
+def get_subscriber(request_id, user_id=None):
     # Returns the subscriber for a given request by user ID
     if request_id and user_id:
         return Subscriber.query.filter_by(user_id=user_id).filter_by(
             request_id=request_id).first()
+    elif user_id==None:
+        return Subscriber.query.filter_by(request_id=request_id).first()
     return None
 
 

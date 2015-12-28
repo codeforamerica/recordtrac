@@ -128,7 +128,12 @@
     $('#modalAdditionalInfoTable').show();
     $('#form_id').val('closeRequest');
     var modalQuestion = 'Are you sure you want to close the request for the reasons below and send an email to the requester?';
-    modalQuestion += '<br><br>' + $('#close_reasons').val();
+    var reasons = $('#close_reasons').val();
+    modalQuestion += '<br><br>';
+    var i;
+    for (i = 0 ; i < reasons.length ; i++){
+        modalQuestion += '<br><br>' + reasons[i];
+    }
     $('#modalquestionDiv').html(modalQuestion);
     $('#modalQuestionTable').hide();
   });

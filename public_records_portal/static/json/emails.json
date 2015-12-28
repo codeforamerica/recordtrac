@@ -14,7 +14,7 @@
           "Subject": "Request has been reopened",
           "Recipients": ["Requester"]
         },
-        "Helper removed":
+        "helper_removed":
         {
           "Subject": "A helper has been removed from your request",
           "Recipients": ["Staff participants"]
@@ -25,7 +25,7 @@
             "Recipients": ["Staff owner"],
             "Email body": "We're not using this but we could."
         },
-        "Staff participant added":
+        "helper_added":
         {   "Subject": "A request has been assigned to you",
             "Recipients": ["Staff participant"]
         },
@@ -54,7 +54,7 @@
             "Subject": "A request in your department is due in 2 days or less.",
             "Recipients": ["Staff owner", "Departmental backups"]
         },
-        "Public note added":
+        "add_note":
         {
             "Subject": "A note has been added to this request by the requester.",
             "Recipients": ["Staff participants"]
@@ -88,6 +88,32 @@
         {
             "Subject": "FOIL Request Submitted",
             "Recipients": ["Staff participants"]
+        },
+        "denied":
+        {
+            "Subject": "FOIL Request Denied",
+            "Recipients":["Subscribers"]
+        },
+        "closed_fulfilled_in_whole":
+        {
+            "Subject": "FOIL Request Fulfilled in Whole",
+            "Recipients":["Subscribers"]
+        },
+        "closed_fulfilled_in_part": {
+            "Subject": "FOIL Request Fulfilled in Part",
+            "Recipients": ["Subscribers"]
+        },
+        "closed_by_email":{
+            "Subject": "FOIL Request Fulfilled via Email",
+            "Recipients": ["Subscribers"]
+        },
+        "closed_by_fax":{
+            "Subject": "FOIL Request Fulfilled via Fax",
+            "Recipients": ["Subscribers"]
+        },
+        "closed_by_pickup":{
+            "Subject": "FOIL Request Fulfilled via Pickup",
+            "Recipients": ["Subscribers"]
         },
         "Public Notification Template 01":
         {
@@ -139,7 +165,6 @@
             "Subject": "FOIL Time Extension Requested",
             "Recipients": ["Requester"]
         },
-
         "Agency Notification Template 01":
         {
             "Subject": "FOIL Acknowledgement Reminder",

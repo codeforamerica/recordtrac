@@ -11,7 +11,11 @@
                                     emailed to you.
                                 </p>
                                 <p>
-
+                                    {% if additional_information %}
+                                        Additional Information: <br />
+                                        {{ notification_content['additional_information'] }}
+                                    {% endif %}
+                                </p>
                                 <p>
                                     You can view the request and take any necessary action at the following webpage:
                                     <a href='{{ page }}'>{{ page }}</a>.

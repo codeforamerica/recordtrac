@@ -10,7 +10,7 @@ from flask.ext.login import current_user
 from flask import flash, session
 from flask.ext.session import Session
 from secureCookie import *
-
+import re
 import upload_helpers
 import bleach
 
@@ -87,7 +87,11 @@ class ResponsePresenter:
 			<a href = '%(download_url)s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='View document' target='_blank'><small><i class='icon-external-link'> </i></small></a>
 			""" % {"download_url": download_url, "description": self.response.description, "url": self.response.url}
         elif self.type == "note":
-            return self.response.text
+            response_text = self.response.text
+            response_text = response_text.lstrip('{"')
+            response_text = response_text.rstrip('"}')
+            response_text = response_text.replace('","'," <br/><br/> ")
+            return response_text
         elif self.type == "link":
             if self.response.description and self.response.url and not(self.response.filename):
                 if 'http' not in self.response.url:
