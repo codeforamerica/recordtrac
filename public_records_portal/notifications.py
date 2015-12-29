@@ -297,6 +297,7 @@ def send_prr_email(
     subject,
     template,
     notification_content,
+    request_id=None,
     include_unsubscribe_link=True,
     cc_everyone=False,
     password=None,
@@ -316,6 +317,7 @@ Attempting to send an e-mail to %s with subject %s, referencing page %s and temp
                         template,
                         unfollow_link=unfollow_link,
                         page=page,
+                        request_id=request_id,
                         notification_content=notification_content
                         ),
                     recipients=recipients,

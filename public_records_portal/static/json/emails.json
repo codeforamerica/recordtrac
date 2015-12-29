@@ -19,7 +19,7 @@
           "Subject": "A helper has been removed from your request",
           "Recipients": ["Staff participants"]
         },
-        "Request assigned":
+        "request_assigned":
         {
             "Subject": "A request has been assigned to you",
             "Recipients": ["Staff owner"],
@@ -29,26 +29,26 @@
         {   "Subject": "A request has been assigned to you",
             "Recipients": ["Staff participant"]
         },
-//        "Question asked":
-//        {
-//            "Subject": "There is a question about your request.",
-//            "Recipients":["Requester"]
-//        },
-//        "Question answered":
-//        {
-//            "Subject": "The question you had about a request has received a response.",
-//            "Recipients": ["Staff participants"]
-//        },
-//        "Request closed":
-//        {
-//            "Subject": "The request has been closed",
-//            "Recipients": ["Staff participants", "Subscribers"]
-//        },
-//        "City response added":
-//        {
-//            "Subject": "There is a new inquiry or response to the information you provided.",
-//            "Recipients": ["Subscribers"]
-//        },
+        "Question asked":
+        {
+            "Subject": "There is a question about your request.",
+            "Recipients":["Requester"]
+        },
+        "Question answered":
+        {
+            "Subject": "The question you had about a request has received a response.",
+            "Recipients": ["Staff participants"]
+        },
+        "Request closed":
+        {
+            "Subject": "The request has been closed",
+            "Recipients": ["Staff participants", "Subscribers"]
+        },
+        "city_response_added":
+        {
+            "Subject": "There is a new inquiry or response to the information you provided.",
+            "Recipients": ["Subscribers"]
+        },
         "Request due":
         {
             "Subject": "A request in your department is due in 2 days or less.",
@@ -113,10 +113,6 @@
         },
         "closed_by_pickup":{
             "Subject": "FOIL Request Fulfilled via Pickup",
-            "Recipients": ["Subscribers"]
-        },
-        "closed_by_mail":{
-            "Subject": "FOIL Request Fulfilled via Mail",
             "Recipients": ["Subscribers"]
         },
         "Public Notification Template 01":

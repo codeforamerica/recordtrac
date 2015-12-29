@@ -310,7 +310,7 @@ def request_extension(
     notification_content = {}
     notification_content['days_after'] = days_after
     notification_content['additional_information'] = extension_reasons
-    notification_content['due_date'] = due_date
+    notification_content['due_date'] = str(req.due_date).split(' ')[0]
 
     print request_body
 
@@ -800,6 +800,7 @@ def add_offline_record(
                               access=access, description=description,
                               privacy=privacy)  # To create an offline record, we need to know the request ID to which it will be added, the user ID for the person adding the record, how it can be accessed, and a description/title of the record.
     if record_id:
+        notification_content['department_name'] = department_name
         change_request_status(request_id, 'A response has been added.')
         generate_prr_emails(request_id=request_id,
                             notification_type='city_response_added',
@@ -1060,11 +1061,11 @@ A new owner has been assigned: Owner: %s'''
 
     if is_new_owner:
         user = User.query.get(user_id)
-        user_name = user.alias
         notification_content['user_id'] = user_id
         notification_content['user_name'] = user.alias
+        notification_content['request_id'] = request_id
         generate_prr_emails(request_id=request_id,
-                            notification_type='Request assigned',
+                            notification_type='request_assigned',
                             notification_content=notification_content)
     return owner_id
 
