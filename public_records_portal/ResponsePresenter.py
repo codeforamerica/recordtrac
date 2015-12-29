@@ -10,6 +10,7 @@ from flask.ext.login import current_user
 from flask import flash, session
 from flask.ext.session import Session
 from secureCookie import *
+from public_records_portal import app
 
 import upload_helpers
 import bleach
