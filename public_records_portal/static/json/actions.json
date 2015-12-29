@@ -115,7 +115,7 @@
     "Action": "Denied - No Records"
   },
   "Denied - All Exempt": {
-    "What": "Your request under the Freedom of Information Law (FOIL) is denied becuase the records you requested are exempt from disclosure under FOIL.",
+    "What": "Your request under the Freedom of Information Law (FOIL) is denied because the records you requested are exempt from disclosure under FOIL.",
     "Who": "",
     "Action": "Denied - All Exempt"
   },
@@ -125,12 +125,12 @@
     "Action": "Denied - Unknown"
   },
   "No Customer Response": {
-    "What": "We need more information from you in order to process your reuqest under the Freedom of Information Law (FOIL). We have tried to contact you but have not received a response within the last 5 business days. We are closing this request due to lack of response. If you remain interested in these records, you may open a new FOIL request.",
+    "What": "We need more information from you in order to process your request under the Freedom of Information Law (FOIL). We have tried to contact you but have not received a response within the last 5 business days. We are closing this request due to lack of response. If you remain interested in these records, you may open a new FOIL request.",
     "Who": "",
     "Action": "No Customer Response"
   },
   "No Payment": {
-    "What": "The records you requested under the Freedom of Information Law (FOIL) could be provided to you at cost. We are closing this request because we ahve not received your payment to cover the record retrieval and/or duplication cost. If you still want a copy of these records, you may open a new FOIL request.",
+    "What": "The records you requested under the Freedom of Information Law (FOIL) could be provided to you at cost. We are closing this request because we have not received your payment to cover the record retrieval and/or duplication cost. If you still want a copy of these records, you may open a new FOIL request.",
     "Who": "",
     "Action": "No Payment"
   },

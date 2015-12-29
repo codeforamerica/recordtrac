@@ -932,7 +932,7 @@ Agency chosen: %s''' % agency)
         notification_content['user_id'] = subscriber_user_id
         notification_content['summary'] = summary
         notification_content['department_name'] = agency
-        notification_content['due_date'] = Request.query.filter_by(id=id).first().due_date
+        notification_content['due_date'] = str(Request.query.filter_by(id=id).first().due_date).split(' ')[0]
         if subscriber_id:
             generate_prr_emails(request_id,
                                 notification_type='confirmation',
