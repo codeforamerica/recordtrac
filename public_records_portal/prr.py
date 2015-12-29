@@ -530,8 +530,7 @@ def add_offline_record(
         change_request_status(request_id, 'A response has been added.')
         generate_prr_emails(request_id=request_id,
                             notification_type='city_response_added',
-                            text=description,
-                            department_name=department_name)
+                            notification_content=notification_content)
         add_staff_participant(request_id=request_id, user_id=user_id)
         return record_id
     return False
