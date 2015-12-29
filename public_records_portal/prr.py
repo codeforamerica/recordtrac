@@ -554,7 +554,7 @@ def generate_denial_page(document):
     paragraph_format.space_after = Pt(2)
     paragraph_format.space_before = Pt(0)
     paragraph_format.left_indent = Inches(.5)
-    run = paragraph.add_run(u"\u25FB     The records are not located in the files of this agency.")
+    run = paragraph.add_run(u"\u25A1     The records are not located in the files of this agency.")
     run.font.name = 'Calibri'
     run.font.size = Pt(10)
     paragraph = document.add_paragraph()
@@ -562,7 +562,7 @@ def generate_denial_page(document):
     paragraph_format.space_after = Pt(2)
     paragraph_format.space_before = Pt(0)
     paragraph_format.left_indent = Inches(.5)
-    run = paragraph.add_run(u"\u25FB     the Freedom of Information Law only requires the disclosure of existing agency records.  It does not require the creation, upon request, of new records.")
+    run = paragraph.add_run(u"\u25A1     the Freedom of Information Law only requires the disclosure of existing agency records.  It does not require the creation, upon request, of new records.")
     run.font.name = 'Calibri'
     run.font.size = Pt(10)
     paragraph = document.add_paragraph()
@@ -570,7 +570,7 @@ def generate_denial_page(document):
     paragraph_format.space_after = Pt(2)
     paragraph_format.space_before = Pt(0)
     paragraph_format.left_indent = Inches(.5)
-    run = paragraph.add_run(u"\u25FB     The records which you seek already are available to the public through:")
+    run = paragraph.add_run(u"\u25A1     The records which you seek already are available to the public through:")
     run.font.name = 'Calibri'
     run.font.size = Pt(10)
     paragraph = document.add_paragraph()
@@ -578,7 +578,7 @@ def generate_denial_page(document):
     paragraph_format.space_after = Pt(2)
     paragraph_format.space_before = Pt(0)
     paragraph_format.left_indent = Inches(1)
-    run = paragraph.add_run(u"\u25FB     the OpenData Portal www.nyc.gov/")
+    run = paragraph.add_run(u"\u25A1     the OpenData Portal www.nyc.gov/")
     run.font.name = 'Calibri'
     run.font.size = Pt(10)
     paragraph = document.add_paragraph()
@@ -586,7 +586,7 @@ def generate_denial_page(document):
     paragraph_format.space_after = Pt(2)
     paragraph_format.space_before = Pt(0)
     paragraph_format.left_indent = Inches(1)
-    run = paragraph.add_run(u"\u25FB     the Government Publications Portal www.nyc.gov/records/publications")
+    run = paragraph.add_run(u"\u25A1     the Government Publications Portal www.nyc.gov/records/publications")
     run.font.name = 'Calibri'
     run.font.size = Pt(10)
     paragraph = document.add_paragraph()
@@ -594,7 +594,7 @@ def generate_denial_page(document):
     paragraph_format.space_after = Pt(2)
     paragraph_format.space_before = Pt(0)
     paragraph_format.left_indent = Inches(1)
-    run = paragraph.add_run(u"\u25FB     New York City 311 www.nyc.gov/")
+    run = paragraph.add_run(u"\u25A1     New York City 311 www.nyc.gov/")
     run.font.name = 'Calibri'
     run.font.size = Pt(10)
     paragraph = document.add_paragraph()
@@ -602,7 +602,7 @@ def generate_denial_page(document):
     paragraph_format.space_after = Pt(2)
     paragraph_format.space_before = Pt(0)
     paragraph_format.left_indent = Inches(.5)
-    run = paragraph.add_run(u"\u25FB     the records or portions of records are specifically exempted from disclosure by state or federal statute;")
+    run = paragraph.add_run(u"\u25A1     the records or portions of records are specifically exempted from disclosure by state or federal statute;")
     run.font.name = 'Calibri'
     run.font.size = Pt(10)
     paragraph = document.add_paragraph()
@@ -610,7 +610,7 @@ def generate_denial_page(document):
     paragraph_format.space_after = Pt(2)
     paragraph_format.space_before = Pt(0)
     paragraph_format.left_indent = Inches(.5)
-    run = paragraph.add_run(u"\u25FB     the records or portions of records, if disclosed would constitute an unwarranted invasion of personal privacy under State law (subdivision two of section eighty-nine of the Public Officers Law;")
+    run = paragraph.add_run(u"\u25A1     the records or portions of records, if disclosed would constitute an unwarranted invasion of personal privacy under State law (subdivision two of section eighty-nine of the Public Officers Law;")
     run.font.name = 'Calibri'
     run.font.size = Pt(10)
     paragraph = document.add_paragraph()
@@ -618,7 +618,7 @@ def generate_denial_page(document):
     paragraph_format.space_after = Pt(2)
     paragraph_format.space_before = Pt(0)
     paragraph_format.left_indent = Inches(.5)
-    run = paragraph.add_run(u"\u25FB     the records or portions of records if disclosed would impair present or imminent contract awards or collective bargaining negotiations;")
+    run = paragraph.add_run(u"\u25A1     the records or portions of records if disclosed would impair present or imminent contract awards or collective bargaining negotiations;")
     run.font.name = 'Calibri'
     run.font.size = Pt(10)
     paragraph = document.add_paragraph()
@@ -626,7 +626,7 @@ def generate_denial_page(document):
     paragraph_format.space_after = Pt(2)
     paragraph_format.space_before = Pt(0)
     paragraph_format.left_indent = Inches(.5)
-    run = paragraph.add_run(u"\u25FB     the records or portions of records are trade secrets or are submitted to an agency by a commercial enterprise or derived from information obtained from a commercial enterprise and which if disclosed would cause substantial injury to the competitive position of the subject enterprise;")
+    run = paragraph.add_run(u"\u25A1     the records or portions of records are trade secrets or are submitted to an agency by a commercial enterprise or derived from information obtained from a commercial enterprise and which if disclosed would cause substantial injury to the competitive position of the subject enterprise;")
     run.font.name = 'Calibri'
     run.font.size = Pt(10)
     paragraph = document.add_paragraph()
@@ -634,7 +634,7 @@ def generate_denial_page(document):
     paragraph_format.space_after = Pt(2)
     paragraph_format.space_before = Pt(0)
     paragraph_format.left_indent = Inches(.5)
-    run = paragraph.add_run(u"\u25FB     the records or portions of records are compiled for law enforcement purposes and which, if disclosed, would: ")
+    run = paragraph.add_run(u"\u25A1     the records or portions of records are compiled for law enforcement purposes and which, if disclosed, would: ")
     run.font.name = 'Calibri'
     run.font.size = Pt(10)
     paragraph = document.add_paragraph()
@@ -650,7 +650,7 @@ def generate_denial_page(document):
     paragraph_format.space_after = Pt(2)
     paragraph_format.space_before = Pt(0)
     paragraph_format.left_indent = Inches(.5)
-    run = paragraph.add_run(u"\u25FB     the records or portions of records if disclosed could endanger the life or safety of any person;")
+    run = paragraph.add_run(u"\u25A1     the records or portions of records if disclosed could endanger the life or safety of any person;")
     run.font.name = 'Calibri'
     run.font.size = Pt(10)
     paragraph = document.add_paragraph()
@@ -658,7 +658,7 @@ def generate_denial_page(document):
     paragraph_format.space_after = Pt(2)
     paragraph_format.space_before = Pt(0)
     paragraph_format.left_indent = Inches(.5)
-    run = paragraph.add_run(u"\u25FB     the records or portions of records are inter-agency or intra-agency materials which are not:")
+    run = paragraph.add_run(u"\u25A1     the records or portions of records are inter-agency or intra-agency materials which are not:")
     run.font.name = 'Calibri'
     run.font.size = Pt(10)
     paragraph = document.add_paragraph()
@@ -674,7 +674,7 @@ def generate_denial_page(document):
     paragraph_format.space_after = Pt(2)
     paragraph_format.space_before = Pt(0)
     paragraph_format.left_indent = Inches(.5)
-    run = paragraph.add_run(u"\u25FB     the records or portions of records are examination questions or answers which are requested prior to the final administration of such questions;")
+    run = paragraph.add_run(u"\u25A1     the records or portions of records are examination questions or answers which are requested prior to the final administration of such questions;")
     run.font.name = 'Calibri'
     run.font.size = Pt(10)
     paragraph = document.add_paragraph()
@@ -682,7 +682,7 @@ def generate_denial_page(document):
     paragraph_format.space_after = Pt(2)
     paragraph_format.space_before = Pt(0)
     paragraph_format.left_indent = Inches(.5)
-    run = paragraph.add_run(u"\u25FB     the records or portions of records if disclosed, would jeopardize the capacity of an agency or an entity that has shared information with an agency to guarantee the security of its information technology assets, such assets encompassing both electronic information systems and infrastructures.")
+    run = paragraph.add_run(u"\u25A1     the records or portions of records if disclosed, would jeopardize the capacity of an agency or an entity that has shared information with an agency to guarantee the security of its information technology assets, such assets encompassing both electronic information systems and infrastructures.")
     run.font.name = 'Calibri'
     run.font.size = Pt(10)
     paragraph = document.add_paragraph()
