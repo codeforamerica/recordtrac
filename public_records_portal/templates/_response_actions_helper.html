@@ -22,7 +22,7 @@
                 {% if "missing_record_access" in errors %}
                     <div class="alert alert-danger" id="missing_record_access">{{ errors['missing_record_access'] }}</div>
                 {% endif %}
-                <p>Please provide a short explanation of the record along with at least a file upload, a link to the record, or instructions on how to access the record offline.</p> 
+                <p>Please provide a short explanation of the record along with at least a file upload, a link to the record, or instructions on how to access the record offline.</p>
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <input type="hidden" name="audience" value="helper"/>
                 <input type="hidden" name="record_privacy" value="True"/>
@@ -92,8 +92,7 @@
                                              title=""
                                              data-original-title="{{'Add a link' |
                                         explain_action}}">
-                                        <small><i class="icon-info-sign"></i>
-                                        </small>
+                                        <small><i class="icon-info-sign"></i></small>
                                     </span></label>
                             {% if form %}
                             <div class="row-fluid">

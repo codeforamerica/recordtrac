@@ -34,19 +34,19 @@
                     <h4>Estimated Duration</h4>
                     <select class="span12" id="acknowledge_status"
                             name="acknowledge_status" style="height:100%">
-                        <option value="Acknowledged - 20 days">Acknowledged - 20
+                        <option value=20>Acknowledged - 20
                             business days
                         </option>
-                        <option value="Acknowledged - 30 days">Acknowledged - 30
+                        <option value=30>Acknowledged - 30
                             business days
                         </option>
-                        <option value="Acknowledged - 60 days">Acknowledged - 60
+                        <option value=60>Acknowledged - 60
                             business days
                         </option>
-                        <option value="Acknowledged - 90 days">Acknowledged - 90
+                        <option value=90>Acknowledged - 90
                             business days
                         </option>
-                        <option value="Acknowledged - 120 days">Acknowledged -
+                        <option value=120>Acknowledged -
                             120 business days
                         </option>
                     </select>
@@ -576,7 +576,7 @@
             </form>
         </div>
         <div class="tab-pane" id="generate_pdf">
-            <form name="note" id="note_pdf" method="post" action="/add_a_pdf">
+            <form name="note" id="note_pdf" method="post" action="/add_a_letter">
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <fieldset>
@@ -594,29 +594,35 @@
                                         name="response_template" required
                                         data-selected-text-format="count"
                                         size="9">
-                                    <option value="template_02">Message Sent
-                                    </option>
-                                    <option value="template_03">Request Status
-                                    </option>
-                                    <option value="template_04">Request
-                                        Completed
-                                    </option>
-                                    <option value="template_05">Request Status -
-                                        Fulfilled in Part
-                                    </option>
-                                    <option value="template_06">Request Denied
-                                    </option>
-                                    <option value="template_07">Request Closed
-                                    </option>
-                                    <option value="template_08">Request Payment
-                                        Information
-                                    </option>
-                                    <option value="template_09">Request Closed -
-                                        No Response
-                                    </option>
-                                    <option value="template_10">Time Extension
-                                        Requested
-                                    </option>
+                                    <option value="acknowledgement_letter">Acknowledge Request</option>
+                                    <option value="denial_letter">Deny Request</option>
+                                    <option value="extension_letter">Extend Request</option>
+                                    <option value="partial_fulfillment_letter">Partial Denial of Request</option>
+                                    <option value="fulfillment_letter">Request Fulfilled</option>
+                                    <option value="payment_letter">Payment Requested</option>
+                                    <!--<option value="template_02">Message Sent-->
+                                    <!--</option>-->
+                                    <!--<option value="template_03">Request Status-->
+                                    <!--</option>-->
+                                    <!--<option value="template_04">Request-->
+                                        <!--Completed-->
+                                    <!--</option>-->
+                                    <!--<option value="template_05">Request Status - -->
+                                        <!--Fulfilled in Part-->
+                                    <!--</option>-->
+                                    <!--<option value="template_06">Request Denied-->
+                                    <!--</option>-->
+                                    <!--<option value="template_07">Request Closed-->
+                                    <!--</option>-->
+                                    <!--<option value="template_08">Request Payment-->
+                                        <!--Information-->
+                                    <!--</option>-->
+                                    <!--<option value="template_09">Request Closed - -->
+                                        <!--No Response-->
+                                    <!--</option>-->
+                                    <!--<option value="template_10">Time Extension-->
+                                        <!--Requested-->
+                                    <!--</option>-->
                                 </select>
                             </div>
                         </div>
@@ -625,7 +631,7 @@
                                 <button type="submit"
                                         class="btn btn-default btn-block"
                                         id="generatePDFButton">
-                                    Generate PDF
+                                    Generate Letter
                                 </button>
                             </div>
                         </div>
@@ -655,7 +661,7 @@
                             <div class="controls">
                                 <select id="close_reasons" name="close_reasons"
                                         multiple="multiple" size="18">
-                                    <option value="{{'Fulfilled in Whole' | explain_action('What')}}">Fulfilled in Whole</option>
+                                    <option value="{{ 'Fulfilled in Whole' | explain_action('What') }}">Fulfilled in Whole</option>
                                     <option value="{{'Fulfilled in Part' | explain_action('What')}}">Fulfilled in Part</option>
                                     <option value="{{'Denied - Records Non-Responsive' | explain_action('What')}}">Denied - Records Non-Responsive</option>
                                     <option value="{{'Denied - No Records' | explain_action('What')}}">Denied - No Records</option>

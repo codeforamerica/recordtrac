@@ -95,94 +95,94 @@
     "Action": "We'll notify the requester via email."
   },
   "Fulfilled in Whole": {
-    "What": "Your request under the Freedom of Information Law (FOIL) has been reviewed and the documents you reqeusted have been posted on the OpenRecords portal.",
+    "What": "Your request under the Freedom of Information Law (FOIL) has been reviewed and the documents you requested have been posted on the OpenRecords portal.",
     "Who": "",
-    "Action": ""
+    "Action": "Fulfilled in Whole"
   },
   "Fulfilled in Part": {
-    "What": "Your request under the Freedom of Information Law (FOIL) has been reviewed and is granted in part and denied in part becasue some of the records or portions of records are disclosable and others are exempt forom disclosure under FOIL.",
+    "What": "Your request under the Freedom of Information Law (FOIL) has been reviewed and is granted in part and denied in part because some of the records or portions of records are disclosable and others are exempt form disclosure under FOIL.",
     "Who": "",
-    "Action": ""
+    "Action": "Fulfilled in Part"
   },
   "Denied - Records Non-Responsive": {
     "What": "Your request under the Freedom of Information Law (FOIL) is denied because no responsive records were found.",
     "Who": "",
-    "Action": ""
+    "Action": "Denied - Records Non-Responsive"
   },
   "Denied - No Records": {
     "What": "Your request under the Freedom of Information Law (FOIL) is denied because it is a request for information that is not contained in an existing agency record.",
     "Who": "",
-    "Action": ""
+    "Action": "Denied - No Records"
   },
   "Denied - All Exempt": {
-    "What": "Your request under the Freedom of Information Law (FOIL) is denied becuase the records you requested are exempt from disclosure under FOIL",
+    "What": "Your request under the Freedom of Information Law (FOIL) is denied because the records you requested are exempt from disclosure under FOIL.",
     "Who": "",
-    "Action": ""
+    "Action": "Denied - All Exempt"
   },
   "Denied - Unknown": {
     "What": "Your request under the Freedom of Information Law (FOIL) cannot be processed because it does not provide enough information to identify the records you would like to receive.",
     "Who": "",
-    "Action": ""
+    "Action": "Denied - Unknown"
   },
   "No Customer Response": {
-    "What": "We ened more information from you in order to process your reuqest under the Freedom of Information Law (FOIL). We have tried to contact you but have not received a response within the last 5 business days. We are closing this request due to lack of response. If you remain interested in these records, you may open a new FOIL request.",
+    "What": "We need more information from you in order to process your request under the Freedom of Information Law (FOIL). We have tried to contact you but have not received a response within the last 5 business days. We are closing this request due to lack of response. If you remain interested in these records, you may open a new FOIL request.",
     "Who": "",
-    "Action": ""
+    "Action": "No Customer Response"
   },
   "No Payment": {
-    "What": "The records you requested under the Freedom of Information Law (FOIL) could be provided to you at cost. We are closing this request because we ahve not received your payment to cover the record retrieval and/or duplication cost. If you still want a copy of these records, you may open a new FOIL request.",
+    "What": "The records you requested under the Freedom of Information Law (FOIL) could be provided to you at cost. We are closing this request because we have not received your payment to cover the record retrieval and/or duplication cost. If you still want a copy of these records, you may open a new FOIL request.",
     "Who": "",
-    "Action": ""
+    "Action": "No Payment"
   },
   "Public Records": {
-    "What": "Your request under the Freedom of Information Law (FOIL) is being closed because the recordss are publicly available at <a href=\"http://nyc.gov/records\">http://nyc.gov/records</a>",
+    "What": "Your request under the Freedom of Information Law (FOIL) is being closed because the records are publicly available at http://nyc.gov/records",
     "Who": "",
-    "Action": ""
+    "Action": "Public Records"
   },
   "Out of Jurisdiction": {
     "What": "Your request under the Freedom of Information Law (FOIL) is being closed because the record is not a City record",
     "Who": "",
-    "Action": ""
+    "Action": "Out of Jurisdiction"
   },
   "Refer to 311/NYC.gov": {
-    "What": "Your request is for general City information or services. You may search <a href=\"http://nyc.gov/\">http://nyc.gov/</a> or call 311 for assistance.",
+    "What": "Your request is for general City information or services. You may search http://nyc.gov/ or call 311 for assistance.",
     "Who": "",
-    "Action": ""
+    "Action": "Refer to 311/NYC.gov"
   },
   "Refer to OpenData": {
-    "What": "Your request is for data that is available through the City's OpenData site. You may visit <a href=\"http://nyc.gov/opendata\">http://nyc.gov/opendata</a> to find this information",
+    "What": "Your request is for data that is available through the City's OpenData site. You may visit http://nyc.gov/opendata to find this information",
     "Who": "",
-    "Action": ""
+    "Action": "Refer to OpenData"
   },
   "Refer to Other Agency": {
     "What": "Your request under the Freedom of Information Law (FOIL) is being closed because this agency does not have the records requested. You should direct your request to a different agency.",
     "Who": "",
-    "Action": ""
+    "Action": "Refer to Other Agency"
   },
   "Refer to Web Link": {
     "What": "Your request under the Freedom of Information Law (FOIL) is being closed because the document or information you requested is publicly available.",
     "Who": "",
-    "Action": ""
+    "Action": "Refer to Web Link"
   },
   "Fulfilled via Email": {
     "What": "Your request under the Freedom of Information Law (FOIL) has been fulfilled and the documents you requested have been emailed to you.",
     "Who": "",
-    "Action": ""
+    "Action": "Fulfilled via Email"
   },
   "Fulfilled via Fax": {
     "What": "Your request under the Freedom of Information Law (FOIL) has been fulfilled and the documents you requested have been faxed to you.",
     "Who": "",
-    "Action": ""
+    "Action": "Fulfilled via Fax"
   },
   "Fulfilled via Mail": {
     "What": "Your request under the Freedom of Information Law (FOIL) has been been fulfilled and the documents you requested have been mailed to you. Please allow 7 - 10 days for receipt.",
     "Who": "",
-    "Action": ""
+    "Action": "Fulfilled via Mail"
   },
   "Fulfilled via Pickup": {
     "What": "Your request under the Freedom of Information Law has been fulfilled and the documents you requested are available to you for pickup.",
     "Who": "",
-    "Action": ""
+    "Action": "Fulfilled via Pickup"
   },
   "Request an extension": {
     "What": "Use this feature to indicate you need more time to respond to this request.",

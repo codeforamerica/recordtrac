@@ -1,0 +1,35 @@
+<html>
+    <body>
+        <div style="background-color:#FFF;width:100%;margin:0px; padding:0px">
+            <div style="padding:20px;">
+                <div style="padding:8px;background-color:#EEE;-moz-border-radius:7px;-webkit-border-radius:7px;">
+                    <div style="clear:both;">
+				        <span style="font-family: arial,helvetica,sans-serif;">
+                            <span style="color: rgb(51, 51, 51); font-size: 14px;">
+                                <p>
+                                    Your message has been sent to the {{ notification_content['department'].name }}. The Agency will contact you directly. No further status will be
+                                    available online.
+                                </p>
+                                <p>
+                                    Click <a href="http://a860-openrecords.nyc.gov/faq">here</a> to learn about how the City responds to FOIL requests.
+                                </p>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <footer>
+        <span style="font-family: arial,helvetica,sans-serif;">
+            <span style="color: rgb(51, 51, 51); font-size: 11px;">
+                <center>
+                    <img src="{{ config['LOGO_ON_WHITE_URL'] }}" width="50" height="40"/>
+                    <br/>
+                    <br/>
+                    {{ config['AGENCY_NAME'] }}
+                </center>
+            </span>
+        </span>
+    </footer>
+</html>
