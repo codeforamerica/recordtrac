@@ -1241,8 +1241,20 @@ def close_request(
     elif "Your request under the Freedom of Information Law has been fulfilled and the documents you requested are " \
          "available to you for pickup." in notification_content['reasons']:
         notification_type = "closed_by_pickup"
+    elif "Your request is for general City information or services. You may search http://nyc.gov/ or call 311 for " \
+         "assistance." in notification_content['reasons']:
+        notification_type = "refer_311"
+    elif "Your request is for data that is available through the City's OpenData site. You may visit " \
+         "http://nyc.gov/opendata to find this information" in notification_content['reasons']:
+        notification_type = "refer_opendata"
+    elif "Your request under the Freedom of Information Law (FOIL) is being closed because this agency does not have " \
+         "the records requested. You should direct your request to a different agency." in notification_content['reasons']:
+        notification_type= "refer_other_agency"
+    elif "Your request under the Freedom of Information Law (FOIL) is being closed because the document or information " \
+         "you requested is publicly available." in notification_content['reasons']:
+        notification_type = "refer_web_link"
     else:
-        # If request is not one of the fulfilled categories, it is assumed to have been denied
+        # If request is not one of the fulfilled or referred categories, it is assumed to have been denied
         notification_type = "denied"
     if request_body:
         generate_prr_emails(request_id=request_id,
