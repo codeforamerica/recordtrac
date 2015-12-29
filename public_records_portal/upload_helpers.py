@@ -97,7 +97,8 @@ def upload_file(document, request_id):
             sock.send( "\r\n" )
             sock.send( "GET /origin-resource HTTP/1.1\r\n" )
             sock.send( "Host: www.origin-server.com\r\n" )
-            sock.send( "Accept: text/html, text/plain, image/gif, application/pdf, application/msword, application/rtf, application/vnd.oasis.opendocument.text, application/vnd.oasis.opendocument.presentation, application/vnd.oasis.opendocument.spreadsheet, application/vnd.oasis.opendocument.graphics, application/vnd.oasis.opendocument.formula, application/vnd.ms-powerpoint, application/vnd.ms-powerpoint.slideshow.macroenabled.12, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.presentationml.presentation, application/vnd.openxmlformats-officedocument.presentationml.slideshow, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpeg, image/png, image/tiff, image/bmp, video/x-msvideo, video/x-flv, video/x-ms-wmv, video/quicktime, video/mp4, audio/mpeg, audio/x-ms-wma, audio/x-wav, audio/x-pn-realaudio, audio/midi\r\n" )
+            mimetype = document.mimetype
+            sock.send( "Accept: " + mimetype + "\r\n")
             sock.send( "Accept-Encoding: gzip, compress\r\n" )
             sock.send( "\r\n" )
             sock.send( "HTTP/1.1 200 OK\r\n" )
