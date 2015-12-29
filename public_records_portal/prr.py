@@ -13,9 +13,15 @@ import csv
 import traceback
 import urllib
 from StringIO import StringIO
+import os
+import json
 
-from flask import request, render_template, make_response
+import bleach
+from flask import request, render_template, make_response, send_file
 from xhtml2pdf import pisa
+from docx import Document
+from docx.shared import Pt, Inches
+
 import upload_helpers
 from RequestPresenter import RequestPresenter
 from ResponsePresenter import ResponsePresenter
@@ -28,9 +34,6 @@ from models import *
 from notifications import generate_prr_emails
 from public_records_portal import db_helpers
 from requires_roles import requires_roles
-from helpers import explain_action
-import bleach
-
 
 agency_codes = {"City Commission on Human Rights": "228",
                 "Department of Education": "040",
@@ -44,10 +47,10 @@ agency_codes = {"City Commission on Human Rights": "228",
                 "NYC Emergency Management": "017",
                 None: "000"}
 
+
 def add_public_note(request_id, text):
     print 'Add Public Note'
     return 1
-
 
 
 def nonportal_request(request_body):
@@ -58,7 +61,7 @@ def nonportal_request(request_body):
     notification_content = {}
     notification_content['department'] = \
         Department.query.filter_by(name=request_body['request_agency'
-                                   ]).first()
+        ]).first()
     notification_content['department_name'] = notification_content['department'].name
     notification_content['user_id'] = notification_content['department'].primary_contact_id
     notification_content['recipient'] = User.query.get(notification_content['department'].primary_contact_id).email
@@ -80,13 +83,13 @@ def nonportal_request(request_body):
         'request_phone': request_body['request_phone'],
         'request_fax': request_body['request_fax'],
         'request_address_street_one': request_body['request_address_street_one'
-                ],
+        ],
         'request_address_street_two': request_body['request_address_street_two'
-                ],
+        ],
         'request_address_city': request_body['request_address_city'],
         'request_address_state': request_body['request_address_state'],
         'request_address_zip': request_body['request_address_zip'],
-        }
+    }
 
     notification_content['contact_info'] = contact_info
     generate_prr_emails(request_id=None,
@@ -103,30 +106,30 @@ def nonportal_request(request_body):
 ### @export "add_resource"
 
 def add_resource(resource, request_body, current_user_id=None):
-    notification_content={}
+    notification_content = {}
     fields = request_body
     department_name = \
         Department.query.filter_by(id=Request.query.filter_by(id=fields['request_id'
-                                   ]).first().department_id).first()
+        ]).first().department_id).first()
     if 'extension' in resource:
         return request_extension(
-            fields['request_id'],
-            fields.getlist('extend_reason'),
-            current_user_id,
-            int(fields['days_after']),
-            fields['due_date'],
-            request_body=request_body,
-            )
+                fields['request_id'],
+                fields.getlist('extend_reason'),
+                current_user_id,
+                int(fields['days_after']),
+                fields['due_date'],
+                request_body=request_body,
+        )
     if 'note' in resource:
         return add_note(request_id=fields['request_id'],
                         text=fields['note_text'],
                         user_id=current_user_id,
                         privacy=fields['note_privacy'],
                         request_body=request_body)
-    if 'pdf' in resource:
-        return add_pdf(request_id=fields['request_id'],
-                       text=fields['response_template'],
-                       user_id=current_user_id, passed_spam_filter=True)
+    if 'letter' in resource:
+        return add_letter(request_id=fields['request_id'],
+                          text=fields['response_template'],
+                          user_id=current_user_id)
     elif 'record' in resource:
         app.logger.info('''
 
@@ -134,7 +137,8 @@ inside add_resource method''')
         if fields['record_description'] == '':
             return "When uploading a record, please fill out the 'summary' field."
         if 'record_access' in fields and fields['record_access'] != "":
-            return add_offline_record(fields['request_id'], bleach.clean(fields['record_description']), bleach.clean(fields['record_access']),
+            return add_offline_record(fields['request_id'], bleach.clean(fields['record_description']),
+                                      bleach.clean(fields['record_access']),
                                       current_user_id, department_name, privacy=bleach.clean(fields['record_privacy']))
         elif 'link_url' in fields and fields['link_url'] != "":
             return add_link(request_id=bleach.clean(fields['request_id']), url=bleach.clean(fields['link_url']),
@@ -152,13 +156,13 @@ everything else...''')
 
 No file passed in''')
             return upload_record(
-                request_id=fields['request_id'],
-                document=document,
-                request_body=None,
-                description=fields['record_description'],
-                user_id=current_user_id,
-                privacy=fields['record_privacy'],
-                )
+                    request_id=fields['request_id'],
+                    document=document,
+                    request_body=None,
+                    description=fields['record_description'],
+                    user_id=current_user_id,
+                    privacy=fields['record_privacy'],
+            )
     elif 'qa' in resource:
         return ask_a_question(request_id=fields['request_id'],
                               user_id=current_user_id,
@@ -175,11 +179,11 @@ No file passed in''')
         if request_body:
 
             user = User.query.filter_by(email=request_body['owner_email'
-                    ]).first()
+            ]).first()
             user_name = user.alias
             notification_content['user_name'] = user_name
             notification_content['user_id'] = get_attribute('user_id',
-                                obj_id=participant_id, obj_type='Owner')
+                                                            obj_id=participant_id, obj_type='Owner')
             notification_content['request_body'] = request_body
             notification_content['request_id'] = request_body['request_id']
             generate_prr_emails(request_id=fields['request_id'],
@@ -191,7 +195,7 @@ No file passed in''')
             notification_content['user_name'] = user_name
             notification_content['request_id'] = request_body['request_id']
             notification_content['user_id'] = get_attribute('user_id',
-                                obj_id=participant_id, obj_type='Owner')
+                                                            obj_id=participant_id, obj_type='Owner')
             generate_prr_emails(request_id=fields['request_id'],
                                 notification_type='helper_removed'
                                 , notification_content=notification_content)
@@ -207,7 +211,7 @@ No file passed in''')
 
 def update_resource(resource, request_body):
     fields = request_body
-    notification_content={}
+    notification_content = {}
     if 'owner' in resource:
         if 'change_assignee' in fields:
 
@@ -215,7 +219,7 @@ def update_resource(resource, request_body):
 
             user_name = \
                 User.query.filter_by(id=Owner.query.filter_by(id=fields['owner_id'
-                    ]).first().user_id).first().alias
+                ]).first().user_id).first().alias
             notification_content['owner_reason'] = request_body['owner_reason']
             notification_content['user_name'] = user_name
             generate_prr_emails(request_id=fields['request_id'],
@@ -233,7 +237,7 @@ def update_resource(resource, request_body):
                                 notification_type='helper_removed',
                                 notification_content=notification_content)
             return remove_staff_participant(owner_id=owner.id,
-                    reason=fields['reason_unassigned'])
+                                            reason=fields['reason_unassigned'])
         elif 'reason_unassigned' in fields:
             return remove_staff_participant(owner_id=fields['owner_id'])
         else:
@@ -256,8 +260,8 @@ def update_resource(resource, request_body):
     elif 'acknowledge' in resource:
         change_request_status(fields['request_id'],
                               fields['acknowledge_status'])
-        notification_content['additional_information']=request_body['additional_information']
-        notification_content['acknowledge_status']=request_body['acknowledge_status']
+        notification_content['additional_information'] = request_body['additional_information']
+        notification_content['acknowledge_status'] = request_body['acknowledge_status']
         generate_prr_emails(request_id=fields['request_id'],
                             notification_content=notification_content,
                             notification_type='acknowledgement')
@@ -270,7 +274,7 @@ def update_resource(resource, request_body):
                    obj_type='Note', obj_id=fields['response_id'])
     elif 'note_delete' in resource:
 
-    # Need to store note text somewhere else (or just do delete here as well)
+        # Need to store note text somewhere else (or just do delete here as well)
         # Need to store note somewhere else
 
         remove_obj('Note', int(fields['response_id']))
@@ -285,13 +289,13 @@ def update_resource(resource, request_body):
 @requires_roles('Portal Administrator', 'Agency Administrator',
                 'Agency FOIL Personnel')
 def request_extension(
-    request_id,
-    extension_reasons,
-    user_id,
-    days_after=None,
-    due_date=None,
-    request_body=None,
-    ):
+        request_id,
+        extension_reasons,
+        user_id,
+        days_after=None,
+        due_date=None,
+        request_body=None,
+):
     """
     This function allows portal admins, agency admins, and FOIL officers to request additonal time.
     Uses add_resource from prr.py and takes extension date from field retrived from that function.
@@ -326,19 +330,19 @@ def request_extension(
 
 
 def add_note(
-    request_id,
-    text,
-    privacy=1,
-    request_body=None,
-    user_id=None,
-    extension=False,
-    ):
-    fields=request_body
+        request_id,
+        text,
+        privacy=1,
+        request_body=None,
+        user_id=None,
+        extension=False,
+):
+    fields = request_body
     notification_content = {}
     if request_body:
         notification_content['user_id'] = user_id
-        notification_content['text']=request_body['note_text']
-        notification_content['additional_information']=request_body['additional_information']
+        notification_content['text'] = request_body['note_text']
+        notification_content['additional_information'] = request_body['additional_information']
     if text and text != '':
         note_id = create_note(request_id=request_id, text=text,
                               user_id=user_id, privacy=privacy)
@@ -350,25 +354,25 @@ def add_note(
 
             if user_id:
                 add_staff_participant(request_id=request_id,
-                        user_id=user_id)
+                                      user_id=user_id)
                 notification_content['request_id'] = request_id
                 if request_body is not None:
                     generate_prr_emails(request_id=request_id,
-                            notification_type='add_note',
-                            notification_content=notification_content)
+                                        notification_type='add_note',
+                                        notification_content=notification_content)
                 else:
                     generate_prr_emails(request_id=request_id,
-                            notification_type='add_note',
-                            notification_content=notification_content)
+                                        notification_type='add_note',
+                                        notification_content=notification_content)
             else:
                 if request_body is not None:
                     generate_prr_emails(request_id=request_id,
-                            notification_type='add_note',
-                            notification_content=notification_content)
+                                        notification_type='add_note',
+                                        notification_content=notification_content)
                 else:
                     generate_prr_emails(request_id=request_id,
-                            notification_type='add_note',
-                            notification_content=notification_content)
+                                        notification_type='add_note',
+                                        notification_content=notification_content)
             return note_id
         return False
     return False
@@ -377,12 +381,12 @@ def add_note(
 ### @export "add_pdf"
 
 def add_pdf(
-    request_id,
-    text,
-    user_id=None,
-    passed_spam_filter=False,
-    privacy=1,
-    ):
+        request_id,
+        text,
+        user_id=None,
+        passed_spam_filter=False,
+        privacy=1,
+):
     if 'template_' in text:
         template_num = text.split('_')[1]
         template_name = 'standard_response_' + template_num + '.html'
@@ -405,16 +409,16 @@ PDF TEMPLATE:''' + template_name)
             user_name = 'First Name Last Name'
 
         html = make_response(render_template(
-            template_name,
-            user_name=user_name,
-            date=date,
-            req=req,
-            department=department,
-            appeals_officer=appeals_officer,
-            appeals_email=appeals_email,
-            staff_alias=staff_alias,
-            staff_signature=staff_signature,
-            ))
+                template_name,
+                user_name=user_name,
+                date=date,
+                req=req,
+                department=department,
+                appeals_officer=appeals_officer,
+                appeals_email=appeals_email,
+                staff_alias=staff_alias,
+                staff_signature=staff_signature,
+        ))
         pdf = StringIO()
         pisaStatus = \
             pisa.CreatePDF(StringIO(html.get_data().encode('utf-8')),
@@ -429,29 +433,298 @@ PDF TEMPLATE:''' + template_name)
             return response
 
 
-### @export "upload_record"
+def add_letter(
+        request_id,
+        text,
+        user_id=None):
+    letters_json = open(os.path.join(app.root_path, 'static/json/letters.json'))
+    letters_data = json.load(letters_json)
 
+    date = datetime.now().strftime("%b %d, %Y")
+    request = Request.query.get(request_id)
+    department = Department.query.filter_by(id=request.department_id).first()
+    staff = request.point_person()
+
+    document = Document()
+
+    document.add_paragraph("%s\n" % date)
+
+    requester = request.requester()
+    if requester:
+        user = requester.user
+        alias = user.alias
+        address1 = user.address1
+        address2 = user.address2
+        city = user.city
+        state = user.state
+        zipcode = user.zipcode
+        if address1:
+            if address2:
+                header = "%s\n%s\n%s\n%s, %s, %s\n\n" % (alias, address1, address2, city, state, zipcode)
+            else:
+                header = "%s\n%s\n%s, %s, %s\n\n" % (alias, address1, city, state, zipcode)
+        else:
+            header = "INSERT USERS ADDRESS HERE"
+        document.add_paragraph("%s" % header)
+
+    if text == 'acknowledgement_letter':
+        subject = letters_data[text]['subject']
+        subject = subject % request_id
+
+        content = letters_data[text]['content']
+        content = content % ( str(app.config['PUBLIC_APPLICATION_URL'] + 'request/' + request_id), staff.user.alias)
+
+        document.add_paragraph(subject)
+        document.add_paragraph(content)
+
+    if text == 'denial_letter':
+        subject = letters_data[text]['subject']
+        subject = subject % request_id
+
+        content = letters_data[text]['content']
+        content = content % (staff.user.alias)
+
+        document.add_paragraph(subject)
+        document.add_paragraph(content)
+
+        document = generate_denial_page(document)
+
+    if text == 'extension_letter':
+        subject = letters_data[text]['subject']
+        subject = subject % request_id
+
+        content = letters_data[text]['content']
+        content = content % ( str(app.config['PUBLIC_APPLICATION_URL'] + 'request/' + request_id), staff.user.alias)
+
+        document.add_paragraph(subject)
+        document.add_paragraph(content)
+
+    if text == 'partial_fulfillment_letter':
+        subject = letters_data[text]['subject']
+        subject = subject % request_id
+
+        content = letters_data[text]['content']
+        content = content % (staff.user.alias)
+
+        document.add_paragraph(subject)
+        document.add_paragraph(content)
+
+        document = generate_denial_page(document)
+
+    if text == 'fulfillment_letter':
+        subject = letters_data[text]['subject']
+        subject = subject % request_id
+
+        content = letters_data[text]['content']
+        content = content % (staff.user.alias)
+
+        document.add_paragraph(subject)
+        document.add_paragraph(content)
+
+    if text == 'payment_letter':
+        subject = letters_data[text]['subject']
+        subject = subject % request_id
+
+        content = letters_data[text]['content']
+        content = content % (staff.user.alias)
+
+        document.add_paragraph(subject)
+        document.add_paragraph(content)
+
+
+    letter = StringIO()
+    document.save(letter)
+    length = letter.tell()
+    letter.seek(0)
+    return send_file(letter, as_attachment=True, attachment_filename='letter.docx')
+
+
+def generate_denial_page(document):
+    document.add_page_break()
+    paragraph = document.add_paragraph()
+    paragraph_format = paragraph.paragraph_format
+    paragraph_format.space_after = Pt(2)
+    paragraph_format.space_before = Pt(0)
+    run = paragraph.add_run("Your Freedom of Information Law (FOIL) request was denied, in whole or in part, for the reason(s) checked below:")
+    run.bold = True
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    paragraph = document.add_paragraph()
+    paragraph_format = paragraph.paragraph_format
+    paragraph_format.space_after = Pt(2)
+    paragraph_format.space_before = Pt(0)
+    paragraph_format.left_indent = Inches(.5)
+    run = paragraph.add_run(u"\u25FB     The records are not located in the files of this agency.")
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    paragraph = document.add_paragraph()
+    paragraph_format = paragraph.paragraph_format
+    paragraph_format.space_after = Pt(2)
+    paragraph_format.space_before = Pt(0)
+    paragraph_format.left_indent = Inches(.5)
+    run = paragraph.add_run(u"\u25FB     the Freedom of Information Law only requires the disclosure of existing agency records.  It does not require the creation, upon request, of new records.")
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    paragraph = document.add_paragraph()
+    paragraph_format = paragraph.paragraph_format
+    paragraph_format.space_after = Pt(2)
+    paragraph_format.space_before = Pt(0)
+    paragraph_format.left_indent = Inches(.5)
+    run = paragraph.add_run(u"\u25FB     The records which you seek already are available to the public through:")
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    paragraph = document.add_paragraph()
+    paragraph_format = paragraph.paragraph_format
+    paragraph_format.space_after = Pt(2)
+    paragraph_format.space_before = Pt(0)
+    paragraph_format.left_indent = Inches(1)
+    run = paragraph.add_run(u"\u25FB     the OpenData Portal www.nyc.gov/")
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    paragraph = document.add_paragraph()
+    paragraph_format = paragraph.paragraph_format
+    paragraph_format.space_after = Pt(2)
+    paragraph_format.space_before = Pt(0)
+    paragraph_format.left_indent = Inches(1)
+    run = paragraph.add_run(u"\u25FB     the Government Publications Portal www.nyc.gov/records/publications")
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    paragraph = document.add_paragraph()
+    paragraph_format = paragraph.paragraph_format
+    paragraph_format.space_after = Pt(2)
+    paragraph_format.space_before = Pt(0)
+    paragraph_format.left_indent = Inches(1)
+    run = paragraph.add_run(u"\u25FB     New York City 311 www.nyc.gov/")
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    paragraph = document.add_paragraph()
+    paragraph_format = paragraph.paragraph_format
+    paragraph_format.space_after = Pt(2)
+    paragraph_format.space_before = Pt(0)
+    paragraph_format.left_indent = Inches(.5)
+    run = paragraph.add_run(u"\u25FB     the records or portions of records are specifically exempted from disclosure by state or federal statute;")
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    paragraph = document.add_paragraph()
+    paragraph_format = paragraph.paragraph_format
+    paragraph_format.space_after = Pt(2)
+    paragraph_format.space_before = Pt(0)
+    paragraph_format.left_indent = Inches(.5)
+    run = paragraph.add_run(u"\u25FB     the records or portions of records, if disclosed would constitute an unwarranted invasion of personal privacy under State law (subdivision two of section eighty-nine of the Public Officers Law;")
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    paragraph = document.add_paragraph()
+    paragraph_format = paragraph.paragraph_format
+    paragraph_format.space_after = Pt(2)
+    paragraph_format.space_before = Pt(0)
+    paragraph_format.left_indent = Inches(.5)
+    run = paragraph.add_run(u"\u25FB     the records or portions of records if disclosed would impair present or imminent contract awards or collective bargaining negotiations;")
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    paragraph = document.add_paragraph()
+    paragraph_format = paragraph.paragraph_format
+    paragraph_format.space_after = Pt(2)
+    paragraph_format.space_before = Pt(0)
+    paragraph_format.left_indent = Inches(.5)
+    run = paragraph.add_run(u"\u25FB     the records or portions of records are trade secrets or are submitted to an agency by a commercial enterprise or derived from information obtained from a commercial enterprise and which if disclosed would cause substantial injury to the competitive position of the subject enterprise;")
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    paragraph = document.add_paragraph()
+    paragraph_format = paragraph.paragraph_format
+    paragraph_format.space_after = Pt(2)
+    paragraph_format.space_before = Pt(0)
+    paragraph_format.left_indent = Inches(.5)
+    run = paragraph.add_run(u"\u25FB     the records or portions of records are compiled for law enforcement purposes and which, if disclosed, would: ")
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    paragraph = document.add_paragraph()
+    paragraph_format = paragraph.paragraph_format
+    paragraph_format.space_after = Pt(2)
+    paragraph_format.space_before = Pt(0)
+    paragraph_format.left_indent = Inches(.75)
+    run = paragraph.add_run(u"i. interfere with law enforcement investigations or judicial proceedings; ii. deprive a person of a right to a fair trial or impartial adjudication; iii. identify a confidential source or disclose confidential information relating to a criminal investigation; or iv. reveal criminal investigative techniques or procedures, except routine techniques and procedures")
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    paragraph = document.add_paragraph()
+    paragraph_format = paragraph.paragraph_format
+    paragraph_format.space_after = Pt(2)
+    paragraph_format.space_before = Pt(0)
+    paragraph_format.left_indent = Inches(.5)
+    run = paragraph.add_run(u"\u25FB     the records or portions of records if disclosed could endanger the life or safety of any person;")
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    paragraph = document.add_paragraph()
+    paragraph_format = paragraph.paragraph_format
+    paragraph_format.space_after = Pt(2)
+    paragraph_format.space_before = Pt(0)
+    paragraph_format.left_indent = Inches(.5)
+    run = paragraph.add_run(u"\u25FB     the records or portions of records are inter-agency or intra-agency materials which are not:")
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    paragraph = document.add_paragraph()
+    paragraph_format = paragraph.paragraph_format
+    paragraph_format.space_after = Pt(2)
+    paragraph_format.space_before = Pt(0)
+    paragraph_format.left_indent = Inches(.75)
+    run = paragraph.add_run(u"i. statistical or factual tabulations or data; or ii. instructions to staff that affect the public; or iii. final agency policy or determinations; or iv. external audits, including but not limited to audits performed by the comptroller and the federal government;")
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    paragraph = document.add_paragraph()
+    paragraph_format = paragraph.paragraph_format
+    paragraph_format.space_after = Pt(2)
+    paragraph_format.space_before = Pt(0)
+    paragraph_format.left_indent = Inches(.5)
+    run = paragraph.add_run(u"\u25FB     the records or portions of records are examination questions or answers which are requested prior to the final administration of such questions;")
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    paragraph = document.add_paragraph()
+    paragraph_format = paragraph.paragraph_format
+    paragraph_format.space_after = Pt(2)
+    paragraph_format.space_before = Pt(0)
+    paragraph_format.left_indent = Inches(.5)
+    run = paragraph.add_run(u"\u25FB     the records or portions of records if disclosed, would jeopardize the capacity of an agency or an entity that has shared information with an agency to guarantee the security of its information technology assets, such assets encompassing both electronic information systems and infrastructures.")
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    paragraph = document.add_paragraph()
+    paragraph_format = paragraph.paragraph_format
+    paragraph_format.space_after = Pt(2)
+    paragraph_format.space_before = Pt(0)
+    run = paragraph.add_run("You may appeal the decision to deny access to material that was redacted in part or withheld in entirety  by contacting the agency's FOIL Appeals Officer within 30 days.")
+    run.bold = True
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    paragraph = document.add_paragraph()
+    paragraph_format = paragraph.paragraph_format
+    paragraph_format.space_after = Pt(2)
+    paragraph_format.space_before = Pt(0)
+    run = paragraph.add_run("The contact information is:")
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    return document
+
+
+### @export "upload_record"
 def upload_record(
-    request_id,
-    description,
-    user_id,
-    request_body,
-    document=None,
-    privacy=True,
-    ):
+        request_id,
+        description,
+        user_id,
+        request_body,
+        document=None,
+        privacy=True,
+):
     """ Creates a record with upload/download attributes """
 
     app.logger.info('''
 
 Begins Upload_record method''')
-    notification_content={}
+    notification_content = {}
     try:
 
         # doc_id is upload_path
 
         (doc_id, filename, error) = \
             upload_helpers.upload_file(document=document,
-                request_id=request_id)
+                                       request_id=request_id)
     except:
 
         # print sys.exc_info()[0]
@@ -471,22 +744,22 @@ Begins Upload_record method''')
             # record_id = create_record(doc_id = doc_id, request_id = request_id, user_id = user_id, description = description, filename = filename, url = app.config['HOST_URL'] + doc_id)
 
             record_id = create_record(
-                doc_id=None,
-                request_id=request_id,
-                user_id=user_id,
-                description=description,
-                filename=filename,
-                url=app.config['HOST_URL'] + doc_id,
-                privacy=privacy,
-                )
+                    doc_id=None,
+                    request_id=request_id,
+                    user_id=user_id,
+                    description=description,
+                    filename=filename,
+                    url=app.config['HOST_URL'] + doc_id,
+                    privacy=privacy,
+            )
             change_request_status(request_id,
                                   'A response has been added.')
-            notification_content['additional_information']=request_body['additional_information']
+            notification_content['additional_information'] = request_body['additional_information']
             notification_content['user_id'] = user_id
 
             if request_body is not None:
                 attached_file = app.config['UPLOAD_FOLDER'] + '/' \
-                    + filename
+                                + filename
                 notification_content['attached_file'] = attached_file
                 generate_prr_emails(request_id=request_id,
                                     notification_type='Public Notification Template 10'
@@ -496,7 +769,7 @@ Begins Upload_record method''')
                                     attached_file=attached_file)
             else:
                 attached_file = app.config['UPLOAD_FOLDER'] + '/' \
-                    + filename
+                                + filename
                 notification_content['attached_file'] = attached_file
                 generate_prr_emails(request_id=request_id,
                                     notification_type='Public Notification Template 10'
@@ -511,16 +784,16 @@ Begins Upload_record method''')
 ### @export "add_offline_record"
 
 def add_offline_record(
-    request_id,
-    description,
-    access,
-    user_id,
-    department_name,
-    request_body=None,
-    privacy=True,
-    ):
+        request_id,
+        description,
+        access,
+        user_id,
+        department_name,
+        request_body=None,
+        privacy=True,
+):
     """ Creates a record with offline attributes """
-    notification_content={}
+    notification_content = {}
     notification_content['description'] = description
     notification_content['department_name'] = department_name
     record_id = create_record(request_id=request_id, user_id=user_id,
@@ -539,15 +812,15 @@ def add_offline_record(
 ### @export "add_link"
 
 def add_link(
-    request_id,
-    url,
-    description,
-    user_id,
-    department_name=None,
-    privacy=True,
-    ):
+        request_id,
+        url,
+        description,
+        user_id,
+        department_name=None,
+        privacy=True,
+):
     """ Creates a record with link attributes """
-    notification_content={}
+    notification_content = {}
     record_id = create_record(url=url, request_id=request_id,
                               user_id=user_id, description=description,
                               privacy=privacy)
@@ -567,31 +840,31 @@ def add_link(
 ### @export "make_request"
 
 def make_request(
-    agency=None,
-    summary=None,
-    text=None,
-    attachment=None,
-    attachment_description=None,
-    offline_submission_type=None,
-    date_received=None,
-    first_name=None,
-    last_name=None,
-    alias=None,
-    role=None,
-    organization=None,
-    email=None,
-    phone=None,
-    fax=None,
-    street_address_one=None,
-    street_address_two=None,
-    city=None,
-    state=None,
-    zip=None,
-    user_id=None,
-    ):
+        agency=None,
+        summary=None,
+        text=None,
+        attachment=None,
+        attachment_description=None,
+        offline_submission_type=None,
+        date_received=None,
+        first_name=None,
+        last_name=None,
+        alias=None,
+        role=None,
+        organization=None,
+        email=None,
+        phone=None,
+        fax=None,
+        street_address_one=None,
+        street_address_two=None,
+        city=None,
+        state=None,
+        zip=None,
+        user_id=None,
+):
     """ Make the request. At minimum you need to communicate which record(s) you want, probably with some text."""
 
-    notification_content={}
+    notification_content = {}
     try:
         is_partner_agency = agency_codes[agency]
     except KeyError:
@@ -613,24 +886,24 @@ Agency chosen: %s''' % agency)
     global currentRequestId
     currentRequestId = id_generator.next()
     id = 'FOIL' + '-' + datetime.now().strftime('%Y') + '-' \
-        + agency_codes[agency] + '-' + '%05d' % currentRequestId
+         + agency_codes[agency] + '-' + '%05d' % currentRequestId
     req = get_obj('Request', id)
     while req is not None and req.id == id:
         app.logger.info(req.id + ' VS ' + id)
         currentRequestId = id_generator.next()
         id = 'FOIL' + '-' + datetime.now().strftime('%Y') + '-' \
-            + agency_codes[agency] + '-' + '%05d' % currentRequestId
+             + agency_codes[agency] + '-' + '%05d' % currentRequestId
         req = get_obj('Request', id)
 
     request_id = create_request(  # Actually create the Request object
-        id=id,
-        agency=agency,
-        summary=summary,
-        text=text,
-        user_id=user_id,
-        offline_submission_type=offline_submission_type,
-        date_received=date_received,
-        )
+            id=id,
+            agency=agency,
+            summary=summary,
+            text=text,
+            user_id=user_id,
+            offline_submission_type=offline_submission_type,
+            date_received=date_received,
+    )
 
     # Please don't remove call to assign_owner below
 
@@ -640,18 +913,18 @@ Agency chosen: %s''' % agency)
     open_request(request_id)  # Set the status of the incoming request to "Open"
     if email or alias or phone:
         subscriber_user_id = create_or_return_user(
-            email=email,
-            alias=alias,
-            first_name=first_name,
-            last_name=last_name,
-            phone=phone,
-            fax=fax,
-            address1=street_address_one,
-            address2=street_address_two,
-            city=city,
-            state=state,
-            zipcode=zip,
-            )
+                email=email,
+                alias=alias,
+                first_name=first_name,
+                last_name=last_name,
+                phone=phone,
+                fax=fax,
+                address1=street_address_one,
+                address2=street_address_two,
+                city=city,
+                state=state,
+                zipcode=zip,
+        )
         (subscriber_id, is_new_subscriber) = \
             create_subscriber(request_id=request_id,
                               user_id=subscriber_user_id)
@@ -694,19 +967,19 @@ def add_subscriber(request_id, email):
 ### @export "ask_a_question"
 
 def ask_a_question(
-    request_id,
-    user_id,
-    question,
-    department_name=None,
-    ):
+        request_id,
+        user_id,
+        question,
+        department_name=None,
+):
     """ City staff can ask a question about a request they are confused about."""
 
-    notification_content={}
+    notification_content = {}
     req = get_obj('Request', request_id)
     qa_id = create_QA(request_id=request_id, question=question,
                       user_id=user_id)
     notification_content['user_id'] = user_id
-    notification_content['department_name']=department_name
+    notification_content['department_name'] = department_name
     if qa_id:
         change_request_status(request_id, 'Pending')
         requester = req.requester()
@@ -722,11 +995,11 @@ def ask_a_question(
 ### @export "answer_a_question"
 
 def answer_a_question(
-    qa_id,
-    answer,
-    subscriber_id=None,
-    passed_spam_filter=False,
-    ):
+        qa_id,
+        answer,
+        subscriber_id=None,
+        passed_spam_filter=False,
+):
     """ A requester can answer a question city staff asked them about their request."""
 
     if not answer or answer == '' or not passed_spam_filter:
@@ -752,7 +1025,7 @@ def open_request(request_id):
 
 def assign_owner(request_id, reason=None, email=None):
     """ Called any time a new owner is assigned. This will overwrite the current owner."""
-    notification_content={}
+    notification_content = {}
     req = get_obj('Request', request_id)
     past_owner_id = None
 
@@ -808,10 +1081,10 @@ def get_request_data_chronologically(req):
     for (i, note) in enumerate(req.notes):
         if not note.user_id:
             responses.append(RequestPresenter(note=note, index=i,
-                             public=public, request=req))
+                                              public=public, request=req))
     for (i, qa) in enumerate(req.qas):
         responses.append(RequestPresenter(qa=qa, index=i,
-                         public=public, request=req))
+                                          public=public, request=req))
     if not responses:
         return responses
     responses.sort(key=lambda x: x.date(), reverse=True)
@@ -830,9 +1103,9 @@ def get_responses_chronologically(req):
             # Ensure private notes only available to appropriate users
 
             if note.privacy == 2 and (current_user.is_anonymous
-                    or current_user.role not in ['Portal Administrator'
+                                      or current_user.role not in ['Portal Administrator'
                     , 'Agency Administrator', 'Agency FOIL Personnel',
-                    'Agency Helpers']):
+                                                                   'Agency Helpers']):
                 pass
             else:
                 responses.append(ResponsePresenter(note=note))
@@ -849,7 +1122,6 @@ def get_responses_chronologically(req):
 ### @export "set_directory_fields"
 
 def set_directory_fields():
-
     # Set basic user data
 
     if 'STAFF_URL' in app.config:
@@ -862,13 +1134,13 @@ def set_directory_fields():
         dictreader = csv.DictReader(csvfile, delimiter=',')
         for row in dictreader:
             create_or_return_user(
-                email=row['email'].lower(),
-                alias=row['name'],
-                phone=row['phone number'],
-                department=row['department name'],
-                is_staff=True,
-                role=row['role'],
-                )
+                    email=row['email'].lower(),
+                    alias=row['name'],
+                    phone=row['phone number'],
+                    department=row['department name'],
+                    is_staff=True,
+                    role=row['role'],
+            )
 
         # Set liaisons data (who is a PRR liaison for what department)
 
@@ -877,16 +1149,16 @@ def set_directory_fields():
             dictreader = csv.DictReader(csvfile, delimiter=',')
             for row in dictreader:
                 user = create_or_return_user(email=row['PRR liaison'],
-                        contact_for=row['department name'])
+                                             contact_for=row['department name'])
                 if row['department name'] != '':
                     set_department_contact(row['department name'],
-                            'primary_contact_id', user)
+                                           'primary_contact_id', user)
                     if row['PRR backup'] != '':
                         user = \
                             create_or_return_user(email=row['PRR backup'
-                                ], backup_for=row['department name'])
+                            ], backup_for=row['department name'])
                         set_department_contact(row['department name'],
-                                'backup_contact_id', user)
+                                               'backup_contact_id', user)
         else:
             app.logger.info('''
 
@@ -896,9 +1168,9 @@ def set_directory_fields():
 
  Please update the config variable STAFF_URL for where to find csv data on the users in your agency.''')
         if 'DEFAULT_OWNER_EMAIL' in app.config \
-            and 'DEFAULT_OWNER_REASON' in app.config:
+                and 'DEFAULT_OWNER_REASON' in app.config:
             create_or_return_user(email=app.config['DEFAULT_OWNER_EMAIL'
-                                  ].lower(),
+            ].lower(),
                                   alias=app.config['DEFAULT_OWNER_EMAIL'
                                   ],
                                   department=app.config['DEFAULT_OWNER_REASON'
@@ -917,7 +1189,7 @@ def set_directory_fields():
 
 def set_department_contact(department_name, attribute_name, user_id):
     department = Department.query.filter(Department.name
-            == department_name).first()
+                                         == department_name).first()
     user_obj = get_user_by_id(user_id)
     user_email = user_obj.email
     app.logger.info('''
@@ -932,45 +1204,45 @@ Setting %s For %s as %s'''
 ### @export "close_request"
 
 def close_request(
-    request_id,
-    reasons='',
-    user_id=None,
-    request_body=None,
-    ):
+        request_id,
+        reasons='',
+        user_id=None,
+        request_body=None,
+):
     req = get_obj('Request', request_id)
     change_request_status(request_id, 'Closed')
-    notification_content={}
+    notification_content = {}
     # Create a note to capture closed information:
     if request_body:
-        notification_content['additional_information']=request_body['additional_information']
+        notification_content['additional_information'] = request_body['additional_information']
     notification_content['explanations'] = []
-    notification_content['reasons']=reasons
+    notification_content['reasons'] = reasons
     # for reason in reasons:
     #     notification_content['explanations'].append(explain_action(reason, explanation_type='What'))
-    notification_content['user_id']=user_id
+    notification_content['user_id'] = user_id
     create_note(request_id, reasons, user_id, privacy=1)
     if "Your request under the Freedom of Information Law (FOIL) has been reviewed and the documents you requested have " \
        "been posted on the OpenRecords portal." in notification_content['reasons']:
-        notification_type="closed_fulfilled_in_whole"
+        notification_type = "closed_fulfilled_in_whole"
     elif "Your request under the Freedom of Information Law (FOIL) has been reviewed and is granted in part and denied " \
          "in part because some of the records or portions of records are disclosable and others are exempt form " \
          "disclosure under FOIL." in notification_content['reasons']:
-        notification_type="closed_fulfilled_in_part"
+        notification_type = "closed_fulfilled_in_part"
     elif "Your request under the Freedom of Information Law (FOIL) has been fulfilled and the documents you requested " \
          "have been emailed to you." in notification_content['reasons']:
-        notification_type="closed_by_email"
+        notification_type = "closed_by_email"
     elif "Your request under the Freedom of Information Law (FOIL) has been fulfilled and the documents you requested " \
          "have been faxed to you." in notification_content['reasons']:
-        notification_type="closed_by_fax"
+        notification_type = "closed_by_fax"
     elif "Your request under the Freedom of Information Law (FOIL) has been been fulfilled and the documents you " \
          "requested have been mailed to you. Please allow 7 - 10 days for receipt." in notification_content['reasons']:
-        notification_type="closed_by_mail"
+        notification_type = "closed_by_mail"
     elif "Your request under the Freedom of Information Law has been fulfilled and the documents you requested are " \
          "available to you for pickup." in notification_content['reasons']:
-        notification_type="closed_by_pickup"
+        notification_type = "closed_by_pickup"
     else:
-        #If request is not one of the fulfilled categories, it is assumed to have been denied
-        notification_type="denied"
+        # If request is not one of the fulfilled categories, it is assumed to have been denied
+        notification_type = "denied"
     if request_body:
         generate_prr_emails(request_id=request_id,
                             notification_type=notification_type,

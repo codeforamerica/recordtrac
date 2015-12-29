@@ -609,7 +609,7 @@ def add_a_resource(resource):
     errors = {}
     if request.method == 'POST':
         print "Resource is a", resource
-        if resource == 'pdf':
+        if resource == 'letter':
             return add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
         # Field validation for adding a recored
         elif resource == 'record_and_close':
