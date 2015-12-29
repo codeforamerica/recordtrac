@@ -17,7 +17,7 @@
                                     You will receive the disclosable records within {{ notification_content['days_after'] }} days.
                                 </p>
                                 <p>
-                                    {% if additional_information %}
+                                    {% if notification_content['additional_information'] %}
                                         Additional Information: <br />
                                         {{ notification_content['additional_information'] }}
                                     {% endif %}

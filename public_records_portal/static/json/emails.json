@@ -19,7 +19,7 @@
           "Subject": "A helper has been removed from your request",
           "Recipients": ["Staff participants"]
         },
-        "Request assigned":
+        "request_assigned":
         {
             "Subject": "A request has been assigned to you",
             "Recipients": ["Staff owner"],
