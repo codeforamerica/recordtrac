@@ -753,6 +753,8 @@ Begins Upload_record method''')
             change_request_status(request_id,
                                   'A response has been added.')
 
+            # notification_content['additional_information'] = request_body['additional_information']
+
             # notification_content['user_id'] = user_id
 
             if request_body is not None:
