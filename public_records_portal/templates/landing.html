@@ -46,7 +46,7 @@
             <a href="/logout" >Logout</a>
           </div>
       {% else %}
-        {% if request.base_url == config['AGENCY_APPLICATION_URL'] %}
+        {% if request.base_url.split('//')[-1] == config['AGENCY_APPLICATION_URL'].split('//')[-1] %}
           <div class="login btn btn-large">
             <a href="/login" >Agency Login</a>
           </div>

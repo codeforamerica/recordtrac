@@ -43,7 +43,7 @@ $(function () {
         "Department of Buildings",
         "New York City Housing Development Corporation"]
     var publicSafety = ["Civilian Complaint Review Board",
-        "Commission to Combat POlice Corruption",
+        "Commission to Combat Police Corruption",
         "Board of Correction",
         "Department of Correction",
         "NYC Emergency Management",
