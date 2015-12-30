@@ -167,7 +167,7 @@
  
   $('#generatePDFButton').on('click',function(event){
     var selectedTemplate = $('#response_template option:selected').text();
-    var modalQuestion = 'Are you sure you want to generate a PDF for the template below?';
+    var modalQuestion = 'Are you sure you want to generate a Word Document for the template below?';
            
     if (selectedTemplate === '') {
       $('#missing_pdf_template').removeClass('hidden');
