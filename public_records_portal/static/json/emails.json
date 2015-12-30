@@ -115,6 +115,22 @@
             "Subject": "FOIL Request Fulfilled via Pickup",
             "Recipients": ["Subscribers"]
         },
+        "refer_311":{
+            "Subject": "FOIL Request 311 Referral",
+            "Recipients": ["Subscribers"]
+        },
+        "refer_opendata":{
+            "Subject": "FOIL Request OpenData Referral",
+            "Recipients": ["Subscribers"]
+        },
+        "refer_other_agency":{
+            "Subject": "FOIL Request Agency Referral",
+            "Recipients": ["Subscribers"]
+        },
+        "refer_web_link":{
+            "Subject": "FOIL Request Web Link",
+            "Recipients": ["Subscribers"]
+        },
         "Public Notification Template 01":
         {
             "Subject": "FOIL Request Submitted",

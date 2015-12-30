@@ -135,12 +135,12 @@
     "Action": "No Payment"
   },
   "Public Records": {
-    "What": "Your request under the Freedom of Information Law (FOIL) is being closed because the records are publicly available at http://nyc.gov/records",
+    "What": "Your request under the Freedom of Information Law (FOIL) is being closed because the records are publicly available at http://nyc.gov/records.",
     "Who": "",
     "Action": "Public Records"
   },
   "Out of Jurisdiction": {
-    "What": "Your request under the Freedom of Information Law (FOIL) is being closed because the record is not a City record",
+    "What": "Your request under the Freedom of Information Law (FOIL) is being closed because the record is not a city record.",
     "Who": "",
     "Action": "Out of Jurisdiction"
   },
