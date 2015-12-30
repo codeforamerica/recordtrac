@@ -111,6 +111,10 @@
             "Subject": "FOIL Request Fulfilled via Fax",
             "Recipients": ["Subscribers"]
         },
+        "closed_by_mail":{
+            "Subject": "FOIL Request Fulfilled via Mail",
+            "Recipients": ["Subscribers"]
+        },
         "closed_by_pickup":{
             "Subject": "FOIL Request Fulfilled via Pickup",
             "Recipients": ["Subscribers"]
