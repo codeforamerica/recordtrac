@@ -8,11 +8,14 @@ from __future__ import generators
 
 import uuid
 
-import ldap
+
 from sqlalchemy import func
 
 from models import *
-from public_records_portal import cal
+from public_records_portal import cal, app
+
+if app.config['USE_LDAP']:
+    import ldap
 
 def id_counter():
     i = 0
