@@ -62,9 +62,9 @@ zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
 def create_user():
     db.create_all()
 
-@app.before_request
-def make_session_permanent():
-    app.permanent_session_lifetime = timedelta(minutes=180)
+#@app.before_request
+#def make_session_permanent():
+#    app.permanent_session_lifetime = timedelta(minutes=180)
 
 @app.before_request
 def csrf_protect():
@@ -1179,7 +1179,7 @@ def about():
 def logout():
     logout_user()
     session.regenerate()
-    session.clear()
+    #session.clear()
     session.pop("_csrf_token", None)
     session.pop('username', None)
     session.pop('_id', None)
