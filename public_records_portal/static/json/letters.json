@@ -1,27 +1,27 @@
 {
     "acknowledgement_letter": {
         "subject": "RE: FOIL Request %s",
-        "content": "Your request under the Freedom of Information Law (FOIL) has been reviewed and the documents you requested will be sent to you within _____ business days.\n\nYou can view the request and take any necessary action at the following webpage: %s\n\nSincerely,\n\n\n%s\nRecords Access Officer"
+        "content": "Your request under the Freedom of Information Law (FOIL) has been reviewed and the documents you requested will be sent to you within _____ business days.\n\nYou can view the request  at the following webpage: %s\n\nSincerely,\n\n\n%s\nRecords Access Officer"
     },
     "denial_letter": {
         "subject": "RE: FOIL Request %s",
-        "content": "Your request under the Freedom of Information Law (FOIL) has been denied as explained in the attached document.\n\n You may appeal this decision to the agency FOIL Appeals Officer within 30 days. The contact information is attached.\n\nSincerely,\n\n\n%s\nRecords Access Officer"
+        "content": "Your request under the Freedom of Information Law (FOIL) has been denied as explained in the attached document.\n\n You may appeal this decision to the agency FOIL Appeals Officer within 30 days. The contact information is attached.\n\nYou can view the request  at the following webpage: %s\n\nSincerely,\n\n\n%s\nRecords Access Officer"
     },
     "extension_letter": {
         "subject": "RE: FOIL Request %s",
-        "content": "We are still in the process of searching for the documents your requested under the Freedom of Information Law (FOIL). YOu can expect a response on or about _______.\n\nYou can view the request and take any necessary action at the following webpage: %s\n\nSincerely,\n\n\n%s\nRecords Access Officer"
+        "content": "We are still in the process of searching for the documents your requested under the Freedom of Information Law (FOIL). You can expect a response on or about _______.\n\nYou can view the request at the following webpage: %s\n\nSincerely,\n\n\n%s\nRecords Access Officer"
     },
     "partial_fulfillment_letter" :{
         "subject": "RE: FOIL Request %s",
-        "content": "Your request under the Freedom of Information Law (FOIL) has been reviewed and is granted in part and denied in part because some records are disclosable and others are exempt from disclosure under FOIL as described in the attached document.\n\nYou may appeal this decision to the agency FOIL Appeals Officer within 30 days.\n\nThe contact information is attached.\n\nYou will receive the disclosable records within ______ days.\n\nSincerely,\n\n\n%s\nRecords Access Officer"
+        "content": "Your request under the Freedom of Information Law (FOIL) has been reviewed and is granted in part and denied in part because some records are disclosable and others are exempt from disclosure under FOIL as described in the attached document.\n\nYou may appeal this decision to the agency FOIL Appeals Officer within 30 days.\n\nThe contact information is attached.\n\nYou will receive the disclosable records within ______ days.\n\nYou can view the request at the following webpage: %s\n\nSincerely,\n\n\n%s\nRecords Access Officer"
     },
     "fulfillment_letter" :{
         "subject": "RE: FOIl Request %s",
-        "content": "Your request under the Freedom of Information Law (FOIL) has been reviewed and the documents you requested are attached.\n\nSincerely,\n\n\n%s\nRecords Access Officer"
+        "content": "Your request under the Freedom of Information Law (FOIL) has been reviewed and the documents you requested are attached.\n\nYou can view the request at the following webpage: %s\n\nSincerely,\n\n\n%s\nRecords Access Officer"
     },
     "payment_letter": {
         "subject": "RE: FOIL Request %s",
-        "content": "Your request under the Freedom of Information Law (FOIL) has been reviewed and we have determined that payment is required to fulfill your FOIL request.\n\nPlease find the payment instructions below:\n\n\n\nSincerely,\n\n\n%s\nRecords Access Officer"
+        "content": "Your request under the Freedom of Information Law (FOIL) has been reviewed and we have determined that payment is required to fulfill your FOIL request.\n\nPlease find the payment instructions below:\n\n\n\nYou can view the request at the following webpage: %s\n\nSincerely,\n\n\n%s\nRecords Access Officer"
     },
     "denial_reasons": {
         "section_01": "Your Freedom of Information Law (FOIL) request was denied, in whole or in part, for the reason(s) checked below.",

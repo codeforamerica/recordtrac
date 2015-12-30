@@ -464,7 +464,7 @@ def add_letter(
             else:
                 header = "%s\n%s\n%s, %s, %s\n\n" % (alias, address1, city, state, zipcode)
         else:
-            header = "INSERT USERS ADDRESS HERE"
+            header = "INSERT USER'S ADDRESS HERE"
         document.add_paragraph("%s" % header)
 
     if text == 'acknowledgement_letter':
