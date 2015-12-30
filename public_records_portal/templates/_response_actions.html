@@ -661,8 +661,12 @@
                             <div class="controls">
                                 <select id="close_reasons" name="close_reasons"
                                         multiple="multiple" size="18">
-                                    <option value="{{ 'Fulfilled in Whole' | explain_action('What') }}">Fulfilled in Whole</option>
+                                    <option value="{{'Fulfilled in Whole' | explain_action('What') }}">Fulfilled in Whole</option>
                                     <option value="{{'Fulfilled in Part' | explain_action('What')}}">Fulfilled in Part</option>
+                                    <option value="{{'Fulfilled via Email' | explain_action('What')}}">Fulfilled via Email</option>
+                                    <option value="{{'Fulfilled via Fax' | explain_action('What')}}">Fulfilled via Fax</option>
+                                    <option value="{{'Fulfilled via Mail' | explain_action('What')}}">Fulfilled via Mail</option>
+                                    <option value="{{'Fulfilled via Pickup' | explain_action('What')}}">Fulfilled via Pickup</option>
                                     <option value="{{'Denied - Records Non-Responsive' | explain_action('What')}}">Denied - Records Non-Responsive</option>
                                     <option value="{{'Denied - No Records' | explain_action('What')}}">Denied - No Records</option>
                                     <option value="{{'Denied - All Exempt' | explain_action('What')}}">Denied - All Exempt</option>
@@ -675,10 +679,7 @@
                                     <option value="{{'Refer to OpenData' | explain_action('What')}}">Refer to OpenData</option>
                                     <option value="{{'Refer to Other Agency' | explain_action('What')}}">Refer to Other Agency</option>
                                     <option value="{{'Refer to Web Link' | explain_action('What')}}">Refer to Web Link</option>
-                                    <option value="{{'Fulfilled via Email' | explain_action('What')}}">Fulfilled via Email</option>
-                                    <option value="{{'Fulfilled via Fax' | explain_action('What')}}">Fulfilled via Fax</option>
-                                    <option value="{{'Fulfilled via Mail' | explain_action('What')}}">Fulfilled via Mail</option>
-                                    <option value="{{'Fulfilled via Pickup' | explain_action('What')}}">Fulfilled via Pickup</option>
+
                                 </select>
                             </div>
                         </div>
