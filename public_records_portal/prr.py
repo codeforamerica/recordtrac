@@ -516,7 +516,7 @@ def add_letter(
         subject = subject % request_id
 
         content = letters_data[text]['content']
-        content = content % (staff.user.alias)
+        content = content % (str(app.config['PUBLIC_APPLICATION_URL'] + 'request/' + request_id), staff.user.alias)
 
         document.add_paragraph(subject)
         document.add_paragraph(content)
