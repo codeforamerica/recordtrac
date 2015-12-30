@@ -895,7 +895,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
     if filters_map:
         departments_selected = get_filter_value(filters_map=filters_map, filter_name='departments_selected',
                                                 is_list=True) or get_filter_value(filters_map, 'department')
-        #departments_selected = bleach.clean(departments_selected);
+        # departments_selected = bleach.clean(departments_selected);
         app.logger.info("Department Selected: %s" % departments_selected)
         is_open = get_filter_value(filters_map=filters_map, filter_name='is_open', is_boolean=True)
         is_open = bleach.clean(is_open);
@@ -920,7 +920,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         app.logger.info(sort_column)
         sort_direction = get_filter_value(filters_map, 'sort_direction') or 'asc'
         sort_direction = bleach.clean(sort_direction);
-        #sort_direction = str(utils.escape(sort_direction))
+        # sort_direction = str(utils.escape(sort_direction))
         #sort_direction = clean_html(sort_direction)
         app.logger.info(sort_direction)
         search_term = get_filter_value(filters_map, 'search_term')
@@ -997,8 +997,11 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
     if output_results_only == True:  # Used by json_requests()
         return requests, num_results, more_results, start_index, end_index
 
+    departments = db.session.query(models.Department).all()
+    departments.sort(key=lambda x: x.name, reverse=False)
+
     return render_template("all_requests_less_js.html", total_requests_count=get_count("Request"), requests=requests,
-                           departments=db.session.query(models.Department).all(),
+                           departments=departments,
                            departments_selected=departments_selected, is_open=is_open, is_closed=is_closed,
                            due_soon=due_soon, overdue=overdue, mine_as_poc=mine_as_poc, mine_as_helper=mine_as_helper,
                            sort_column=sort_column, sort_direction=sort_direction, search_term=search_term,
