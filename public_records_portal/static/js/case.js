@@ -95,6 +95,10 @@
     }
    });
 
+    $('#cancel_close').on('click',function(event){
+        $('#close-reminder').hide();
+    });
+
   $('#rerouteButton').on('click',function(){
     $('#form_id').val('AcknowledgeNote');
     var modalQuestion = 'Are you sure you want to acknowledge the request for the number of days below and send an email to the requester?';
@@ -125,8 +129,9 @@
   });
 
   $('#closeButton').on('click',function(){
-    $('#modalAdditionalInfoTable').hide();
-    $('#modalAdditionalInfoTableClose').show();
+    $('#modalAdditionalInfoTable').show();
+    $('#close-reminder').show()
+    //$('#modalAdditionalInfoTable').append('<p><b>If you are denying this request please explain why.</b></p>');
     $('#form_id').val('closeRequest');
     var modalQuestion = 'Are you sure you want to close the request for the reasons below and send an email to the requester?';
     var reasons = $('#close_reasons').val();
@@ -137,6 +142,7 @@
     }
     $('#modalquestionDiv').html(modalQuestion);
     $('#modalQuestionTable').hide();
+
   });
 
   $('#addRecordButton').on('click',function(){
