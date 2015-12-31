@@ -9,6 +9,7 @@ Initializes application and all of its environment variables.
 
 import logging
 import time
+from datetime import timedelta
 from logging.handlers import TimedRotatingFileHandler
 from os import environ, pardir
 from os.path import abspath, dirname, join
@@ -17,41 +18,35 @@ import pytz
 from business_calendar import Calendar, MO, TU, WE, TH, FR
 from dotenv import load_dotenv
 from flask import Flask
+from flask.ext.kvsession import KVSessionExtension
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask_recaptcha import ReCaptcha
+from simplekv.db.sql import SQLAlchemyStore
 from tzlocal import get_localzone
-from simplekv.db.sql import SQLAlchemyStore
-from simplekv.db.sql import SQLAlchemyStore
-from flask.ext.kvsession import KVSessionExtension
-from datetime import datetime, timedelta
 
 # Initialize Flask app
 app = Flask(__name__)
-app.debug = True
-log_filename =  "/data/logs/openrecords_"+time.strftime("%Y%m%d")+".log"
-handler = TimedRotatingFileHandler(log_filename, when='D', interval=60)
-handler.setLevel(logging.DEBUG)
-app.logger.addHandler(handler)
 
 load_dotenv(abspath(join(join(dirname(__file__), pardir), '.env')))
 
 # Setup Calendar
 cal = Calendar(
-    workdays=[MO,TU,WE,TH,FR],
-    holidays=[
-        '2016-01-01',
-        '2016-01-18',
-        '2016-02-15',
-        '2016-05-30',
-        '2016-07-4',
-        '2016-09-5',
-        '2016-10-10',
-        '2016-11-08',
-        '2016-11-11',
-        '2016-11-24',
-        '2016-12-26'
-    ]
+        workdays=[MO, TU, WE, TH, FR],
+        holidays=[
+            '2016-01-01',
+            '2016-01-18',
+            '2016-02-15',
+            '2016-05-30',
+            '2016-07-4',
+            '2016-09-5',
+            '2016-10-10',
+            '2016-11-08',
+            '2016-11-11',
+            '2016-11-24',
+            '2016-12-26'
+        ]
 )
+
 
 def set_env(key, default=None):
     """ Used to set environment variables """
@@ -79,7 +74,7 @@ envvars = [
     'DAYS_AFTER_EXTENSION',  # Default number of days for an extension
     'DAYS_TO_FULFILL',  # Default number of days to fulfill a request
     'DAYS_UNTIL_OVERDUE',  # Default number of days until
-    'NYC_GOV_BASE', # Base URL for NYC.gov links/assets
+    'NYC_GOV_BASE',  # Base URL for NYC.gov links/assets
 
     # Flask Settings
     'PUBLIC_APPLICATION_URL',  # Application URL for Public Users
@@ -87,6 +82,7 @@ envvars = [
     'ENVIRONMENT',  # Local Environemnt (LOCAL, STAGING, TESTING, PRODUCTION)
     'SECRET_KEY',  # Secret key for cookie signing (sessions)
     'DATABASE_URL',  # URL to access Postgres database
+    'LOGFILE_DIRECTORY', # Location to store logfiles
 
     # Flask Mail Settings
     'MAIL_USERNAME',  # Username for mail server
@@ -112,7 +108,7 @@ envvars = [
     'SHOULD_SCAN_FILES',
 
     # LDAP
-    'USE_LDAP', # Determines if LDAP or Flask-Login is used
+    'USE_LDAP',  # Determines if LDAP or Flask-Login is used
     'LDAP_SERVER',  # LDAP Server URL
     'LDAP_PORT',  # LDAP Connection Port
     'LDAP_USE_TLS',  # Using TLS to connect to server
@@ -142,3 +138,9 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=int(environ['PERMAN
 
 store = SQLAlchemyStore(db.engine, db.metadata, 'sessions')
 kvsession = KVSessionExtension(store, app)
+
+app.debug = True
+log_filename = environ['LOGFILE_DIRECTORY'] + "openrecords_" + time.strftime("%Y%m%d") + ".log"
+handler = TimedRotatingFileHandler(log_filename, when='D', interval=60)
+handler.setLevel(logging.DEBUG)
+app.logger.addHandler(handler)
