@@ -14,8 +14,10 @@ from sqlalchemy import func
 from models import *
 from public_records_portal import cal, app
 
-if app.config['USE_LDAP']:
+try:
     import ldap
+except ImportError:
+    pass
 
 def id_counter():
     i = 0
