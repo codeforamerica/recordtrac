@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% set active_page = "view_requests" %}
 {% block title %}
-  {{ title }} &#45; OpenRecords - RecordTrac
+  {{ title }} &#45; OpenRecords
 {% endblock title %}
 {% block custom_css_links %}
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/all_requests.css') }}">
@@ -36,7 +36,7 @@
         {# Blurb about what RecordTrac does and 'Request new' button.#}
         <div class="row-fluid blurb">
           <div class="span9">
-            <p class="intro_text">RecordTrac makes every public records request available to the public, including messages or documents uploaded by agency staff.  Search through current and past requests.  You may find what you need!</p>
+            <p class="intro_text">OpenRecords makes every public records request available to the public, including messages or documents uploaded by agency staff.  Search through current and past requests.  You may find what you need!</p>
           </div>
           <div class="span3">
             <a href="/new" class="btn btn-primary btn-large">Request new record</a>
