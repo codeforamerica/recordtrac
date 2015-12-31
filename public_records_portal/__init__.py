@@ -28,7 +28,7 @@ from datetime import datetime, timedelta
 # Initialize Flask app
 app = Flask(__name__)
 app.debug = True
-log_filename =  "openrecords_"+time.strftime("%Y%m%d")+".log"
+log_filename =  "/data/logs/openrecords_"+time.strftime("%Y%m%d")+".log"
 handler = TimedRotatingFileHandler(log_filename, when='D', interval=60)
 handler.setLevel(logging.DEBUG)
 app.logger.addHandler(handler)

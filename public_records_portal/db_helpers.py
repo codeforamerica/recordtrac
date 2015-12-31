@@ -356,7 +356,7 @@ def create_or_return_user(email=None, alias=None, first_name=None, last_name=Non
         pass
 
     if email:
-        user = User.query.filter(User.email == func.lower(email)).first()
+        user = User.query.filter(User.email == func.lower(email), User.first_name == first_name, User.last_name == last_name).first()
         if department and type(department) != int and not department.isdigit():
             d = Department.query.filter_by(name=department).first()
             if d:
