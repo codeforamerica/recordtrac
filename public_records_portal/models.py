@@ -53,7 +53,7 @@ class User(db.Model):
     alias = db.Column(db.String(100))
     first_name = db.Column(db.String(100))
     last_name = db.Column(db.String(100))
-    email = db.Column(db.String(100), unique=True)
+    email = db.Column(db.String(100))
     phone = db.Column(db.String())
     fax = db.Column(db.String())
     address1 = db.Column(db.String(500))
