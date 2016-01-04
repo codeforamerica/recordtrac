@@ -95,6 +95,7 @@ envvars = [
     # Upload Settings
     'UPLOAD_DOCS',  # Enable uploads of documents on Local environment
     'UPLOAD_FOLDER',  # Path for uploaded documents
+    'UPLOAD_FOLDER_COPY', # Path for rsynced documents
     'HOST_URL',  # URL for uploaded documents folder
 
     # ReCaptcha

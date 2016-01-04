@@ -724,7 +724,7 @@ Begins Upload_record method''')
 
         (doc_id, filename, error) = \
             upload_helpers.upload_file(document=document,
-                                       request_id=request_id)
+                                       request_id=request_id, privacy=privacy)
     except:
 
         # print sys.exc_info()[0]
@@ -1287,5 +1287,5 @@ def change_record_privacy(record_id, privacy):
     record = get_obj("Record", record_id)
     app.logger.info('performing rsync...')
     if privacy == 'False':
-        os.system("rsync -avzh " + app.config['UPLOAD_FOLDER'] + "/" + " /Users/Admin/Desktop/uploads_copy")
+        os.system("rsync -avzh " + app.config['UPLOAD_FOLDER'] + "/ " + app.config['UPLOAD_FOLDER_COPY'] + "/")
     update_obj(attribute="privacy", val=privacy, obj_type="Record", obj_id=record.id)

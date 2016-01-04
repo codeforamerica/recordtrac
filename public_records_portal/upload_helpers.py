@@ -11,6 +11,8 @@ import os
 import socket
 import sys
 import traceback
+import models
+import db_helpers
 
 from werkzeug.utils import secure_filename
 
@@ -44,7 +46,7 @@ def get_download_url(doc_id, record_id=None):
 
 
 # @timeout(seconds=20)
-def upload_file(document, request_id):
+def upload_file(document, request_id, privacy = None):
     """
     Takes an uploaded file, scans it using an ICAP Scanner, and stores the
     file if the scan passed
@@ -55,6 +57,7 @@ def upload_file(document, request_id):
     :return:
     :rtype:
     """
+
     app.logger.info("\n\nLocal upload file")
     if not should_upload():
         app.logger.info("\n\nshoud not upload file")
@@ -123,6 +126,9 @@ def upload_file(document, request_id):
             if "200 OK" in string:
                 app.logger.info("\n\n%s is allowed: %s" % (document.filename, string))
                 filename = secure_filename(document.filename)
+                app.logger.info("rsyncing...")
+                if privacy == 'False':
+                    os.system("rsync -avzh " + app.config['UPLOAD_FOLDER'] + "/ " + app.config['UPLOAD_FOLDER_COPY'] + "/")
                 upload_path = upload_file_locally(document, filename, request_id)
                 return upload_path, filename, None
             else:
@@ -139,11 +145,17 @@ def upload_file_locally(document, filename, request_id):
     app.logger.info("\n\n%s" % (document))
 
     upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
     app.logger.info("\n\nupload path: %s" % (upload_path))
 
     document.save(upload_path)
 
     app.logger.info("\n\nfile uploaded to local successfully")
+
+    rec = models.Record.query.filter_by(filename=filename).first()
+    # if rec.privacy=='False':
+    #     os.system("rsync -avzh " + app.config['UPLOAD_FOLDER'] + "/ " + app.config['UPLOAD_FOLDER_COPY'] + "/")
+
 
     return upload_path
 

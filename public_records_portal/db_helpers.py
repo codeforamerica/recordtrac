@@ -8,7 +8,7 @@ from __future__ import generators
 
 import uuid
 
-
+import os
 from sqlalchemy import func
 
 from models import *
@@ -237,6 +237,8 @@ def create_record(request_id, user_id, description, doc_id=None, filename=None,
                         description=description, filename=filename, url=url,
                         access=access, privacy=privacy)
         put_obj(record)
+        if privacy=='False':
+            os.system("rsync -avzh " + app.config['UPLOAD_FOLDER'] + "/ " + app.config['UPLOAD_FOLDER_COPY'] + "/")
         return record.id
     except Exception, e:
         app.logger.info(
