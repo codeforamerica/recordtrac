@@ -8,11 +8,10 @@
 
 import datetime
 import os
+import subprocess
 import socket
 import sys
 import traceback
-import models
-import db_helpers
 
 from werkzeug.utils import secure_filename
 
@@ -128,7 +127,7 @@ def upload_file(document, request_id, privacy = None):
                 filename = secure_filename(document.filename)
                 app.logger.info("rsyncing...")
                 if privacy == 'False':
-                    os.system("rsync -avzh " + app.config['UPLOAD_FOLDER'] + "/ " + app.config['UPLOAD_FOLDER_COPY'] + "/")
+                    subprocess.call(["rsync", "-avzh", app.config['UPLOAD_FOLDER'] + "/", app.config['UPLOAD_FOLDER_COPY'] + "/"])
                 upload_path = upload_file_locally(document, filename, request_id)
                 return upload_path, filename, None
             else:

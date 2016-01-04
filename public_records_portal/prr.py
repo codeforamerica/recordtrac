@@ -15,7 +15,7 @@ import urllib
 from StringIO import StringIO
 import os
 import json
-
+import subprocess
 import bleach
 from flask import request, render_template, make_response, send_file
 from xhtml2pdf import pisa
@@ -1287,5 +1287,6 @@ def change_record_privacy(record_id, privacy):
     record = get_obj("Record", record_id)
     app.logger.info('performing rsync...')
     if privacy == 'False':
-        os.system("rsync -avzh " + app.config['UPLOAD_FOLDER'] + "/ " + app.config['UPLOAD_FOLDER_COPY'] + "/")
+        subprocess.call(["rsync", "-avzh", app.config['UPLOAD_FOLDER'] + "/", app.config['UPLOAD_FOLDER_COPY'] + "/"])
+        # os.system("rsync -avzh " + app.config['UPLOAD_FOLDER'] + "/ " + app.config['UPLOAD_FOLDER_COPY'] + "/")
     update_obj(attribute="privacy", val=privacy, obj_type="Record", obj_id=record.id)
