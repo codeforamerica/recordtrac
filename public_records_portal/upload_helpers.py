@@ -152,11 +152,6 @@ def upload_file_locally(document, filename, request_id):
 
     app.logger.info("\n\nfile uploaded to local successfully")
 
-    rec = models.Record.query.filter_by(filename=filename).first()
-    # if rec.privacy=='False':
-    #     os.system("rsync -avzh " + app.config['UPLOAD_FOLDER'] + "/ " + app.config['UPLOAD_FOLDER_COPY'] + "/")
-
-
     return upload_path
 
 
