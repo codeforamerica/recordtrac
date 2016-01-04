@@ -1285,4 +1285,7 @@ def change_privacy_setting(request_id, privacy, field):
 
 def change_record_privacy(record_id, privacy):
     record = get_obj("Record", record_id)
+    app.logger.info('performing rsync...')
+    if privacy == 'False':
+        os.system("rsync -avzh " + app.config['UPLOAD_FOLDER'] + "/" + " /Users/Admin/Desktop/uploads_copy")
     update_obj(attribute="privacy", val=privacy, obj_type="Record", obj_id=record.id)
