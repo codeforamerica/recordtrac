@@ -312,21 +312,37 @@ Attempting to send an e-mail to %s with subject %s, referencing page %s and temp
     if recipients:
         if send_emails:
             try:
-                send_email(
-                    body=render_template(
-                        template,
-                        unfollow_link=unfollow_link,
-                        page=page,
-                        request_id=request_id,
-                        notification_content=notification_content
-                        ),
-                    recipients=recipients,
-                    subject=subject,
-                    include_unsubscribe_link=include_unsubscribe_link,
-                    cc_everyone=cc_everyone,
-                    attached_file=attached_file,
-                    )
-                app.logger.info('''E-mail sent successfully!''')
+                if "attached_file" in notification_content:
+                    send_email(
+                        body=render_template(
+                            template,
+                            unfollow_link=unfollow_link,
+                            page=page,
+                            request_id=request_id,
+                            notification_content=notification_content
+                            ),
+                        recipients=recipients,
+                        subject=subject,
+                        include_unsubscribe_link=include_unsubscribe_link,
+                        cc_everyone=cc_everyone,
+                        attached_file=notification_content['attached_file'],
+                        )
+                    app.logger.info('''E-mail sent successfully!''')
+                else:
+                    send_email(
+                        body=render_template(
+                            template,
+                            unfollow_link=unfollow_link,
+                            page=page,
+                            request_id=request_id,
+                            notification_content=notification_content
+                            ),
+                        recipients=recipients,
+                        subject=subject,
+                        include_unsubscribe_link=include_unsubscribe_link,
+                        cc_everyone=cc_everyone
+                        )
+                    app.logger.info('''E-mail sent successfully!''')
             except Exception, e:
                 app.logger.info('''
 
@@ -355,7 +371,6 @@ def send_email(
     sender = app.config['DEFAULT_MAIL_SENDER']
     message = Message(sender=sender, subject=subject, html=html,
                       body=plaintext, bcc=sender)
-
     if attached_file is not None:
         with app.open_resource(attached_file) as fp:
             url = urllib.pathname2url(attached_file)

@@ -155,13 +155,16 @@ everything else...''')
                 app.logger.info('''
 
 No file passed in''')
+
             return upload_record(
                     request_id=fields['request_id'],
                     document=document,
-                    request_body=None,
+                    request_body=fields,
                     description=fields['record_description'],
                     user_id=current_user_id,
                     privacy=fields['record_privacy'],
+                    department_name = department_name,
+                    # attach_file_q = fields['attach_file_q'],
             )
     elif 'qa' in resource:
         return ask_a_question(request_id=fields['request_id'],
@@ -711,6 +714,7 @@ def upload_record(
         request_body,
         document=None,
         privacy=True,
+        department_name = None,
 ):
     """ Creates a record with upload/download attributes """
 
@@ -752,32 +756,23 @@ Begins Upload_record method''')
             )
             change_request_status(request_id,
                                   'A response has been added.')
+            notification_content['user_id'] = user_id
+            notification_content['department_name'] = department_name
 
-            # notification_content['additional_information'] = request_body['additional_information']
-
-            # notification_content['user_id'] = user_id
-
-            if request_body is not None:
-                attached_file = app.config['UPLOAD_FOLDER'] + '/' \
-                                + filename
-                notification_content['attached_file'] = attached_file
-                # generate_prr_emails(request_id=request_id,
-                #                     notification_type='Public Notification Template 10'
-                #                     ,
-                #                     text=request_body['additional_information'
-                #                     ], user_id=user_id,
-                #                     attached_file=attached_file)
-            else:
-                attached_file = app.config['UPLOAD_FOLDER'] + '/' \
-                                + filename
-                notification_content['attached_file'] = attached_file
-                # generate_prr_emails(request_id=request_id,
-                #                     notification_type='Public Notification Template 10'
-                #                     , user_id=user_id,
-                #                     attached_file=attached_file)
-            add_staff_participant(request_id=request_id,
-                                  user_id=user_id)
-            return record_id
+        if "attach_file_q" in request_body:
+            attached_file = app.config['UPLOAD_FOLDER'] + '/' \
+                            + filename
+            notification_content['attached_file'] = attached_file
+            generate_prr_emails(request_id=request_id,
+                                notification_type='city_response_added',
+                                notification_content=notification_content)
+        else:
+            generate_prr_emails(request_id=request_id,
+                                notification_type='city_response_added',
+                                notification_content=notification_content)
+        add_staff_participant(request_id=request_id,
+                              user_id=user_id)
+        return record_id
     return 'There was an issue with your upload.'
 
 
@@ -941,10 +936,11 @@ Agency chosen: %s''' % agency)
                                 notification_type='confirmation_agency',
                                 notification_content=notification_content)
     if attachment:
+        # department_id = User.query.filter_by(department_id = user_id.)
         upload_record(request_id=request_id,
                       description=attachment_description,
                       user_id=user_id, request_body=None,
-                      document=attachment)
+                      document=attachment, department_name = agency)
     return (request_id, True)
 
 
