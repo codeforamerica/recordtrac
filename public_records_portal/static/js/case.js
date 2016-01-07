@@ -207,5 +207,12 @@
   $("#requesterInfoButton").on('click', function() {
     $('#requester_info').toggle();
     $('#requesterInfoButton').innerHTML()
-  })
+  });
+
+$("#record").fileinput({
+    maxFileCount: 4,
+    validateInitialCount: true,
+    overwriteInitial: false,
+    allowedFileExtensions: ["txt", "pdf", "doc", "rtf", "odt", "odp", "ods", "odg","odf","ppt", "pps", "xls", "docx", "pptx", "ppsx", "xlsx","jpg","jpeg","png","gif","tif","tiff","bmp","avi","flv","wmv","mov","mp4","mp3","wma","wav","ra","mid"]
+});  
 })($);
