@@ -759,6 +759,7 @@ Begins Upload_record method''')
             notification_content['user_id'] = user_id
             notification_content['department_name'] = department_name
 
+
         if "attach_file_q" in request_body:
             attached_file = app.config['UPLOAD_FOLDER'] + '/' \
                             + filename
