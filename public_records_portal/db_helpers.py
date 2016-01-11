@@ -237,8 +237,11 @@ def create_record(request_id, user_id, description, doc_id=None, filename=None,
                         description=description, filename=filename, url=url,
                         access=access, privacy=privacy)
         put_obj(record)
-        if privacy=='False':
-            subprocess.call(["rsync", "-avzh", app.config['UPLOAD_FOLDER'] + "/", app.config['UPLOAD_FOLDER_COPY'] + "/"])
+        # if privacy=='False':
+        #     app.logger.info("performing rsync")
+        #     subprocess.call(["rsync", "-avzh", app.config['UPLOAD_FOLDER_PUBLIC'] + "/" + record.filename, app.config['UPLOAD_FOLDER_PUBLIC_COPY'] + "/"])
+        # elif privacy=='True':
+        #     subprocess.call(["rsnyc", "-avzh", url, app.config['UPLOAD_FOLDER_PRIVATE']])
         return record.id
     except Exception, e:
         app.logger.info(

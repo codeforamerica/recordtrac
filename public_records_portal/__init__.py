@@ -94,8 +94,11 @@ envvars = [
 
     # Upload Settings
     'UPLOAD_DOCS',  # Enable uploads of documents on Local environment
-    'UPLOAD_FOLDER',  # Path for uploaded documents
-    'UPLOAD_FOLDER_COPY', # Path for rsynced documents
+    'UPLOAD_FOLDER_PUBLIC', # Path for uploaded public documents
+    'UPLOAD_FOLDER_PRIVATE', # Path for uploaded private documents
+    # 'UPLOAD_FOLDER',  # Path for uploaded documents
+    'UPLOAD_FOLDER_PUBLIC_COPY', # Path for rsynced public documents
+    'UPLOAD_FOLDER_PRIVATE_COPY', # Path for rsynced public documents
     'HOST_URL',  # URL for uploaded documents folder
 
     # ReCaptcha
@@ -117,7 +120,11 @@ envvars = [
     'LDAP_SA_BIND_DN',  # Bind DN for the LDAP Service Account
     'LDAP_SA_PASSWORD',  # Password for the LDAP Service Account
     'LDAP_BASE_DN',  # Base DN for searching for users
-    'PERMANENT_SESSION_LIFETIME'
+    'PERMANENT_SESSION_LIFETIME',
+
+    # rsync
+    'RSYNC_PASSWORD' # Rsync password for when sshing into server with rsync daemon running on it.
+
 
 ]
 

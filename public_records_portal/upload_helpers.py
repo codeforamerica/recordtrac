@@ -45,7 +45,7 @@ def get_download_url(doc_id, record_id=None):
 
 
 # @timeout(seconds=20)
-def upload_file(document, request_id, privacy = None):
+def upload_file(document, request_id, privacy = True):
     """
     Takes an uploaded file, scans it using an ICAP Scanner, and stores the
     file if the scan passed
@@ -126,9 +126,19 @@ def upload_file(document, request_id, privacy = None):
                 app.logger.info("\n\n%s is allowed: %s" % (document.filename, string))
                 filename = secure_filename(document.filename)
                 app.logger.info("rsyncing...")
+                app.logger.info(filename)
+                upload_path = upload_file_locally(document, filename, request_id, privacy)
                 if privacy == 'False':
-                    subprocess.call(["rsync", "-avzh", app.config['UPLOAD_FOLDER'] + "/", app.config['UPLOAD_FOLDER_COPY'] + "/"])
-                upload_path = upload_file_locally(document, filename, request_id)
+                    app.logger.info("rsync public...")
+                    # subprocess.call(["mv", app.config['UPLOAD_FOLDER_PRIVATE'] + "/" + document.filename, app.config['UPLOAD_FOLDER_PUBLIC'] + "/"])
+                    subprocess.call(["rsync", "-avzh", "ssh", app.config['UPLOAD_FOLDER_PUBLIC'] + "/" + document.filename, app.config['UPLOAD_FOLDER_PUBLIC_COPY'] + "/"])
+                    # subprocess.call(["rsync", "-avzh", "--delete", app.config['UPLOAD_FOLDER_PRIVATE'] + "/", app.config['UPLOAD_FOLDER_PRIVATE_COPY'] + "/"])
+                elif privacy == 'True':
+                    app.logger.info("rsync private...")
+                    #no rsync is necessary for private files for now.
+                    # subprocess.call(["mv", app.config['UPLOAD_FOLDER_PUBLIC'] + "/" + document.filename, app.config['UPLOAD_FOLDER_PRIVATE'] + "/"])
+                    # subprocess.call(["rsync", "-avzh", app.config['UPLOAD_FOLDER_PRIVATE'] + "/" + document.filename, app.config['UPLOAD_FOLDER_PRIVATE_COPY'] + "/"])
+                    # subprocess.call(["rsync", "-avzh", "--delete", app.config['UPLOAD_FOLDER_PUBLIC'] + "/", app.config['UPLOAD_FOLDER_PUBLIC_COPY'] + "/"])
                 return upload_path, filename, None
             else:
                 app.logger.error("Malware detected. Upload failed")
@@ -139,12 +149,15 @@ def upload_file(document, request_id, privacy = None):
     return "1", None, None
 
 
-def upload_file_locally(document, filename, request_id):
+def upload_file_locally(document, filename, request_id, privacy):
     app.logger.info("\n\nuploading file locally")
     app.logger.info("\n\n%s" % (document))
 
-    upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
+    if privacy == u'True':
+        upload_path = os.path.join(app.config['UPLOAD_FOLDER_PRIVATE'], filename)
+    elif privacy == u'False':
+        upload_path = os.path.join(app.config['UPLOAD_FOLDER_PUBLIC'], filename)
     app.logger.info("\n\nupload path: %s" % (upload_path))
 
     document.save(upload_path)
