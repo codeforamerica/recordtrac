@@ -1220,7 +1220,6 @@ def about():
 def logout():
     logout_user()
     session.regenerate()
-    #session.clear()
     session.pop("_csrf_token", None)
     session.pop('username', None)
     session.pop('_id', None)
