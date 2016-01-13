@@ -145,6 +145,26 @@
 
   });
 
+$('#file_upload_filenames').bind('DOMNodeInserted', function(event) {
+  var names = [];
+  for (var i = 0; i < $("input[name=record]").get(0).files.length; ++i) {
+    names.push($("input[name=record]").get(0).files[i].name);
+  }
+
+  $('#file_upload_one').text(names[0]);
+  $('#file_upload_two').text(names[1]);
+  $('#file_upload_three').text(names[2]);
+  $('#file_upload_four').text(names[3]);
+  
+});
+
+$('#close_filenames_list').on('click',function(){ 
+  $('#file_upload_one').empty();
+  $('#file_upload_two').empty();
+  $('#file_upload_three').empty();
+  $('#file_upload_four').empty();
+});
+
   $('#addRecordButton').on('click',function(){
     $('#modalAdditionalInfoTable').show();
     $('#form_id').val('submitRecord');
@@ -207,5 +227,14 @@
   $("#requesterInfoButton").on('click', function() {
     $('#requester_info').toggle();
     $('#requesterInfoButton').innerHTML()
-  })
+  });
+/*
+$(document).on('ready', function() {
+    $("#record").fileinput({
+        maxFileCount: 4,
+    validateInitialCount: true,
+    overwriteInitial: false,
+    allowedFileExtensions: ["txt", "pdf", "doc", "rtf", "odt", "odp", "ods", "odg","odf","ppt", "pps", "xls", "docx", "pptx", "ppsx", "xlsx","jpg","jpeg","png","gif","tif","tiff","bmp","avi","flv","wmv","mov","mp4","mp3","wma","wav","ra","mid"]
+    });
+});*/
 })($);
