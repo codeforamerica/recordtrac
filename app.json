@@ -1,7 +1,7 @@
 {
   "name": "OpenRecords",
   "description": "Manage and display Freedom of Information Law (FOIL) requests",
-  "website": "https://github.com/cityofnewyork/openrecords",
+  "website": "https://github.com/cityofnewyork/nycopenrecords",
   "success_url": "/",
   "addons": ["heroku-postgresql:hobby-dev"],
   "env": {
