@@ -69,7 +69,7 @@ def create_user():
 @app.before_request
 def csrf_protect():
     if request.method == "POST":
-        token = session.pop("_csrf_token", None)
+        token = session['_csrf_token']
         if not token or token != request.form.get('_csrf_token'):
             return access_denied(403)
 
@@ -1220,7 +1220,6 @@ def about():
 def logout():
     logout_user()
     session.regenerate()
-    #session.clear()
     session.pop("_csrf_token", None)
     session.pop('username', None)
     session.pop('_id', None)
