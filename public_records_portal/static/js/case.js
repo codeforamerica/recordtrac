@@ -145,16 +145,25 @@
 
   });
 
+
 $('#file_upload_filenames').bind('DOMNodeInserted', function(event) {
   var names = [];
+  if($("input[name=record]") && $("input[name=record]").get(0) && $("input[name=record]").get(0).files) {
   for (var i = 0; i < $("input[name=record]").get(0).files.length; ++i) {
     names.push($("input[name=record]").get(0).files[i].name);
-  }
+  }}
 
-  $('#file_upload_one').text(names[0]);
-  $('#file_upload_two').text(names[1]);
-  $('#file_upload_three').text(names[2]);
-  $('#file_upload_four').text(names[3]);
+  if(names.length > 4) {
+      $('#close_filenames_list').click();
+      $('#numFiles').show();
+  }
+  else {
+      $('#file_upload_one').text(names[0]);
+      $('#file_upload_two').text(names[1]);
+      $('#file_upload_three').text(names[2]);
+      $('#file_upload_four').text(names[3]);
+      $('#numFiles').hide();
+  }
   
 });
 
@@ -228,8 +237,8 @@ $('#close_filenames_list').on('click',function(){
     $('#requester_info').toggle();
     $('#requesterInfoButton').innerHTML()
   });
-/*
-$(document).on('ready', function() {
+
+/*$(document).on('ready', function() {
     $("#record").fileinput({
         maxFileCount: 4,
     validateInitialCount: true,

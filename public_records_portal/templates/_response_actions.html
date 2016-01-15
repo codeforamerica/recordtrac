@@ -107,11 +107,11 @@
                                                            multiple
                                                            name="record" id="record" data-show-upload="false" data-show-caption="true">
                                                 </span>
-                                        <span class="fileinput-filename" id="file_upload_filenames" style="display:none;"></span>
-                                        <span  id="file_upload_one"></span>
-                                        <span  id="file_upload_two"></span>
-                                        <span  id="file_upload_three"></span>
-                                        <span  id="file_upload_four"></span>                     
+                                        <span class="fileinput-filename" id="file_upload_filenames"></span>
+                                        <span  style="display:block;" id="file_upload_one"></span>
+                                        <span  style="display:block;" id="file_upload_two"><br></span>
+                                        <span  style="display:block;" id="file_upload_three"><br></span>
+                                        <span  style="display:block;" id="file_upload_four"><br></span>                    
                                         <a href="#"
                                            id="close_filenames_list"
                                            class="close fileinput-exists"
@@ -303,7 +303,8 @@
                 {% endif %}
                 {% if "filesize" in errors %}
                     <div class="alert alert-danger" id="filesize">{{ errors['filesize'] }}</div>
-                {% endif %}    
+                {% endif %}
+                <div class="alert alert-danger" id="numFiles" style="display:none;">A maximum of four documents can be added in one session.</div>
                 <p>Please provide a short explanation of the record along with at least a file upload, a link to the record, or instructions on how to access the record offline.</p> 
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <input type="hidden" name="audience" value="city"/>
@@ -356,11 +357,11 @@
                                                            multiple
                                                            name="record" id="record">
                                                 </span>
-                                        <span class="fileinput-filename" id="file_upload_filenames" style="display:none;"></span>
-                                        <span  id="file_upload_one"></span>
-                                        <span  id="file_upload_two"></span>
-                                        <span  id="file_upload_three"></span>
-                                        <span  id="file_upload_four"></span>
+                                        <span class="fileinput-filename" id="file_upload_filenames"></span>
+                                        <span  style="display:block;" id="file_upload_one"></span>
+                                        <span  style="display:block;" id="file_upload_two"><br></span>
+                                        <span  style="display:block;" id="file_upload_three"><br></span>
+                                        <span  style="display:block;" id="file_upload_four"><br></span>
                                         <a href="#"
                                            id="close_filenames_list"
                                            class="close fileinput-exists"
