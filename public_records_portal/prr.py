@@ -159,12 +159,11 @@ No file passed in''')
             return upload_multiple_records(
                     request_id=fields['request_id'],
                     documents=documents,
-                    request_body=None,
+                    request_body=request_body,
                     description=fields['record_description'],
                     user_id=current_user_id,
                     privacy=fields['record_privacy'],
                     department_name = department_name,
-                    # attach_file_q = fields['attach_file_q'],
             )
     elif 'qa' in resource:
         return ask_a_question(request_id=fields['request_id'],
@@ -705,9 +704,9 @@ def generate_denial_page(document):
     run.font.size = Pt(10)
     return document
 
-def upload_multiple_records(request_id, description, user_id, request_body, documents=None, privacy=True):
+def upload_multiple_records(request_id, description, user_id, request_body, documents=None, privacy=True, department_name=None):
     for document in documents:
-        upload_record(request_id, description, user_id, request_body, document, privacy)
+        upload_record(request_id, description, user_id, request_body, document, privacy, department_name)
 
 ### @export "upload_record"
 def upload_record(
@@ -764,8 +763,7 @@ Begins Upload_record method''')
 
 
         if "attach_file_q" in request_body:
-            attached_file = app.config['UPLOAD_FOLDER'] + '/' \
-                            + filename
+            attached_file = app.config['UPLOAD_FOLDER'] + '/' + filename
             notification_content['attached_file'] = attached_file
             generate_prr_emails(request_id=request_id,
                                 notification_type='city_response_added',
