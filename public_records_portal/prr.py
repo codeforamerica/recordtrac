@@ -155,18 +155,11 @@ everything else...''')
                 app.logger.info('''
 
 No file passed in''')
-<<<<<<< HEAD
 
-            return upload_record(
-                    request_id=fields['request_id'],
-                    document=document,
-                    request_body=fields,
-=======
             return upload_multiple_records(
                     request_id=fields['request_id'],
                     documents=documents,
                     request_body=None,
->>>>>>> develop
                     description=fields['record_description'],
                     user_id=current_user_id,
                     privacy=fields['record_privacy'],
