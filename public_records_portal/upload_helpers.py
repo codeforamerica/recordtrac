@@ -133,15 +133,9 @@ def upload_file(document, request_id, privacy = True):
                 upload_path = upload_file_locally(document, filename, request_id, privacy)
                 if privacy == 'False':
                     app.logger.info("rsync public...")
-                    # subprocess.call(["mv", app.config['UPLOAD_FOLDER_PRIVATE'] + "/" + document.filename, app.config['UPLOAD_FOLDER_PUBLIC'] + "/"])
-                    subprocess.call(["rsync", "-avzh", "ssh", app.config['UPLOAD_FOLDER_PUBLIC'] + "/" + document.filename, app.config['UPLOAD_FOLDER_PUBLIC_COPY'] + "/"])
-                    # subprocess.call(["rsync", "-avzh", "--delete", app.config['UPLOAD_FOLDER_PRIVATE'] + "/", app.config['UPLOAD_FOLDER_PRIVATE_COPY'] + "/"])
+                    subprocess.call(["rsync", "-avzh", "ssh", app.config['UPLOAD_PUBLIC_FOLDER_LOCAL'] + "/" + document.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_FOLDER_REMOTE'] + "/"])
                 elif privacy == 'True':
                     app.logger.info("rsync private...")
-                    #no rsync is necessary for private files for now.
-                    # subprocess.call(["mv", app.config['UPLOAD_FOLDER_PUBLIC'] + "/" + document.filename, app.config['UPLOAD_FOLDER_PRIVATE'] + "/"])
-                    # subprocess.call(["rsync", "-avzh", app.config['UPLOAD_FOLDER_PRIVATE'] + "/" + document.filename, app.config['UPLOAD_FOLDER_PRIVATE_COPY'] + "/"])
-                    # subprocess.call(["rsync", "-avzh", "--delete", app.config['UPLOAD_FOLDER_PUBLIC'] + "/", app.config['UPLOAD_FOLDER_PUBLIC_COPY'] + "/"])
                 return upload_path, filename, None
             else:
                 app.logger.error("Malware detected. Upload failed")
@@ -158,9 +152,9 @@ def upload_file_locally(document, filename, request_id, privacy):
 
 
     if privacy == u'True':
-        upload_path = os.path.join(app.config['UPLOAD_FOLDER_PRIVATE'], filename)
+        upload_path = os.path.join(app.config['UPLOAD_PRIVATE_FOLDER_LOCAL'], filename)
     elif privacy == u'False':
-        upload_path = os.path.join(app.config['UPLOAD_FOLDER_PUBLIC'], filename)
+        upload_path = os.path.join(app.config['UPLOAD_PUBLIC_FOLDER_LOCAL'], filename)
     app.logger.info("\n\nupload path: %s" % (upload_path))
 
     document.save(upload_path)
