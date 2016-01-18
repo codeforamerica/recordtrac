@@ -148,18 +148,25 @@ inside add_resource method''')
             app.logger.info('''
 
 everything else...''')
-            document = None
+            documents = None
             try:
-                document = request.files['record']
+                documents = request.files.getlist('record')
             except:
                 app.logger.info('''
 
 No file passed in''')
+<<<<<<< HEAD
 
             return upload_record(
                     request_id=fields['request_id'],
                     document=document,
                     request_body=fields,
+=======
+            return upload_multiple_records(
+                    request_id=fields['request_id'],
+                    documents=documents,
+                    request_body=None,
+>>>>>>> develop
                     description=fields['record_description'],
                     user_id=current_user_id,
                     privacy=fields['record_privacy'],
@@ -705,6 +712,9 @@ def generate_denial_page(document):
     run.font.size = Pt(10)
     return document
 
+def upload_multiple_records(request_id, description, user_id, request_body, documents=None, privacy=True):
+    for document in documents:
+        upload_record(request_id, description, user_id, request_body, document, privacy)
 
 ### @export "upload_record"
 def upload_record(
@@ -937,11 +947,10 @@ Agency chosen: %s''' % agency)
                                 notification_type='confirmation_agency',
                                 notification_content=notification_content)
     if attachment:
-        # department_id = User.query.filter_by(department_id = user_id.)
-        upload_record(request_id=request_id,
+        upload_multiple_records(request_id=request_id,
                       description=attachment_description,
                       user_id=user_id, request_body=None,
-                      document=attachment, department_name = agency)
+                      documents=attachment)
     return (request_id, True)
 
 

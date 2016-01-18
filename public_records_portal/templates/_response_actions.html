@@ -104,10 +104,16 @@
                                                     <span class="fileinput-new">Select file</span>
                                                     <span class="fileinput-exists">Change</span>
                                                     <input type="file"
-                                                           name="record">
+                                                           multiple
+                                                           name="record" id="record" data-show-upload="false" data-show-caption="true">
                                                 </span>
-                                        <span class="fileinput-filename"></span>
+                                        <span class="fileinput-filename" id="file_upload_filenames"></span>
+                                        <span  style="display:block;" id="file_upload_one"></span>
+                                        <span  style="display:block;" id="file_upload_two"><br></span>
+                                        <span  style="display:block;" id="file_upload_three"><br></span>
+                                        <span  style="display:block;" id="file_upload_four"><br></span>                    
                                         <a href="#"
+                                           id="close_filenames_list"
                                            class="close fileinput-exists"
                                            data-dismiss="fileinput"
                                            style="float: none">&times;</a>
@@ -297,7 +303,8 @@
                 {% endif %}
                 {% if "filesize" in errors %}
                     <div class="alert alert-danger" id="filesize">{{ errors['filesize'] }}</div>
-                {% endif %}    
+                {% endif %}
+                <div class="alert alert-danger" id="numFiles" style="display:none;">A maximum of four documents can be added in one session.</div>
                 <p>Please provide a short explanation of the record along with at least a file upload, a link to the record, or instructions on how to access the record offline.</p> 
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <input type="hidden" name="audience" value="city"/>
@@ -330,7 +337,7 @@
                         </div>
                         <!-- upload a record -->
                         <div class="control-group">
-                            <label class="control-label">Upload a record<span
+                            <label class="control-label">Upload a record <span
                                     id="recordTooltip" rel="tooltip"
                                     data-toggle="tooltip"
                                     data-placement="right" title=""
@@ -339,18 +346,24 @@
                                         </small>
                                     </span></label>
 
-                            <div class="row-fluid" style="width:98%;">
+                            <div class="row-fluid" style="width:98%;" id="test_id">
                                 <div class="controls">
-                                    <div class="fileinput fileinput-new"
-                                         data-provides="fileinput">
+                                    <div class="fileinput fileinput-new file_upload_record"
+                                         data-provides="fileinput" >
                                                 <span class="btn btn-default btn-file">
-                                                    <span class="fileinput-new">Select file</span>
-                                                    <span class="fileinput-exists">Change</span>
+                                                    <span class="fileinput-new" id="fileinput_new_id">Select file</span>
+                                                    <span class="fileinput-exists" id="fileinput_exists">Change</span>
                                                     <input type="file"
-                                                           name="record">
+                                                           multiple
+                                                           name="record" id="record">
                                                 </span>
-                                        <span class="fileinput-filename"></span>
+                                        <span class="fileinput-filename" id="file_upload_filenames"></span>
+                                        <span  style="display:block;" id="file_upload_one"></span>
+                                        <span  style="display:block;" id="file_upload_two"><br></span>
+                                        <span  style="display:block;" id="file_upload_three"><br></span>
+                                        <span  style="display:block;" id="file_upload_four"><br></span>
                                         <a href="#"
+                                           id="close_filenames_list"
                                            class="close fileinput-exists"
                                            data-dismiss="fileinput"
                                            style="float: none">&times;</a>
