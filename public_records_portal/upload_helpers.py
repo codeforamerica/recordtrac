@@ -62,10 +62,10 @@ def upload_file(document, request_id):
     if not should_upload():
         app.logger.info("\n\nshoud not upload file")
         return '1', None, None  # Don't need to do real uploads locally
-    if app.config["SHOULD_SCAN_FILES"] == True:
+    if app.config["SHOULD_SCAN_FILES"] == 'True':
         if allowed_file(document.filename) and len(document.read()) > 10000000:
             app.logger.error("Error with filesize.")
-            error = "Error with the file size. Check to make sure it is less than 10 MB."
+            error = "file_too_large"
             return None, None, error
         if allowed_file(document.filename):
             app.logger.info("\n\nbegin file upload")

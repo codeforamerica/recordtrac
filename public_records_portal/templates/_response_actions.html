@@ -301,6 +301,9 @@
                 {% if "missing_record_access" in errors %}
                     <div class="alert alert-danger" id="missing_record_access">{{ errors['missing_record_access'] }}</div>
                 {% endif %}
+                {% if "file_too_large" in errors %}
+                    <div class="alert alert-danger" id="file_too_large">{{ errors['file_too_large'] }}</div>
+                {% endif %}
                 {% if "filesize" in errors %}
                     <div class="alert alert-danger" id="filesize">{{ errors['filesize'] }}</div>
                 {% endif %}
