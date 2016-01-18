@@ -42,6 +42,9 @@ def get_download_url(doc_id, record_id=None):
     if not should_upload():
         return None
 
+def upload_multiple_files(documents, request_id):
+    for document in documents:
+        upload_file(document=document, request_id=request_id)
 
 # @timeout(seconds=20)
 def upload_file(document, request_id):
