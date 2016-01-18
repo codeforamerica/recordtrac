@@ -94,7 +94,9 @@ envvars = [
 
     # Upload Settings
     'UPLOAD_DOCS',  # Enable uploads of documents on Local environment
-    'UPLOAD_FOLDER',  # Path for uploaded documents
+    'UPLOAD_PUBLIC_LOCAL_FOLDER', # Upload records marked as public to this local location
+    'UPLOAD_PRIVATE_LOCAL_FOLDER', # Upload records marked as private to this local location
+    'UPLOAD_PUBLIC_REMOTE_FOLDER', # Upload records marked as public to this remote location
     'HOST_URL',  # URL for uploaded documents folder
 
     # ReCaptcha
@@ -116,7 +118,7 @@ envvars = [
     'LDAP_SA_BIND_DN',  # Bind DN for the LDAP Service Account
     'LDAP_SA_PASSWORD',  # Password for the LDAP Service Account
     'LDAP_BASE_DN',  # Base DN for searching for users
-    'PERMANENT_SESSION_LIFETIME'
+    'PERMANENT_SESSION_LIFETIME',
 
 ]
 

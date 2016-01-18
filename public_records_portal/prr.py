@@ -15,7 +15,7 @@ import urllib
 from StringIO import StringIO
 import os
 import json
-
+import subprocess
 import bleach
 from flask import request, render_template, make_response, send_file
 from xhtml2pdf import pisa
@@ -727,7 +727,7 @@ Begins Upload_record method''')
 
         (doc_id, filename, error) = \
             upload_helpers.upload_file(document=document,
-                                       request_id=request_id)
+                                       request_id=request_id, privacy=privacy)
     except:
 
         # print sys.exc_info()[0]
@@ -760,8 +760,8 @@ Begins Upload_record method''')
 
             # notification_content['user_id'] = user_id
 
-            if request_body is not None:
-                attached_file = app.config['UPLOAD_FOLDER'] + '/' \
+            if privacy == True:
+                attached_file = app.config['UPLOAD_FOLDER_PRIVATE'] + '/' \
                                 + filename
                 notification_content['attached_file'] = attached_file
                 # generate_prr_emails(request_id=request_id,
@@ -770,8 +770,8 @@ Begins Upload_record method''')
                 #                     text=request_body['additional_information'
                 #                     ], user_id=user_id,
                 #                     attached_file=attached_file)
-            else:
-                attached_file = app.config['UPLOAD_FOLDER'] + '/' \
+            elif privacy == False:
+                attached_file = app.config['UPLOAD_FOLDER_PUBLIC'] + '/' \
                                 + filename
                 notification_content['attached_file'] = attached_file
                 # generate_prr_emails(request_id=request_id,
@@ -1288,4 +1288,15 @@ def change_privacy_setting(request_id, privacy, field):
 
 def change_record_privacy(record_id, privacy):
     record = get_obj("Record", record_id)
+    app.logger.info('performing rsync...')
+
+    if privacy == 'False':
+        subprocess.call(["mv", app.config['UPLOAD_FOLDER_PRIVATE'] + "/" + record.filename, app.config['UPLOAD_FOLDER_PUBLIC'] + "/"])
+        subprocess.call(["rsync", "-avzh", "ssh", app.config['UPLOAD_FOLDER_PUBLIC'] + "/" + record.filename, app.config['UPLOAD_FOLDER_PUBLIC_COPY'] + "/"])
+        # subprocess.call(["rsync", "-avzh", "--delete", app.config['UPLOAD_FOLDER_PRIVATE'] + "/", app.config['UPLOAD_FOLDER_PRIVATE_COPY'] + "/"])
+    elif privacy == 'True':
+        app.logger.info("rsync private...")
+        subprocess.call(["mv", app.config['UPLOAD_FOLDER_PUBLIC'] + "/" + record.filename, app.config['UPLOAD_FOLDER_PRIVATE'] + "/"])
+        # subprocess.call(["rsync", "-avzh", app.config['UPLOAD_FOLDER_PRIVATE'] + "/" + record.filename, app.config['UPLOAD_FOLDER_PRIVATE_COPY'] + "/"])
+        subprocess.call(["rsync", "-avzh", "--delete", "ssh", app.config['UPLOAD_FOLDER_PUBLIC'] + "/", app.config['UPLOAD_FOLDER_PUBLIC_COPY'] + "/"])
     update_obj(attribute="privacy", val=privacy, obj_type="Record", obj_id=record.id)
