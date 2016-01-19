@@ -151,9 +151,9 @@ def upload_file_locally(document, filename, request_id, privacy):
 
 
     if privacy == u'True':
-        upload_path = os.path.join(app.config['UPLOAD_PRIVATE_FOLDER_LOCAL'], filename)
+        upload_path = os.path.join(app.config['UPLOAD_PRIVATE_LOCAL_FOLDER'], filename)
     elif privacy == u'False':
-        upload_path = os.path.join(app.config['UPLOAD_PUBLIC_FOLDER_LOCAL'], filename)
+        upload_path = os.path.join(app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'], filename)
     app.logger.info("\n\nupload path: %s" % (upload_path))
 
     document.save(upload_path)

@@ -97,6 +97,8 @@ envvars = [
     'UPLOAD_PUBLIC_LOCAL_FOLDER', # Upload records marked as public to this local location
     'UPLOAD_PRIVATE_LOCAL_FOLDER', # Upload records marked as private to this local location
     'UPLOAD_PUBLIC_REMOTE_FOLDER', # Upload records marked as public to this remote location
+    'PUBLIC_SERVER_HOSTNAME', # Remote Server Hostname
+    'PUBLIC_SERVER_USER', # User for RSYNC
     'HOST_URL',  # URL for uploaded documents folder
 
     # ReCaptcha

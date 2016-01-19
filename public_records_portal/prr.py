@@ -1292,11 +1292,11 @@ def change_record_privacy(record_id, privacy):
     app.logger.info('Syncing privacy changes to %s' % app.config['PUBLIC_SERVER_HOSTNAME'])
     if privacy == 'False':
         app.logger.info("Making %s public" % record.filename)
-        subprocess.call(["mv", app.config['UPLOAD_PRIVATE_FOLDER_LOCAL'] + "/" + record.filename, app.config['UPLOAD_PUBLIC_FOLDER_LOCAL'] + "/"])
-        subprocess.call(["rsync", "-avzh", "ssh", app.config['UPLOAD_PUBLIC_FOLDER_LOCAL'] + "/" + record.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_FOLDER_REMOTE'] + "/"])
+        subprocess.call(["mv", app.config['UPLOAD_PRIVATE_LOCAL_FOLDER'] + "/" + record.filename, app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/"])
+        subprocess.call(["rsync", "-avzh", "ssh", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/"])
     elif privacy == 'True':
         app.logger.info("Making %s private" % record.filename)
-        subprocess.call(["mv", app.config['UPLOAD_PUBLIC_FOLDER_LOCAL'] + "/" + record.filename, app.config['UPLOAD_PRIVATE_FOLDER_LOCAL'] + "/"])
-        subprocess.call(["rsync", "-avzh", "--delete", "ssh", app.config['UPLOAD_PUBLIC_FOLDER_LOCAL'] + "/" + record.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_FOLDER_REMOTE'] + "/"])
+        subprocess.call(["mv", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['UPLOAD_PRIVATE_LOCAL_FOLDER'] + "/"])
+        subprocess.call(["rsync", "-avzh", "--delete", "ssh", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/"])
 
     update_obj(attribute="privacy", val=privacy, obj_type="Record", obj_id=record.id)
