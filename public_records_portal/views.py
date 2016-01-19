@@ -684,6 +684,8 @@ def add_a_resource(resource):
         else:
             app.logger.info("\n\nThere was an issue with the upload: %s" % resource_id)
             template = "manage_request_%s_less_js.html" % req['audience']
+            if resource_id == "File too large":
+                errors['file_too_large'] = resource_id
             return show_request(request_id=req['request_id'],
                                 template=template, errors=errors,
                                 form=req, file=request.files['record'])

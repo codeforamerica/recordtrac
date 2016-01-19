@@ -301,6 +301,9 @@
                 {% if "missing_record_access" in errors %}
                     <div class="alert alert-danger" id="missing_record_access">{{ errors['missing_record_access'] }}</div>
                 {% endif %}
+                {% if "file_too_large" in errors %}
+                    <div class="alert alert-danger" id="file_too_large">{{ errors['file_too_large'] }}</div>
+                {% endif %}
                 {% if "filesize" in errors %}
                     <div class="alert alert-danger" id="filesize">{{ errors['filesize'] }}</div>
                 {% endif %}
@@ -475,7 +478,14 @@
                                         Private
                                     </label>
                             </div>                           
-                        </div>                        
+                        </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <label class="radio inline" for ="attach_file_q" style="padding-left:0px;">
+                                <input type="checkbox" name="attach_file_q" value="True" style="padding-left:0px;">
+                                Send file as email attachment (must be less than 10MB)
+                            </label>
+                    </div>
                         <!-- submission -->
                         <div class="control-group">                         
                             <div class="controls">

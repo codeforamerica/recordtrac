@@ -155,13 +155,15 @@ everything else...''')
                 app.logger.info('''
 
 No file passed in''')
+
             return upload_multiple_records(
                     request_id=fields['request_id'],
                     documents=documents,
-                    request_body=None,
+                    request_body=request_body,
                     description=fields['record_description'],
                     user_id=current_user_id,
                     privacy=fields['record_privacy'],
+                    department_name = department_name,
             )
     elif 'qa' in resource:
         return ask_a_question(request_id=fields['request_id'],
@@ -702,9 +704,17 @@ def generate_denial_page(document):
     run.font.size = Pt(10)
     return document
 
-def upload_multiple_records(request_id, description, user_id, request_body, documents=None, privacy=True):
+def upload_multiple_records(request_id, description, user_id, request_body, documents=None, privacy=True, department_name=None):
+    # for document in documents:
+    #     upload_record(request_id, description, user_id, request_body, document, privacy, department_name)
+
+    documents_size = 0
     for document in documents:
-        upload_record(request_id, description, user_id, request_body, document, privacy)
+        documents_size += len(document.read())
+        document.seek(0)
+    if documents_size > 10000000:
+        return "File too large"
+    return upload_record(request_id, description, user_id, request_body, documents, privacy, department_name)
 
 ### @export "upload_record"
 def upload_record(
@@ -712,8 +722,9 @@ def upload_record(
         description,
         user_id,
         request_body,
-        document=None,
+        documents=None,
         privacy=True,
+        department_name = None,
 ):
     """ Creates a record with upload/download attributes """
 
@@ -725,39 +736,41 @@ Begins Upload_record method''')
 
         # doc_id is upload_path
 
-        (doc_id, filename, error) = \
+        for document in documents:
+            (doc_id, filename, error) = \
             upload_helpers.upload_file(document=document,
                                        request_id=request_id, privacy=privacy)
+            if error == "file_too_large":
+                return "File too large"
+            elif doc_id == False:
+                return "Extension type '%s' is not allowed." % filename
+            else:
+                # if str(doc_id).isdigit():
+                if str(doc_id) == 'VIRUS_FOUND':
+                    return 'There was a virus found in the document you uploaded.'
+                if doc_id:
+
+                    # record_id = create_record(doc_id = doc_id, request_id = request_id, user_id = user_id, description = description, filename = filename, url = app.config['HOST_URL'] + doc_id)
+
+                    record_id = create_record(
+                            doc_id=None,
+                            request_id=request_id,
+                            user_id=user_id,
+                            description=description,
+                            filename=filename,
+                            url=app.config['HOST_URL'] + doc_id,
+                            privacy=privacy,
+                    )
+                    change_request_status(request_id,
+                                          'A response has been added.')
+                    notification_content['user_id'] = user_id
+                    notification_content['department_name'] = department_name
     except:
-
         # print sys.exc_info()[0]
-
         print traceback.format_exc()
         return 'The upload timed out, please try again.'
-    if doc_id == False:
-        return "Extension type '%s' is not allowed." % filename
-    else:
-        # if str(doc_id).isdigit():
-        if str(doc_id) == 'VIRUS_FOUND':
-            return 'There was a virus found in the document you uploaded.'
-        if doc_id:
 
-            # record_id = create_record(doc_id = doc_id, request_id = request_id, user_id = user_id, description = description, filename = filename, url = app.config['HOST_URL'] + doc_id)
-
-            record_id = create_record(
-                    doc_id=None,
-                    request_id=request_id,
-                    user_id=user_id,
-                    description=description,
-                    filename=filename,
-                    url=app.config['HOST_URL'] + doc_id,
-                    privacy=privacy,
-            )
-            change_request_status(request_id,
-                                  'A response has been added.')
-
-            # notification_content['additional_information'] = request_body['additional_information']
-
+<<<<<<< HEAD
             # notification_content['user_id'] = user_id
 
             if privacy == True:
@@ -782,6 +795,22 @@ Begins Upload_record method''')
                                   user_id=user_id)
             return record_id
     return 'There was an issue with your upload.'
+=======
+    if "attach_file_q" in request_body:
+        # attached_file = app.config['UPLOAD_FOLDER'] + '/' + filename
+        notification_content['documents'] = documents
+        generate_prr_emails(request_id=request_id,
+                            notification_type='city_response_added',
+                            notification_content=notification_content)
+    else:
+        generate_prr_emails(request_id=request_id,
+                            notification_type='city_response_added',
+                            notification_content=notification_content)
+    add_staff_participant(request_id=request_id,
+                          user_id=user_id)
+        # return record_id
+    return 1
+>>>>>>> feature/OP-460
 
 
 ### @export "add_offline_record"
