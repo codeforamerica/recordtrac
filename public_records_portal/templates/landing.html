@@ -10,52 +10,77 @@
 {% block container %}
 
 <div class="row-fluid">
-	<div class="span8 intro">
-	  <h1>Welcome to NYC Government’s home for filing Freedom of Information Law (FOIL) requests.</h1>
-	  <p>On this site you can file a records request with every agency of the City of New York.  Some government information is already available to the public and doesn’t require a FOIL request.  Examples of public information include copies of your own birth certificate and reports issued by City agencies.</p>
-	  <p>The site you see today is the beginning of a new approach to making records easily available.  In the coming months, we will be adding many new features.</p>
-	  <a href="/new"><button class="btn btn-primary btn-large input-block-level">Request a Record</button></a>
-      {% if current_user.is_authenticated %}
-          <a href="/tutorial/01"><button class="btn btn-primary btn-large input-block-level">Tutorial</button></a>
-      {% else %}
-          <a href="/tutorial/01"><button class="btn btn-primary btn-large input-block-level">How To Use This Tool</button></a>
-      {% endif %}
-	</div>
-	<div class="span4">
-      <div class="sideblock">
-        <h3>Looking for Something Else?</h3>
-        <ul>
-           <li><a href="http://nyc.gov/">NYC.gov</a> The official website of the City of New York</li>
-           <li><a href="http://nyc.gov/311">NYC 311</a> Get information about your neighborhood, and check the status of existing requests.</li>
-           <li><a href="http://nyc.gov/publications">NYC Government Publications Portal</a> An Open Data portal for the City of New York's publications</li>
-           <li><a href="http://www.nyc.gov/html/exit-page.html?url=https://data.cityofnewyork.us/">NYC OpenData Portal</a> Discover open datasets</li>
-        </ul>
-      </div>
-      <div class="span3">
-        <div class="row-fluid">
-          <a href="/report" class="btn btn-link round_link">
-            <img src="{{ url_for('static', filename='images/explore.png') }}" alt="Reports">
-            <h4 class="text-center text-title">View Reports</h4>
-          </a>
-        </div>
-      </div>
-      <div class="span6 offset2">
-        <div class="row-fluid">
-      {% if current_user.is_authenticated %}
-          <div class="login btn btn-large">
-            <a href="/logout" >Logout</a>
-          </div>
-      {% else %}
-        {% if request.base_url.split('//')[-1] == config['AGENCY_APPLICATION_URL'].split('//')[-1] %}
-          <div class="login btn btn-large">
-            <a href="/login" >Agency Login</a>
-          </div>
+    <div class="span8 intro">
+        <h1>Welcome to NYC Government’s home for filing Freedom of Information Law (FOIL) requests.</h1>
+        <p>On this site you can file a records request with every agency of the City of New York. Some government
+            information is already available to the public and doesn’t require a FOIL request. Examples of public
+            information include copies of your own birth certificate and reports issued by City agencies.</p>
+        <p>The site you see today is the beginning of a new approach to making records easily available. In the coming
+            months, we will be adding many new features.</p>
+        <a href="/new">
+            <button class="btn btn-primary btn-large input-block-level">Request a Record</button>
+        </a>
+        {% if current_user.is_authenticated %}
+        <a href="/tutorial/01">
+            <button class="btn btn-primary btn-large input-block-level">Tutorial</button>
+        </a>
+        {% else %}
+        <a href="/tutorial/01">
+            <button class="btn btn-primary btn-large input-block-level">How To Use This Tool</button>
+        </a>
         {% endif %}
-      {% endif %}
+    </div>
+    <div class="span4">
+        <div class="sideblock">
+            <h3>Looking for Something Else?</h3>
+            <ul>
+                <li><a href="http://nyc.gov/">NYC.gov</a> The official website of the City of New York</li>
+                <li><a href="http://nyc.gov/311">NYC 311</a> Get information about your neighborhood, and check the
+                    status of existing requests.
+                </li>
+                <li><a href="http://nyc.gov/publications">NYC Government Publications Portal</a> An Open Data portal for
+                    the City of New York's publications
+                </li>
+                <li><a href="http://www.nyc.gov/html/exit-page.html?url=https://data.cityofnewyork.us/">NYC OpenData
+                    Portal</a> Discover open datasets
+                </li>
+            </ul>
         </div>
-      </div>
-      </div>
-      </div>
+        <div class="span3">
+            <div class="row-fluid">
+                <a href="/report" class="btn btn-link round_link">
+                    <img src="{{ url_for('static', filename='images/explore.png') }}" alt="Reports">
+                    <h4 class="text-center text-title">View Reports</h4>
+                </a>
+            </div>
+        </div>
+        <div class="span6 offset2">
+            <div class="row-fluid">
+                {% if current_user.is_authenticated %}
+                <div class="login btn btn-large">
+                    <a href="/logout">Logout</a>
+                </div>
+                {% else %}
+                {% if request.base_url.split('//')[-1] == config['AGENCY_APPLICATION_URL'].split('//')[-1] %}
+                <div class="login btn btn-large">
+                    <a href="/login">Agency Login</a>
+                </div>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="span12">
+            <p>
+                OpenRECORDS is an easy online way to submit and track a FOIL request. Records that are not personal will
+                be
+                posted on the portal. The current version is a “test” model. You can file a FOIL request for any New
+                York
+                City agency and those that are not participating in this launch will respond to your request using their
+                current FOIL process. Eight agencies will use the portal to track and respond to FOIL requests.
+            </p>
+        </div>
+    </div>
+</div>
 
 
 {% endblock container %}
