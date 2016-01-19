@@ -712,7 +712,7 @@ def upload_multiple_records(request_id, description, user_id, request_body, docu
     for document in documents:
         documents_size += len(document.read())
         document.seek(0)
-    if documents_size > 100000:
+    if documents_size > 10000000:
         return "File too large"
     return upload_record(request_id, description, user_id, request_body, documents, privacy, department_name)
 
