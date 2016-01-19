@@ -769,33 +769,6 @@ Begins Upload_record method''')
         # print sys.exc_info()[0]
         print traceback.format_exc()
         return 'The upload timed out, please try again.'
-
-<<<<<<< HEAD
-            # notification_content['user_id'] = user_id
-
-            if privacy == True:
-                attached_file = app.config['UPLOAD_FOLDER_PRIVATE'] + '/' \
-                                + filename
-                notification_content['attached_file'] = attached_file
-                # generate_prr_emails(request_id=request_id,
-                #                     notification_type='Public Notification Template 10'
-                #                     ,
-                #                     text=request_body['additional_information'
-                #                     ], user_id=user_id,
-                #                     attached_file=attached_file)
-            elif privacy == False:
-                attached_file = app.config['UPLOAD_FOLDER_PUBLIC'] + '/' \
-                                + filename
-                notification_content['attached_file'] = attached_file
-                # generate_prr_emails(request_id=request_id,
-                #                     notification_type='Public Notification Template 10'
-                #                     , user_id=user_id,
-                #                     attached_file=attached_file)
-            add_staff_participant(request_id=request_id,
-                                  user_id=user_id)
-            return record_id
-    return 'There was an issue with your upload.'
-=======
     if "attach_file_q" in request_body:
         # attached_file = app.config['UPLOAD_FOLDER'] + '/' + filename
         notification_content['documents'] = documents
@@ -810,7 +783,6 @@ Begins Upload_record method''')
                           user_id=user_id)
         # return record_id
     return 1
->>>>>>> feature/OP-460
 
 
 ### @export "add_offline_record"
