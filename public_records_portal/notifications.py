@@ -373,6 +373,7 @@ def send_email(
                       body=plaintext, bcc=sender)
     for file in attached_files:
         if file is not None:
+            file.seek(0)
             # url = urllib.pathname2url(file)
             url = app.config['UPLOAD_FOLDER'] + "/" + file.filename
             content_type = mimetypes.guess_type(url)[0]
