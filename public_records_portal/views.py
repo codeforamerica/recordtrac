@@ -504,7 +504,7 @@ show_request_for_x.methods = ['GET', 'POST']
 
 @app.route("/city/request/<string:request_id>")
 @login_required
-@requires_roles('Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel', 'Agency Helpers')
+@requires_roles('Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel', 'Agency Helpers','Agency FOIL Officer')
 def show_request_for_city(request_id):
     req = get_obj("Request", request_id)
     app.logger.info("Current User Role: %s" % current_user.role)
