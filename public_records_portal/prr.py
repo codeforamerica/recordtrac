@@ -1290,11 +1290,11 @@ def change_privacy_setting(request_id, privacy, field):
 def change_record_privacy(record_id, privacy):
     record = get_obj("Record", record_id)
     app.logger.info('Syncing privacy changes to %s' % app.config['PUBLIC_SERVER_HOSTNAME'])
-    if privacy == 'False':
+    if record.filename and privacy == 'False':
         app.logger.info("Making %s public" % record.filename)
         subprocess.call(["mv", app.config['UPLOAD_PRIVATE_LOCAL_FOLDER'] + "/" + record.filename, app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/"])
         subprocess.call(["rsync", "-avzh", "ssh", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/"])
-    elif privacy == 'True':
+    elif record.filename and privacy == 'True':
         app.logger.info("Making %s private" % record.filename)
         subprocess.call(["mv", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['UPLOAD_PRIVATE_LOCAL_FOLDER'] + "/"])
         subprocess.call(["rsync", "-avzh", "--delete", "ssh", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/"])
