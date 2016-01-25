@@ -289,7 +289,7 @@ def update_resource(resource, request_body):
 ### @export "request_extension"
 
 @requires_roles('Portal Administrator', 'Agency Administrator',
-                'Agency FOIL Personnel')
+                'Agency FOIL Officer')
 def request_extension(
         request_id,
         extension_reasons,
@@ -1109,7 +1109,7 @@ def get_responses_chronologically(req):
 
             if note.privacy == 2 and (current_user.is_anonymous
                                       or current_user.role not in ['Portal Administrator'
-                    , 'Agency Administrator', 'Agency FOIL Personnel',
+                    , 'Agency Administrator', 'Agency FOIL Officer',
                                                                    'Agency Helpers']):
                 pass
             else:
