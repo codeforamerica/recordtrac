@@ -504,7 +504,7 @@ show_request_for_x.methods = ['GET', 'POST']
 
 @app.route("/city/request/<string:request_id>")
 @login_required
-@requires_roles('Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel', 'Agency Helpers')
+@requires_roles('Portal Administrator', 'Agency Administrator', 'Agency Helpers', 'Agency FOIL Officer')
 def show_request_for_city(request_id):
     req = get_obj("Request", request_id)
     app.logger.info("Current User Role: %s" % current_user.role)
@@ -512,7 +512,7 @@ def show_request_for_city(request_id):
         audience = 'city'
     elif current_user.department_id == req.department_id:
         app.logger.info("User Dep: %s; Req Dep: %s" % (current_user.department_id, req.department_id))
-        if current_user.role in ['Agency Administrator', 'Agency FOIL Personnel']:
+        if current_user.role in ['Agency Administrator', 'Agency FOIL Officer']:
             app.logger.info("User Role: %s" % current_user.role)
             audience = 'city'
         else:
@@ -965,7 +965,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
                                               'Agency Administrator'] or current_user.is_admin()):
             mine_as_poc = None
             mine_as_helper = None
-        elif current_user.is_authenticated and current_user.role in ['Agency FOIL Personnel']:
+        elif current_user.is_authenticated and current_user.role in ['Agency FOIL Officer']:
             mine_as_poc = "on"
             mine_as_helper = "on"
         elif current_user.is_authenticated and current_user.role in ['Agency Helpers']:
