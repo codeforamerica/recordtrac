@@ -371,15 +371,16 @@ def send_email(
     sender = app.config['DEFAULT_MAIL_SENDER']
     message = Message(sender=sender, subject=subject, html=html,
                       body=plaintext, bcc=sender)
-    for file in attached_files:
-        if file is not None:
-            file.seek(0)
-            # url = urllib.pathname2url(file)
-            url = app.config['UPLOAD_FOLDER'] + "/" + file.filename
-            content_type = mimetypes.guess_type(url)[0]
-            filename = file.filename
-            message.attach(filename=filename,
-                           content_type=content_type, data=file.read())
+    if attached_files:
+        for file in attached_files:
+            if file is not None:
+                file.seek(0)
+                # url = urllib.pathname2url(file)
+                url = app.config['UPLOAD_FOLDER'] + "/" + file.filename
+                content_type = mimetypes.guess_type(url)[0]
+                filename = file.filename
+                message.attach(filename=filename,
+                               content_type=content_type, data=file.read())
 
     # if not include_unscubscribe_link:
     # message.add_filter('subscriptiontrack', 'enable', 0)
