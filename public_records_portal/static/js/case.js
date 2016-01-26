@@ -209,6 +209,12 @@ $('#close_filenames_list').on('click',function(){
       $('#missing_pdf_template').removeClass('hidden');
     }
     else {
+        if(selectedTemplate === 'Deny Request' || selectedTemplate === 'Partial Denial of Request') {
+            $('#deny_explain_why').show();
+        }
+        else {
+            $('#deny_explain_why').hide(); 
+        }
         $('#missing_pdf_template').addClass('hidden');
         var attr = $('#generatePDFButton').attr('data-toggle');
         $('#generatePDFButton').attr('data-toggle','modal');
