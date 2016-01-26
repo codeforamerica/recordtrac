@@ -129,6 +129,14 @@
   });
 
   $('#closeButton').on('click',function(){
+    var selectedCloseReason = $('#close_reasons option:selected').text();
+    if(selectedCloseReason.indexOf('Denied') >= 0) {
+        $('#deny_explain_why').show();  
+    }
+    else {
+        $('#deny_explain_why').hide();
+    }
+
     $('#modalAdditionalInfoTable').show();
     $('#close-reminder').show()
     //$('#modalAdditionalInfoTable').append('<p><b>If you are denying this request please explain why.</b></p>');
