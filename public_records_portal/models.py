@@ -142,7 +142,7 @@ class User(db.Model):
         return 'N/A'
 
     def show_department_filters(self):
-        return self.role in ['Portal Administrator', 'Agency Administrator', 'Agency FOIL Officer']
+        return self.role in ['Portal Administrator', 'Agency Administrator']
 
     def __init__(
             self,
