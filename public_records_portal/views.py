@@ -886,7 +886,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
     mine_as_poc = checkbox_value
     mine_as_helper = checkbox_value
     departments_selected = []
-    if current_user.is_authenticated:
+    if current_user.is_authenticated and current_user.role != 'Portal Administrator':
         departments_selected.append(current_user.current_department.name)
     sort_column = "id"
     sort_direction = "asc"
