@@ -23,7 +23,7 @@ This template provides the header, footer, and envelope info for all pages excep
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32"
           href="{{ url_for('static', filename='images/favicon-32x32.png') }}"/>
-        {% block custom_css_links %}
+    {% block custom_css_links %}
 
     {% endblock custom_css_links %}
 
@@ -67,33 +67,33 @@ This template provides the header, footer, and envelope info for all pages excep
 
 <body>
 {% if current_user.is_authenticated %}
-    {% set navigation_bar = [
+{% set navigation_bar = [
 
-        ('/new', 'new', 'Request a Record'),
-        ('/view_requests','view_requests','View Requests'),
-        ('/track','track','Track an Existing Record'),
-        ('/report','report','Report'),
-        ('/city/tutorial/01','tutorial','Tutorial'),
-        ('/faq','faq','FAQ'),
-        ('/about','about','About'),
-    ] -%}
+('/new', 'new', 'Request a Record'),
+('/view_requests','view_requests','View Requests'),
+('/track','track','Track an Existing Record'),
+('/report','report','Report'),
+('/city/tutorial/01','tutorial','Tutorial'),
+('/faq','faq','FAQ'),
+('/about','about','About'),
+] -%}
 {% else %}
-    {% set navigation_bar = [
+{% set navigation_bar = [
 
-        ('/new', 'new', 'Request a Record'),
-        ('/view_requests','view_requests','View Requests'),
-        ('/track','track','Track an Existing Record'),
-        ('/report','report','Report'),
-        ('/faq','faq','FAQ'),
-        ('/about','about','About'),
-    ] -%}
+('/new', 'new', 'Request a Record'),
+('/view_requests','view_requests','View Requests'),
+('/track','track','Track an Existing Record'),
+('/report','report','Report'),
+('/faq','faq','FAQ'),
+('/about','about','About'),
+] -%}
 {% endif %}
 
 
 {% if current_user.is_authenticated %}
-    {% set active_page = active_page|default('view_requests') -%}
+{% set active_page = active_page|default('view_requests') -%}
 {% else %}
-    {% set active_page=active_page|default('') -%}
+{% set active_page=active_page|default('') -%}
 {% endif %}
 <div class="agency-header">
     <div class="upper-header-black">
@@ -138,14 +138,19 @@ This template provides the header, footer, and envelope info for all pages excep
             <div class="nav-collapse navbar-responsive-collapse collapse"
                  style="height: 0px;">
                 {% if current_user.is_authenticated %}
-                <div class="google_translate btn">
-                    <p><a href="/logout">Logout</a></p>
+                <div class="btn-group nav pull-right">
+                    <button type="button" class="btn btn-default">{{current_user.alias}}</button>
+                    <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li><a href="/logout">Logout</a></li>
+                    </ul>
                 </div>
-                {#                    loops through the navigation_bar container for the label and definition of each tab#}
-                <ul class="nav nav-pills" >
+                {# loops through the navigation_bar container for the label and definition of each tab#}
+                <ul class="nav nav-pills">
                     {% for href, id, caption in navigation_bar %}
-                      <li{% if id == active_page %} class="active openrecords_nav"{% endif%}>
-                      <a class="openrecords_nav" href="{{ href|e }}">{{ caption|e }}</a></li>
+                    <li
+                            {% if id== active_page %} class="active openrecords_nav" {% endif%}>
+                        <a class="openrecords_nav" href="{{ href|e }}">{{ caption|e }}</a></li>
                     {% endfor %}
                 </ul>
                 <ul class="nav pull-right">
@@ -165,31 +170,32 @@ This template provides the header, footer, and envelope info for all pages excep
                             src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
                     </script>
                 </div>
-                <ul class="nav nav-pills" >
+                <ul class="nav nav-pills">
                     {% for href, id, caption in navigation_bar %}
-                      <li{% if id == active_page %} class="active openrecords_nav"{% endif%}>
-                      <a class="openrecords_nav" href="{{ href|e }}">{{ caption|e }}</a></li>
+                    <li
+                            {% if id== active_page %} class="active openrecords_nav" {% endif%}>
+                        <a class="openrecords_nav" href="{{ href|e }}">{{ caption|e }}</a></li>
                     {% endfor %}
                 </ul>
                 <ul class="nav pull-right">
                 </ul>
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
-<div id="container-fluid">
-    {% block container %}
-    <div class="row-fluid">
-        <div class="span10">
-            {% block banner %}
+    <div id="container-fluid">
+        {% block container %}
+        <div class="row-fluid">
+            <div class="span10">
+                {% block banner %}
 
-            {% endblock banner %}
+                {% endblock banner %}
+            </div>
         </div>
-    </div>
 
-    {% endblock container %}
-</div>
-<div class="push"></div>
+        {% endblock container %}
+    </div>
+    <div class="push"></div>
 </div>
 <!-- // Wrapper -->
 <div class="iw_component" id="1422284559235">
