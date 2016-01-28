@@ -886,7 +886,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
     mine_as_poc = checkbox_value
     mine_as_helper = checkbox_value
     departments_selected = []
-    if current_user.is_authenticated:
+    if current_user.is_authenticated and current_user.role != 'Portal Administrator':
         departments_selected.append(current_user.current_department.name)
     sort_column = "id"
     sort_direction = "asc"
@@ -900,8 +900,9 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
     request_id_search = None
 
     if filters_map:
-        departments_selected = get_filter_value(filters_map=filters_map, filter_name='departments_selected',
-                                                is_list=True) or get_filter_value(filters_map, 'department')
+        if not departments_selected:
+            departments_selected = get_filter_value(filters_map=filters_map, filter_name='departments_selected',
+                                                    is_list=True) or get_filter_value(filters_map, 'department')
         # departments_selected = bleach.clean(departments_selected);
         app.logger.info("Department Selected: %s" % departments_selected)
         is_open = get_filter_value(filters_map=filters_map, filter_name='is_open', is_boolean=True)
@@ -1099,7 +1100,7 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
     if is_closed == checkbox_value:
         status_filters.append(models.Request.closed)
 
-    if min_date_received and max_date_received and min_date_received != "" and max_date_received != "":
+    if min_date_received and max_date_received and min_date_received != "" and max_date_received != "" and min_date_received != "None" and max_date_received != "None":
         try:
             min_date_received = datetime.strptime(min_date_received, date_format)
             max_date_received = datetime.strptime(max_date_received, date_format) + timedelta(hours=23, minutes=59)
@@ -1119,7 +1120,7 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
         if overdue == checkbox_value:
             status_filters.append(models.Request.overdue)
 
-        if min_due_date and max_due_date and min_due_date != "" and max_due_date != "":
+        if min_due_date and max_due_date and min_due_date != "" and max_due_date != "" and min_due_date != "None" and max_due_date != "None":
             try:
                 min_due_date = datetime.strptime(min_due_date, date_format)
                 max_due_date = datetime.strptime(max_due_date, date_format) + timedelta(hours=23, minutes=59)
