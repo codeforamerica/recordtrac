@@ -664,7 +664,20 @@ def add_a_resource(resource):
 
         resource_id = add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
         if type(resource_id) == int or str(resource_id).isdigit():
+            requestObj = get_obj("Request", req['request_id'])
             audience = 'city'
+            if current_user.role == 'Portal Administrator':
+                audience = 'city'
+            elif current_user.department_id == requestObj.department_id:
+                app.logger.info("User Dep: %s; Req Dep: %s" % (current_user.department_id, requestObj.department_id))
+                if current_user.role in ['Agency Administrator', 'Agency FOIL Officer']:
+                    app.logger.info("User Role: %s" % current_user.role)
+                    audience = 'city'
+                else:
+                    audience = 'helper'
+            else:
+                audience = 'public'
+
             template = "manage_request_%s_less_js.html" % audience
             app.logger.info("\n\nSuccessfully added resource: %s with id: %s" % (resource, resource_id))
             if resource == 'record_and_close':

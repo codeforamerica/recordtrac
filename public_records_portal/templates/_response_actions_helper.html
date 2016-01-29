@@ -26,6 +26,7 @@
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <input type="hidden" name="audience" value="helper"/>
                 <input type="hidden" name="record_privacy" value="True"/>
+                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <fieldset>
                     <div class="row-fluid">
                         <!-- name of record -->
