@@ -133,7 +133,7 @@ def upload_file(document, request_id, privacy = True):
                 upload_path = upload_file_locally(document, filename, request_id, privacy)
                 if privacy == 'False':
                     app.logger.info("rsync public...")
-                    subprocess.call(["rsync", "-avzh", "ssh", app.config['UPLOAD_PUBLIC_FOLDER_LOCAL'] + "/" + document.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_FOLDER_REMOTE'] + "/"])
+                    subprocess.call(["rsync", "-avzh", "ssh", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + document.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/"])
                 elif privacy == 'True':
                     app.logger.info("rsync private...")
                 return upload_path, filename, None
