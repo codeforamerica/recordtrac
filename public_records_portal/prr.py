@@ -765,6 +765,7 @@ Begins Upload_record method''')
                                           'A response has been added.')
                     notification_content['user_id'] = user_id
                     notification_content['department_name'] = department_name
+                    notification_content['privacy'] = privacy
     except:
         # print sys.exc_info()[0]
         print traceback.format_exc()
