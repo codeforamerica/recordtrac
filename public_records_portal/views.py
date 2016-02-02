@@ -1379,7 +1379,7 @@ def login():
     form = LoginForm()
     errors = []
     if request.method == 'POST':
-        if (form.username.data is not None and form.username.data != '') and (form.password.data is not None and form.username.data != ''):
+        if (form.username.data is not None and form.username.data != '') and (form.password.data is not None and form.password.data != ''):
             user_to_login = authenticate_login(form.username.data, form.password.data)
             if user_to_login:
                 login_user(user_to_login)
