@@ -211,6 +211,9 @@ class LoginForm(Form):
     username = StringField('Email', validators=[DataRequired(), Length(1, 64)])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Log In')
+    class Meta:
+        # This overrides the value from the base form.
+        csrf = False
 
 class EditUserForm(Form):
     username = StringField('Email', validators=[DataRequired(), Length(1, 64)])
