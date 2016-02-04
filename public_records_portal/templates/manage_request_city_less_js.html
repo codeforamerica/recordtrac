@@ -8,6 +8,8 @@
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.css') }}">
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jasny-bootstrap.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.fileupload.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.fileupload-ui.css') }}">
 {% endblock custom_css_links %}
 
 {% block requester_info %}
@@ -30,5 +32,72 @@
 
 
 <!-- For file uploads -->
-<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jasny-bootstrap.js') }}"></script>
+<!--script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jasny-bootstrap.js') }}"></script-->
+
+<script type="text/javascript"
+        src="{{ url_for('static', filename='js/plugins/jquery.ellipsis.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/jquery.ui.widget.js') }}"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="{{ url_for('static', filename='js/jquery.iframe-transport.js') }}"></script>
+<!-- The basic File Upload plugin -->
+<script src="{{ url_for('static', filename='js/jquery.fileupload.js') }}"></script>
+<!-- The File Upload processing plugin -->
+<script src="{{ url_for('static', filename='js/jquery.fileupload-process.js') }}"></script>
+
+
+<script type="text/javascript">
+
+var url = window.location.hostname === 'blueimp.github.io' ?
+                '//jquery-file-upload.appspot.com/' : '/temp1',
+        uploadButton = $('<button/>')
+            .addClass('btn btn-primary')
+            .prop('disabled', true)
+            .text('Processing...')
+            .on('click', function () {
+                var $this = $(this),
+                    data = $this.data();
+                $this
+                    .off('click')
+                    .text('Abort')
+                    .on('click', function () {
+                        $this.remove();
+                        data.abort();
+                    });
+                data.submit().always(function () {
+                    $this.remove();
+                });
+            });
+
+$("#record").on('change', function (e, data) {
+  var names = [];
+  if($("input[name=record]") && $("input[name=record]").get(0) && $("input[name=record]").get(0).files) {
+      for (var i = 0; i < $("input[name=record]").get(0).files.length; ++i) {
+        names.push($("input[name=record]").get(0).files[i].name);
+      }
+  }	
+        $.each(names, function (index, file) {
+            var node = $('<p>');
+                    //.append($('<span/>').text(file));
+            node.append('<tr class="template-upload fade">');
+            node.append('<td>');
+            node.append('<p class="name">' + file + '</p>');
+            node.append('<strong class="error text-danger"></strong>');
+            node.append('</td>');
+            node.append('<td class="title">');
+            node.append('<label>Title: <input name="title[]" required></label>');
+            node.append('</td>');
+            node.append('<tr>');
+            node.append('<button class="btn btn-danger delete" type="button">');
+            node.append('<i class="glyphicon glyphicon-trash"></i>');
+            node.append('<span>Delete</span>');
+            node.append('</button>');
+            if (!index) {
+                node
+                    .append('<br>')
+                    .append(uploadButton.clone(true).data(data));
+            }
+            node.appendTo("#files");
+        })})
+</script>        
 {% endblock custom_script_links %}
