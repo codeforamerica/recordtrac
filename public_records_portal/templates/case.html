@@ -288,7 +288,19 @@
                                     {% endif %}
                                 </div>
                             </div>
-                        <div class="tab-pane" id="agencyDescription">
+                        {% if current_user.is_authenticated %}
+                            <p class="lead" style="margin-bottom: 0rem;" truncateable="250">
+                                {% if req.agencyDescription != None %}
+                                    {{ req.agencyDescription }}
+
+                                {% endif %}
+                            </p>
+                        {% endif %}
+
+                        </fieldset>
+                    </form>
+                    {% endif %}
+                <div class="tab-pane" id="agencyDescription">
                             <form name="agency_Description" id="agencyDescription" method="post" action="/agencyDescription">
                                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
 {#                                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">#}
@@ -320,33 +332,9 @@
                                             </div>
                                             <input type="hidden" name="agency_description" value="1"/>
                                         </div>
-
-                                                <div class="control-group">
-{#                                                    <div class="controls">#}
-{#                                                        <button id="extendButton" data-toggle="modal"#}
-{#                                                                data-target="#confirm-submit"#}
-{#                                                                type="submit"#}
-{#                                                                class="btn btn-default btn-block">Extend#}
-{#                                                            this request#}
-{#                                                        </button>#}
-{#                                                    </div>#}
-{#                                                </div>#}
-                                                </div>
                                 </fieldset>
                             </form>
                         </div>
-                        {% if current_user.is_authenticated %}
-                            <p class="lead" style="margin-bottom: 0rem;" truncateable="250">
-                                {% if req.agencyDescription != None %}
-                                    {{ req.agencyDescription }}
-
-                                {% endif %}
-                            </p>
-                        {% endif %}
-
-                        </fieldset>
-                    </form>
-                    {% endif %}
                 </div>
                 <!--<div>-->
                     <!--&lt;!&ndash; shows any existing Q&A or public notes &ndash;&gt;-->

@@ -93,7 +93,7 @@
                .attr("name", "additional_information").val(additional_information);
       $(form_id).append($(input));
         console.log(form_id);
-      $(form_id).submit();
+      //$(form_id).submit();
         console.log("subbmitting");
     }
    });
@@ -161,7 +161,7 @@ $('#editAgencyDescriptionButton').on('click',function(){
     $('#modalAdditionalInfoTable').show();
     var modalQuestion = 'Type in the agency description below';
     modalQuestion += '<br><br>';
-    $('#form_id').val('agencyDescription');
+    $('#form_id').val('agencyDescription') ;
     console.log("hello");
     console.log($('#form_id').val('agencyDescription'));
     $('#modalquestionDiv').html(modalQuestion);
