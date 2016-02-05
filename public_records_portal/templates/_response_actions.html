@@ -97,27 +97,15 @@
                                     </span></label>
 
                             <div class="row-fluid" style="width:98%;">
-                                <div class="controls">
-                                    <div class="fileinput fileinput-new"
-                                         data-provides="fileinput">
-                                                <span class="btn btn-default btn-file">
-                                                    <span class="fileinput-new">Select file</span>
-                                                    <span class="fileinput-exists">Change</span>
-                                                    <input type="file"
-                                                           multiple
-                                                           name="record" id="record" data-show-upload="false" data-show-caption="true">
+                                 <div class="controls">
+                                               <span class="btn btn-success fileinput-button">
+                                               <i class="glyphicon glyphicon-plus"></i>
+                                               <span>Add files...</span>
+                                               <!-- The file input field used as target for the file upload widget -->
+                                               <input id="record" type="file" name="record" multiple>
                                                 </span>
-                                        <span class="fileinput-filename" id="file_upload_filenames"></span>
-                                        <span  style="display:block;" id="file_upload_one"></span>
-                                        <span  style="display:block;" id="file_upload_two"><br></span>
-                                        <span  style="display:block;" id="file_upload_three"><br></span>
-                                        <span  style="display:block;" id="file_upload_four"><br></span>                    
-                                        <a href="#"
-                                           id="close_filenames_list"
-                                           class="close fileinput-exists"
-                                           data-dismiss="fileinput"
-                                           style="float: none">&times;</a>
-                                    </div>
+                                                <!-- The container for the uploaded files -->
+                                                <div id="files" class="files"></div>
                                     <p>Size of file is limited to 10 Mb</p>
                                 </div>
                             </div>
