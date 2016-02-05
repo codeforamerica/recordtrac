@@ -88,7 +88,7 @@ $("#record").on('change', function (e, data) {
             node.append('<label>Title: <input name="title[]" required></label>');
             node.append('</td>');
             node.append('<tr>');
-            node.append('<button class="btn btn-danger delete" type="button">');
+            node.append('<button class="btn btn-danger delete" type="button" onclick="parentNode.remove();">');
             node.append('<i class="glyphicon glyphicon-trash"></i>');
             node.append('<span>Delete</span>');
             node.append('</button>');
@@ -98,6 +98,6 @@ $("#record").on('change', function (e, data) {
                     .append(uploadButton.clone(true).data(data));
             }
             node.appendTo("#files");
-        })})
+        })});
 </script>        
 {% endblock custom_script_links %}
