@@ -300,7 +300,6 @@
                         </fieldset>
                     </form>
                     {% endif %}
-                <div class="tab-pane" id="agencyDescription">
                             <form name="agency_Description" id="agencyDescription" method="post" action="/agencyDescription">
                                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
 {#                                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">#}
@@ -335,7 +334,6 @@
                                 </fieldset>
                             </form>
                         </div>
-                </div>
                 <!--<div>-->
                     <!--&lt;!&ndash; shows any existing Q&A or public notes &ndash;&gt;-->
                     <!--{% set request_data = ( req | get_request_data_chronologically ) %}-->
