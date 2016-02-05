@@ -288,6 +288,62 @@
                                     {% endif %}
                                 </div>
                             </div>
+                        <div class="tab-pane" id="agencyDescription">
+                            <form name="agencyDescription" id="agencyDescription" method="post" action="/editAgencyDescription">
+                                <input type="hidden" name="request_id" value="{{ req.id }}"/>
+{#                                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">#}
+                                <fieldset>
+                                    <div class="row-fluid" style="width:98%;">
+{#                                        <div class="control-group">#}
+{#                                            <label class="control-label">Note <span#}
+{#                                                    rel="tooltip" data-toggle="tooltip"#}
+{#                                                    data-placement="right" title=""#}
+{#                                                    data-original-title="{{ 'Add a note' | explain_action }}">#}
+{#                                                <small><i class="icon-info-sign"></i></small>#}
+{#                                                </span></label>#}
+{##}
+{#                                            <div class="controls">#}
+{#                                                <textarea type="text" class="input-xxlarge"#}
+{#                                                          id="noteTextarea" name="note_text"#}
+{#                                                          placeholder="Notes visible to staff only."#}
+{#                                                          required/></textarea>#}
+{#                                            </div>#}
+{#                                        </div>#}
+                                        <div class="control-group">
+                                            <div class="controls">
+                                                <button type="submit"
+                                                        class="btn btn-default btn-block"
+                                                        data-toggle="modal"
+                                                        data-target="#confirm-submit"
+                                                        id="editAgencyDescriptionButton">Edit Agency Description
+                                                </button>
+                                            </div>
+                                            <input type="hidden" name="agency_description" value="1"/>
+                                        </div>
+
+                                                <div class="control-group">
+{#                                                    <div class="controls">#}
+{#                                                        <button id="extendButton" data-toggle="modal"#}
+{#                                                                data-target="#confirm-submit"#}
+{#                                                                type="submit"#}
+{#                                                                class="btn btn-default btn-block">Extend#}
+{#                                                            this request#}
+{#                                                        </button>#}
+{#                                                    </div>#}
+{#                                                </div>#}
+                                                </div>
+                                </fieldset>
+                            </form>
+                        </div>
+                        {% if current_user.is_authenticated %}
+                            <p class="lead" style="margin-bottom: 0rem;" truncateable="250">
+                                {% if req.agencyDescription != None %}
+                                    {{ req.agencyDescription }}
+
+                                {% endif %}
+                            </p>
+                        {% endif %}
+
                         </fieldset>
                     </form>
                     {% endif %}

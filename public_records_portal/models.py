@@ -307,6 +307,8 @@ class Request(db.Model):
     #Adding new privacy option for description field
     descriptionPrivate=db.Column(db.Boolean, default=True)
     titlePrivate=db.Column(db.Boolean, default=False)
+    agencyDescription=db.Column(db.String(5000))
+
     def __init__(
             self,
             id,
@@ -317,7 +319,9 @@ class Request(db.Model):
             date_received=None,
             agency=None,
             descriptionPrivate=True,
-            titlePrivate=False
+            titlePrivate=False,
+            agencyDescription=None
+
     ):
         self.id = id
         self.summary = summary
@@ -330,6 +334,7 @@ class Request(db.Model):
         self.department_id = agency
         self.descriptionPrivate = descriptionPrivate
         self.titlePrivacy=titlePrivate
+        self.agencyDescription=agencyDescription
 
 
     def __repr__(self):

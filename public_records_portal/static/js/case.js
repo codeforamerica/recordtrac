@@ -154,6 +154,16 @@
   });
 
 
+$('#editAgencyDescriptionButton').on('click',function(){
+    var modalQuestion = 'Type in the agency description below'
+    modalQuestion += '<br><br>';
+    $('#form_id').val('agencyDescription');
+    console.log("hello");
+    console.log($('#form_id').val('agencyDescription'));
+    $('#modalquestionDiv').html(modalQuestion);
+    $('#modalQuestionTable').hide();
+});
+
 $('#file_upload_filenames').bind('DOMNodeInserted', function(event) {
   var names = [];
   if($("input[name=record]") && $("input[name=record]").get(0) && $("input[name=record]").get(0).files) {
@@ -194,6 +204,7 @@ $('#close_filenames_list').on('click',function(){
   $('#addNoteButton').on('click',function(){
     $('#modalAdditionalInfoTable').show();
     $('#form_id').val('note');
+    console.log($('#form_id').val('note'));
     var modalQuestion = 'Are you sure you want to add the note below and send an email to the requester?';
     modalQuestion += '<br><br>' + $('#noteTextarea').val();
     $('#modalquestionDiv').html(modalQuestion);

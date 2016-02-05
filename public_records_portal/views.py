@@ -1695,6 +1695,9 @@ def change_category():
     category = request.form['category']
     return redirect(render_template('new_request.html'))
 
+@app.route("/editAgencyDescription", methods=["POST", "GET"])
+def edit_agency_description():
+    return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
 
 @app.route("/<page>")
 def any_page(page):
