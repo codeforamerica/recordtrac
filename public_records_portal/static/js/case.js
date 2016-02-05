@@ -253,7 +253,20 @@ $('#close_filenames_list').on('click',function(){
   });
 
   $(".start").on('click', function() {
-    $('#addRecordButton').click();
+    var title = $('.title_text');
+    var titleLengthCorrect = 1;
+
+    $.each(title, function (index, t) {
+        if(t.value.length > 140) {
+          $('#record_title_alert').show();
+          titleLengthCorrect = -1;
+        }
+    });
+    
+    if(titleLengthCorrect === 1) {
+        $('#record_title_alert').hide();
+        $('#addRecordButton').click();
+    }
   });
 
   $("#cancel_all").on('click', function() {
