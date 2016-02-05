@@ -203,7 +203,7 @@
                     {% if current_user.is_authenticated and audience == 'city' %}
                     <form class="form-horizontal" method="post" action="/changeprivacy">
                         <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}"/>
                         <input type="hidden" name="fieldtype" value="title"/>
                         <fieldset>
                             <!-- Multiple Radios (inline) -->
@@ -296,43 +296,9 @@
                                 {% endif %}
                             </p>
                         {% endif %}
-
                         </fieldset>
                     </form>
                     {% endif %}
-                            <form name="agency_Description" id="agencyDescription" method="post" action="/agencyDescription">
-                                <input type="hidden" name="request_id" value="{{ req.id }}"/>
-{#                                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">#}
-                                <fieldset>
-                                    <div class="row-fluid" style="width:98%;">
-{#                                        <div class="control-group">#}
-{#                                            <label class="control-label">Note <span#}
-{#                                                    rel="tooltip" data-toggle="tooltip"#}
-{#                                                    data-placement="right" title=""#}
-{#                                                    data-original-title="{{ 'Add a note' | explain_action }}">#}
-{#                                                <small><i class="icon-info-sign"></i></small>#}
-{#                                                </span></label>#}
-{##}
-{#                                            <div class="controls">#}
-{#                                                <textarea type="text" class="input-xxlarge"#}
-{#                                                          id="noteTextarea" name="note_text"#}
-{#                                                          placeholder="Notes visible to staff only."#}
-{#                                                          required/></textarea>#}
-{#                                            </div>#}
-{#                                        </div>#}
-                                        <div class="control-group">
-                                            <div class="controls">
-                                                <button type="submit"
-                                                        class="btn btn-default btn-level"
-                                                        data-toggle="modal"
-                                                        data-target="#confirm-submit"
-                                                        id="editAgencyDescriptionButton">Edit Agency Description
-                                                </button>
-                                            </div>
-                                            <input type="hidden" name="agency_description" value="1"/>
-                                        </div>
-                                </fieldset>
-                            </form>
                         </div>
                 <!--<div>-->
                     <!--&lt;!&ndash; shows any existing Q&A or public notes &ndash;&gt;-->
@@ -372,6 +338,25 @@
                     <!--{% endif %}-->
                 <!--</div>-->
             </div>
+            <form name="agency_description" id="agencyDescription" method="post" action="/agencyDescription">
+                <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                <fieldset>
+                    <div class="row-fluid" style="width:98%;">
+                        <div class="control-group">
+                            <div class="controls">
+                                <button type="submit"
+                                        class="btn btn-default btn-level"
+                                        data-toggle="modal"
+                                        data-target="#confirm-submit"
+                                        id="editAgencyDescriptionButton">Edit Agency Description
+                                </button>
+                            </div>
+                            <input type="hidden" name="agency_description" value="1"/>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
             {% endblock request %}
         </div>
         {% endblock well %}

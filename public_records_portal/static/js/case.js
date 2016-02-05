@@ -80,21 +80,17 @@
   $('#submit').on('click',function(event){
     form_id = '#' + $('#form_id').val();
     if(!$('#modalAdditionalInfoTable').is(':visible') || $(form_id) == 'note_pdf') {
-        console.log("going to if");
         $('#confirm-submit').modal('toggle');
         $(form_id).submit();
     }
     else {
-        console.log("going to else");
       $('#modalAdditionalInfoTable').show();
       additional_information = $('#additional_note').val();
       var input = $("<input>")
                .attr("type", "hidden")
                .attr("name", "additional_information").val(additional_information);
       $(form_id).append($(input));
-        console.log(form_id);
       $(form_id).submit();
-        console.log("subbmitting");
     }
    });
 
@@ -162,8 +158,6 @@ $('#editAgencyDescriptionButton').on('click',function(){
     var modalQuestion = 'Type in the agency description below';
     modalQuestion += '<br><br>';
     $('#form_id').val('agencyDescription') ;
-    console.log("hello");
-    console.log($('#form_id').val('agencyDescription'));
     $('#modalquestionDiv').html(modalQuestion);
     $('#modalQuestionTable').hide();
 });

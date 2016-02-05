@@ -1300,3 +1300,10 @@ def change_record_privacy(record_id, privacy):
         subprocess.call(["rsync", "-avzh", "--delete", "ssh", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/"])
 
     update_obj(attribute="privacy", val=privacy, obj_type="Record", obj_id=record.id)
+
+def edit_agency_description(request_id, agency_description_text):
+    app.logger.info("Modifying agency description of the request")
+    update_obj(attribute='agencyDescription', val=agency_description_text, obj_type='Request', obj_id=request_id)
+
+
+
