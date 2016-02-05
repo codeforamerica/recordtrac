@@ -97,13 +97,21 @@
                                     </span></label>
 
                             <div class="row-fluid" style="width:98%;">
-                                 <div class="controls">
-                                               <span class="btn btn-success fileinput-button">
+                                <div class="controls">
+                                               <span class="btn btn-primary fileinput-button">
                                                <i class="glyphicon glyphicon-plus"></i>
                                                <span>Add files...</span>
                                                <!-- The file input field used as target for the file upload widget -->
                                                <input id="record" type="file" name="record" multiple>
                                                 </span>
+                                               <span class="btn btn-primary start" type="submit">
+                                               <i class="glyphicon glyphicon-plus"></i>
+                                               <span id="upload_all">Upload All</span>
+                                                </span>
+                                               <span class="btn btn-primary cancel" type="reset">
+                                               <i class="glyphicon glyphicon-plus"></i>
+                                               <span id="cancel_all">Cancel All</span>
+                                                </span>                                                
                                                 <!-- The container for the uploaded files -->
                                                 <div id="files" class="files"></div>
                                     <p>Size of file is limited to 10 Mb</p>
@@ -339,12 +347,20 @@
 
                             <div class="row-fluid" style="width:98%;" id="test_id">
                                 <div class="controls">
-                                               <span class="btn btn-success fileinput-button">
+                                               <span class="btn btn-primary fileinput-button">
                                                <i class="glyphicon glyphicon-plus"></i>
                                                <span>Add files...</span>
                                                <!-- The file input field used as target for the file upload widget -->
                                                <input id="record" type="file" name="record" multiple>
                                                 </span>
+                                               <span class="btn btn-primary start" type="submit">
+                                               <i class="glyphicon glyphicon-plus"></i>
+                                               <span id="upload_all">Upload All</span>
+                                                </span>
+                                               <span class="btn btn-primary cancel" type="reset">
+                                               <i class="glyphicon glyphicon-plus"></i>
+                                               <span id="cancel_all">Cancel All</span>
+                                                </span>                                                
                                                 <!-- The container for the uploaded files -->
                                                 <div id="files" class="files"></div>
                                     <p>Size of file is limited to 10 Mb</p>

@@ -249,7 +249,15 @@ $('#close_filenames_list').on('click',function(){
 
   $("#requesterInfoButton").on('click', function() {
     $('#requester_info').toggle();
-    $('#requesterInfoButton').innerHTML()
+    $('#requesterInfoButton').innerHTML();
+  });
+
+  $(".start").on('click', function() {
+    $('#addRecordButton').click();
+  });
+
+  $("#cancel_all").on('click', function() {
+    $('.delete').click();
   });
 
 /*$(document).on('ready', function() {

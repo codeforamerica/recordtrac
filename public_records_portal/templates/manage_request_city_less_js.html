@@ -48,9 +48,7 @@
 
 <script type="text/javascript">
 
-var url = window.location.hostname === 'blueimp.github.io' ?
-                '//jquery-file-upload.appspot.com/' : '/temp1',
-        uploadButton = $('<button/>')
+        var uploadButton = $('<button/>')
             .addClass('btn btn-primary')
             .prop('disabled', true)
             .text('Processing...')
@@ -90,7 +88,7 @@ $("#record").on('change', function (e, data) {
             node.append('<tr>');
             node.append('<button class="btn btn-danger delete" type="button" onclick="parentNode.remove();">');
             node.append('<i class="glyphicon glyphicon-trash"></i>');
-            node.append('<span>Delete</span>');
+            node.append('<span>Cancel</span>');
             node.append('</button>');
             if (!index) {
                 node
