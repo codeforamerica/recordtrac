@@ -289,7 +289,7 @@
                                 </div>
                             </div>
                         <div class="tab-pane" id="agencyDescription">
-                            <form name="agencyDescription" id="agencyDescription" method="post" action="/editAgencyDescription">
+                            <form name="agency_Description" id="agencyDescription" method="post" action="/agencyDescription">
                                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
 {#                                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">#}
                                 <fieldset>
@@ -312,7 +312,7 @@
                                         <div class="control-group">
                                             <div class="controls">
                                                 <button type="submit"
-                                                        class="btn btn-default btn-block"
+                                                        class="btn btn-default btn-level"
                                                         data-toggle="modal"
                                                         data-target="#confirm-submit"
                                                         id="editAgencyDescriptionButton">Edit Agency Description
