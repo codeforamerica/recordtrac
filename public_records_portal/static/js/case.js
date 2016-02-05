@@ -93,7 +93,7 @@
                .attr("name", "additional_information").val(additional_information);
       $(form_id).append($(input));
         console.log(form_id);
-      //$(form_id).submit();
+      $(form_id).submit();
         console.log("subbmitting");
     }
    });
