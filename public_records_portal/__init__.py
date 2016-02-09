@@ -106,10 +106,12 @@ envvars = [
     'RECAPTCHA_SITE_KEY',  # Site key for Google ReCaptcha
 
     # ICAP Variables
-    'HOST',
-    'SERVICE',
-    'PORT',
+    'ICAP_SERVER',
+    'ICAP_SERVICE_NAME',
+    'ICAP_PORT',
+    'ICAP_PROFILE',
     'SHOULD_SCAN_FILES',
+    'MAX_FILE_SIZE',
 
     # LDAP
     'USE_LDAP',  # Determines if LDAP or Flask-Login is used
