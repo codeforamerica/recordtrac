@@ -69,6 +69,7 @@
                 <input type="hidden" name="audience" value="city"/>
                 <input type="hidden" name="record_privacy" value="True"/>
                 <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                <input type="hidden" name="record_description" value="additionalRecord"/>
                 <fieldset>
                     <div class="row-fluid" style="width:98%;">
                         <!-- name of record -->
@@ -543,6 +544,7 @@
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 <input type="hidden" name="audience" value="city"/>
+                <input type="hidden" id="extend_file" />
                 <input type="hidden" name="extend_reason"
                        value="{{ 'Extension - Large Amount' | explain_action('What') }}"/>
                 <fieldset>
