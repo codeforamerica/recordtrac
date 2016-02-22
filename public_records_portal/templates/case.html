@@ -71,6 +71,33 @@
                         {% endif %}
                         {% endif %}
                     </h3>
+                <p class="lead" style="margin-bottom: 0rem;" truncateable="250">
+                    {% if req.agencyDescription != None %}
+                        Agency Description: {{ req.agencyDescription }}
+                    {% endif %}
+                </p>
+                {% if current_user.is_authenticated %}
+                    <form name="agency_description" id="agencyDescription" method="post" action="/agencyDescription">
+                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                        <fieldset>
+                            <div class="row-fluid" style="width:98%;">
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <button type="submit"
+                                                class="btn btn-default btn-level"
+                                                data-toggle="modal"
+                                                data-target="#confirm-submit"
+                                                id="editAgencyDescriptionButton">Edit Agency Description
+                                        </button>
+                                    </div>
+                                    <input type="hidden" name="agency_description" value="1"/>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+            {% endif %}
+
                     {% block clarify_request %}
                     <!-- ask a question -->
                     <form name="ask_question" id="question" class="form-inline" style="margin: 10px 0px 15px 0px;"
@@ -291,11 +318,6 @@
 
                         </fieldset>
                         {% endif %}
-                        <p class="lead" style="margin-bottom: 0rem;" truncateable="250">
-                            {% if req.agencyDescription != None %}
-                                Agency Description: {{ req.agencyDescription }}
-                            {% endif %}
-                        </p>
                     </form>
 
                         </div>
@@ -337,27 +359,7 @@
                     <!--{% endif %}-->
                 <!--</div>-->
             </div>
-            {% if current_user.is_authenticated %}
-                <form name="agency_description" id="agencyDescription" method="post" action="/agencyDescription">
-                    <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-                    <fieldset>
-                        <div class="row-fluid" style="width:98%;">
-                            <div class="control-group">
-                                <div class="controls">
-                                    <button type="submit"
-                                            class="btn btn-default btn-level"
-                                            data-toggle="modal"
-                                            data-target="#confirm-submit"
-                                            id="editAgencyDescriptionButton">Edit Agency Description
-                                    </button>
-                                </div>
-                                <input type="hidden" name="agency_description" value="1"/>
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
-            {% endif %}
+
             {% endblock request %}
         </div>
         {% endblock well %}
