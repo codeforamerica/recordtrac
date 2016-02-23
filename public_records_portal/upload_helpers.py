@@ -162,7 +162,7 @@ def send_to_icap(string, sock):
         sock.send(string + "\n")
         counter += 1
     except socket.error, msg:
-        app.logger.error("Failed to write \"%s\"\n%s\n" % (string, msg[1]))
+        app.logger.error("Failed to write send file to ICAP Server: %s\n\n" % (string, msg[1]))
         return_value = -1
     return return_value
 
