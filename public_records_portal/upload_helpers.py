@@ -74,7 +74,7 @@ def upload_file(document, request_id, privacy = True):
         else:
             return None
     else:
-        upload_file_locally(document, document.filename, privacy)
+        upload_file_locally(document, secure_filename(document.filename), privacy)
         return 1, secure_filename(document.filename), None
 
 def scan_file(document, file_length):
@@ -162,7 +162,7 @@ def send_to_icap(string, sock):
         sock.send(string + "\n")
         counter += 1
     except socket.error, msg:
-        app.logger.error("Failed to write send file to ICAP Server: %s\n\n" % (string, msg[1]))
+        app.logger.error("Failed to write send file to ICAP Server: %s\n\n" % (msg[1]))
         return_value = -1
     return return_value
 
