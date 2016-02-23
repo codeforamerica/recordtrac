@@ -67,7 +67,7 @@ def upload_file(document, request_id, privacy = True):
         if allowed_file(document.filename):
             file_scanned = scan_file(document, file_length)
             if file_scanned == 0:
-                upload_file_locally(document, document.filename, privacy)
+                upload_file_locally(document, secure_filename(document.filename), privacy)
                 return 1, secure_filename(document.filename), None
             else:
                 return None, None, None
@@ -268,7 +268,6 @@ def disconnect(sock):
 def upload_file_locally(document, filename, privacy):
     app.logger.info("\n\nuploading file locally")
     app.logger.info("\n\n%s" % (document))
-
 
     if privacy == u'True':
         upload_path = os.path.join(app.config['UPLOAD_PRIVATE_LOCAL_FOLDER'], filename)
