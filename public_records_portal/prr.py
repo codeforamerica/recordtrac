@@ -159,9 +159,7 @@ No file passed in''')
             try:
                 titles = request.form.getlist('title[]')
             except:
-                app.logger.info('''
-
-No titles passed in for each record''')
+                app.logger.info('''No titles passed in for each record''')
 
             return upload_multiple_records(
                     request_id=fields['request_id'],
@@ -962,7 +960,7 @@ Agency chosen: %s''' % agency)
                                 notification_type='confirmation_agency',
                                 notification_content=notification_content)
     if attachment:
-        upload_multiple_records(request_id=request_id,
+        upload_record(request_id=request_id,
                       description=attachment_description,
                       user_id=user_id, request_body=None,
                       documents=attachment)

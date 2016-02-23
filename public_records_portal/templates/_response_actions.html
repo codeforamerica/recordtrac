@@ -98,6 +98,7 @@
 
                             <div class="row-fluid" style="width:98%;">
                                 <div class="controls">
+<<<<<<< HEAD
                                                <span class="btn btn-primary fileinput-button">
                                                <i class="glyphicon glyphicon-plus"></i>
                                                <span>Add files...</span>
@@ -115,6 +116,24 @@
                                                 <!-- The container for the uploaded files -->
                                                 <div id="files" class="files"></div>
                                     <p>Size of file is limited to 10 Mb</p>
+=======
+                                    <div class="fileinput fileinput-new"
+                                         data-provides="fileinput">
+                                                <span class="btn btn-default btn-file">
+                                                    <span class="fileinput-new">Select file</span>
+                                                    <span class="fileinput-exists">Change</span>
+                                                    <input type="file"
+                                                           name="record" id="record" data-show-upload="false" data-show-caption="true">
+                                                </span>
+                                        <span class="fileinput-filename"></span>                  
+                                        <a href="#"
+                                           id="close_filenames_list"
+                                           class="close fileinput-exists"
+                                           data-dismiss="fileinput"
+                                           style="float: none">&times;</a>
+                                    </div>
+                                    <p>Size of file is limited to 15 MB</p>
+>>>>>>> develop
                                 </div>
                             </div>
                         </div>
@@ -472,13 +491,6 @@
                                     </label>
                             </div>                           
                         </div>
-                    <div class="control-group">
-                        <div class="controls">
-                            <label class="radio inline" for ="attach_file_q" style="padding-left:0px;">
-                                <input type="checkbox" name="attach_file_q" value="True" style="padding-left:0px;">
-                                Send file as email attachment (must be less than 10MB)
-                            </label>
-                    </div>
                         <!-- submission -->
                         <div class="control-group">                         
                             <div class="controls">
