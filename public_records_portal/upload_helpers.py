@@ -65,7 +65,7 @@ def upload_file(document, request_id, privacy = True):
         app.logger.info("\n\nshoud not upload file")
         return '1', None, None  # Don't need to do real uploads locally
     if app.config["SHOULD_SCAN_FILES"] == 'True':
-        if allowed_file(document.filename) and len(document.read()) > 10000000:
+        if allowed_file(document.filename) and len(document.read()) > 15000000:
             app.logger.error("Error with filesize.")
             error = "file_too_large"
             return None, None, error
