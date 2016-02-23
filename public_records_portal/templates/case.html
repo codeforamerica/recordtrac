@@ -72,11 +72,20 @@
                         {% endif %}
                     </h3>
                 <p class="lead" style="margin-bottom: 0rem;" truncateable="250">
+{#                {{ req.agencyDescription.decode("utf-8") }}#}
+{#                {{ req.agencyDescription.split('') }}#}
                     {% if req.agencyDescription != None %}
-                        Agency Description: {{ req.agencyDescription }}
+{#                        {% if len(bytes.decode(req.agencyDescription)) > 50 %}#}
+{#                        {% if (req.agencyDescription.decode("utf-8")) > 50 %}#}
+                        {% if req.agencyDescription.decode("utf-8")|length > 50 %}
+                            Agency Description: {{ req.agencyDescription[0:50] }}...
+                        {% else %}
+                            Agency Description: {{ req.agencyDescription }}
+                        {% endif %}
+
                     {% endif %}
                 </p>
-                {% if current_user.is_authenticated %}
+                {% if current_user.is_authenticated and audience == 'city' %}
                     <form name="agency_description" id="agencyDescription" method="post" action="/agencyDescription">
                         <input type="hidden" name="request_id" value="{{ req.id }}"/>
                         <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
@@ -87,7 +96,7 @@
                                         <button type="submit"
                                                 class="btn btn-default btn-level"
                                                 data-toggle="modal"
-                                                data-target="#confirm-submit"
+                                                data-target=".agencyDescriptionModal"
                                                 id="editAgencyDescriptionButton">Edit Agency Description
                                         </button>
                                     </div>
@@ -96,7 +105,7 @@
                             </div>
                         </fieldset>
                     </form>
-            {% endif %}
+                {% endif %}
 
                     {% block clarify_request %}
                     <!-- ask a question -->
@@ -120,8 +129,8 @@
                         </fieldset>
                     </form>
 
-                    <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog"
-                         aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal fade agencyDescriptionModal" id="confirm-submit2" tabindex="-1" role="dialog"
+                         aria-labelledby="myModalLabel" aria-hidden="true" style="height: 40em; width:40em;">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -138,8 +147,22 @@
                                             <input type="hidden" id="form_id" value=""/>
                                         </tr>
                                     </table>
+
                                     <table id="modalAdditionalInfoTable" class="table">
-                                        <tr>
+                                        <tr id="editAgencyDescription" style="display:None;">
+                                            <th>Agency Description <br>(5000 character limit) <br></th>
+                                            {% if req.agencyDescription != None or (req.agencyDescription) != '' %}
+                                                <td><textarea style="width: 30em; height: 20em;" id="additional_note" name="additional_note" class="input-xlarge" maxlength="5000">{{ req.agencyDescription }}</textarea></td>
+                                            {% else %}
+                                                    <td><textarea style="width: 30em; height: 20em;" id="additional_note" name="additional_note"
+                                                              class="input-xlarge"
+                                                              placeholder="Agency Description"
+                                                                maxlength="5000">
+                                                    </textarea></td>
+                                            {% endif %}
+
+                                        </tr>
+                                        <tr id="additionalInformation">
                                             <th>Additional Information</th>
                                             <td><textarea id="additional_note" name="additional_note"
                                                           class="input-xlarge"
@@ -158,7 +181,63 @@
                                     </table>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal" id="cancelDescription">Cancel</button>
+                                    <a href="#" id="submit" class="btn btn-success success">Submit</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog"
+                         aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    Confirmation
+                                </div>
+                                <div class="modal-body">
+                                    <div id="modalquestionDiv">Are you sure you want to make the following question
+                                        public and send an email to the requester?
+                                    </div>
+{#                                    <table id="modalQuestionTable" class="table">#}
+{#                                        <tr>#}
+{#                                            <th>Question</th>#}
+{#                                            <td id="question_text"></td>#}
+{#                                            <input type="hidden" id="form_id" value=""/>#}
+{#                                        </tr>#}
+{#                                    </table>#}
+
+                                    <table id="modalAdditionalInfoTable" class="table">
+                                        <tr id="editAgencyDescription" style="display:None;">
+                                            <th>Agency Description <br>(5000 character limit) <br></th>
+{#                                            {% if req.agencyDescription != "" %}#}
+                                                <td><textarea style="width: 30em; height: 20em;" id="additional_note" name="additional_note"
+                                                              class="input-xlarge"
+                                                              placeholder="Agency Description"
+                                                                maxlength="5000">{{ req.agencyDescription }}
+                                                    </textarea></td>
+{#                                            {% endif %}#}
+                                        </tr>
+                                        <tr id="additionalInformation">
+                                            <th>Additional Information</th>
+                                            <td><textarea id="additional_note" name="additional_note"
+                                                          class="input-xlarge"
+                                                          placeholder="Additional Information"/></textarea></td>
+                                        </tr>
+                                    </table>
+                                    <br/><br/>
+                                    <table id="modalAdditionalInfoTableClose" class="table" style="display:none;">
+                                        <p id="deny_explain_why" style="display:none;"><b>If you are denying this request please explain why.</b></p>
+                                        <tr>
+                                            <th>Additional Information for Closing</th>
+                                            <td><textarea id="additional_note" name="additional_note"
+                                                          class="input-xlarge"
+                                                          placeholder="Additional Information"/></textarea></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">Cancel</button>
                                     <a href="#" id="submit" class="btn btn-success success">Submit</a>
                                 </div>
                             </div>
