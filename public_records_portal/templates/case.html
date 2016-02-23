@@ -53,14 +53,6 @@
                             </p>
                             {# If the request title is set to private then do not display the title#}
                             {% endif %}
-                            {% if not req.descriptionPrivate %}
-                            <p class="lead" style="margin-bottom: 0rem;"
-                               truncateable="250"> Request: {{ req.text | e | new_lines }}
-                            </p>
-                            {% else %}
-                            <p class="lead" style="margin-bottom: 0rem;" truncateable="250">
-                            </p>
-                            {% endif %}
                         {% else %}
                         <p class="lead" style="margin-bottom: 0rem;"
                            truncateable="250"> Title: {{ req.summary | e | new_lines }}
