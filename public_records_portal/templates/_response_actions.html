@@ -309,31 +309,6 @@
                 <input type="hidden" name="audience" value="city"/>
                 <fieldset>
                     <div class="row-fluid" style="width:98%;">
-                        <!-- name of record -->
-                        <div class="control-group">
-                            <label class="control-label" for="recordSummary">Name
-                                of record</label>
-
-                            {% if form %}
-                                    <div class="controls">
-                                                <textarea class="input-xxlarge"
-                                                          name="record_description"
-                                                          type="text"
-                                                          id="recordSummary"
-                                                          placeholder="Add a short explanation of the record"
-                                                          required/>{{ form['record_description'] }}</textarea>
-                                    </div>
-                            {% else %}
-                                <div class="controls">
-                                    <textarea class="input-xxlarge"
-                                              name="record_description"
-                                              type="text"
-                                              id="recordSummary"
-                                              placeholder="Add a short explanation of the record"
-                                              required/></textarea>
-                                </div>
-                            {% endif %}
-                        </div>
                         <!-- upload a record -->
                         <div class="control-group">
                             <label class="control-label">Upload a record <span
@@ -368,12 +343,35 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- name of record -->
+                        <div class="control-group">
+                            <label class="control-label" for="recordSummary">Provide a name for a link to a record</label>
+
+                            {% if form %}
+                                    <div class="controls">
+                                                <textarea class="input-xxlarge"
+                                                          name="record_description"
+                                                          type="text"
+                                                          id="recordSummary"
+                                                          placeholder="Add a short explanation of the record"
+                                                          required/>{{ form['record_description'] }}</textarea>
+                                    </div>
+                            {% else %}
+                                <div class="controls">
+                                    <textarea class="input-xxlarge"
+                                              name="record_description"
+                                              type="text"
+                                              id="recordSummary"
+                                              placeholder="Add a short explanation of the record"
+                                              required/></textarea>
+                                </div>
+                            {% endif %}
+                        </div>
                         <!-- link to a record -->
                         <div class="control-group">
 
                             {% if form %}
-                            <label class="control-label">Or provide a link to a
-                                record <span rel="tooltip"
+                            <label class="control-label">Provide the url for a link <span rel="tooltip"
                                              data-toggle="tooltip"
                                              data-placement="right"
                                              title=""
@@ -392,8 +390,7 @@
                                 </div>
                             </div>
                             {% else %}
-                            <label class="control-label">Or provide a link to a
-                            record <span rel="tooltip"
+                            <label class="control-label">Provide the url for a link <span rel="tooltip"
                                          data-toggle="tooltip"
                                          data-placement="right"
                                          title=""
@@ -462,13 +459,18 @@
                             <div class="controls">
                                     <label class="radio inline" for="privacy setting-0">
                                         <input type="radio" name="record_privacy" value="False">
-                                        {# Value set to False means public#}
-                                        Public
+                                        {# Value set to False means release and public#}
+                                        Release and Public
                                     </label>
                                     <label class="radio inline" for="privacy setting-1">
                                         <input type="radio" name="record_privacy" value="True" checked="checked">
                                         {# Value set to True means private#}
                                         Private
+                                    </label>
+                                    <label class="radio inline" for="privacy setting-2">
+                                        <input type="radio" name="record_privacy" value="Both">
+                                        {# Value set to Both means released and private#}
+                                        Released and Private
                                     </label>
                             </div>                           
                         </div>

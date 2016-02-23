@@ -660,7 +660,8 @@ def add_a_resource(resource):
                 errors[
                     'missing_record_access'] = "You must upload a record, provide a link to a record, or indicate how the record can be accessed"
             if not ((req['record_description'])):
-                errors['missing_record_description'] = "Please include a name for this record"
+                if req['link_url']:
+                    errors['missing_record_description'] = "Please include a name for this record"
 
         resource_id = add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
         if type(resource_id) == int or str(resource_id).isdigit():
