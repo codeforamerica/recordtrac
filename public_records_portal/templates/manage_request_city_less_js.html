@@ -86,10 +86,7 @@ $("#record").on('change', function (e, data) {
             node.append('<label>Title: <input class="title_text" name="title[]" required></label>');
             node.append('</td>');
             node.append('<tr>');
-            node.append('<button class="btn btn-danger delete" type="button" onclick="parentNode.remove();">');
-            node.append('<i class="glyphicon glyphicon-trash"></i>');
-            node.append('<span>Cancel</span>');
-            node.append('</button>');
+            node.append('<button class="btn btn-danger delete" type="button" onclick="parentNode.remove();"><i class="glyphicon glyphicon-trash"></i><span>Cancel</span></button>');
             if (!index) {
                 node
                     .append('<br>')

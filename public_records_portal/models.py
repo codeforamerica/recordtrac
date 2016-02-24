@@ -24,9 +24,12 @@ from werkzeug.security import generate_password_hash, \
 from public_records_portal import db, app, cal
 
 
-class notePrivacy:
-    PUBLIC = 0x01
+class RecordPrivacy:
+    PRIVATE              = 0x01
+    RELEASED_AND_PRIVATE = 0x02
+    RELEASED_AND_PUBLIC  = 0x04
     AGENCY = 0x02
+
 
 
 # @export "User"
@@ -661,7 +664,8 @@ class Record(db.Model):
         db.String())  # Where it can be downloaded on the internet.
     access = db.Column(
         db.String())  # How to access it. Probably only defined on offline docs for now.
-    privacy=db.Column(db.Boolean, default=True)
+    privacy=db.Column(db.Integer, default=RecordPrivacy.PRIVATE)
+    release_date = db.Column(db.DateTime, nullable=True)
 
     def __init__(
             self,
@@ -672,7 +676,7 @@ class Record(db.Model):
             doc_id=None,
             description=None,
             access=None,
-            privacy=True
+            privacy=RecordPrivacy.PRIVATE
     ):
         self.doc_id = doc_id
         self.request_id = request_id
