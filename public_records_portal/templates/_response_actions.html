@@ -665,6 +665,10 @@
             <form name="close" id="closeRequest" method="post" action="/close">
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                {% if "missing_agency_description" in errors %}
+                    <div class="alert alert-danger" id="missing_agency_description">
+                        {{ errors['missing_agency_description'] }}</div>
+                {% endif %}
                 <fieldset>
                     <legend>Close request</legend>
                     <div class="row-fluid" style="width:98%;">

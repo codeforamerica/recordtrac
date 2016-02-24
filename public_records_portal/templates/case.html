@@ -96,7 +96,7 @@
                                         <button type="submit"
                                                 class="btn btn-default btn-level"
                                                 data-toggle="modal"
-                                                data-target=".agencyDescriptionModal"
+                                                data-target="#agencyDescriptionModal"
                                                 id="editAgencyDescriptionButton">Edit Agency Description
                                         </button>
                                     </div>
@@ -129,7 +129,7 @@
                         </fieldset>
                     </form>
 
-                    <div class="modal fade agencyDescriptionModal" id="confirm-submit2" tabindex="-1" role="dialog"
+                    <div class="modal fade agencyDescriptionModal" id="agencyDescriptionModal" tabindex="-1" role="dialog"
                          aria-labelledby="myModalLabel" aria-hidden="true" style="height: 40em; width:40em;">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -140,13 +140,13 @@
                                     <div id="modalquestionDiv">Are you sure you want to make the following question
                                         public and send an email to the requester?
                                     </div>
-                                    <table id="modalQuestionTable" class="table">
-                                        <tr>
-                                            <th>Question</th>
-                                            <td id="question_text"></td>
-                                            <input type="hidden" id="form_id" value=""/>
-                                        </tr>
-                                    </table>
+{#                                    <table id="modalQuestionTable" class="table">#}
+{#                                        <tr>#}
+{#                                            <th>Question</th>#}
+{#                                            <td id="question_text"></td>#}
+{#                                            <input type="hidden" id="form_id" value=""/>#}
+{#                                        </tr>#}
+{#                                    </table>#}
 
                                     <table id="modalAdditionalInfoTable" class="table">
                                         <tr id="editAgencyDescription" style="display:None;">
@@ -182,8 +182,8 @@
                                     </table>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal" id="cancelDescription">Cancel</button>
-                                    <a href="#" id="submit" class="btn btn-success success">Submit</a>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal" id="cancelDescription">Canceled</button>
+                                    <a href="#" id="submitAgencyDescription" class="btn btn-success success">Submit</a>
                                 </div>
                             </div>
                         </div>
@@ -200,13 +200,13 @@
                                     <div id="modalquestionDiv">Are you sure you want to make the following question
                                         public and send an email to the requester?
                                     </div>
-{#                                    <table id="modalQuestionTable" class="table">#}
-{#                                        <tr>#}
-{#                                            <th>Question</th>#}
-{#                                            <td id="question_text"></td>#}
-{#                                            <input type="hidden" id="form_id" value=""/>#}
-{#                                        </tr>#}
-{#                                    </table>#}
+                                    <table id="modalQuestionTable" class="table">
+                                        <tr>
+                                            <th>Question</th>
+                                            <td id="question_text"></td>
+                                            <input type="hidden" id="form_id" value=""/>
+                                        </tr>
+                                    </table>
 
                                     <table id="modalAdditionalInfoTable" class="table">
 {#                                        <tr id="editAgencyDescription" style="display:None;">#}
@@ -244,6 +244,7 @@
                             </div>
                         </div>
                     </div>
+
 
                     <!-- Add a public note form -->
                     {% if not current_user.is_authenticated or audience == 'public' %}

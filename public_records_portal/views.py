@@ -766,17 +766,19 @@ def acknowledge_request(resource, passed_recaptcha=False, data=None):
 @app.route("/close", methods=["GET", "POST"])
 @login_required
 def close(request_id=None):
+    errors = {}
     if request.method == 'POST':
         template = 'closed.html'
         request_id = request.form['request_id']
         reasons = []
-
         if 'close_reason' in request.form:
             reasons = request.form['close_reason']
         elif 'close_reasons' in request.form:
             for close_reason in request.form.getlist('close_reasons'):
                 reasons.append(close_reason)
-        close_request(request_id=request_id, reasons=reasons, user_id=get_user_id(), request_body=request.form)
+        errors['missing_agency_description'] = close_request(request_id=request_id, reasons=reasons, user_id=get_user_id(), request_body=request.form)
+        if errors:
+            return show_request(request_id, template=template, errors=errors)
         return show_request(request_id, template=template)
     return render_template('error.html', message="You can only close from a requests page!")
 

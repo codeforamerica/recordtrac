@@ -1215,6 +1215,13 @@ def close_request(
         request_body=None,
 ):
     req = get_obj('Request', request_id)
+    records = Record.query.filter_by(request_id=request_id).all()
+    for rec in records:
+        if rec.access != None:
+            app.logger.info("Request contains an offline record!")
+            if req.agencyDescription == None:
+                app.logger.info("Agency Description is not filled out")
+                return "You must fill out the Agency Description box before closing this request since you have uploaded an offline document"
     change_request_status(request_id, 'Closed')
     notification_content = {}
     # Create a note to capture closed information:
@@ -1269,6 +1276,7 @@ def close_request(
                             notification_type=notification_type,
                             notification_content=notification_content)
     add_staff_participant(request_id=request_id, user_id=user_id)
+    return None
 
 
 def change_privacy_setting(request_id, privacy, field):

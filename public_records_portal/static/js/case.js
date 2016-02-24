@@ -78,12 +78,39 @@
   });
 
   $('#submit').on('click',function(event){
+    console.log("SUBMITTING...")
+    alert("submission javascript");
     form_id = '#' + $('#form_id').val();
     if(!$('#modalAdditionalInfoTable').is(':visible') || $(form_id) == 'note_pdf') {
+        alert("abcdefghijklmn");
         $('#confirm-submit').modal('toggle');
         $(form_id).submit();
     }
     else {
+        alert("abcdefghijklmn2");
+      $('#modalAdditionalInfoTable').show();
+      $('#editAgencyDescription').hide();
+      additional_information = $('#additional_note').val();
+      var input = $("<input>")
+               .attr("type", "hidden")
+               .attr("name", "additional_information").val(additional_information);
+      $(form_id).append($(input));
+      $(form_id).submit();
+    }
+
+   });
+
+  $('#submitAgencyDescription').on('click',function(event){
+    console.log("SUBMITTING...")
+    alert("submission javascript");
+    form_id = '#' + $('#form_id').val();
+    if(!$('#modalAdditionalInfoTable').is(':visible') || $(form_id) == 'note_pdf') {
+        alert("abcdefghijklmn");
+        $('#confirm-submit').modal('toggle');
+        $(form_id).submit();
+    }
+    else {
+        alert("abcdefghijklmn2");
       $('#modalAdditionalInfoTable').show();
       $('#editAgencyDescription').hide();
       additional_information = $('#additional_note').val();
