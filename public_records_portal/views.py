@@ -505,7 +505,7 @@ show_request_for_x.methods = ['GET', 'POST']
 @app.route("/city/request/<string:request_id>")
 @login_required
 @requires_roles('Portal Administrator', 'Agency Administrator', 'Agency Helpers', 'Agency FOIL Officer')
-def show_request_for_city(request_id):
+def show_request_for_city(request_id,errors=None):
     req = get_obj("Request", request_id)
     app.logger.info("Current User Role: %s" % current_user.role)
     if current_user.role == 'Portal Administrator':
@@ -521,7 +521,7 @@ def show_request_for_city(request_id):
         audience = 'public'
         return show_request_for_x(audience, request_id)
 
-    return show_request(request_id=request_id, template="manage_request_%s_less_js.html" % audience)
+    return show_request(request_id=request_id, template="manage_request_%s_less_js.html" % audience, errors=errors)
 
 
 @app.route("/response/<string:request_id>")
@@ -613,7 +613,7 @@ def show_request(request_id, template="manage_request_public.html", errors=None,
                                , errors=errors, form=form, file=file)
     else:
         return render_template(template, req=req, agency_data=agency_data, users=users,
-                               department=department, assigned_user=assigned_user, helpers=helpers, audience=audience)
+                               department=department, assigned_user=assigned_user, helpers=helpers, audience=audience, datetime=datetime.now())
 
 
 # @app.route("/api/staff")
@@ -1678,9 +1678,9 @@ def change_privacy():
     field = request.form['fieldtype']
     # field will either be title or description
     app.logger.info("Changing privacy function")
-    errors = prr.change_privacy_setting(request_id=request.form['request_id'], privacy=privacy, field=field)
-    if errors['missing_agency_description']:
-        return show_request(req.request_id, template='show_request_for_city', errors=errors)
+    errors['missing_agency_description_privacy'] = prr.change_privacy_setting(request_id=request.form['request_id'], privacy=privacy, field=field)
+    if errors['missing_agency_description_privacy']:
+        return show_request_for_city(req.id, errors=errors)
     return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
 
 

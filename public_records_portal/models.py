@@ -308,6 +308,7 @@ class Request(db.Model):
     descriptionPrivate=db.Column(db.Boolean, default=True)
     titlePrivate=db.Column(db.Boolean, default=False)
     agencyDescription=db.Column(db.String(5000))
+    agencyDescription_due_date=db.Column(db.DateTime, default=None, nullable=True)
 
     def __init__(
             self,
@@ -320,8 +321,8 @@ class Request(db.Model):
             agency=None,
             descriptionPrivate=True,
             titlePrivate=False,
-            agencyDescription=None
-
+            agencyDescription=None,
+            agencyDescription_due_date=None
     ):
         self.id = id
         self.summary = summary
@@ -335,6 +336,7 @@ class Request(db.Model):
         self.descriptionPrivate = descriptionPrivate
         self.titlePrivacy=titlePrivate
         self.agencyDescription=agencyDescription
+        self.agencyDescription_due_date=agencyDescription_due_date
 
 
     def __repr__(self):

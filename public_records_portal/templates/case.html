@@ -74,22 +74,21 @@
                 <p class="lead" style="margin-bottom: 0rem;" truncateable="250">
 {#                {{ req.agencyDescription.decode("utf-8") }}#}
 {#                {{ req.agencyDescription.split('') }}#}
-                {% if "missing_record_description" in errors %}
-                    <div class="alert alert-danger" id="missing_agency_description">
-                        {{ errors['missing_record_description'] }}</div>
+                {% if "missing_agency_description_privacy" in errors %}
+                    <div class="alert alert-danger" id="missing_agency_description_privacy">
+                        {{ errors['missing_agency_description_privacy'] }}</div>
                 {% endif %}
+                {% if (current_user.is_authenticated and audience == 'city') or req.agencyDescription_due_date < datetime.now()%}
                     {% if req.agencyDescription != None %}
-{#                        {% if len(bytes.decode(req.agencyDescription)) > 50 %}#}
-{#                        {% if (req.agencyDescription.decode("utf-8")) > 50 %}#}
                         {% if req.agencyDescription.decode("utf-8")|length > 50 %}
                             Agency Description: {{ req.agencyDescription[0:50] }}...
                         {% else %}
                             Agency Description: {{ req.agencyDescription }}
                         {% endif %}
-
                     {% endif %}
+                {% endif %}
                 </p>
-                {% if current_user.is_authenticated and audience == 'city' %}
+                {% if (current_user.is_authenticated and audience == 'city') %}
                     <form name="agency_description" id="agencyDescription" method="post" action="/agencyDescription">
                         <input type="hidden" name="request_id" value="{{ req.id }}"/>
                         <input name=_csrf_token type=hidden value="{{ csrf_token() }}">

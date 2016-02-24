@@ -1276,13 +1276,17 @@ def close_request(
                             notification_type=notification_type,
                             notification_content=notification_content)
     add_staff_participant(request_id=request_id, user_id=user_id)
+
+    #Update the time of when the agency description should be released to the public to be 10 days from now
+    updated_due_date = datetime.now() + timedelta(days=10)
+    update_obj(attribute='agencyDescription_due_date', val=updated_due_date,obj_type='Request', obj_id=req.id)
     return None
 
 
 def change_privacy_setting(request_id, privacy, field):
     req = get_obj('Request', request_id)
 
-    if (req.descriptionPrivate==True and privacy==True) or (req.titlePrivate==True and privacy==True):
+    if (req.descriptionPrivate==True and privacy==u'True') or (req.titlePrivate==True and privacy==u'True'):
         if req.agencyDescription == None:
             return "An Agency Description must be created if you are changing the title and description to private"
     if field == 'title':

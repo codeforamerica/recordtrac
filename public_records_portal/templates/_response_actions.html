@@ -1,6 +1,10 @@
 {% if current_user.is_authenticated %}
 {% if req.solid_status() == 'open' %}
 <div class="row-fluid">
+{#    {% if "missing_agency_description_privacy" in errors %}#}
+{#        <div class="alert alert-danger" id="missing_agency_description_privacy">#}
+{#            {{ errors['missing_agency_description_privacy'] }}</div>#}
+{#    {% endif %}#}
     <div class="span12">
         <ul class="nav nav-pills nav-justified" role="tablist">
             <li>
