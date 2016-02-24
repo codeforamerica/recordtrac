@@ -98,22 +98,23 @@
 
                             <div class="row-fluid" style="width:98%;">
                                 <div class="controls">
-                                    <div class="fileinput fileinput-new"
-                                         data-provides="fileinput">
-                                                <span class="btn btn-default btn-file">
-                                                    <span class="fileinput-new">Select file</span>
-                                                    <span class="fileinput-exists">Change</span>
-                                                    <input type="file"
-                                                           name="record" id="record" data-show-upload="false" data-show-caption="true">
+                                               <span class="btn btn-primary fileinput-button">
+                                               <i class="glyphicon glyphicon-plus"></i>
+                                               <span>Add files...</span>
+                                               <!-- The file input field used as target for the file upload widget -->
+                                               <input id="record" type="file" name="record" multiple>
                                                 </span>
-                                        <span class="fileinput-filename"></span>                  
-                                        <a href="#"
-                                           id="close_filenames_list"
-                                           class="close fileinput-exists"
-                                           data-dismiss="fileinput"
-                                           style="float: none">&times;</a>
-                                    </div>
-                                    <p>Size of file is limited to 15 MB</p>
+                                               <span class="btn btn-primary start" type="submit">
+                                               <i class="glyphicon glyphicon-plus"></i>
+                                               <span id="upload_all">Upload All</span>
+                                                </span>
+                                               <span class="btn btn-primary cancel" type="reset">
+                                               <i class="glyphicon glyphicon-plus"></i>
+                                               <span id="cancel_all">Cancel All</span>
+                                                </span>                                                
+                                                <!-- The container for the uploaded files -->
+                                                <div id="files" class="files"></div>
+                                    <p>Size of file is limited to 10 Mb</p>
                                 </div>
                             </div>
                         </div>
@@ -308,10 +309,43 @@
                 <input type="hidden" name="audience" value="city"/>
                 <fieldset>
                     <div class="row-fluid" style="width:98%;">
+                        <!-- upload a record -->
+                        <div class="control-group">
+                            <label class="control-label">Upload a record <span
+                                    id="recordTooltip" rel="tooltip"
+                                    data-toggle="tooltip"
+                                    data-placement="right" title=""
+                                    data-original-title="{{'Upload a document'| explain_action}}">
+                                        <small><i class="icon-info-sign"></i>
+                                        </small>
+                                    </span></label>
+
+                            <div class="row-fluid" style="width:98%;" id="test_id">
+                                <div class="controls">
+                                               <div class="alert alert-danger" id="record_title_alert" style="display:none;">Record Title Cannot Be Longer Than 140 Characters</div>
+                                               <span class="btn btn-primary fileinput-button">
+                                               <i class="glyphicon glyphicon-plus"></i>
+                                               <span>Add files...</span>
+                                               <!-- The file input field used as target for the file upload widget -->
+                                               <input id="record" type="file" name="record" multiple>
+                                                </span>
+                                               <span class="btn btn-primary start" type="submit">
+                                               <i class="glyphicon glyphicon-plus"></i>
+                                               <span id="upload_all">Upload All</span>
+                                                </span>
+                                               <span class="btn btn-primary cancel" type="reset">
+                                               <i class="glyphicon glyphicon-plus"></i>
+                                               <span id="cancel_all">Cancel All</span>
+                                                </span>                                                
+                                                <!-- The container for the uploaded files -->
+                                                <div id="files" class="files"></div>
+                                    <p>Size of file is limited to 10 Mb</p>
+                                </div>
+                            </div>
+                        </div>
                         <!-- name of record -->
                         <div class="control-group">
-                            <label class="control-label" for="recordSummary">Name
-                                of record</label>
+                            <label class="control-label" for="recordSummary">Provide a name for a link to a record</label>
 
                             {% if form %}
                                     <div class="controls">
@@ -333,44 +367,11 @@
                                 </div>
                             {% endif %}
                         </div>
-                        <!-- upload a record -->
-                        <div class="control-group">
-                            <label class="control-label">Upload a record <span
-                                    id="recordTooltip" rel="tooltip"
-                                    data-toggle="tooltip"
-                                    data-placement="right" title=""
-                                    data-original-title="{{'Upload a document'| explain_action}}">
-                                        <small><i class="icon-info-sign"></i>
-                                        </small>
-                                    </span></label>
-
-                            <div class="row-fluid" style="width:98%;" id="test_id">
-                                <div class="controls">
-                                    <div class="fileinput fileinput-new file_upload_record"
-                                         data-provides="fileinput" >
-                                                <span class="btn btn-default btn-file">
-                                                    <span class="fileinput-new" id="fileinput_new_id">Select file</span>
-                                                    <span class="fileinput-exists" id="fileinput_exists">Change</span>
-                                                    <input type="file"
-                                                           name="record" id="record">
-                                                </span>
-                                        <span class="fileinput-filename"></span>
-                                        <a href="#"
-                                           id="close_filenames_list"
-                                           class="close fileinput-exists"
-                                           data-dismiss="fileinput"
-                                           style="float: none">&times;</a>
-                                    </div>
-                                    <p>Size of file is limited to 15 MB</p>
-                                </div>
-                            </div>
-                        </div>
                         <!-- link to a record -->
                         <div class="control-group">
 
                             {% if form %}
-                            <label class="control-label">Or provide a link to a
-                                record <span rel="tooltip"
+                            <label class="control-label">Provide the url for a link <span rel="tooltip"
                                              data-toggle="tooltip"
                                              data-placement="right"
                                              title=""
@@ -389,8 +390,7 @@
                                 </div>
                             </div>
                             {% else %}
-                            <label class="control-label">Or provide a link to a
-                            record <span rel="tooltip"
+                            <label class="control-label">Provide the url for a link <span rel="tooltip"
                                          data-toggle="tooltip"
                                          data-placement="right"
                                          title=""
@@ -459,13 +459,18 @@
                             <div class="controls">
                                     <label class="radio inline" for="privacy setting-0">
                                         <input type="radio" name="record_privacy" value="False">
-                                        {# Value set to False means public#}
-                                        Public
+                                        {# Value set to False means release and public#}
+                                        Release and Public
                                     </label>
                                     <label class="radio inline" for="privacy setting-1">
                                         <input type="radio" name="record_privacy" value="True" checked="checked">
                                         {# Value set to True means private#}
                                         Private
+                                    </label>
+                                    <label class="radio inline" for="privacy setting-2">
+                                        <input type="radio" name="record_privacy" value="Both">
+                                        {# Value set to Both means released and private#}
+                                        Released and Private
                                     </label>
                             </div>                           
                         </div>
