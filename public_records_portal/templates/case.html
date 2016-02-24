@@ -74,6 +74,10 @@
                 <p class="lead" style="margin-bottom: 0rem;" truncateable="250">
 {#                {{ req.agencyDescription.decode("utf-8") }}#}
 {#                {{ req.agencyDescription.split('') }}#}
+                {% if "missing_record_description" in errors %}
+                    <div class="alert alert-danger" id="missing_agency_description">
+                        {{ errors['missing_record_description'] }}</div>
+                {% endif %}
                     {% if req.agencyDescription != None %}
 {#                        {% if len(bytes.decode(req.agencyDescription)) > 50 %}#}
 {#                        {% if (req.agencyDescription.decode("utf-8")) > 50 %}#}

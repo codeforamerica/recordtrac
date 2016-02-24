@@ -778,7 +778,7 @@ def close(request_id=None):
                 reasons.append(close_reason)
         errors['missing_agency_description'] = close_request(request_id=request_id, reasons=reasons, user_id=get_user_id(), request_body=request.form)
         if errors:
-            return show_request(request_id, template=template, errors=errors)
+            return show_request(request_id, template=template, errors=errors, form='close')
         return show_request(request_id, template=template)
     return render_template('error.html', message="You can only close from a requests page!")
 
@@ -1672,12 +1672,15 @@ def submit():
 
 @app.route("/changeprivacy", methods=["POST", "GET"])
 def change_privacy():
+    errors = {}
     req = get_obj("Request", request.form['request_id'])
     privacy = request.form['privacy setting']
     field = request.form['fieldtype']
     # field will either be title or description
     app.logger.info("Changing privacy function")
-    prr.change_privacy_setting(request_id=request.form['request_id'], privacy=privacy, field=field)
+    errors = prr.change_privacy_setting(request_id=request.form['request_id'], privacy=privacy, field=field)
+    if errors['missing_agency_description']:
+        return show_request(req.request_id, template='show_request_for_city', errors=errors)
     return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
 
 

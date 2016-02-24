@@ -1281,8 +1281,11 @@ def close_request(
 
 def change_privacy_setting(request_id, privacy, field):
     req = get_obj('Request', request_id)
-    if field == 'title':
 
+    if (req.descriptionPrivate==True and privacy==True) or (req.titlePrivate==True and privacy==True):
+        if req.agencyDescription == None:
+            return "An Agency Description must be created if you are changing the title and description to private"
+    if field == 'title':
         # Set the title to private
         update_obj(attribute='titlePrivate', val=privacy,
                    obj_type='Request', obj_id=req.id)
