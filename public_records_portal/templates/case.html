@@ -151,14 +151,15 @@
                                     <table id="modalAdditionalInfoTable" class="table">
                                         <tr id="editAgencyDescription" style="display:None;">
                                             <th>Agency Description <br>(5000 character limit) <br></th>
-                                            {% if req.agencyDescription != None or (req.agencyDescription) != '' %}
-                                                <td><textarea style="width: 30em; height: 20em;" id="additional_note" name="additional_note" class="input-xlarge" maxlength="5000">{{ req.agencyDescription }}</textarea></td>
+                                            {% if req.agencyDescription != "None" %}
+                                                <td><textarea style="width: 30em; height: 20em;" id="additional_note" name="additional_note"
+                                                              class="input-xlarge" maxlength="5000"
+                                                              placeholder="Agency Description">{{ req.agencyDescription }}</textarea></td>
                                             {% else %}
                                                     <td><textarea style="width: 30em; height: 20em;" id="additional_note" name="additional_note"
                                                               class="input-xlarge"
                                                               placeholder="Agency Description"
-                                                                maxlength="5000">
-                                                    </textarea></td>
+                                                                maxlength="5000"></textarea></td>
                                             {% endif %}
 
                                         </tr>
@@ -208,16 +209,16 @@
 {#                                    </table>#}
 
                                     <table id="modalAdditionalInfoTable" class="table">
-                                        <tr id="editAgencyDescription" style="display:None;">
-                                            <th>Agency Description <br>(5000 character limit) <br></th>
+{#                                        <tr id="editAgencyDescription" style="display:None;">#}
+{#                                            <th>Agency Description <br>(5000 character limit) <br></th>#}
 {#                                            {% if req.agencyDescription != "" %}#}
-                                                <td><textarea style="width: 30em; height: 20em;" id="additional_note" name="additional_note"
-                                                              class="input-xlarge"
-                                                              placeholder="Agency Description"
-                                                                maxlength="5000">{{ req.agencyDescription }}
-                                                    </textarea></td>
+{#                                                <td><textarea style="width: 30em; height: 20em;" id="additional_note" name="additional_note"#}
+{#                                                              class="input-xlarge"#}
+{#                                                              placeholder="Agency Description"#}
+{#                                                                maxlength="5000">{{ req.agencyDescription }}#}
+{#                                                    </textarea></td>#}
 {#                                            {% endif %}#}
-                                        </tr>
+{#                                        </tr>#}
                                         <tr id="additionalInformation">
                                             <th>Additional Information</th>
                                             <td><textarea id="additional_note" name="additional_note"

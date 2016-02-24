@@ -97,7 +97,6 @@
    });
 
     $('#cancelDescription').on('click',function(event){
-        alert("Inside cancel description javascript funciton");
         $('#editAgencyDescription').hide();
         $('#additionalInformation').show();
         form_id = '#' + $('#form_id').val();

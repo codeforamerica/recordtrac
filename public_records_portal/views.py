@@ -770,6 +770,7 @@ def close(request_id=None):
         template = 'closed.html'
         request_id = request.form['request_id']
         reasons = []
+
         if 'close_reason' in request.form:
             reasons = request.form['close_reason']
         elif 'close_reasons' in request.form:
