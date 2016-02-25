@@ -156,6 +156,11 @@ everything else...''')
 
 No file passed in''')
 
+            try:
+                titles = request.form.getlist('title[]')
+            except:
+                app.logger.info('''No titles passed in for each record''')
+
             return upload_multiple_records(
                     request_id=fields['request_id'],
                     documents=documents,
@@ -164,6 +169,7 @@ No file passed in''')
                     user_id=current_user_id,
                     privacy=fields['record_privacy'],
                     department_name = department_name,
+                    titles=titles
             )
     elif 'qa' in resource:
         return ask_a_question(request_id=fields['request_id'],
@@ -704,9 +710,10 @@ def generate_denial_page(document):
     run.font.size = Pt(10)
     return document
 
-def upload_multiple_records(request_id, description, user_id, request_body, documents=None, privacy=True, department_name=None):
-    # for document in documents:
-    #     upload_record(request_id, description, user_id, request_body, document, privacy, department_name)
+def upload_multiple_records(request_id, description, user_id, request_body, documents=None, privacy=True, department_name=None, titles=None):
+    #for document in documents:
+    #    upload_record(request_id, titles[titleIndex], user_id, request_body, document, privacy, department_name)
+
 
     documents_size = 0
     for document in documents:
@@ -714,7 +721,7 @@ def upload_multiple_records(request_id, description, user_id, request_body, docu
         document.seek(0)
     if documents_size > 10000000:
         return "File too large"
-    return upload_record(request_id, description, user_id, request_body, documents, privacy, department_name)
+    return upload_record(request_id, description, user_id, request_body, documents, privacy, department_name, titles)
 
 ### @export "upload_record"
 def upload_record(
@@ -725,6 +732,7 @@ def upload_record(
         documents=None,
         privacy=True,
         department_name = None,
+        titles=None
 ):
     """ Creates a record with upload/download attributes """
 
@@ -732,6 +740,7 @@ def upload_record(
 
 Begins Upload_record method''')
     notification_content = {}
+    titleIndex = 0
     try:
 
         # doc_id is upload_path
@@ -751,6 +760,11 @@ Begins Upload_record method''')
                 if doc_id:
 
                     # record_id = create_record(doc_id = doc_id, request_id = request_id, user_id = user_id, description = description, filename = filename, url = app.config['HOST_URL'] + doc_id)
+
+                    # use file title instead of description if is provided
+                    if titles:
+                        description = titles[titleIndex]
+                        titleIndex = titleIndex + 1
 
                     record_id = create_record(
                             doc_id=None,
@@ -946,7 +960,7 @@ Agency chosen: %s''' % agency)
                                 notification_type='confirmation_agency',
                                 notification_content=notification_content)
     if attachment:
-        upload_multiple_records(request_id=request_id,
+        upload_record(request_id=request_id,
                       description=attachment_description,
                       user_id=user_id, request_body=None,
                       documents=attachment)

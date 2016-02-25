@@ -660,11 +660,25 @@ def add_a_resource(resource):
                 errors[
                     'missing_record_access'] = "You must upload a record, provide a link to a record, or indicate how the record can be accessed"
             if not ((req['record_description'])):
-                errors['missing_record_description'] = "Please include a name for this record"
+                if req['link_url']:
+                    errors['missing_record_description'] = "Please include a name for this record"
 
         resource_id = add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
         if type(resource_id) == int or str(resource_id).isdigit():
+            requestObj = get_obj("Request", req['request_id'])
             audience = 'city'
+            if current_user.role == 'Portal Administrator':
+                audience = 'city'
+            elif current_user.department_id == requestObj.department_id:
+                app.logger.info("User Dep: %s; Req Dep: %s" % (current_user.department_id, requestObj.department_id))
+                if current_user.role in ['Agency Administrator', 'Agency FOIL Officer']:
+                    app.logger.info("User Role: %s" % current_user.role)
+                    audience = 'city'
+                else:
+                    audience = 'helper'
+            else:
+                audience = 'public'
+
             template = "manage_request_%s_less_js.html" % audience
             app.logger.info("\n\nSuccessfully added resource: %s with id: %s" % (resource, resource_id))
             if resource == 'record_and_close':
@@ -1366,9 +1380,7 @@ def login():
     form = LoginForm()
     errors = []
     if request.method == 'POST':
-        print form.username.data
-        print form.password.data
-        if form.validate_on_submit():
+        if (form.username.data is not None and form.username.data != '') and (form.password.data is not None and form.password.data != ''):
             user_to_login = authenticate_login(form.username.data, form.password.data)
             if user_to_login:
                 login_user(user_to_login)
@@ -1405,11 +1417,13 @@ def login():
         return bad_request(400)
 
 
-@app.route("/attachments/<string:resource>", methods=["GET"])
-def get_attachments(resource):
+@app.route("/attachments/<string:privacy>/<string:resource>", methods=["GET"])
+def get_attachments(privacy, resource):
     app.logger.info("\n\ngetting attachment file")
-
-    return send_from_directory(app.config["UPLOAD_FOLDER"], resource, as_attachment=True)
+    if privacy == 'private':
+        return send_from_directory(app.config["UPLOAD_PRIVATE_LOCAL_FOLDER"], resource, as_attachment=True)
+    if privacy == 'public':
+        return send_from_directory(app.config["UPLOAD_PUBLIC_LOCAL_FOLDER"], resource, as_attachment=True)
 
 
 @app.route("/pdfs/<string:resource>", methods=["GET"])

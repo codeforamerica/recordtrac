@@ -77,8 +77,6 @@
     $('#question_text').html($('#questionTextarea').val());
   });
 
-  var additionalFile = "";
-
   $('#submit').on('click',function(event){
     form_id = '#' + $('#form_id').val();
     if(!$('#modalAdditionalInfoTable').is(':visible') || $(form_id) == 'note_pdf') {
@@ -86,36 +84,16 @@
         $(form_id).submit();
     }
     else {
+
       $('#modalAdditionalInfoTable').show();
       additional_information = $('#additional_note').val();
-      additional_record_val = $('#additionalRecord').val();
       var input = $("<input>")
                .attr("type", "hidden")
                .attr("name", "additional_information").val(additional_information);
-      var fileInput = $("<input>")
-               .attr("type", "hidden")
-               .attr("name", "additional_file").val(additionalFile);         
-      var additional_record = $("#additionalRecord")[0].files[0];               
       $(form_id).append($(input));
-      console.log(additional_record.type);
-      console.log(additional_record);
-      var fileInput = document.getElementById('additionalRecord');
-      file = fileInput.files[0];
-      fr = new FileReader();
-      fr.onload = receivedText;
-      fr.readAsDataURL(file);
-      console.log(receivedText());
-      //var form = new FormData();
-      //var formElement = document.querySelector("form");
-      //form.append(additional_record.type,additional_record);
       $(form_id).submit();
     }
    });
-
-    function receivedText() {
-      //document.getElementById('extend_file').appendChild(document.createTextNode(fr.result));
-      console.log(fr.result);
-    } 
 
     $('#cancel_close').on('click',function(event){
         $('#close-reminder').hide();
@@ -271,7 +249,28 @@ $('#close_filenames_list').on('click',function(){
 
   $("#requesterInfoButton").on('click', function() {
     $('#requester_info').toggle();
-    $('#requesterInfoButton').innerHTML()
+    $('#requesterInfoButton').innerHTML();
+  });
+
+  $(".start").on('click', function() {
+    var title = $('.title_text');
+    var titleLengthCorrect = 1;
+
+    $.each(title, function (index, t) {
+        if(t.value.length > 140) {
+          $('#record_title_alert').show();
+          titleLengthCorrect = -1;
+        }
+    });
+    
+    if(titleLengthCorrect === 1) {
+        $('#record_title_alert').hide();
+        $('#addRecordButton').click();
+    }
+  });
+
+  $("#cancel_all").on('click', function() {
+    $('.delete').click();
   });
 
 /*$(document).on('ready', function() {
