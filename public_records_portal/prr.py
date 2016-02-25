@@ -1216,12 +1216,17 @@ def close_request(
 ):
     req = get_obj('Request', request_id)
     records = Record.query.filter_by(request_id=request_id).all()
+    errors={}
     for rec in records:
-        if rec.access != None:
-            app.logger.info("Request contains an offline record!")
-            if req.agencyDescription == None:
-                app.logger.info("Agency Description is not filled out")
-                return "You must fill out the Agency Description box before closing this request since you have uploaded an offline document"
+        if req.agencyDescription == None or req.agencyDescription == '':
+            app.logger.info("Agency Description is not filled out")
+            if rec.access != None:
+                app.logger.info("Request contains an offline record!")
+                errors['missing_agency_description'] = "You must provide an Agency Description before closing this request since you uploaded an offline document"
+        if (rec.privacy == 0x1) or (rec.privacy == 0x2):
+            errors['missing_agency_description_record_privacy'] = "You must provide an Agency Description before closing this request since one or more document is marked as 'Private' or 'Released and Private' "
+    if errors:
+        return errors
     change_request_status(request_id, 'Closed')
     notification_content = {}
     # Create a note to capture closed information:
@@ -1319,6 +1324,12 @@ def change_record_privacy(record_id, privacy):
 def edit_agency_description(request_id, agency_description_text):
     app.logger.info("Modifying agency description of the request")
     req = get_obj('Request',request_id)
+    records = Record.query.filter_by(request_id=request_id).all()
+    for rec in records:
+        if (rec.privacy == 0x1 or rec.privacy == 0x2 ):
+            if (req.agencyDescription==None) or (req.agencyDescription==''):
+                return "An Angency Description must be provided if any of the uploaded documents "
+
     if (req.descriptionPrivate == True and req.titlePrivate== True):
         return "An Agency Description must be provided if you are changing the title and description to private."
     update_obj(attribute='agencyDescription', val=agency_description_text, obj_type='Request', obj_id=request_id)

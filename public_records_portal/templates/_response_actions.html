@@ -687,6 +687,10 @@
                     <div class="alert alert-danger" id="missing_agency_description">
                         {{ errors['missing_agency_description'] }}</div>
                 {% endif %}
+                {% if "missing_agency_description_record_privacy" in errors %}
+                    <div class="alert alert-danger" id="missing_agency_record_privacy">
+                        {{ errors['missing_agency_description_record_privacy'] }}</div>
+                {% endif %}
                 <fieldset>
                     <legend>Close request</legend>
                     <div class="row-fluid" style="width:98%;">

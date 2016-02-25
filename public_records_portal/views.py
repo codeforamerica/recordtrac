@@ -776,7 +776,7 @@ def close(request_id=None):
         elif 'close_reasons' in request.form:
             for close_reason in request.form.getlist('close_reasons'):
                 reasons.append(close_reason)
-        errors['missing_agency_description'] = close_request(request_id=request_id, reasons=reasons, user_id=get_user_id(), request_body=request.form)
+        errors = close_request(request_id=request_id, reasons=reasons, user_id=get_user_id(), request_body=request.form)
         if errors:
             return show_request(request_id, template=template, errors=errors, form='close')
         return show_request(request_id, template=template)
@@ -1687,9 +1687,9 @@ def change_privacy():
 @app.route("/switchRecordPrivacy", methods=["POST", "GET"])
 def switch_record_privacy():
     record = get_obj("Record", request.form['record_id'])
-    privacy = request.form['privacy_setting']
     app.logger.info(
         "Changing Record Privacy for Request %s, Record_Id %s to %s" % (record, request.form['record_id'], privacy))
+    # models.Record.query.filter_by(request_id=).all()
     if record is not None and privacy is not None:
         prr.change_record_privacy(record_id=request.form['record_id'], privacy=privacy)
     record.privacy = not (record.privacy)
