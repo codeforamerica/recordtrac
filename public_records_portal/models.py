@@ -25,30 +25,32 @@ from public_records_portal import db, app, cal
 
 
 class RecordPrivacy:
-    PRIVATE              = 0x01
-    RELEASED_AND_PRIVATE = 0x02
-    RELEASED_AND_PUBLIC  = 0x04
-    AGENCY = 0x02
+    PRIVATE = 0x1
+    RELEASED_AND_PRIVATE = 0x2
+    RELEASED_AND_PUBLIC = 0x3
 
 
-
-# @export "User"
 class AnonUser:
     @property
     def is_authenticated(self):
         return False
+
     @property
     def is_active(self):
         return False
+
     @property
     def is_anonymous(self):
         return True
+
     @property
     def get_id(self):
         return None
+
     @property
     def role(self):
         return None
+
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -76,13 +78,9 @@ class User(db.Model):
     backup_for = db.Column(db.String())  # comma separated list
     owners = relationship('Owner')
     subscribers = relationship('Subscriber')
-
-    # Is this user an active agency member?
-
     is_staff = db.Column(db.Boolean, default=False)
     staff_signature = db.Column(db.String(100),
                                 default='public_records_portal/static/images/staff_signature.png')
-
     role = db.Column(db.String())
 
     @property
@@ -119,11 +117,12 @@ class User(db.Model):
         if self.phone and self.phone != '':
             return self.phone
         return 'N/A'
-    
+
     def get_fax(self):
         if self.fax and self.fax != '':
             return self.fax
         return 'N/A'
+
     def get_adddress1(self):
         if self.address1 and self.address1 != '':
             return self.address1
@@ -302,14 +301,15 @@ class Request(db.Model):
     creator_id = db.Column(db.Integer, db.ForeignKey(
         'user.id'))  # If city staff created it on behalf of the public, otherwise the creator is the subscriber with creator = true
     department_id = db.Column(db.Integer, ForeignKey('department.id',
-                                                        name='fk_department'))
+                                                     name='fk_department'))
     department = relationship('Department', uselist=False)
     date_received = db.Column(db.DateTime)
     offline_submission_type = db.Column(db.String())
     prev_status = db.Column(db.String(400))  # The previous status of the request (open, closed, etc.)
-    #Adding new privacy option for description field
-    descriptionPrivate=db.Column(db.Boolean, default=True)
-    titlePrivate=db.Column(db.Boolean, default=False)
+    # Adding new privacy option for description field
+    descriptionPrivate = db.Column(db.Boolean, default=True)
+    titlePrivate = db.Column(db.Boolean, default=False)
+
     def __init__(
             self,
             id,
@@ -332,8 +332,7 @@ class Request(db.Model):
             self.date_received = date_received
         self.department_id = agency
         self.descriptionPrivate = descriptionPrivate
-        self.titlePrivacy=titlePrivate
-
+        self.titlePrivacy = titlePrivate
 
     def __repr__(self):
         return '<Request %r>' % self.summary
@@ -342,10 +341,9 @@ class Request(db.Model):
         if not self.date_received:
             self.date_received = self.date_created
         if self.extended == True:
-            self.due_date = cal.addbusdays(self.date_received, int(app.config['DAYS_AFTER_EXTENSION']))                
+            self.due_date = cal.addbusdays(self.date_received, int(app.config['DAYS_AFTER_EXTENSION']))
         else:
             self.due_date = cal.addbusdays(self.date_received, int(app.config['DAYS_TO_FULFILL']))
-
 
     def extension(self, days_after=int(app.config['DAYS_AFTER_EXTENSION']),
                   custom_due_date=None):
@@ -408,7 +406,7 @@ class Request(db.Model):
         if requester and requester.user:
             return requester.user.get_phone()
         return 'N/A'
-    
+
     def requester_fax(self):
         requester = self.requester()
         if requester and requester.user:
@@ -664,7 +662,7 @@ class Record(db.Model):
         db.String())  # Where it can be downloaded on the internet.
     access = db.Column(
         db.String())  # How to access it. Probably only defined on offline docs for now.
-    privacy=db.Column(db.Integer, default=RecordPrivacy.PRIVATE)
+    privacy = db.Column(db.Integer, default=RecordPrivacy.PRIVATE)
     release_date = db.Column(db.DateTime, nullable=True)
 
     def __init__(
@@ -676,7 +674,8 @@ class Record(db.Model):
             doc_id=None,
             description=None,
             access=None,
-            privacy=RecordPrivacy.PRIVATE
+            privacy=RecordPrivacy.PRIVATE,
+            release_date=None
     ):
         self.doc_id = doc_id
         self.request_id = request_id
@@ -687,9 +686,16 @@ class Record(db.Model):
         self.filename = filename
         self.access = access
         self.privacy = privacy
+        self.release_date = release_date
 
     def __repr__(self):
         return '<Record %r>' % self.description
+
+    def set_release_date(self, days):
+        self.release_date = datetime.now() + timedelta(days=days)
+
+    def get_release_date(self):
+        return self.release_date
 
 
 class Note(db.Model):
