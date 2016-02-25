@@ -766,7 +766,6 @@ def acknowledge_request(resource, passed_recaptcha=False, data=None):
 @app.route("/close", methods=["GET", "POST"])
 @login_required
 def close(request_id=None):
-    errors = {}
     if request.method == 'POST':
         template = 'closed.html'
         request_id = request.form['request_id']
