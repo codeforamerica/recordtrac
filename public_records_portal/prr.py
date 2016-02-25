@@ -1287,7 +1287,7 @@ def change_privacy_setting(request_id, privacy, field):
     req = get_obj('Request', request_id)
 
     if (req.descriptionPrivate==True and privacy==u'True') or (req.titlePrivate==True and privacy==u'True'):
-        if req.agencyDescription == None:
+        if req.agencyDescription == None or req.agencyDescription == u'':
             return "An Agency Description must be created if you are changing the title and description to private"
     if field == 'title':
         # Set the title to private
@@ -1318,6 +1318,9 @@ def change_record_privacy(record_id, privacy):
 
 def edit_agency_description(request_id, agency_description_text):
     app.logger.info("Modifying agency description of the request")
+    req = get_obj('Request',request_id)
+    if (req.descriptionPrivate == True and req.titlePrivate== True):
+        return "An Agency Description must be provided if you are changing the title and description to private."
     update_obj(attribute='agencyDescription', val=agency_description_text, obj_type='Request', obj_id=request_id)
 
 

@@ -1703,9 +1703,12 @@ def change_category():
 
 @app.route("/agencyDescription", methods=["POST", "GET"])
 def edit_agency_description():
+    errors={}
     req = request.form
     app.logger.info("Editing the agency description")
-    prr.edit_agency_description(request_id=req['request_id'],agency_description_text=req['additional_information'])
+    errors['missing_agency_description_privacy'] = prr.edit_agency_description(request_id=req['request_id'],agency_description_text=req['additional_information'])
+    if errors['missing_agency_description_privacy']:
+        return show_request_for_city(req['request_id'], errors=errors)
     return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
 
 @app.route("/<page>")
