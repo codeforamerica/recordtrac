@@ -742,6 +742,8 @@ Begins Upload_record method''')
                                        request_id=request_id, privacy=privacy)
             if error == "file_too_large":
                 return "File too large"
+            elif error == "file_too_small":
+                return "File too small"
             elif doc_id == False:
                 return "Extension type '%s' is not allowed." % filename
             else:
@@ -758,7 +760,7 @@ Begins Upload_record method''')
                             user_id=user_id,
                             description=description,
                             filename=filename,
-                            url=app.config['HOST_URL'] + doc_id,
+                            url=app.config['HOST_URL'] + str(doc_id),
                             privacy=privacy,
                     )
                     change_request_status(request_id,
