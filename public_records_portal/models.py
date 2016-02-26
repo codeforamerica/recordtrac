@@ -691,12 +691,6 @@ class Record(db.Model):
     def __repr__(self):
         return '<Record %r>' % self.description
 
-    def set_release_date(self, days):
-        self.release_date = datetime.now() + timedelta(days=days)
-
-    def get_release_date(self):
-        return self.release_date
-
 
 class Note(db.Model):
     # A note on a request.

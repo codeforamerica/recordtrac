@@ -17,6 +17,7 @@ import os
 import json
 import subprocess
 import bleach
+from public_records_portal import cal
 from flask import request, render_template, make_response, send_file
 from xhtml2pdf import pisa
 from docx import Document
@@ -134,16 +135,26 @@ def add_resource(resource, request_body, current_user_id=None):
         app.logger.info('''
 
 inside add_resource method''')
-        if fields['record_description'] == '':
-            return "When uploading a record, please fill out the 'summary' field."
         if 'record_access' in fields and fields['record_access'] != "":
+            if fields['record_privacy'] == 'release_and_public':
+                privacy = RecordPrivacy.RELEASED_AND_PUBLIC
+            elif fields['record_privacy'] == 'release_and_private':
+                privacy = RecordPrivacy.RELEASED_AND_PRIVATE
+            else:
+                privacy = RecordPrivacy.PRIVATE
             return add_offline_record(fields['request_id'], bleach.clean(fields['record_description']),
                                       bleach.clean(fields['record_access']),
-                                      current_user_id, department_name, privacy=bleach.clean(fields['record_privacy']))
+                                      current_user_id, department_name, privacy=privacy)
         elif 'link_url' in fields and fields['link_url'] != "":
+            if fields['record_privacy'] == 'release_and_public':
+                privacy = RecordPrivacy.RELEASED_AND_PUBLIC
+            elif fields['record_privacy'] == 'release_and_private':
+                privacy = RecordPrivacy.RELEASED_AND_PRIVATE
+            else:
+                privacy = RecordPrivacy.PRIVATE
             return add_link(request_id=bleach.clean(fields['request_id']), url=bleach.clean(fields['link_url']),
                             description=bleach.clean(fields['record_description']), user_id=current_user_id,
-                            department_name=department_name, privacy=bleach.clean(fields['record_privacy']))
+                            department_name=department_name, privacy=privacy)
         else:
             app.logger.info('''
 
@@ -161,13 +172,21 @@ No file passed in''')
             except:
                 app.logger.info('''No titles passed in for each record''')
 
+
+            if fields['record_privacy'] == 'release_and_public':
+                privacy = RecordPrivacy.RELEASED_AND_PUBLIC
+            elif fields['record_privacy'] == 'release_and_private':
+                privacy = RecordPrivacy.RELEASED_AND_PRIVATE
+            else:
+                privacy = RecordPrivacy.PRIVATE
+
             return upload_multiple_records(
                     request_id=fields['request_id'],
                     documents=documents,
                     request_body=request_body,
                     description=fields['record_description'],
                     user_id=current_user_id,
-                    privacy=fields['record_privacy'],
+                    privacy=privacy,
                     department_name = department_name,
                     titles=titles
             )
@@ -710,7 +729,7 @@ def generate_denial_page(document):
     run.font.size = Pt(10)
     return document
 
-def upload_multiple_records(request_id, description, user_id, request_body, documents=None, privacy=True, department_name=None, titles=None):
+def upload_multiple_records(request_id, description, user_id, request_body, documents=None, privacy=RecordPrivacy.PRIVATE, department_name=None, titles=None):
     #for document in documents:
     #    upload_record(request_id, titles[titleIndex], user_id, request_body, document, privacy, department_name)
 
@@ -730,7 +749,7 @@ def upload_record(
         user_id,
         request_body,
         documents=None,
-        privacy=True,
+        privacy=RecordPrivacy.PRIVATE,
         department_name = None,
         titles=None
 ):
@@ -747,8 +766,7 @@ Begins Upload_record method''')
 
         for document in documents:
             (doc_id, filename, error) = \
-            upload_helpers.upload_file(document=document,
-                                       request_id=request_id, privacy=privacy)
+            upload_helpers.upload_file(document=document, request_id=request_id, privacy=privacy)
             if error == "file_too_large":
                 return "File too large"
             elif doc_id == False:
@@ -1304,12 +1322,23 @@ def change_privacy_setting(request_id, privacy, field):
 
 def change_record_privacy(record_id, privacy):
     record = get_obj("Record", record_id)
+    if privacy == 'release_and_public':
+        privacy = RecordPrivacy.RELEASED_AND_PUBLIC
+        release_date = cal.addbusdays(datetime.now(), int(app.config['DAYS_TO_POST']))
+        update_obj(attribute="release_date", val=release_date, obj_type="Record", obj_id=record.id)
+    elif privacy == 'release_and_private':
+        privacy = RecordPrivacy.RELEASED_AND_PRIVATE
+        update_obj(attribute="release_date", val=None, obj_type="Record", obj_id=record.id)
+
+    else:
+        update_obj(attribute="release_date", val=None, obj_type="Record", obj_id=record.id)
+
     app.logger.info('Syncing privacy changes to %s' % app.config['PUBLIC_SERVER_HOSTNAME'])
-    if record.filename and privacy == 'False':
+    if record.filename and privacy == RecordPrivacy.RELEASED_AND_PUBLIC:
         app.logger.info("Making %s public" % record.filename)
         subprocess.call(["mv", app.config['UPLOAD_PRIVATE_LOCAL_FOLDER'] + "/" + record.filename, app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/"])
         subprocess.call(["rsync", "-avzh", "ssh", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/"])
-    elif record.filename and privacy == 'True':
+    elif record.filename and (privacy == RecordPrivacy.RELEASED_AND_PRIVATE or privacy == RecordPrivacy.PRIVATE):
         app.logger.info("Making %s private" % record.filename)
         subprocess.call(["mv", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['UPLOAD_PRIVATE_LOCAL_FOLDER'] + "/"])
         subprocess.call(["rsync", "-avzh", "--delete", "ssh", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/"])

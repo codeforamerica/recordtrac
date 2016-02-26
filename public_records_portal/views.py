@@ -29,7 +29,7 @@ from forms import OfflineRequestForm, NewRequestForm, LoginForm, EditUserForm
 import pytz
 from requires_roles import requires_roles
 from flask_login import LoginManager
-from models import AnonUser
+from models import AnonUser, RecordPrivacy
 from datetime import datetime, timedelta, date
 from business_calendar import Calendar
 import operator
@@ -1420,10 +1420,10 @@ def login():
 @app.route("/attachments/<string:privacy>/<string:resource>", methods=["GET"])
 def get_attachments(privacy, resource):
     app.logger.info("\n\ngetting attachment file")
-    if privacy == 'private':
-        return send_from_directory(app.config["UPLOAD_PRIVATE_LOCAL_FOLDER"], resource, as_attachment=True)
     if privacy == 'public':
         return send_from_directory(app.config["UPLOAD_PUBLIC_LOCAL_FOLDER"], resource, as_attachment=True)
+    if privacy == 'private':
+        return send_from_directory(app.config["UPLOAD_PRIVATE_LOCAL_FOLDER"], resource, as_attachment=True)
 
 
 @app.route("/pdfs/<string:resource>", methods=["GET"])

@@ -16,6 +16,7 @@ import traceback
 from werkzeug.utils import secure_filename
 
 from public_records_portal import app
+from models import RecordPrivacy
 
 
 def should_upload():
@@ -131,10 +132,10 @@ def upload_file(document, request_id, privacy = True):
                 app.logger.info("rsyncing...")
                 app.logger.info(filename)
                 upload_path = upload_file_locally(document, filename, request_id, privacy)
-                if privacy == 'False':
+                if privacy == RecordPrivacy.RELEASED_AND_PUBLIC:
                     app.logger.info("rsync public...")
                     subprocess.call(["rsync", "-avzh", "ssh", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + document.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/"])
-                elif privacy == 'True':
+                else:
                     app.logger.info("rsync private...")
                 return upload_path, filename, None
             else:
@@ -150,9 +151,9 @@ def upload_file_locally(document, filename, request_id, privacy):
     app.logger.info("\n\n%s" % (document))
 
 
-    if privacy == u'True':
+    if privacy == RecordPrivacy.RELEASED_AND_PUBLIC:
         upload_path = os.path.join(app.config['UPLOAD_PRIVATE_LOCAL_FOLDER'], filename)
-    elif privacy == u'False':
+    else:
         upload_path = os.path.join(app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'], filename)
     app.logger.info("\n\nupload path: %s" % (upload_path))
 
