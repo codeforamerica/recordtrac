@@ -1323,7 +1323,7 @@ def change_record_privacy(record_id, privacy):
     update_obj(attribute="privacy", val=privacy, obj_type="Record", obj_id=record.id)
 
 def edit_agency_description(request_id, agency_description_text):
-    #edit the agency description field of the record
+    #edit the agency description field of the request
     app.logger.info("Modifying agency description of the request")
     update_obj(attribute='agencyDescription', val=agency_description_text, obj_type='Request', obj_id=request_id)
 
