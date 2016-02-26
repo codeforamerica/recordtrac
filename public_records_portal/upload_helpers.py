@@ -61,7 +61,7 @@ def upload_file(document, request_id, privacy = True):
         if file_length < 0:
             app.logger.error("File: %s is too small" % document.filename)
             return None, None, "file_too_small"
-        if file_length > app.config['MAX_FILE_SIZE']:
+        if file_length > int(app.config['MAX_FILE_SIZE']):
             app.logger.error("File: %s is too large" % document.filename)
             return None, None, "file_too_large"
         if allowed_file(document.filename):
