@@ -1274,17 +1274,8 @@ def close_request(
 
 def change_privacy_setting(request_id, privacy, field):
     req = get_obj('Request', request_id)
-    if field == 'title':
-
-        # Set the title to private
-        update_obj(attribute='titlePrivate', val=privacy,
-                   obj_type='Request', obj_id=req.id)
-    elif field == 'description':
-
-        # Set description to private
-
-        req.descriptionPrivate = privacy
-        update_obj(attribute='descriptionPrivate', val=privacy,
+    # Set the title to private
+    update_obj(attribute='titlePrivate', val=privacy,
                    obj_type='Request', obj_id=req.id)
 
 
