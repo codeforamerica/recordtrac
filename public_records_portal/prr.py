@@ -158,12 +158,14 @@ No file passed in''')
 
             try:
                 titles = request.form.getlist('title[]')
+                addAsEmailAttachmentList = request.form.getlist('addAsEmailAttachment[]')
             except:
                 app.logger.info('''No titles passed in for each record''')
 
             return upload_multiple_records(
                     request_id=fields['request_id'],
                     documents=documents,
+                    addAsEmailAttachmentList = addAsEmailAttachmentList,
                     request_body=request_body,
                     description=fields['record_description'],
                     user_id=current_user_id,
@@ -710,7 +712,7 @@ def generate_denial_page(document):
     run.font.size = Pt(10)
     return document
 
-def upload_multiple_records(request_id, description, user_id, request_body, documents=None, privacy=True, department_name=None, titles=None):
+def upload_multiple_records(request_id, description, user_id, request_body, documents=None, addAsEmailAttachmentList=None, privacy=True, department_name=None, titles=None):
     #for document in documents:
     #    upload_record(request_id, titles[titleIndex], user_id, request_body, document, privacy, department_name)
 
@@ -721,7 +723,7 @@ def upload_multiple_records(request_id, description, user_id, request_body, docu
         document.seek(0)
     if documents_size > 10000000:
         return "File too large"
-    return upload_record(request_id, description, user_id, request_body, documents, privacy, department_name, titles)
+    return upload_record(request_id, description, user_id, request_body, documents, addAsEmailAttachmentList, privacy, department_name, titles)
 
 ### @export "upload_record"
 def upload_record(
@@ -730,6 +732,7 @@ def upload_record(
         user_id,
         request_body,
         documents=None,
+        addAsEmailAttachmentList=None,
         privacy=True,
         department_name = None,
         titles=None
@@ -784,17 +787,18 @@ Begins Upload_record method''')
         # print sys.exc_info()[0]
         print traceback.format_exc()
         return 'The upload timed out, please try again.'
-    if "attach_file_q" in request_body:
+    for addAsEmailAttachment in addAsEmailAttachmentList:
+        if addAsEmailAttachment:
         # attached_file = app.config['UPLOAD_FOLDER'] + '/' + filename
-        notification_content['documents'] = documents
-        generate_prr_emails(request_id=request_id,
+          notification_content['documents'] = documents
+          generate_prr_emails(request_id=request_id,
                             notification_type='city_response_added',
                             notification_content=notification_content)
-    else:
-        generate_prr_emails(request_id=request_id,
+        else:
+          generate_prr_emails(request_id=request_id,
                             notification_type='city_response_added',
                             notification_content=notification_content)
-    add_staff_participant(request_id=request_id,
+          add_staff_participant(request_id=request_id,
                           user_id=user_id)
         # return record_id
     return 1
