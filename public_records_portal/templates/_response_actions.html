@@ -458,19 +458,17 @@
                         <div class="control-group">
                             <div class="controls">
                                     <label class="radio inline" for="privacy setting-0">
-                                        <input type="radio" name="record_privacy" value="False">
+                                        <input type="radio" name="record_privacy" value="release_and_public">
                                         {# Value set to False means release and public#}
                                         Release and Public
                                     </label>
-                                    <label class="radio inline" for="privacy setting-1">
-                                        <input type="radio" name="record_privacy" value="True" checked="checked">
-                                        {# Value set to True means private#}
-                                        Private
-                                    </label>
                                     <label class="radio inline" for="privacy setting-2">
-                                        <input type="radio" name="record_privacy" value="Both">
-                                        {# Value set to Both means released and private#}
+                                        <input type="radio" name="record_privacy" value="release_and_private">
                                         Released and Private
+                                    </label>
+                                    <label class="radio inline" for="privacy setting-1">
+                                        <input type="radio" name="record_privacy" value="private" checked="checked">
+                                        Private
                                     </label>
                             </div>                           
                         </div>
