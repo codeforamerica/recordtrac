@@ -1687,7 +1687,6 @@ def switch_record_privacy():
         "Changing Record Privacy for Request %s, Record_Id %s to %s" % (record, request.form['record_id'], privacy))
     if record is not None and privacy is not None:
         prr.change_record_privacy(record_id=request.form['record_id'], privacy=privacy)
-    record.privacy = not (record.privacy)
     return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
 
 

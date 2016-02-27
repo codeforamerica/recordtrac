@@ -1318,22 +1318,28 @@ def change_record_privacy(record_id, privacy):
     if privacy == 'release_and_public':
         privacy = RecordPrivacy.RELEASED_AND_PUBLIC
         release_date = cal.addbusdays(datetime.now(), int(app.config['DAYS_TO_POST']))
-        update_obj(attribute="release_date", val=release_date, obj_type="Record", obj_id=record.id)
+        update_obj(attribute="release_date", val=None, obj_type="Record", obj_id=record.id)
     elif privacy == 'release_and_private':
         privacy = RecordPrivacy.RELEASED_AND_PRIVATE
         update_obj(attribute="release_date", val=None, obj_type="Record", obj_id=record.id)
-
     else:
+        privacy = RecordPrivacy.PRIVATE
         update_obj(attribute="release_date", val=None, obj_type="Record", obj_id=record.id)
-
+    update_obj(attribute="privacy", val=privacy, obj_type="Record", obj_id=record.id)
     app.logger.info('Syncing privacy changes to %s' % app.config['PUBLIC_SERVER_HOSTNAME'])
     if record.filename and privacy == RecordPrivacy.RELEASED_AND_PUBLIC:
         app.logger.info("Making %s public" % record.filename)
         subprocess.call(["mv", app.config['UPLOAD_PRIVATE_LOCAL_FOLDER'] + "/" + record.filename, app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/"])
-        subprocess.call(["rsync", "-avzh", "ssh", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/"])
+        if app.config['PUBLIC_SERVER_HOSTNAME'] is not None:
+            subprocess.call(["rsync", "-avzh", "ssh", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/"])
+        else:
+            subprocess.call(["mv", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/"])
     elif record.filename and (privacy == RecordPrivacy.RELEASED_AND_PRIVATE or privacy == RecordPrivacy.PRIVATE):
         app.logger.info("Making %s private" % record.filename)
         subprocess.call(["mv", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['UPLOAD_PRIVATE_LOCAL_FOLDER'] + "/"])
-        subprocess.call(["rsync", "-avzh", "--delete", "ssh", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/"])
+        if app.config['PUBLIC_SERVER_HOSTNAME'] is not None:
+            subprocess.call(["rsync", "-avzh", "--delete", "ssh", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/"])
+        else:
+            subprocess.call(["rm", "-rf", app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/" + record.filename])
 
     update_obj(attribute="privacy", val=privacy, obj_type="Record", obj_id=record.id)
