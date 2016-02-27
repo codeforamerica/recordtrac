@@ -769,6 +769,8 @@ Begins Upload_record method''')
             upload_helpers.upload_file(document=document, request_id=request_id, privacy=privacy)
             if error == "file_too_large":
                 return "File too large"
+            elif error == "file_too_small":
+                return "File too small"
             elif doc_id == False:
                 return "Extension type '%s' is not allowed." % filename
             else:
@@ -790,7 +792,7 @@ Begins Upload_record method''')
                             user_id=user_id,
                             description=description,
                             filename=filename,
-                            url=app.config['HOST_URL'] + doc_id,
+                            url=app.config['HOST_URL'] + str(doc_id),
                             privacy=privacy,
                     )
                     change_request_status(request_id,
@@ -1306,17 +1308,8 @@ def close_request(
 
 def change_privacy_setting(request_id, privacy, field):
     req = get_obj('Request', request_id)
-    if field == 'title':
-
-        # Set the title to private
-        update_obj(attribute='titlePrivate', val=privacy,
-                   obj_type='Request', obj_id=req.id)
-    elif field == 'description':
-
-        # Set description to private
-
-        req.descriptionPrivate = privacy
-        update_obj(attribute='descriptionPrivate', val=privacy,
+    # Set the title to private
+    update_obj(attribute='titlePrivate', val=privacy,
                    obj_type='Request', obj_id=req.id)
 
 
