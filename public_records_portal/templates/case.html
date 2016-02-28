@@ -240,43 +240,6 @@
                     </form>
                     {% endif %}
                 </div>
-                <!--<div>-->
-                    <!--&lt;!&ndash; shows any existing Q&A or public notes &ndash;&gt;-->
-                    <!--{% set request_data = ( req | get_request_data_chronologically ) %}-->
-
-                    <!--{% for response in request_data %}-->
-                    <!--{% set icon = response.get_icon() %}-->
-                    <!--<div class="row-fluid response">-->
-                        <!--<div class="span1 text-left">-->
-                            <!--<i class="{{ icon }}"></i>-->
-                        <!--</div>-->
-                        <!--<div class="span9">-->
-                            <!--<p truncateable="175">-->
-                                <!--{{ response.display_text() | safe }}-->
-                            <!--</p>-->
-                        <!--</div>-->
-                        <!--<div class="span2 text-right request-date">-->
-                            <!--<div class="timestampPopoverContainer">-->
-                                <!--<div class="row-fluid">-->
-                                        <!--<span class="timestampPopover" onmouseover="">-->
-                                            <!--{{ response.date() | date_granular }}-->
-                                        <!--</span>-->
-
-                                    <!--<div class="hide">-->
-                                        <!--{% include '_timestamp.html' %}-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--{% endfor %}-->
-                    <!--{% if request_data | length > 1 %}-->
-                    <!--&lt;!&ndash; SHOW/HIDE button; js is in case.js &ndash;&gt;-->
-                    <!--<div class="case-show-all show">-->
-                        <!--<i class="icon-chevron-down"></i> See all <i class="icon-chevron-down"></i>-->
-                    <!--</div>-->
-                    <!--{% endif %}-->
-                <!--</div>-->
             </div>
             {% endblock request %}
         </div>
@@ -308,7 +271,7 @@
                 </div>
                 <div class="span9">
                     <p class="expandable" truncateable="200">
-                        {{ response.display_text() | safe }} - <a href="mailto:{{staff.email}}">{{ staff.alias or staff.email }}</a>
+                        {{ response.display_text() | safe }} - <a href="mailto:{{ department.primary_contact.email }}">{{ staff.alias }}</a>
                     </p>
                 </div>
                 <div class="span2 text-right response-date">

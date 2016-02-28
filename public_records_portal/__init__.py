@@ -74,6 +74,7 @@ envvars = [
     'DAYS_AFTER_EXTENSION',  # Default number of days for an extension
     'DAYS_TO_FULFILL',  # Default number of days to fulfill a request
     'DAYS_UNTIL_OVERDUE',  # Default number of days until
+    'DAYS_TO_POST', # Days between upload and public visibility
     'NYC_GOV_BASE',  # Base URL for NYC.gov links/assets
 
     # Flask Settings

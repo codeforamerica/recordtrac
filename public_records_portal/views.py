@@ -29,7 +29,7 @@ from forms import OfflineRequestForm, NewRequestForm, LoginForm, EditUserForm
 import pytz
 from requires_roles import requires_roles
 from flask_login import LoginManager
-from models import AnonUser
+from models import AnonUser, RecordPrivacy
 from datetime import datetime, timedelta, date
 from business_calendar import Calendar
 import operator
@@ -660,7 +660,8 @@ def add_a_resource(resource):
                 errors[
                     'missing_record_access'] = "You must upload a record, provide a link to a record, or indicate how the record can be accessed"
             if not ((req['record_description'])):
-                errors['missing_record_description'] = "Please include a name for this record"
+                if req['link_url']:
+                    errors['missing_record_description'] = "Please include a name for this record"
 
         resource_id = add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
         if type(resource_id) == int or str(resource_id).isdigit():
@@ -1419,10 +1420,10 @@ def login():
 @app.route("/attachments/<string:privacy>/<string:resource>", methods=["GET"])
 def get_attachments(privacy, resource):
     app.logger.info("\n\ngetting attachment file")
-    if privacy == 'private':
-        return send_from_directory(app.config["UPLOAD_PRIVATE_LOCAL_FOLDER"], resource, as_attachment=True)
     if privacy == 'public':
         return send_from_directory(app.config["UPLOAD_PUBLIC_LOCAL_FOLDER"], resource, as_attachment=True)
+    if privacy == 'private':
+        return send_from_directory(app.config["UPLOAD_PRIVATE_LOCAL_FOLDER"], resource, as_attachment=True)
 
 
 @app.route("/pdfs/<string:resource>", methods=["GET"])
@@ -1686,7 +1687,6 @@ def switch_record_privacy():
         "Changing Record Privacy for Request %s, Record_Id %s to %s" % (record, request.form['record_id'], privacy))
     if record is not None and privacy is not None:
         prr.change_record_privacy(record_id=request.form['record_id'], privacy=privacy)
-    record.privacy = not (record.privacy)
     return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
 
 
