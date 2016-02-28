@@ -49,10 +49,10 @@
         $('#acknowledgeRequestForm').hide();
       }
   });
- 
+
   $("#days_after").change(function() {
     selected = $(this).val();
-    if(selected === "0") { 
+    if(selected === "0") {
       $("#custom_due_date").show();
       }
     else {
@@ -63,7 +63,7 @@
 
   $("#days_after").change(function() {
     selected = $(this).val();
-    if(selected === "-1") { 
+    if(selected === "-1") {
       $("#custom_due_date").show();
     }
     else {
@@ -97,16 +97,12 @@
    });
 
   $('#submitAgencyDescription').on('click',function(event){
-    console.log("SUBMITTING...")
-    alert("submission javascript");
     form_id = '#' + $('#form_id').val();
     if(!$('#modalAdditionalInfoTable').is(':visible') || $(form_id) == 'note_pdf') {
-        alert("abcdefghijklmn");
         $('#confirm-submit').modal('toggle');
         $(form_id).submit();
     }
     else {
-        alert("abcdefghijklmn2");
       $('#modalAdditionalInfoTable').show();
       $('#editAgencyDescription').hide();
       additional_information = $('#additional_note').val();
@@ -167,7 +163,7 @@
   $('#closeButton').on('click',function(){
     var selectedCloseReason = $('#close_reasons option:selected').text();
     if(selectedCloseReason.indexOf('Denied') >= 0) {
-        $('#deny_explain_why').show();  
+        $('#deny_explain_why').show();
     }
     else {
         $('#deny_explain_why').hide();
@@ -219,10 +215,10 @@ $('#file_upload_filenames').bind('DOMNodeInserted', function(event) {
       $('#file_upload_four').text(names[3]);
       $('#numFiles').hide();
   }
-  
+
 });
 
-$('#close_filenames_list').on('click',function(){ 
+$('#close_filenames_list').on('click',function(){
   $('#file_upload_one').empty();
   $('#file_upload_two').empty();
   $('#file_upload_three').empty();
@@ -256,11 +252,11 @@ $('#close_filenames_list').on('click',function(){
       $('#modalquestionDiv').html(modalQuestion);
       $('#modalQuestionTable').hide();
     });
- 
+
   $('#generatePDFButton').on('click',function(event){
     var selectedTemplate = $('#response_template option:selected').text();
     var modalQuestion = 'Are you sure you want to generate a Word Document for the template below?';
-           
+
     if (selectedTemplate === '') {
       $('#missing_pdf_template').removeClass('hidden');
     }
@@ -269,22 +265,22 @@ $('#close_filenames_list').on('click',function(){
             $('#deny_explain_why').show();
         }
         else {
-            $('#deny_explain_why').hide(); 
+            $('#deny_explain_why').hide();
         }
         $('#missing_pdf_template').addClass('hidden');
         var attr = $('#generatePDFButton').attr('data-toggle');
         $('#generatePDFButton').attr('data-toggle','modal');
         $('#generatePDFButton').attr('data-target','#confirm-submit');
-                             
+
         $('#modalAdditionalInfoTable').hide();
         $('#form_id').val('note_pdf');
         modalQuestion += '<br><br>' + selectedTemplate;
         $('#modalquestionDiv').html(modalQuestion);
         $('#modalQuestionTable').hide();
     }
-                            
-        
-        
+
+
+
   });
 
   $('#notifyButton').on('click',function(){

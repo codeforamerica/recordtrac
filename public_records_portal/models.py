@@ -121,7 +121,7 @@ class User(db.Model):
         if self.phone and self.phone != '':
             return self.phone
         return 'N/A'
-    
+
     def get_fax(self):
         if self.fax and self.fax != '':
             return self.fax
@@ -351,7 +351,7 @@ class Request(db.Model):
         if not self.date_received:
             self.date_received = self.date_created
         if self.extended == True:
-            self.due_date = cal.addbusdays(self.date_received, int(app.config['DAYS_AFTER_EXTENSION']))                
+            self.due_date = cal.addbusdays(self.date_received, int(app.config['DAYS_AFTER_EXTENSION']))
         else:
             self.due_date = cal.addbusdays(self.date_received, int(app.config['DAYS_TO_FULFILL']))
 
@@ -417,7 +417,7 @@ class Request(db.Model):
         if requester and requester.user:
             return requester.user.get_phone()
         return 'N/A'
-    
+
     def requester_fax(self):
         requester = self.requester()
         if requester and requester.user:

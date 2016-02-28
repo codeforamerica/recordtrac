@@ -78,7 +78,7 @@
                     <div class="alert alert-danger" id="missing_agency_description_privacy">
                         {{ errors['missing_agency_description_privacy'] }}</div>
                 {% endif %}
-                {% if (current_user.is_authenticated and audience == 'city') or req.agencyDescription_due_date < datetime.now()%}
+                {% if (current_user.is_authenticated and audience == 'city') or (req.agencyDescription_due_date and req.agencyDescription_due_date < datetime.now() ) %}
                     {% if req.agencyDescription != None %}
                         {% if req.agencyDescription.decode("utf-8")|length > 50 %}
                             Agency Description: {{ req.agencyDescription[0:50] }}...
@@ -133,7 +133,7 @@
                     </form>
 
                     <div class="modal fade agencyDescriptionModal" id="agencyDescriptionModal" tabindex="-1" role="dialog"
-                         aria-labelledby="myModalLabel" aria-hidden="true" style="height: 40em; width:60em;">
+                         aria-labelledby="myModalLabel" aria-hidden="true" style="width:60em;">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -143,26 +143,18 @@
                                     <div id="modalquestionDiv">Are you sure you want to make the following question
                                         public and send an email to the requester?
                                     </div>
-{#                                    <table id="modalQuestionTable" class="table">#}
-{#                                        <tr>#}
-{#                                            <th>Question</th>#}
-{#                                            <td id="question_text"></td>#}
-{#                                            <input type="hidden" id="form_id" value=""/>#}
-{#                                        </tr>#}
-{#                                    </table>#}
-
                                     <table id="modalAdditionalInfoTable" class="table">
                                         <tr id="editAgencyDescription" style="display:None;">
                                             <th>Agency Description <br>(5000 character limit) <br></th>
-                                            {% if req.agencyDescription != "None" %}
-                                                <td><textarea style="width: 30em; height: 20em;" id="additional_note" name="additional_note"
-                                                              class="input-xlarge" maxlength="5000"
-                                                              placeholder="Agency Description">{{ req.agencyDescription }}</textarea></td>
+                                            {% if req.agencyDescription and req.agencyDescription != "None" %}
+                                                <td><textarea style="width: 30em; height: 10em;" id="additional_note" name="additional_note"
+                                                              class="input-large" maxlength="5000"
+                                                              placeholder="Agency Description" >{{ req.agencyDescription }}</textarea></td>
                                             {% else %}
-                                                    <td><textarea style="width: 30em; height: 20em;" id="additional_note" name="additional_note"
-                                                              class="input-xlarge"
+                                                    <td><textarea style="width: 30em; height: 10em;" id="additional_note" name="additional_note"
+                                                              class="input-large"
                                                               placeholder="Agency Description"
-                                                                maxlength="5000"></textarea></td>
+                                                                maxlength="5000" ></textarea></td>
                                             {% endif %}
 
                                         </tr>
