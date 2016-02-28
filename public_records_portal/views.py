@@ -505,7 +505,7 @@ show_request_for_x.methods = ['GET', 'POST']
 @app.route("/city/request/<string:request_id>")
 @login_required
 @requires_roles('Portal Administrator', 'Agency Administrator', 'Agency Helpers', 'Agency FOIL Officer')
-def show_request_for_city(request_id):
+def show_request_for_city(request_id,errors=None):
     req = get_obj("Request", request_id)
     app.logger.info("Current User Role: %s" % current_user.role)
     if current_user.role == 'Portal Administrator':
@@ -521,7 +521,7 @@ def show_request_for_city(request_id):
         audience = 'public'
         return show_request_for_x(audience, request_id)
 
-    return show_request(request_id=request_id, template="manage_request_%s_less_js.html" % audience)
+    return show_request(request_id=request_id, template="manage_request_%s_less_js.html" % audience, errors=errors)
 
 
 @app.route("/response/<string:request_id>")
@@ -613,7 +613,7 @@ def show_request(request_id, template="manage_request_public.html", errors=None,
                                , errors=errors, form=form, file=file)
     else:
         return render_template(template, req=req, agency_data=agency_data, users=users,
-                               department=department, assigned_user=assigned_user, helpers=helpers, audience=audience)
+                               department=department, assigned_user=assigned_user, helpers=helpers, audience=audience, datetime=datetime.now())
 
 
 # @app.route("/api/staff")
@@ -776,7 +776,9 @@ def close(request_id=None):
         elif 'close_reasons' in request.form:
             for close_reason in request.form.getlist('close_reasons'):
                 reasons.append(close_reason)
-        close_request(request_id=request_id, reasons=reasons, user_id=get_user_id(), request_body=request.form)
+        errors = close_request(request_id=request_id, reasons=reasons, user_id=get_user_id(), request_body=request.form)
+        if errors:
+            return show_request(request_id, template=template, errors=errors, form='close')
         return show_request(request_id, template=template)
     return render_template('error.html', message="You can only close from a requests page!")
 
@@ -1670,21 +1672,24 @@ def submit():
 
 @app.route("/changeprivacy", methods=["POST", "GET"])
 def change_privacy():
+    errors = {}
     req = get_obj("Request", request.form['request_id'])
     privacy = request.form['privacy setting']
     field = request.form['fieldtype']
     # field will either be title or description
     app.logger.info("Changing privacy function")
-    prr.change_privacy_setting(request_id=request.form['request_id'], privacy=privacy, field=field)
+    errors['missing_agency_description_privacy'] = prr.change_privacy_setting(request_id=request.form['request_id'], privacy=privacy, field=field)
+    if errors['missing_agency_description_privacy']:
+        return show_request_for_city(req.id, errors=errors)
     return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
 
 
 @app.route("/switchRecordPrivacy", methods=["POST", "GET"])
 def switch_record_privacy():
     record = get_obj("Record", request.form['record_id'])
-    privacy = request.form['privacy_setting']
     app.logger.info(
         "Changing Record Privacy for Request %s, Record_Id %s to %s" % (record, request.form['record_id'], privacy))
+    # models.Record.query.filter_by(request_id=).all()
     if record is not None and privacy is not None:
         prr.change_record_privacy(record_id=request.form['record_id'], privacy=privacy)
     return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
@@ -1695,6 +1700,15 @@ def change_category():
     category = request.form['category']
     return redirect(render_template('new_request.html'))
 
+@app.route("/agencyDescription", methods=["POST", "GET"])
+def edit_agency_description():
+    errors={}
+    req = request.form
+    app.logger.info("Editing the agency description")
+    errors['missing_agency_description_privacy'] = prr.edit_agency_description(request_id=req['request_id'],agency_description_text=req['additional_information'])
+    if errors['missing_agency_description_privacy']:
+        return show_request_for_city(req['request_id'], errors=errors)
+    return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
 
 @app.route("/<page>")
 def any_page(page):

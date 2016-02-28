@@ -1250,6 +1250,22 @@ def close_request(
         request_body=None,
 ):
     req = get_obj('Request', request_id)
+    records = Record.query.filter_by(request_id=request_id).all()
+    errors={}
+    #Goes through all the records associated with a request and checks if they have agency description filled out.
+    for rec in records:
+        if req.agencyDescription == None or req.agencyDescription == '':
+            #Check if the agency description is filled out
+            app.logger.info("Agency Description is not filled out")
+            if rec.access != None:
+                #Check if an offline record exists
+                app.logger.info("Request contains an offline record!")
+                errors['missing_agency_description'] = "You must provide an Agency Description before closing this request since you uploaded an offline document"
+            if (rec.privacy == 0x1) or (rec.privacy == 0x2):
+                #Check if there are any documents uploaded which are private
+                errors['missing_agency_description_record_privacy'] = "You must provide an Agency Description before closing this request since one or more document is marked as 'Private' or 'Released and Private' "
+    if errors:
+        return errors
     change_request_status(request_id, 'Closed')
     notification_content = {}
     # Create a note to capture closed information:
@@ -1305,11 +1321,20 @@ def close_request(
                             notification_content=notification_content)
     add_staff_participant(request_id=request_id, user_id=user_id)
 
+    #Update the time of when the agency description should be released to the public to be 10 days from now
+    updated_due_date = datetime.now() + timedelta(days=10)
+    update_obj(attribute='agencyDescription_due_date', val=updated_due_date,obj_type='Request', obj_id=req.id)
+    return None
+
 
 def change_privacy_setting(request_id, privacy, field):
     req = get_obj('Request', request_id)
+    if (req.description_private==True and privacy==u'True') or (req.title_private==True and privacy==u'True'):
+        if req.agency_description == None or req.agency_description == u'':
+            return "An Agency Description must be provided if both the description and title are set to private"
+    if field == 'title':
     # Set the title to private
-    update_obj(attribute='titlePrivate', val=privacy,
+    update_obj(attribute='title_private', val=privacy,
                    obj_type='Request', obj_id=req.id)
 
 
@@ -1343,3 +1368,11 @@ def change_record_privacy(record_id, privacy):
             subprocess.call(["rm", "-rf", app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/" + record.filename])
 
     update_obj(attribute="privacy", val=privacy, obj_type="Record", obj_id=record.id)
+
+def edit_agency_description(request_id, agency_description_text):
+    #edit the agency description field of the request
+    app.logger.info("Modifying agency description of the request")
+    update_obj(attribute='agencyDescription', val=agency_description_text, obj_type='Request', obj_id=request_id)
+
+
+

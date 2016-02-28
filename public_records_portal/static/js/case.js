@@ -49,10 +49,10 @@
         $('#acknowledgeRequestForm').hide();
       }
   });
- 
+
   $("#days_after").change(function() {
     selected = $(this).val();
-    if(selected === "0") { 
+    if(selected === "0") {
       $("#custom_due_date").show();
       }
     else {
@@ -63,7 +63,7 @@
 
   $("#days_after").change(function() {
     selected = $(this).val();
-    if(selected === "-1") { 
+    if(selected === "-1") {
       $("#custom_due_date").show();
     }
     else {
@@ -84,8 +84,8 @@
         $(form_id).submit();
     }
     else {
-
       $('#modalAdditionalInfoTable').show();
+      $('#editAgencyDescription').hide();
       additional_information = $('#additional_note').val();
       var input = $("<input>")
                .attr("type", "hidden")
@@ -93,7 +93,39 @@
       $(form_id).append($(input));
       $(form_id).submit();
     }
+
    });
+
+  $('#submitAgencyDescription').on('click',function(event){
+    form_id = '#' + $('#form_id').val();
+    if(!$('#modalAdditionalInfoTable').is(':visible') || $(form_id) == 'note_pdf') {
+        $('#confirm-submit').modal('toggle');
+        $(form_id).submit();
+    }
+    else {
+      $('#modalAdditionalInfoTable').show();
+      $('#editAgencyDescription').hide();
+      additional_information = $('#additional_note').val();
+      var input = $("<input>")
+               .attr("type", "hidden")
+               .attr("name", "additional_information").val(additional_information);
+      $(form_id).append($(input));
+      $(form_id).submit();
+    }
+
+   });
+
+    $('#cancelDescription').on('click',function(event){
+        $('#editAgencyDescription').hide();
+        $('#additionalInformation').show();
+        form_id = '#' + $('#form_id').val();
+        additional_information = "";
+        var input = $("<input>")
+            .attr("type", "hidden")
+            .attr("name", "additional_information").val(additional_information);
+        $(form_id).append($(input));
+        $(form_id).submit();
+    });
 
     $('#cancel_close').on('click',function(event){
         $('#close-reminder').hide();
@@ -131,7 +163,7 @@
   $('#closeButton').on('click',function(){
     var selectedCloseReason = $('#close_reasons option:selected').text();
     if(selectedCloseReason.indexOf('Denied') >= 0) {
-        $('#deny_explain_why').show();  
+        $('#deny_explain_why').show();
     }
     else {
         $('#deny_explain_why').hide();
@@ -154,6 +186,17 @@
   });
 
 
+$('#editAgencyDescriptionButton').on('click',function(){
+    //$('#modalAdditionalInfoTable').hide();
+    $('#editAgencyDescription').show();
+    $('#additionalInformation').hide();
+    var modalQuestion = 'Type in the agency description below';
+    modalQuestion += '<br><br>';
+    $('#form_id').val('agencyDescription');
+    $('#modalquestionDiv').html(modalQuestion);
+    $('#modalQuestionTable').hide();
+});
+
 $('#file_upload_filenames').bind('DOMNodeInserted', function(event) {
   var names = [];
   if($("input[name=record]") && $("input[name=record]").get(0) && $("input[name=record]").get(0).files) {
@@ -172,10 +215,10 @@ $('#file_upload_filenames').bind('DOMNodeInserted', function(event) {
       $('#file_upload_four').text(names[3]);
       $('#numFiles').hide();
   }
-  
+
 });
 
-$('#close_filenames_list').on('click',function(){ 
+$('#close_filenames_list').on('click',function(){
   $('#file_upload_one').empty();
   $('#file_upload_two').empty();
   $('#file_upload_three').empty();
@@ -194,6 +237,7 @@ $('#close_filenames_list').on('click',function(){
   $('#addNoteButton').on('click',function(){
     $('#modalAdditionalInfoTable').show();
     $('#form_id').val('note');
+    console.log($('#form_id').val('note'));
     var modalQuestion = 'Are you sure you want to add the note below and send an email to the requester?';
     modalQuestion += '<br><br>' + $('#noteTextarea').val();
     $('#modalquestionDiv').html(modalQuestion);
@@ -208,11 +252,11 @@ $('#close_filenames_list').on('click',function(){
       $('#modalquestionDiv').html(modalQuestion);
       $('#modalQuestionTable').hide();
     });
- 
+
   $('#generatePDFButton').on('click',function(event){
     var selectedTemplate = $('#response_template option:selected').text();
     var modalQuestion = 'Are you sure you want to generate a Word Document for the template below?';
-           
+
     if (selectedTemplate === '') {
       $('#missing_pdf_template').removeClass('hidden');
     }
@@ -221,22 +265,22 @@ $('#close_filenames_list').on('click',function(){
             $('#deny_explain_why').show();
         }
         else {
-            $('#deny_explain_why').hide(); 
+            $('#deny_explain_why').hide();
         }
         $('#missing_pdf_template').addClass('hidden');
         var attr = $('#generatePDFButton').attr('data-toggle');
         $('#generatePDFButton').attr('data-toggle','modal');
         $('#generatePDFButton').attr('data-target','#confirm-submit');
-                             
+
         $('#modalAdditionalInfoTable').hide();
         $('#form_id').val('note_pdf');
         modalQuestion += '<br><br>' + selectedTemplate;
         $('#modalquestionDiv').html(modalQuestion);
         $('#modalQuestionTable').hide();
     }
-                            
-        
-        
+
+
+
   });
 
   $('#notifyButton').on('click',function(){

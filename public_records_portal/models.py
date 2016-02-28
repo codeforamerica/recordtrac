@@ -29,6 +29,11 @@ class RecordPrivacy:
     RELEASED_AND_PRIVATE = 0x2
     RELEASED_AND_PUBLIC = 0x3
 
+class RecordPrivacy:
+    PRIVATE = 0x1
+    RELEASED_AND_PRIVATE = 0x2
+    RELEASED_AND_PUBLIC = 0x3
+
 
 class AnonUser:
     @property
@@ -307,7 +312,11 @@ class Request(db.Model):
     offline_submission_type = db.Column(db.String())
     prev_status = db.Column(db.String(400))  # The previous status of the request (open, closed, etc.)
     #Adding new privacy option for description field
-    titlePrivate=db.Column(db.Boolean, default=False)
+    description_private=db.Column(db.Boolean, default=True)
+    title_private=db.Column(db.Boolean, default=False)
+    agency_description=db.Column(db.String(5000))
+    agency_description_due_date=db.Column(db.DateTime, default=None, nullable=True)
+
     def __init__(
             self,
             id,
@@ -317,7 +326,10 @@ class Request(db.Model):
             offline_submission_type=None,
             date_received=None,
             agency=None,
-            titlePrivate=False
+            description_private=True,
+            title_private=False,
+            agency_description=None,
+            agency_description_due_date=None
     ):
         self.id = id
         self.summary = summary
@@ -328,7 +340,10 @@ class Request(db.Model):
         if date_received and str(type(date_received)) == "<type 'datetime.date'>":
             self.date_received = date_received
         self.department_id = agency
-        self.titlePrivacy=titlePrivate
+        self.description_private = description_private
+        self.titlePrivacy=title_private
+        self.agency_description=agency_description
+        self.agency_description_due_date=agency_description_due_date
 
     def __repr__(self):
         return '<Request %r>' % self.summary
