@@ -134,13 +134,13 @@ def add_resource(resource, request_body, current_user_id=None):
         app.logger.info('''
 
 inside add_resource method''')
-        if fields['record_description'] == '':
-            return "When uploading a record, please fill out the 'summary' field."
         if 'record_access' in fields and fields['record_access'] != "":
             return add_offline_record(fields['request_id'], bleach.clean(fields['record_description']),
                                       bleach.clean(fields['record_access']),
                                       current_user_id, department_name, privacy=bleach.clean(fields['record_privacy']))
         elif 'link_url' in fields and fields['link_url'] != "":
+            if fields['record_description'] == '':
+                return "When uploading a record, please fill out the 'summary' field."
             return add_link(request_id=bleach.clean(fields['request_id']), url=bleach.clean(fields['link_url']),
                             description=bleach.clean(fields['record_description']), user_id=current_user_id,
                             department_name=department_name, privacy=bleach.clean(fields['record_privacy']))
