@@ -310,10 +310,10 @@ class Request(db.Model):
     offline_submission_type = db.Column(db.String())
     prev_status = db.Column(db.String(400))  # The previous status of the request (open, closed, etc.)
     #Adding new privacy option for description field
-    descriptionPrivate=db.Column(db.Boolean, default=True)
-    titlePrivate=db.Column(db.Boolean, default=False)
-    agencyDescription=db.Column(db.String(5000))
-    agencyDescription_due_date=db.Column(db.DateTime, default=None, nullable=True)
+    description_private=db.Column(db.Boolean, default=True)
+    title_private=db.Column(db.Boolean, default=False)
+    agency_description=db.Column(db.String(5000))
+    agency_description_due_date=db.Column(db.DateTime, default=None, nullable=True)
 
     def __init__(
             self,
@@ -324,10 +324,10 @@ class Request(db.Model):
             offline_submission_type=None,
             date_received=None,
             agency=None,
-            descriptionPrivate=True,
-            titlePrivate=False,
-            agencyDescription=None,
-            agencyDescription_due_date=None
+            description_private=True,
+            title_private=False,
+            agency_description=None,
+            agency_description_due_date=None
     ):
         self.id = id
         self.summary = summary
@@ -338,10 +338,10 @@ class Request(db.Model):
         if date_received and str(type(date_received)) == "<type 'datetime.date'>":
             self.date_received = date_received
         self.department_id = agency
-        self.descriptionPrivate = descriptionPrivate
-        self.titlePrivacy=titlePrivate
-        self.agencyDescription=agencyDescription
-        self.agencyDescription_due_date=agencyDescription_due_date
+        self.description_private = description_private
+        self.titlePrivacy=title_private
+        self.agency_description=agency_description
+        self.agency_description_due_date=agency_description_due_date
 
 
     def __repr__(self):
