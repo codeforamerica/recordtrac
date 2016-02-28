@@ -1,0 +1,40 @@
+<!-- This template houses the baseline case information (request, documents, status, etc.) only. -->
+
+{% extends "base.html" %}
+{% block title %}Contact{% endblock title %}
+
+{% block container %}
+    <!-- main content -->
+
+    <h2>Contact</h2>
+
+    {% if success %}
+        <p>Thank you for your message. We'll get back to you shortly.</p>
+
+    {% else %}
+        {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        <form action="{{ url_for('contact') }}" method=post>
+            <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+
+
+            {{ form.name.label }}
+            {{ form.name }}
+
+            {{ form.email.label }}
+            {{ form.email }}
+
+            {{ form.subject.label }}
+            {{ form.subject }}
+
+            {{ form.message.label }}
+            {{ form.message }}
+
+            {{ form.submit }}
+        </form>
+
+    {% endif %}
+
+{% endblock container %}
+
