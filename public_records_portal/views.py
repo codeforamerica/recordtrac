@@ -1381,9 +1381,7 @@ def login():
     form = LoginForm()
     errors = []
     if request.method == 'POST':
-        print form.username.data
-        print form.password.data
-        if form.validate_on_submit():
+        if (form.username.data is not None and form.username.data != '') and (form.password.data is not None and form.password.data != ''):
             user_to_login = authenticate_login(form.username.data, form.password.data)
             if user_to_login:
                 login_user(user_to_login)
@@ -1420,11 +1418,13 @@ def login():
         return bad_request(400)
 
 
-@app.route("/attachments/<string:resource>", methods=["GET"])
-def get_attachments(resource):
+@app.route("/attachments/<string:privacy>/<string:resource>", methods=["GET"])
+def get_attachments(privacy, resource):
     app.logger.info("\n\ngetting attachment file")
-
-    return send_from_directory(app.config["UPLOAD_FOLDER"], resource, as_attachment=True)
+    if privacy == 'private':
+        return send_from_directory(app.config["UPLOAD_PRIVATE_LOCAL_FOLDER"], resource, as_attachment=True)
+    if privacy == 'public':
+        return send_from_directory(app.config["UPLOAD_PUBLIC_LOCAL_FOLDER"], resource, as_attachment=True)
 
 
 @app.route("/pdfs/<string:resource>", methods=["GET"])

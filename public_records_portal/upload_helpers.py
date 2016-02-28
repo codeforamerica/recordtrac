@@ -65,7 +65,7 @@ def upload_file(document, request_id, privacy = True):
         app.logger.info("\n\nshoud not upload file")
         return '1', None, None  # Don't need to do real uploads locally
     if app.config["SHOULD_SCAN_FILES"] == 'True':
-        if allowed_file(document.filename) and len(document.read()) > 10000000:
+        if allowed_file(document.filename) and len(document.read()) > 15000000:
             app.logger.error("Error with filesize.")
             error = "file_too_large"
             return None, None, error
@@ -133,7 +133,7 @@ def upload_file(document, request_id, privacy = True):
                 upload_path = upload_file_locally(document, filename, request_id, privacy)
                 if privacy == 'False':
                     app.logger.info("rsync public...")
-                    subprocess.call(["rsync", "-avzh", "ssh", app.config['UPLOAD_PUBLIC_FOLDER_LOCAL'] + "/" + document.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_FOLDER_REMOTE'] + "/"])
+                    subprocess.call(["rsync", "-avzh", "ssh", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + document.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/"])
                 elif privacy == 'True':
                     app.logger.info("rsync private...")
                 return upload_path, filename, None

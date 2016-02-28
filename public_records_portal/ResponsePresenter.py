@@ -110,12 +110,18 @@ class ResponsePresenter:
                 download_url = "/attachments/" + str(self.response.filename)
                 if current_user.role not in ['Agency Helpers']  and current_user.role is not None:
                     if self.response.privacy:
+                        download_url = "/attachments/private/" + str(self.response.filename)
                         return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s'>%s </a><form method='post' action='/switchRecordPrivacy'><input name=_csrf_token type=hidden value='%s'><input type='hidden' name='request_id' value='%s'/><input type='hidden' name='record_id' value='%s'/><input class='radio inline' type='radio' name='privacy_setting' value='False' type='submit' onclick='action=this.form.submit();'> Public</input><input class='radio inline' type='radio' name='privacy_setting' value='True' type='submit' onclick='action=this.form.submit();' checked> Private</input></form>" % (download_url, download_url, bleach.clean(self.response.description), session['_csrf_token'], self.response.request_id, self.response.id)
                     else:
+                        download_url = "/attachments/public/" + str(self.response.filename)
                         return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s'>%s </a><form method='post' action='/switchRecordPrivacy'><input name=_csrf_token type=hidden value='%s'><input type='hidden' name='request_id' value='%s'/><input type='hidden' name='record_id' value='%s'/><input class='radio inline' type='radio' name='privacy_setting' value='False' type='submit' onclick='action=this.form.submit();' checked> Public</input><input class='radio inline' type='radio' name='privacy_setting' value='True' type='submit' onclick='action=this.form.submit();'> Private</input></form>" % (download_url, download_url, bleach.clean(self.response.description), session['_csrf_token'], self.response.request_id, self.response.id)
                 else:
-                        if current_user.role in ['Agency Helpers'] or not(self.response.privacy):
-                            return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s'>%s </a>" % (download_url, download_url, self.response.description)
+                    if self.response.privacy:
+                        download_url = "/attachments/private/" + str(self.response.filename)
+                    else:
+                        download_url = "/attachments/public/" + str(self.response.filename)
+                    if current_user.role in ['Agency Helpers'] or not(self.response.privacy):
+                        return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s'>%s </a>" % (download_url, download_url, self.response.description)
         elif self.type == "extension":
             text = self.response.text.strip("Request extended:")
             return text

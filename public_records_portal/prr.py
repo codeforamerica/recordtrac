@@ -156,7 +156,7 @@ everything else...''')
 
 No file passed in''')
 
-            return upload_multiple_records(
+            return upload_record(
                     request_id=fields['request_id'],
                     documents=documents,
                     request_body=request_body,
@@ -765,6 +765,7 @@ Begins Upload_record method''')
                                           'A response has been added.')
                     notification_content['user_id'] = user_id
                     notification_content['department_name'] = department_name
+                    notification_content['privacy'] = privacy
     except:
         # print sys.exc_info()[0]
         print traceback.format_exc()
@@ -945,7 +946,7 @@ Agency chosen: %s''' % agency)
                                 notification_type='confirmation_agency',
                                 notification_content=notification_content)
     if attachment:
-        upload_multiple_records(request_id=request_id,
+        upload_record(request_id=request_id,
                       description=attachment_description,
                       user_id=user_id, request_body=None,
                       documents=attachment)

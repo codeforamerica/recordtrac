@@ -326,6 +326,7 @@ Attempting to send an e-mail to %s with subject %s, referencing page %s and temp
                         include_unsubscribe_link=include_unsubscribe_link,
                         cc_everyone=cc_everyone,
                         attached_files=notification_content['documents'],
+                        privacy=notification_content['privacy'],
                         )
                     app.logger.info('''E-mail sent successfully!''')
                 else:
@@ -361,6 +362,7 @@ def send_email(
     include_unsubscribe_link=True,
     cc_everyone=False,
     attached_files=None,
+    privacy=True,
     ):
 
     mail = Mail(app)
@@ -375,8 +377,10 @@ def send_email(
         for file in attached_files:
             if file is not None:
                 file.seek(0)
-                # url = urllib.pathname2url(file)
-                url = app.config['UPLOAD_FOLDER'] + "/" + file.filename
+                if privacy == u'True':
+                    url = app.config['UPLOAD_PRIVATE_LOCAL_FOLDER'] + "/" + file.filename
+                else:
+                    url = app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + file.filename
                 content_type = mimetypes.guess_type(url)[0]
                 filename = file.filename
                 message.attach(filename=filename,
