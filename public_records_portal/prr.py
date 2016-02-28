@@ -807,20 +807,20 @@ Begins Upload_record method''')
         # print sys.exc_info()[0]
         print traceback.format_exc()
         return 'The upload timed out, please try again.'
-    for addAsEmailAttachment in addAsEmailAttachmentList:
-        if addAsEmailAttachment:
-        # attached_file = app.config['UPLOAD_FOLDER'] + '/' + filename
-          notification_content['documents'] = documents
-          generate_prr_emails(request_id=request_id,
-                            notification_type='city_response_added',
-                            notification_content=notification_content)
-        else:
-          generate_prr_emails(request_id=request_id,
-                            notification_type='city_response_added',
-                            notification_content=notification_content)
-          add_staff_participant(request_id=request_id,
-                          user_id=user_id)
-        # return record_id
+    if privacy in [RecordPrivacy.RELEASED_AND_PUBLIC, RecordPrivacy.RELEASED_AND_PRIVATE]:
+        for addAsEmailAttachment in addAsEmailAttachmentList:
+            if addAsEmailAttachment:
+            # attached_file = app.config['UPLOAD_FOLDER'] + '/' + filename
+              notification_content['documents'] = documents
+              generate_prr_emails(request_id=request_id,
+                                notification_type='city_response_added',
+                                notification_content=notification_content)
+            else:
+              generate_prr_emails(request_id=request_id,
+                                notification_type='city_response_added',
+                                notification_content=notification_content)
+              add_staff_participant(request_id=request_id,
+                              user_id=user_id)
     return 1
 
 
