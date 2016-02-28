@@ -64,24 +64,24 @@
                         {% endif %}
                     </h3>
                 <p class="lead" style="margin-bottom: 0rem;" truncateable="250">
-{#                {{ req.agencyDescription.decode("utf-8") }}#}
-{#                {{ req.agencyDescription.split('') }}#}
+{#                {{ req.agency_description.decode("utf-8") }}#}
+{#                {{ req.agency_description.split('') }}#}
                 {% if "missing_agency_description_privacy" in errors %}
                     <div class="alert alert-danger" id="missing_agency_description_privacy">
                         {{ errors['missing_agency_description_privacy'] }}</div>
                 {% endif %}
-                {% if (current_user.is_authenticated and audience == 'city') or (req.agencyDescription_due_date and req.agencyDescription_due_date < datetime.now() ) %}
-                    {% if req.agencyDescription != None %}
-                        {% if req.agencyDescription.decode("utf-8")|length > 50 %}
-                            Agency Description: {{ req.agencyDescription[0:50] }}...
+                {% if (current_user.is_authenticated and audience == 'city') or (req.agency_description_due_date and req.agency_description_due_date < datetime.now() ) %}
+                    {% if req.agency_description != None %}
+                        {% if req.agency_description.decode("utf-8")|length > 50 %}
+                            Agency Description: {{ req.agency_description[0:50] }}...
                         {% else %}
-                            Agency Description: {{ req.agencyDescription }}
+                            Agency Description: {{ req.agency_description }}
                         {% endif %}
                     {% endif %}
                 {% endif %}
                 </p>
                 {% if (current_user.is_authenticated and audience == 'city') %}
-                    <form name="agency_description" id="agencyDescription" method="post" action="/agencyDescription">
+                    <form name="agency_description" id="agency_description" method="post" action="/agency_description">
                         <input type="hidden" name="request_id" value="{{ req.id }}"/>
                         <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                         <fieldset>
@@ -91,7 +91,7 @@
                                         <button type="submit"
                                                 class="btn btn-default btn-level"
                                                 data-toggle="modal"
-                                                data-target="#agencyDescriptionModal"
+                                                data-target="#agency_descriptionModal"
                                                 id="editAgencyDescriptionButton">Edit Agency Description
                                         </button>
                                     </div>
@@ -124,7 +124,7 @@
                         </fieldset>
                     </form>
 
-                    <div class="modal fade agencyDescriptionModal" id="agencyDescriptionModal" tabindex="-1" role="dialog"
+                    <div class="modal fade agency_descriptionModal" id="agency_descriptionModal" tabindex="-1" role="dialog"
                          aria-labelledby="myModalLabel" aria-hidden="true" style="width:60em;">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -138,10 +138,10 @@
                                     <table id="modalAdditionalInfoTable" class="table">
                                         <tr id="editAgencyDescription" style="display:None;">
                                             <th>Agency Description <br>(5000 character limit) <br></th>
-                                            {% if req.agencyDescription and req.agencyDescription != "None" %}
+                                            {% if req.agency_description and req.agency_description != "None" %}
                                                 <td><textarea style="width: 30em; height: 10em;" id="additional_note" name="additional_note"
                                                               class="input-large" maxlength="5000"
-                                                              placeholder="Agency Description" >{{ req.agencyDescription }}</textarea></td>
+                                                              placeholder="Agency Description" >{{ req.agency_description }}</textarea></td>
                                             {% else %}
                                                     <td><textarea style="width: 30em; height: 10em;" id="additional_note" name="additional_note"
                                                               class="input-large"
@@ -198,11 +198,11 @@
                                     <table id="modalAdditionalInfoTable" class="table">
 {#                                        <tr id="editAgencyDescription" style="display:None;">#}
 {#                                            <th>Agency Description <br>(5000 character limit) <br></th>#}
-{#                                            {% if req.agencyDescription != "" %}#}
+{#                                            {% if req.agency_description != "" %}#}
 {#                                                <td><textarea style="width: 30em; height: 20em;" id="additional_note" name="additional_note"#}
 {#                                                              class="input-xlarge"#}
 {#                                                              placeholder="Agency Description"#}
-{#                                                                maxlength="5000">{{ req.agencyDescription }}#}
+{#                                                                maxlength="5000">{{ req.agency_description }}#}
 {#                                                    </textarea></td>#}
 {#                                            {% endif %}#}
 {#                                        </tr>#}

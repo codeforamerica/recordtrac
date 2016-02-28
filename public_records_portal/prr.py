@@ -1254,7 +1254,7 @@ def close_request(
     errors={}
     #Goes through all the records associated with a request and checks if they have agency description filled out.
     for rec in records:
-        if req.agencyDescription == None or req.agencyDescription == '':
+        if req.agency_description == None or req.agency_description == '':
             #Check if the agency description is filled out
             app.logger.info("Agency Description is not filled out")
             if rec.access != None:
@@ -1323,7 +1323,7 @@ def close_request(
 
     #Update the time of when the agency description should be released to the public to be 10 days from now
     updated_due_date = datetime.now() + timedelta(days=10)
-    update_obj(attribute='agencyDescription_due_date', val=updated_due_date,obj_type='Request', obj_id=req.id)
+    update_obj(attribute='agency_description_due_date', val=updated_due_date,obj_type='Request', obj_id=req.id)
     return None
 
 
@@ -1334,7 +1334,7 @@ def change_privacy_setting(request_id, privacy, field):
             return "An Agency Description must be provided if both the description and title are set to private"
     if field == 'title':
     # Set the title to private
-    update_obj(attribute='title_private', val=privacy,
+        update_obj(attribute='title_private', val=privacy,
                    obj_type='Request', obj_id=req.id)
 
 
@@ -1372,7 +1372,7 @@ def change_record_privacy(record_id, privacy):
 def edit_agency_description(request_id, agency_description_text):
     #edit the agency description field of the request
     app.logger.info("Modifying agency description of the request")
-    update_obj(attribute='agencyDescription', val=agency_description_text, obj_type='Request', obj_id=request_id)
+    update_obj(attribute='agency_description', val=agency_description_text, obj_type='Request', obj_id=request_id)
 
 
 

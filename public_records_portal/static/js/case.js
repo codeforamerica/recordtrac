@@ -192,7 +192,7 @@ $('#editAgencyDescriptionButton').on('click',function(){
     $('#additionalInformation').hide();
     var modalQuestion = 'Type in the agency description below';
     modalQuestion += '<br><br>';
-    $('#form_id').val('agencyDescription');
+    $('#form_id').val('agency_description');
     $('#modalquestionDiv').html(modalQuestion);
     $('#modalQuestionTable').hide();
 });

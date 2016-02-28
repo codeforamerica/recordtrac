@@ -1700,7 +1700,7 @@ def change_category():
     category = request.form['category']
     return redirect(render_template('new_request.html'))
 
-@app.route("/agencyDescription", methods=["POST", "GET"])
+@app.route("/agency_description", methods=["POST", "GET"])
 def edit_agency_description():
     errors={}
     req = request.form
