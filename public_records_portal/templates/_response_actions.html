@@ -64,7 +64,7 @@
                   method="post"
                   action="/add_a_record_and_close" autocomplete="on"
                   enctype="multipart/form-data">
-                  <p>Please provide a short explanation of the record along with at least a file upload, a link to the record, or instructions on how to access the record offline.</p>                  
+                  <p>Please provide a short explanation of the record along with at least a file upload, a link to the record, or instructions on how to access the record offline.</p>
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <input type="hidden" name="audience" value="city"/>
                 <input type="hidden" name="record_privacy" value="True"/>
@@ -111,7 +111,7 @@
                                                <span class="btn btn-primary cancel" type="reset">
                                                <i class="glyphicon glyphicon-plus"></i>
                                                <span id="cancel_all">Cancel All</span>
-                                                </span>                                                
+                                                </span>
                                                 <!-- The container for the uploaded files -->
                                                 <div id="files" class="files"></div>
                                     <p>Size of file is limited to 10 Mb</p>
@@ -304,7 +304,7 @@
                     <div class="alert alert-danger" id="filesize">{{ errors['filesize'] }}</div>
                 {% endif %}
                 <div class="alert alert-danger" id="numFiles" style="display:none;">A maximum of four documents can be added in one session.</div>
-                <p>Please provide a short explanation of the record along with at least a file upload, a link to the record, or instructions on how to access the record offline.</p> 
+                <p>Please provide a short explanation of the record along with at least a file upload, a link to the record, or instructions on how to access the record offline.</p>
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <input type="hidden" name="audience" value="city"/>
                 <fieldset>
@@ -336,7 +336,7 @@
                                                <span class="btn btn-primary cancel" type="reset">
                                                <i class="glyphicon glyphicon-plus"></i>
                                                <span id="cancel_all">Cancel All</span>
-                                                </span>                                                
+                                                </span>
                                                 <!-- The container for the uploaded files -->
                                                 <div id="files" class="files"></div>
                                     <p>Size of file is limited to 10 Mb</p>
@@ -472,10 +472,10 @@
                                         {# Value set to Both means released and private#}
                                         Released and Private
                                     </label>
-                            </div>                           
+                            </div>
                         </div>
                         <!-- submission -->
-                        <div class="control-group">                         
+                        <div class="control-group">
                             <div class="controls">
                                 <button type="submit"
                                         class="btn btn-default btn-block"
@@ -722,7 +722,7 @@
                     <div class="controls">
                         <input type="hidden" name="request_id"
                                value="{{ req.id }}"/>
-                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}"> 
+                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                         <input type="hidden" name="owner_id"
                                value="{{ owner.id }}"/>
                         <input type="hidden" name="remove_helper"
@@ -767,7 +767,7 @@
                                             <option value="{{ user.email }}" department_id="{{ user.department_id }}">{{ user.alias}}</option>
                                         {% endif %}
                                     {% endfor %}
-                    </select>                       
+                    </select>
                     <input id="notifyReason" class="input-block-level"
                            type="text" name="owner_reason"
                            placeholder="Say why." required/>
@@ -784,7 +784,7 @@
                     <div class="controls">
                         <input type="hidden" name="request_id"
                                value="{{ req.id }}"/>
-                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">       
+                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                         <!--input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required /-->
                         <select class="span12" id="rerouteEmail"
                                 name="owner_email" style="height:100%">
