@@ -73,7 +73,7 @@ $("#record").on('change', function (e, data) {
       for (var i = 0; i < $("input[name=record]").get(0).files.length; ++i) {
         names.push($("input[name=record]").get(0).files[i].name);
       }
-  }	
+  }
         $.each(names, function (index, file) {
             var node = $('<p>');
                     //.append($('<span/>').text(file));
@@ -86,11 +86,11 @@ $("#record").on('change', function (e, data) {
             node.append('<label>Title: <input class="title_text" name="title[]" required></label>');
             node.append('</td>');
             node.append('<tr>');
-            node.append('<button class="btn btn-danger delete" type="button" onclick="parentNode.remove();">');
-            node.append('<i class="glyphicon glyphicon-trash"></i>');
-            node.append('<span>Cancel</span>');
-            node.append('</button><br>');
-            node.append('<input type="checkbox" name="addAsEmailAttachment[]" id="addAttachment">Add to email</input>');
+            node.append('<button class="btn btn-danger delete" type="button" onclick="parentNode.remove();"><i class="icon-remove icon-white"></i><span>Cancel</span>&nbsp;</button>');
+            node.append('</tr>')
+            node.append('<tr>')
+            node.append('<input type="checkbox" name="addAsEmailAttachment[]" id="addAttachment"><label for"addAsEmailAttachment[]" style="display: inline-block;">Add to email');
+            node.append('</tr>')
             if (!index) {
                 node
                     .append('<br>')
@@ -98,5 +98,5 @@ $("#record").on('change', function (e, data) {
             }
             node.appendTo("#files");
         })});
-</script>        
+</script>
 {% endblock custom_script_links %}
