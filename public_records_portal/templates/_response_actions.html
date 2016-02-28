@@ -64,6 +64,8 @@
                   method="post"
                   action="/add_a_record_and_close" autocomplete="on"
                   enctype="multipart/form-data">
+                  <p>Please provide a short explanation of the record along with at least a file upload, a link to the record, or instructions on how to access the record offline.</p>
+                <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <input type="hidden" name="audience" value="city"/>
                 <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                 {% if "missing_record_description" in errors %}
@@ -121,7 +123,7 @@
                                                 </span>
                                     <!-- The container for the uploaded files -->
                                     <div id="files" class="files"></div>
-                                    <p>Size of file is limited to 10 Mb</p>
+                                    <p>Size of file is limited to 10 MB</p>
                                 </div>
                             </div>
                         </div>
@@ -453,7 +455,7 @@
                                                <span class="btn btn-primary fileinput-button">
                                                <i class="glyphicon glyphicon-plus"></i>
                                                <span>Add files...</span>
-                                                   <!-- The file input field used as target for the file upload widget -->
+                                               <!-- The file input field used as target for the file upload widget -->
                                                <input id="record" type="file" name="record" multiple>
                                                 </span>
                                                <span class="btn btn-primary start" type="submit">
@@ -466,14 +468,13 @@
                                                 </span>
                                     <!-- The container for the uploaded files -->
                                     <div id="files" class="files"></div>
-                                    <p>Size of file is limited to 10 Mb</p>
+                                    <p>Size of file is limited to 10 MB</p>
                                 </div>
                             </div>
                         </div>
                         <!-- name of record -->
                         <div class="control-group">
-                            <label class="control-label" for="recordSummary">Provide a name for a link to a
-                                record</label>
+                            <label class="control-label" for="recordSummary">Provide a name for a link to a record</label>
 
                             {% if form %}
                                 <div class="controls">
@@ -499,12 +500,12 @@
                         <div class="control-group">
 
                             {% if form %}
-                                <label class="control-label">Provide the url for a link <span rel="tooltip"
-                                                                                              data-toggle="tooltip"
-                                                                                              data-placement="right"
-                                                                                              title=""
-                                                                                              data-original-title="{{ 'Add a link' |
-                                        explain_action }}">
+                            <label class="control-label">Provide the url for a link <span rel="tooltip"
+                                             data-toggle="tooltip"
+                                             data-placement="right"
+                                             title=""
+                                             data-original-title="{{'Add a link' |
+                                        explain_action}}">
                                         <small><i class="icon-info-sign"></i>
                                         </small>
                                     </span></label>
@@ -518,12 +519,12 @@
                                     </div>
                                 </div>
                             {% else %}
-                                <label class="control-label">Provide the url for a link <span rel="tooltip"
-                                                                                              data-toggle="tooltip"
-                                                                                              data-placement="right"
-                                                                                              title=""
-                                                                                              data-original-title="{{ 'Add a link' |
-                                    explain_action }}">
+                            <label class="control-label">Provide the url for a link <span rel="tooltip"
+                                         data-toggle="tooltip"
+                                         data-placement="right"
+                                         title=""
+                                         data-original-title="{{'Add a link' |
+                                    explain_action}}">
                                     <small><i class="icon-info-sign"></i>
                                     </small>
                             </span></label>
@@ -858,22 +859,22 @@
                                         </option>
 
                                     </select>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <div class="controls">
-                                    <button id="closeButton" data-toggle="modal"
-                                            data-target="#confirm-submit"
-                                            type="submit"
-                                            class="btn btn-default btn-block">Close
-                                        request
-                                    </button>
-                                </div>
                             </div>
                         </div>
-                    </fieldset>
-                </form>
-            </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                <button id="closeButton" data-toggle="modal"
+                                        data-target="#confirm-submit"
+                                        type="submit"
+                                        class="btn btn-default btn-block">Close
+                                    request
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
             <div class="tab-pane" id="manage_helpers" style="width: 98%;">
                 {% if helpers %}
                     <p class="lead">Remove Helpers</p>

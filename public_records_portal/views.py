@@ -1070,7 +1070,7 @@ def prepare_request_fields(results):
         # and not regular SQLAlchemy attributes.
         "contact_name": r.point_person_name(), \
         "solid_status": r.solid_status(),
-        "titlePrivate": r.titlePrivate
+        "title_private": r.title_private
     }, results)
 
 

@@ -43,7 +43,7 @@
                         </span>
                         {% if req %}
                         {% if current_user.is_anonymous or audience == 'public' %}
-                            {% if not req.titlePrivate %}
+                            {% if not req.title_private %}
                             <p class="lead" style="margin-bottom: 0rem;"
                                truncateable="250"> Title: {{ req.summary | e | new_lines }}
                             </p>
@@ -308,7 +308,7 @@
                                 <div class="controls" style="margin-left: 3rem">
 
                                     {# Set the private checkbox to be filled out if the request is private#}
-                                    {% if req.titlePrivate %}
+                                    {% if req.title_private %}
                                     <label class="radio inline" for="privacy setting-0">
                                         <input type="radio" name="privacy setting" id="privacy setting-0" value="False"
                                                type="submit" onclick="action=this.form.submit();">
@@ -322,7 +322,7 @@
                                         Private
                                     </label>
                                     {# Set the public checkbox to be filled out if the request is public#}
-                                    {% elif req.titlePrivate==False %}
+                                    {% elif req.title_private==False %}
                                     <label class="radio inline" for="privacy setting-0">
                                         <input type="radio" name="privacy setting" id="privacy setting-0" value="False"
                                                type="submit" checked onclick="action=this.form.submit();">
