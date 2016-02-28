@@ -17,6 +17,7 @@ import os
 import json
 import subprocess
 import bleach
+from public_records_portal import cal
 from flask import request, render_template, make_response, send_file
 from xhtml2pdf import pisa
 from docx import Document
@@ -135,15 +136,25 @@ def add_resource(resource, request_body, current_user_id=None):
 
 inside add_resource method''')
         if 'record_access' in fields and fields['record_access'] != "":
+            if fields['record_privacy'] == 'release_and_public':
+                privacy = RecordPrivacy.RELEASED_AND_PUBLIC
+            elif fields['record_privacy'] == 'release_and_private':
+                privacy = RecordPrivacy.RELEASED_AND_PRIVATE
+            else:
+                privacy = RecordPrivacy.PRIVATE
             return add_offline_record(fields['request_id'], bleach.clean(fields['record_description']),
                                       bleach.clean(fields['record_access']),
-                                      current_user_id, department_name, privacy=bleach.clean(fields['record_privacy']))
+                                      current_user_id, department_name, privacy=privacy)
         elif 'link_url' in fields and fields['link_url'] != "":
-            if fields['record_description'] == '':
-                return "When uploading a record, please fill out the 'summary' field."
+            if fields['record_privacy'] == 'release_and_public':
+                privacy = RecordPrivacy.RELEASED_AND_PUBLIC
+            elif fields['record_privacy'] == 'release_and_private':
+                privacy = RecordPrivacy.RELEASED_AND_PRIVATE
+            else:
+                privacy = RecordPrivacy.PRIVATE
             return add_link(request_id=bleach.clean(fields['request_id']), url=bleach.clean(fields['link_url']),
                             description=bleach.clean(fields['record_description']), user_id=current_user_id,
-                            department_name=department_name, privacy=bleach.clean(fields['record_privacy']))
+                            department_name=department_name, privacy=privacy)
         else:
             app.logger.info('''
 
@@ -162,6 +173,14 @@ No file passed in''')
             except:
                 app.logger.info('''No titles passed in for each record''')
 
+
+            if fields['record_privacy'] == 'release_and_public':
+                privacy = RecordPrivacy.RELEASED_AND_PUBLIC
+            elif fields['record_privacy'] == 'release_and_private':
+                privacy = RecordPrivacy.RELEASED_AND_PRIVATE
+            else:
+                privacy = RecordPrivacy.PRIVATE
+
             return upload_multiple_records(
                     request_id=fields['request_id'],
                     documents=documents,
@@ -169,7 +188,7 @@ No file passed in''')
                     request_body=request_body,
                     description=fields['record_description'],
                     user_id=current_user_id,
-                    privacy=fields['record_privacy'],
+                    privacy=privacy,
                     department_name = department_name,
                     titles=titles
             )
@@ -712,7 +731,7 @@ def generate_denial_page(document):
     run.font.size = Pt(10)
     return document
 
-def upload_multiple_records(request_id, description, user_id, request_body, documents=None, addAsEmailAttachmentList=None, privacy=True, department_name=None, titles=None):
+def upload_multiple_records(request_id, description, user_id, request_body, documents=None, addAsEmailAttachmentList=None, privacy=RecordPrivacy.PRIVATE, department_name=None, titles=None):
     #for document in documents:
     #    upload_record(request_id, titles[titleIndex], user_id, request_body, document, privacy, department_name)
 
@@ -732,8 +751,8 @@ def upload_record(
         user_id,
         request_body,
         documents=None,
-        addAsEmailAttachmentList=None,
-        privacy=True,
+        addAsEmailAttachmentList=None, 
+        privacy=RecordPrivacy.PRIVATE,
         department_name = None,
         titles=None
 ):
@@ -750,10 +769,11 @@ Begins Upload_record method''')
 
         for document in documents:
             (doc_id, filename, error) = \
-            upload_helpers.upload_file(document=document,
-                                       request_id=request_id, privacy=privacy)
+            upload_helpers.upload_file(document=document, request_id=request_id, privacy=privacy)
             if error == "file_too_large":
                 return "File too large"
+            elif error == "file_too_small":
+                return "File too small"
             elif doc_id == False:
                 return "Extension type '%s' is not allowed." % filename
             else:
@@ -775,7 +795,7 @@ Begins Upload_record method''')
                             user_id=user_id,
                             description=description,
                             filename=filename,
-                            url=app.config['HOST_URL'] + doc_id,
+                            url=app.config['HOST_URL'] + str(doc_id),
                             privacy=privacy,
                     )
                     change_request_status(request_id,
@@ -1234,6 +1254,22 @@ def close_request(
         request_body=None,
 ):
     req = get_obj('Request', request_id)
+    records = Record.query.filter_by(request_id=request_id).all()
+    errors={}
+    #Goes through all the records associated with a request and checks if they have agency description filled out.
+    for rec in records:
+        if req.agency_description == None or req.agency_description == '':
+            #Check if the agency description is filled out
+            app.logger.info("Agency Description is not filled out")
+            if rec.access != None:
+                #Check if an offline record exists
+                app.logger.info("Request contains an offline record!")
+                errors['missing_agency_description'] = "You must provide an Agency Description before closing this request since you uploaded an offline document"
+            if (rec.privacy == 0x1) or (rec.privacy == 0x2):
+                #Check if there are any documents uploaded which are private
+                errors['missing_agency_description_record_privacy'] = "You must provide an Agency Description before closing this request since one or more document is marked as 'Private' or 'Released and Private' "
+    if errors:
+        return errors
     change_request_status(request_id, 'Closed')
     notification_content = {}
     # Create a note to capture closed information:
@@ -1289,33 +1325,65 @@ def close_request(
                             notification_content=notification_content)
     add_staff_participant(request_id=request_id, user_id=user_id)
 
+    #Update the time of when the agency description should be released to the public to be 10 days from now
+    updated_due_date = datetime.now() + timedelta(days=10)
+    update_obj(attribute='agency_description_due_date', val=updated_due_date,obj_type='Request', obj_id=req.id)
+    return None
+
 
 def change_privacy_setting(request_id, privacy, field):
     req = get_obj('Request', request_id)
+    if (req.description_private==True and privacy==u'True') or (req.title_private==True and privacy==u'True'):
+        if req.agency_description == None or req.agency_description == u'':
+            return "An Agency Description must be provided if both the description and title are set to private"
     if field == 'title':
-
-        # Set the title to private
-        update_obj(attribute='titlePrivate', val=privacy,
+    # Set the title to private
+        update_obj(attribute='title_private', val=privacy,
                    obj_type='Request', obj_id=req.id)
     elif field == 'description':
 
         # Set description to private
 
-        req.descriptionPrivate = privacy
-        update_obj(attribute='descriptionPrivate', val=privacy,
+        req.description_private = privacy
+        update_obj(attribute='title_private', val=privacy,
                    obj_type='Request', obj_id=req.id)
 
 
 def change_record_privacy(record_id, privacy):
     record = get_obj("Record", record_id)
+    if privacy == 'release_and_public':
+        privacy = RecordPrivacy.RELEASED_AND_PUBLIC
+        release_date = cal.addbusdays(datetime.now(), int(app.config['DAYS_TO_POST']))
+        update_obj(attribute="release_date", val=None, obj_type="Record", obj_id=record.id)
+    elif privacy == 'release_and_private':
+        privacy = RecordPrivacy.RELEASED_AND_PRIVATE
+        update_obj(attribute="release_date", val=None, obj_type="Record", obj_id=record.id)
+    else:
+        privacy = RecordPrivacy.PRIVATE
+        update_obj(attribute="release_date", val=None, obj_type="Record", obj_id=record.id)
+    update_obj(attribute="privacy", val=privacy, obj_type="Record", obj_id=record.id)
     app.logger.info('Syncing privacy changes to %s' % app.config['PUBLIC_SERVER_HOSTNAME'])
-    if record.filename and privacy == 'False':
+    if record.filename and privacy == RecordPrivacy.RELEASED_AND_PUBLIC:
         app.logger.info("Making %s public" % record.filename)
         subprocess.call(["mv", app.config['UPLOAD_PRIVATE_LOCAL_FOLDER'] + "/" + record.filename, app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/"])
-        subprocess.call(["rsync", "-avzh", "ssh", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/"])
-    elif record.filename and privacy == 'True':
+        if app.config['PUBLIC_SERVER_HOSTNAME'] is not None:
+            subprocess.call(["rsync", "-avzh", "ssh", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/"])
+        else:
+            subprocess.call(["mv", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/"])
+    elif record.filename and (privacy == RecordPrivacy.RELEASED_AND_PRIVATE or privacy == RecordPrivacy.PRIVATE):
         app.logger.info("Making %s private" % record.filename)
         subprocess.call(["mv", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['UPLOAD_PRIVATE_LOCAL_FOLDER'] + "/"])
-        subprocess.call(["rsync", "-avzh", "--delete", "ssh", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/"])
+        if app.config['PUBLIC_SERVER_HOSTNAME'] is not None:
+            subprocess.call(["rsync", "-avzh", "--delete", "ssh", app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + record.filename, app.config['PUBLIC_SERVER_USER'] + '@' + app.config['PUBLIC_SERVER_HOSTNAME'] + ':' + app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/"])
+        else:
+            subprocess.call(["rm", "-rf", app.config['UPLOAD_PUBLIC_REMOTE_FOLDER'] + "/" + record.filename])
 
     update_obj(attribute="privacy", val=privacy, obj_type="Record", obj_id=record.id)
+
+def edit_agency_description(request_id, agency_description_text):
+    #edit the agency description field of the request
+    app.logger.info("Modifying agency description of the request")
+    update_obj(attribute='agency_description', val=agency_description_text, obj_type='Request', obj_id=request_id)
+
+
+

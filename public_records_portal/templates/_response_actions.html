@@ -1,65 +1,65 @@
 {% if current_user.is_authenticated %}
-{% if req.solid_status() == 'open' %}
-<div class="row-fluid">
-    <div class="span12">
-        <ul class="nav nav-pills nav-justified" role="tablist">
-            <li>
-                <a href="#acknowledge_request" role="tab" data-toggle="tab">
-                    <small>Acknowledge Request</small>
-                </a>
-            </li>
-            <li>
-                <a href="#acknowledge_and_grant_request" role="tab"
-                   data-toggle="tab">
-                    <small>Grant Request</small>
-                </a>
-            </li>
-            <li>
-                <a href="#acknowledge_and_deny_request" role="tab"
-                   data-toggle="tab">
-                    <small>Deny Request</small>
-                </a>
-            </li>
-        </ul>
-    </div>
-</div>
-<div class="row-fluid" style="width:98%;">
-    <div class="tab-content">
-        <div class="tab-pane" id="acknowledge_request">
-            <form name="note" id="AcknowledgeNote" method="post"
-                  action="/update_a_request_acknowledge">
-                <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-                <fieldset>
-                    <h4>Estimated Duration</h4>
-                    <select class="span12" id="acknowledge_status"
-                            name="acknowledge_status" style="height:100%">
-                        <option value="20 days">Acknowledged - 20
-                            business days
-                        </option>
-                        <option value="30 days">Acknowledged - 30
-                            business days
-                        </option>
-                        <option value="60 days">Acknowledged - 60
-                            business days
-                        </option>
-                        <option value="90 days">Acknowledged - 90
-                            business days
-                        </option>
-                        <option value="120 days">Acknowledged -
-                            120 business days
-                        </option>
-                    </select>
-                    <button id="rerouteButton" class="btn input-block-level"
-                            data-toggle="modal"
-                            data-target="#confirm-submit" type="submit"><i
-                            class="icon-envelope"> </i>
-                        Acknowledge Request
-                    </button>
-                </fieldset>
-            </form>
+    {% if req.solid_status() == 'open' %}
+        <div class="row-fluid">
+            <div class="span12">
+                <ul class="nav nav-pills nav-justified" role="tablist">
+                    <li>
+                        <a href="#acknowledge_request" role="tab" data-toggle="tab">
+                            <small>Acknowledge Request</small>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#acknowledge_and_grant_request" role="tab"
+                           data-toggle="tab">
+                            <small>Grant Request</small>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#acknowledge_and_deny_request" role="tab"
+                           data-toggle="tab">
+                            <small>Deny Request</small>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="tab-pane" id="acknowledge_and_grant_request">
+        <div class="row-fluid" style="width:98%;">
+            <div class="tab-content">
+                <div class="tab-pane" id="acknowledge_request">
+                    <form name="note" id="AcknowledgeNote" method="post"
+                          action="/update_a_request_acknowledge">
+                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                        <fieldset>
+                            <h4>Estimated Duration</h4>
+                            <select class="span12" id="acknowledge_status"
+                                    name="acknowledge_status" style="height:100%">
+                                <option value="20 days">Acknowledged - 20
+                                    business days
+                                </option>
+                                <option value="30 days">Acknowledged - 30
+                                    business days
+                                </option>
+                                <option value="60 days">Acknowledged - 60
+                                    business days
+                                </option>
+                                <option value="90 days">Acknowledged - 90
+                                    business days
+                                </option>
+                                <option value="120 days">Acknowledged -
+                                    120 business days
+                                </option>
+                            </select>
+                            <button id="rerouteButton" class="btn input-block-level"
+                                    data-toggle="modal"
+                                    data-target="#confirm-submit" type="submit"><i
+                                    class="icon-envelope"> </i>
+                                Acknowledge Request
+                            </button>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="tab-pane" id="acknowledge_and_grant_request">
             <form name="input_doc" style="margin-top: 2em;" id="submitRecord"
                   method="post"
                   action="/add_a_record_and_close" autocomplete="on"
@@ -67,41 +67,50 @@
                   <p>Please provide a short explanation of the record along with at least a file upload, a link to the record, or instructions on how to access the record offline.</p>
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <input type="hidden" name="audience" value="city"/>
-                <input type="hidden" name="record_privacy" value="True"/>
                 <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                {% if "missing_record_description" in errors %}
+                    <div class="alert alert-danger" id="missing_record_description">
+                        {{ errors['missing_record_description'] }}</div>
+                {% endif %}
+                {% if "missing_record_access" in errors %}
+                    <div class="alert alert-danger"
+                         id="missing_record_access">{{ errors['missing_record_access'] }}</div>
+                {% endif %}
+                {% if "file_too_large" in errors %}
+                    <div class="alert alert-danger" id="file_too_large">{{ errors['file_too_large'] }}</div>
+                {% endif %}
+                {% if "filesize" in errors %}
+                    <div class="alert alert-danger" id="filesize">{{ errors['filesize'] }}</div>
+                {% endif %}
+                <div class="alert alert-danger" id="numFiles" style="display:none;">A maximum of four documents can be
+                    added in one session.
+                </div>
+                <p>Please provide a short explanation of the record along with at least a file upload, a link to the
+                    record, or instructions on how to access the record offline.</p>
+                <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                <input type="hidden" name="audience" value="city"/>
                 <fieldset>
                     <div class="row-fluid" style="width:98%;">
-                        <!-- name of record -->
-                        <div class="control-group">
-                            <label class="control-label" for="recordSummary">Name
-                                of record</label>
-
-                            <div class="controls">
-                                        <textarea class="input-xxlarge"
-                                                  name="record_description"
-                                                  type="text"
-                                                  id="recordSummary"
-                                                  placeholder="Add a short explanation of the record"
-                                                  required/></textarea>
-                            </div>
-                        </div>
                         <!-- upload a record -->
                         <div class="control-group">
                             <label class="control-label">Upload a record <span
                                     id="recordTooltip" rel="tooltip"
                                     data-toggle="tooltip"
                                     data-placement="right" title=""
-                                    data-original-title="{{'Upload a document'| explain_action}}">
+                                    data-original-title="{{ 'Upload a document'| explain_action }}">
                                         <small><i class="icon-info-sign"></i>
                                         </small>
                                     </span></label>
 
-                            <div class="row-fluid" style="width:98%;">
+                            <div class="row-fluid" style="width:98%;" id="test_id">
                                 <div class="controls">
+                                    <div class="alert alert-danger" id="record_title_alert" style="display:none;">Record
+                                        Title Cannot Be Longer Than 140 Characters
+                                    </div>
                                                <span class="btn btn-primary fileinput-button">
                                                <i class="glyphicon glyphicon-plus"></i>
                                                <span>Add files...</span>
-                                               <!-- The file input field used as target for the file upload widget -->
+                                                   <!-- The file input field used as target for the file upload widget -->
                                                <input id="record" type="file" name="record" multiple>
                                                 </span>
                                                <span class="btn btn-primary start" type="submit">
@@ -112,52 +121,146 @@
                                                <i class="glyphicon glyphicon-plus"></i>
                                                <span id="cancel_all">Cancel All</span>
                                                 </span>
-                                                <!-- The container for the uploaded files -->
-                                                <div id="files" class="files"></div>
-                                    <p>Size of file is limited to 10 Mb</p>
+                                    <!-- The container for the uploaded files -->
+                                    <div id="files" class="files"></div>
+                                    <p>Size of file is limited to 10 MB</p>
                                 </div>
                             </div>
+                        </div>
+                        <!-- name of record -->
+                        <div class="control-group">
+                            <label class="control-label" for="recordSummary">Provide a name for a link to a
+                                record</label>
+
+                            {% if form %}
+                                <div class="controls">
+                                                <textarea class="input-xxlarge"
+                                                          name="record_description"
+                                                          type="text"
+                                                          id="recordSummary"
+                                                          placeholder="Add a short explanation of the record"
+                                                          required/>{{ form['record_description'] }}</textarea>
+                                </div>
+                            {% else %}
+                                <div class="controls">
+                                    <textarea class="input-xxlarge"
+                                              name="record_description"
+                                              type="text"
+                                              id="recordSummary"
+                                              placeholder="Add a short explanation of the record"
+                                              required/></textarea>
+                                </div>
+                            {% endif %}
                         </div>
                         <!-- link to a record -->
                         <div class="control-group">
-                            <label class="control-label">Or provide a link to a
-                                record <span rel="tooltip"
-                                             data-toggle="tooltip"
-                                             data-placement="right"
-                                             title=""
-                                             data-original-title="{{'Add a link' |
-                                        explain_action}}">
+
+                            {% if form %}
+                                <label class="control-label">Provide the url for a link <span rel="tooltip"
+                                                                                              data-toggle="tooltip"
+                                                                                              data-placement="right"
+                                                                                              title=""
+                                                                                              data-original-title="{{ 'Add a link' |
+                                        explain_action }}">
                                         <small><i class="icon-info-sign"></i>
                                         </small>
                                     </span></label>
 
-                            <div class="row-fluid" style="width:98%;">
-                                <div class="controls">
-                                    <input type="text" name="link_url"
-                                           id="inputUrl" class="input-xxlarge"/>
-                                    <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
+                                <div class="row-fluid" style="width:98%;">
+                                    <div class="controls">
+                                        <input type="text" name="link_url" value="{{ form['link_url'] }}"
+                                               id="inputUrl" class="input-xxlarge"/>
+
+                                        <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
+                                    </div>
                                 </div>
-                            </div>
+                            {% else %}
+                                <label class="control-label">Provide the url for a link <span rel="tooltip"
+                                                                                              data-toggle="tooltip"
+                                                                                              data-placement="right"
+                                                                                              title=""
+                                                                                              data-original-title="{{ 'Add a link' |
+                                    explain_action }}">
+                                    <small><i class="icon-info-sign"></i>
+                                    </small>
+                            </span></label>
+
+                                <div class="row-fluid" style="width:98%;">
+                                    <div class="controls">
+                                        <input type="text" name="link_url"
+                                               id="inputUrl" class="input-xxlarge"/>
+                                        <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
+                                    </div>
+                                </div>
+                            {% endif %}
+
                         </div>
                         <!-- offline record -->
                         <div class="control-group button-margin">
-                            <label class="control-label">Or indicate how the
-                                record can be accessed offline <span
-                                        id="offlinedocTooltip" rel="tooltip"
-                                        data-toggle="tooltip"
-                                        data-placement="right"
-                                        title=""
-                                        data-original-title="{{'Describe hard copies' | explain_action}}">
+                            {% if form %}
+                                <label class="control-label">Or indicate how the
+                                    record can be accessed offline <span
+                                            id="offlinedocTooltip" rel="tooltip"
+                                            data-toggle="tooltip"
+                                            data-placement="right"
+                                            title=""
+                                            data-original-title="{{ 'Describe hard copies' | explain_action }}">
                                         <small><i class="icon-info-sign"></i>
                                         </small>
                                     </span></label>
 
-                            <div class="row-fluid" style="width:98%;">
-                                <div class="controls">
+                                <div class="row-fluid" style="width:98%;">
+                                    <div class="controls">
                                             <textarea class="input-xxlarge"
                                                       id="offlineDoc_textarea"
                                                       name="record_access"
-                                                      placeholder="How can the requester get this record?  Ex. 'Sent via mail on a CD', 'Print out awaiting requester at City Clerk desk'"></textarea>
+                                                      placeholder="How can the requester get this record? Ex. 'Sent via mail on a CD', 'Print out awaiting requester at City Clerk desk'">{{ form['record_access'] }}</textarea>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <label class="control-label">Or indicate how the
+                                    record can be accessed offline <span
+                                            id="offlinedocTooltip" rel="tooltip"
+                                            data-toggle="tooltip"
+                                            data-placement="right"
+                                            title=""
+                                            data-original-title="{{ 'Describe hard copies' | explain_action }}">
+                                        <small><i class="icon-info-sign"></i>
+                                        </small>
+                                    </span></label>
+
+                                <div class="row-fluid" style="width:98%;">
+                                    <div class="controls">
+                                            <textarea class="input-xxlarge"
+                                                      id="offlineDoc_textarea"
+                                                      name="record_access"
+                                                      placeholder="How can the requester get this record? Ex. 'Sent via mail on a CD', 'Print out awaiting requester at City Clerk desk'"></textarea>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <!-- privacy -->
+                        <div class="control-group">
+                            <div class="controls">
+                                <p>Privacy Options:</p>
+                                <div class="row-fluid" style="padding-bottom: 1px; margin-bottom: 1px;">
+                                    <label class="radio inline" for="release_and_public"/>
+                                    <input type="radio" id="release_and_public" name="record_privacy"
+                                           value="release_and_public">
+                                    {# Value set to False means release and public#}
+                                    Release and Public
+                                </div>
+                                <div class="row-fluid" style="padding-bottom: 1px; margin-bottom: 1px;">
+                                    <label class="radio inline" for="release_and_private"/>
+                                    <input type="radio" id="release_and_private" name="record_privacy"
+                                           value="release_and_private">
+                                    Released and Private
+                                </div>
+                                <div class="row-fluid" style="padding-bottom: 1px; margin-bottom: 1px;">
+                                    <label class="radio inline" for="private"/>
+                                    <input type="radio" id="private" name="record_privacy" value="private"
+                                           checked="checked">
+                                    Private
                                 </div>
                             </div>
                         </div>
@@ -175,115 +278,135 @@
                     </div>
                 </fieldset>
             </form>
-        </div>
-        <div class="tab-pane" id="acknowledge_and_deny_request">
-            <form name="close" id="closeRequest" method="post" action="/close">
-                <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-                <fieldset>
-                    <div class="row-fluid" style="width:98%;">
-                        <div class="control-group">
-                            <label class="control-label">Reason <span
-                                    rel="tooltip" data-toggle="tooltip"
-                                    data-placement="right" title=""
-                                    data-original-title="{{'Close a request'|
+                </div>
+                <div class="tab-pane" id="acknowledge_and_deny_request">
+                    <form name="close" id="closeRequest" method="post" action="/close">
+                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                        <fieldset>
+                            <div class="row-fluid" style="width:98%;">
+                                <div class="control-group">
+                                    <label class="control-label">Reason <span
+                                            rel="tooltip" data-toggle="tooltip"
+                                            data-placement="right" title=""
+                                            data-original-title="{{ 'Close a request'|
                                         explain_action }}">
                                         <small><i class="icon-info-sign"></i>
                                         </small>
                                     </span></label>
 
-                            <div class="controls">
-                                <select id="close_reasons"
-                                        name="close_reasons" multiple="multiple"
-                                        size="12">
-                                    <option value="{{'Denied - Records Non-Responsive' | explain_action('What')}}">Denied - Records Non-Responsive</option>
-                                    <option value="{{'Denied - No Records' | explain_action('What')}}">Denied - No Records</option>
-                                    <option value="{{'Denied - All Exempt' | explain_action('What')}}">Denied - All Exempt</option>
-                                    <option value="{{'Denied - Unknown' | explain_action('What')}}">Denied - Unknown</option>
-                                    <option value="{{'Public Records' | explain_action('What')}}">Public Records</option>
-                                    <option value="{{'Out of Jurisdiction' | explain_action('What')}}">Out of Jurisdiction</option>
-                                    <option value="{{'Refer to 311/NYC.gov' | explain_action('What')}}">Refer to 311/NYC.gov</option>
-                                    <option value="{{'Refer to OpenData' | explain_action('What')}}">Refer to OpenData</option>
-                                    <option value="{{'Refer to Other Agency' | explain_action('What')}}">Refer to Other Agency</option>
-                                    <option value="{{'Refer to Web Link' | explain_action('What')}}">Refer to Web Link</option>
-                                </select>
+                                    <div class="controls">
+                                        <select id="close_reasons"
+                                                name="close_reasons" multiple="multiple"
+                                                size="12">
+                                            <option value="{{ 'Denied - Records Non-Responsive' | explain_action('What') }}">
+                                                Denied - Records Non-Responsive
+                                            </option>
+                                            <option value="{{ 'Denied - No Records' | explain_action('What') }}">Denied
+                                                - No Records
+                                            </option>
+                                            <option value="{{ 'Denied - All Exempt' | explain_action('What') }}">Denied
+                                                - All Exempt
+                                            </option>
+                                            <option value="{{ 'Denied - Unknown' | explain_action('What') }}">Denied -
+                                                Unknown
+                                            </option>
+                                            <option value="{{ 'Public Records' | explain_action('What') }}">Public
+                                                Records
+                                            </option>
+                                            <option value="{{ 'Out of Jurisdiction' | explain_action('What') }}">Out of
+                                                Jurisdiction
+                                            </option>
+                                            <option value="{{ 'Refer to 311/NYC.gov' | explain_action('What') }}">Refer
+                                                to 311/NYC.gov
+                                            </option>
+                                            <option value="{{ 'Refer to OpenData' | explain_action('What') }}">Refer to
+                                                OpenData
+                                            </option>
+                                            <option value="{{ 'Refer to Other Agency' | explain_action('What') }}">Refer
+                                                to Other Agency
+                                            </option>
+                                            <option value="{{ 'Refer to Web Link' | explain_action('What') }}">Refer to
+                                                Web Link
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <button id="closeButton" data-toggle="modal"
+                                                data-target="#confirm-submit"
+                                                type="submit"
+                                                class="btn btn-default btn-block">Close
+                                            this request
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="controls">
-                                <button id="closeButton" data-toggle="modal"
-                                        data-target="#confirm-submit"
-                                        type="submit"
-                                        class="btn btn-default btn-block">Close
-                                    this request
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-{% elif req.solid_status() == 'closed' %}
-<div class="row-fluid">
-    <div class="span12">
-        <form name="reopen_request" id="question" method="post"
-              action="/update_a_request_reopen">
-            <input type="hidden" name="request_id" value="{{ req.id }}"/>
-            <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-            <button id="reopenRequest"
-                    class="btn btn-default btn-block btn-block" type="submit">
-                Reopen request
-            </button>
-        </form>
-    </div>
-</div>
-<div class="row-fluid" style="width:98%;">
-    <div class="span12">&nbsp;</div>
-</div>
-{% else %}
-<div class="row-fluid">
-    <div class="span12">
-        <ul class="nav nav-pills" role="tablist">
-            {% if form %}
-            <li class="active"><a href="#add_record" role="tab" data-toggle="tab">
-                <small>Add Record</small>
-            </a></li>
-            {% else %}
-            <li><a href="#add_record" role="tab" data-toggle="tab">
-                <small>Add Record</small>
-            </a></li>
-            {% endif %}
-
-            <li><a href="#add_note" role="tab" data-toggle="tab">
-                <small>Add Note</small>
-            </a></li>
-            <li><a href="#extend_request" role="tab" data-toggle="tab">
-                <small>Extend Request</small>
-            </a></li>
-            <li><a href="#generate_pdf" role="tab" data-toggle="tab">
-                <small>Generate Letter</small>
-            </a></li>
-            <li><a href="#close_request" role="tab" data-toggle="tab">
-                <small>Close Request</small>
-            </a></li>
-            <li><a href="#manage_helpers" role="tab" data-toggle="tab">
-                <small>Manage Helpers</small>
-            </a></li>
-            <li><a href="#change_assignee" role="tab" data-toggle="tab">
-                <small>Edit Assignee</small>
-            </a></li>
-        </ul>
-    </div>
-</div>
-<div class="row-fluid" style="width:98%;">
-    <div class="tab-content">
-    {% if form %}
-        <div class="active tab-pane" id="add_record">
+    {% elif req.solid_status() == 'closed' %}
+        <div class="row-fluid">
+            <div class="span12">
+                <form name="reopen_request" id="question" method="post"
+                      action="/update_a_request_reopen">
+                    <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                    <button id="reopenRequest"
+                            class="btn btn-default btn-block btn-block" type="submit">
+                        Reopen request
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="row-fluid" style="width:98%;">
+            <div class="span12">&nbsp;</div>
+        </div>
     {% else %}
-        <div class="tab-pane" id="add_record">
-    {% endif %}
+        <div class="row-fluid">
+            <div class="span12">
+                <ul class="nav nav-pills" role="tablist">
+                    {% if form %}
+                        <li class="active"><a href="#add_record" role="tab" data-toggle="tab">
+                            <small>Add Record</small>
+                        </a></li>
+                    {% else %}
+                        <li><a href="#add_record" role="tab" data-toggle="tab">
+                            <small>Add Record</small>
+                        </a></li>
+                    {% endif %}
+
+                    <li><a href="#add_note" role="tab" data-toggle="tab">
+                        <small>Add Note</small>
+                    </a></li>
+                    <li><a href="#extend_request" role="tab" data-toggle="tab">
+                        <small>Extend Request</small>
+                    </a></li>
+                    <li><a href="#generate_pdf" role="tab" data-toggle="tab">
+                        <small>Generate Letter</small>
+                    </a></li>
+                    <li><a href="#close_request" role="tab" data-toggle="tab">
+                        <small>Close Request</small>
+                    </a></li>
+                    <li><a href="#manage_helpers" role="tab" data-toggle="tab">
+                        <small>Manage Helpers</small>
+                    </a></li>
+                    <li><a href="#change_assignee" role="tab" data-toggle="tab">
+                        <small>Edit Assignee</small>
+                    </a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row-fluid" style="width:98%;">
+        <div class="tab-content">
+            {% if form %}
+                <div class="active tab-pane" id="add_record">
+            {% else %}
+                <div class="tab-pane" id="add_record">
+            {% endif %}
             <form name="input_doc" style="margin-top: 2em;" id="submitRecord"
                   method="post"
                   action="/add_a_record_and_close" autocomplete="on"
@@ -295,7 +418,8 @@
                         {{ errors['missing_record_description'] }}</div>
                 {% endif %}
                 {% if "missing_record_access" in errors %}
-                    <div class="alert alert-danger" id="missing_record_access">{{ errors['missing_record_access'] }}</div>
+                    <div class="alert alert-danger"
+                         id="missing_record_access">{{ errors['missing_record_access'] }}</div>
                 {% endif %}
                 {% if "file_too_large" in errors %}
                     <div class="alert alert-danger" id="file_too_large">{{ errors['file_too_large'] }}</div>
@@ -303,8 +427,11 @@
                 {% if "filesize" in errors %}
                     <div class="alert alert-danger" id="filesize">{{ errors['filesize'] }}</div>
                 {% endif %}
-                <div class="alert alert-danger" id="numFiles" style="display:none;">A maximum of four documents can be added in one session.</div>
-                <p>Please provide a short explanation of the record along with at least a file upload, a link to the record, or instructions on how to access the record offline.</p>
+                <div class="alert alert-danger" id="numFiles" style="display:none;">A maximum of four documents can be
+                    added in one session.
+                </div>
+                <p>Please provide a short explanation of the record along with at least a file upload, a link to the
+                    record, or instructions on how to access the record offline.</p>
                 <input type="hidden" name="request_id" value="{{ req.id }}"/>
                 <input type="hidden" name="audience" value="city"/>
                 <fieldset>
@@ -315,14 +442,16 @@
                                     id="recordTooltip" rel="tooltip"
                                     data-toggle="tooltip"
                                     data-placement="right" title=""
-                                    data-original-title="{{'Upload a document'| explain_action}}">
+                                    data-original-title="{{ 'Upload a document'| explain_action }}">
                                         <small><i class="icon-info-sign"></i>
                                         </small>
                                     </span></label>
 
                             <div class="row-fluid" style="width:98%;" id="test_id">
                                 <div class="controls">
-                                               <div class="alert alert-danger" id="record_title_alert" style="display:none;">Record Title Cannot Be Longer Than 140 Characters</div>
+                                    <div class="alert alert-danger" id="record_title_alert" style="display:none;">Record
+                                        Title Cannot Be Longer Than 140 Characters
+                                    </div>
                                                <span class="btn btn-primary fileinput-button">
                                                <i class="glyphicon glyphicon-plus"></i>
                                                <span>Add files...</span>
@@ -337,9 +466,9 @@
                                                <i class="glyphicon glyphicon-plus"></i>
                                                <span id="cancel_all">Cancel All</span>
                                                 </span>
-                                                <!-- The container for the uploaded files -->
-                                                <div id="files" class="files"></div>
-                                    <p>Size of file is limited to 10 Mb</p>
+                                    <!-- The container for the uploaded files -->
+                                    <div id="files" class="files"></div>
+                                    <p>Size of file is limited to 10 MB</p>
                                 </div>
                             </div>
                         </div>
@@ -348,14 +477,14 @@
                             <label class="control-label" for="recordSummary">Provide a name for a link to a record</label>
 
                             {% if form %}
-                                    <div class="controls">
+                                <div class="controls">
                                                 <textarea class="input-xxlarge"
                                                           name="record_description"
                                                           type="text"
                                                           id="recordSummary"
                                                           placeholder="Add a short explanation of the record"
                                                           required/>{{ form['record_description'] }}</textarea>
-                                    </div>
+                                </div>
                             {% else %}
                                 <div class="controls">
                                     <textarea class="input-xxlarge"
@@ -381,14 +510,14 @@
                                         </small>
                                     </span></label>
 
-                            <div class="row-fluid" style="width:98%;">
-                                <div class="controls">
-                                <input type="text" name="link_url" value="{{ form['link_url'] }}"
-                                           id="inputUrl" class="input-xxlarge"/>
+                                <div class="row-fluid" style="width:98%;">
+                                    <div class="controls">
+                                        <input type="text" name="link_url" value="{{ form['link_url'] }}"
+                                               id="inputUrl" class="input-xxlarge"/>
 
-                                    <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
+                                        <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
+                                    </div>
                                 </div>
-                            </div>
                             {% else %}
                             <label class="control-label">Provide the url for a link <span rel="tooltip"
                                          data-toggle="tooltip"
@@ -400,78 +529,83 @@
                                     </small>
                             </span></label>
 
-                            <div class="row-fluid" style="width:98%;">
-                                <div class="controls">
-                                    <input type="text" name="link_url"
-                                           id="inputUrl" class="input-xxlarge"/>
-                                    <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
+                                <div class="row-fluid" style="width:98%;">
+                                    <div class="controls">
+                                        <input type="text" name="link_url"
+                                               id="inputUrl" class="input-xxlarge"/>
+                                        <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
+                                    </div>
                                 </div>
-                            </div>
                             {% endif %}
 
                         </div>
                         <!-- offline record -->
                         <div class="control-group button-margin">
                             {% if form %}
-                            <label class="control-label">Or indicate how the
-                                record can be accessed offline <span
-                                        id="offlinedocTooltip" rel="tooltip"
-                                        data-toggle="tooltip"
-                                        data-placement="right"
-                                        title=""
-                                        data-original-title="{{'Describe hard copies' | explain_action}}">
+                                <label class="control-label">Or indicate how the
+                                    record can be accessed offline <span
+                                            id="offlinedocTooltip" rel="tooltip"
+                                            data-toggle="tooltip"
+                                            data-placement="right"
+                                            title=""
+                                            data-original-title="{{ 'Describe hard copies' | explain_action }}">
                                         <small><i class="icon-info-sign"></i>
                                         </small>
                                     </span></label>
 
-                            <div class="row-fluid" style="width:98%;">
-                                <div class="controls">
+                                <div class="row-fluid" style="width:98%;">
+                                    <div class="controls">
                                             <textarea class="input-xxlarge"
                                                       id="offlineDoc_textarea"
                                                       name="record_access"
                                                       placeholder="How can the requester get this record? Ex. 'Sent via mail on a CD', 'Print out awaiting requester at City Clerk desk'">{{ form['record_access'] }}</textarea>
+                                    </div>
                                 </div>
-                            </div>
                             {% else %}
-                            <label class="control-label">Or indicate how the
-                                record can be accessed offline <span
-                                        id="offlinedocTooltip" rel="tooltip"
-                                        data-toggle="tooltip"
-                                        data-placement="right"
-                                        title=""
-                                        data-original-title="{{'Describe hard copies' | explain_action}}">
+                                <label class="control-label">Or indicate how the
+                                    record can be accessed offline <span
+                                            id="offlinedocTooltip" rel="tooltip"
+                                            data-toggle="tooltip"
+                                            data-placement="right"
+                                            title=""
+                                            data-original-title="{{ 'Describe hard copies' | explain_action }}">
                                         <small><i class="icon-info-sign"></i>
                                         </small>
                                     </span></label>
 
-                            <div class="row-fluid" style="width:98%;">
-                                <div class="controls">
+                                <div class="row-fluid" style="width:98%;">
+                                    <div class="controls">
                                             <textarea class="input-xxlarge"
                                                       id="offlineDoc_textarea"
                                                       name="record_access"
                                                       placeholder="How can the requester get this record? Ex. 'Sent via mail on a CD', 'Print out awaiting requester at City Clerk desk'"></textarea>
+                                    </div>
                                 </div>
-                            </div>
                             {% endif %}
                         </div>
                         <!-- privacy -->
                         <div class="control-group">
                             <div class="controls">
-                                    <label class="radio inline" for="privacy setting-0">
-                                        <input type="radio" name="record_privacy" value="False">
-                                        {# Value set to False means release and public#}
-                                        Release and Public
-                                    </label>
-                                    <label class="radio inline" for="privacy setting-1">
-                                        <input type="radio" name="record_privacy" value="True" checked="checked">
-                                        {# Value set to True means private#}
-                                        Private
-                                    </label>
-                                    <label class="radio inline" for="privacy setting-2">
-                                        <input type="radio" name="record_privacy" value="Both">
-                                        {# Value set to Both means released and private#}
-                                        Released and Private
-                                    </label>
+                                <p>Privacy Options:</p>
+                                <div class="row-fluid" style="padding-bottom: 1px; margin-bottom: 1px;">
+                                    <label class="radio inline" for="release_and_public"/>
+                                    <input type="radio" id="release_and_public" name="record_privacy"
+                                           value="release_and_public">
+                                    {# Value set to False means release and public#}
+                                    Release and Public
+                                </div>
+                                <div class="row-fluid" style="padding-bottom: 1px; margin-bottom: 1px;">
+                                    <label class="radio inline" for="release_and_private"/>
+                                    <input type="radio" id="release_and_private" name="record_privacy"
+                                           value="release_and_private">
+                                    Released and Private
+                                </div>
+                                <div class="row-fluid" style="padding-bottom: 1px; margin-bottom: 1px;">
+                                    <label class="radio inline" for="private"/>
+                                    <input type="radio" id="private" name="record_privacy" value="private"
+                                           checked="checked">
+                                    Private
+                                </div>
                             </div>
                         </div>
                         <!-- submission -->
@@ -488,210 +622,243 @@
                     </div>
                 </fieldset>
             </form>
-        </div>
-        <div class="tab-pane" id="add_note">
-            <form name="note" id="note" method="post" action="/add_a_note">
-                <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-                <fieldset>
-                    <div class="row-fluid" style="width:98%;">
-                        <div class="control-group">
-                            <label class="control-label">Note <span
-                                    rel="tooltip" data-toggle="tooltip"
-                                    data-placement="right" title=""
-                                    data-original-title="{{ 'Add a note' | explain_action }}">
+            </div>
+            <div class="tab-pane" id="add_note">
+                <form name="note" id="note" method="post" action="/add_a_note">
+                    <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                    <fieldset>
+                        <div class="row-fluid" style="width:98%;">
+                            <div class="control-group">
+                                <label class="control-label">Note <span
+                                        rel="tooltip" data-toggle="tooltip"
+                                        data-placement="right" title=""
+                                        data-original-title="{{ 'Add a note' | explain_action }}">
                                 <small><i class="icon-info-sign"></i></small>
                                 </span></label>
 
-                            <div class="controls">
+                                <div class="controls">
                                 <textarea type="text" class="input-xxlarge"
                                           id="noteTextarea" name="note_text"
                                           placeholder="Notes visible to staff only."
                                           required/></textarea>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="controls">
+                                    <button type="submit"
+                                            class="btn btn-default btn-block"
+                                            data-toggle="modal"
+                                            data-target="#confirm-submit"
+                                            id="addNoteButton">Add note
+                                    </button>
+                                </div>
+                                <input type="hidden" name="note_privacy" value="2"/>
                             </div>
                         </div>
-                        <div class="control-group">
-                            <div class="controls">
-                                <button type="submit"
-                                        class="btn btn-default btn-block"
-                                        data-toggle="modal"
-                                        data-target="#confirm-submit"
-                                        id="addNoteButton">Add note
-                                </button>
-                            </div>
-                            <input type="hidden" name="note_privacy" value="2"/>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
-        </div>
-        <div class="tab-pane" id="extend_request">
-            <form name="extend_request" id="extension" method="post"
-                  action="/add_a_extension">
-                <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-                <input type="hidden" name="audience" value="city"/>
-                <input type="hidden" name="extend_reason"
-                       value="{{ 'Extension - Large Amount' | explain_action('What') }}"/>
-                <fieldset>
-                    <legend>Extend request</legend>
-                    <div class="row-fluid" style="width:98%;">
-                        <div class="control-group">
-                            <label class="control-label">Length <span
-                                    rel="tooltip" data-toggle="tooltip"
-                                    data-placement="right" title=""
-                                    data-original-title="{{ 'Request an extension'| explain_action }}">
-                                <small><i class="icon-info-sign"></i></small>
-                                </span></label>
-
-                            <div class="controls">
-                                <select id="days_after" name="days_after">
-                                    <option value="0">None selected</option>
-                                    <option value="20">20 business days</option>
-                                    <option value="30">30 business days</option>
-                                    <option value="60">60 business days</option>
-                                    <option value="90">90 business days</option>
-                                    <option value="-1">Custom Due Date</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="control-group" style="display:none;"
-                             id="custom_due_date">
-                            <label class="control-label">Custom Due Date<span
-                                    rel="tooltip" data-toggle="tooltip"
-                                    data-placement="right" title=""
-                                    data-original-title="{{ 'Request an extension'| explain_action }}">
-                                <small><i class="icon-info-sign"></i></small>
-                                </span></label>
-
-                            <div class="controls">
-                                <input type="date" id="due_date"
-                                       name="due_date"
-                                       value="{{ min_due_date }}"
-                                >
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="controls">
-                                <button id="extendButton" data-toggle="modal"
-                                        data-target="#confirm-submit"
-                                        type="submit"
-                                        class="btn btn-default btn-block">Extend
-                                    this request
-                                </button>
-
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
-        </div>
-        <div class="tab-pane" id="generate_pdf">
-            <form name="note" id="note_pdf" method="post" action="/add_a_letter">
-                <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-                <fieldset>
-                    <div class="row-fluid" style="width:98%;">
-                        <div class="control-group">
-                            <label class="control-label">Template <span
-                                    rel="tooltip" data-toggle="tooltip"
-                                    data-placement="right" title=""
-                                    data-original-title="{{'Generate PDF'}}">
-                                <small><i class="icon-info-sign"></i></small>
-                                </span></label>
-
-                            <div class="controls">
-                                <select id="response_template"
-                                        name="response_template" required
-                                        data-selected-text-format="count"
-                                        size="9">
-                                    <option value="acknowledgement_letter">Acknowledge Request</option>
-                                    <option value="denial_letter">Deny Request</option>
-                                    <option value="extension_letter">Extend Request</option>
-                                    <option value="partial_fulfillment_letter">Partial Denial of Request</option>
-                                    <option value="fulfillment_letter">Request Fulfilled</option>
-                                    <option value="payment_letter">Payment Requested</option>
-                                    <!--<option value="template_02">Message Sent-->
-                                    <!--</option>-->
-                                    <!--<option value="template_03">Request Status-->
-                                    <!--</option>-->
-                                    <!--<option value="template_04">Request-->
-                                        <!--Completed-->
-                                    <!--</option>-->
-                                    <!--<option value="template_05">Request Status - -->
-                                        <!--Fulfilled in Part-->
-                                    <!--</option>-->
-                                    <!--<option value="template_06">Request Denied-->
-                                    <!--</option>-->
-                                    <!--<option value="template_07">Request Closed-->
-                                    <!--</option>-->
-                                    <!--<option value="template_08">Request Payment-->
-                                        <!--Information-->
-                                    <!--</option>-->
-                                    <!--<option value="template_09">Request Closed - -->
-                                        <!--No Response-->
-                                    <!--</option>-->
-                                    <!--<option value="template_10">Time Extension-->
-                                        <!--Requested-->
-                                    <!--</option>-->
-                                </select>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="controls">
-                                <button type="submit"
-                                        class="btn btn-default btn-block"
-                                        id="generatePDFButton">
-                                    Generate Letter
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
-        </div>
-        <div class="tab-pane" id="close_request">
-            <form name="close" id="closeRequest" method="post" action="/close">
-                <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-                <fieldset>
-                    <legend>Close request</legend>
-                    <div class="row-fluid" style="width:98%;">
-                        <div class="control-group">
-                            <label class="control-label">Reason (CTRL + click to
-                                select multiple reasons) <span
+                    </fieldset>
+                </form>
+            </div>
+            <div class="tab-pane" id="extend_request">
+                <form name="extend_request" id="extension" method="post"
+                      action="/add_a_extension">
+                    <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                    <input type="hidden" name="audience" value="city"/>
+                    <input type="hidden" name="extend_reason"
+                           value="{{ 'Extension - Large Amount' | explain_action('What') }}"/>
+                    <fieldset>
+                        <legend>Extend request</legend>
+                        <div class="row-fluid" style="width:98%;">
+                            <div class="control-group">
+                                <label class="control-label">Length <span
                                         rel="tooltip" data-toggle="tooltip"
                                         data-placement="right" title=""
-                                        data-original-title="{{'Close a request'|
+                                        data-original-title="{{ 'Request an extension'| explain_action }}">
+                                <small><i class="icon-info-sign"></i></small>
+                                </span></label>
+
+                                <div class="controls">
+                                    <select id="days_after" name="days_after">
+                                        <option value="0">None selected</option>
+                                        <option value="20">20 business days</option>
+                                        <option value="30">30 business days</option>
+                                        <option value="60">60 business days</option>
+                                        <option value="90">90 business days</option>
+                                        <option value="-1">Custom Due Date</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group" style="display:none;"
+                                 id="custom_due_date">
+                                <label class="control-label">Custom Due Date<span
+                                        rel="tooltip" data-toggle="tooltip"
+                                        data-placement="right" title=""
+                                        data-original-title="{{ 'Request an extension'| explain_action }}">
+                                <small><i class="icon-info-sign"></i></small>
+                                </span></label>
+
+                                <div class="controls">
+                                    <input type="date" id="due_date"
+                                           name="due_date"
+                                           value="{{ min_due_date }}"
+                                    >
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="controls">
+                                    <button id="extendButton" data-toggle="modal"
+                                            data-target="#confirm-submit"
+                                            type="submit"
+                                            class="btn btn-default btn-block">Extend
+                                        this request
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="tab-pane" id="generate_pdf">
+                <form name="note" id="note_pdf" method="post" action="/add_a_letter">
+                    <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                    <fieldset>
+                        <div class="row-fluid" style="width:98%;">
+                            <div class="control-group">
+                                <label class="control-label">Template <span
+                                        rel="tooltip" data-toggle="tooltip"
+                                        data-placement="right" title=""
+                                        data-original-title="{{ 'Generate PDF' }}">
+                                <small><i class="icon-info-sign"></i></small>
+                                </span></label>
+
+                                <div class="controls">
+                                    <select id="response_template"
+                                            name="response_template" required
+                                            data-selected-text-format="count"
+                                            size="9">
+                                        <option value="acknowledgement_letter">Acknowledge Request</option>
+                                        <option value="denial_letter">Deny Request</option>
+                                        <option value="extension_letter">Extend Request</option>
+                                        <option value="partial_fulfillment_letter">Partial Denial of Request</option>
+                                        <option value="fulfillment_letter">Request Fulfilled</option>
+                                        <option value="payment_letter">Payment Requested</option>
+                                        <!--<option value="template_02">Message Sent-->
+                                        <!--</option>-->
+                                        <!--<option value="template_03">Request Status-->
+                                        <!--</option>-->
+                                        <!--<option value="template_04">Request-->
+                                        <!--Completed-->
+                                        <!--</option>-->
+                                        <!--<option value="template_05">Request Status - -->
+                                        <!--Fulfilled in Part-->
+                                        <!--</option>-->
+                                        <!--<option value="template_06">Request Denied-->
+                                        <!--</option>-->
+                                        <!--<option value="template_07">Request Closed-->
+                                        <!--</option>-->
+                                        <!--<option value="template_08">Request Payment-->
+                                        <!--Information-->
+                                        <!--</option>-->
+                                        <!--<option value="template_09">Request Closed - -->
+                                        <!--No Response-->
+                                        <!--</option>-->
+                                        <!--<option value="template_10">Time Extension-->
+                                        <!--Requested-->
+                                        <!--</option>-->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="controls">
+                                    <button type="submit"
+                                            class="btn btn-default btn-block"
+                                            id="generatePDFButton">
+                                        Generate Letter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="tab-pane" id="close_request">
+                <form name="close" id="closeRequest" method="post" action="/close">
+                    <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                    <fieldset>
+                        <legend>Close request</legend>
+                        <div class="row-fluid" style="width:98%;">
+                            <div class="control-group">
+                                <label class="control-label">Reason (CTRL + click to
+                                    select multiple reasons) <span
+                                            rel="tooltip" data-toggle="tooltip"
+                                            data-placement="right" title=""
+                                            data-original-title="{{ 'Close a request'|
                                         explain_action }}">
                                         <small><i class="icon-info-sign"></i>
                                         </small>
                                     </span>
-                            </label>
+                                </label>
 
-                            <div class="controls">
-                                <select id="close_reasons" name="close_reasons"
-                                        multiple="multiple" size="18">
-                                    <option value="{{'Fulfilled in Whole' | explain_action('What') }}">Fulfilled in Whole</option>
-                                    <option value="{{'Fulfilled in Part' | explain_action('What')}}">Fulfilled in Part</option>
-                                    <option value="{{'Fulfilled via Email' | explain_action('What')}}">Fulfilled via Email</option>
-                                    <option value="{{'Fulfilled via Fax' | explain_action('What')}}">Fulfilled via Fax</option>
-                                    <option value="{{'Fulfilled via Mail' | explain_action('What')}}">Fulfilled via Mail</option>
-                                    <option value="{{'Fulfilled via Pickup' | explain_action('What')}}">Fulfilled via Pickup</option>
-                                    <option value="{{'Denied - Records Non-Responsive' | explain_action('What')}}">Denied - Records Non-Responsive</option>
-                                    <option value="{{'Denied - No Records' | explain_action('What')}}">Denied - No Records</option>
-                                    <option value="{{'Denied - All Exempt' | explain_action('What')}}">Denied - All Exempt</option>
-                                    <option value="{{'Denied - Unknown' | explain_action('What')}}">Denied - Unknown</option>
-                                    <option value="{{'No Customer Response' | explain_action('What')}}">No Customer Response</option>
-                                    <option value="{{'No Payment' | explain_action('What')}}">No Payment</option>
-                                    <option value="{{'Public Records' | explain_action('What')}}">Public Records</option>
-                                    <option value="{{'Out of Jurisdiction' | explain_action('What')}}">Out of Jurisdiction</option>
-                                    <option value="{{'Refer to 311/NYC.gov' | explain_action('What')}}">Refer to 311/NYC.gov</option>
-                                    <option value="{{'Refer to OpenData' | explain_action('What')}}">Refer to OpenData</option>
-                                    <option value="{{'Refer to Other Agency' | explain_action('What')}}">Refer to Other Agency</option>
-                                    <option value="{{'Refer to Web Link' | explain_action('What')}}">Refer to Web Link</option>
+                                <div class="controls">
+                                    <select id="close_reasons" name="close_reasons"
+                                            multiple="multiple" size="18">
+                                        <option value="{{ 'Fulfilled in Whole' | explain_action('What') }}">Fulfilled in
+                                            Whole
+                                        </option>
+                                        <option value="{{ 'Fulfilled in Part' | explain_action('What') }}">Fulfilled in
+                                            Part
+                                        </option>
+                                        <option value="{{ 'Fulfilled via Email' | explain_action('What') }}">Fulfilled
+                                            via Email
+                                        </option>
+                                        <option value="{{ 'Fulfilled via Fax' | explain_action('What') }}">Fulfilled via
+                                            Fax
+                                        </option>
+                                        <option value="{{ 'Fulfilled via Mail' | explain_action('What') }}">Fulfilled
+                                            via Mail
+                                        </option>
+                                        <option value="{{ 'Fulfilled via Pickup' | explain_action('What') }}">Fulfilled
+                                            via Pickup
+                                        </option>
+                                        <option value="{{ 'Denied - Records Non-Responsive' | explain_action('What') }}">
+                                            Denied - Records Non-Responsive
+                                        </option>
+                                        <option value="{{ 'Denied - No Records' | explain_action('What') }}">Denied - No
+                                            Records
+                                        </option>
+                                        <option value="{{ 'Denied - All Exempt' | explain_action('What') }}">Denied -
+                                            All Exempt
+                                        </option>
+                                        <option value="{{ 'Denied - Unknown' | explain_action('What') }}">Denied -
+                                            Unknown
+                                        </option>
+                                        <option value="{{ 'No Customer Response' | explain_action('What') }}">No
+                                            Customer Response
+                                        </option>
+                                        <option value="{{ 'No Payment' | explain_action('What') }}">No Payment</option>
+                                        <option value="{{ 'Public Records' | explain_action('What') }}">Public Records
+                                        </option>
+                                        <option value="{{ 'Out of Jurisdiction' | explain_action('What') }}">Out of
+                                            Jurisdiction
+                                        </option>
+                                        <option value="{{ 'Refer to 311/NYC.gov' | explain_action('What') }}">Refer to
+                                            311/NYC.gov
+                                        </option>
+                                        <option value="{{ 'Refer to OpenData' | explain_action('What') }}">Refer to
+                                            OpenData
+                                        </option>
+                                        <option value="{{ 'Refer to Other Agency' | explain_action('What') }}">Refer to
+                                            Other Agency
+                                        </option>
+                                        <option value="{{ 'Refer to Web Link' | explain_action('What') }}">Refer to Web
+                                            Link
+                                        </option>
 
-                                </select>
+                                    </select>
                             </div>
                         </div>
                         <div class="control-group">
@@ -708,105 +875,106 @@
                 </fieldset>
             </form>
         </div>
-        <div class="tab-pane" id="manage_helpers" style="width: 98%;">
-            {% if helpers %}
-            <p class="lead">Remove Helpers</p>
-            {% for owner in req.owners %}
-            {% if owner.active %}
-            {% set participant = (owner | display_staff_participant(req)) %}
-            {% if participant %}
-            <form id="rerouteForm" class="form-inline" method="post"
-                  action="/update_a_owner">
-                <!-- my form -->
-                <div class="control-group">
-                    <div class="controls">
+            <div class="tab-pane" id="manage_helpers" style="width: 98%;">
+                {% if helpers %}
+                    <p class="lead">Remove Helpers</p>
+                    {% for owner in req.owners %}
+                        {% if owner.active %}
+                            {% set participant = (owner | display_staff_participant(req)) %}
+                            {% if participant %}
+                                <form id="rerouteForm" class="form-inline" method="post"
+                                      action="/update_a_owner">
+                                    <!-- my form -->
+                                    <div class="control-group">
+                                        <div class="controls">
+                                            <input type="hidden" name="request_id"
+                                                   value="{{ req.id }}"/>
+                                            <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                                            <input type="hidden" name="owner_id"
+                                                   value="{{ owner.id }}"/>
+                                            <input type="hidden" name="remove_helper"
+                                                   value="remove_helper"/>
+                                            <div class="row-fluid" style="width:98%;">
+                                                <div class="span8">
+                                                    <input type="text" class="span12"
+                                                           name="reason_unassigned"
+                                                           value="Task complete" required="" style="height:100%">
+                                                </div>
+                                                <div class="span4 align-left">
+                                                    <button class="btn btn-default" type="submit">
+                                                        Remove Helper: {{ participant }}&nbsp;&nbsp;<i
+                                                            class="icon-envelope"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    <hr>
+
+                {% endif %}
+                <p class="lead">Add Helper</p>
+
+                <form id="notifyForm" method="post" action="/add_a_owner">
+                    <fieldset>
                         <input type="hidden" name="request_id"
                                value="{{ req.id }}"/>
                         <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-                        <input type="hidden" name="owner_id"
-                               value="{{ owner.id }}"/>
-                        <input type="hidden" name="remove_helper"
-                                value="remove_helper"/>
-                        <div class="row-fluid" style="width:98%;">
-                            <div class="span8">
-                                <input type="text" class="span12"
-                                       name="reason_unassigned"
-                                       value="Task complete" required="" style="height:100%">
-                            </div>
-                            <div class="span4 align-left">
-                                <button class="btn btn-default" type="submit" >
-                                    Remove Helper: {{ participant }}&nbsp;&nbsp;<i
-                                        class="icon-envelope"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            {% endif %}
-            {% endif %}
-            {% endfor %}
-            <hr>
-
-            {% endif %}
-            <p class="lead">Add Helper</p>
-
-            <form id="notifyForm" method="post" action="/add_a_owner">
-                <fieldset>
-                    <input type="hidden" name="request_id"
-                           value="{{ req.id }}"/>
-                    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-                    <!--input id="notifyEmail" class="input-block-level"
-                           type="email" name="owner_email"
-                           placeholder="name@email.com" data-provide="typeahead"
-                           autocomplete="off" required/>
-                    autocomplete="off" required /-->
-                    <select class="span12" id="notifyEmail"
+                        <!--input id="notifyEmail" class="input-block-level"
+                               type="email" name="owner_email"
+                               placeholder="name@email.com" data-provide="typeahead"
+                               autocomplete="off" required/>
+                        autocomplete="off" required /-->
+                        <select class="span12" id="notifyEmail"
                                 name="owner_email" style="height:100%;">
-                                    {% for user in users %}
-                                        {%  if user.is_staff %}
-                                            <option value="{{ user.email }}" department_id="{{ user.department_id }}">{{ user.alias}}</option>
-                                        {% endif %}
-                                    {% endfor %}
-                    </select>
-                    <input id="notifyReason" class="input-block-level"
-                           type="text" name="owner_reason"
-                           placeholder="Say why." required/>
-                    <button id="notifyButton" class="btn btn-block btn-default"
-                            type="submit"><i
-                            class="icon-envelope"> </i> Add a helper
-                    </button>
-            </form>
-        </div>
-        <div class="tab-pane" id="change_assignee">
-            <form id="rerouteForm" method="post" action="/update_a_owner">
-                <!-- my form -->
-                <div class="control-group" style="width: 98%;">
-                    <div class="controls">
-                        <input type="hidden" name="request_id"
-                               value="{{ req.id }}"/>
-                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-                        <!--input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required /-->
-                        <select class="span12" id="rerouteEmail"
-                                name="owner_email" style="height:100%">
                             {% for user in users %}
-                            <option value="{{ user.email }}">{{ user.alias }}
-                            </option>
+                                {% if user.is_staff %}
+                                    <option value="{{ user.email }}"
+                                            department_id="{{ user.department_id }}">{{ user.alias }}</option>
+                                {% endif %}
                             {% endfor %}
                         </select>
-                        <input id="rerouteReason" type="text"
-                               name="owner_reason" placeholder="Say why"
-                               required/>
-                        <button id="rerouteButton"
-                                class="btn btn-default btn-block" type="submit">
-                            <i
-                                    class="icon-envelope"></i>&nbsp;Change
-                            Assignee
+                        <input id="notifyReason" class="input-block-level"
+                               type="text" name="owner_reason"
+                               placeholder="Say why." required/>
+                        <button id="notifyButton" class="btn btn-block btn-default"
+                                type="submit"><i
+                                class="icon-envelope"> </i> Add a helper
                         </button>
+                </form>
+            </div>
+            <div class="tab-pane" id="change_assignee">
+                <form id="rerouteForm" method="post" action="/update_a_owner">
+                    <!-- my form -->
+                    <div class="control-group" style="width: 98%;">
+                        <div class="controls">
+                            <input type="hidden" name="request_id"
+                                   value="{{ req.id }}"/>
+                            <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                            <!--input id="rerouteEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required /-->
+                            <select class="span12" id="rerouteEmail"
+                                    name="owner_email" style="height:100%">
+                                {% for user in users %}
+                                    <option value="{{ user.email }}">{{ user.alias }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <input id="rerouteReason" type="text"
+                                   name="owner_reason" placeholder="Say why"
+                                   required/>
+                            <button id="rerouteButton"
+                                    class="btn btn-default btn-block" type="submit">
+                                <i
+                                        class="icon-envelope"></i>&nbsp;Change
+                                Assignee
+                            </button>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
+            </div>
         </div>
-    </div>
-</div>
-{% endif %}
+    {% endif %}
 {% endif %}
