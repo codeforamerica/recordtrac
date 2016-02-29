@@ -199,31 +199,7 @@
                                 </div>
                             {% endif %}
                         </div>
-                        <!-- privacy -->
-                        <div class="control-group">
-                            <div class="controls">
-                                <p>Privacy Options:</p>
-                                <div class="row-fluid" style="padding-bottom: 1px; margin-bottom: 1px;">
-                                    <label class="radio inline" for="release_and_public"/>
-                                    <input type="radio" id="release_and_public" name="record_privacy"
-                                           value="release_and_public">
-                                    {# Value set to False means release and public#}
-                                    Release and Public
-                                </div>
-                                <div class="row-fluid" style="padding-bottom: 1px; margin-bottom: 1px;">
-                                    <label class="radio inline" for="release_and_private"/>
-                                    <input type="radio" id="release_and_private" name="record_privacy"
-                                           value="release_and_private">
-                                    Released and Private
-                                </div>
-                                <div class="row-fluid" style="padding-bottom: 1px; margin-bottom: 1px;">
-                                    <label class="radio inline" for="private"/>
-                                    <input type="radio" id="private" name="record_privacy" value="private"
-                                           checked="checked">
-                                    Private
-                                </div>
-                            </div>
-                        </div>
+                        <input type="hidden" id="private" name="record_privacy" value="private">
                         <!-- submission -->
                         <div class="control-group">
                             <div class="controls">
@@ -231,7 +207,7 @@
                                         class="btn btn-default btn-block"
                                         data-toggle="modal"
                                         data-target="#confirm-submit"
-                                        id="addRecordButton">Grant Request
+                                        id="addRecordButton">Add a Record
                                 </button>
                             </div>
                         </div>
