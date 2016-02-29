@@ -1154,9 +1154,15 @@ def get_responses_chronologically(req):
             else:
                 responses.append(ResponsePresenter(note=note))
     for record in req.records:
-        responses.append(ResponsePresenter(record=record))
+        if current_user.is_authenticated:
+            responses.append(ResponsePresenter(record=record))
+        else:
+            if record.privacy == RecordPrivacy.RELEASED_AND_PUBLIC and record.release_date < datetime.now():
+                responses.append(ResponsePresenter(record=record))
+
     if not responses:
         return responses
+
     responses.sort(key=lambda x: x.date(), reverse=True)
     if 'Closed' in req.status:
         responses[0].set_icon('icon-archive')  # Set most recent note (closed note)'s icon
