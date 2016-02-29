@@ -367,42 +367,51 @@
         </div>
     {% else %}
         <div class="row-fluid">
-            <div class="span12">
-                <ul class="nav nav-pills" role="tablist">
-                    {% if form %}
-                        <li class="active"><a href="#add_record" role="tab" data-toggle="tab">
-                            <small>Add Record</small>
-                        </a></li>
-                    {% else %}
-                        <li><a href="#add_record" role="tab" data-toggle="tab">
-                            <small>Add Record</small>
-                        </a></li>
-                    {% endif %}
-
-                    <li><a href="#add_note" role="tab" data-toggle="tab">
-                        <small>Add Note</small>
-                    </a></li>
-                    <li><a href="#extend_request" role="tab" data-toggle="tab">
-                        <small>Extend Request</small>
-                    </a></li>
-                    <li><a href="#generate_pdf" role="tab" data-toggle="tab">
-                        <small>Generate Letter</small>
-                    </a></li>
-                    <li><a href="#close_request" role="tab" data-toggle="tab">
-                        <small>Close Request</small>
-                    </a></li>
-                    <li><a href="#manage_helpers" role="tab" data-toggle="tab">
-                        <small>Manage Helpers</small>
-                    </a></li>
-                    <li><a href="#change_assignee" role="tab" data-toggle="tab">
-                        <small>Edit Assignee</small>
-                    </a></li>
-                </ul>
-            </div>
+           <div class="span12">
+               <ul class="nav nav-pills" role="tablist">
+                   {% if form=='close' %}
+                   <li><a href="#add_record" role="tab" data-toggle="tab">
+                       <small>Add Record</small>
+                   </a></li>
+                   {% elif form and form !='close'%}
+                   <li class="active"><a href="#add_record" role="tab" data-toggle="tab">
+                       <small>Add Record</small>
+                   </a></li>
+                   {% else %}
+                   <li><a href="#add_record" role="tab" data-toggle="tab">
+                       <small>Add Record</small>
+                   </a></li>
+                   {% endif %}
+                   <li><a href="#add_note" role="tab" data-toggle="tab">
+                       <small>Add Note</small>
+                   </a></li>
+                   <li><a href="#extend_request" role="tab" data-toggle="tab">
+                       <small>Extend Request</small>
+                   </a></li>
+                   <li><a href="#generate_pdf" role="tab" data-toggle="tab">
+                       <small>Generate Letter</small>
+                   </a></li>
+                   {% if form=='close' %}
+                   <li class="active"><a href="#close_request" role="tab" data-toggle="tab">
+                       <small>Close Request</small>
+                   </a></li>
+                   {% else %}
+                   <li><a href="#close_request" role="tab" data-toggle="tab">
+                       <small>Close Request</small>
+                   </a></li>
+                   {% endif %}
+                   <li><a href="#manage_helpers" role="tab" data-toggle="tab">
+                       <small>Manage Helpers</small>
+                   </a></li>
+                   <li><a href="#change_assignee" role="tab" data-toggle="tab">
+                       <small>Edit Assignee</small>
+                   </a></li>
+               </ul>
+           </div>
         </div>
         <div class="row-fluid" style="width:98%;">
         <div class="tab-content">
-            {% if form %}
+            {% if form and form != 'close'%}
                 <div class="active tab-pane" id="add_record">
             {% else %}
                 <div class="tab-pane" id="add_record">
@@ -784,10 +793,23 @@
                     </fieldset>
                 </form>
             </div>
-            <div class="tab-pane" id="close_request">
+            {% if form=='close' %}
+                <div class="active tab-pane" id="close_request">
+            {% else %}
+                <div class="tab-pane" id ="close_request">
+            {% endif %}
+{#            <div class="tab-pane" id="close_request">#}
                 <form name="close" id="closeRequest" method="post" action="/close">
                     <input type="hidden" name="request_id" value="{{ req.id }}"/>
                     <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                    {% if "missing_agency_description" in errors %}
+                       <div class="alert alert-danger" id="missing_agency_description">
+                           {{ errors['missing_agency_description'] }}</div>
+                   {% endif %}
+                   {% if "missing_agency_description_record_privacy" in errors %}
+                       <div class="alert alert-danger" id="missing_agency_record_privacy">
+                           {{ errors['missing_agency_description_record_privacy'] }}</div>
+                   {% endif %}
                     <fieldset>
                         <legend>Close request</legend>
                         <div class="row-fluid" style="width:98%;">
