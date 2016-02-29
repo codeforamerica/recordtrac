@@ -94,22 +94,43 @@ class ResponsePresenter:
                         self.response.id)
             elif current_user.role in ['Agency Helpers']:
                 return "How to Access Record: <br />%s" % self.response.access
-            else:
-                if self.response.privacy == RecordPrivacy.RELEASED_AND_PUBLIC and self.response.release_date < datetime.datetime.now():
+            elif self.response.privacy == RecordPrivacy.RELEASED_AND_PUBLIC and self.response.release_date and self.response.release_date < datetime.datetime.now():
                     return "How to Access Record: <br />%s" % (self.response.access)
+            else:
+                return None
         elif self.type == "document":
-            if self.response.privacy == RecordPrivacy.RELEASED_AND_PUBLIC:
+            if current_user.role not in ['Agency Helpers'] and current_user.role is not None:
+                if self.response.privacy == RecordPrivacy.RELEASED_AND_PUBLIC:
+                    download_url = "/attachments/public/" + \
+                        str(self.response.filename)
+                    return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s' target='_blank'><i class='icon-file'></i></i>&nbsp;<b>%s </b></a><form method='post' action='/switchRecordPrivacy'><input name=_csrf_token type=hidden value='%s'><input type='hidden' name='request_id' value='%s'/><input type='hidden' name='record_id' value='%s'/><input class='radio inline' type='radio' name='privacy_setting' value='release_and_public' type='submit' onclick='action=this.form.submit();' checked> Release and Public</input><input class='radio inline' type='radio' name='privacy_setting' value='release_and_private' type='submit' onclick='action=this.form.submit();'> Release and Private</input><input class='radio inline' type='radio' name='privacy_setting' value='private' type='submit' onclick='action=this.form.submit();'> Private</input></form>" % (download_url, self.response.description, self.response.description, session['_csrf_token'], self.response.request_id, self.response.id)
+                elif self.response.privacy == RecordPrivacy.RELEASED_AND_PRIVATE:
+                    download_url = "/attachments/private/" + \
+                        str(self.response.filename)
+                    return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s' target='_blank'><i class='icon-file'></i></i>&nbsp;<b>%s </b></a><form method='post' action='/switchRecordPrivacy'><input name=_csrf_token type=hidden value='%s'><input type='hidden' name='request_id' value='%s'/><input type='hidden' name='record_id' value='%s'/><input class='radio inline' type='radio' name='privacy_setting' value='release_and_public' type='submit' onclick='action=this.form.submit();'> Release and Public</input><input class='radio inline' type='radio' name='privacy_setting' value='release_and_private' type='submit' onclick='action=this.form.submit();' checked> Release and Private</input><input class='radio inline' type='radio' name='privacy_setting' value='private' type='submit' onclick='action=this.form.submit();'> Private</input></form>" % (download_url, self.response.description, self.response.description, session['_csrf_token'], self.response.request_id, self.response.id)
+                else:
+                    download_url = "/attachments/private/" + \
+                        str(self.response.filename)
+                    return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s' target='_blank'><i class='icon-file'></i></i>&nbsp;<b>%s </b></a><form method='post' action='/switchRecordPrivacy'><input name=_csrf_token type=hidden value='%s'><input type='hidden' name='request_id' value='%s'/><input type='hidden' name='record_id' value='%s'/><input class='radio inline' type='radio' name='privacy_setting' value='release_and_public' type='submit' onclick='action=this.form.submit();'> Release and Public</input><input class='radio inline' type='radio' name='privacy_setting' value='release_and_private' type='submit' onclick='action=this.form.submit();'> Release and Private</input><input class='radio inline' type='radio' name='privacy_setting' value='private' type='submit' onclick='action=this.form.submit();' checked> Private</input></form>" % (download_url, self.response.description, self.response.description, session['_csrf_token'], self.response.request_id, self.response.id)
+            elif current_user.role in ['Agency Helpers']:
+                if self.response.privacy == RecordPrivacy.RELEASED_AND_PUBLIC:
+                    download_url = "/attachments/public/" + \
+                        str(self.response.filename)
+                    return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s' target='_blank'><i class='icon-file'></i></i>&nbsp;<b>%s </b></a>" % (download_url, self.response.description, self.response.description)
+                elif self.response.privacy == RecordPrivacy.RELEASED_AND_PRIVATE:
+                    download_url = "/attachments/private/" + \
+                        str(self.response.filename)
+                    return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s' target='_blank'><i class='icon-file'></i></i>&nbsp;<b>%s </b></a>" % (download_url, self.response.description, self.response.description)
+                else:
+                    download_url = "/attachments/private/" + \
+                        str(self.response.filename)
+                    return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s' target='_blank'><i class='icon-file'></i></i>&nbsp;<b>%s </b></a>" % (download_url, self.response.description, self.response.description)
+            elif (self.response.privacy == RecordPrivacy.RELEASED_AND_PUBLIC) and (self.response.release_date is not None) and (self.response.release_date < datetime.datetime.now()):
                 download_url = "/attachments/public/" + \
                     str(self.response.filename)
-                return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s' target='_blank'><i class='icon-file'></i></i>&nbsp;<b>%s </b></a><form method='post' action='/switchRecordPrivacy'><input name=_csrf_token type=hidden value='%s'><input type='hidden' name='request_id' value='%s'/><input type='hidden' name='record_id' value='%s'/><input class='radio inline' type='radio' name='privacy_setting' value='release_and_public' type='submit' onclick='action=this.form.submit();' checked> Release and Public</input><input class='radio inline' type='radio' name='privacy_setting' value='release_and_private' type='submit' onclick='action=this.form.submit();'> Release and Private</input><input class='radio inline' type='radio' name='privacy_setting' value='private' type='submit' onclick='action=this.form.submit();'> Private</input></form>" % (download_url, self.response.description, self.response.description, session['_csrf_token'], self.response.request_id, self.response.id)
-            elif self.response.privacy == RecordPrivacy.RELEASED_AND_PRIVATE:
-                download_url = "/attachments/private/" + \
-                    str(self.response.filename)
-                return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s' target='_blank'><i class='icon-file'></i></i>&nbsp;<b>%s </b></a><form method='post' action='/switchRecordPrivacy'><input name=_csrf_token type=hidden value='%s'><input type='hidden' name='request_id' value='%s'/><input type='hidden' name='record_id' value='%s'/><input class='radio inline' type='radio' name='privacy_setting' value='release_and_public' type='submit' onclick='action=this.form.submit();'> Release and Public</input><input class='radio inline' type='radio' name='privacy_setting' value='release_and_private' type='submit' onclick='action=this.form.submit();' checked> Release and Private</input><input class='radio inline' type='radio' name='privacy_setting' value='private' type='submit' onclick='action=this.form.submit();'> Private</input></form>" % (download_url, self.response.description, self.response.description, session['_csrf_token'], self.response.request_id, self.response.id)
+                return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s' target='_blank'><i class='icon-file'></i></i>&nbsp;<b>%s </b></a>" % (download_url, self.response.description, self.response.description)
             else:
-                download_url = "/attachments/private/" + \
-                    str(self.response.filename)
-                return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s' target='_blank'><i class='icon-file'></i></i>&nbsp;<b>%s </b></a><form method='post' action='/switchRecordPrivacy'><input name=_csrf_token type=hidden value='%s'><input type='hidden' name='request_id' value='%s'/><input type='hidden' name='record_id' value='%s'/><input class='radio inline' type='radio' name='privacy_setting' value='release_and_public' type='submit' onclick='action=this.form.submit();'> Release and Public</input><input class='radio inline' type='radio' name='privacy_setting' value='release_and_private' type='submit' onclick='action=this.form.submit();'> Release and Private</input><input class='radio inline' type='radio' name='privacy_setting' value='private' type='submit' onclick='action=this.form.submit();' checked> Private</input></form>" % (download_url, self.response.description, self.response.description, session['_csrf_token'], self.response.request_id, self.response.id)
+                return None
         elif self.type == "note":
             response_text = self.response.text
             response_text = response_text.lstrip('{"')
@@ -143,10 +164,12 @@ class ResponsePresenter:
                                 '_csrf_token'], self.response.request_id,
                             self.response.id)
 
-                else:
-                    if current_user.role in ['Agency Helpers'] or not (self.response.privacy):
+                elif current_user.role in ['Agency Helpers'] or not (self.response.privacy):
                         return "<a href='%s' rel='tooltip' data-toggle='tooltip' data-placement='top' data-original-title='%s'><i class='icon-share'></i>&nbsp;<b>%s </b></a>" % (
                             self.response.url, self.response.url, self.response.description)
+                else:
+                    return None
+
         elif self.type == "extension":
             text = self.response.text.strip("Request extended:")
             return text
