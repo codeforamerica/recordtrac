@@ -188,8 +188,8 @@
 
 $('#editAgencyDescriptionButton').on('click',function(){
     //$('#modalAdditionalInfoTable').hide();
-    $('#editAgencyDescription').show();
-    $('#additionalInformation').hide();
+    //$('#editAgencyDescription').show();
+    //$('#additionalInformation').hide();
     var modalQuestion = 'Type in the agency description below';
     modalQuestion += '<br><br>';
     $('#form_id').val('agency_description');
@@ -237,7 +237,6 @@ $('#close_filenames_list').on('click',function(){
   $('#addNoteButton').on('click',function(){
     $('#modalAdditionalInfoTable').show();
     $('#form_id').val('note');
-    console.log($('#form_id').val('note'));
     var modalQuestion = 'Are you sure you want to add the note below and send an email to the requester?';
     modalQuestion += '<br><br>' + $('#noteTextarea').val();
     $('#modalquestionDiv').html(modalQuestion);

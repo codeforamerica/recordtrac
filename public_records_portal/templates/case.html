@@ -91,7 +91,7 @@
                                         <button type="submit"
                                                 class="btn btn-default btn-level"
                                                 data-toggle="modal"
-                                                data-target="#agency_descriptionModal"
+                                                data-target="#confirm-submit"
                                                 id="editAgencyDescriptionButton">Edit Agency Description
                                         </button>
                                     </div>
@@ -124,57 +124,6 @@
                         </fieldset>
                     </form>
 
-                    <div class="modal fade agency_descriptionModal" id="agency_descriptionModal" tabindex="-1" role="dialog"
-                         aria-labelledby="myModalLabel" aria-hidden="true" style="width:60em;">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    Confirmation
-                                </div>
-                                <div class="modal-body">
-                                    <div id="modalquestionDiv">Are you sure you want to make the following question
-                                        public and send an email to the requester?
-                                    </div>
-                                    <table id="modalAdditionalInfoTable" class="table">
-                                        <tr id="editAgencyDescription" style="display:None;">
-                                            <th>Agency Description <br>(5000 character limit) <br></th>
-                                            {% if req.agency_description and req.agency_description != "None" %}
-                                                <td><textarea style="width: 30em; height: 10em;" id="additional_note" name="additional_note"
-                                                              class="input-large" maxlength="5000"
-                                                              placeholder="Agency Description" >{{ req.agency_description }}</textarea></td>
-                                            {% else %}
-                                                    <td><textarea style="width: 30em; height: 10em;" id="additional_note" name="additional_note"
-                                                              class="input-large"
-                                                              placeholder="Agency Description"
-                                                                maxlength="5000" ></textarea></td>
-                                            {% endif %}
-
-                                        </tr>
-                                        <tr id="additionalInformation">
-                                            <th>Additional Information</th>
-                                            <td><textarea id="additional_note" name="additional_note"
-                                                          class="input-xlarge"
-                                                          placeholder="Additional Information"/></textarea></td>
-                                        </tr>
-                                    </table>
-                                    <br/><br/>
-                                    <table id="modalAdditionalInfoTableClose" class="table" style="display:none;">
-                                        <p id="deny_explain_why" style="display:none;"><b>If you are denying this request please explain why.</b></p>
-                                        <tr>
-                                            <th>Additional Information for Closing</th>
-                                            <td><textarea id="additional_note" name="additional_note"
-                                                          class="input-xlarge"
-                                                          placeholder="Additional Information"/></textarea></td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal" id="cancelDescription">Cancel</button>
-                                    <a href="#" id="submitAgencyDescription" class="btn btn-success success">Submit</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog"
                          aria-labelledby="myModalLabel" aria-hidden="true">
@@ -208,10 +157,17 @@
 {#                                        </tr>#}
                                         <tr id="additionalInformation">
                                             <th>Additional Information</th>
+                                            {% if req.agency_description != '' and req.agency_description != None %}
                                             <td><textarea id="additional_note" name="additional_note"
                                                           class="input-xlarge"
+                                                          placeholder="Additional Information"/>{{ req.agency_description }}</textarea></td>
+                                            {% else %}
+                                                <td><textarea id="additional_note" name="additional_note"
+                                                          class="input-xlarge"
                                                           placeholder="Additional Information"/></textarea></td>
+                                            {% endif %}
                                         </tr>
+
                                     </table>
                                     <br/><br/>
                                     <table id="modalAdditionalInfoTableClose" class="table" style="display:none;">
