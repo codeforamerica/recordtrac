@@ -342,51 +342,6 @@
                         </fieldset>
                     </form>
                     {% endif %}
-                  {% if current_user.is_authenticated and audience == 'city' %}
-                    <form class="form-horizontal" method="post" action="/changeprivacy">
-                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-                        <input type="hidden" name="fieldtype" value="description"/>
-                        <fieldset>
-                            <!-- Multiple Radios (inline) -->
-                            <div class="control-group">
-                                <label class="control-label" for="privacy setting" style="width:7rem; text-align:left;">Description
-                                    Privacy:</label>
-
-                                <div class="controls" style="margin-left: 3rem">
-                                    {% if req.descriptionPrivate==True %}
-                                    <label class="radio inline" for="privacy setting-public">
-                                        <input type="radio" name="privacy setting" id="privacy setting-public"
-                                               value="False" type="submit" onclick="action=this.form.submit();">
-                                        {# Value set to False means public#}
-                                        Public
-                                    </label>
-                                    <label class="radio inline" for="privacy setting-private">
-                                        <input type="radio" name="privacy setting" id="privacy setting-private"
-                                               value="True" type="submit" checked onclick="action=this.form.submit();">
-                                        {# Value set to True means private#}
-                                        Private
-                                    </label>
-                                    {% else %}
-                                    <label class="radio inline" for="privacy setting-public">
-                                        <input type="radio" name="privacy setting" id="privacy setting-public"
-                                               value="False" type="submit" checked onclick="action=this.form.submit();">
-                                        {# Value set to False means public#}
-                                        Public
-                                    </label>
-                                    <label class="radio inline" for="privacy setting-private">
-                                        <input type="radio" name="privacy setting" id="privacy setting-private"
-                                               value="True" type="submit" onclick="action=this.form.submit();">
-                                        {# Value set to True means private#}
-                                        Private
-                                    </label>
-                                    {% endif %}
-                                </div>
-                            </div>
-
-                        </fieldset>
-                        {% endif %}
-                    </form>
 
                         </div>
                 <!--<div>-->
