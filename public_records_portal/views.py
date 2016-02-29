@@ -6,9 +6,9 @@
 
 """
 
-from flask import flash
 from flask import render_template, redirect, url_for, send_from_directory
 from flask.ext.login import login_user, logout_user, current_user, login_required
+from flask.ext.mail import Message, Mail
 # from flaskext.browserid import BrowserID
 from public_records_portal import db, models, recaptcha
 from prr import add_resource, update_resource, make_request, close_request
@@ -25,19 +25,17 @@ from filters import *
 import re
 from db_helpers import get_count, get_obj
 from sqlalchemy import func, and_, or_, text
-from forms import OfflineRequestForm, NewRequestForm, LoginForm, EditUserForm
+from forms import OfflineRequestForm, NewRequestForm, LoginForm, EditUserForm, ContactForm
 import pytz
 from requires_roles import requires_roles
 from flask_login import LoginManager
-from models import AnonUser, RecordPrivacy
+from models import AnonUser
 from datetime import datetime, timedelta, date
 from business_calendar import Calendar
 import operator
 import bleach
-#from flask.ext.session import Session
-from secureCookie import *
+# from flask.ext.session import Session
 from uuid import uuid4
-from jinja2 import utils
 
 cal = Calendar()
 
@@ -50,20 +48,22 @@ login_manager.user_loader(get_user_by_id)
 login_manager.anonymous_user = AnonUser
 login_manager.init_app(app)
 
-#SESSION_COOKIE_SECURE=True
-#app.config.from_object(__name__)
-#Session(app)
+# SESSION_COOKIE_SECURE=True
+# app.config.from_object(__name__)
+# Session(app)
 
 app.config['SESSION_COOKIE_SECURE'] = True
 
 zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
 
+
 @app.before_first_request
 def create_user():
     db.create_all()
 
-#@app.before_request
-#def make_session_permanent():
+
+# @app.before_request
+# def make_session_permanent():
 #    app.permanent_session_lifetime = timedelta(minutes=180)
 
 @app.before_request
@@ -73,12 +73,16 @@ def csrf_protect():
         if not token or token != request.form.get('_csrf_token'):
             return access_denied(403)
 
+
 def generate_csrf_token():
     if '_csrf_token' not in session:
         session['_csrf_token'] = str(uuid4())
         app.logger.info('CSRF Token: %s' % session['_csrf_token'])
     return session['_csrf_token']
+
+
 app.jinja_env.globals['csrf_token'] = generate_csrf_token
+
 
 # Submitting a new request
 @app.route("/new", methods=["GET", "POST"])
@@ -457,7 +461,7 @@ def index():
     if current_user.is_anonymous == False:
         return redirect(url_for('display_all_requests'))
     else:
-        #app.permanent_session_lifetime = timedelta(seconds=0)
+        # app.permanent_session_lifetime = timedelta(seconds=0)
         return landing()
 
 
@@ -505,7 +509,7 @@ show_request_for_x.methods = ['GET', 'POST']
 @app.route("/city/request/<string:request_id>")
 @login_required
 @requires_roles('Portal Administrator', 'Agency Administrator', 'Agency Helpers', 'Agency FOIL Officer')
-def show_request_for_city(request_id,errors=None):
+def show_request_for_city(request_id, errors=None):
     req = get_obj("Request", request_id)
     app.logger.info("Current User Role: %s" % current_user.role)
     if current_user.role == 'Portal Administrator':
@@ -613,7 +617,8 @@ def show_request(request_id, template="manage_request_public.html", errors=None,
                                , errors=errors, form=form, file=file)
     else:
         return render_template(template, req=req, agency_data=agency_data, users=users,
-                               department=department, assigned_user=assigned_user, helpers=helpers, audience=audience, datetime=datetime.now())
+                               department=department, assigned_user=assigned_user, helpers=helpers, audience=audience,
+                               datetime=datetime.now())
 
 
 # @app.route("/api/staff")
@@ -945,7 +950,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         sort_direction = get_filter_value(filters_map, 'sort_direction') or 'asc'
         sort_direction = bleach.clean(sort_direction);
         # sort_direction = str(utils.escape(sort_direction))
-        #sort_direction = clean_html(sort_direction)
+        # sort_direction = clean_html(sort_direction)
         app.logger.info(sort_direction)
         search_term = get_filter_value(filters_map, 'search_term')
         search_term = bleach.clean(search_term);
@@ -1382,7 +1387,8 @@ def login():
     form = LoginForm()
     errors = []
     if request.method == 'POST':
-        if (form.username.data is not None and form.username.data != '') and (form.password.data is not None and form.password.data != ''):
+        if (form.username.data is not None and form.username.data != '') and (
+                        form.password.data is not None and form.password.data != ''):
             user_to_login = authenticate_login(form.username.data, form.password.data)
             if user_to_login:
                 login_user(user_to_login)
@@ -1678,7 +1684,8 @@ def change_privacy():
     field = request.form['fieldtype']
     # field will either be title or description
     app.logger.info("Changing privacy function")
-    errors['missing_agency_description_privacy'] = prr.change_privacy_setting(request_id=request.form['request_id'], privacy=privacy, field=field)
+    errors['missing_agency_description_privacy'] = prr.change_privacy_setting(request_id=request.form['request_id'],
+                                                                              privacy=privacy, field=field)
     if errors['missing_agency_description_privacy']:
         return show_request_for_city(req.id, errors=errors)
     return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
@@ -1700,15 +1707,57 @@ def change_category():
     category = request.form['category']
     return redirect(render_template('new_request.html'))
 
+
 @app.route("/agency_description", methods=["POST", "GET"])
 def edit_agency_description():
-    errors={}
+    errors = {}
     req = request.form
     app.logger.info("Editing the agency description")
-    errors['missing_agency_description_privacy'] = prr.edit_agency_description(request_id=req['request_id'],agency_description_text=req['additional_information'])
+    errors['missing_agency_description_privacy'] = prr.edit_agency_description(request_id=req['request_id'],
+                                                                               agency_description_text=req[
+                                                                                   'additional_information'])
     if errors['missing_agency_description_privacy']:
         return show_request_for_city(req['request_id'], errors=errors)
     return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
+
+
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    form = ContactForm()
+
+    if request.method == 'POST':
+        name = form.name.data
+        email = form.email.data
+        subject = form.subject.data
+        message = form.message.data
+
+        if not (name and email and subject and message):
+            error = "All fields are required"
+            return render_template('contact.html', form=form, error=error)
+        else:
+            app.logger.info("Name: %s\nEmail: %s\nSubject: %s\nMessage: %s\n" % (name, email, subject, message))
+
+            mail = Mail(app)
+
+            app.logger.info("List of Admins: %s" % app.config['LIST_OF_ADMINS'])
+            app.logger.info("Type: %s" % type(app.config['LIST_OF_ADMINS']))
+
+            recipients = app.config['LIST_OF_ADMINS'].split(',')
+            app.logger.info("Recipients: %s" % recipients)
+
+            msg = Message("OpenRecords Contact Form: %s" % form.subject.data, sender=app.config['DEFAULT_MAIL_SENDER'],
+                          recipients=recipients)
+            msg.body = """
+                Date: %s
+                From: %s <%s>
+                Message: %s
+              """ % (datetime.now().strftime("%m/%d/%Y %H:%M"), form.name.data, form.email.data, form.message.data)
+            mail.send(msg)
+            return render_template(('contact.html'), success=True)
+
+    elif request.method == 'GET':
+        return render_template('contact.html', form=form)
+
 
 @app.route("/<page>")
 def any_page(page):
