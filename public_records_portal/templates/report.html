@@ -75,7 +75,7 @@ rect:hover{
         <!--<button id="clear_filter" type="submit" class="btn btn-primary">Clear Filters</button>-->
 		<h5>Agency Filter</h5>
 		<select id="agency_filter" name="agency_filter">
-			<option value="0">None Selected</option>
+			<option value="0">All Agencies</option>
 			{% for data in agency_data %}
                         	<option value="{{data.id}}">{{data.name}}</option>
 			{% endfor %}
