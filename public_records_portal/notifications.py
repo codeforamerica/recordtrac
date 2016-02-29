@@ -362,7 +362,7 @@ def send_email(
     include_unsubscribe_link=True,
     cc_everyone=False,
     attached_files=None,
-    privacy=True,
+    privacy=None
     ):
 
     mail = Mail(app)
@@ -377,7 +377,7 @@ def send_email(
         for file in attached_files:
             if file is not None:
                 file.seek(0)
-                if privacy == u'True':
+                if privacy in [RecordPrivacy.PRIVATE, RecordPrivacy.RELEASED_AND_PRIVATE]:
                     url = app.config['UPLOAD_PRIVATE_LOCAL_FOLDER'] + "/" + file.filename
                 else:
                     url = app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + file.filename
