@@ -783,6 +783,19 @@ def close(request_id=None):
                 reasons.append(close_reason)
         errors = close_request(request_id=request_id, reasons=reasons, user_id=get_user_id(), request_body=request.form)
         if errors:
+            requestObj = get_obj("Request", request.form['request_id'])
+            if current_user.role == 'Portal Administrator':
+                audience = 'city'
+            elif current_user.department_id == requestObj.department_id:
+                app.logger.info("User Dep: %s; Req Dep: %s" % (current_user.department_id, requestObj.department_id))
+                if current_user.role in ['Agency Administrator', 'Agency FOIL Officer']:
+                    app.logger.info("User Role: %s" % current_user.role)
+                    audience = 'city'
+                else:
+                    audience = 'helper'
+            else:
+                audience = 'public'
+            template = "manage_request_%s_less_js.html" % audience
             return show_request(request_id, template=template, errors=errors, form='close')
         return show_request(request_id, template=template)
     return render_template('error.html', message="You can only close from a requests page!")

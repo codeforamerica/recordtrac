@@ -29,11 +29,6 @@ class RecordPrivacy:
     RELEASED_AND_PRIVATE = 0x2
     RELEASED_AND_PUBLIC = 0x3
 
-class RecordPrivacy:
-    PRIVATE = 0x1
-    RELEASED_AND_PRIVATE = 0x2
-    RELEASED_AND_PUBLIC = 0x3
-
 
 class AnonUser:
     @property

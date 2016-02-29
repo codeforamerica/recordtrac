@@ -377,9 +377,9 @@ def send_email(
         for file in attached_files:
             if file is not None:
                 file.seek(0)
-                if privacy == u'True':
+                if privacy == 1 or privacy == 2:
                     url = app.config['UPLOAD_PRIVATE_LOCAL_FOLDER'] + "/" + file.filename
-                else:
+                elif privacy == 3:
                     url = app.config['UPLOAD_PUBLIC_LOCAL_FOLDER'] + "/" + file.filename
                 content_type = mimetypes.guess_type(url)[0]
                 filename = file.filename
