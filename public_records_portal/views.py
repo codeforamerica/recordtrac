@@ -8,6 +8,7 @@
 
 from flask import render_template, redirect, url_for, send_from_directory
 from flask.ext.login import login_user, logout_user, current_user, login_required
+from flask.ext.mail import Message, Mail
 # from flaskext.browserid import BrowserID
 from public_records_portal import db, models, recaptcha
 from prr import add_resource, update_resource, make_request, close_request
@@ -1387,7 +1388,7 @@ def login():
     errors = []
     if request.method == 'POST':
         if (form.username.data is not None and form.username.data != '') and (
-                form.password.data is not None and form.password.data != ''):
+                        form.password.data is not None and form.password.data != ''):
             user_to_login = authenticate_login(form.username.data, form.password.data)
             if user_to_login:
                 login_user(user_to_login)
@@ -1735,7 +1736,25 @@ def contact():
             return render_template('contact.html', form=form, error=error)
         else:
             app.logger.info("Name: %s\nEmail: %s\nSubject: %s\nMessage: %s\n" % (name, email, subject, message))
-            return redirect("http://google.com")
+
+            mail = Mail(app)
+
+            app.logger.info("List of Admins: %s" % app.config['LIST_OF_ADMINS'])
+            app.logger.info("Type: %s" % type(app.config['LIST_OF_ADMINS']))
+
+            recipients = app.config['LIST_OF_ADMINS'].split(',')
+            app.logger.info("Recipients: %s" % recipients)
+
+            msg = Message("OpenRecords Contact Form: %s" % form.subject.data, sender=app.config['DEFAULT_MAIL_SENDER'],
+                          recipients=recipients)
+            msg.body = """
+                Date: %s
+                From: %s <%s>
+                Message: %s
+              """ % (datetime.now().strftime("%m/%d/%Y %H:%M"), form.name.data, form.email.data, form.message.data)
+            mail.send(msg)
+            return render_template(('contact.html'), success=True)
+
     elif request.method == 'GET':
         return render_template('contact.html', form=form)
 
