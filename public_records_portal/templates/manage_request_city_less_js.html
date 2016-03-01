@@ -84,6 +84,7 @@ $("#record").on('change', function (e, data) {
             node.append('</td>');
             node.append('<td class="title">');
             node.append('<label>Title: <input class="title_text" name="title[]" required></label>');
+            node.append('<div class="alert alert-danger" id="missing_title" style="display:none;">All records require a Title</div>');
             node.append('</td>');
             node.append('<tr>');
             node.append('<button class="btn btn-danger delete" type="button" onclick="parentNode.remove();"><i class="icon-remove icon-white"></i>&nbsp;<span>Cancel</span>&nbsp;</button>');
