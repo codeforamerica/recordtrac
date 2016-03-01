@@ -79,6 +79,8 @@
 
   $('#submit').on('click',function(event){
     form_id = '#' + $('#form_id').val();
+    $('.agency-description').show();
+    $('.additional-note').show();
     if(!$('#modalAdditionalInfoTable').is(':visible') || $(form_id) == 'note_pdf') {
         $('#confirm-submit').modal('toggle');
         $(form_id).submit();
@@ -187,9 +189,8 @@
 
 
 $('#editAgencyDescriptionButton').on('click',function(){
-    //$('#modalAdditionalInfoTable').hide();
-    //$('#editAgencyDescription').show();
-    //$('#additionalInformation').hide();
+    $('.agency-description').show();
+    $('.additional-note').hide();
     var modalQuestion = 'Type in the agency description below';
     modalQuestion += '<br><br>';
     $('#form_id').val('agency_description');
@@ -315,6 +316,11 @@ $('#close_filenames_list').on('click',function(){
   $("#cancel_all").on('click', function() {
     $('.delete').click();
   });
+
+$("#cancel").on('click', function(){
+    $('.additional-note').show();
+    $('.agency-description').hide();
+});
 
 /*$(document).on('ready', function() {
     $("#record").fileinput({
