@@ -1157,7 +1157,7 @@ def get_responses_chronologically(req):
         if current_user.is_authenticated:
             responses.append(ResponsePresenter(record=record))
         else:
-            if record.privacy == RecordPrivacy.RELEASED_AND_PUBLIC and record.release_date < datetime.now():
+            if record.privacy == RecordPrivacy.RELEASED_AND_PUBLIC and record.release_date and record.release_date < datetime.now():
                 responses.append(ResponsePresenter(record=record))
 
     if not responses:
