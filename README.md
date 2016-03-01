@@ -1,5 +1,7 @@
-#RecordTrac
-This is the home page for documentation for the **RecordTrac** application.
+[ ![Codeship Status for nycrecordswebdev/recordtrac](https://codeship.com/projects/e1c59fe0-9c47-0133-fe2b-3604d537a8d3/status?branch=master)](https://codeship.com/projects/127075)
+
+#NYC OpenRecords
+This is the home page for documentation for the **NYC OpenRecords** application.
 
 * [What is RecordTrac](#what-is-recordtrac)
 * [How to create a new RecordTrac app](#how-to-create-a-new-recordtrac-app-for-your-agency)

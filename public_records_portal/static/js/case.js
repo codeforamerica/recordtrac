@@ -49,10 +49,10 @@
         $('#acknowledgeRequestForm').hide();
       }
   });
- 
+
   $("#days_after").change(function() {
     selected = $(this).val();
-    if(selected === "0") { 
+    if(selected === "0") {
       $("#custom_due_date").show();
       }
     else {
@@ -63,7 +63,7 @@
 
   $("#days_after").change(function() {
     selected = $(this).val();
-    if(selected === "-1") { 
+    if(selected === "-1") {
       $("#custom_due_date").show();
     }
     else {
@@ -84,8 +84,8 @@
         $(form_id).submit();
     }
     else {
-
       $('#modalAdditionalInfoTable').show();
+      $('#editAgencyDescription').hide();
       additional_information = $('#additional_note').val();
       var input = $("<input>")
                .attr("type", "hidden")
@@ -93,7 +93,39 @@
       $(form_id).append($(input));
       $(form_id).submit();
     }
+
    });
+
+  $('#submitAgencyDescription').on('click',function(event){
+    form_id = '#' + $('#form_id').val();
+    if(!$('#modalAdditionalInfoTable').is(':visible') || $(form_id) == 'note_pdf') {
+        $('#confirm-submit').modal('toggle');
+        $(form_id).submit();
+    }
+    else {
+      $('#modalAdditionalInfoTable').show();
+      $('#editAgencyDescription').hide();
+      additional_information = $('#additional_note').val();
+      var input = $("<input>")
+               .attr("type", "hidden")
+               .attr("name", "additional_information").val(additional_information);
+      $(form_id).append($(input));
+      $(form_id).submit();
+    }
+
+   });
+
+    $('#cancelDescription').on('click',function(event){
+        $('#editAgencyDescription').hide();
+        $('#additionalInformation').show();
+        form_id = '#' + $('#form_id').val();
+        additional_information = "";
+        var input = $("<input>")
+            .attr("type", "hidden")
+            .attr("name", "additional_information").val(additional_information);
+        $(form_id).append($(input));
+        $(form_id).submit();
+    });
 
     $('#cancel_close').on('click',function(event){
         $('#close-reminder').hide();
@@ -129,6 +161,14 @@
   });
 
   $('#closeButton').on('click',function(){
+    var selectedCloseReason = $('#close_reasons option:selected').text();
+    if(selectedCloseReason.indexOf('Denied') >= 0) {
+        $('#deny_explain_why').show();
+    }
+    else {
+        $('#deny_explain_why').hide();
+    }
+
     $('#modalAdditionalInfoTable').show();
     $('#close-reminder').show()
     //$('#modalAdditionalInfoTable').append('<p><b>If you are denying this request please explain why.</b></p>');
@@ -144,6 +184,46 @@
     $('#modalQuestionTable').hide();
 
   });
+
+
+$('#editAgencyDescriptionButton').on('click',function(){
+    //$('#modalAdditionalInfoTable').hide();
+    //$('#editAgencyDescription').show();
+    //$('#additionalInformation').hide();
+    var modalQuestion = 'Type in the agency description below';
+    modalQuestion += '<br><br>';
+    $('#form_id').val('agency_description');
+    $('#modalquestionDiv').html(modalQuestion);
+    $('#modalQuestionTable').hide();
+});
+
+$('#file_upload_filenames').bind('DOMNodeInserted', function(event) {
+  var names = [];
+  if($("input[name=record]") && $("input[name=record]").get(0) && $("input[name=record]").get(0).files) {
+  for (var i = 0; i < $("input[name=record]").get(0).files.length; ++i) {
+    names.push($("input[name=record]").get(0).files[i].name);
+  }}
+
+  if(names.length > 4) {
+      $('#close_filenames_list').click();
+      $('#numFiles').show();
+  }
+  else {
+      $('#file_upload_one').text(names[0]);
+      $('#file_upload_two').text(names[1]);
+      $('#file_upload_three').text(names[2]);
+      $('#file_upload_four').text(names[3]);
+      $('#numFiles').hide();
+  }
+
+});
+
+$('#close_filenames_list').on('click',function(){
+  $('#file_upload_one').empty();
+  $('#file_upload_two').empty();
+  $('#file_upload_three').empty();
+  $('#file_upload_four').empty();
+});
 
   $('#addRecordButton').on('click',function(){
     $('#modalAdditionalInfoTable').show();
@@ -171,29 +251,35 @@
       $('#modalquestionDiv').html(modalQuestion);
       $('#modalQuestionTable').hide();
     });
- 
+
   $('#generatePDFButton').on('click',function(event){
     var selectedTemplate = $('#response_template option:selected').text();
     var modalQuestion = 'Are you sure you want to generate a Word Document for the template below?';
-           
+
     if (selectedTemplate === '') {
       $('#missing_pdf_template').removeClass('hidden');
     }
     else {
+        if(selectedTemplate === 'Deny Request' || selectedTemplate === 'Partial Denial of Request') {
+            $('#deny_explain_why').show();
+        }
+        else {
+            $('#deny_explain_why').hide();
+        }
         $('#missing_pdf_template').addClass('hidden');
         var attr = $('#generatePDFButton').attr('data-toggle');
         $('#generatePDFButton').attr('data-toggle','modal');
         $('#generatePDFButton').attr('data-target','#confirm-submit');
-                             
+
         $('#modalAdditionalInfoTable').hide();
         $('#form_id').val('note_pdf');
         modalQuestion += '<br><br>' + selectedTemplate;
         $('#modalquestionDiv').html(modalQuestion);
         $('#modalQuestionTable').hide();
     }
-                            
-        
-        
+
+
+
   });
 
   $('#notifyButton').on('click',function(){
@@ -206,6 +292,36 @@
 
   $("#requesterInfoButton").on('click', function() {
     $('#requester_info').toggle();
-    $('#requesterInfoButton').innerHTML()
-  })
+    $('#requesterInfoButton').innerHTML();
+  });
+
+  $(".start").on('click', function() {
+    var title = $('.title_text');
+    var titleLengthCorrect = 1;
+
+    $.each(title, function (index, t) {
+        if(t.value.length > 140) {
+          $('#record_title_alert').show();
+          titleLengthCorrect = -1;
+        }
+    });
+    
+    if(titleLengthCorrect === 1) {
+        $('#record_title_alert').hide();
+        $('#addRecordButton').click();
+    }
+  });
+
+  $("#cancel_all").on('click', function() {
+    $('.delete').click();
+  });
+
+/*$(document).on('ready', function() {
+    $("#record").fileinput({
+        maxFileCount: 4,
+    validateInitialCount: true,
+    overwriteInitial: false,
+    allowedFileExtensions: ["txt", "pdf", "doc", "rtf", "odt", "odp", "ods", "odg","odf","ppt", "pps", "xls", "docx", "pptx", "ppsx", "xlsx","jpg","jpeg","png","gif","tif","tiff","bmp","avi","flv","wmv","mov","mp4","mp3","wma","wav","ra","mid"]
+    });
+});*/
 })($);

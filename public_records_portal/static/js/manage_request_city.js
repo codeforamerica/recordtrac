@@ -250,5 +250,5 @@ $(document).ready(function() {
     $parent.append("<div class='more'>..more</div>");
   })
 
-})
+})}
 

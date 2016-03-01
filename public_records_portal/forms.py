@@ -122,7 +122,8 @@ class OfflineRequestForm(Form):
         Length(1, 5000,
                'The detailed description of this request must be less than '
                '5000 characters')])
-    request_attachment_description = TextAreaField(u'Description of Attachment', validators=[Length(1,5000,'less than 5000 characters')])
+    request_attachment_description = TextAreaField(u'Description of Attachment',
+                                                   validators=[Length(1, 5000, 'less than 5000 characters')])
     request_attachment = FileField(u'Upload attachment')
     request_format = SelectField(u'Format Received*', choices=formats,
                                  validators=[
@@ -212,6 +213,11 @@ class LoginForm(Form):
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Log In')
 
+    class Meta:
+        # This overrides the value from the base form.
+        csrf = False
+
+
 class EditUserForm(Form):
     username = StringField('Email', validators=[DataRequired(), Length(1, 64)])
     phone = StringField('Phone Number', validators=[DataRequired()])
@@ -220,3 +226,14 @@ class EditUserForm(Form):
     title = StringField('Title', validators=[DataRequired()])
 
     submit = SubmitField('Update')
+
+
+
+
+class ContactForm(Form):
+    name = StringField("Name", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired(), Email()])
+    subject = StringField("Subject", validators=[DataRequired()])
+    message = TextAreaField("Message", validators=[DataRequired()])
+    recaptcha = ReCaptcha(app)
+    submit = SubmitField("Send")

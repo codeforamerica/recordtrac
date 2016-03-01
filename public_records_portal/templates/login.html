@@ -19,7 +19,7 @@
                 <form name="login" class="form-horizontal" id="submitRequest" method="post" action="/login"
                       autocomplete="off" novalidate="novalidate">
                     <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-                    {{ form.hidden_tag() }}
+{#                    {{ form.csrf_token( name = _csrf_token ) }}#}
                     <div class="control-group">
                         <h2>
                             <small>{{ form.username.label.text }}</small>

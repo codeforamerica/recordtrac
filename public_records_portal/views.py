@@ -6,9 +6,9 @@
 
 """
 
-from flask import flash
 from flask import render_template, redirect, url_for, send_from_directory
 from flask.ext.login import login_user, logout_user, current_user, login_required
+from flask.ext.mail import Message, Mail
 # from flaskext.browserid import BrowserID
 from public_records_portal import db, models, recaptcha
 from prr import add_resource, update_resource, make_request, close_request
@@ -25,7 +25,7 @@ from filters import *
 import re
 from db_helpers import get_count, get_obj
 from sqlalchemy import func, and_, or_, text
-from forms import OfflineRequestForm, NewRequestForm, LoginForm, EditUserForm
+from forms import OfflineRequestForm, NewRequestForm, LoginForm, EditUserForm, ContactForm
 import pytz
 from requires_roles import requires_roles
 from flask_login import LoginManager
@@ -34,10 +34,8 @@ from datetime import datetime, timedelta, date
 from business_calendar import Calendar
 import operator
 import bleach
-#from flask.ext.session import Session
-from secureCookie import *
+# from flask.ext.session import Session
 from uuid import uuid4
-from jinja2 import utils
 
 cal = Calendar()
 
@@ -50,35 +48,41 @@ login_manager.user_loader(get_user_by_id)
 login_manager.anonymous_user = AnonUser
 login_manager.init_app(app)
 
-#SESSION_COOKIE_SECURE=True
-#app.config.from_object(__name__)
-#Session(app)
+# SESSION_COOKIE_SECURE=True
+# app.config.from_object(__name__)
+# Session(app)
 
 app.config['SESSION_COOKIE_SECURE'] = True
 
 zip_reg_ex = re.compile('^[0-9]{5}(?:-[0-9]{4})?$')
 
+
 @app.before_first_request
 def create_user():
     db.create_all()
 
-#@app.before_request
-#def make_session_permanent():
+
+# @app.before_request
+# def make_session_permanent():
 #    app.permanent_session_lifetime = timedelta(minutes=180)
 
 @app.before_request
 def csrf_protect():
     if request.method == "POST":
-        token = session.pop("_csrf_token", None)
+        token = session['_csrf_token']
         if not token or token != request.form.get('_csrf_token'):
             return access_denied(403)
+
 
 def generate_csrf_token():
     if '_csrf_token' not in session:
         session['_csrf_token'] = str(uuid4())
         app.logger.info('CSRF Token: %s' % session['_csrf_token'])
     return session['_csrf_token']
+
+
 app.jinja_env.globals['csrf_token'] = generate_csrf_token
+
 
 # Submitting a new request
 @app.route("/new", methods=["GET", "POST"])
@@ -457,7 +461,7 @@ def index():
     if current_user.is_anonymous == False:
         return redirect(url_for('display_all_requests'))
     else:
-        #app.permanent_session_lifetime = timedelta(seconds=0)
+        # app.permanent_session_lifetime = timedelta(seconds=0)
         return landing()
 
 
@@ -504,15 +508,15 @@ show_request_for_x.methods = ['GET', 'POST']
 
 @app.route("/city/request/<string:request_id>")
 @login_required
-@requires_roles('Portal Administrator', 'Agency Administrator', 'Agency FOIL Personnel', 'Agency Helpers')
-def show_request_for_city(request_id):
+@requires_roles('Portal Administrator', 'Agency Administrator', 'Agency Helpers', 'Agency FOIL Officer')
+def show_request_for_city(request_id, errors=None):
     req = get_obj("Request", request_id)
     app.logger.info("Current User Role: %s" % current_user.role)
     if current_user.role == 'Portal Administrator':
         audience = 'city'
     elif current_user.department_id == req.department_id:
         app.logger.info("User Dep: %s; Req Dep: %s" % (current_user.department_id, req.department_id))
-        if current_user.role in ['Agency Administrator', 'Agency FOIL Personnel']:
+        if current_user.role in ['Agency Administrator', 'Agency FOIL Officer']:
             app.logger.info("User Role: %s" % current_user.role)
             audience = 'city'
         else:
@@ -521,7 +525,7 @@ def show_request_for_city(request_id):
         audience = 'public'
         return show_request_for_x(audience, request_id)
 
-    return show_request(request_id=request_id, template="manage_request_%s_less_js.html" % audience)
+    return show_request(request_id=request_id, template="manage_request_%s_less_js.html" % audience, errors=errors)
 
 
 @app.route("/response/<string:request_id>")
@@ -613,7 +617,8 @@ def show_request(request_id, template="manage_request_public.html", errors=None,
                                , errors=errors, form=form, file=file)
     else:
         return render_template(template, req=req, agency_data=agency_data, users=users,
-                               department=department, assigned_user=assigned_user, helpers=helpers, audience=audience)
+                               department=department, assigned_user=assigned_user, helpers=helpers, audience=audience,
+                               datetime=datetime.now())
 
 
 # @app.route("/api/staff")
@@ -660,11 +665,25 @@ def add_a_resource(resource):
                 errors[
                     'missing_record_access'] = "You must upload a record, provide a link to a record, or indicate how the record can be accessed"
             if not ((req['record_description'])):
-                errors['missing_record_description'] = "Please include a name for this record"
+                if req['link_url']:
+                    errors['missing_record_description'] = "Please include a name for this record"
 
         resource_id = add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
         if type(resource_id) == int or str(resource_id).isdigit():
+            requestObj = get_obj("Request", req['request_id'])
             audience = 'city'
+            if current_user.role == 'Portal Administrator':
+                audience = 'city'
+            elif current_user.department_id == requestObj.department_id:
+                app.logger.info("User Dep: %s; Req Dep: %s" % (current_user.department_id, requestObj.department_id))
+                if current_user.role in ['Agency Administrator', 'Agency FOIL Officer']:
+                    app.logger.info("User Role: %s" % current_user.role)
+                    audience = 'city'
+                else:
+                    audience = 'helper'
+            else:
+                audience = 'public'
+
             template = "manage_request_%s_less_js.html" % audience
             app.logger.info("\n\nSuccessfully added resource: %s with id: %s" % (resource, resource_id))
             if resource == 'record_and_close':
@@ -684,6 +703,8 @@ def add_a_resource(resource):
         else:
             app.logger.info("\n\nThere was an issue with the upload: %s" % resource_id)
             template = "manage_request_%s_less_js.html" % req['audience']
+            if resource_id == "File too large":
+                errors['file_too_large'] = resource_id
             return show_request(request_id=req['request_id'],
                                 template=template, errors=errors,
                                 form=req, file=request.files['record'])
@@ -760,7 +781,22 @@ def close(request_id=None):
         elif 'close_reasons' in request.form:
             for close_reason in request.form.getlist('close_reasons'):
                 reasons.append(close_reason)
-        close_request(request_id=request_id, reasons=reasons, user_id=get_user_id(), request_body=request.form)
+        errors = close_request(request_id=request_id, reasons=reasons, user_id=get_user_id(), request_body=request.form)
+        if errors:
+            requestObj = get_obj("Request", request.form['request_id'])
+            if current_user.role == 'Portal Administrator':
+                audience = 'city'
+            elif current_user.department_id == requestObj.department_id:
+                app.logger.info("User Dep: %s; Req Dep: %s" % (current_user.department_id, requestObj.department_id))
+                if current_user.role in ['Agency Administrator', 'Agency FOIL Officer']:
+                    app.logger.info("User Role: %s" % current_user.role)
+                    audience = 'city'
+                else:
+                    audience = 'helper'
+            else:
+                audience = 'public'
+            template = "manage_request_%s_less_js.html" % audience
+            return show_request(request_id, template=template, errors=errors, form='close')
         return show_request(request_id, template=template)
     return render_template('error.html', message="You can only close from a requests page!")
 
@@ -884,7 +920,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
     mine_as_poc = checkbox_value
     mine_as_helper = checkbox_value
     departments_selected = []
-    if current_user.is_authenticated:
+    if current_user.is_authenticated and current_user.role != 'Portal Administrator':
         departments_selected.append(current_user.current_department.name)
     sort_column = "id"
     sort_direction = "asc"
@@ -898,8 +934,9 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
     request_id_search = None
 
     if filters_map:
-        departments_selected = get_filter_value(filters_map=filters_map, filter_name='departments_selected',
-                                                is_list=True) or get_filter_value(filters_map, 'department')
+        if not departments_selected:
+            departments_selected = get_filter_value(filters_map=filters_map, filter_name='departments_selected',
+                                                    is_list=True) or get_filter_value(filters_map, 'department')
         # departments_selected = bleach.clean(departments_selected);
         app.logger.info("Department Selected: %s" % departments_selected)
         is_open = get_filter_value(filters_map=filters_map, filter_name='is_open', is_boolean=True)
@@ -926,7 +963,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
         sort_direction = get_filter_value(filters_map, 'sort_direction') or 'asc'
         sort_direction = bleach.clean(sort_direction);
         # sort_direction = str(utils.escape(sort_direction))
-        #sort_direction = clean_html(sort_direction)
+        # sort_direction = clean_html(sort_direction)
         app.logger.info(sort_direction)
         search_term = get_filter_value(filters_map, 'search_term')
         search_term = bleach.clean(search_term);
@@ -963,7 +1000,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
                                               'Agency Administrator'] or current_user.is_admin()):
             mine_as_poc = None
             mine_as_helper = None
-        elif current_user.is_authenticated and current_user.role in ['Agency FOIL Personnel']:
+        elif current_user.is_authenticated and current_user.role in ['Agency FOIL Officer']:
             mine_as_poc = "on"
             mine_as_helper = "on"
         elif current_user.is_authenticated and current_user.role in ['Agency Helpers']:
@@ -1051,7 +1088,7 @@ def prepare_request_fields(results):
         # and not regular SQLAlchemy attributes.
         "contact_name": r.point_person_name(), \
         "solid_status": r.solid_status(),
-        "titlePrivate": r.titlePrivate
+        "title_private": r.title_private
     }, results)
 
 
@@ -1097,7 +1134,7 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
     if is_closed == checkbox_value:
         status_filters.append(models.Request.closed)
 
-    if min_date_received and max_date_received and min_date_received != "" and max_date_received != "":
+    if min_date_received and max_date_received and min_date_received != "" and max_date_received != "" and min_date_received != "None" and max_date_received != "None":
         try:
             min_date_received = datetime.strptime(min_date_received, date_format)
             max_date_received = datetime.strptime(max_date_received, date_format) + timedelta(hours=23, minutes=59)
@@ -1117,7 +1154,7 @@ def get_results_by_filters(departments_selected, is_open, is_closed, due_soon, o
         if overdue == checkbox_value:
             status_filters.append(models.Request.overdue)
 
-        if min_due_date and max_due_date and min_due_date != "" and max_due_date != "":
+        if min_due_date and max_due_date and min_due_date != "" and max_due_date != "" and min_due_date != "None" and max_due_date != "None":
             try:
                 min_due_date = datetime.strptime(min_due_date, date_format)
                 max_due_date = datetime.strptime(max_due_date, date_format) + timedelta(hours=23, minutes=59)
@@ -1220,7 +1257,6 @@ def about():
 def logout():
     logout_user()
     session.regenerate()
-    #session.clear()
     session.pop("_csrf_token", None)
     session.pop('username', None)
     session.pop('_id', None)
@@ -1364,9 +1400,8 @@ def login():
     form = LoginForm()
     errors = []
     if request.method == 'POST':
-        print form.username.data
-        print form.password.data
-        if form.validate_on_submit():
+        if (form.username.data is not None and form.username.data != '') and (
+                        form.password.data is not None and form.password.data != ''):
             user_to_login = authenticate_login(form.username.data, form.password.data)
             if user_to_login:
                 login_user(user_to_login)
@@ -1403,11 +1438,13 @@ def login():
         return bad_request(400)
 
 
-@app.route("/attachments/<string:resource>", methods=["GET"])
-def get_attachments(resource):
+@app.route("/attachments/<string:privacy>/<string:resource>", methods=["GET"])
+def get_attachments(privacy, resource):
     app.logger.info("\n\ngetting attachment file")
-
-    return send_from_directory(app.config["UPLOAD_FOLDER"], resource, as_attachment=True)
+    if privacy == 'public':
+        return send_from_directory(app.config["UPLOAD_PUBLIC_LOCAL_FOLDER"], resource, as_attachment=True)
+    if privacy == 'private':
+        return send_from_directory(app.config["UPLOAD_PRIVATE_LOCAL_FOLDER"], resource, as_attachment=True)
 
 
 @app.route("/pdfs/<string:resource>", methods=["GET"])
@@ -1654,12 +1691,16 @@ def submit():
 
 @app.route("/changeprivacy", methods=["POST", "GET"])
 def change_privacy():
+    errors = {}
     req = get_obj("Request", request.form['request_id'])
     privacy = request.form['privacy setting']
     field = request.form['fieldtype']
     # field will either be title or description
     app.logger.info("Changing privacy function")
-    prr.change_privacy_setting(request_id=request.form['request_id'], privacy=privacy, field=field)
+    errors['missing_agency_description_privacy'] = prr.change_privacy_setting(request_id=request.form['request_id'],
+                                                                              privacy=privacy, field=field)
+    if errors['missing_agency_description_privacy']:
+        return show_request_for_city(req.id, errors=errors)
     return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
 
 
@@ -1671,7 +1712,6 @@ def switch_record_privacy():
         "Changing Record Privacy for Request %s, Record_Id %s to %s" % (record, request.form['record_id'], privacy))
     if record is not None and privacy is not None:
         prr.change_record_privacy(record_id=request.form['record_id'], privacy=privacy)
-    record.privacy = not (record.privacy)
     return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
 
 
@@ -1679,6 +1719,57 @@ def switch_record_privacy():
 def change_category():
     category = request.form['category']
     return redirect(render_template('new_request.html'))
+
+
+@app.route("/agency_description", methods=["POST", "GET"])
+def edit_agency_description():
+    errors = {}
+    req = request.form
+    app.logger.info("Editing the agency description")
+    errors['missing_agency_description_privacy'] = prr.edit_agency_description(request_id=req['request_id'],
+                                                                               agency_description_text=req[
+                                                                                   'additional_information'])
+    if errors['missing_agency_description_privacy']:
+        return show_request_for_city(req['request_id'], errors=errors)
+    return redirect(url_for('show_request_for_city', request_id=request.form['request_id']))
+
+
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    form = ContactForm()
+
+    if request.method == 'POST':
+        name = form.name.data
+        email = form.email.data
+        subject = form.subject.data
+        message = form.message.data
+
+        if not (name and email and subject and message):
+            error = "All fields are required"
+            return render_template('contact.html', form=form, error=error)
+        else:
+            app.logger.info("Name: %s\nEmail: %s\nSubject: %s\nMessage: %s\n" % (name, email, subject, message))
+
+            mail = Mail(app)
+
+            app.logger.info("List of Admins: %s" % app.config['LIST_OF_ADMINS'])
+            app.logger.info("Type: %s" % type(app.config['LIST_OF_ADMINS']))
+
+            recipients = app.config['LIST_OF_ADMINS'].split(',')
+            app.logger.info("Recipients: %s" % recipients)
+
+            msg = Message("OpenRecords Contact Form: %s" % form.subject.data, sender=app.config['DEFAULT_MAIL_SENDER'],
+                          recipients=recipients)
+            msg.body = """
+                Date: %s
+                From: %s <%s>
+                Message: %s
+              """ % (datetime.now().strftime("%m/%d/%Y %H:%M"), form.name.data, form.email.data, form.message.data)
+            mail.send(msg)
+            return render_template(('contact.html'), success=True)
+
+    elif request.method == 'GET':
+        return render_template('contact.html', form=form)
 
 
 @app.route("/<page>")
