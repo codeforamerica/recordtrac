@@ -9,7 +9,7 @@
           "Subject": "FOIL Time Extension Requested",
           "Recipients": ["Subscribers"]
         },
-        "Reopen request":
+        "reopen_request":
         {
           "Subject": "Request has been reopened",
           "Recipients": ["Requester"]
