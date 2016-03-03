@@ -64,7 +64,6 @@
   $("#days_after").change(function() {
     selected = $(this).val();
     if(selected === "-1") {
-        alert("abc");
       $("#custom_due_date").show();
     }
     else {
