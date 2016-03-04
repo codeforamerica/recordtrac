@@ -235,6 +235,20 @@ $('#close_filenames_list').on('click',function(){
     $('#modalQuestionTable').hide();
   });
 
+  $("[data-toggle='modal']").click(function (e) {
+    if(this.id === "addRecordButton") {
+      var titleTexts = $('.title_text');
+      $('.title_text').each(function()  {
+        if($(this).val() === '') {
+          $('#missing_title').show();
+          $('#missing_title').focus();
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      });
+    }
+  });
+
   $('#addNoteButton').on('click',function(){
     $('#modalAdditionalInfoTable').show();
     $('#form_id').val('note');
