@@ -74,6 +74,7 @@ envvars = [
     'DAYS_AFTER_EXTENSION',  # Default number of days for an extension
     'DAYS_TO_FULFILL',  # Default number of days to fulfill a request
     'DAYS_UNTIL_OVERDUE',  # Default number of days until
+    'DAYS_TO_POST', # Days between upload and public visibility
     'NYC_GOV_BASE',  # Base URL for NYC.gov links/assets
 
     # Flask Settings
@@ -94,7 +95,11 @@ envvars = [
 
     # Upload Settings
     'UPLOAD_DOCS',  # Enable uploads of documents on Local environment
-    'UPLOAD_FOLDER',  # Path for uploaded documents
+    'UPLOAD_PUBLIC_LOCAL_FOLDER', # Upload records marked as public to this local location
+    'UPLOAD_PRIVATE_LOCAL_FOLDER', # Upload records marked as private to this local location
+    'UPLOAD_PUBLIC_REMOTE_FOLDER', # Upload records marked as public to this remote location
+    'PUBLIC_SERVER_HOSTNAME', # Remote Server Hostname
+    'PUBLIC_SERVER_USER', # User for RSYNC
     'HOST_URL',  # URL for uploaded documents folder
 
     # ReCaptcha
@@ -102,10 +107,12 @@ envvars = [
     'RECAPTCHA_SITE_KEY',  # Site key for Google ReCaptcha
 
     # ICAP Variables
-    'HOST',
-    'SERVICE',
-    'PORT',
+    'ICAP_SERVER',
+    'ICAP_SERVICE_NAME',
+    'ICAP_PORT',
+    'ICAP_PROFILE',
     'SHOULD_SCAN_FILES',
+    'MAX_FILE_SIZE',
 
     # LDAP
     'USE_LDAP',  # Determines if LDAP or Flask-Login is used
@@ -116,7 +123,7 @@ envvars = [
     'LDAP_SA_BIND_DN',  # Bind DN for the LDAP Service Account
     'LDAP_SA_PASSWORD',  # Password for the LDAP Service Account
     'LDAP_BASE_DN',  # Base DN for searching for users
-    'PERMANENT_SESSION_LIFETIME'
+    'PERMANENT_SESSION_LIFETIME',
 
 ]
 

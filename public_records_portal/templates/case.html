@@ -43,24 +43,16 @@
                         </span>
                         {% if req %}
                         {% if current_user.is_anonymous or audience == 'public' %}
-                        {% if not req.titlePrivate %}
-                        <p class="lead" style="margin-bottom: 0rem;"
-                           truncateable="250"> Title: {{ req.summary | e | new_lines }}
-                        </p>
-                        {% else %}
-                        <p class="lead" style="margin-bottom: 0rem;" truncateable="250">
+                            {% if not req.title_private %}
+                            <p class="lead" style="margin-bottom: 0rem;"
+                               truncateable="250"> Title: {{ req.summary | e | new_lines }}
+                            </p>
+                            {% else %}
+                            <p class="lead" style="margin-bottom: 0rem;" truncateable="250">
 
-                        </p>
-                        {# If the request title is set to private then do not display the title#}
-                        {% endif %}
-                        {% if not req.descriptionPrivate %}
-                        <p class="lead" style="margin-bottom: 0rem;"
-                           truncateable="250"> Request: {{ req.text | e | new_lines }}
-                        </p>
-                        {% else %}
-                        <p class="lead" style="margin-bottom: 0rem;" truncateable="250">
-                        </p>
-                        {% endif %}
+                            </p>
+                            {# If the request title is set to private then do not display the title#}
+                            {% endif %}
                         {% else %}
                         <p class="lead" style="margin-bottom: 0rem;"
                            truncateable="250"> Title: {{ req.summary | e | new_lines }}
@@ -71,6 +63,45 @@
                         {% endif %}
                         {% endif %}
                     </h3>
+                <p class="lead" style="margin-bottom: 0rem;" truncateable="250">
+{#                {{ req.agency_description.decode("utf-8") }}#}
+{#                {{ req.agency_description.split('') }}#}
+                {% if "missing_agency_description_privacy" in errors %}
+                    <div class="alert alert-danger" id="missing_agency_description_privacy">
+                        {{ errors['missing_agency_description_privacy'] }}</div>
+                {% endif %}
+                {% if (current_user.is_authenticated and audience == 'city') or (req.agency_description_due_date and req.agency_description_due_date < datetime.now() ) %}
+                    {% if req.agency_description != None %}
+                        {% if req.agency_description.decode("utf-8")|length > 50 %}
+                            Agency Description: {{ req.agency_description[0:50] }}...
+                        {% else %}
+                            Agency Description: {{ req.agency_description }}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+                </p>
+                {% if (current_user.is_authenticated and audience == 'city') %}
+                    <form name="agency_description" id="agency_description" method="post" action="/agency_description">
+                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                        <fieldset>
+                            <div class="row-fluid" style="width:98%;">
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <button type="submit"
+                                                class="btn btn-default btn-level"
+                                                data-toggle="modal"
+                                                data-target="#confirm-submit"
+                                                id="editAgencyDescriptionButton">Edit Agency Description
+                                        </button>
+                                    </div>
+                                    <input type="hidden" name="agency_description" value="1"/>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                {% endif %}
+
                     {% block clarify_request %}
                     <!-- ask a question -->
                     <form name="ask_question" id="question" class="form-inline" style="margin: 10px 0px 15px 0px;"
@@ -93,6 +124,7 @@
                         </fieldset>
                     </form>
 
+
                     <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog"
                          aria-labelledby="myModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
@@ -111,17 +143,23 @@
                                             <input type="hidden" id="form_id" value=""/>
                                         </tr>
                                     </table>
+
                                     <table id="modalAdditionalInfoTable" class="table">
-                                        <tr>
+                                        <tr id="additionalInformation">
                                             <th>Additional Information</th>
                                             <td><textarea id="additional_note" name="additional_note"
-                                                          class="input-xlarge"
-                                                          placeholder="Additional Information"/></textarea></td>
+                                                          class="input-xlarge agency-description"
+                                                          style = "display:None;"
+                                                          placeholder="Additional Information"/>{{ req.agency_description }}</textarea></td>
+                                            <td><textarea id="additional_note" name="additional_note"
+                                                      class="input-xlarge additional-note"
+                                                      placeholder="Additional Information"/></textarea></td>
                                         </tr>
+
                                     </table>
                                     <br/><br/>
                                     <table id="modalAdditionalInfoTableClose" class="table" style="display:none;">
-                                        <p><b>If you are denying this request please explain why.</b></p>
+                                        <p id="deny_explain_why" style="display:none;"><b>If you are denying this request please explain why.</b></p>
                                         <tr>
                                             <th>Additional Information for Closing</th>
                                             <td><textarea id="additional_note" name="additional_note"
@@ -131,12 +169,13 @@
                                     </table>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">Cancel</button>
                                     <a href="#" id="submit" class="btn btn-success success">Submit</a>
                                 </div>
                             </div>
                         </div>
                     </div>
+
 
                     <!-- Add a public note form -->
                     {% if not current_user.is_authenticated or audience == 'public' %}
@@ -203,7 +242,7 @@
                     {% if current_user.is_authenticated and audience == 'city' %}
                     <form class="form-horizontal" method="post" action="/changeprivacy">
                         <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}"/>
                         <input type="hidden" name="fieldtype" value="title"/>
                         <fieldset>
                             <!-- Multiple Radios (inline) -->
@@ -213,7 +252,7 @@
                                 <div class="controls" style="margin-left: 3rem">
 
                                     {# Set the private checkbox to be filled out if the request is private#}
-                                    {% if req.titlePrivate %}
+                                    {% if req.title_private %}
                                     <label class="radio inline" for="privacy setting-0">
                                         <input type="radio" name="privacy setting" id="privacy setting-0" value="False"
                                                type="submit" onclick="action=this.form.submit();">
@@ -227,7 +266,7 @@
                                         Private
                                     </label>
                                     {# Set the public checkbox to be filled out if the request is public#}
-                                    {% elif req.titlePrivate==False %}
+                                    {% elif req.title_private==False %}
                                     <label class="radio inline" for="privacy setting-0">
                                         <input type="radio" name="privacy setting" id="privacy setting-0" value="False"
                                                type="submit" checked onclick="action=this.form.submit();">
@@ -247,51 +286,8 @@
                         </fieldset>
                     </form>
                     {% endif %}
-                    {% if current_user.is_authenticated and audience == 'city' %}
-                    <form class="form-horizontal" method="post" action="/changeprivacy">
-                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
-                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-                        <input type="hidden" name="fieldtype" value="description"/>
-                        <fieldset>
-                            <!-- Multiple Radios (inline) -->
-                            <div class="control-group">
-                                <label class="control-label" for="privacy setting" style="width:7rem; text-align:left;">Description
-                                    Privacy:</label>
 
-                                <div class="controls" style="margin-left: 3rem">
-                                    {% if req.descriptionPrivate==True %}
-                                    <label class="radio inline" for="privacy setting-public">
-                                        <input type="radio" name="privacy setting" id="privacy setting-public"
-                                               value="False" type="submit" onclick="action=this.form.submit();">
-                                        {# Value set to False means public#}
-                                        Public
-                                    </label>
-                                    <label class="radio inline" for="privacy setting-private">
-                                        <input type="radio" name="privacy setting" id="privacy setting-private"
-                                               value="True" type="submit" checked onclick="action=this.form.submit();">
-                                        {# Value set to True means private#}
-                                        Private
-                                    </label>
-                                    {% else %}
-                                    <label class="radio inline" for="privacy setting-public">
-                                        <input type="radio" name="privacy setting" id="privacy setting-public"
-                                               value="False" type="submit" checked onclick="action=this.form.submit();">
-                                        {# Value set to False means public#}
-                                        Public
-                                    </label>
-                                    <label class="radio inline" for="privacy setting-private">
-                                        <input type="radio" name="privacy setting" id="privacy setting-private"
-                                               value="True" type="submit" onclick="action=this.form.submit();">
-                                        {# Value set to True means private#}
-                                        Private
-                                    </label>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </fieldset>
-                    </form>
-                    {% endif %}
-                </div>
+                        </div>
                 <!--<div>-->
                     <!--&lt;!&ndash; shows any existing Q&A or public notes &ndash;&gt;-->
                     <!--{% set request_data = ( req | get_request_data_chronologically ) %}-->
@@ -330,6 +326,7 @@
                     <!--{% endif %}-->
                 <!--</div>-->
             </div>
+
             {% endblock request %}
         </div>
         {% endblock well %}
@@ -360,7 +357,7 @@
                 </div>
                 <div class="span9">
                     <p class="expandable" truncateable="200">
-                        {{ response.display_text() | safe }} - <a href="mailto:{{staff.email}}">{{ staff.alias or staff.email }}</a>
+                        {{ response.display_text() | safe }} - <a href="mailto:{{ department.primary_contact.email }}">{{ staff.alias }}</a>
                     </p>
                 </div>
                 <div class="span2 text-right response-date">
