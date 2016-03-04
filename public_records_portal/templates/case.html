@@ -145,27 +145,15 @@
                                     </table>
 
                                     <table id="modalAdditionalInfoTable" class="table">
-{#                                        <tr id="editAgencyDescription" style="display:None;">#}
-{#                                            <th>Agency Description <br>(5000 character limit) <br></th>#}
-{#                                            {% if req.agency_description != "" %}#}
-{#                                                <td><textarea style="width: 30em; height: 20em;" id="additional_note" name="additional_note"#}
-{#                                                              class="input-xlarge"#}
-{#                                                              placeholder="Agency Description"#}
-{#                                                                maxlength="5000">{{ req.agency_description }}#}
-{#                                                    </textarea></td>#}
-{#                                            {% endif %}#}
-{#                                        </tr>#}
                                         <tr id="additionalInformation">
                                             <th>Additional Information</th>
-                                            {% if req.agency_description != '' and req.agency_description != None %}
                                             <td><textarea id="additional_note" name="additional_note"
-                                                          class="input-xlarge"
+                                                          class="input-xlarge agency-description"
+                                                          style = "display:None;"
                                                           placeholder="Additional Information"/>{{ req.agency_description }}</textarea></td>
-                                            {% else %}
-                                                <td><textarea id="additional_note" name="additional_note"
-                                                          class="input-xlarge"
-                                                          placeholder="Additional Information"/></textarea></td>
-                                            {% endif %}
+                                            <td><textarea id="additional_note" name="additional_note"
+                                                      class="input-xlarge additional-note"
+                                                      placeholder="Additional Information"/></textarea></td>
                                         </tr>
 
                                     </table>
