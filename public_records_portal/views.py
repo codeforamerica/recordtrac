@@ -922,6 +922,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
     departments_selected = []
     if current_user.is_authenticated and current_user.role != 'Portal Administrator':
         departments_selected.append(current_user.current_department.name)
+
     sort_column = "id"
     sort_direction = "asc"
     min_due_date = None
@@ -934,8 +935,7 @@ def fetch_requests(output_results_only=False, filters_map=None, date_format='%Y-
     request_id_search = None
 
     if filters_map:
-        if not departments_selected:
-            departments_selected = get_filter_value(filters_map=filters_map, filter_name='departments_selected',
+        departments_selected = get_filter_value(filters_map=filters_map, filter_name='departments_selected',
                                                     is_list=True) or get_filter_value(filters_map, 'department')
         # departments_selected = bleach.clean(departments_selected);
         app.logger.info("Department Selected: %s" % departments_selected)
