@@ -281,8 +281,9 @@ def update_resource(resource, request_body):
         try:
             user_id = req.subscribers[0].user.id
             notification_content['user_id'] = user_id
+            notification_content['request_id'] = request_id
             generate_prr_emails(request_id=request_id, notification_content=notification_content,
-                                notification_type='Public Notification Template 10'
+                                notification_type='reopen_request'
                                 )
         except IndexError:
             app.logger.error('No Subscribers')
