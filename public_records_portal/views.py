@@ -669,21 +669,21 @@ def add_a_resource(resource):
                     errors['missing_record_description'] = "Please include a name for this record"
 
         resource_id = add_resource(resource=resource, request_body=request.form, current_user_id=get_user_id())
-        if type(resource_id) == int or str(resource_id).isdigit():
-            requestObj = get_obj("Request", req['request_id'])
+        requestObj = get_obj("Request", req['request_id'])
+        audience = 'city'
+        if current_user.role == 'Portal Administrator':
             audience = 'city'
-            if current_user.role == 'Portal Administrator':
+        elif current_user.department_id == requestObj.department_id:
+            app.logger.info("User Dep: %s; Req Dep: %s" % (current_user.department_id, requestObj.department_id))
+            if current_user.role in ['Agency Administrator', 'Agency FOIL Officer']:
+                app.logger.info("User Role: %s" % current_user.role)
                 audience = 'city'
-            elif current_user.department_id == requestObj.department_id:
-                app.logger.info("User Dep: %s; Req Dep: %s" % (current_user.department_id, requestObj.department_id))
-                if current_user.role in ['Agency Administrator', 'Agency FOIL Officer']:
-                    app.logger.info("User Role: %s" % current_user.role)
-                    audience = 'city'
-                else:
-                    audience = 'helper'
             else:
-                audience = 'public'
+                audience = 'helper'
+        else:
+            audience = 'public'
 
+        if type(resource_id) == int or str(resource_id).isdigit() or req['note_text']:
             template = "manage_request_%s_less_js.html" % audience
             app.logger.info("\n\nSuccessfully added resource: %s with id: %s" % (resource, resource_id))
             if resource == 'record_and_close':
@@ -691,15 +691,23 @@ def add_a_resource(resource):
                                     template=template, errors=errors,
                                     form=req, file=request.files['record'])
 
+
             return show_request(request_id=req['request_id'],
                                 template=template, errors=errors,
                                 form=req)
         elif resource_id == False:
             app.logger.info("\n\nThere was an issue with adding resource: %s" % resource)
-            template = "manage_request_%s_less_js.html" % req['audience']
-            return show_request(request_id=req['request_id'],
+            template = "manage_request_%s_less_js.html" % audience
+            if req['note_text'] == u'':
+                return show_request_for_x(audience,request_id=req['request_id'])
+                # return show_request(request_id=req['request_id'],
+                # template=template, errors=errors,
+                # form=req)
+            else:
+                return show_request(request_id=req['request_id'],
                                 template=template, errors=errors,
                                 form=req, file=request.files['record'])
+
         else:
             app.logger.info("\n\nThere was an issue with the upload: %s" % resource_id)
             template = "manage_request_%s_less_js.html" % req['audience']
