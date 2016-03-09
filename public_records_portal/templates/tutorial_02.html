@@ -145,10 +145,10 @@
 <div id="container-fluid">
     
     <link rel=stylesheet type=text/css href="/static/css/about.css">
-    <div class="row-fluid">
+        <div class="row-fluid">
         <div class="span8">
 
-            <div class="row-fluid" id="about">
+            <div class="row-fluid">
                 <div class="bottombreathe">
                     <h1 id="about">About OpenRECORDS</h1>
 
@@ -162,32 +162,24 @@
                 <div class="bottombreathe">
                     <h4 id="what">What is OpenRECORDS?</h4>
 
-                    <p>OpenRECORDS is a quick, simple way for individuals to submit Freedom of Information Law (FOIL)
-                        requests to a NYC agency. The web application also allows government employees
-                        to manage, respond to, and fulfill incoming requests. By displaying all records requests and
-                        responsive documents, members of the public may find what they need without having to create a
-                        new public record request.</p>
+                    <p>OpenRECORDS is a quick, simple way for individuals to submit Freedom of Information Law (FOIL) requests to a NYC agency. The web application also allows government employees to manage, respond to, and fulfill incoming requests. By providing more information about records requests, members of the public may find what they need without having to create a new public record request.
+</p>
                 </div>
                 <div class="bottombreathe">
                     <h4 id="documents">Why aren't all documents uploaded on OpenRECORDS?</h4>
 
-                    <p>City agencies will not publicly release records or information that violates
-                        your right to privacy. City agencies will not make records available that have
-                        been exempted from disclosure by Federal, State, or Local statute, including records that would
-                        impair contract awards or collective bargainaing negotiations, are trade secrets, are compiled
-                        for law enforcement services and if disclosed would interfere with investigations or judicial
-                        proceedings, deprive a person to a fair trial, identify a confidential source, reveal
-                        investigative techniques, or endanger a person's life.</p>
+                    <p>City agencies will not publicly release records or information that violates your right to privacy. City agencies will not make records available that have been exempted from disclosure by Federal, State, or Local statute, including records that would impair contract awards or collective bargaining negotiations, are trade secrets, or are compiled for law enforcement purposes and if disclosed would interfere with investigations or judicial proceedings, deprive a person to a fair trial, identify a confidential source, reveal investigative techniques, or endanger a person's life. Records such as reports and data will be posted to the portal 20 business days after they are sent directly to the requester. Records that contain email correspondence from government employees will be sent directly to the requester.
+</p>
                 </div>
                 <div class="bottombreathe">
                     <h4 id="why">History of OpenRECORDS (Previously RecordTrac)</h4>
 
                     <div class="row-fluid">
                         <div id="about_image" class="span10">
-                            <img src="/static/images/nycseal.png"
+                            <img src="{{ url_for('static', filename = 'images/nycseal.png') }}"
                                  alt="City of New York Seal" width="100" height="100"/>
                             <!-- <i class="icon-plus icon-3x text-center muted"></i> -->
-                            <!-- <img src="/static/images/CfA_logo.png" width="20%" alt="Code for America"/> -->
+                            <!-- <img src="{{ url_for('static', filename='images/CfA_logo.png') }}" width="20%" alt="Code for America"/> -->
                         </div>
                     </div>
 
@@ -208,7 +200,11 @@
                         <li>
                             <a href="/tutorial/01">Learn
                                 to create a request</a></li>
-                        
+                        {% if current_user.is_authenticated %}
+                            <li>
+                                <a href="/city/tutorial/01">Learn
+                                to manage requests</a></li>
+                        {% endif %}
                     </ul>
                     <p>For more information, please see the <a
                             href="https://github.com/codeforamerica/recordtrac#recordtrac">full
