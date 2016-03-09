@@ -1,15 +1,15 @@
 $(function () {
     var business = [
-        "Department of Consumer Affairs",
-        "Mayor's Office of Contract Services",
-        "Procurement Policy Board",
-        "Small Business Services"
+            "Department of Consumer Affairs",
+            "Mayor's Office of Contract Services",
+            "Procurement Policy Board",
+            "Small Business Services"
     ]
     var cultureAndRecreation = [
-        //"Art Commission",
-        "Department of Cultural Affairs",
-        "Department of Parks and Recreation"
-        //"Mayor's Office of Media and Entertainment"
+            "Art Commission",
+            "Department of Cultural Affairs",
+            "Mayor's Office of Media and Entertainment",
+            "Department of Parks and Recreation"
     ]
     var education = [
         "Department of Education",
@@ -17,7 +17,7 @@ $(function () {
     ]
     var environment = [
         "Department of Environmental Protection",
-        //"Department of Sanitation",
+        "Department of Sanitation",
         "Office of Environmental Remediation",
         "Office of Long-Term Planning & Sustainability"
     ]
@@ -33,6 +33,7 @@ $(function () {
         "Department of Records and Information Services",
         "Design Commission",
         "Equal Employment Practices Commission",
+        "Financial Information Services Agency",
         "Law Department",
         "Office of Administrative Trials and Hearings",
         "Office of Labor Relations",
@@ -53,8 +54,8 @@ $(function () {
         "Housing Recovery Operations",
         "Landmarks Preservation Commission",
         "Loft Board",
-        "New York City Housing Authority"
-        //"New York City Housing Development Corporation"
+        "New York City Housing Authority",
+        "New York City Housing Development Corporation"
     ]
     var publicSafety = [
         "Board of Correction",
@@ -74,11 +75,13 @@ $(function () {
         "Department of Homeless Services",
         "Department of Housing Preservation and Development",
         "Department of Youth and Community Development",
-        "Human Resources Administration"
+        "Human Resources Administration",
+        "Office of Collective Bargaining"
+
     ]
     var transportation = [
-        "Department of Transportation"
-        //"Taxi and Limousine Commission"
+        "Department of Transportation",
+        "Taxi and Limousine Commission"
     ]
 
     $("#category_info").tooltip();
