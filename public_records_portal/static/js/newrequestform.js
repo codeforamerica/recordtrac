@@ -44,7 +44,7 @@ $(function () {
     ]
     var health = [
         "Department of Health and Mental Hygiene",
-        "Health and Hospitals Corporation",
+        //"Health and Hospitals Corporation",
         "Office of the Chief Medical Examiner"
     ]
     var housingAndDevelopment = [

@@ -130,7 +130,7 @@ def new_request(passed_recaptcha=False, data=None):
         ],
         'Health': [
             "Office of Chief Medical Examiner",
-            "Health and Hospitals Corporation",
+            # "Health and Hospitals Corporation",
             "Department of Health and Mental Hygiene"
         ],
         'Housing & Development': [
