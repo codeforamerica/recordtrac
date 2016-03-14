@@ -22,7 +22,7 @@ from werkzeug.security import generate_password_hash, \
     check_password_hash
 
 from public_records_portal import db, app, cal
-
+from business_calendar import Calendar, MO, TU, WE, TH, FR, FOLLOWING
 
 class notePrivacy:
     PUBLIC = 0x01
@@ -339,9 +339,9 @@ class Request(db.Model):
         if not self.date_received:
             self.date_received = self.date_created
         if self.extended == True:
-            self.due_date = cal.addbusdays(self.date_received, int(app.config['DAYS_AFTER_EXTENSION']))                
+            self.due_date = cal.addbusdays(cal.adjust(self.date_received, FOLLOWING), int(app.config['DAYS_AFTER_EXTENSION']))
         else:
-            self.due_date = cal.addbusdays(self.date_received, int(app.config['DAYS_TO_FULFILL']))
+            self.due_date = cal.addbusdays(cal.adjust(self.date_received, FOLLOWING), int(app.config['DAYS_TO_FULFILL']))
 
 
     def extension(self, days_after=int(app.config['DAYS_AFTER_EXTENSION']),
