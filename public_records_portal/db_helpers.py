@@ -13,6 +13,7 @@ from sqlalchemy import func
 
 from models import *
 from public_records_portal import cal, app
+from business_calendar import Calendar, MO, TU, WE, TH, FR, FOLLOWING
 
 try:
     import ldap
@@ -495,6 +496,7 @@ def change_request_status(request_id, status):
                     (request_id, status))
 
     date_created = req.date_received or req.date_created
+    date_created = cal.adjust(date_created, FOLLOWING)
     if "days" in status:
             days_to_fulfill = re.findall(r"(\d{2}) days",status)[0]
             app.logger.info("Changing Due Date: %s " % cal.addbusdays(date_created, int(days_to_fulfill)))
