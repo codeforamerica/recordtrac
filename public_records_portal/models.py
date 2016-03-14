@@ -340,8 +340,12 @@ class Request(db.Model):
             self.date_received = self.date_created
         if self.extended == True:
             self.due_date = cal.addbusdays(cal.adjust(self.date_received, FOLLOWING), int(app.config['DAYS_AFTER_EXTENSION']))
+            if self.date_received.hour > 17:
+                self.due_date = cal.addbusdays(self.due_date, 1)
         else:
             self.due_date = cal.addbusdays(cal.adjust(self.date_received, FOLLOWING), int(app.config['DAYS_TO_FULFILL']))
+            if self.date_received.hour > 17:
+                self.due_date = cal.addbusdays(self.due_date, 1)
 
 
     def extension(self, days_after=int(app.config['DAYS_AFTER_EXTENSION']),
