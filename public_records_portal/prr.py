@@ -747,7 +747,7 @@ Begins Upload_record method''')
                     user_id=user_id,
                     description=description,
                     filename=filename,
-                    url=app.config['HOST_URL'] + doc_id,
+                    url=doc_id,
                     privacy=privacy,
             )
             change_request_status(request_id,
@@ -777,7 +777,7 @@ Begins Upload_record method''')
                 #                     attached_file=attached_file)
             add_staff_participant(request_id=request_id,
                                   user_id=user_id)
-            return record_id
+            return 1
     return 'There was an issue with your upload.'
 
 

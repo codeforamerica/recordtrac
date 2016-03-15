@@ -96,7 +96,7 @@ envvars = [
     'UPLOAD_DOCS',  # Enable uploads of documents on Local environment
     'UPLOAD_FOLDER',  # Path for uploaded documents
     'HOST_URL',  # URL for uploaded documents folder
-
+    'MAX_FILE_SIZE',
     # ReCaptcha
     'RECAPTCHA_SECRET_KEY',  # Secret key for Google ReCaptcha
     'RECAPTCHA_SITE_KEY',  # Site key for Google ReCaptcha
@@ -106,6 +106,12 @@ envvars = [
     'SERVICE',
     'PORT',
     'SHOULD_SCAN_FILES',
+    'ICAP_SERVER_HOST',
+    'ICAP_SERVER_PORT',
+    'ICAP_CLIENT_HOST',
+    'ICAP_SERVICE_NAME',
+    'ICAP_PROFILE_NAME',
+    'ICAP_VERSION',
 
     # LDAP
     'USE_LDAP',  # Determines if LDAP or Flask-Login is used
