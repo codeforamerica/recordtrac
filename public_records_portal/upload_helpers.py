@@ -11,7 +11,6 @@ import socket
 
 from werkzeug.utils import secure_filename
 
-from models import RecordPrivacy
 from public_records_portal import app
 
 # These are the extensions that can be uploaded:

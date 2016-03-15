@@ -28,11 +28,6 @@ class notePrivacy:
     PUBLIC = 0x01
     AGENCY = 0x02
 
-class RecordPrivacy:
-    PRIVATE = 0x1
-    RELEASED_AND_PRIVATE = 0x2
-    RELEASED_AND_PUBLIC = 0x3
-
 # @export "User"
 class AnonUser:
     @property
