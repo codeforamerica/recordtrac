@@ -1,5 +1,5 @@
 {% if current_user.is_authenticated %}
-{% if req.solid_status() == 'open' %}
+{% if req.solid_status() == 'open' or req.prev_status == None %}
 <div class="row-fluid">
     <div class="span12">
         <ul class="nav nav-pills nav-justified" role="tablist">
