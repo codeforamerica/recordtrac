@@ -360,7 +360,10 @@
                 </div>
                 <div class="span9">
                     <p class="expandable" truncateable="200">
-                        {{ response.display_text() | safe }} - <a href="mailto:{{staff.email}}">{{ staff.alias or staff.email }}</a>
+                        {{ response.display_text() | safe }}
+                        {% if current_user.is_authenticated %}
+                        - <a href="mailto:{{staff.email}}">{{ staff.alias or staff.email }}</a>
+                        {% endif %}
                     </p>
                 </div>
                 <div class="span2 text-right response-date">
