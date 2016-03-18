@@ -1,0 +1,48 @@
+<html>
+    <body>
+        <div style="background-color:#FFF;width:100%;margin:0px; padding:0px">
+            <div style="padding:20px;">
+                <div style="padding:8px;background-color:#EEE;-moz-border-radius:7px;-webkit-border-radius:7px;">
+                    <div style="clear:both;">
+                        <span style="font-family: arial,helvetica,sans-serif;">
+                            <span style="color: rgb(51, 51, 51); font-size: 14px;">
+                                <p>
+                                    Your request under the Freedom of Information Law (FOIL) has been reviewed and fulfilled in part
+                                    because some records or portions of the record are disclosable and others are exempt from disclosure under FOIL as described below.
+                                </p>
+                                <p>
+                                    You may appeal this decision within 30 days to the Agency FOIL Appeals Officer. The contact information is shown below.
+                                </p>
+                                <p>
+                                    You will receive the disclosable records within 7-10 days.
+                                </p>
+                                <p>
+                                    {% if notification_content['additional_information'] %}
+                                        Additional Information: <br/>
+                                        {{ notification_content['additional_information'] }}
+                                    {% endif %}
+                                </p>
+                                <p>
+                                    You can view the request and take any necessary action at the following webpage:
+                                    <a href='{{ page }}'>{{ page }}</a>.
+                                </p>
+                                <p>
+                                    Click <a href="FAQ PAGE">here</a> to learn about how the City responds to FOIL requests.
+                                </p>
+                                </br>
+                                {% if unfollow_link %}
+                                    <p>
+                                        You can always choose to
+                                        <a href='{{ unfollow_link }}s'>unfollow this request</a> if you
+                                        do not want to receive more emails about it.
+                                    </p>
+                                {% endif %}
+                                </br>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

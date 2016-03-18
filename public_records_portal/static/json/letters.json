@@ -1,0 +1,49 @@
+{
+    "acknowledgement_letter": {
+        "subject": "RE: FOIL Request %s",
+        "content": "Your request under the Freedom of Information Law (FOIL) has been reviewed and the documents you requested will be sent to you within _____ business days.\n\nYou can view the request  at the following webpage: %s\n\nSincerely,\n\n\n%s\nRecords Access Officer"
+    },
+    "denial_letter": {
+        "subject": "RE: FOIL Request %s",
+        "content": "Your request under the Freedom of Information Law (FOIL) has been denied as explained in the attached document.\n\n You may appeal this decision to the agency FOIL Appeals Officer within 30 days. The contact information is attached.\n\nYou can view the request  at the following webpage: %s\n\nSincerely,\n\n\n%s\nRecords Access Officer"
+    },
+    "extension_letter": {
+        "subject": "RE: FOIL Request %s",
+        "content": "We are still in the process of searching for the documents your requested under the Freedom of Information Law (FOIL). You can expect a response on or about _______.\n\nYou can view the request at the following webpage: %s\n\nSincerely,\n\n\n%s\nRecords Access Officer"
+    },
+    "partial_fulfillment_letter" :{
+        "subject": "RE: FOIL Request %s",
+        "content": "Your request under the Freedom of Information Law (FOIL) has been reviewed and is granted in part and denied in part because some records are disclosable and others are exempt from disclosure under FOIL as described in the attached document.\n\nYou may appeal this decision to the agency FOIL Appeals Officer within 30 days.\n\nThe contact information is attached.\n\nYou will receive the disclosable records within ______ days.\n\nYou can view the request at the following webpage: %s\n\nSincerely,\n\n\n%s\nRecords Access Officer"
+    },
+    "fulfillment_letter" :{
+        "subject": "RE: FOIl Request %s",
+        "content": "Your request under the Freedom of Information Law (FOIL) has been reviewed and the documents you requested are attached.\n\nYou can view the request at the following webpage: %s\n\nSincerely,\n\n\n%s\nRecords Access Officer"
+    },
+    "payment_letter": {
+        "subject": "RE: FOIL Request %s",
+        "content": "Your request under the Freedom of Information Law (FOIL) has been reviewed and we have determined that payment is required to fulfill your FOIL request.\n\nPlease find the payment instructions below:\n\n\n\nYou can view the request at the following webpage: %s\n\nSincerely,\n\n\n%s\nRecords Access Officer"
+    },
+    "denial_reasons": {
+        "section_01": "Your Freedom of Information Law (FOIL) request was denied, in whole or in part, for the reason(s) checked below.",
+        "section_02": "    The records are not located in the files of this agency.",
+        "section_03": "    the Freedom of Information Law  only requires the disclosure of existing agency records.  It does not require the creation, upon request, of new records.",
+        "section_04": "    The records which you seek already are available to the public through:",
+        "section_05": "        the open data portal www.nyc.gov/",
+        "section_06": "        the government publications portal www.nyc.gov/records/publications",
+        "section_07": "        New York City 311 www.nyc.gov/",
+        "section_08": "    the records or portions of records are specifically exempted from disclosure by state or federal statute;",
+        "section_09": "    the records or portions of records, if disclosed would constitute an unwarranted invasion of personal privacy under State law (subdivision two of section eighty-nine of the Public Officers Law;",
+        "section_10": "    the records or portions of records if disclosed would impair present or imminent contract awards or collective bargaining negotiations;",
+        "section_11": "    the records or portions of records are trade secrets or are submitted to an agency by a commercial enterprise or derived from information obtained from a commercial enterprise and which if disclosed would cause substantial injury to the competitive position of the subject enterprise;",
+        "section_12": "    the records or portions of records are compiled for law enforcement purposes and which, if disclosed, would: i. interfere with law enforcement investigations or judicial proceedings; ii. deprive a person of a right to a fair trial or impartial adjudication; iii. identify a confidential source or disclose confidential information relating to a criminal investigation; or iv. reveal criminal investigative techniques or procedures, except routine techniques and procedures",
+        "section_13": "    the records or portions of records if disclosed could endanger the life or safety of any person;",
+        "section_14": "    the records or portions of records are inter-agency or intra-agency materials which are not:",
+        "section_15": "        i. statistical or factual tabulations or data;",
+        "section_16": "        ii. instructions to staff that affect the public;",
+        "section_17": "        iii. final agency policy or determinations; or iv. external audits, including but not limited to audits performed by the comptroller and the federal government;",
+        "section_18": "    the records or portions of records are examination questions or answers which are requested prior to the final administration of such questions;",
+        "section_19": "    the records or portions of records if disclosed, would jeopardize the capacity of an agency or an entity that has shared information with an agency to guarantee the security of its information technology assets, such assets encompassing both electronic information systems and infrastructures.",
+        "section_20": "You may appeal the decision to deny access to material that was redacted in part or withheld in entirety  by contacting the agency’s FOIL Appeals Officer within 30 days.",
+        "section_21": "The contact information is:"
+    }
+}

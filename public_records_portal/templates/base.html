@@ -1,154 +1,256 @@
 {#
 This template provides the header, footer, and envelope info for all pages except signup.
-#}<!doctype html>
+#}<!DOCTYPE html>
 <html class="no-js" lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock title%}</title>
+    <title>{% block title %}{% endblock title %}</title>
     <!-- HTML5 shim for IE backwards compatibility -->
     <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <script src="{{ url_for('static', filename='js/plugins/html5.js') }}"></script>
     <![endif]-->
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap.min.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-responsive.min.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/BootSwatchr6.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/font-awesome.min.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/base.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/feedback.css') }}">
-    <!-- Favicon -->
-    <link rel="icon" type="image/ico" href="{{ url_for('static', filename='images/favicon.ico') }}"/>
 
-    {% block custom_css_links %}
+    <link rel=stylesheet type=text/css
+          href="{{ url_for('static', filename='style/css/screen.css') }}">
+
+    <!--[if lte IE 9]>
+    <link rel=stylesheet type=text/css
+          href="{{ url_for('static', filename='style/css/ie.css') }}">
+    <![endif]-->
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32"
+          href="{{ url_for('static', filename='images/favicon-32x32.png') }}"/>
+        {% block custom_css_links %}
 
     {% endblock custom_css_links %}
 
-  <!-- modernizr -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/modernizr-latest-min.js') }}"></script>
+    <!-- modernizr -->
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/plugins/modernizr-latest-min.js') }}"></script>
 
+    <!-- auth_script requires jquery and Mozilla's 'include.js' shim -->
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/plugins/jquery-1.11.1.min.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/plugins/include.js') }}"></script>
 
-  <!-- auth_script requires jquery and Mozilla's 'include.js' shim -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.11.1.min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/include.js') }}"></script>
-    <script type="text/javascript">{{ auth_script|safe }}</script>
-
-  <!-- IE8 polyfill for CSS3 pseudo classes like :hover -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery-1.11.1.min.js') }}"></script>
+    <!-- IE8 polyfill for CSS3 pseudo classes like :hover -->
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/plugins/jquery-1.11.1.min.js') }}"></script>
     <!--[if (gte IE 6)&(lte IE 8)]>
-      <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/selectivizr-min.js') }}"></script>
-      <noscript><link rel="stylesheet" href="[fallback css]" /></noscript>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/plugins/selectivizr-min.js') }}"></script>
+    <noscript>
+        <link rel="stylesheet" href="[fallback css]"/>
+    </noscript>
     <![endif]-->
 
-  <!-- transform and other prefixes polyfill -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/css3finalize/4.0.0/jquery.css3finalize.min.js"></script>
 
-  <!-- REM unit polyfill -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/rem.min.js') }}"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
-  </head>
+    <!-- transform and other prefixes polyfill -->
+    <script src="{{ url_for('static', filename='js/plugins/jquery.css3finalize.min.js') }}"></script>
 
-  <body>
-    <div class="wrapper">
-      <div class="navbar navbar-inverse">
-        <div class="navbar-inner">
-          <div class="container">
-            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </a>
-            <!-- Be sure to leave the brand out there if you want it shown -->
-            <a class="brand" href="/landing"><img id="logo_nav" src="{{config['LOGO_ON_BLACK_URL']}}" alt="{{config['AGENCY_NAME']}} logo" width="35" height="35"/><strong> RecordTrac</strong><small id="beta" class="text-warning"></small></a>
-            <div class="nav-collapse navbar-responsive-collapse collapse" style="height: 0px;">
+    <!-- REM unit polyfill -->
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/plugins/rem.min.js') }}"></script>
 
-                {% if current_user.is_authenticated() %}
-                  <ul class="nav tabs">
-                    <li><a href="/new">New request</a></li>
-                    <li><a href="/view_requests">All requests</a></li>
-                    <li><a href="/track">Track</a></li>
-                    <!-- <li><a href="/tutorial">Tutorial</a></li> -->
-                    <!-- <li><a href="/admin">Admin</a></li> -->
-                    <li><a href="/about">About</a></li>
-                  </ul>
-                  <ul class="nav pull-right">
-                    <li><button id="browserid-logout" class="btn">{{config['AGENCY_NAME']}} Logout</button></li>
-                  </ul>
-                {% else %}
-                  <ul class="nav tabs">
-                    <li><a href="/new">New request</a></li>
-                    <li><a href="/view_requests">Explore requests</a></li>
-                    <li><a href="/track">Track</a></li>
-                    <li><a href="/about">About</a></li>
-                  </ul>
-                  <ul class="nav pull-right">
-                    <li><button id="browserid-login" class="btn">{{config['AGENCY_NAME']}} Login</button></li>
-                  </ul>
-                {% endif %}
-            </div>
+    <script type='text/javascript'
+            src="{{ url_for('static', filename='js/plugins/d3.v3.min.js') }}"
+            charset="utf-8"></script>
+
+</head>
+
+<body>
+{% if current_user.is_authenticated %}
+    {% set navigation_bar = [
+
+        ('/new', 'new', 'Request a Record'),
+        ('/view_requests','view_requests','View Requests'),
+        ('/track','track','Track an Existing Record'),
+        ('/report','report','Report'),
+        ('/city/tutorial/01','tutorial','Tutorial'),
+        ('/faq','faq','FAQ'),
+        ('/about','about','About'),
+    ] -%}
+{% else %}
+    {% set navigation_bar = [
+
+        ('/new', 'new', 'Request a Record'),
+        ('/view_requests','view_requests','View Requests'),
+        ('/track','track','Track an Existing Record'),
+        ('/report','report','Report'),
+        ('/faq','faq','FAQ'),
+        ('/about','about','About'),
+    ] -%}
+{% endif %}
 
 
-            <!-- Everything you want hidden at 940px or less, place within here -->
-            <div class="nav-collapse collapse">
-              <!-- .nav, .navbar-search, .navbar-form, etc -->
-            </div>
-          </div>
+{% if current_user.is_authenticated %}
+    {% set active_page = active_page|default('view_requests') -%}
+{% else %}
+    {% set active_page=active_page|default('') -%}
+{% endif %}
+<div class="agency-header">
+    <div class="upper-header-black">
+        <div class="container">
+          <span class="upper-header-left">
+            <a href="https://{{ config['NYC_GOV_BASE'] }}"><img
+                    src="https://{{ config['NYC_GOV_BASE'] }}/assets/home/images/global/nyc_white.png"
+                    alt="NYC" class="small-nyc-logo"/></a>
+            <img src="https://{{ config['NYC_GOV_BASE'] }}/assets/home/images/global/upper-header-divider.gif"
+                 alt=""/>
+            <span class="upper-header-black-title">OpenRecords</span>
+          </span>
+            <span class="upper-header-padding"></span>
+          <span class="upper-header-right">
+            <span class="upper-header-three-one-one">
+              <a href="https://{{ config['NYC_GOV_BASE'] }}/311/index.page">311</a>
+            </span>
+            <img src="https://{{ config['NYC_GOV_BASE'] }}/assets/home/images/global/upper-header-divider.gif"
+                 alt=""/>
+            <span class="upper-header-search">
+              <a href="https://{{ config['NYC_GOV_BASE'] }}/home/search/index.page">Search all
+                  NYC.gov websites</a>
+            </span>
+          </span>
         </div>
-      </div>
-      <div id="container-fluid">
-        {% block container %}
-          <div class="row-fluid">
-            <div class="span10">
-              {% block banner %}
+    </div>
+</div>
+<div class="wrapper">
+    <div class="navbar">
+        <div class="navbar-inner">
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse"
+               data-target=".navbar-responsive-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="/"><img id="logo_nav"
+                                           src="{{ url_for('static', filename='images/logo.png') }}"
+                                           alt="{{ config['AGENCY_NAME'] }} logo"/></a>
 
-              {% endblock banner%}
-            </div>
-          </div>
+            <div class="nav-collapse navbar-responsive-collapse collapse"
+                 style="height: 0px;">
+                {% if current_user.is_authenticated %}
+                <div class="google_translate btn">
+                    <p><a href="/logout">Logout</a></p>
+                </div>
+                {#                    loops through the navigation_bar container for the label and definition of each tab#}
+                <ul class="nav nav-pills" >
+                    {% for href, id, caption in navigation_bar %}
+                      <li{% if id == active_page %} class="active openrecords_nav"{% endif%}>
+                      <a class="openrecords_nav" href="{{ href|e }}">{{ caption|e }}</a></li>
+                    {% endfor %}
+                </ul>
+                <ul class="nav pull-right">
+                </ul>
+                {% else %}
+                <div class="google_translate">
+                    <div id="google_translate_element"></div>
+                    <script type="text/javascript">
+                        function googleTranslateElementInit() {
+                            new google.translate.TranslateElement({
+                                pageLanguage: 'en',
+                                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                            }, 'google_translate_element');
+                        }
+                    </script>
+                    <script type="text/javascript"
+                            src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+                    </script>
+                </div>
+                <ul class="nav nav-pills" >
+                    {% for href, id, caption in navigation_bar %}
+                      <li{% if id == active_page %} class="active openrecords_nav"{% endif%}>
+                      <a class="openrecords_nav" href="{{ href|e }}">{{ caption|e }}</a></li>
+                    {% endfor %}
+                </ul>
+                <ul class="nav pull-right">
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div id="container-fluid">
+    {% block container %}
+    <div class="row-fluid">
+        <div class="span10">
+            {% block banner %}
 
-        {% endblock container %}
-      </div>
-
-
-
-      <div class="push"></div>
+            {% endblock banner %}
+        </div>
     </div>
 
-<!-- Footer is separate on landing page -->
-    {% block footer %}
-      <div id="footer" class="well well-small footer">
-        <p class="text-center">For more information about this application or instructions on how to get the app for <em>your</em> agency, <a href="https://github.com/codeforamerica/recordtrac" target="_blank"> view project info and documentation</a>.</p>
-        <p class="text-center">Made by the <a href="http://www.codeforamerica.org/apps/recordtrac/" target="_blank">Code for America 2013 Fellows</a> with the City of Oakland</p>
-      </div>
-    {% endblock footer %}
+    {% endblock container %}
+</div>
+<div class="push"></div>
+</div>
+<!-- // Wrapper -->
+<div class="iw_component" id="1422284559235">
+    <div class="row">
+        <footer>
+            <div class="container">
+                <div class="span9 footer-links">
+                    <a href="https://{{ config['NYC_GOV_BASE'] }}/nyc-resources/agencies.page">Directory
+                        of City Agencies</a>
+                    <a href="https://{{ config['NYC_GOV_BASE'] }}/home/contact-us.page">Contact
+                        NYC Government</a>
+                    <a href="https://a127-ess.nyc.gov">City Employees</a>
+                    <a href="https://a858-nycnotify.nyc.gov/notifynyc/">Notify NYC</a>
+                    <a href="https://a856-citystore.nyc.gov/">CityStore</a>
+                    <a href="https://{{ config['NYC_GOV_BASE'] }}/connect/social-media.page">Stay
+                        Connected</a>
+                    <a href="https://{{ config['NYC_GOV_BASE'] }}/connect/applications.page">NYC
+                        Mobile Apps</a>
+                    <a href="https://{{ config['NYC_GOV_BASE'] }}/nyc-resources/nyc-maps.page">Maps</a>
+                    <a href="https://{{ config['NYC_GOV_BASE'] }}/nyc-resources/resident-toolkit.page">Resident
+                        Toolkit</a>
+                </div>
+                <div class="span3">
+                    <span class="logo-nyc">NYC</span>
 
-    {% if 'GOOGLE_FEEDBACK_FORM_ID' in config %}
-      {% block feedback %}
-      <!-- gforms feedback tab -->
-          <h5 class="text-center hidden-phone" ><a id="floating_link" href="#feedbackModal" data-toggle="modal" class="bootstro" data-bootstro-title="Feedback" data-bootstro-content="{{"Feedback" | tutorial }}" data-bootstro-step="9" data-bootstro-placement="right" data-bootstro-width="50%"> Feedback</a></h5>
+                    <form class="form-search" method="get"
+                          action="https://{{ config['NYC_GOV_BASE'] }}/home/search/index.page">
+                        <input placeholder="Search"
+                               class="input-search placeholder"
+                               name="search-terms" type="text"/>
+                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                        <button class="ico-search">Search</button>
+                    </form>
+                    <div class="copyright">
+                        <p>City of New York. 2015 All Rights Reserved,</p>
 
-        <!-- Modal for feedback -->
-        <div id="feedbackModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel" aria-hidden="true">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          </div>
-          <div class="modal-body">
-            <iframe title="feedback_form" src="https://docs.google.com/forms/d/{{config['GOOGLE_FEEDBACK_FORM_ID']}}/viewform?embedded=true" width="500" height="390" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
-          </div>
-        </div>
-      {% endblock feedback %}
-    {% endif %}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.placeholder.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/placeholder.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.validate.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/custom.js') }}"></script>
-    <!-- CSS3 media queries polyfill -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/css3-mediaqueries.js') }}"></script>
-    <!-- accessibility element tag polyfill -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/accessifyhtml5.min.js') }}"></script>
+                        <p>NYC is a trademark and service mark of the City of
+                            New York</p>
 
-    {% block custom_script_links %}
-    {% endblock custom_script_links %}
-  </body>
+                        <p>
+                            <a href="https://{{ config['NYC_GOV_BASE'] }}/home/privacy-policy.page"
+                               title="Privacy">Privacy Policy</a>.
+                            <a href="https://{{ config['NYC_GOV_BASE'] }}/home/terms-of-use.page"
+                               title="TOU">Terms of Use</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script type="text/javascript"
+        src="{{ url_for('static', filename='js/plugins/jquery.placeholder.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='js/plugins/jquery.validate.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='js/plugins/bootstrap.js') }}"></script>
+
+{% block custom_script_links %}
+{% endblock custom_script_links %}
+<form method=post action="">
+    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+</body>
 </html>

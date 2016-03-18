@@ -1,191 +1,212 @@
 {
-    "Ask a question": 
-        {
-            "What":"Use this space to ask a question about this request.",
-            "Who":"We'll post your question online to be viewed by the public.",
-            "Action":"The requester will be notified via email."
-        },
-    "Add a note": 
-        {
-            "What":"Use this space to provide an update about the request.",
-            "Who":"We'll post your question online to be viewed by the public.",
-            "Action":"The requester will be notified via email."
-        },
-    "Add a public note":
-        {
-            "What":"Use this section to communicate with the city.",
-            "Who":"We’ll will post your message online and it can be viewed by the public.",
-            "Action":"The city employee responsible for your request will be notified via email."
-        },
-    "Enter records request": 
-        {
-            "What":"Describe in detail the records you need.",
-            "Who":"This message can be viewed by the public. Don’t reveal personal information about yourself or others.",
-            "Action":""
-        },
-    "Enter email address": 
-        {
-            "What":"",
-            "Who":"No one will be able to view your email address.",
-            "Action":"We'll use it to send updates about your request."
-        },
-    "Enter name": 
-        {
-            "What":"",
-            "Who":"Only *agency* employees will be able to view this information.",
-            "Action":""
-        },
-   "Enter phone number": 
-        {
-            "What":"",
-            "Who":"Only *agency* employees will be able to view this information.",
-            "Action":""
-        },
-    "Enter department or document type": 
-        {
-            "What":"Tell us where to send your request or the type of document you need. Leave this space blank if you don't know where it should go. We'll get it to the right person.",
-            "Who":"",
-            "Action":""
-        },
-    "Upload a document": 
-        {
-            "What":"Upload a record stored on your computer.", 
-            "Who":"The record will be uploaded to the web and the public will be able to read and download it here.",
-            "Action":"We’ll notify the requester via email of the document."
-        },
-    "Describe hard copies": 
-        {
-            "What":"Name the record you are about to upload.",
-            "Who":"We’ll post your title online and it can be viewed by the public.",
-            "Action":""
-        },
-    "Add an offline document": 
-        {
-            "What":"If you can't post this record online, use this space to tell a requester when and where they can pick it up. Include any fees they may have to pay.",
-            "Who":"We’ll post your instructions online and it can be viewed by the public.",
-            "Action":"We'll notify the requester via email."
-        },
-    "Add a link": 
-        {
-            "What":"Provide the web address of where a requester can find the information or documents.",
-            "Who":"The link will be posted online for the public to view.",
-            "Action":"We'll notify the requester via email."
-        },
-    "Close a request": 
-        {
-            "What":"Use this feature to close out this request.",
-            "Who":"Your message will be posted online for the public to view.",
-            "Action":"We'll notify the requester via email."
-        },
-
-        "Fulfilled": 
-            {
-                "What":"We released all of the requested documents.",
-                "Who":"",
-                "Action":""
-            },
-
-         "Fulfilled - Private Documents Not Uploaded": 
-            {
-                "What":"We cannot upload your document online. The records contains sensitive information only you can view.",
-                "Who":"",
-                "Action":""
-            },
-        "Fulfilled - Information Redacted": 
-            {
-                "What":"We released all of the requested documents. Personal information, such as home addresses, telephone numbers, and credit card numbers, were removed from the documents to protect the privacy or identity of another individual.",
-                "Who":"",
-                "Action":""
-            },
-        "Fulfilled - Identity of Citizens Making Complaints Removed": 
-            {
-                "What":"We released all of the requested documents. We removed information identifying private citizens who made complaints to government.",
-                "Who":"",
-                "Action":""
-            },
-        "Not a public records request": 
-            {
-                "What":"This is not a public records request.",
-                "Who":"",
-                "Action":""
-            },
-
-        "Record Does Not Exist": 
-            {
-                "What":"The record you asked for does not exist.",
-                "Who":"",
-                "Action":""
-            },
-        "Contact Another Government Agency": 
-            {
-                "What":"We don't have the records you requested. We suggest you submit a public records request to the County or the State.",
-                "Who":"",
-                "Action":""
-            },
-        "Can Not Release - Personal Records": 
-            {
-                "What":"We cannot upload the documents you requested. We are prohibited from releasing an individual’s employment, medical, or similar files to protect their privacy.",
-                "Who":"",
-                "Action":""
-            },
-        "Can Not Release - Ongoing Litigation": 
-            {
-                "What":"We cannot upload the documents you requested. We are prohibited from releasing records related to an on-going litigation.",
-                "Who":"",
-                "Action":""
-            },
-        "Can Not Release - Investigative Records": 
-            {
-                "What":"We cannot upload the documents you requested. We are prohibited from releasing investigative records for crimes committed or police incident reports, rap sheets, and arrest records.",
-                "Who":"",
-                "Action":""
-            },
-        "Can Not Release - Attorney-Client Privilege": 
-            {
-                "What":"We cannot upload the documents you requested. We are prohibited from releasing communications between an attorney and his or her clients",
-                "Who":"",
-                "Action":""
-            },
-        "Requester Not Interested": 
-            {
-                "What":"The person who submitted this request determined they no longer need the record.",
-                "Who":"",
-                "Action":""
-            },
-        "Unable to contact the requester": 
-            {
-                "What":"We closed this request after we were unable to contact the requester to determine what they needed.",
-                "Who":"",
-                "Action":""
-            },
-    "Request an extension": 
-        {
-            "What":"Use this feature to indicate you need more time to respond to this request.",
-            "Who":"Your message will be posted online for the public to view.",
-            "Action":"We'll notify the requester via email."
-        },
-            "Extension - Large Amount": 
-                {
-                    "What":"Additional time is required to answer your public records request. We need to search for, collect, or examine a large number of records.",
-                    "Who":"",
-                    "Action":""
-                },
-            "Extension - Separate Facility": 
-                {
-                    "What":"Additional time is required to answer your public records request. We need to search for and collect the requested records from a separate facility or set of facilities.",
-                    "Who":"",
-                    "Action":""
-                },
-            "Extension - Another Agency": 
-                {
-                    "What":"Additional time is required to answer your public records request. We need to consult with another agency before we are able to deliver your record.",
-                    "Who":"",
-                    "Action":""
-                },
-            "Extension - Data": 
-                {
-                    "What":"Additional time is required to answer your public records request. We need to compile data or create a computer report to extract data.",
-                    "Who":"",
-                    "Action":""
-                }
-    }
+  "Ask a question": {
+    "What": "Use this space to ask a question about this request.",
+    "Who": "We'll post your question online to be viewed by the public.",
+    "Action": "The requester will be notified via email."
+  },
+  "Add a note": {
+    "What": "Use this space to track private notes.",
+    "Who": "Your note will only be visible to staff.",
+    "Action": ""
+  },
+  "Add a public note": {
+    "What": "Use this section to communicate with the city.",
+    "Who": "We’ll will post your message online and it can be viewed by the public.",
+    "Action": "The city employee responsible for your request will be notified via email."
+  },
+  "Enter records request": {
+    "What": "Describe in detail the records you need.",
+    "Who": "This message can be viewed by the public. Don’t reveal personal information about yourself or others.",
+    "Action": ""
+  },
+  "Choose Agency": {
+    "What": "Choose the agency that best fits the type of request you are making. If you do not know which agency to choose, please select \"I Don't Know\"",
+    "Who": "",
+    "Action": ""
+  },
+  "Enter name": {
+    "What": "",
+    "Who": "Only *agency* employees will be able to view this information.",
+    "Action": "We will need it to respond to your request."
+  },
+  "Enter email address": {
+    "What": "",
+    "Who": "Only *agency* employees will be able to view this information.",
+    "Action": "We'll use this to send you updates about your request."
+  },
+  "Enter phone number": {
+    "What": "",
+    "Who": "Only *agency* employees will be able to view this information.",
+    "Action": "We'll use this to send you updates about your request."
+  },
+  "Enter address1": {
+    "What": "",
+    "Who": "Only *agency* employees will be able to view this information.",
+    "Action": "We'll use this to send you updates about your request."
+  },
+  "Enter street": {
+    "What": "",
+    "Who": "Only *agency* employees will be able to view this information.",
+    "Action": "We'll use this to send you updates about your request."
+  },
+  "Enter city": {
+    "What": "",
+    "Who": "Only *agency* employees will be able to view this information.",
+    "Action": "We'll use this to send you updates about your request."
+  },
+  "Enter state": {
+    "What": "",
+    "Who": "Only *agency* employees will be able to view this information.",
+    "Action": "We'll use this to send you updates about your request."
+  },
+  "Enter zip": {
+    "What": "",
+    "Who": "Only *agency* employees will be able to view this information.",
+    "Action": "We'll use this to send you updates about your request."
+  },
+  "Enter department or document type": {
+    "What": "Tell us where to send your request or the type of document you need. Leave this space blank if you don't know where it should go. We'll get it to the right person.",
+    "Who": "",
+    "Action": ""
+  },
+  "Upload a document": {
+    "What": "Upload a record stored on your computer.",
+    "Who": "The record will be uploaded to the web and the public will be able to read and download it here.",
+    "Action": "We’ll notify the requester via email of the document."
+  },
+  "Describe hard copies": {
+    "What": "Name the record you are about to upload.",
+    "Who": "We’ll post your title online and it can be viewed by the public.",
+    "Action": ""
+  },
+  "Add an offline document": {
+    "What": "If you can't post this record online, use this space to tell a requester when and where they can pick it up. Include any fees they may have to pay.",
+    "Who": "We’ll post your instructions online and it can be viewed by the public.",
+    "Action": "We'll notify the requester via email."
+  },
+  "Add a link": {
+    "What": "Provide the web address of where a requester can find the information or documents.",
+    "Who": "The link will be posted online for the public to view.",
+    "Action": "We'll notify the requester via email."
+  },
+  "Close a request": {
+    "What": "Use this feature to close out this request.",
+    "Who": "Your message will be posted online for the public to view.",
+    "Action": "We'll notify the requester via email."
+  },
+  "Fulfilled in Whole": {
+    "What": "Your request under the Freedom of Information Law (FOIL) has been reviewed and fulfilled.",
+    "Who": "",
+    "Action": "Fulfilled in Whole"
+  },
+  "Fulfilled in Part": {
+    "What": "Your request under the Freedom of Information Law (FOIL) has been reviewed and fulfilled in part because some of the records or portions of records are disclosable and others are exempt from disclosure under FOIL.",
+    "Who": "",
+    "Action": "Fulfilled in Part"
+  },
+  "Denied - Records Non-Responsive": {
+    "What": "Your request under the Freedom of Information Law (FOIL) is denied because no responsive records were found.",
+    "Who": "",
+    "Action": "Denied - Records Non-Responsive"
+  },
+  "Denied - No Records": {
+    "What": "Your request under the Freedom of Information Law (FOIL) is denied because it is a request for information that is not contained in an existing agency record.",
+    "Who": "",
+    "Action": "Denied - No Records"
+  },
+  "Denied - All Exempt": {
+    "What": "Your request under the Freedom of Information Law (FOIL) is denied because the records you requested are exempt from disclosure under FOIL.",
+    "Who": "",
+    "Action": "Denied - All Exempt"
+  },
+  "Denied - Unknown": {
+    "What": "Your request under the Freedom of Information Law (FOIL) cannot be processed because it does not provide enough information to identify the records you would like to receive.",
+    "Who": "",
+    "Action": "Denied - Unknown"
+  },
+  "No Customer Response": {
+    "What": "We need more information from you in order to process your request under the Freedom of Information Law (FOIL). We have tried to contact you but have not received a response within the last 5 business days. We are closing this request due to lack of response. If you remain interested in these records, you may open a new FOIL request.",
+    "Who": "",
+    "Action": "No Customer Response"
+  },
+  "No Payment": {
+    "What": "The records you requested under the Freedom of Information Law (FOIL) could be provided to you at cost. We are closing this request because we have not received your payment to cover the record retrieval and/or duplication cost. If you still want a copy of these records, you may open a new FOIL request.",
+    "Who": "",
+    "Action": "No Payment"
+  },
+  "Public Records": {
+    "What": "Your request under the Freedom of Information Law (FOIL) is being closed because the records are publicly available.",
+    "Who": "",
+    "Action": "Public Records"
+  },
+  "Out of Jurisdiction": {
+    "What": "Your request under the Freedom of Information Law (FOIL) is being closed because the record is not a city record.",
+    "Who": "",
+    "Action": "Out of Jurisdiction"
+  },
+  "Refer to 311/NYC.gov": {
+    "What": "Your request is for general City information or services. You may search http://nyc.gov/ or call 311 for assistance.",
+    "Who": "",
+    "Action": "Refer to 311/NYC.gov"
+  },
+  "Refer to OpenData": {
+    "What": "Your request is for data that is available through the City's OpenData site. You may visit http://nyc.gov/opendata to find this information",
+    "Who": "",
+    "Action": "Refer to OpenData"
+  },
+  "Refer to Other Agency": {
+    "What": "Your request under the Freedom of Information Law (FOIL) is being closed because this agency does not have the records requested. You should direct your request to a different agency.",
+    "Who": "",
+    "Action": "Refer to Other Agency"
+  },
+  "Refer to Web Link": {
+    "What": "Your request under the Freedom of Information Law (FOIL) is being closed because the document or information you requested is publicly available.",
+    "Who": "",
+    "Action": "Refer to Web Link"
+  },
+  "Fulfilled via Email": {
+    "What": "Your request under the Freedom of Information Law (FOIL) has been fulfilled and the documents you requested have been emailed to you.",
+    "Who": "",
+    "Action": "Fulfilled via Email"
+  },
+  "Fulfilled via Fax": {
+    "What": "Your request under the Freedom of Information Law (FOIL) has been fulfilled and the documents you requested have been faxed to you.",
+    "Who": "",
+    "Action": "Fulfilled via Fax"
+  },
+  "Fulfilled via Mail": {
+    "What": "Your request under the Freedom of Information Law (FOIL) has been been fulfilled and the documents you requested have been mailed to you. Please allow 7 - 10 days for receipt.",
+    "Who": "",
+    "Action": "Fulfilled via Mail"
+  },
+  "Fulfilled via Pickup": {
+    "What": "Your request under the Freedom of Information Law has been fulfilled and the documents you requested are available to you for pickup.",
+    "Who": "",
+    "Action": "Fulfilled via Pickup"
+  },
+  "Request an extension": {
+    "What": "Use this feature to indicate you need more time to respond to this request.",
+    "Who": "Your message will be posted online for the public to view.",
+    "Action": "We'll notify the requester via email."
+  },
+  "Extension - Large Amount": {
+    "What": "Additional time is required to answer your public records request. We need to search for, collect, or examine a large number of records.",
+    "Who": "",
+    "Action": ""
+  },
+  "Extension - Separate Facility": {
+    "What": "Additional time is required to answer your public records request. We need to search for and collect the requested records from a separate facility or set of facilities.",
+    "Who": "",
+    "Action": ""
+  },
+  "Extension - Another Agency": {
+    "What": "Additional time is required to answer your public records request. We need to consult with another agency before we are able to deliver your record.",
+    "Who": "",
+    "Action": ""
+  },
+  "Extension - Data": {
+    "What": "Additional time is required to answer your public records request. We need to compile data or create a computer report to extract data.",
+    "Who": "",
+    "Action": ""
+  }
+}

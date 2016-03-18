@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block container %}
-	<div class="span10 offset1">
+    <div class="span10 offset1">
 
-		{% block error_generic %}
-			Oops, something went wrong...
-		{% endblock error_generic %}
+        {% block error_generic %}
+            Oops, something went wrong...
+        {% endblock error_generic %}
 
-		{% block error_specific %}
-			<p><strong>{{ message | safe }}</strong></p>
-		{% endblock error_specific %}
-		
-	</div>
+        {% block error_specific %}
+            <p><strong>{{ message | safe }}</strong></p>
+        {% endblock error_specific %}
+
+    </div>
 {% endblock container %}

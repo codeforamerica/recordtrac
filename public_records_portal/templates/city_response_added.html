@@ -1,0 +1,43 @@
+<html>
+
+<body>
+<div style="background-color:#FFF;width:100%;margin:0px; padding:0px">
+    <div style="padding:20px;">
+        <div style="padding:8px;background-color:#EEE;-moz-border-radius:7px;-webkit-border-radius:7px;">
+            <div style="clear:both;">
+				<span style="font-family: arial,helvetica,sans-serif;"><span
+                        style="color: rgb(51, 51, 51); font-size: 14px;">
+
+<p>
+{#    You can view the request and take any necessary action at the following webpage: <a href='{{ page }}'>{{ page }}</a>. Click <a href="FAQ PAGE">here</a> to learn about how the City Responds to FOIL requests.#}
+     {{ department_name }} has sent additional information about your request. Please  visit {{ page }} to add a response.
+</p>
+                    </br>
+
+                    {% if unfollow_link %}
+                        <p>
+                            You can always choose to <a href='{{ unfollow_link }}'>unfollow this request</a> if you
+                            don't want to receive more emails about it.
+                        </p>
+                    {% endif %}
+                    </br>
+
+
+		</span></span></div>
+        </div>
+    </div>
+</div>
+</body>
+<footer>
+
+<span style="font-family: arial,helvetica,sans-serif;"><span style="color: rgb(51, 51, 51); font-size: 11px;">
+<center>
+    <img src="{{ config['LOGO_ON_WHITE_URL'] }}" width="50" height="40"/> <br/> <br/>
+
+    {{ config['AGENCY_NAME'] }}
+
+</center>
+<span>
+</div>
+</footer>
+</html>

@@ -4,228 +4,427 @@
 {% block title %}Request{% endblock title %}
 
 {% block custom_css_links %}
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/manage_request_city.css') }}">
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/_response_widget.css') }}">
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bottom_sidebar.css') }}">
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
+<link rel=stylesheet type=text/css
+      href="{{ url_for('static', filename='css/manage_request_city.css') }}">
+<link rel=stylesheet type=text/css
+      href="{{ url_for('static', filename='css/_response_widget.css') }}">
+<link rel=stylesheet type=text/css
+      href="{{ url_for('static', filename='css/sidebar.css') }}">
+<link rel=stylesheet type=text/css
+      href="{{ url_for('static', filename='css/bottom_sidebar.css') }}">
+<link rel=stylesheet type=text/css
+      href="{{ url_for('static', filename='css/case.css') }}">
 {% endblock custom_css_links %}
 
+{% if req %}
+{% if req.privacy==True %}
+{% elif req.privacy==False %}
+{% endif %}
+{% endif %}
+
 {% block container %}
-<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
-<!-- social media section -->
-  <div id="floating_media" class="text-center">
-
-    <!-- share on twitter -->
-    <a href="#"
-      onclick="
-        window.open(
-          'http://twitter.com/intent/tweet?text=Requested from {{config['AGENCY_NAME']}}:&amp;via=RecordTrac&amp;url={{config['APPLICATION_URL']}}request/{{req.id}}',
-          'facebook-share-dialog',
-          'width=550,height=350');
-        return false;">
-      <i class="icon-twitter icon-large"> </i>
-    </a>
-
-    <!-- share on facebook -->
-    <a href="#"
-      onclick="
-        window.open(
-          'https://www.facebook.com/sharer/sharer.php?u={{config['APPLICATION_URL']}}request/{{req.id}}',
-          'facebook-share-dialog',
-          'width=626,height=436');
-        return false;">
-      <i class="icon-facebook icon-large"> </i>
-    </a>
-  </div>
-
 <!-- main content -->
-  <div class="row-fluid">
-    <div class="span8">
-      {% block banner %}{{super()}}{% endblock banner %}
+<div class="row-fluid">
+    <div class="span12">
+        {% block banner %}{{ super() }}{% endblock banner %}
     </div>
-  </div>
-  <div class="row-fluid">
-    <div class="span7 offset1">
-      {% block well %}
+</div>
+<div class="row-fluid">
+    <div class="span9">
+        {% block well %}
         <div class="well">
-          {% block request %}
-          <div id = "request-container">
-            <!-- request area -->
-            <div class="row-fluid">
-              <h3 class="control-widget">Request <span class="muted">#{{req.id}}</span></h3>
-              {% block clarify_request %}{% endblock clarify_request %}{% block public_note %}{% endblock public_note %}
+            {% block request %}
+            <div id="request-container">
+                <!-- Request Details -->
+                <div class="row-fluid">
+                    <h3 class="control-widget">
+                        <span class="muted">
+                           {{req.id}}
+                        </span>
+                        {% if req %}
+                        {% if current_user.is_anonymous or audience == 'public' %}
+                        {% if not req.titlePrivate %}
+                        <p class="lead" style="margin-bottom: 0rem;"
+                           truncateable="250"> Title: {{ req.summary | e | new_lines }}
+                        </p>
+                        {% else %}
+                        <p class="lead" style="margin-bottom: 0rem;" truncateable="250">
 
-              <p class="lead" truncateable="250"> {{ req.text | new_lines }} </p>
-            </div>
-            <div id="proxyrequester_info" class="row-fluid">
-              {% block proxyrequester_info %}
-                <small>
-                  {% if req.creator_id %}
-                    <span>This request was submitted on behalf of the requester by {{ "alias"| get_attribute(req.creator_id, "User") }}.</span>
-                  {% endif %}
-                </small>
-              {% endblock proxyrequester_info %}
-            </div>
-            <div>
-            <!-- shows any existing Q&A or public notes -->
-            {% set request_data = ( req | get_request_data_chronologically ) %}
+                        </p>
+                        {# If the request title is set to private then do not display the title#}
+                        {% endif %}
+                        {% if not req.descriptionPrivate %}
+                        <p class="lead" style="margin-bottom: 0rem;"
+                           truncateable="250"> Request: {{ req.text | e | new_lines }}
+                        </p>
+                        {% else %}
+                        <p class="lead" style="margin-bottom: 0rem;" truncateable="250">
+                        </p>
+                        {% endif %}
+                        {% else %}
+                        <p class="lead" style="margin-bottom: 0rem;"
+                           truncateable="250"> Title: {{ req.summary | e | new_lines }}
+                        </p>
+                        <p class="lead" style="margin-bottom: 0rem;"
+                           truncateable="250"> Request: {{ req.text | e | new_lines }}
+                        </p>
+                        {% endif %}
+                        {% endif %}
+                    </h3>
+                    {% block clarify_request %}
+                    <!-- ask a question -->
+                    <form name="ask_question" id="question" class="form-inline" style="margin: 10px 0px 15px 0px;"
+                          method="post" action="/add_a_qa" autocomplete="on">
+                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                        <fieldset>
+                            {% if email %}
+                            <label>Ask a question <span rel="tooltip" data-toggle="tooltip" data-placement="right"
+                                                        title="" data-original-title="{{" Ask a question" |
+                                explain_action }}">
+                                <small><i class="icon-info-sign"></i></small>
+                                </span></label>
+                            <textarea id="questionTextarea" name="question_text" class="input-xlarge"
+                                      placeholder="Ask the requester a question" required/></textarea>
+                            <button id="askQuestion" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#confirm-submit" type="submit">Ask
+                            </button>
+                            {% endif %}
+                        </fieldset>
+                    </form>
 
-              {% for response in request_data %}
-                {% set icon = response.get_icon() %}
-                <div class="row-fluid response">
-                  <div class="span1 text-left">
-                    <i class="{{icon}}"></i>
-                  </div>
-                  <div class="span9">
-                    <p truncateable="175">
-                     {{ response.display_text() | safe }}
-                   </p>
-                  </div>
-                  <div class="span2 text-right request-date">
-                    <div class = "timestampPopoverContainer">
-                      <div class="row-fluid">
-                        <span class="timestampPopover" onmouseover="">{{ response.date() | date_granular }}</span>
-                        <div class = "hide">
-                         {% include '_timestamp.html' %}
-                       </div>
-                      </div>
-                  </div>
+                    <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog"
+                         aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    Confirmation
+                                </div>
+                                <div class="modal-body">
+                                    <div id="modalquestionDiv">Are you sure you want to make the following question
+                                        public and send an email to the requester?
+                                    </div>
+                                    <table id="modalQuestionTable" class="table">
+                                        <tr>
+                                            <th>Question</th>
+                                            <td id="question_text"></td>
+                                            <input type="hidden" id="form_id" value=""/>
+                                        </tr>
+                                    </table>
+                                    <table id="modalAdditionalInfoTable" class="table">
+                                        <tr>
+                                            <th>Additional Information</th>
+                                            <td><textarea id="additional_note" name="additional_note"
+                                                          class="input-xlarge"
+                                                          placeholder="Additional Information"/></textarea></td>
+                                        </tr>
+                                    </table>
+                                    <br/><br/>
+                                    <table id="modalAdditionalInfoTableClose" class="table" style="display:none;">
+                                        <p><b>If you are denying this request please explain why.</b></p>
+                                        <tr>
+                                            <th>Additional Information for Closing</th>
+                                            <td><textarea id="additional_note" name="additional_note"
+                                                          class="input-xlarge"
+                                                          placeholder="Additional Information"/></textarea></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <a href="#" id="submit" class="btn btn-success success">Submit</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add a public note form -->
+                    {% if not current_user.is_authenticated or audience == 'public' %}
+                    <!--<form name="note" class="form-inline" style="margin: 10px 0px 15px 0px;" id="note" method="post"-->
+                          <!--action="/public_add_a_note">-->
+                        <!--<input type="hidden" name="request_id" value="{{ req.id }}"/>-->
+                        <!--<fieldset>-->
+                            <!--<legend>Add a note</legend>-->
+                            <!--<div class="row-fluid">-->
+                                <!--<div class="control-group" align="left">-->
+                                    <!--<label class="control-label">Note <span rel="tooltip" data-toggle="tooltip"-->
+                                                                            <!--data-placement="right" title=""-->
+                                                                            <!--data-original-title="{{'Add a note'| explain_action }}">-->
+                                        <!--<small><i class="icon-info-sign"></i></small>-->
+                                        <!--</span></label>-->
+
+                                    <!--<div class="controls">-->
+                                        <!--<textarea type="text" class="input-xxlarge" id="noteTextarea" name="note_text"-->
+                                                  <!--placeholder="Notes visible to all public users."-->
+                                                  <!--required/"></textarea>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="control-group">-->
+                                    <!--<div class="controls">-->
+                                        <!--<button type="submit" class="btn btn-primary" data-toggle="modal"-->
+                                                <!--data-target="#confirm-submit" id="addPublicNoteButton">Add note-->
+                                        <!--</button>-->
+                                    <!--</div>-->
+                                    <!--<input type="hidden" name="note_privacy" value="1"/>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</fieldset>-->
+                    <!--</form>-->
+                    <!--<div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog"-->
+                         <!--aria-labelledby="myModalLabel" aria-hidden="true">-->
+                        <!--<div class="modal-dialog">-->
+                            <!--<div class="modal-content">-->
+                                <!--<div class="modal-header">-->
+                                    <!--Confirmation-->
+                                <!--</div>-->
+                                <!--<div class="modal-body">-->
+                                    <!--<div id="modalquestionDiv">Are you sure you want to make the following question-->
+                                        <!--public?-->
+                                    <!--</div>-->
+                                    <!--<table id="modalQuestionTable" class="table">-->
+                                        <!--<tr>-->
+                                            <!--<th>Question</th>-->
+                                            <!--<td id="question_text"></td>-->
+                                            <!--<input type="hidden" id="form_id" value=""/>-->
+                                        <!--</tr>-->
+                                    <!--</table>-->
+                                <!--</div>-->
+                                <!--<div class="modal-footer">-->
+                                    <!--<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>-->
+                                    <!--<a href="#" id="submit" class="btn btn-success success">Submit</a>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    {% endif %}
+
+                    {% endblock clarify_request %}
+                    {# Form for changing field to public or private#}
+                    {% if current_user.is_authenticated and audience == 'city' %}
+                    <form class="form-horizontal" method="post" action="/changeprivacy">
+                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                        <input type="hidden" name="fieldtype" value="title"/>
+                        <fieldset>
+                            <!-- Multiple Radios (inline) -->
+                            <div class="control-group">
+                                <label class="control-label" style="width:7rem; text-align:left;">Title Privacy:</label>
+
+                                <div class="controls" style="margin-left: 3rem">
+
+                                    {# Set the private checkbox to be filled out if the request is private#}
+                                    {% if req.titlePrivate %}
+                                    <label class="radio inline" for="privacy setting-0">
+                                        <input type="radio" name="privacy setting" id="privacy setting-0" value="False"
+                                               type="submit" onclick="action=this.form.submit();">
+                                        {# Value set to False means public#}
+                                        Public
+                                    </label>
+                                    <label class="radio inline" for="privacy setting-1">
+                                        <input type="radio" name="privacy setting" id="privacy setting-1" value="True"
+                                               type="submit" checked onclick="action=this.form.submit();">
+                                        {# Value set to True means private#}
+                                        Private
+                                    </label>
+                                    {# Set the public checkbox to be filled out if the request is public#}
+                                    {% elif req.titlePrivate==False %}
+                                    <label class="radio inline" for="privacy setting-0">
+                                        <input type="radio" name="privacy setting" id="privacy setting-0" value="False"
+                                               type="submit" checked onclick="action=this.form.submit();">
+                                        {# Value set to False means public#}
+                                        Public
+                                    </label>
+                                    <label class="radio inline" for="privacy setting-1">
+                                        <input type="radio" name="privacy setting" id="privacy setting-1" value="True"
+                                               type="submit" onclick="action=this.form.submit();">
+                                        {# Value set to True means private#}
+                                        Private
+                                    </label>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                    {% endif %}
+                    {% if current_user.is_authenticated and audience == 'city' %}
+                    <form class="form-horizontal" method="post" action="/changeprivacy">
+                        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                        <input type="hidden" name="fieldtype" value="description"/>
+                        <fieldset>
+                            <!-- Multiple Radios (inline) -->
+                            <div class="control-group">
+                                <label class="control-label" for="privacy setting" style="width:7rem; text-align:left;">Description
+                                    Privacy:</label>
+
+                                <div class="controls" style="margin-left: 3rem">
+                                    {% if req.descriptionPrivate==True %}
+                                    <label class="radio inline" for="privacy setting-public">
+                                        <input type="radio" name="privacy setting" id="privacy setting-public"
+                                               value="False" type="submit" onclick="action=this.form.submit();">
+                                        {# Value set to False means public#}
+                                        Public
+                                    </label>
+                                    <label class="radio inline" for="privacy setting-private">
+                                        <input type="radio" name="privacy setting" id="privacy setting-private"
+                                               value="True" type="submit" checked onclick="action=this.form.submit();">
+                                        {# Value set to True means private#}
+                                        Private
+                                    </label>
+                                    {% else %}
+                                    <label class="radio inline" for="privacy setting-public">
+                                        <input type="radio" name="privacy setting" id="privacy setting-public"
+                                               value="False" type="submit" checked onclick="action=this.form.submit();">
+                                        {# Value set to False means public#}
+                                        Public
+                                    </label>
+                                    <label class="radio inline" for="privacy setting-private">
+                                        <input type="radio" name="privacy setting" id="privacy setting-private"
+                                               value="True" type="submit" onclick="action=this.form.submit();">
+                                        {# Value set to True means private#}
+                                        Private
+                                    </label>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                    {% endif %}
                 </div>
-              </div>
-              {% endfor %}
-                {% if request_data | length > 1 %}
-                  <!-- SHOW/HIDE button; js is in case.js -->
-                  <div class="case-show-all show"><i class="icon-chevron-down"></i> See all <i class="icon-chevron-down"></i></div>
-                {% endif %}
-              </div>
-          </div>
-          {% endblock request %}
-        </div>
-      {% endblock well %}
-      {% block requester_info %}{% endblock requester_info %}
+                <!--<div>-->
+                    <!--&lt;!&ndash; shows any existing Q&A or public notes &ndash;&gt;-->
+                    <!--{% set request_data = ( req | get_request_data_chronologically ) %}-->
 
-      {% block responses_container %}
+                    <!--{% for response in request_data %}-->
+                    <!--{% set icon = response.get_icon() %}-->
+                    <!--<div class="row-fluid response">-->
+                        <!--<div class="span1 text-left">-->
+                            <!--<i class="{{ icon }}"></i>-->
+                        <!--</div>-->
+                        <!--<div class="span9">-->
+                            <!--<p truncateable="175">-->
+                                <!--{{ response.display_text() | safe }}-->
+                            <!--</p>-->
+                        <!--</div>-->
+                        <!--<div class="span2 text-right request-date">-->
+                            <!--<div class="timestampPopoverContainer">-->
+                                <!--<div class="row-fluid">-->
+                                        <!--<span class="timestampPopover" onmouseover="">-->
+                                            <!--{{ response.date() | date_granular }}-->
+                                        <!--</span>-->
+
+                                    <!--<div class="hide">-->
+                                        <!--{% include '_timestamp.html' %}-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--{% endfor %}-->
+                    <!--{% if request_data | length > 1 %}-->
+                    <!--&lt;!&ndash; SHOW/HIDE button; js is in case.js &ndash;&gt;-->
+                    <!--<div class="case-show-all show">-->
+                        <!--<i class="icon-chevron-down"></i> See all <i class="icon-chevron-down"></i>-->
+                    <!--</div>-->
+                    <!--{% endif %}-->
+                <!--</div>-->
+            </div>
+            {% endblock request %}
+        </div>
+        {% endblock well %}
+        {% block requester_info %}{% endblock requester_info %}
+        {% block responses_container %}
+        {% set responses = ( req | get_responses_chronologically ) %}
+
         <div id="responses-container" class="row-fluid">
-          <h3 class="control-widget">Response</h3>
-          {% block response_actions %}{% endblock response_actions %}
-          <!-- shows all existing responses (links, documents, offline docs, notes) -->
-          {% set responses = ( req | get_responses_chronologically ) %}
-          {% if responses %}
+            {% block response_actions_lessjs %}
+
+            {% if audience == 'city' %}
+            {% include '_response_actions.html' %}
+            {% elif audience == 'helper' %}
+            {% include '_response_actions_helper.html' %}
+            {% endif %}
+            {% endblock response_actions_lessjs %}
+            {% if responses %}
+            {% set responses = ( req | get_responses_chronologically ) %}
+            <h3 class="control-widget">Responses</h3>
             {% for response in responses %}
-              {% set uid = response.uid() %}
-              {% set staff = ("User" | get_obj(uid)) %}
-              {% set icon = response.get_icon() %}
-              <div class="row-fluid response-wrapper">
+            {% set uid = response.uid() %}
+            {% set staff = ("User" | get_obj(uid)) %}
+            {% set icon = response.get_icon() %}
+            {% if response.type == 'document' or response.type == 'note' or response.type == 'extension' or audience != 'public' or (audience == 'helper') or not(response.response.privacy)%}
+            <div class="row-fluid response-wrapper">
                 <div class="span1 text-left">
-                  <i class="{{icon}}"></i>
+                    <i class="{{ icon }}"></i>
                 </div>
                 <div class="span9">
-                  <p class="expandable" truncateable="200">
-                   {{ response.display_text() | safe }} - <a href="/staff_card/{{uid}}"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias or staff.email }}</span></a>
-                 </p>
+                    <p class="expandable" truncateable="200">
+                        {{ response.display_text() | safe }}
+                        {% if current_user.is_authenticated %}
+                        - <a href="mailto:{{staff.email}}">{{ staff.alias or staff.email }}</a>
+                        {% endif %}
+                    </p>
                 </div>
                 <div class="span2 text-right response-date">
-                  <!-- <div class="row-fluid">
-                    <a href="/staff_card/{{uid}}" data-placement="right" data-toggle="popover" id="contactinfoPopoverResponse{{loop.index}}" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('{{staff.email}}', '{{staff.department}}', '{{staff.phone}}', '#contactinfoPopoverResponse{{loop.index}}')">{{ staff.alias or staff.email }}</span></a>
-                  </div> -->
-                  <div class = "timestampPopoverContainer">
-                    <div class="row-fluid">
-                     <span class="timestampPopover" onmouseover="">{{ response.date() | date_granular }}</span>
-                      <div class = "hide">
-                       {% include '_timestamp.html' %}
-                      </div>
+                    <div class="timestampPopoverContainer">
+                        <div class="row-fluid">
+                                <span class="timestampPopover" onmouseover="">
+                                    {{ response.date() | date_granular }}
+                                </span>
+
+                            <div class="hide">
+                                {% include '_timestamp.html' %}
+                            </div>
+                        </div>
                     </div>
-                  </div>
-              </div>
-            </div>
-            {% endfor %}
-          {% else %}<!--added an if then to check to see if any responses exist - if no then show text here for the "if any response exists" above -->
-            <div class = "row-fluid">
-              <br>
-              {% set requester = req.requester() %}
-              {% if requester %}
-                  {% set email = requester.user.email %}
-              {% endif %}
-              {% if not email %}
-                <p id="no-email"><i>Requester did not provide an e-mail address. <i class="icon-question-sign" title= "If a clarification is needed and no alternate contact information has been provided, it may not be possible to respond to this request."></i></i></p>
-              {% endif %}
-              <p id="no-records"><i>No records uploaded yet.</i></p>
-            </div>
-          {% endif %}
-          {% block response_actions_lessjs %}{% endblock response_actions_lessjs %}
-        </div>
-      {% endblock responses_container %}
-    </div>
-
-    <div id="participant-container" class="span3">
-      {% block sidebar %}
-
-        {% block status %}{% endblock status %}
-
-        <div class="b_sidebar">
-          <div class="row-fluid participantRow">
-              <h4 class="case_participantRow">Point of Contact</h4>
-              {% include '_contact_popover.html' %}
-          </div>
-          <div class="row-fluid participantRow">
-              <h4 class="case_participantRow">Helpers</h4>
-              {% include '_staff_participants.html' %}
-          </div>
-          <div class="row-fluid">
-            <div class="participantRow-history">
-              {% include '_history.html' %}
-            </div>
-
-          </div>
-
-
-
-        </div>
-      {% endblock sidebar %}
-
-      {% block request_dates %}
-        {% with req_date = (req.date_received or req.date_created) %}
-        <div class="muted text-center">Received: {{ req_date | format_datetime('%b %d, %Y at %-I:%M %p') }}</div>
-        {% endwith %}
-      {% endblock request_dates %}
-
-      {% block follow %}
-        <form name="folow" id="follow" method="post" action="/public_add_a_subscriber">
-          <input type="hidden" name="request_id" value= "{{req.id}}"/>
-          <!-- <fieldset> -->
-            <div class="row-fluid follow">
-              <div class="span10 offset2">
-                <div class="input-append">
-                  <input id="followRequest" name="follow_email" class="span6" placeholder="yourname@email.com" type="email">
-                  <button id="followRequest-button" class="btn" type="submit">Follow</button>
                 </div>
-                <div id="whatisfollow"><span id="recordTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="Enter your email here and we will send you updates for this request." ><small><i class="icon-question-sign"></i></i></small></span></div>
-              </div>
             </div>
-          </fieldset>
-        </form>
-      {% endblock follow %}
+            {% endif %}
+            {% endfor %}
+            {% else %}
+            {% if current_user.is_authenticated and audience == 'city' %}
+            <h3 class="control-widget">Response</h3>
+
+            <p><em>No responses have been uploaded yet</em></p>
+            {% endif %}
+            {% endif %}
+        </div>
+        {% endblock responses_container %}
     </div>
+    <div id="participant-container" class="span3">
+        {% block sidebar %}
+        {% include '_manage_request_sidebar.html' %}
+        {% block subscribe %}
+        {% include '_subscribe_widget.html' %}
+        {% endblock subscribe %}
+        {% endblock sidebar %}
+    </div>
+</div>
 
-  </div>
 
-
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/social_media.css') }}">
+<link rel=stylesheet type=text/css
+      href="{{ url_for('static', filename='css/social_media.css') }}">
 
 
 {% endblock container %}
 
 
 {% block custom_script_links %}
-  <!-- Listed in case instead of manage_request_city for truncation!!! -->
-  <script type="text/javascript" src="{{ url_for('static', filename='js/manage_request_city.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='js/case.js') }}"></script>
+<!-- Listed in case instead of manage_request_city for truncation!!! -->
+<script type="text/javascript"
+        src="{{ url_for('static', filename='js/manage_request_city.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='js/case.js') }}"></script>
 
-  <!-- For response_widget partial -->
-  <script type="text/javascript" src="{{ url_for('static', filename='js/_response_widget.js') }}"></script>
+<!-- For response_widget partial -->
+<script type="text/javascript"
+        src="{{ url_for('static', filename='js/_response_widget.js') }}"></script>
 
-  <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jquery.ellipsis.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='js/plugins/jquery.ellipsis.js') }}"></script>
+
+
 {% endblock custom_script_links %}
 
 

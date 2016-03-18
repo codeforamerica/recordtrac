@@ -1,0 +1,33 @@
+{% extends "case.html" %}
+{% block title %}OpenRecords - Request {{ req.id }}{% endblock %}
+{% block custom_css_links %}
+<!-- used for the extension and close request multi-select boxes in city view -->
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/manage_request_city_less_js.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bottom_sidebar.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jasny-bootstrap.css') }}">
+{% endblock custom_css_links %}
+
+{% block requester_info %}
+{% include '_requester_info.html' %}
+{% endblock requester_info %}
+
+{% block sidebar %}
+{% include '_manage_request_sidebar.html' %}
+{% endblock sidebar %}
+
+{% block follow %}{% endblock follow %}
+
+{% block custom_script_links %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/case.js') }}"></script>
+
+<!-- used for the extension and close request multi-select boxes in city view -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-select.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/custom.bootstrap-select.js') }}"></script>
+
+
+<!-- For file uploads -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jasny-bootstrap.js') }}"></script>
+{% endblock custom_script_links %}
