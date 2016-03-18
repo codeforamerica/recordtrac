@@ -45,11 +45,11 @@
     </div>
 {% endblock request_dates %}
 {% if req.solid_status() == 'closed' %}
-{% elif req.solid_status() in ['in_progress', 'overdue'] %}
-    <div class="text-center"> Response Due Date: <span class="label"> {{ req.due_date.strftime('%Y-%m-%d') }}</span>
+{% elif req.prev_status == None %}
+    <div class="text-center">Acknowledgement Due: <span class="label">{{ req.due_date.strftime('%Y-%m-%d') }}</span>
     </div>
 {% else %}
-    <div class="text-center">Acknowledgement Due: <span class="label">{{ req.due_date.strftime('%Y-%m-%d') }}</span>
+    <div class="text-center">Response Due Date: <span class="label"> {{ req.due_date.strftime('%Y-%m-%d') }}</span>
     </div>
     <div class="span12"><br/></div>
 {% endif %}
