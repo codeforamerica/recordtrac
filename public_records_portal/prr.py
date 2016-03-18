@@ -1222,11 +1222,11 @@ def close_request(
     #     notification_content['explanations'].append(explain_action(reason, explanation_type='What'))
     notification_content['user_id'] = user_id
     create_note(request_id, reasons, user_id, privacy=1)
-    if "Your request under the Freedom of Information Law (FOIL) has been reviewed and the documents you requested have " \
-       "been posted on the OpenRecords portal." in notification_content['reasons']:
+    if "Your request under the Freedom of Information Law (FOIL) has been reviewed and fulfilled " \
+        in notification_content['reasons']:
         notification_type = "closed_fulfilled_in_whole"
-    elif "Your request under the Freedom of Information Law (FOIL) has been reviewed and is granted in part and denied " \
-         "in part because some of the records or portions of records are disclosable and others are exempt form " \
+    elif "Your request under the Freedom of Information Law (FOIL) has been reviewed and fulfilled " \
+         "in part because some of the records or portions of records are disclosable and others are exempt from " \
          "disclosure under FOIL." in notification_content['reasons']:
         notification_type = "closed_fulfilled_in_part"
     elif "Your request under the Freedom of Information Law (FOIL) has been fulfilled and the documents you requested " \
