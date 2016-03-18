@@ -127,7 +127,3 @@ html, body {
 	height: 5em; /* .push must be the same height as .footer */
 	margin-bottom: 0px; /* custom: added to fix the Bootstrap well margins */
 }
-
-
-
-

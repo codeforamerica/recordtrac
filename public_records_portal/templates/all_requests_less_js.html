@@ -221,7 +221,7 @@
                             </td>
                             <td>{{ request.id }}</td>
                             <td class="hide-mobile">{{ request.date_received }}</td>
-                            <td style="word-break: break-all">
+                            <td style="word-break: break-word">
                                 {% if current_user.is_authenticated %}
                                     <a href="/city/request/{{ request.id }}">
                                     {% set text = request.summary %}
