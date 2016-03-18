@@ -195,7 +195,9 @@
                                     </button>
                                 </th>
                                 <th>Assigned Agency</th>
+                                {% if current_user.is_authenticated %}
                                 <th class="hide-mobile">Point of Contact</th>
+                                {% endif %}
                                 <th>
                                     <button class="btn btn-link sortable" type="submit"
                                             onclick="return insertInput('due_date');">Due
@@ -245,7 +247,9 @@
                                 </a>
                             </td>
                             <td>{{ request.department }}</td>
+                            {% if current_user.is_authenticated %}
                             <td class="hide-mobile">{{ request.contact_name }}</td>
+                            {% endif %}
                             <td >{{ request.due_date }}</td>
                             {% if current_user.is_authenticated %}
                                 <td class="hide-mobile">{{ request.requester }}</td>
