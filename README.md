@@ -39,7 +39,7 @@ RecordTrac is compatible with most modern browsers, including Internet Explorer 
 
 ###Service dependencies
 * [SendGrid](http://sendgrid.com/) is used for all email notifications about requests.
-* [Askimet](http://akismet.com/) is used as a spam filter.
+* [Akismet](http://akismet.com/) is used as a spam filter.
 * [Captcha](http://www.captcha.net/) is used to allow requesters to override the spam filter if necessary.
 * [Mozilla Persona](https://login.persona.org/) is used to manage user authentication and password management.
 
