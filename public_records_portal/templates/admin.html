@@ -4,8 +4,8 @@
     {{ super() }}
     <ul class="nav pull-right">
       <li>
-        <a href="/export" data-toggle="tooltip" data-placement="bottom" title="Right click and save file&hellip;">
-            <i class="icon-download"></i> Export Records</a>
+        <a href="/export" data-toggle="tooltip" data-placement="bottom" title="{% trans %}Right click and save file{% endtrans %}&hellip;">
+            <i class="icon-download"></i> {% trans %}Export Records{% endtrans %}</a>
       </li>
     </ul>
 {% endblock %}
@@ -13,39 +13,38 @@
 {% block body %}
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/admin.css') }}">
 
-    <h3>Administrative Controls</h3>
+    <h3>{% trans %}Administrative Controls{% endtrans %}</h3>
     <p class="intro_text">
-        RecordTrac’s administrative controls allows users to permanently delete or records, requests, and notes from the database. Because of this, administrative access is restricted to a small number of users.
+        {% trans %}RecordTrac’s administrative controls allow users to permanently delete records, requests, and notes from the database. Because of this, administrative access is restricted to a small number of users.{% endtrans %}
     </p>
 
-    <h5>Manage content</h5>
-	    <p class="manage-hotlinks"><a href="/admin/requestview/">Edit or remove a request</a></p>
-	    <p class="manage-hotlinks"><a href="/admin/recordview/">Remove a record</a></p>
-        <p class="manage-hotlinks"><a href="/admin/noteview/">Edit or remove a note</a></p>
-        <p class="manage-hotlinks"><a href="/admin/qaview/">Edit or remove questions and answers</a></p>
+    <h5>{% trans %}Manage content{% endtrans %}</h5>
+	    <p class="manage-hotlinks"><a href="/admin/requestview/">{% trans %}Edit or remove a request{% endtrans %}</a></p>
+	    <p class="manage-hotlinks"><a href="/admin/recordview/">{% trans %}Remove a record{% endtrans %}</a></p>
+        <p class="manage-hotlinks"><a href="/admin/noteview/">{% trans %}Edit or remove a note{% endtrans %}</a></p>
+        <p class="manage-hotlinks"><a href="/admin/qaview/">{% trans %}Edit or remove questions and answers{% endtrans %}</a></p>
 
-    <h5>Best Practices to Consider</h5>
-        <p>Content  should only be removed or edited if sensitive or confidential information is revealed. If this happens, you should:
+    <h5>{% trans %}Best Practices to Consider{% endtrans %}</h5>
+        <p>{% trans %}Content should only be removed or edited if sensitive or confidential information is revealed. If this happens, you should:{% endtrans %}
         <ul>
-        <li>Save a copy of the original message. (This will have to be done outside of RecordTrac. There is no way to hide a message from public view.)</li>
-        <li>Edit the message to indicate why it needs to be removed.</li>
-        <li>Notify the requester why their post or answer was removed.</li>
-        <li>Provide guidance to the requester on how they can get the record they need.</li>
+        <li>{% trans %}Save a copy of the original message. (This will have to be done outside of RecordTrac. There is no way to hide a message from public view.){% endtrans %}</li>
+        <li>{% trans %}Edit the message to indicate why it needs to be removed.{% endtrans %}</li>
+        <li>{% trans %}Notify the requester why their post or answer was removed.{% endtrans %}</li>
+        <li>{% trans %}Provide guidance to the requester on how they can get the record they need.{% endtrans %}</li>
         </ul>
         </p>
 
-        <p>If a city staff member enters information incorrectly, simply add a note explaining the mistake.</p>
+        <p>{% trans %}If a city staff member enters information incorrectly, simply add a note explaining the mistake.{% endtrans %}</p>
 
-        <p>If a member of the public enters incorrect information,  the requester (or a city staff member) can add a note correcting  the mistake.</p>
+        <p>{% trans %}If a member of the public enters incorrect information, the requester (or a city staff member) can add a note correcting the mistake.{% endtrans %}</p>
 
-        <p>Sometimes it’s necessary to create a new request. If a new request must be created, we suggest you do the following:
+        <p>{% trans %}Sometimes it’s necessary to create a new request. If a new request must be created, we suggest you do the following:{% endtrans %}
         <ul>
-        <li>Create a new request with the proper information.</li>
-        <li>In the old request, include a note explaining what is wrong with it and a link to the new request.</li>
-        <li>Close out the old request.</li>
-        <li>In the new request, reference and/or provide a link to the old request.</li>
+        <li>{% trans %}Create a new request with the proper information.{% endtrans %}</li>
+        <li>{% trans %}In the old request, include a note explaining what is wrong with it and a link to the new request.{% endtrans %}</li>
+        <li>{% trans %}Close out the old request.{% endtrans %}</li>
+        <li>{% trans %}In the new request, reference and/or provide a link to the old request.{% endtrans %}</li>
         </ul>
         </p>
-        <p>Although RecordTrac has a spam filter, every once in a while it may receive spam. When confronted with spam, close the request with a note indicating why it is not a public records request.  If there is a large amount of spam requests, it is appropriate to simply remove the spam.</p>
-
+        <p>{% trans %}Although RecordTrac has a spam filter, it may receive spam. When confronted with spam, close the request with a note indicating why it is not a public records request.{% endtrans %}</p>
 {% endblock %}

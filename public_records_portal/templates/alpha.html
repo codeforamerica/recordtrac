@@ -7,11 +7,11 @@
 			{{ super() }}
 		{% endblock banner %}
 		<div class="span8 offset1 intro_text">
-			<p>You have entered the public records request portal for the {{config['AGENCY_NAME']}}.  This view requires authorized access.</p>
-			
-			<p>If you are on {{config['AGENCY_NAME']}} staff, please login above to view and respond to the request.</p>
+			<p>{% trans agency_name=config['AGENCY_NAME'] %}You have entered the public records request portal for the {{agency_name}}.  This view requires authorized access.{% endtrans %}</p>
 
-			<p>If you are not a {{config['AGENCY_NAME']}} employee, you can still <a href="/landing">view requests here</a>.</p>
+			<p>{% trans agency_name=config['AGENCY_NAME'] %}If you are on {{agency_name}} staff, please login above to view and respond to the request.{% endtrans %}</p>
+
+			<p>{% trans agency_name=config['AGENCY_NAME'] %}If you are not a {{agency_name]}} employee, you can <a href="/landing">view public requests here</a>.{% endtrans %}</p>
 		</div>
 	</div>
 </div>

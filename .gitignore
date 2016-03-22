@@ -4,6 +4,8 @@ websiteconfig.py
 settings.env
 notes/
 .DS_Store
+public_records_portal/messages.po
+public_records_portal/messages.csv
 # @waltz's emacs gitignore partee pak
 *~
 .#*

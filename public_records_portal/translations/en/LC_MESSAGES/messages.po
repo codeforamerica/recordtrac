@@ -1,0 +1,1048 @@
+# English translations for RecordTrac.
+# This file is distributed under the same license as the RecordTrac project.
+#
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2015-12-15 15:23+0545\n"
+"PO-Revision-Date: 2015-12-11 11:52+0545\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.2.0\n"
+
+#: RequestPresenter.py:25 RequestPresenter.py:26 RequestPresenter.py:27
+#: RequestPresenter.py:28 templates/_history.html:24
+msgid "N/A"
+msgstr ""
+
+#: RequestPresenter.py:53 RequestPresenter.py:70
+#: templates/all_requests.html:201 templates/all_requests_less_js.html:175
+msgid "Requester"
+msgstr ""
+
+#: RequestPresenter.py:56
+msgid "No response from requester"
+msgstr ""
+
+#: RequestPresenter.py:62
+msgid "Can you respond to the above question?"
+msgstr ""
+
+#: RequestPresenter.py:63
+msgid "Respond"
+msgstr ""
+
+#: RequestPresenter.py:67
+msgid "Requester hasn't answered yet."
+msgstr ""
+
+#: helpers.py:32
+#, python-format
+msgid "\\%s hours ago"
+msgstr ""
+
+#: helpers.py:34
+#, python-format
+msgid "\\%s minutes ago"
+msgstr ""
+
+#: helpers.py:36
+#, python-format
+msgid "\\%s seconds ago"
+msgstr ""
+
+#: helpers.py:38
+msgid "Just now."
+msgstr ""
+
+#: helpers.py:40
+msgid "A day ago"
+msgstr ""
+
+#: helpers.py:44
+#, python-format
+msgid "\\%s days ago"
+msgstr ""
+
+#: helpers.py:46
+msgid "A week ago"
+msgstr ""
+
+#: helpers.py:48
+#, python-format
+msgid "\\%s weeks ago"
+msgstr ""
+
+#: helpers.py:82
+msgid "en"
+msgstr ""
+
+#: views.py:66
+msgid ""
+"That e-mail/password didn't work. You can always <a "
+"href='/reset_password'>reset your password</a>."
+msgstr ""
+
+#: views.py:68
+msgid "Something went wrong."
+msgstr ""
+
+#: views.py:72
+msgid ""
+"You are already logged in. If you wish to log in as another user, first "
+"log out by clicking your name in the upper-right corner of this page and "
+"clicking Logout."
+msgstr ""
+
+#: views.py:74
+#, python-format
+msgid ""
+"If you work for the %s and are trying to log into RecordTrac, please log "
+"in by clicking City login in the upper-right corner of this page."
+msgstr ""
+
+#: views.py:85
+msgid "Your temporary password"
+msgstr ""
+
+#: views.py:114
+msgid "You cannot submit an empty request."
+msgstr ""
+
+#: views.py:139
+msgid "Please use the datepicker to select a date."
+msgstr ""
+
+#: views.py:141
+msgid "Please choose a request receipt date that is no later than today."
+msgstr ""
+
+#: views.py:152
+msgid "Your request might be spam."
+msgstr ""
+
+#: views.py:154
+#, python-format
+msgid "Your request is the same as /request/%s"
+msgstr ""
+
+#: views.py:224 views.py:256
+#, python-format
+msgid "A request with ID %s does not exist."
+msgstr ""
+
+#: views.py:250
+msgid ""
+"Unfollowing this request was unsuccessful. You probably weren't following"
+" it."
+msgstr ""
+
+#: templates/404.html:18
+msgid "Page Not Found"
+msgstr ""
+
+#: templates/404.html:19
+msgid "homepage"
+msgstr ""
+
+#: templates/_add_person.html:1
+msgid "Notify"
+msgstr ""
+
+#: templates/_add_person.html:8 templates/_reroute.html:8
+#: templates/case.html:204 templates/missing_email.html:17
+#: templates/new_request.html:56 templates/offline_request.html:77
+#: templates/reset_password.html:24
+msgid "email@example.com"
+msgstr "name@email.com"
+
+#: templates/_add_person.html:9 templates/_reroute.html:9
+msgid "reason"
+msgstr ""
+
+#: templates/_ask_question.html:9
+msgid "Ask a Question"
+msgstr ""
+
+#: templates/_ask_question.html:23
+msgid "Question"
+msgstr ""
+
+#: templates/_ask_question.html:25
+msgid "Ask the requester a question"
+msgstr ""
+
+#: templates/_ask_question.html:31
+msgid "Ask"
+msgstr ""
+
+#: templates/_history.html:3
+msgid "Request's History"
+msgstr ""
+
+#: templates/_history.html:5
+msgid "History of request"
+msgstr ""
+
+#: templates/_history.html:10
+msgid "Name"
+msgstr ""
+
+#: templates/_history.html:12
+msgid "Date"
+msgstr ""
+
+#: templates/_history.html:13 templates/_response_widget.html:86
+msgid "Note"
+msgstr ""
+
+#: templates/_history.html:31
+msgid "Unassigned"
+msgstr ""
+
+#: templates/_manage_requests_status.html:5
+msgid "closed"
+msgstr ""
+
+#: templates/_manage_requests_status.html:7
+msgid "open"
+msgstr ""
+
+#: templates/_manage_requests_status.html:16
+msgid "Reopen request"
+msgstr ""
+
+#: templates/_public_note.html:10 templates/_public_note.html:25
+msgid "Add a Note"
+msgstr ""
+
+#: templates/_public_note.html:27
+msgid ""
+"Use this field to note anything else the government should know about "
+"your request."
+msgstr ""
+
+#: templates/_public_note.html:28 templates/_response_widget.html:93
+msgid "Add note"
+msgstr ""
+
+#: templates/_reroute.html:1
+msgid "Reassign to:"
+msgstr ""
+
+#: templates/_response_widget.html:10
+msgid "Add Record"
+msgstr ""
+
+#: templates/_response_widget.html:14
+msgid "Add Note"
+msgstr ""
+
+#: templates/_response_widget.html:21
+msgid "Extend Request"
+msgstr ""
+
+#: templates/_response_widget.html:27
+msgid "Close Request"
+msgstr ""
+
+#: templates/_response_widget.html:44
+msgid "Name of record"
+msgstr ""
+
+#: templates/_response_widget.html:46
+msgid "Add a short explanation of the record"
+msgstr ""
+
+#: templates/_response_widget.html:50
+msgid "Provide a link to a record"
+msgstr ""
+
+#: templates/_response_widget.html:59
+msgid "Or indicate how the record can be accessed offline"
+msgstr ""
+
+#: templates/_response_widget.html:59
+msgid "Describe hard copies"
+msgstr ""
+
+#: templates/_response_widget.html:62
+msgid ""
+"How can the requester get this record?  Ex. 'Sent via mail on a CD', "
+"'Print out awaiting requester at City Clerk desk'"
+msgstr ""
+
+#: templates/_response_widget.html:68
+msgid "Add record"
+msgstr ""
+
+#: templates/_response_widget.html:88
+msgid "Anything else the requester should know."
+msgstr ""
+
+#: templates/_response_widget.html:113 templates/_response_widget.html:163
+msgid "Reason"
+msgstr ""
+
+#: templates/_response_widget.html:116
+msgid "Large amount"
+msgstr ""
+
+#: templates/_response_widget.html:117
+msgid "Separate facility"
+msgstr ""
+
+#: templates/_response_widget.html:118
+msgid "Another agency"
+msgstr ""
+
+#: templates/_response_widget.html:119
+msgid "Data extraction"
+msgstr ""
+
+#: templates/_response_widget.html:127
+msgid "Extend request"
+msgstr ""
+
+#: templates/_response_widget.html:133
+msgid "Reason for extension"
+msgstr ""
+
+#: templates/_response_widget.html:140 templates/_response_widget.html:198
+msgid "Cancel"
+msgstr ""
+
+#: templates/_response_widget.html:141
+msgid "Extend this request"
+msgstr ""
+
+#: templates/_response_widget.html:166
+msgid "Fulfilled"
+msgstr ""
+
+#: templates/_response_widget.html:167
+msgid "Fulfilled - Private Documents Not Uploaded"
+msgstr ""
+
+#: templates/_response_widget.html:168
+msgid "Fulfilled - Information Redacted"
+msgstr ""
+
+#: templates/_response_widget.html:169
+msgid "Fulfilled - Identity of Citizens Making Complaints Removed"
+msgstr ""
+
+#: templates/_response_widget.html:170
+msgid "Not a public records request"
+msgstr ""
+
+#: templates/_response_widget.html:171
+msgid "Do not have this record"
+msgstr ""
+
+#: templates/_response_widget.html:172
+msgid "Can Not Release - Personal Records"
+msgstr ""
+
+#: templates/_response_widget.html:173
+msgid "Can Not Release - Ongoing Litigation"
+msgstr ""
+
+#: templates/_response_widget.html:174
+msgid "Can Not Release - Investigative Records"
+msgstr ""
+
+#: templates/_response_widget.html:175
+msgid "Can Not Release - Attorney-Client Privilege"
+msgstr ""
+
+#: templates/_response_widget.html:176
+msgid "Unable to contact the requester"
+msgstr ""
+
+#: templates/_response_widget.html:177
+msgid "Contact Another Government Agency"
+msgstr ""
+
+#: templates/_response_widget.html:178
+msgid "Requester Not Interested"
+msgstr ""
+
+#: templates/_response_widget.html:185
+msgid "Close request"
+msgstr ""
+
+#: templates/_response_widget.html:191
+msgid "Reason for closing request"
+msgstr ""
+
+#: templates/_response_widget.html:199
+msgid "Close this request"
+msgstr ""
+
+#: templates/_staff_participants.html:8
+msgid "remove"
+msgstr ""
+
+#: templates/_staff_participants.html:10
+msgid "Remove helper:"
+msgstr ""
+
+#: templates/_staff_participants.html:18
+msgid "Task completed"
+msgstr ""
+
+#: templates/actions.html:2
+msgid "Actions"
+msgstr ""
+
+#: templates/actions.html:5
+msgid "These are the actions you can take on this site. They may change."
+msgstr ""
+
+#: templates/all_requests.html:4 templates/all_requests_less_js.html:4
+#: templates/base.html:61 templates/landing.html:4 templates/landing.html:16
+msgid "RecordTrac"
+msgstr "RecordTrac"
+
+#: templates/all_requests.html:34 templates/all_requests_less_js.html:34
+#, python-format
+msgid ""
+"Explore <span class=\"badge\">%(total_requests_count)s</span> requests "
+"and counting"
+msgstr ""
+
+#: templates/all_requests.html:42 templates/all_requests_less_js.html:42
+msgid "RecordTrac makes every public records request available to the public."
+msgstr ""
+
+#: templates/all_requests.html:45 templates/all_requests_less_js.html:35
+msgid "Request new record"
+msgstr ""
+
+#: templates/all_requests.html:55
+msgid "SEARCH"
+msgstr ""
+
+#: templates/all_requests.html:56 templates/all_requests.html:196
+#: templates/all_requests_less_js.html:167 templates/case.html:4
+#: templates/response.html:4
+msgid "Request"
+msgstr ""
+
+#: templates/all_requests.html:58 templates/all_requests_less_js.html:52
+msgid "I'd like to find..."
+msgstr ""
+
+#: templates/all_requests.html:65 templates/all_requests_less_js.html:122
+msgid "Requester name"
+msgstr ""
+
+#: templates/all_requests.html:67
+msgid "Enter name"
+msgstr ""
+
+#: templates/all_requests.html:74
+msgid "ADVANCED FILTER"
+msgstr ""
+
+#: templates/all_requests.html:76
+msgid "My Requests"
+msgstr ""
+
+#: templates/all_requests.html:85 templates/all_requests_less_js.html:63
+msgid "is the Point of Contact"
+msgstr ""
+
+#: templates/all_requests.html:94 templates/all_requests_less_js.html:67
+msgid "is a Helper"
+msgstr ""
+
+#: templates/all_requests.html:99 templates/all_requests_less_js.html:74
+msgid "Status"
+msgstr ""
+
+#: templates/all_requests.html:107 templates/all_requests_less_js.html:78
+msgid "Open"
+msgstr ""
+
+#: templates/all_requests.html:116 templates/all_requests_less_js.html:83
+msgid "Due Soon"
+msgstr ""
+
+#: templates/all_requests.html:124 templates/all_requests_less_js.html:87
+msgid "Overdue"
+msgstr ""
+
+#: templates/all_requests.html:133 templates/all_requests_less_js.html:92
+msgid "Closed"
+msgstr ""
+
+#: templates/all_requests.html:138
+msgid "Request Date"
+msgstr ""
+
+#: templates/all_requests.html:146
+msgid "All Dates"
+msgstr ""
+
+#: templates/all_requests.html:162 templates/all_requests.html:197
+#: templates/all_requests_less_js.html:128
+#: templates/all_requests_less_js.html:169
+msgid "Department"
+msgstr ""
+
+#: templates/all_requests.html:165
+msgid "All departments"
+msgstr ""
+
+#: templates/all_requests.html:181 templates/all_requests_less_js.html:147
+msgid "Export data"
+msgstr ""
+
+#: templates/all_requests.html:195 templates/all_requests_less_js.html:164
+msgid "Received"
+msgstr ""
+
+#: templates/all_requests.html:198 templates/all_requests_less_js.html:170
+#: templates/case.html:172 templates/manage_request_city.html:67
+msgid "Point of Contact"
+msgstr ""
+
+#: templates/all_requests.html:200 templates/all_requests_less_js.html:173
+msgid "Due"
+msgstr ""
+
+#: templates/all_requests.html:230 templates/all_requests_less_js.html:198
+msgid "due soon"
+msgstr ""
+
+#: templates/all_requests.html:232 templates/all_requests_less_js.html:200
+msgid "overdue"
+msgstr ""
+
+#: templates/all_requests.html:247
+msgid "No matching records found"
+msgstr ""
+
+#: templates/all_requests.html:255
+msgid ""
+"Showing <%- start_index %> to <%- end_index %> of <%- num_results %> "
+"entries"
+msgstr ""
+
+#: templates/all_requests.html:262 templates/all_requests_less_js.html:220
+msgid "Previous"
+msgstr ""
+
+#: templates/all_requests.html:267 templates/all_requests_less_js.html:226
+msgid "Next"
+msgstr ""
+
+#: templates/all_requests_less_js.html:50
+msgid "Search request text"
+msgstr ""
+
+#: templates/all_requests_less_js.html:59
+msgid "My requests"
+msgstr ""
+
+#: templates/all_requests_less_js.html:98 templates/offline_request.html:55
+msgid "Date received"
+msgstr ""
+
+#: templates/all_requests_less_js.html:111
+msgid "Due date"
+msgstr ""
+
+#: templates/all_requests_less_js.html:141
+msgid "Find"
+msgstr ""
+
+#: templates/all_requests_less_js.html:223
+#, python-format
+msgid "Showing %(start_index)s to %(end_index)s of %(num_results)s entries"
+msgstr ""
+
+#: templates/base.html:66 templates/base.html:78
+msgid "New request"
+msgstr ""
+
+#: templates/base.html:67
+msgid "All requests"
+msgstr ""
+
+#: templates/base.html:68 templates/base.html:80 templates/track.html:4
+msgid "Track"
+msgstr ""
+
+#: templates/base.html:71 templates/base.html:81
+msgid "About"
+msgstr ""
+
+#: templates/base.html:74
+msgid "Logout"
+msgstr ""
+
+#: templates/base.html:79
+msgid "Explore requests"
+msgstr ""
+
+#: templates/base.html:84
+msgid "Login"
+msgstr ""
+
+#: templates/base.html:125
+msgid "Feedback"
+msgstr ""
+
+#: templates/base.html:133
+msgid "Loading..."
+msgstr ""
+
+#: templates/case.html:60 templates/closed.html:5
+#: templates/manage_request_city.html:4
+#: templates/manage_request_follower.html:4 templates/manage_request_new.html:4
+#: templates/manage_request_unfollow.html:4 templates/response.html:10
+msgid "Request ID:"
+msgstr ""
+
+#: templates/case.html:69
+#, python-format
+msgid "This request was submitted on behalf of the requester by %(submitter)s."
+msgstr ""
+
+#: templates/case.html:103
+msgid "See all information"
+msgstr ""
+
+#: templates/case.html:114 templates/response.html:19
+msgid "Response"
+msgstr ""
+
+#: templates/case.html:155
+msgid "Requester did not provide an e-mail address."
+msgstr ""
+
+#: templates/case.html:155
+msgid ""
+"If a clarification is needed and no alternate contact has been provided, "
+"it may not be possible to respond to your request."
+msgstr ""
+
+#: templates/case.html:157 templates/response.html:40
+msgid "No records uploaded yet."
+msgstr ""
+
+#: templates/case.html:176 templates/manage_request_city.html:78
+msgid "Helpers"
+msgstr ""
+
+#: templates/case.html:193
+msgid "Date received:"
+msgstr ""
+
+#: templates/case.html:205
+msgid "Follow"
+msgstr ""
+
+#: templates/case.html:207
+msgid "Enter your email here and we will send you updates for this request."
+msgstr ""
+
+#: templates/error.html:6
+msgid "A technical error occurred."
+msgstr ""
+
+#: templates/generic_email.html:11
+msgid "You can view the request and take any necessary action at this website:"
+msgstr ""
+
+#: templates/generic_email.html:17
+#, python-format
+msgid ""
+"You can always <a href='%(unfollow_link)s'>unfollow this request</a> if "
+"you don't want to receive more emails about it."
+msgstr ""
+
+#: templates/help_with_uploads.html:8
+msgid ""
+"If you are trying to upload emails from Outlook, we recommend saving it "
+"as a .txt file and uploading that."
+msgstr ""
+
+#: templates/help_with_uploads.html:10
+msgid "Supported file types are:"
+msgstr ""
+
+#: templates/landing.html:17
+msgid "tagline"
+msgstr ""
+
+#: templates/landing.html:24
+#, python-format
+msgid ""
+"Use RecordTrac to tell the %(agency_name)s the type of documents you "
+"need. We display every message or record uploaded. You may find what "
+"you're looking for without having to submit a new request."
+msgstr ""
+
+#: templates/landing.html:33
+msgid "EXPLORE"
+msgstr "EXPLORE"
+
+#: templates/landing.html:35
+#, python-format
+msgid ""
+"View <span id=\"request-count\" class=\"badge badge-"
+"info\">%(counter)s</span> past requests and counting."
+msgstr ""
+
+#: templates/landing.html:44
+msgid "REQUEST"
+msgstr "REQUEST"
+
+#: templates/landing.html:45
+msgid "Create a new public records request."
+msgstr ""
+
+#: templates/landing.html:53
+msgid "TRACK"
+msgstr "TRACK"
+
+#: templates/landing.html:54
+msgid "Get updates as we process your request."
+msgstr ""
+
+#: templates/manage_request_city.html:30
+msgid "Requester's e-mail has not been provided."
+msgstr ""
+
+#: templates/manage_request_city.html:35
+msgid "Requester's name:"
+msgstr ""
+
+#: templates/manage_request_city.html:35
+msgid "Not provided"
+msgstr ""
+
+#: templates/manage_request_city.html:36
+msgid "Requester's phone number:"
+msgstr ""
+
+#: templates/manage_request_follower.html:15
+msgid "You are now subscribed!"
+msgstr ""
+
+#: templates/manage_request_follower.html:15
+#: templates/manage_request_new.html:37
+msgid "You will be contacted via e-mail with any updates."
+msgstr ""
+
+#: templates/manage_request_new.html:25
+msgid "The request has been submitted!"
+msgstr ""
+
+#: templates/manage_request_new.html:28
+#, python-format
+msgid ""
+"The requester has been notified via email that they can expect to hear a "
+"response from the %(agency_name)s in the next 10 days. Requester will be "
+"automatically contacted with any updates."
+msgstr ""
+
+#: templates/manage_request_new.html:30
+msgid ""
+"Because the requester did not provide an email address, the agency is "
+"responsible for communicating updates to the requester in the format "
+"received."
+msgstr ""
+
+#: templates/manage_request_new.html:34
+msgid "Your request has been submitted!"
+msgstr ""
+
+#: templates/manage_request_new.html:35
+#, python-format
+msgid "You can expect a response from the %(agency_name)s in the next 10 days."
+msgstr ""
+
+#: templates/manage_request_new.html:39
+msgid ""
+"You did not provide an e-mail address, so you should visit this page for "
+"updates."
+msgstr ""
+
+#: templates/manage_request_new.html:42
+#, python-format
+msgid ""
+"All messages from the %(agency_name)s and/or the information and "
+"documents you requested will be posted to this page."
+msgstr ""
+
+#: templates/manage_request_new.html:43
+#, python-format
+msgid "You can access <a href =\"%(page_link)s\">this page</a> at any time."
+msgstr ""
+
+#: templates/manage_request_unfollow.html:15
+msgid "You have unsubscribed from this request."
+msgstr ""
+
+#: templates/manage_request_unfollow.html:16
+msgid "You will not receive any new email updates for this request."
+msgstr ""
+
+#: templates/manage_request_unfollow.html:17
+msgid ""
+"If you would like to start receiving updates again, enter your email "
+"address and click the Follow button on the right side of this request "
+"page."
+msgstr ""
+
+#: templates/missing_email.html:6
+msgid "The email address is missing."
+msgstr ""
+
+#: templates/missing_email.html:7
+msgid ""
+"Enter an email if you have one.  We need it to let you know when your "
+"record is ready."
+msgstr ""
+
+#: templates/missing_email.html:19 templates/new_request.html:73
+#: templates/recaptcha_answer.html:34 templates/recaptcha_note.html:33
+#: templates/recaptcha_request.html:36
+msgid "Submit my request"
+msgstr ""
+
+#: templates/new_request.html:6 templates/offline_request.html:6
+msgid "Public records"
+msgstr ""
+
+#: templates/new_request.html:22
+msgid "Request a new record"
+msgstr ""
+
+#: templates/new_request.html:23
+#, python-format
+msgid ""
+"Use RecordTrac to request copies of specific documents, photos, emails, "
+"texts, audio recordings, electronic information and data from "
+"%(agency_name)s."
+msgstr ""
+
+#: templates/new_request.html:28
+msgid "What are you trying to find?"
+msgstr ""
+
+#: templates/new_request.html:31 templates/offline_request.html:33
+msgid "Everything in this request box will be displayed publicly."
+msgstr ""
+
+#: templates/new_request.html:33 templates/offline_request.html:35
+msgid "Describe your request. Be as specific as possible."
+msgstr ""
+
+#: templates/new_request.html:34
+msgid "Enter records request"
+msgstr ""
+
+#: templates/new_request.html:41 templates/offline_request.html:62
+msgid "Select a department"
+msgstr ""
+
+#: templates/new_request.html:41 templates/new_request.html:59
+#: templates/new_request.html:64 templates/offline_request.html:62
+#: templates/offline_request.html:80 templates/offline_request.html:85
+msgid "(optional)"
+msgstr ""
+
+#: templates/new_request.html:52
+msgid "Your contact information"
+msgstr ""
+
+#: templates/new_request.html:54
+msgid "Your email"
+msgstr ""
+
+#: templates/new_request.html:59
+msgid "Your name"
+msgstr ""
+
+#: templates/new_request.html:61
+msgid "Your Name"
+msgstr ""
+
+#: templates/new_request.html:64
+msgid "Your phone number"
+msgstr ""
+
+#: templates/new_request.html:66 templates/offline_request.html:87
+msgid "(510) 555-1234"
+msgstr ""
+
+#: templates/new_request.html:87 templates/offline_request.html:108
+msgid "Example"
+msgstr ""
+
+#: templates/new_request.html:91 templates/offline_request.html:111
+msgid "Tips"
+msgstr ""
+
+#: templates/offline_request.html:24
+msgid "Create a New Request"
+msgstr ""
+
+#: templates/offline_request.html:25
+msgid "Enter request details"
+msgstr ""
+
+#: templates/offline_request.html:27
+msgid ""
+"Use this page to request public records that you received by phone, fax, "
+"mail, email, or in person on behalf of that resident."
+msgstr ""
+
+#: templates/offline_request.html:42
+msgid "Receipt information"
+msgstr ""
+
+#: templates/offline_request.html:44
+msgid "Format received"
+msgstr ""
+
+#: templates/offline_request.html:47
+msgid "Fax"
+msgstr ""
+
+#: templates/offline_request.html:48
+msgid "Phone"
+msgstr ""
+
+#: templates/offline_request.html:49
+msgid "Email"
+msgstr ""
+
+#: templates/offline_request.html:50
+msgid "Mail"
+msgstr ""
+
+#: templates/offline_request.html:51
+msgid "In-person"
+msgstr ""
+
+#: templates/offline_request.html:52
+msgid "Text message"
+msgstr ""
+
+#: templates/offline_request.html:73
+msgid "Requester's contact information"
+msgstr ""
+
+#: templates/offline_request.html:75
+msgid "Requester's email"
+msgstr ""
+
+#: templates/offline_request.html:80
+msgid "Requester's name"
+msgstr ""
+
+#: templates/offline_request.html:82
+msgid "Requester's Name"
+msgstr ""
+
+#: templates/offline_request.html:85
+msgid "Requester's phone number"
+msgstr ""
+
+#: templates/offline_request.html:94
+msgid "Submit request"
+msgstr ""
+
+#: templates/password_email.html:11 templates/reset_password.html:9
+msgid "Your password has been reset."
+msgstr ""
+
+#: templates/password_email.html:12
+msgid "To log in, use your agency's e-mail address and the temporary password:"
+msgstr ""
+
+#: templates/password_email.html:14
+msgid "Temporary password:"
+msgstr ""
+
+#: templates/password_email.html:16
+#, python-format
+msgid ""
+"After logging in with the temporary password, please <a href = "
+"'%(page)supdate_password'>update your password."
+msgstr ""
+
+#: templates/reset_password.html:10
+msgid "Please check your email for a temporary password."
+msgstr ""
+
+#: templates/reset_password.html:12
+msgid "There was an issue resetting your password."
+msgstr ""
+
+#: templates/reset_password.html:13
+msgid "Your email is not registered in the system."
+msgstr ""
+
+#: templates/reset_password.html:16
+msgid "Reset your password"
+msgstr ""
+
+#: templates/reset_password.html:17
+msgid "Type your email address in the field:"
+msgstr ""
+
+#: templates/reset_password.html:29
+msgid "Reset"
+msgstr ""
+
+#: templates/staff_card.html:14
+msgid "Department:"
+msgstr ""
+
+#: templates/staff_card.html:15
+msgid "Email:"
+msgstr ""
+
+#: templates/staff_card.html:16
+msgid "Phone:"
+msgstr ""
+
+#: templates/staff_card.html:18
+msgid "Staff ID does not exist."
+msgstr ""
+
+#: templates/track.html:16
+msgid "Track a request"
+msgstr ""
+
+#: templates/track.html:17
+msgid "Use the tracking tool to find a specific request."
+msgstr ""
+
+#: templates/track.html:18
+msgid ""
+"If you want to browse all existing requests, you can <a "
+"href=\"/view_requests\">explore here</a>."
+msgstr ""
+
+#: templates/track.html:23
+msgid "Enter your tracking number"
+msgstr ""
+
+#: templates/track.html:27
+msgid "12345"
+msgstr ""
+
+#: templates/track.html:34
+msgid "Find my request"
+msgstr ""

@@ -3,12 +3,12 @@
 	<div class="span10 offset1">
 
 		{% block error_generic %}
-			Oops, something went wrong...
+			{% trans %}Oops, something went wrong...{% endtrans %}
 		{% endblock error_generic %}
 
 		{% block error_specific %}
 			<p><strong>{{ message | safe }}</strong></p>
 		{% endblock error_specific %}
-		
+
 	</div>
 {% endblock container %}

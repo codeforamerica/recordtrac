@@ -1,6 +1,6 @@
 
 {% extends "case.html" %}
-{% block title %}Request {{ req.id }}{% endblock %}
+{% block title %}{% trans %}Request ID:{% endtrans %} {{ req.id }}{% endblock %}
 {% block custom_css_links %}
     <!-- used for the extension and close request multi-select boxes in city view -->
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/manage_request_city_less_js.css') }}">
@@ -13,23 +13,24 @@
 
 {% block requester_info %}
   <div>
-    {% set alias = "Not provided" %}
-    {% set phone = "Not provided" %}
+    {% set alias = _("Not provided") %}
+    {% set phone = _("Not provided") %}
     {% set requester = req.requester() %}
     {% if requester %}
-       {% set user = requester.user %}  
+       {% set user = requester.user %}
        {% set email = user.email %}
        {% set alias = user.alias %}
        {% set phone = user.phone %}
     {% endif %}
     {% if not email %}
       <span id="no_email">
-        <strong><i class="icon icon-exclamation-sign"></i> Requester's e-mail has not been provided.</strong>
+        <strong><i class="icon icon-exclamation-sign"></i> {% trans %}Requester's e-mail has not been provided.{% endtrans %}</strong>
       </span>
     <small>
     {% endif %}
       <span>
-        Requester's name: <span class="label">{{ alias or "Not provided" }}</span> and phone number: <span class="label"> {{ phone or "Not provided" }}</span>
+        {% trans %}Requester's name:{% endtrans %} <span class="label">{{ alias or _("Not provided") }}</span>
+        {% trans %}Requester's phone number:{% endtrans %} <span class="label"> {{ phone or _("Not provided") }}</span>
       </span>
     </small>
   </div>
@@ -44,31 +45,31 @@
   <form name="ask_question" id="question" class="form-inline" style="margin: 10px 0px 15px 0px;" method="post" action="/add_a_qa" autocomplete="on">
     <input type="hidden" name="request_id" value="{{ req.id }}"/>
     <fieldset>
-      <label>Ask a question <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
-      <textarea id="questionTextarea"  name="question_text" class="input-xlarge" placeholder="Ask the requester a question" required/></textarea> 
-      <button id="askQuestion" class="btn btn-primary" type="submit">Ask</button>
+      <label>{% trans %}Ask a question{% endtrans %} <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Ask a question" | explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+      <textarea id="questionTextarea"  name="question_text" class="input-xlarge" placeholder="{% trans %}Ask the requester a question{% endtrans %}" required/></textarea>
+      <button id="askQuestion" class="btn btn-primary" type="submit">{% trans %}Ask{% endtrans %}</button>
     </fieldset>
   </form>
 {% endblock clarify_request %}
 
 {% block response_actions_lessjs %}
-  <h3 style="margin-top:40px;">Response actions</h3>
+  <h3 style="margin-top:40px;">{% trans %}Response actions{% endtrans %}</h3>
   <!-- upload a record -->
   <form name="input_doc" style="margin-top: 2em;" class="form-horizontal" id="submitRecord" method="post" action="/add_a_record" autocomplete="on" enctype="multipart/form-data">
     <input type="hidden" name="request_id" value="{{ req.id }}"/>
     <fieldset>
-      <legend>Add a record</legend>
+      <legend>{% trans %}Add a record{% endtrans %}</legend>
       <div class="row-fluid">
         <!-- name of record -->
         <div class="control-group">
-          <label class="control-label" for="recordSummary">Name of record</label>
+          <label class="control-label" for="recordSummary">{% trans %}Name of record{% endtrans %}</label>
           <div class="controls">
-            <textarea class="input-xxlarge" name="record_description" type="text" id="recordSummary" placeholder="Add a short explanation of the record" required /></textarea>
+            <textarea class="input-xxlarge" name="record_description" type="text" id="recordSummary" placeholder="{% trans %}Add a short explanation of the record{% trans %}" required /></textarea>
           </div>
         </div>
         <!-- upload a record -->
         <div class="control-group">
-          <label class="control-label">Upload a record <span id="recordTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Upload a document" | explain_action}}" ><small><i class="icon-info-sign"></i></small></span></label>
+          <label class="control-label">{% trans %}Upload a record{% trans %} <span id="recordTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Upload a document" | explain_action}}" ><small><i class="icon-info-sign"></i></small></span></label>
           <div class="row-fluid">
             <div class="controls">
               <div class="fileupload fileupload-new" data-provides="fileupload">
@@ -78,11 +79,11 @@
                     <span class="fileupload-preview" />
                   </div> -->
                   <span class="btn btn-file">
-                    <span class="fileupload-new">Select file</span>
-                    <span class="fileupload-exists">Change</span>
+                    <span class="fileupload-new">{% trans %}Select file{% endtrans %}</span>
+                    <span class="fileupload-exists">{% trans %}Change file{% endtrans %}</span>
                     <input type="file" name="record" />
                   </span>
-                  <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                  <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">{% trans %}Remove{% endtrans %}</a>
                 </div>
               </div>
             </div>
@@ -90,7 +91,7 @@
         </div>
         <!-- link to a record -->
         <div class="control-group">
-          <label class="control-label">Or provide a link to a record <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a link" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></label>
+          <label class="control-label">{% trans %}Or provide a link to a record{% endtrans %} <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a link" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></label>
           <div class="row-fluid">
             <div class="controls">
               <input type="text" name="link_url" id="inputUrl" class="input-xxlarge"/>
@@ -100,17 +101,17 @@
         </div>
         <!-- offline record -->
         <div class="control-group button-margin">
-          <label class="control-label">Or indicate how the record can be accessed offline <span id="offlinedocTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Describe hard copies" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></label>
+          <label class="control-label">{% trans %}Or indicate how the record can be accessed offline{% endtrans %} <span id="offlinedocTooltip" rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Describe hard copies" | explain_action}}"><small><i class="icon-info-sign"></i></small></span></label>
           <div class="row-fluid">
             <div class="controls">
-              <textarea class="input-xxlarge" id="offlineDoc_textarea" name="record_access" placeholder="How can the requester get this record?  Ex. 'Sent via mail on a CD', 'Print out awaiting requester at City Clerk desk'" ></textarea>
+              <textarea class="input-xxlarge" id="offlineDoc_textarea" name="record_access" placeholder="{% trans %}How can the requester get this record?  Ex. 'Sent via mail on a CD', 'Print out awaiting requester at City Clerk desk'{% endtrans %}" ></textarea>
             </div>
           </div>
         </div>
         <!-- submission -->
         <div class="control-group">
           <div class="controls">
-            <button type="submit" class="btn btn-primary">Add record</button>
+            <button type="submit" class="btn btn-primary">{% trans %}Add record{% endtrans %}</button>
           </div>
         </div>
 
@@ -122,17 +123,17 @@
   <form name="note" class="form-horizontal" id="note" method="post" action="/add_a_note">
     <input type="hidden" name="request_id" value="{{ req.id }}"/>
     <fieldset>
-      <legend>Add a note</legend>
+      <legend>{% trans %}Add a note{% endtrans %}</legend>
       <div class="row-fluid">
         <div class="control-group">
-          <label class="control-label">Note <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+          <label class="control-label">{% trans %}Note{% endtrans %} <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Add a note"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
           <div class="controls">
-            <textarea type="text" class="input-xxlarge" id="noteTextarea" name="note_text"  placeholder="Anything else the requester should know."required/></textarea>
+            <textarea type="text" class="input-xxlarge" id="noteTextarea" name="note_text"  placeholder="{% trans %}Anything else the requester should know.{% endtrans %}" required/></textarea>
           </div>
         </div>
         <div class="control-group">
           <div class="controls">
-            <button type="submit" class="btn btn-primary">Add note</button>
+            <button type="submit" class="btn btn-primary">{% trans %}Add note{% endtrans %}</button>
           </div>
         </div>
       </div>
@@ -146,22 +147,22 @@
   <form name="extend_request" class="form-horizontal" id="extension" method="post" action="/add_a_extension">
     <input type="hidden" name="request_id" value="{{ req.id }}"/>
     <fieldset>
-      <legend>Extend request</legend>
+      <legend>{% trans %}Extend request{% endtrans %}</legend>
       <div class="row-fluid">
         <div class="control-group">
-          <label class="control-label">Reason <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Request an extension"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+          <label class="control-label">{% trans %}Reason{% trans %} <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Request an extension"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
           <div class="controls">
             <select id="extend_reason" name="extend_reason" multiple="multiple" multiple required data-selected-text-format="count" size="4">
-              <option value="{{"Extension - Large Amount" | explain_action("What")}}">Large amount</option>
-              <option value="{{"Extension - Separate Facility" | explain_action("What")}}">Separate facility</option>
-              <option value="{{"Extension - Another Agency" | explain_action("What")}}">Another agency</option>
-              <option value="{{"Extension - Data" | explain_action("What")}}">Data extraction</option>
+              <option value="{{"Extension - Large Amount" | explain_action("What")}}">{% trans %}Large amount{% endtrans %}</option>
+              <option value="{{"Extension - Separate Facility" | explain_action("What")}}">{% trans %}Separate facility{% endtrans %}</option>
+              <option value="{{"Extension - Another Agency" | explain_action("What")}}">{% trans %}Another agency{% endtrans %}</option>
+              <option value="{{"Extension - Data" | explain_action("What")}}">{% trans %}Data extraction{% endtrans %}</option>
             </select>
           </div>
         </div>
         <div class="control-group">
           <div class="controls">
-            <button id="extendButton" type="submit" class="btn btn-primary">Extend this request</button>
+            <button id="extendButton" type="submit" class="btn btn-primary">{% trans %}Extend this request{% endtrans %}</button>
 
           </div>
         </div>
@@ -175,31 +176,31 @@
   <form name="close" class="form-horizontal" id="closeRequest" method="post" action="/close">
     <input type="hidden" name="request_id" value="{{ req.id }}"/>
     <fieldset>
-      <legend>Close request</legend>
+      <legend>{% trans %}Close request{% endtrans %}</legend>
       <div class="row-fluid">
         <div class="control-group">
-          <label class="control-label">Reason <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
+          <label class="control-label">{% trans %}Reason{% endtrans %} <span rel="tooltip" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{"Close a request"| explain_action }}"><small><i class="icon-info-sign"></i></small></span></label>
           <div class="controls">
             <select id="close_reasons" name="close_reasons" multiple="multiple" size="5">
-              <option value="{{"Fulfilled" | explain_action("What")}}">Fulfilled</option>
-              <option value="{{"Fulfilled - Private Documents Not Uploaded" | explain_action("What")}}">Fulfilled - Private Documents Not Uploaded</option>
-              <option value="{{"Fulfilled - Information Redacted" | explain_action("What")}}">Fulfilled - Information Redacted</option>
-              <option value="{{"Fulfilled - Identity of Citizens Making Complaints Removed" | explain_action("What")}}">Fulfilled - Identity of Citizens Making Complaints Removed</option>
-              <option value="{{"Not a public records request" | explain_action("What")}}">Not a public records request</option>
-              <option value="{{"Record Does Not Exist" | explain_action("What")}}">Do not have this record</option>
-              <option value="{{"Can Not Release - Personal Records" | explain_action("What")}}">Can Not Release - Personal Records</option>
-              <option value="{{"Can Not Release - Ongoing Litigation" | explain_action("What")}}">Can Not Release - Ongoing Litigation</option>
-              <option value="{{"Can Not Release - Investigative Records" | explain_action("What")}}">Can Not Release - Investigative Records</option>
-              <option value="{{"Can Not Release - Attorney-Client Privilege" | explain_action("What")}}">Can Not Release - Attorney-Client Privilege</option>
-              <option value="{{"Unable to contact the requester" | explain_action("What")}}">Unable to contact the requester</option>
-              <option value="{{"Contact Another Government Agency" | explain_action("What")}}">Contact Another Government Agency</option>
-              <option value="{{"Requester Not Interested" | explain_action("What")}}">Requester Not Interested</option>
+              <option value="{{"Fulfilled" | explain_action("What")}}">{% trans %}Fulfilled{% endtrans %}</option>
+              <option value="{{"Fulfilled - Private Documents Not Uploaded" | explain_action("What")}}">{% trans %}Fulfilled - Private Documents Not Uploaded{% endtrans %}</option>
+              <option value="{{"Fulfilled - Information Redacted" | explain_action("What")}}">{% trans %}Fulfilled - Information Redacted{% endtrans %}</option>
+              <option value="{{"Fulfilled - Identity of Citizens Making Complaints Removed" | explain_action("What")}}">{% trans %}Fulfilled - Identity of Citizens Making Complaints Removed{% endtrans %}</option>
+              <option value="{{"Not a public records request" | explain_action("What")}}">{% trans %}Not a public records request{% endtrans %}</option>
+              <option value="{{"Record Does Not Exist" | explain_action("What")}}">{% trans %}Do not have this record{% endtrans %}</option>
+              <option value="{{"Can Not Release - Personal Records" | explain_action("What")}}">{% trans %}Can Not Release - Personal Records{% endtrans %}</option>
+              <option value="{{"Can Not Release - Ongoing Litigation" | explain_action("What")}}">{% trans %}Can Not Release - Ongoing Litigation{% endtrans %}</option>
+              <option value="{{"Can Not Release - Investigative Records" | explain_action("What")}}">{% trans %}Can Not Release - Investigative Records{% endtrans %}</option>
+              <option value="{{"Can Not Release - Attorney-Client Privilege" | explain_action("What")}}">{% trans %}Can Not Release - Attorney-Client Privilege{% endtrans %}</option>
+              <option value="{{"Unable to contact the requester" | explain_action("What")}}">{% trans %}Unable to contact the requester{% endtrans %}</option>
+              <option value="{{"Contact Another Government Agency" | explain_action("What")}}">{% trans %}Contact Another Government Agency{% endtrans %}</option>
+              <option value="{{"Requester Not Interested" | explain_action("What")}}">{% trans %}Requester Not Interested{% endtrans %}</option>
             </select>
           </div>
         </div>
         <div class="control-group">
           <div class="controls">
-            <button id="closeButton" type="submit" class="btn btn-inverse">Close this request</button>
+            <button id="closeButton" type="submit" class="btn btn-inverse">{% trans %}Close this request{% endtrans %}</button>
           </div>
         </div>
       </div>
@@ -219,7 +220,7 @@
   <div class="b_sidebar">
     <div class="row-fluid participantRow">
 
-        <div><h4 class="participantRow-title" style="color: #333333;">Point of Contact </h4>
+        <div><h4 class="participantRow-title" style="color: #333333;">{% trans %}Point of Contact{% endtrans %} </h4>
         </div>
 
     </div>
@@ -231,32 +232,32 @@
       <fieldset>
         <!-- <label>Change point of contact</label> -->
           <input type="hidden" name="request_id" value="{{ req.id }}"/>
-          <input id="rerouteEmail" class="input-block-level" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
-          <input id="rerouteReason" class="input-block-level" type="text" name="owner_reason" placeholder="Say why." required />
-          <button id="rerouteButton" class="btn input-block-level" type="submit"> <i class="icon-envelope"> </i> Change point of contact</button>
+          <input id="rerouteEmail" class="input-block-level" type="email" name="owner_email" placeholder="{% trans %}name@email.com{% endtrans %}" data-provide="typeahead" autocomplete="off" required />
+          <input id="rerouteReason" class="input-block-level" type="text" name="owner_reason" placeholder="{% trans %}Say why.{% endtrans %}" required />
+          <button id="rerouteButton" class="btn input-block-level" type="submit"> <i class="icon-envelope"> </i> {% trans %}Change point of contact{% endtrans %}</button>
       </fieldset>
     </form>
 
-    <div class="row-fluid participantRow">   
-      <div class="participantRow-helpers"><h4 class="participantRow-title">Helpers</h4></div>  
+    <div class="row-fluid participantRow">
+      <div class="participantRow-helpers"><h4 class="participantRow-title">{% trans %}Helpers{% endtrans %}</h4></div>
     </div>
     <div class="row-fluid participantRow-participants">
       {% for owner in req.owners %}
         {% if owner.active %}
-          {% set participant = (owner | display_staff_participant(req)) %} 
+          {% set participant = (owner | display_staff_participant(req)) %}
           {% if participant %}
             {% if current_user.is_authenticated() %}
-              
+
                 <div>
                   {{ participant }}
                   <form id="unassignForm" class="form-inline" method ="post" action="/update_a_owner">
                         <input type="hidden" name="request_id" value="{{ req.id }}"/>
                         <input type="hidden" name="owner_id" value="{{ owner.id }}"/>
-                        <input type="text" class="span8" name="reason_unassigned" value="Task complete" required />
-                        <button id="unassignButton" class="btn btn-mini" type="submit"> <i class="icon-envelope"> </i> Remove</button>
+                        <input type="text" class="span8" name="reason_unassigned" value="{% trans %}Task complete{% endtrans %}" required />
+                        <button id="unassignButton" class="btn btn-mini" type="submit"> <i class="icon-envelope"> </i> {% trans %}Remove{% endtrans %}</button>
                   </form>
-                </div> 
-                
+                </div>
+
             {% else %}
               <div>
                 {{ participant }}
@@ -270,18 +271,18 @@
     <form id="notifyForm" class="form-inline" method ="post" action="/add_a_owner">
       <fieldset>
         <input type="hidden" name="request_id" value="{{ req.id }}"/>
-        <input id="notifyEmail" class="input-block-level" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
-        <input id="notifyReason" class="input-block-level" type="text" name="owner_reason" placeholder="Say why." required />
-        <button id="notifyButton" class="btn input-block-level" type="submit"> <i class="icon-envelope"> </i> Add a helper</button>
+        <input id="notifyEmail" class="input-block-level" type="email" name="owner_email" placeholder="{% trans %}name@email.com{% endtrans %}" data-provide="typeahead" autocomplete="off" required />
+        <input id="notifyReason" class="input-block-level" type="text" name="owner_reason" placeholder="{% trans %}reason{% endtrans %}" required />
+        <button id="notifyButton" class="btn input-block-level" type="submit"> <i class="icon-envelope"> </i> {% trans %}Add a helper{% endtrans %}</button>
     </form>
 
     <div class="row-fluid participantRow-history">
       {% include '_history.html' %}
     </div>
 
-    
 
-    
+
+
 
 
   </div>
@@ -306,9 +307,9 @@
   <!-- used for the extension and close request multi-select boxes in city view -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-select.min.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/custom.bootstrap-select.js') }}"></script>
-  
 
-   
+
+
   <!-- For file uploads -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-fileupload.js') }}"></script>
 {% endblock custom_script_links %}

@@ -1,7 +1,7 @@
 <!-- This template is to display success banner immediately after a new requests gets submitted. -->
 
 {% extends "case.html" %}
-{% block title %}Request {{ request_id }}{% endblock %}
+{% block title %}{% trans %}Request ID:{% endtrans %} {{ request_id }}{% endblock %}
 {% block head %}
   {{ super() }}
 {% endblock %}
@@ -22,27 +22,26 @@
     {% endif %}
     <div class="offset1">
     {% if current_user.is_authenticated() %}
-      <p><strong>  The request has been submitted!</strong></p>
+      <p><strong>  {% trans %}The request has been submitted!{% endtrans %}</strong></p>
       <p>
-        {% if email %} 
-          The requester has been notified via email that they can expect to hear a response from the {{config['AGENCY_NAME']}} in the next 10 days. Requester will be automatically contacted with any updates.
-        {% else %} 
-          Because the requester did not provide an email address, the agency is responsible for communicating updates to the requester in the format received. 
+        {% if email %}
+          {% trans agency_name=config['AGENCY_NAME'] %}The requester has been notified via email that they can expect to hear a response from the {{agency_name}} in the next 10 days. Requester will be automatically contacted with any updates.{% endtrans %}
+        {% else %}
+          {% trans %}Because the requester did not provide an email address, the agency is responsible for communicating updates to the requester in the format received.{% endtrans %}
         {% endif %}
       </p>
     {% else %}
-        <p><strong>  Your request has been submitted!</strong></p>
-        <p>You can expect a response from the {{config['AGENCY_NAME']}} in the next 10 days.
-          {% if email %} 
-            You will be contacted via e-mail with any updates.
-          {% else %} 
-            You did not provide an e-mail address so you will have to visit this page for updates. 
+        <p><strong>  {% trans %}Your request has been submitted!{% endtrans %}</strong></p>
+        <p>{% trans agency_name=config['AGENCY_NAME'] %}You can expect a response from the {{agency_name}} in the next 10 days.{% endtrans %}
+          {% if email %}
+            {% trans %}You will be contacted via e-mail with any updates.{% endtrans %}
+          {% else %}
+            {% trans %}You did not provide an e-mail address, so you should visit this page for updates.{% endtrans %}
           {% endif %}
         </p>
-        <p>All messages from the {{config['AGENCY_NAME']}} and/or the information and documents you requested will be posted to this page. You can access <a href ="{{request.path}}">this page</a> at any time.</p>
+        <p>{% trans agency_name=config['AGENCY_NAME'] %}All messages from the {{agency_name}} and/or the information and documents you requested will be posted to this page.{% endtrans %}
+          {% trans page_link=request.path %}You can access <a href ="{{page_link}}">this page</a> at any time.{% endtrans %}</p>
     {% endif %}
     </div>
   </div>
 {% endblock banner %}
-
-

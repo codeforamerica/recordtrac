@@ -14,6 +14,7 @@ from jinja2 import Markup
 from db_helpers import *
 import notifications
 import pytz
+from flask.ext.babel import gettext as _
 
 def localize(datetime_str):
 	tz = pytz.timezone(app.config['TIMEZONE'])
@@ -80,7 +81,7 @@ def tutorial(section):
 
 def explain_action(action, explanation_type = None):
 	# Get filepath for actions.json
-	actions_filepath = os.path.join(app.root_path, 'static/json/actions.json')
+	actions_filepath = os.path.join(app.root_path, 'static/json/actions_' + _('en') + '.json')
 	action_json = open(actions_filepath)
 	json_data = json.load(action_json)
 	explanation = json_data[action]
@@ -118,4 +119,3 @@ def display_staff_participant(owner, request):
 		return staff.alias
 	else:
 		return staff.email
-

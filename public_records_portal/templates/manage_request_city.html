@@ -1,7 +1,7 @@
 <!-- This template is for testing purposes. -->
 
 {% extends "case.html" %}
-{% block title %}Request {{ req.id }}{% endblock %}
+{% block title %}{% trans %}Request ID:{% endtrans %} {{ req.id }}{% endblock %}
 {% block custom_css_links %}
     <!-- used for the extension and close request multi-select boxes in city view -->
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/manage_request_city.css') }}">
@@ -20,19 +20,20 @@
     {% set phone = "Not provided" %}
     {% set requester = req.requester() %}
     {% if requester %}
-       {% set user = requester.user %}  
+       {% set user = requester.user %}
        {% set email = user.email %}
        {% set alias = user.alias %}
        {% set phone = user.phone %}
     {% endif %}
     {% if not email %}
       <span id="no_email">
-        <strong><i class="icon icon-exclamation-sign"></i> Requester's e-mail has not been provided.</strong>
+        <strong><i class="icon icon-exclamation-sign"></i> {% trans %}Requester's e-mail has not been provided.{% endtrans %}</strong>
       </span>
     <small>
     {% endif %}
       <span>
-        Requester's name: <span class="label">{{ alias or "Not provided" }}</span> and phone number: <span class="label"> {{ phone or "Not provided" }}</span>
+        {% trans %}Requester's name:{% endtrans %} <span class="label">{{ alias or _("Not provided") }}</span>
+        {% trans %}Requester's phone number:{% endtrans %} <span class="label"> {{ phone or _("Not provided") }}</span>
       </span>
     </small>
   </div>
@@ -63,7 +64,7 @@
   <div class="b_sidebar">
     <div class="row-fluid participantRow">
 
-        <a data-placement="left" href="#" id="reroutePopover"><div class="popover-container"><h4 class="participantRow-title">Point of Contact <span class="pull-right"><small><i class="icon-arrow-right"></i></small><i class="icon-user"></i></span></h4>
+        <a data-placement="left" href="#" id="reroutePopover"><div class="popover-container"><h4 class="participantRow-title">{% trans %}Point of Contact{% endtrans %} <span class="pull-right"><small><i class="icon-arrow-right"></i></small><i class="icon-user"></i></span></h4>
         </div></a>
 
         {% include '_reroute.html' %}
@@ -73,10 +74,10 @@
         {% include '_contact_popover.html' %}
     </div>
 
-    <div class="row-fluid participantRow">   
-      <a data-placement="left" href="#" id="notifyPopover"><div class="popover-container participantRow-helpers"><h4 class="participantRow-title">Helpers<span class="pull-right"><small><i class="icon-plus"></i></small><i class="icon-group"></i></span></h4></div></a>
+    <div class="row-fluid participantRow">
+      <a data-placement="left" href="#" id="notifyPopover"><div class="popover-container participantRow-helpers"><h4 class="participantRow-title">{% trans %}Helpers{% endtrans %}<span class="pull-right"><small><i class="icon-plus"></i></small><i class="icon-group"></i></span></h4></div></a>
       {% include '_add_person.html' %}
-      
+
     </div>
     <div class="row-fluid participantRow-participants">
       {% include '_staff_participants.html' %}
@@ -104,13 +105,13 @@
   <!-- used for the extension and close request multi-select boxes in city view -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-select.min.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/custom.bootstrap-select.js') }}"></script>
-  
+
   <!-- Listed in case instead of manage_request_city for truncation -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/manage_request_city.js') }}"></script>
-  
+
   <!-- For response_widget partial -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/_response_widget.js') }}"></script>
-   
+
   <!-- For file uploads -->
   <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-fileupload.js') }}"></script>
 {% endblock custom_script_links %}

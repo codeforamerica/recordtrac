@@ -10,6 +10,7 @@
 from public_records_portal import models
 from models import Note, QA
 from db_helpers import get_obj
+from flask.ext.babel import gettext as _
 
 class RequestPresenter:
 	def __init__(self, request, qa = None, note = None, index = None, public = False):
@@ -21,10 +22,10 @@ class RequestPresenter:
 			self.type = "qa"
 			self.uid = self.response.owner_id
 			self.staff = get_obj("User", self.uid)
-			self.staff_email = "N/A"
-			self.staff_department = "N/A"
-			self.staff_phone = "N/A"
-			self.staff_alias = "N/A"
+			self.staff_email = _("N/A")
+			self.staff_department = _("N/A")
+			self.staff_phone = _("N/A")
+			self.staff_alias = _("N/A")
 			if self.staff:
 				if self.staff.email:
 					self.staff_email = self.staff.email
@@ -49,24 +50,24 @@ class RequestPresenter:
 		if self.type == "qa":
 			text = "%s - %s" %(self.response.question, self.owner_link)
 			if self.response.answer:
-				text = text + "<p>%s - <span class='requester'>Requester</span></p>" %(self.response.answer)
+				text = text + ("<p>%s - <span class='requester'>" + _("Requester") + "</span></p>") %(self.response.answer)
 			else:
 				if self.request.is_closed():
-					text = text + "<i><p>No response from requester</p></i>"
+					text = text + "<i><p>" + _("No response from requester") + "</p></i>"
 				else:
 					if self.public:
 						text = text + """
 						<form name='respond_question' class='form-inline' id='answer' method='post' action='/update_a_qa' autocomplete='on'>
 							<label class='control-label'>Answer</label><input type='hidden' name='qa_id' value='%s'/><input type='hidden' name='request_id' value='%s'/>
-							<textarea id='answerTextarea' name='answer_text' class='input-xlarge' rows="2" type='text' rows='1' placeholder='Can you respond to the above question?' required/></textarea>
-							<button id='askQuestion' class='btn btn-primary' type='submit'>Respond</button>
+							<textarea id='answerTextarea' name='answer_text' class='input-xlarge' rows="2" type='text' rows='1' placeholder='""" + _("Can you respond to the above question?") + """' required/></textarea>
+							<button id='askQuestion' class='btn btn-primary' type='submit'>""" + _("Respond") + """</button>
 						</form>
 						""" % (self.response.id, self.request.id)
 					else:
-						text = text + "<p>Requester hasn't answered yet.</p>"
+						text = text + "<p>" + _("Requester hasn't answered yet.") + "</p>"
 			return text
 		elif self.type == "note":
-			return "%s - Requester" %(self.response.text)
+			return ("%s - " + _("Requester")) %(self.response.text)
 
 	def get_icon(self):
 		return self.icon
