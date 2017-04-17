@@ -1,41 +1,43 @@
 <!-- This template is for the landing page. -->
 
 {% extends "base.html" %}
-{% block title %}Captcha{% endblock title %}
+{% block title %}Captcha - OpenRecords{% endblock title %}
 
 {% block container %}
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/recaptcha.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/recaptcha.css') }}">
 
-<div class="row-fluid">
-  <div class="span10 offset1">
-    <div id="recaptcha_message" class="row-fluid">
-      {{ message }}
-    </div>
-    <div id="recaptcha" class="row-fluid">
-      <form name="input" action="/recaptcha_note" method="POST">
-        <fieldset>
-           <script type="text/javascript"
-               src="http://www.google.com/recaptcha/api/challenge?k={{config['RECAPTCHA_PUBLIC_KEY']}}">
-            </script>
-            <noscript>
-               <iframe src="http://www.google.com/recaptcha/api/noscript?k={{config['RECAPTCHA_PUBLIC_KEY']}}"
-                   height="300" width="500" frameborder="0"></iframe><br>
-               <textarea id = "recaptcha_challenge_field" name="recaptcha_challenge_field" rows="3" cols="40">
+    <div class="row-fluid">
+        <div class="span10 offset1">
+            <div id="recaptcha_message" class="row-fluid">
+                {{ message }}
+            </div>
+            <div id="recaptcha" class="row-fluid">
+                <form name="input" action="/recaptcha_note" method="POST">
+                    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                    <fieldset>
+                        <script type="text/javascript"
+                                src="http://www.google.com/recaptcha/api/challenge?k={{ config['RECAPTCHA_PUBLIC_KEY'] }}">
+                        </script>
+                        <noscript>
+                            <iframe src="http://www.google.com/recaptcha/api/noscript?k={{ config['RECAPTCHA_PUBLIC_KEY'] }}"
+                                    height="300" width="500" frameborder="0"></iframe>
+                            <br>
+               <textarea id="recaptcha_challenge_field" name="recaptcha_challenge_field" rows="3" cols="40">
                </textarea>
-               <input type="hidden" id="recaptcha_response_field" name="recaptcha_response_field"
-                   value="manual_challenge">
-            </noscript>
-            {% if form %}
-            	<input type="hidden" name="note_text" value="{{form.note_text}}" />
-              <input type="hidden" name="request_id" value="{{form.request_id}}"/>
-          	{% endif %}
+                            <input type="hidden" id="recaptcha_response_field" name="recaptcha_response_field"
+                                   value="manual_challenge">
+                        </noscript>
+                        {% if form %}
+                            <input type="hidden" name="note_text" value="{{ form.note_text }}"/>
+                            <input type="hidden" name="request_id" value="{{ form.request_id }}"/>
+                        {% endif %}
 
-          <button type="submit" class="btn btn-primary" value="Submit">Submit my request</button>
-          <!-- <input type="submit" value="Submit"> -->
-        </fieldset>
-      </form>
+                        <button type="submit" class="btn btn-primary" value="Submit">Submit my request</button>
+                        <!-- <input type="submit" value="Submit"> -->
+                    </fieldset>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 {% endblock container %}
 

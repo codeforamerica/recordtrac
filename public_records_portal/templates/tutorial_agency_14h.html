@@ -1,0 +1,871 @@
+<!-- This template houses the baseline case information (request, documents, status, etc.) only. -->
+
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request FOIL-2015-860-00001</title>
+    <!-- HTML5 shim for IE backwards compatibility -->
+    <!--[if lt IE 9]>
+      <script src="/static/js/plugins/html5.js"></script>
+    <![endif]-->
+
+    <link rel=stylesheet type=text/css href="/static/style/css/screen.css">
+
+    <!--[if lte IE 9]>
+    <link rel=stylesheet type=text/css href="/static/style/css/ie.css">
+    <![endif]-->
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32"
+          href="/static/images/favicon-32x32.png"/>
+
+    
+    <!-- used for the extension and close request multi-select boxes in city view -->
+    <link rel=stylesheet type=text/css href="/static/css/manage_request_city_less_js.css">
+    <link rel=stylesheet type=text/css href="/static/css/sidebar.css">
+    <link rel=stylesheet type=text/css href="/static/css/bottom_sidebar.css">
+    <link rel=stylesheet type=text/css href="/static/css/case.css">
+    <link rel=stylesheet type=text/css href="/static/css/plugins/bootstrap-select.css">
+    <link rel=stylesheet type=text/css href="/static/css/plugins/bootstrap-fileupload.css">
+
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstro.css') }}">
+    <link rel=stylesheet type=text/css href="/static/css/plugins/BootSwatchr6.css">
+    <link rel=stylesheet type=text/css href="/static/css/plugins/DT_bootstrap.css">
+    <link rel=stylesheet type=text/css href="/static/css/plugins/font-awesome.min.css">
+		
+    <!-- modernizr -->
+    <script type="text/javascript"
+            src="/static/js/plugins/modernizr-latest-min.js"></script>
+
+    <!-- auth_script requires jquery and Mozilla's 'include.js' shim -->
+    <script type="text/javascript" src="/static/js/plugins/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="/static/js/plugins/include.js"></script>
+    <script type="text/javascript"></script>
+
+    <!-- IE8 polyfill for CSS3 pseudo classes like :hover -->
+    <script type="text/javascript" src="/static/js/plugins/jquery-1.11.1.min.js"></script>
+    <!--[if (gte IE 6)&(lte IE 8)]>
+      <script type="text/javascript" src="/static/js/plugins/selectivizr-min.js"></script>
+      <noscript><link rel="stylesheet" href="[fallback css]" /></noscript>
+    <![endif]-->
+
+    <!-- transform and other prefixes polyfill -->
+    <script src="/static/js/plugins/jquery.css3finalize.min.js"></script>
+
+    <!-- REM unit polyfill -->
+    <script type="text/javascript" src="/static/js/plugins/rem.min.js"></script>
+
+    <script type='text/javascript' src="/static/js/plugins/d3.v3.min.js"
+            charset="utf-8"></script>
+
+</head>
+
+<body>
+<div class="agency-header">
+    <div class="upper-header-black">
+        <div class="container">
+          <span class="upper-header-left">
+            <a href="http://www1.nyc.gov"><img
+                    src="http://www1.nyc.gov/assets/home/images/global/nyc_white.png"
+                    alt="NYC" class="small-nyc-logo"/></a>
+            <img src="http://www1.nyc.gov/assets/home/images/global/upper-header-divider.gif"
+                 alt=""/>
+            <span class="upper-header-black-title">OpenRecords</span>
+          </span>
+            <span class="upper-header-padding"></span>
+          <span class="upper-header-right">
+            <span class="upper-header-three-one-one">
+              <a href="http://www1.nyc.gov/311/index.page">311</a>
+            </span>
+            <img src="http://www1.nyc.gov/assets/home/images/global/upper-header-divider.gif"
+                 alt=""/>
+            <span class="upper-header-search">
+              <a href="http://www1.nyc.gov/home/search/index.page">Search all
+                  NYC.gov websites</a>
+            </span>
+          </span>
+        </div>
+    </div>
+</div>
+<div class="wrapper">
+    <div class="navbar">
+        <div class="navbar-inner">
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse"
+               data-target=".navbar-responsive-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="/"><img id="logo_nav"
+                                           src="/static/images/logo.png"
+                                           alt="Your agency name logo"/></a>
+
+            <div class="nav-collapse navbar-responsive-collapse collapse"
+                 style="height: 0px;">
+                
+                <div class="google_translate btn">
+                    <p><a href="/logout">Logout</a></p>
+                </div>
+                <ul class="nav tabs">
+                    <li><a href="/new">Request a Record</a></li>
+                    <li><a href="/view_requests">All Requests</a></li>
+                    <li><a href="/track">Track an Existing Request</a></li>
+                    <li><a href="/report">Report</a></li>
+                    <li><a href="/faq">FAQ</a></li>
+                    <li><a href="/about">About</a></li>
+                </ul>
+                <ul class="nav pull-right">
+                </ul>
+                
+        </div>
+    </div>
+</div>
+<div id="container-fluid">
+    
+<!-- main content -->
+<div class="row-fluid">
+    <div class="span12">
+        
+
+            
+    </div>
+</div>
+<div class="row-fluid">
+    <div class="span9">
+        
+        <div class="well">
+            
+            <div id="request-container">
+                <!-- Request Details -->
+                <div class="row-fluid">
+                    <h3 class="control-widget">
+                        <span class="muted">
+                            <a href="http://127.0.0.1:5000/request/FOIL-2015-017-00005">FOIL-2015-017-00005</a>
+                        </span>
+                    </h3>
+                    
+                    <!-- ask a question -->
+                    <form name="ask_question" id="question" class="form-inline" style="margin: 10px 0px 15px 0px;"
+                          method="post" action="/add_a_qa" autocomplete="on">
+                        <input type="hidden" name="request_id" value="FOIL-2015-017-00005"/>
+                        <fieldset>
+                            
+                        </fieldset>
+                    </form>
+
+                    <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog"
+                         aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    Confirmation
+                                </div>
+                                <div class="modal-body">
+                                    <div id="modalquestionDiv">Are you sure you want to make the following question
+                                        public and send an email to the requester?
+                                    </div>
+                                    <table id="modalQuestionTable" class="table">
+                                        <tr>
+                                            <th>Question</th>
+                                            <td id="question_text"></td>
+                                            <input type="hidden" id="form_id" value=""/>
+                                        </tr>
+                                    </table>
+                                    <table id="modalAdditionalInfoTable" class="table">
+                                        <tr>
+                                            <th>Additional Information</th>
+                                            <td><textarea id="additional_note" name="additional_note"
+                                                          class="input-xlarge"
+                                                          placeholder="Additional Information"/></textarea></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <a href="#" id="submit" class="btn btn-success success">Submit</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Add a public note form -->
+                    
+                    
+                    
+                    <p class="lead" style="margin-bottom: 0rem;" truncateable="250"> Title </p>
+                    
+                        
+                            <p class="lead" style="margin-bottom: 0rem;"
+                               truncateable="250"> Title:
+                            </p>
+
+                            <p truncateable="250"> City Council meeting minutes 220</p>
+                     
+                    
+
+                    
+                    <form class="form-horizontal" method="post" action="/changeprivacy">
+                        <input type="hidden" name="request_id" value="FOIL-2015-017-00005"/>
+                        <input type="hidden" name="fieldtype" value="title"/>
+                            <fieldset>
+                            <!-- Multiple Radios (inline) -->
+                            <div class="control-group">
+                              <label class="control-label" for="privacy setting" style="width:7rem; text-align:left;">Title Privacy:</label>
+                              <div class="controls" style="margin-left: 3rem">
+
+
+                                
+                                <label class="radio inline" for="privacy setting-0">
+                                  <input type="radio" name="privacy setting" id="privacy setting-0" value="False" type="submit" onclick="action=this.form.submit();">
+
+                                  Public
+                                </label>
+                                <label class="radio inline" for="privacy setting-1">
+                                  <input type="radio" name="privacy setting" id="privacy setting-1" value="True" type="submit" checked onclick="action=this.form.submit();">
+
+                                  Private
+                                </label>
+
+                                
+
+                              </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                    
+
+                    
+                        <p class="lead" truncateable="250"
+                           style="margin-bottom: 0rem;"> Request: </p>
+                        <p truncateable="250"> City Council meeting minutes 220</p>
+                    
+                    
+                    <form class="form-horizontal" method="post" action="/changeprivacy">
+                        <input type="hidden" name="request_id" value="FOIL-2015-017-00005"/>
+                        <input type="hidden" name="fieldtype" value="description"/>
+                            <fieldset>
+                            <!-- Multiple Radios (inline) -->
+                            <div class="control-group">
+                              <label class="control-label" for="privacy setting" style="width:7rem; text-align:left;">Description Privacy:</label>
+                              <div class="controls" style="margin-left: 3rem">
+                              
+                                <label class="radio inline" for="privacy setting-public">
+                                  <input type="radio" name="privacy setting" id="privacy setting-public" value="False" type="submit" onclick="action=this.form.submit();">
+
+                                  Public
+                                </label>
+                                <label class="radio inline" for="privacy setting-private">
+                                  <input type="radio" name="privacy setting" id="privacy setting-private" value="True" type="submit" checked onclick="action=this.form.submit();">
+
+                                  Private
+                                </label>
+                                
+                              </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                    
+                </div>
+                <div>
+                    <!-- shows any existing Q&A or public notes -->
+                    
+
+                    
+                    
+                    <div class="row-fluid response">
+                        <div class="span1 text-left">
+                            <i class="icon-question icon-large"></i>
+                        </div>
+                        <div class="span9">
+                            <p truncateable="175">
+                                You specified 220, but that does not exist. Did you mean 324?  - <a href="/staff_card/1" data-placement="top" data-toggle="popover" href="#" id="contactinfoPopoverQA0" class="hidden-phone hidden-tablet"><span class="contactinfoPopover" onmouseover="directoryPopover('jcastillo@records.nyc.gov', '1', '311', '#contactinfoPopoverQA0')">Joel Castillo</span></a><p>Requester hasn't answered yet.</p>
+                            </p>
+                        </div>
+                        <div class="span2 text-right request-date">
+                            <div class="timestampPopoverContainer">
+                                <div class="row-fluid">
+                                        <span class="timestampPopover" onmouseover="">
+                                            4 minutes ago
+                                        </span>
+
+                                    <div class="hide">
+                                        <div class="timestampPopover-content">
+    <div class="row-fluid">
+        Nov 12, 2015
+    </div>
+    <div class="row-fluid">
+        05:25:23
+    </div>
+</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+            
+        </div>
+        
+        
+
+
+
+
+
+
+<div class="btn" id="requesterInfoButton">Show Requester Contact Information<span class="caret"></span></div>
+
+
+<div class="row-fluid hide" id="requester_info">
+    <div class="span8">
+        <div class="row-fluid">
+            <div class="span6">Requester's Name:</div>
+            <div class="span6">
+                <span class="label">Not provided</span>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span6">Requester's Email:</div>
+            <div class="span6">
+                
+                <span class="label">Not provided</span>
+                
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span6">Requester's Phone Number:</div>
+            <div class="span6">
+                
+                    <span class="label">Not provided</span>
+                
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span6">Requester's Fax Number:</div>
+            <div class="span6">
+                
+                    <span class="label">Not provided</span>
+                
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span6">Requester's Street Address (line 1):</div>
+            <div class="span6">
+                <span class="label">Not provided</span>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span6">Requester's Street Address (line 2):</div>
+            <div class="span6">
+                <span class="label">Not provided</span>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span6">Requester's City:</div>
+            <div class="span6">
+                <span class="label" style="align: left;">Not provided</span>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span6">Requester's State:</div>
+            <div class="span6">
+                
+                    <span class="label">Not provided</span>
+                
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span6">Requester's Zipcode:</div>
+            <div class="span6">
+                <span class="label">Not provided</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+        
+        
+    
+
+        
+        
+        
+
+        <div id="responses-container" class="row-fluid">
+            
+            
+
+<div class="row-fluid">
+    <div class="span12">
+        <ul class="nav nav-pills nav-justified" role="tablist">
+            <li>
+                <a href="#acknowledge_request" id="acknowledge_request_tab" role="tab" data-toggle="tab">
+                    <small>Acknowledge Request</small>
+                </a>
+            </li>
+            <li>
+                <a href="#acknowledge_and_grant_request" id="grant_request_tab" role="tab"
+                   data-toggle="tab">
+                    <small>Grant Request</small>
+                </a>
+            </li>
+            <li>
+                <a href="#acknowledge_and_deny_request" role="tab"
+                   data-toggle="tab">
+                    <small>Deny Request</small>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="row-fluid">
+    <div class="tab-content">
+        <div class="tab-pane" id="acknowledge_request">
+            <form name="note" id="AcknowledgeNote" method="post"
+                  action="/update_a_request_acknowledge">
+                <input type="hidden" name="request_id" value="FOIL-2015-017-00005"/>
+                <fieldset>
+                    <h4>Estimated Duration</h4>
+                    <select class="span12" id="acknowledge_status"
+                            name="acknowledge_status">
+                        <option value="Acknowledged - 15 days" id="acknowledge_request_15_days">Acknowledged - 15
+                            days
+                        </option>
+                        <option value="Acknowledged - 30 days">Acknowledged - 30
+                            days
+                        </option>
+                        <option value="Acknowledged - 60 days">Acknowledged - 60
+                            days
+                        </option>
+                        <option value="Acknowledged - 90 days">Acknowledged - 90
+                            days
+                        </option>
+                        <option value="Acknowledged - 120 days">Acknowledged -
+                            120 days
+                        </option>
+                    </select>
+                    <button id="rerouteButton" class="btn input-block-level"
+                            data-toggle="modal"
+                            data-target="#confirm-submit" type="submit"><i
+                            class="icon-envelope"> </i>
+                        Acknowledge Request
+                    </button>
+                </fieldset>
+            </form>
+        </div>
+        <div class="tab-pane" id="acknowledge_and_grant_request">
+            <form name="input_doc" style="margin-top: 2em;" id="submitRecord"
+                  method="post"
+                  action="/add_a_record_and_close" autocomplete="on"
+                  enctype="multipart/form-data">
+                <input type="hidden" name="request_id" value="FOIL-2015-017-00005"/>
+                <fieldset>
+                    <div class="row-fluid">
+                        <!-- name of record -->
+                        <div class="control-group">
+                            <label class="control-label" for="recordSummary">Name
+                                of record</label>
+
+                            <div class="controls">
+                                        <textarea class="input-xxlarge"
+                                                  name="record_description"
+                                                  type="text"
+                                                  id="recordSummary"
+                                                  placeholder="Add a short explanation of the record"
+                                                  required/></textarea>
+                            </div>
+                        </div>
+                        <!-- upload a record -->
+                        <div class="control-group">
+                            <label class="control-label">Upload a record <span
+                                    id="recordTooltip" rel="tooltip"
+                                    data-toggle="tooltip"
+                                    data-placement="right" title=""
+                                    data-original-title="Upload a record stored on your computer. The record will be uploaded to the web and the public will be able to read and download it here. We’ll notify the requester via email of the document.">
+                                        <small><i class="icon-info-sign"></i>
+                                        </small>
+                                    </span></label>
+
+                            <div class="row-fluid">
+                                <div class="controls">
+                                    <div class="fileinput fileinput-new"
+                                         data-provides="fileinput">
+                                                <span class="btn btn-default btn-file">
+                                                    <span class="fileinput-new">Select file</span>
+                                                    <span class="fileinput-exists">Change</span>
+                                                    <input type="file"
+                                                           name="record">
+                                                </span>
+                                        <span class="fileinput-filename"></span>
+                                        <a href="#"
+                                           class="close fileinput-exists"
+                                           data-dismiss="fileinput"
+                                           style="float: none">&times;</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- link to a record -->
+                        <div class="control-group">
+                            <label class="control-label">Or provide a link to a
+                                record <span rel="tooltip"
+                                             data-toggle="tooltip"
+                                             data-placement="right"
+                                             title=""
+                                             data-original-title="Provide the web address of where a requester can find the information or documents. The link will be posted online for the public to view. We&#39;ll notify the requester via email.">
+                                        <small><i class="icon-info-sign"></i>
+                                        </small>
+                                    </span></label>
+
+                            <div class="row-fluid">
+                                <div class="controls">
+                                    <input type="text" name="link_url"
+                                           id="inputUrl" class="input-xxlarge"/>
+                                    <!-- need to clean this up with jquery: needs to switch from being disabled when no file exists to being enabled when a file exists -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- offline record -->
+                        <div class="control-group button-margin">
+                            <label class="control-label">Or indicate how the
+                                record can be accessed offline <span
+                                        id="offlinedocTooltip" rel="tooltip"
+                                        data-toggle="tooltip"
+                                        data-placement="right"
+                                        title=""
+                                        data-original-title="Name the record you are about to upload. We’ll post your title online and it can be viewed by the public. ">
+                                        <small><i class="icon-info-sign"></i>
+                                        </small>
+                                    </span></label>
+
+                            <div class="row-fluid">
+                                <div class="controls">
+                                            <textarea class="input-xxlarge"
+                                                      id="offlineDoc_textarea"
+                                                      name="record_access"
+                                                      placeholder="How can the requester get this record?  Ex. 'Sent via mail on a CD', 'Print out awaiting requester at City Clerk desk'"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- submission -->
+                        <div class="control-group">
+                            <div class="controls">
+                                <button type="submit"
+                                        class="btn btn-default btn-block"
+                                        data-toggle="modal"
+                                        data-target="#confirm-submit"
+                                        id="addRecordButton">Grant Request
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class="tab-pane" id="acknowledge_and_deny_request">
+            <form name="close" id="closeRequest" method="post" action="/close">
+                <input type="hidden" name="request_id" value="FOIL-2015-017-00005"/>
+                <fieldset>
+                    <div class="row-fluid">
+                        <div class="control-group">
+                            <label class="control-label">Reason <span
+                                    rel="tooltip" data-toggle="tooltip"
+                                    data-placement="right" title=""
+                                    data-original-title="Use this feature to close out this request. Your message will be posted online for the public to view. We&#39;ll notify the requester via email.">
+                                        <small><i class="icon-info-sign"></i>
+                                        </small>
+                                    </span></label>
+
+                            <div class="controls">
+                                <select id="close_reasons"
+                                        name="close_reasons" multiple="multiple"
+                                        size="10">
+                                    <option value="This is not a public records request.">
+                                        Not a public records request
+                                    </option>
+                                    <option value="The record you asked for does not exist.">
+                                        Do not have this record
+                                    </option>
+                                    <option value="We cannot upload the documents you requested. We are prohibited from releasing an individual’s employment, medical, or similar files to protect their privacy.">
+                                        Can Not Release - Personal Records
+                                    </option>
+                                    <option value="We cannot upload the documents you requested. We are prohibited from releasing records related to an on-going litigation.">
+                                        Can Not Release - Ongoing Litigation
+                                    </option>
+                                    <option value="We cannot upload the documents you requested. We are prohibited from releasing investigative records for crimes committed or police incident reports, rap sheets, and arrest records.">
+                                        Can Not Release - Investigative Records
+                                    </option>
+                                    <option value="We cannot upload the documents you requested. We are prohibited from releasing communications between an attorney and his or her clients">
+                                        Can Not Release - Attorney-Client
+                                        Privilege
+                                    </option>
+                                    <option value="We don&#39;t have the records you requested. We suggest you submit a public records request to the County or the State.">
+                                        Contact Another Government Agency
+                                    </option>
+                                    <option value="Please visit the following link to find this information: http://www.nyc.gov">
+                                        Please visit NYC.gov
+                                    </option>
+                                    <option value="Please visit the NYC Open Data Portal to find this information: https://nycopendata.socrata.com/">
+                                        Please visit NYC OpenData
+                                    </option>
+                                    <option value="Please visit the NYC Government Publications Portal to find this informaton: http://a860-gpp.nyc.gov/">
+                                        Please visit NYC Government Publications
+                                        Portal
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                <button id="closeButton" data-toggle="modal"
+                                        data-target="#confirm-submit"
+                                        type="submit"
+                                        class="btn btn-default btn-block">Close
+                                    this request
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+            
+            
+            
+            <h3 class="control-widget">Response</h3>
+            
+            
+            
+            
+            <div class="row-fluid response-wrapper" id="list_of_responses">
+                <div class="span1 text-left">
+                    <i class="icon-edit icon-large"></i>
+                </div>
+                <div class="span9">
+                    <p class="expandable" truncateable="200">
+                        Record does not exist. - <a href="/staff_card/1"><span
+                            class="contactinfoPopover"
+                            onmouseover="directoryPopover('jcastillo@records.nyc.gov', '', '311', '#contactinfoPopoverResponse1')">Joel Castillo</span></a>
+                    </p>
+                </div>
+                <div class="span2 text-right response-date">
+                    <div class="timestampPopoverContainer">
+                        <div class="row-fluid">
+                                <span class="timestampPopover" onmouseover="">
+                                    4 minutes ago
+                                </span>
+                            <div class="hide">
+                                <div class="timestampPopover-content">
+    <div class="row-fluid">
+        Nov 12, 2015
+    </div>
+    <div class="row-fluid">
+        05:25:23
+    </div>
+</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            
+            
+            <div class="row-fluid response-wrapper">
+                <div class="span1 text-left">
+                    <i class="icon-edit icon-large"></i>
+                </div>
+                <div class="span9">
+                    <p class="expandable" truncateable="200">
+                        We're working on this and will get back to you shortly. - <a href="/staff_card/1"><span
+                            class="contactinfoPopover"
+                            onmouseover="directoryPopover('jcastillo@records.nyc.gov', '', '311', '#contactinfoPopoverResponse2')">Joel Castillo</span></a>
+                    </p>
+                </div>
+                <div class="span2 text-right response-date">
+                    <div class="timestampPopoverContainer">
+                        <div class="row-fluid">
+                                <span class="timestampPopover" onmouseover="">
+                                    4 minutes ago
+                                </span>
+                            <div class="hide">
+                                <div class="timestampPopover-content">
+    <div class="row-fluid">
+        Nov 12, 2015
+    </div>
+    <div class="row-fluid">
+        05:25:23
+    </div>
+</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+        </div>
+        
+    </div>
+    <div id="participant-container" class="span3">
+        
+
+
+<div class="request-status-well well well-small r_sidebar_banner due soon">
+    <h3 id="status-text">
+        
+        
+            due soon
+        
+    </h3>
+</div>
+
+
+<div class="row-fluid participantRow">
+    <div>
+        <h4 class="participantRow-title">Assigned Agency</h4>
+
+        <div class="participantRow-participants">Department of Records and Information Services</div>
+    </div>
+    
+    <h4 class="participantRow-title">Assigned User</h4>
+    
+    <div class="participantRow-participants">
+        <a href="mailto:zack@reboot.org">Zack Brisson</a>
+    </div>
+</div>
+
+<div>
+    <h4 class="participantRow-title">Helpers</h4>
+    
+    <div class="participantRow-participants">
+        <a href="mailto:rwilson@oem.nyc.gov">Robert Wilson</a>
+    </div>
+    
+    <div class="participantRow-participants">
+        <a href="mailto:jcastillo@records.nyc.gov">Joel Castillo</a>
+    </div>
+    
+    <div class="participantRow-participants">
+        <a href="mailto:cfcarney@cto.nyc.gov">Caroline Carney</a>
+    </div>
+    
+</div>
+
+
+<div class="row-fluid">&nbsp;</div>
+
+<div class="muted participantRow-participants text-center">
+    Received: Nov 08, 2015
+</div>
+
+<div class="text-center">Due: <span class="label">Nov 18, 2015</span></div>
+
+    </div>
+</div>
+
+
+<link rel=stylesheet type=text/css
+      href="/static/css/social_media.css">
+
+
+
+</div>
+<div class="push"></div>
+</div>
+<!-- // Wrapper -->
+<div class="iw_component" id="1422284559235">
+    <div class="row">
+        <footer>
+            <div class="container">
+                <div class="span9 footer-links">
+                    <a href="http://www1.nyc.gov/nyc-resources/agencies.page">Directory
+                        of City Agencies</a>
+                    <a href="http://www1.nyc.gov/home/contact-us.page">Contact
+                        NYC Government</a>
+                    <a href="https://a127-ess.nyc.gov">City Employees</a>
+                    <a href="http://www.nyc.gov/notifynyc">Notify NYC</a>
+                    <a href="http://a856-citystore.nyc.gov/">CityStore</a>
+                    <a href="http://www1.nyc.gov/connect/social-media.page">Stay
+                        Connected</a>
+                    <a href="http://www1.nyc.gov/connect/applications.page">NYC
+                        Mobile Apps</a>
+                    <a href="http://www1.nyc.gov/nyc-resources/nyc-maps.page">Maps</a>
+                    <a href="http://www1.nyc.gov/nyc-resources/resident-toolkit.page">Resident
+                        Toolkit</a>
+                </div>
+                <div class="span3">
+                    <span class="logo-nyc">NYC</span>
+
+                    <form class="form-search" method="get"
+                          action="http://www1.nyc.gov/home/search/index.page">
+                        <input placeholder="Search"
+                               class="input-search placeholder"
+                               name="search-terms" type="text"/>
+                        <button class="ico-search">Search</button>
+                    </form>
+                    <div class="copyright">
+                        <p>City of New York. 2015 All Rights Reserved,</p>
+
+                        <p>NYC is a trademark and service mark of the City of
+                            New York</p>
+
+                        <p>
+                            <a href="http://www1.nyc.gov/home/privacy-policy.page"
+                               title="Privacy">Privacy Policy</a>.
+                            <a href="http://www1.nyc.gov/home/terms-of-use.page"
+                               title="TOU">Terms of Use</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script type="text/javascript"
+        src="/static/js/plugins/jquery.placeholder.js"></script>
+<script type="text/javascript"
+        src="/static/js/plugins/jquery.validate.js"></script>
+<script type="text/javascript"
+        src="/static/js/plugins/bootstrap.js"></script>
+
+
+<script type="text/javascript" src="/static/js/case.js"></script>
+
+<!-- used for the extension and close request multi-select boxes in city view -->
+<script type="text/javascript" src="/static/js/plugins/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="/static/js/custom.bootstrap-select.js"></script>
+
+
+<!-- For file uploads -->
+<script type="text/javascript" src="/static/js/plugins/bootstrap-fileupload.js"></script>
+
+<!-- used for the tutorial -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstro.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/custom.bootstro.js') }}"></script>
+
+<script>
+$(document).ready(function(){
+    //$('#grant_request_tab').click();
+    //$('#acknowledge_status').attr('size',6);
+    bootstro.start('',{stopOnBackdropClick : false, stopOnEsc:false, items:
+       [{selector:'#request-container',title:'Track a Request',content:'By clicking All Requests or Track an existing Request you can display the request information including the Requestor Contact Information.',placement:'right',finishButton:'<a class="btn" href="/city/tutorial/14g"> «Previous</a> <a class="btn" href="/city/tutorial/14i">Next »</a><br><br><a class="btn" href="/">Back to OpenRecords site</a>'}
+       ]
+    });
+});
+</script>
+
+</body>
+</html>

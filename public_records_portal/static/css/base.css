@@ -47,7 +47,7 @@
 		margin-left: 0;
 	}
 
-	.navbar-inner {	
+	.navbar-inner {
 	  -webkit-border-radius: 0;
 	  -moz-border-radius: 0;
 	  border-radius: 0;
@@ -104,7 +104,9 @@ label.error {
 	}
 
 
-
+.nav-pills>li>a.openrecords_nav {
+	background-color: #FFFFFF;
+}
 
 
 /* ----- Sticky Footer ----- by Ryan Fait http://ryanfait.com/sticky-footer/ ----- */
@@ -113,6 +115,7 @@ label.error {
 }
 html, body {
 	height: 100%;
+	font-family: Sans-Serif;
 }
 .wrapper {
 	min-height: 100%;
