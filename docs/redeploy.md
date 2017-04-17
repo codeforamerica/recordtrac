@@ -1,4 +1,4 @@
-#How to create a new RecordTrac app for your agency
+# How to create a new RecordTrac app for your agency
 
 
 ## Groundwork

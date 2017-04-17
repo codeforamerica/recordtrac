@@ -76,12 +76,12 @@ A requester can respond to a question asked by an agency employee. This field on
 
 ## Follow and unfollow requests
 
-###Follow someone else's request
+### Follow someone else's request
 ![subscribe](/docs/images/subscribe.png "subscribe")
 
 If an individual is interested in the outcome of a particular request, they can subscribe to a request. They will receive email updates every time a response is added to the particular request and when it's closed.
 
-###Unfollow a request
+### Unfollow a request
 To remove yourself from following a particular request, select the "unfollow this request" option in the email notification you received when you followed the request.
 
 ![unsubscribe](/docs/images/unsubscribe.png "unsubscribe")
