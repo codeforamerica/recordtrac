@@ -1,111 +1,289 @@
 <!-- This template is to initiate a new request. -->
-
-{% extends "base.html" %}
-{% from 'help_text.html' import help %}
-
-{% block title %}Public records{% endblock title%}
+{% extends "base.html" %} {% from 'help_text.html' import help %} {% block title %}Public records{% endblock title %}
 {% block custom_css_links %}
-    <!-- used for the extension and close request multi-select boxes in city view -->
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.min.css') }}">
     <!-- used for department dropdown -->
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-combobox.css') }}"media="screen">
-    <!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}"> -->
+    <link rel=stylesheet type=text/css
+          href="{{ url_for('static', filename='css/plugins/jquery-ui-1.10.4.custom.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/new_request.css') }}">
-{% endblock custom_css_links %}
-{% block container %}
-  <div class="row-fluid">
-  <div class="span11 offset1">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-fileupload.css') }}">
+    <link rel=stylesheet type=text/css
+          href="{{ url_for('static', filename='css/case.css') }}"> {% endblock custom_css_links %} {% block container %}
+    <!-- start of static form -->
     <div class="row-fluid">
-    <div class="span8">
-      <div class="row-fluid">
         <div class="span8">
-          <h3>Request a new record</h3>
-          <p class="intro_text">Use RecordTrac to request copies of specific documents, photos, emails, texts, audio recordings, electronic information and data in the {{config['AGENCY_NAME']}}'s databases.</p>
+            <h1>Request a Record</h1>
 
-          <form name="input" class="form-horizontal" id="submitRequest" method="post" action="/new" autocomplete="off"novalidate="novalidate">
+            <p>Please make your request specific so you receive the fastest service. After you submit a FOIL request you
+                will receive a confirmation number so you can track the status of the response. The agency will notify
+                you about how much time is required to
+                respond to your request.</p>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <form name="newrequest" class="form-horizontal" id="submitRequest" method="post" action="/new"
+              autocomplete="off" novalidate="novalidate" enctype="multipart/form-data">
+            <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
             <fieldset>
 
-              <p class="lead">What are you trying to find?</p>
-
-              <div class="control-group">
-                <label for="requestTextarea"><strong><i class="icon-exclamation-sign"></i> Everything in this request box will be displayed publicly. </strong></label>
-                <div >
-                  <textarea id="requestTextarea" name="request_text" rows="3" class="input-block-level" placeholder="Describe your request. Be as specific as possible."></textarea>
-                  {{ help("requestPopover-content", "Enter records request") }}
+                <div class="row-fluid">
+                    <div class="span8">
+                        <div class="control-group">
+                            <h2>
+                                <small id='categoryTitle'>Category (optional)&nbsp;<a href="#" data-toggle="tooltip" data-placement="right" id="category_info" title="Select to display the agency list for the category to help find the agency you want."><icon style="vertical-align: middle;" class="icon-info-sign"></icon></a> </small>
+                            </h2>
+                            <select id="category" class="input-block-level">
+                                <option selected value></option>
+                                <option>Business</option>
+                                <option>Culture and Recreation</option>
+                                <option>Education</option>
+                                <option>Environment</option>
+                                <option>Government Administration</option>
+                                <option>Health</option>
+                                <option>Housing</option>
+                                <option>Public</option>
+                                <option>Social Services</option>
+                                <option>Transportation</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-<!--                 <div id="not_public_record">
-
-                </div> -->
-              </div>
-              {% if routing_available %}
-              <p class="lead">Select a department<small class="department_optional"> (optional)</small></p>
-              <div class="control-group">
-                  <select id="inputDepartment" class="input-block-level" title="select_department" name="request_department" type="text">
-                    <option value=""></option>
-                    {% for department in departments %}
-                      <option  value="{{department.name}}">{{department.name}}</option>
-                    {% endfor %}
-                  </select>
-              </div>
-              {% endif %}
-
-              <p class="lead">Contact information</p>
-              <div class="control-group">
-                <label for="inputEmail">Your email</label>
-                <div class="spacer">
-                  <input class="input-block-level" title="input_email" name="request_email" type="email" id="inputEmail" placeholder="yourname@email.com" />
-                  {{ help("emailPopover-content", "Enter email address") }}
+                <div class="row-fluid">
+                    <div class="span8">
+                        <div class="control-group">
+                            <h2>
+                                <small>What agency has the records you want? (required)</small>
+                            </h2>
+                            {% if 'missing_agency' in errors %}
+                                <div class="alert alert-danger" id="missing_agency"
+                                     style="width: calc(100% - 4.5rem);">
+                                    {{ errors['missing_agency'] }}
+                                </div>
+                            {% endif %}
+                        {% if form.request_agency.data %}
+                            <select id="agency" name="request_agency" class="input-block-level">
+                                <option></option>
+                                <option selected value>{{ form.request_agency.data }}</option>
+                            </select>
+                        {% else %}
+                            <select id="agency" name="request_agency" class="input-block-level">
+                                <option selected value></option>
+                            </select>
+                        {% endif %}
+                        </div>
+                    </div>
                 </div>
-                <label for="inputName">Your name <small>(optional)</small></label>
-                <div class="spacer">
-                  <input class="input-block-level" title="input_name" name="request_alias" type="text" id="inputName" placeholder="Your Name" />
-                  {{ help("namePopover-content", "Enter name") }}
-                </div>
-                <label for="inputPhone">Your phone number <small>(optional)</small></label>
-                <div class="spacer spacer_phone">
-                  <input class="input-block-level" title="input_telephone_number" name="request_phone" type="tel" id="inputPhone" placeholder="(510) 555-1234" maxlength="14" />
-                  {{ help("phonePopover-content", "Enter phone number") }}
-                </div>
-              </div>
+                <div class="row-fluid">
+                    <div class="span8">
 
-              <div id="requestButton" class="control-group">
-                <div>
-                  <button type="submit" title="submit_request_button" class="btn btn-primary btn-large input-block-level">Submit my request</button>
-                </div>
-              </div>
+                        <div class="control-group">
+                            <h2>
+                                <small>Request Title (required)</small>
+                            </h2>
+                            {% if 'missing_summary' in errors %}
+                            <div class="alert alert-danger" id="missing_summary">
+                                {{ errors['missing_summary'] }}
+                            </div>
+                            {% elif 'summary_length' in errors %}
+                            <div class="alert alert-danger" id="summary_length">
+                                {{ errors['summary_length'] }}
+                            </div>
+                            {% endif %}
+                            {% if 'duplicate_request' in errors %}
+                            <div class="alert alert-danger" id="duplicate_request">
+                                Based on the title and summary this appears to be a duplicate of <a href="/request/{{ errors['duplicate_request'] }}">{{ errors['duplicate_request'] }}</a>
+                            </div>
+                            {% endif %}
+                            {{ form.request_summary(class="input-block-level", rows="2", maxlength="90", id="request_summary", placeholder="Please provide a short summary of your request" ) }}
+                            <div class="small">Please enter no more than 90 characters</div>
+                        </div>
+                    </div>
+                    <div class="span4">
+                        <br></br>
+                        <div class="sideblock">
 
+                            <h3>Example Title</h3>
+
+                            <p>Public Advocate Emails from 2015</p>
+                        </div>
+                        <h5>Note: The agency, category, and topic of your request will be visible to the
+                            public.
+                            Do not enter personal information here.</h5>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span8">
+                        <div class="control-group">
+                            <h2>
+                                <small>Request (required)</small>
+                            </h2>
+                            {% if 'missing_description' in errors %}
+                            <div class="alert alert-danger" id="missing_description">
+                                {{ errors['missing_summary'] }}
+                            </div>
+                            {% elif 'description_length' in errors %}
+                            <div class="alert alert-danger" id="description_length">
+                                {{ errors['summary_length'] }}
+                            </div>
+                            {% endif %}
+                            {{ form.request_text(class="input-block-level",rows="6",id="request_text",maxlength="5000",placeholder="Provide more information about your request to help the City locate the record. If you don't know the record name, describe the type of information you think it would contain and the approximate date range. Do not include private information such as a social security # or credit card." ) }}
+                            <div class="small">Please enter no more than 5000 characters</div>
+                        </div>
+
+                    </div>
+                    <div class="span4">
+                        <br></br>
+
+                        <div class="sideblock">
+
+                            <h3>Example Request</h3>
+
+                            <p>Topic: Public Advocate Emails from 2015</p>
+
+                            <p>Emails that mention bike lanes or bicycle lanes from the Public Advocate's Office between
+                                July
+                                27, 2015 and September 10, 2015</p>
+                        </div>
+                        <h5>Note: The details of your request will not be visible to the public.</h5>
+                    </div>
+                </div>
+
+
+                <div class="row-fluid">
+                    <div class="span8">
+                        <h2>
+                            <lead>Personal Information</lead>
+                        </h2>
+                        <p>This information will not be publicly viewable on this site. You must provide contact
+                            information so that the agency can respond to your request for records.</p>
+
+                        <div class="row-fluid">
+                            <div class="control-group span6">
+                                <h2>
+                                    <small>{{ form.request_first_name.label.text }}</small>
+                                </h2>
+                                {% if 'missing_first_name' in errors %}
+                                <div class="alert alert-danger" id="missing_first_name">
+                                    {{ errors['missing_first_name'] }}
+                                </div>
+                                {% endif %}
+                                {{ form.request_first_name(id="request_first_name", class="input-block-level", type="text", placeholder="John") }}
+                            </div>
+                            <div class="control-group span6">
+                                <h2>
+                                    <small>{{ form.request_last_name.label.text }}</small>
+                                </h2>
+                                {% if 'missing_last_name' in errors %}
+                                <div class="alert alert-danger" id="missing_last_name">
+                                    {{ errors['missing_last_name'] }}
+                                </div>
+                                {% endif %}
+                                {{ form.request_last_name(id="request_last_name", class="input-block-level", type="text", placeholder="Doe") }}
+                            </div>
+                            <h2>
+                                <small>{{ form.request_email.label.text }}</small>
+                            </h2>
+                            {{ form.request_email(class="input-block-level" , type="email" , placeholder="requester@email.com") }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-fluid">
+                    <div class="span8">
+                        <h3>
+                            <lead>Alternate Contact Information</lead>
+                        </h3>
+                        {% if 'missing_contact_info' in errors %}
+                        <div class="alert alert-danger" id="missing_contact_information">
+                            {{ errors['missing_contact_info'] }}
+                        </div>
+                        {% endif %}
+                        <p>No information entered in this section will be visibile to the public.
+                        </p>
+
+                        <div class="control-group">
+                            <h2>
+                                <small>{{ form.request_role.label.text }}</small>
+                            </h2>
+                            {{ form.request_role( class="input-block-level", type="text", placeholder="Your role in your organization (if applicable)" ) }}
+                            <h2>
+                                <small>{{ form.request_organization.label.text }}</small>
+                            </h2>
+                            {{ form.request_organization(class="input-block-level", type="text", placeholder="Your organization (if applicable)") }}
+                            <h2>
+                                <small>{{ form.request_phone.label.text }}</small>
+                            </h2>
+                            {{ form.request_phone(class="input-block-level", type="tel", placeholder="(555) 555-5555") }}
+                            <h2>
+                                <small>{{ form.request_fax.label.text }}</small>
+                            </h2>
+                            {{ form.request_fax(class="input-block-level", type="tel", placeholder="(555) 555-5555") }}
+                            <h2>
+                                <small>Address</small>
+                            </h2>
+                            <small>{{ form.request_address_street_one.label.text }}</small>
+                            {{ form.request_address_street_one(class="input-block-level", type="text", placeholder="123 Main Street") }}
+                            <small>{{ form.request_address_street_two.label.text }}</small>
+                            {{ form.request_address_street_two(class="input-block-level", type="text", placeholder="Apartment 3D") }}
+                            <div class="row-fluid">
+                                <div class="span5">
+                                    <small>{{ form.request_address_city.label.text }}</small>
+                                    <div class="spacer">
+                                        {{ form.request_address_city(class="input-block-level", type="text", placeholder="New York") }}
+                                    </div>
+                                </div>
+                                <div class="span4">
+                                    <small>{{ form.request_address_state.label.text }}</small>
+                                    <div class="spacer">
+                                        {{ form.request_address_state(class="input-block-level combobox") }}
+                                    </div>
+                                </div>
+                                <div class="span3">
+                                    <small>{{ form.request_address_zip.label.text }}</small>
+                                    <div class="spacer">
+                                        {{ form.request_address_zip(class="input-block-level",type="text", placeholder="12345") }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if config['ENVIRONMENT'] != 'LOCAL' %} {{ recaptcha }} {% endif %}
+                <div id="requestButton" class="spacer">
+                    <button id="button2" title="submit_request_button"
+                            class="btn btn-primary btn-large input-block-level">
+                        Submit request
+                    </button>
+                </div>
             </fieldset>
-          </form>
-        </div>
-      </div>
+
+
+        </form>
     </div>
 
-    <div class="span4">
-      <div class="row-fluid">
-      {% block sidebar %}
-        <div class="well r_sidebar hidden-phone">
-          <h4>Example</h4>
-          <!-- needs to be hooked up to prr_help.json PLEASE DELETE THIS COMMENT WHEN DONE -->
-            <p class="example">I need a copy of the Mayor’s emails sent to the Department of Public Works between July 30, 2013 and August 8, 2013.</p><p class="example">The emails should contain the words “bridge project” or “bridge development”.</p>
-          <h4>Tips</h4>
-            <ul>
-              <li>Don't reveal personal information, like your social security number or home address.</li>
-              <li>Limit your request by a date range.</li>
-              <li>Provide the name of the record or take a guess.</li>
-              <li>If you don't know the name of the record, describe the information you believe is contained in it.</li>
-            </ul>
-        </div>
-      {% endblock sidebar %}
+
     </div>
-  </div>
-
-  </div>
-  </div>
-  </div>
-{% endblock container %}
-
-{% block custom_script_links %}
+    </div>
+    <!-- end of static form -->
+{% endblock container %} {% block custom_script_links %}
     <!-- used for department dropdown -->
-  <script type="text/javascript" src="{{ url_for('static', filename = 'js/plugins/bootstrap-combobox.js') }}"></script>  
-  <script type="text/javascript" src="{{ url_for('static', filename='js/new_request.js') }}"></script>
-{% endblock custom_script_links %}
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/plugins/jquery-ui-1.10.4.custom.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/new_request.js') }}"></script>
+    {% if date %}
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("input[id^='request_date']").datepicker().val("{{ date }}");
+            });
+        </script>
+    {% else %}
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("input[id^='request_date']").datepicker().val('');
+            });
+        </script>
+    {% endif %}
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/newrequestform.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/validate.js') }}"></script>
+{% endblock custom_script_links %}IE

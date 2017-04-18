@@ -1,18 +1,21 @@
 {% extends "base.html" %}
 
 {% block container %}
-<div class="row-fluid">
-    <div class="span10">
-		{% block banner %}
-			{{ super() }}
-		{% endblock banner %}
-		<div class="span8 offset1 intro_text">
-			<p>You have entered the public records request portal for the {{config['AGENCY_NAME']}}.  This view requires authorized access.</p>
-			
-			<p>If you are on {{config['AGENCY_NAME']}} staff, please login above to view and respond to the request.</p>
+    <div class="row-fluid">
+        <div class="span10">
+            {% block banner %}
+                {{ super() }}
+            {% endblock banner %}
+            <div class="span8 offset1 intro_text">
+                <p>You have entered the public records request portal for the {{ config['AGENCY_NAME'] }}. This view
+                    requires authorized access.</p>
 
-			<p>If you are not a {{config['AGENCY_NAME']}} employee, you can still <a href="/landing">view requests here</a>.</p>
-		</div>
-	</div>
-</div>
+                <p>If you are on {{ config['AGENCY_NAME'] }} staff, please login above to view and respond to the
+                    request.</p>
+
+                <p>If you are not a {{ config['AGENCY_NAME'] }} employee, you can still <a href="/landing">view requests
+                    here</a>.</p>
+            </div>
+        </div>
+    </div>
 {% endblock container %}

@@ -1,0 +1,28 @@
+{% block subscribe %}
+{%- if "/new/request/FOIL-" in request.path %}
+{% if current_user.is_anonymous or audience == 'public' %}
+{% set requester = req.requester() %}
+{% if (requester) %}
+{% set email = requester.user.email %}
+{% endif %}
+<form name="follow" id="follow" method="post" action="/public_add_a_subscriber">
+    <input type="hidden" name="request_id" value="{{ req.id }}"/>
+    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+    <fieldset>
+        <div class="row-fluid follow">
+            <div class="span12">
+                <p>Keep track of this request?</p>
+                <input id="followRequest" name="follow_email"
+                       class="span12"
+                       placeholder="yourname@email.com" type="email">  <br/>
+                <button id="followRequest-button" class="btn btn-block"
+                        type="submit">Subscribe
+                </button>
+            </div>
+        </div>
+        </div>
+    </fieldset>
+</form>
+{% endif %}
+{% endif %}
+{% endblock subscribe %}

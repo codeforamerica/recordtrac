@@ -1,5 +1,7 @@
-#RecordTrac
-This is the home page for documentation for the **RecordTrac** application.
+[ ![Codeship Status for nycrecordswebdev/recordtrac](https://codeship.com/projects/e1c59fe0-9c47-0133-fe2b-3604d537a8d3/status?branch=master)](https://codeship.com/projects/127075)
+
+#NYC OpenRecords
+This is the home page for documentation for the **NYC OpenRecords** application.
 
 * [What is RecordTrac](#what-is-recordtrac)
 * [How to create a new RecordTrac app](#how-to-create-a-new-recordtrac-app-for-your-agency)
@@ -10,7 +12,7 @@ For help contact [Code for America](http://www.codeforamerica.org/apps/recordtra
 
 ##What is RecordTrac?
 RecordTrac is a public record request management tool for government agencies.
-![RecordTrac](/docs/images/generic_request.png "RecordTrac")  
+![RecordTrac](/docs/images/generic_request.png "RecordTrac")
 This web application allows government employees manage, respond to, and fulfill incoming requests.  It also provides a quick, simple way for individuals to submit public record requests. RecordTrac displays all requests and responsive documents so that members of the public may find what they need without submitting additional public record requests.
 
 [More about RecordTrac...](/docs/about.md)
@@ -60,4 +62,3 @@ Issues and feature backlog are tracked through [GitHub issues](https://github.co
 * [Make a new request](/docs/responder.md#make-a-new-request)
 * [Respond to a request](/docs/responder.md#respond-to-a-request)
 * [Admin](/docs/admin.md)
-

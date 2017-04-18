@@ -1,0 +1,36 @@
+<html>
+    <body>
+        <div style="background-color:#FFF;width:100%;margin:0px; padding:0px">
+            <div style="padding:20px;">
+                <div style="padding:8px;background-color:#EEE;-moz-border-radius:7px;-webkit-border-radius:7px;">
+                    <div style="clear:both;">
+                        <span style="font-family: arial,helvetica,sans-serif;">
+                            <span style="color: rgb(51, 51, 51); font-size: 14px;">
+                                <p>
+                                    We have received your payment to cover the cost of the retrieval and/or reproduction of the documents you requested
+                                    under the Freedom of Information Law (FOIL). Thank You. Please allow 7-10 business days to receive your documents.
+                                </p>
+                                <p>
+                                    You can view the request and take any necessary action at the following webpage:
+                                    <a href='{{ page }}'>{{ page }}</a>.
+                                </p>
+                                <p>
+                                    Click <a href="FAQ PAGE">here</a> to learn about how the City responds to FOIL requests.
+                                </p>
+                                </br>
+                                {% if unfollow_link %}
+                                    <p>
+                                        You can always choose to
+                                        <a href='{{ unfollow_link }}s'>unfollow this request</a> if you
+                                        don't want to receive more emails about it.
+                                    </p>
+                                {% endif %}
+                                </br>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
