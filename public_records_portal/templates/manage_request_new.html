@@ -1,10 +1,22 @@
 <!-- This template is to display success banner immediately after a new requests gets submitted. -->
 
 {% extends "case.html" %}
-{% block title %}Request {{ request_id }}{% endblock %}
+{% set active_page='new' %}
+{% block title %}OpenRecords - Request {{ request_id }}{% endblock %}
 {% block head %}
-  {{ super() }}
+    {{ super() }}
 {% endblock %}
+{% block custom_css_links %}
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/manage_request_city_less_js.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bottom_sidebar.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/case.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jasny-bootstrap.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.fileupload.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.fileupload-ui.css') }}">
+{% endblock custom_css_links %}
+
 
 {% block banner %}
     {% set requester = req.requester() %}
@@ -12,37 +24,118 @@
         {% set email = requester.user.email %}
     {% endif %}
     {% if email %}
-      <div class="alert alert-success">
-      <button type="button" class="close" data-dismiss="alert">x</button>
-      <div class="span1 text-right"><i class="icon-ok-sign icon-2x"> </i></div>
+        <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert">x</button>
+        <div class="span1 text-right"><i class="icon-ok-sign icon-2x"> </i></div>
     {% else %}
         <div class="alert alert-warning">
-       <button type="button" class="close" data-dismiss="alert">x</button>
-      <div class="span1 text-right"><i class="icon-warning-sign icon-2x"> </i></div>
+        <button type="button" class="close" data-dismiss="alert">x</button>
+        <div class="span1 text-right"><i class="icon-warning-sign icon-2x"> </i></div>
     {% endif %}
-    <div class="offset1">
-    {% if current_user.is_authenticated() %}
-      <p><strong>  The request has been submitted!</strong></p>
-      <p>
-        {% if email %} 
-          The requester has been notified via email that they can expect to hear a response from the {{config['AGENCY_NAME']}} in the next 10 days. Requester will be automatically contacted with any updates.
-        {% else %} 
-          Because the requester did not provide an email address, the agency is responsible for communicating updates to the requester in the format received. 
-        {% endif %}
-      </p>
-    {% else %}
-        <p><strong>  Your request has been submitted!</strong></p>
-        <p>You can expect a response from the {{config['AGENCY_NAME']}} in the next 10 days.
-          {% if email %} 
-            You will be contacted via e-mail with any updates.
-          {% else %} 
-            You did not provide an e-mail address so you will have to visit this page for updates. 
-          {% endif %}
+
+<div class="offset1">
+
+    {% if current_user.is_authenticated %}
+        <p><strong> The request has been submitted!</strong></p>
+        <p>
+            {% if email %}
+                The requester has been notified via email that they can expect to hear a response from the
+                {{ config['AGENCY_NAME'] }} within 5 business days. Requester will be automatically contacted with any
+                updates.
+            {% else %}
+                Because the requester did not provide an email address, the agency is responsible for communicating
+                updates to the requester in the format received.
+            {% endif %}
         </p>
-        <p>All messages from the {{config['AGENCY_NAME']}} and/or the information and documents you requested will be posted to this page. You can access <a href ="{{request.path}}">this page</a> at any time.</p>
+    {% else %}
+        <p><strong> Your request has been submitted!</strong></p>
+        <p>You can expect an acknowledgement from the {{ config['AGENCY_NAME'] }} within 5 business days.
+            <!-- {% if email %}
+            You will be contacted via e-mail with any updates.
+          {% else %}
+            You did not provide an e-mail address so you will have to visit this page for updates.
+          {% endif %} -->
+            The agency will use the contact information you provided.
+        </p>
+        <p>All messages from the {{ config['AGENCY_NAME'] }} and/or the information and documents you requested will be
+            posted to this page. You can access <a href="{{ request.path }}">this page</a> at any time.</p>
     {% endif %}
-    </div>
-  </div>
+</div>
+</div>
 {% endblock banner %}
+
+{% block custom_script_links %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/case.js') }}"></script>
+
+<!-- used for the extension and close request multi-select boxes in city view -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-select.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/custom.bootstrap-select.js') }}"></script>
+
+
+<!-- For file uploads -->
+<!--script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jasny-bootstrap.js') }}"></script-->
+
+<script type="text/javascript"
+        src="{{ url_for('static', filename='js/plugins/jquery.ellipsis.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/jquery.ui.widget.js') }}"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="{{ url_for('static', filename='js/jquery.iframe-transport.js') }}"></script>
+<!-- The basic File Upload plugin -->
+<script src="{{ url_for('static', filename='js/jquery.fileupload.js') }}"></script>
+<!-- The File Upload processing plugin -->
+<script src="{{ url_for('static', filename='js/jquery.fileupload-process.js') }}"></script>
+
+
+<script type="text/javascript">
+
+        var uploadButton = $('<button/>')
+            .addClass('btn btn-primary')
+            .prop('disabled', true)
+            .text('Processing...')
+            .on('click', function () {
+                var $this = $(this),
+                    data = $this.data();
+                $this
+                    .off('click')
+                    .text('Abort')
+                    .on('click', function () {
+                        $this.remove();
+                        data.abort();
+                    });
+                data.submit().always(function () {
+                    $this.remove();
+                });
+            });
+
+$("#record").on('change', function (e, data) {
+  var names = [];
+  if($("input[name=record]") && $("input[name=record]").get(0) && $("input[name=record]").get(0).files) {
+      for (var i = 0; i < $("input[name=record]").get(0).files.length; ++i) {
+        names.push($("input[name=record]").get(0).files[i].name);
+      }
+  }
+        $.each(names, function (index, file) {
+            var node = $('<p>');
+                    //.append($('<span/>').text(file));
+            node.append('<tr class="template-upload fade">');
+            node.append('<td>');
+            node.append('<p class="name">' + file + '</p>');
+            node.append('<strong class="error text-danger"></strong>');
+            node.append('</td>');
+            node.append('<td class="title">');
+            node.append('<label>Title: <input class="title_text" name="title[]" required></label>');
+            node.append('</td>');
+            node.append('<tr>');
+            node.append('<button class="btn btn-danger delete" type="button" onclick="parentNode.remove();"><i class="glyphicon glyphicon-trash"></i><span>Cancel</span></button>');
+            if (!index) {
+                node
+                    .append('<br>')
+                    .append(uploadButton.clone(true).data(data));
+            }
+            node.appendTo("#files");
+        })});
+</script>
+{% endblock custom_script_links %}
 
 

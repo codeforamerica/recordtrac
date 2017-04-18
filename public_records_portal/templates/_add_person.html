@@ -1,14 +1,16 @@
-  <div id="notifyPopover-head" class="hide">Notify: <a class="close" href="#">&times;</a> </div>
-  <div id="notifyPopover-content" class="hide">              
-    <form id="notifyForm" class="form-inline" method ="post" action="/add_a_owner">
-      <!-- my form -->
-      <div class="control-group">
-        <div class="controls">
-          <input type="hidden" name="request_id" value="{{ req.id }}"/>
-          <input id="notifyEmail" type="email" name="owner_email" placeholder="name@email.com" data-provide="typeahead" autocomplete="off" required />
-          <input id="notifyReason" type="text" name="owner_reason" placeholder="Say why." required />
-          <button id="notifyButton" class="btn" type="submit"> <i class="icon-envelope"> </i> </button>
+<div id="notifyPopover-head" class="hide">Notify: <a class="close" href="#">&times;</a></div>
+<div id="notifyPopover-content" class="hide">
+    <form id="notifyForm" class="form-inline" method="post" action="/add_a_owner">
+        <!-- my form -->
+        <div class="control-group">
+            <div class="controls">
+                <input type="hidden" name="request_id" value="{{ req.id }}"/>
+                <input id="notifyEmail" type="email" name="owner_email" placeholder="name@email.com"
+                       data-provide="typeahead" autocomplete="off" required/>
+                <input id="notifyReason" type="text" name="owner_reason" placeholder="Say why." required/>
+                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                <button id="notifyButton" class="btn" type="submit"><i class="icon-envelope"> </i></button>
+            </div>
         </div>
-      </div>
     </form>
-  </div>
+</div>

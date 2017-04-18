@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}OpenRecords - Login{% endblock %}
+
+{% block container %}
+    <div class="row-fluid">
+	    <div class="span8 ">
+	        <h1 class="lead">Login to NYC OpenRecords</h1>
+
+	        <div class="row-fluid">
+	            {% for message in errors %}
+	                <div class="alert alert-danger">
+	                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+	                    {{ message }}
+	                </div>
+	            {% endfor %}
+	        </div>
+            <div class="row-fluid">
+                <form name="login" class="form-horizontal" id="submitRequest" method="post" action="/login"
+                      autocomplete="off" novalidate="novalidate">
+                    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+{#                    {{ form.csrf_token( name = _csrf_token ) }}#}
+                    <div class="control-group">
+                        <h2>
+                            <small>{{ form.username.label.text }}</small>
+                        </h2>
+                        {{ form.username(class="input-block-level form-control", type="text", placeholder="jdoe@city.gov") }}
+                    </div>                  
+                    <div class="control-group">
+                        <h2>
+                            <small>{{ form.password.label.text }}</small>
+                        </h2>
+                        {{ form.password(class="input-block-level form-control", type="password", placeholder="*******") }}
+                    </div>
+                    <div class="control-group">
+                        {{ form.submit(class="btn btn-primary btn-large input-block-level") }}
+                    </div>
+                    <div class="control-group">
+                        Forgot your password? Please email <a href="mailto:openrecords@records.nyc.gov">openrecords@records.nyc.gov</a> for assistance
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock container %}
