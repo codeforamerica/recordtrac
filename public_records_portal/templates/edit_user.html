@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}OpenRecords - Login{% endblock %}
+
+{% block custom_css_links %}
+    <!-- used for the extension and close request multi-select boxes in city view -->
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-select.min.css') }}">
+    <!-- used for department dropdown -->
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui-1.10.4.custom.min.css') }}">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/jquery-ui.css') }}">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/plugins/bootstrap-combobox.css') }}"media="screen">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/sidebar.css') }}">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/new_request.css') }}">
+{% endblock %}
+{% block container %}
+	<div class="row-fluid">
+		<div class="offset1">
+			<p class="lead">Sign up for OpenFOIL</p>
+			<div class="span7">
+				<div class="row-fluid">
+					{% for message in errors %}
+						<div class="alert alert-danger">
+							<a href="#" class="close" data-dismiss="alert">&times;</a>
+							{{ message }}
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+			<div class="span7">
+				<form name="edit_user_info" class="form-horizontal" method="post" action="/edit_user_info" autocomplete="off" novalidate="novalidate">
+                    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+					{{ form.username.label.text }}
+					<div class="spacer">
+						{{ form.username(placeholder=current_user.email) }}
+					</div>
+					{{ form.phone.label }}
+					{{ form.phone(placeholder=current_user.phone or "") }}
+					{{ form.first_name.label }}
+					{{ form.first_name(placeholder=current_user.first_name or "") }}
+					{{ form.last_name.label }}
+					{{ form.last_name(placeholder=current_user.last_name or "") }}
+					{{ form.title.label }}
+					{{ form.title(placeholder=current_user.title or "") }}
+					{{ form.submit }}
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock container %}
+
+
+
+

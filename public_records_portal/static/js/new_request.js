@@ -1,47 +1,14 @@
 $(document).ready(function(){
-
-  $.validator.addMethod('nopostdate', function(value, element) {
-    var eod = new Date();
-    var dateval = new Date(value);
-
-    eod.setHours(23, 59, 59, 999);
-    return this.optional(element) || dateval <= eod;
-  }, "This field must not be postdated.");
-
-  /* validates add a request form */
-  $("#submitRequest").validate({
-      rules: {
-        request_text: {
-          required: true,
-          minlength: 2
-        },
-        date_received: {
-          nopostdate: true
-        }
-      },
-      messages: {
-        date_received: "You must select a date in the past."
-      },
-      highlight: function(element) {
-        $(element).closest('.control-group').removeClass('success').addClass('error');
-      },
-      success: function(element) {
-        element
-          .closest('.control-group').removeClass('error').addClass('success');
-      }
-    });
-
-
   /* help text popover */
-    $('#requestTextarea').popover({
+    $('#request_text').popover({
         trigger: 'focus',
         html : true,
         content: function() {
-          return $("#requestPopover-content").html();
+          return $("#requestTextPopover-content").html();
         }
     });
 
-    $('#inputEmail').popover({
+    $('#request_email').popover({
         trigger: 'focus',
         html : true,
         content: function() {
@@ -49,7 +16,7 @@ $(document).ready(function(){
         }
     });
 
-    $('#inputName').popover({
+    $('#request_name').popover({
         trigger: 'focus',
         html : true,
         content: function() {
@@ -57,7 +24,7 @@ $(document).ready(function(){
         }
     });
 
-    $('#inputPhone').popover({
+    $('#request_phone').popover({
         trigger: 'focus',
         html : true,
         content: function() {
@@ -65,6 +32,29 @@ $(document).ready(function(){
         }
     });
 
+    $('#request_address_street').popover({
+        trigger: 'focus',
+        html : true,
+        content: function() {
+          return $("#streetPopover-content").html();
+        }
+    });
+
+    $('#request_address_city').popover({
+        trigger: 'focus',
+        html : true,
+        content: function() {
+          return $("#cityPopover-content").html();
+        }
+    });
+
+    $('#request_address_zip').popover({
+        trigger: 'focus',
+        html : true,
+        content: function() {
+          return $("#zipPopover-content").html();
+        }
+    });
 
 
 /* End of .ready functionality */

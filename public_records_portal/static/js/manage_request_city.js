@@ -132,16 +132,16 @@ function prepareStaffTypeahead(){
   var contacts = []
 
 
-  $.getJSON("/api/staff", function(data) {
-        var user_data = data['objects']
-        $.each(user_data, function (i, staff) {
-              emails.push(staff['email']);
-              map[staff['alias'] + " - " + staff['email']] = staff['email'];
-              contacts.push(staff['alias'] + " - " + staff['email']);
-       });
-    });
-  return { map:map, emails:emails, contacts:contacts }
-}
+//   $.getJSON("/api/staff", function(data) {
+//         var user_data = data['objects']
+//         $.each(user_data, function (i, staff) {
+//               emails.push(staff['email']);
+//               map[staff['alias'] + " - " + staff['email']] = staff['email'];
+//               contacts.push(staff['alias'] + " - " + staff['email']);
+//        });
+//     });
+//   return { map:map, emails:emails, contacts:contacts }
+// }
 
 function setStaffTypeahead(contacts, map) {
 
@@ -250,5 +250,5 @@ $(document).ready(function() {
     $parent.append("<div class='more'>..more</div>");
   })
 
-})
+})}
 

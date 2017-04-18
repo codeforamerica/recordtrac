@@ -1,7 +1,7 @@
-from functools import wraps
 import errno
 import os
 import signal
+from functools import wraps
 
 
 def timeout(seconds=10, error_message=os.strerror(errno.ETIME)):

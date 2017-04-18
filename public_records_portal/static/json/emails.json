@@ -3,24 +3,40 @@
     ["Requester", "Subscribers", "Subscriber", "Staff owner", "Departmental backups", "Staff participants", "Staff participant"],
     "Notification types":
     {
-        "Request assigned":
+
+        "extension":
+        {
+          "Subject": "FOIL Time Extension Requested",
+          "Recipients": ["Subscribers"]
+        },
+        "Reopen request":
+        {
+          "Subject": "Request has been reopened",
+          "Recipients": ["Requester"]
+        },
+        "helper_removed":
+        {
+          "Subject": "A helper has been removed from your request",
+          "Recipients": ["Staff participants"]
+        },
+        "request_assigned":
         {
             "Subject": "A request has been assigned to you",
             "Recipients": ["Staff owner"],
             "Email body": "We're not using this but we could."
         },
-         "Staff participant added":
+        "helper_added":
         {   "Subject": "A request has been assigned to you",
             "Recipients": ["Staff participant"]
         },
-        "Question asked": 
+        "Question asked":
         {
             "Subject": "There is a question about your request.",
             "Recipients":["Requester"]
         },
         "Question answered":
         {
-            "Subject": "A question about this request has been answered by the requester.",
+            "Subject": "The question you had about a request has received a response.",
             "Recipients": ["Staff participants"]
         },
         "Request closed":
@@ -28,9 +44,9 @@
             "Subject": "The request has been closed",
             "Recipients": ["Staff participants", "Subscribers"]
         },
-        "City response added":
+        "city_response_added":
         {
-            "Subject": "A response has been added to the request.",
+            "Subject": "There is a new inquiry or response to the information you provided.",
             "Recipients": ["Subscribers"]
         },
         "Request due":
@@ -38,14 +54,14 @@
             "Subject": "A request in your department is due in 2 days or less.",
             "Recipients": ["Staff owner", "Departmental backups"]
         },
-        "Public note added":
+        "add_note":
         {
             "Subject": "A note has been added to this request by the requester.",
             "Recipients": ["Staff participants"]
         },
         "Request made":
         {
-            "Subject": "Your request has been submitted.",
+            "Subject": "FOIL Request Submitted.",
             "Recipients": ["Requester"]
         },
         "Request overdue":
@@ -57,8 +73,147 @@
         {
             "Subject": "You are now subscribed to this request.",
             "Recipients": ["Subscriber"]
+        },
+        "acknowledgement":
+        {
+            "Subject": "The request has been Acknowledged",
+            "Recipients":["Subscribers","Requester"]
+        },
+        "confirmation":
+        {
+            "Subject": "FOIL Request Submitted",
+            "Recipients": ["Requester"]
+        },
+        "confirmation_agency":
+        {
+            "Subject": "FOIL Request Submitted",
+            "Recipients": ["Staff participants"]
+        },
+        "denied":
+        {
+            "Subject": "FOIL Request Denied",
+            "Recipients":["Subscribers"]
+        },
+        "closed_fulfilled_in_whole":
+        {
+            "Subject": "FOIL Request Fulfilled in Whole",
+            "Recipients":["Subscribers"]
+        },
+        "closed_fulfilled_in_part": {
+            "Subject": "FOIL Request Fulfilled in Part",
+            "Recipients": ["Subscribers"]
+        },
+        "closed_by_email":{
+            "Subject": "FOIL Request Fulfilled via Email",
+            "Recipients": ["Subscribers"]
+        },
+        "closed_by_fax":{
+            "Subject": "FOIL Request Fulfilled via Fax",
+            "Recipients": ["Subscribers"]
+        },
+        "closed_by_mail":{
+            "Subject": "FOIL Request Fulfilled via Mail",
+            "Recipients": ["Subscribers"]
+        },
+        "closed_by_pickup":{
+            "Subject": "FOIL Request Fulfilled via Pickup",
+            "Recipients": ["Subscribers"]
+        },
+        "refer_311":{
+            "Subject": "FOIL Request 311 Referral",
+            "Recipients": ["Subscribers"]
+        },
+        "refer_opendata":{
+            "Subject": "FOIL Request OpenData Referral",
+            "Recipients": ["Subscribers"]
+        },
+        "refer_other_agency":{
+            "Subject": "FOIL Request Agency Referral",
+            "Recipients": ["Subscribers"]
+        },
+        "refer_web_link":{
+            "Subject": "FOIL Request Web Link",
+            "Recipients": ["Subscribers"]
+        },
+        "Public Notification Template 01":
+        {
+            "Subject": "FOIL Request Submitted",
+            "Recipients": ["Requester"]
+        },
+        "Public Notification Template 02":
+        {
+            "Subject": "FOIL Message Sent",
+            "Recipients": ["Requester"]
+        },
+        "Public Notification Template 03":
+        {
+            "Subject": "FOIL Request Status",
+            "Recipients": ["Requester"]
+        },
+        "Public Notification Template 04":
+        {
+            "Subject": "FOIL Request Completed",
+            "Recipients": ["Requester"]
+        },
+        "Public Notification Template 05":
+        {
+            "Subject": "FOIL Request Status",
+            "Recipients": ["Requester"]
+        },
+        "Public Notification Template 06":
+        {
+            "Subject": "FOIL Request Denied",
+            "Recipients": ["Requester"]
+        },
+        "Public Notification Template 07":
+        {
+            "Subject": "FOIL Request Closed",
+            "Recipients": ["Requester"]
+        },
+        "Public Notification Template 08":
+        {
+            "Subject": "FOIL Request Payment Information",
+            "Recipients": ["Requester"]
+        },
+        "Public Notification Template 09":
+        {
+            "Subject": "FOIL Request Closed",
+            "Recipients": ["Requester"]
+        },
+        "Public Notification Template 10":
+        {
+            "Subject": "FOIL Time Extension Requested",
+            "Recipients": ["Requester"]
+        },
+        "Agency Notification Template 01":
+        {
+            "Subject": "FOIL Acknowledgement Reminder",
+            "Recipients": ["Staff owner"]
+        },
+        "Agency Notification Template 02":
+        {
+            "Subject": "FOIL 5-Day Fulfillment Reminder",
+            "Recipients": ["Staff owner"]
+        },
+        "Agency Notification Template 03":
+        {
+            "Subject": "FOIL 10-Day Fulfillment Reminder",
+            "Recipients": ["Staff owner"]
+        },
+        "Agency Notification Template 04":
+        {
+            "Subject": "FOIL Acknowledgement Past Due",
+            "Recipients": ["Staff owner"]
+        },
+        "Agency Notification Template 05":
+        {
+            "Subject": "FOIL Acknowledgement Past Due",
+            "Recipients": ["Staff owner"]
+        },
+        "Agency Notification Template 06":
+        {
+            "Subject": "FOIL Extension Reminder",
+            "Recipients": ["Staff owner"]
         }
-
     }
 }
-

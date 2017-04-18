@@ -62,6 +62,14 @@ class PublicRecordsTestCase(unittest.TestCase):
 		assert note_text in page.data
 
 	# Tests for adding a record:
+	# ---
+
+	def test_upload_record(self):
+		request_id = self.submit_request(text=self.random_content('request'), email = 'richa@richa.com')
+		record_description = self.random_content('record')
+		fields = dict(request_id = request_id, record_description = record_description)
+		page = self.submit_generic(fields = fields, endpoint = "add_a_record")
+		assert record_description in page.data
 
 	def test_add_note(self):
 		request_id = self.submit_request(text=self.random_content('request'), email = 'richa@richa.com')
@@ -128,11 +136,6 @@ class PublicRecordsTestCase(unittest.TestCase):
 		page = self.submit_generic(fields = dict(request_id = request_id, extend_reason = [extend_reason]), endpoint = "add_a_extension")
 		assert extend_reason in page.data
 
-	def test_extend_request_must_have_reason(self):
-		request_id = self.submit_request(text = self.random_content('request'), email = 'richa@codeforamerica.org')
-		page = self.submit_generic(fields = dict(request_id = request_id), endpoint = "add_a_extension")
-		assert 'You must select a reason' in page.data
-
 	def submit_request(self, email, text):
 		request_id, success = prr.make_request(text = text, email = email, passed_spam_filter = True)
 		return request_id
@@ -142,3 +145,4 @@ class PublicRecordsTestCase(unittest.TestCase):
 
 if __name__ == '__main__':
 	unittest.main()
+
