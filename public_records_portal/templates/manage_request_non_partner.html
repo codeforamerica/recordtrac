@@ -1,0 +1,26 @@
+<!-- This template is to display success banner immediately after a new requests gets submitted. -->
+{% extends "base.html" %}
+{% set active_page='new' %}
+{% block title %}OpenRecords - Request {{ request_id }}{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+
+{% block banner %}
+<div class="alert alert-warning">
+    <button type="button" class="close" data-dismiss="alert">x</button>
+    <div class="span1 text-right"><i class="icon-warning-sign icon-2x"> </i></div>
+
+    <div class="offset1">
+        <p class="lead"><strong>The {{ agency }} is not currently using the OpenRECORDS program to
+            respond to requests. Your FOIL request has been automatically sent to the agency. They will contact you
+            directly. Information about this request will not be maintained in this program.</strong></p>
+
+        <p class="lead">You can find the Agency FOIL Office contact information in the following listing: <a
+                href="http://www.nyc.gov/html/records/downloads/pdf/FOIL%20Officer%20Contact%20Information_February%202015.pdf">NYC
+            Agency FOIL Officers (February 2015)</a> (in <a href="http://www.nyc.gov/cgi-bin/exit.pl?url=http://www.adobe.com/products/acrobat/readstep2.html">PDF</a>)</p>
+    </div>
+</div>
+{% endblock banner %}
+

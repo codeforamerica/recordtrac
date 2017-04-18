@@ -1,3 +1,92 @@
 name,email,department name,phone number
-Richa Agarwal,richa@codeforamerica.org,Engineering,555-555-5555
-Cris Cristina,cris@codeforamerica.org,Design,
+Joel Castillo,jcastillo@records.nyc.gov,Department of Records and Information Services,311
+Martin Batey,mbatey@records.nyc.gov,Department of Records and Information Services,311
+Pauline Toole,ptoole@records.nyc.gov,Department of Records and Information Services,311
+Kenneth Cobb,kcobb@records.nyc.gov,Department of Records and Information Services,311
+LaTonya Jones,lcjones@records.nyc.gov,Department of Records and Information Services,311
+Haronil Estevez,hestevez@records.nyc.gov,Department of Records and Information Services,311
+Florence Hutner,fhutner@ocme.nyc.gov,Office of the Chief Medical Examiner,311
+Maureen Paulino,MPaulino@ocme.nyc.gov,Office of the Chief Medical Examiner,311
+Frank Ng,fng@oath.nyc.gov,Office of Administrative Trials and Hearings,311
+James Macron,jmacron@oath.nyc.gov,Office of Administrative Trials and Hearings,311
+Tito Sinha,TSinha@cchr.nyc.gov,Commission on Human Rights,311
+Robert Wilson,rwilson@oem.nyc.gov,NYC Emergency Management,311
+Jennifer Baek,jbaek@doitt.nyc.gov,Department of Information Technology and Telecommunications,311
+Charles Fraser,cfraser@doitt.nyc.gov,Department of Information Technology and Telecommunications,311
+Ugooma Daniel,udaniel@doitt.nyc.gov,Department of Information Technology and Telecommunications,311
+Joseph Baranello,JBaranello3@schools.nyc.gov,Department of Education,311
+Ian Bassin,ibassin@cityhall.nyc.gov,Office of the Mayor,311
+Kiren Gopal,kgopal@cityhall.nyc.gov,Office of the Mayor,311
+Brandon Joseph,bjoseph@cityhall.nyc.gov,Office of the Mayor,311
+Bess Chiu,bchiu@cityhall.nyc.gov,Office of the Mayor,311
+Katherine Vera,kvera@cityhall.nyc.gov,Mayor's Office of Operations,311
+Jeff Merritt,jmerritt@cto.nyc.gov,Mayor's Office of Technology and Innovation,311
+Caroline Carney,cfcarney@cto.nyc.gov,Mayor's Office of Technology and Innovation,311
+Steven Goulden,sgoulden@law.nyc.gov,Law Department,311
+Stephen Louis,slouis@law.nyc.gov,Law Department,311
+Patrick Ainslie,patrick@reboot.org,Department of Records and Information Services,311
+Adam Parker,adam.parker@reboot.org,Department of Records and Information Services,311
+Zack Brisson,Zack@reboot.org,Department of Records and Information Services,311
+Lois Last,llast@doitt.nyc.gov,Department of Information Technology and Telecommunications,311
+Chris Long,clong@doitt.nyc.gov,Department of Information Technology and Telecommunications,311
+Tin Lau,tlau@doitt.nyc.gov,Department of Information Technology and Telecommunications,311
+Visham Subrath,vsubrath@doitt.nyc.gov,Department of Information Technology and Telecommunications,311
+Foil Officer,foil@NYCOA.nyc.gov,NYC Office of the Actuary,311
+Foil Officer,foil@OATH.nyc.gov,Office of Administrative Trials and Hearings,311
+Foil Officer,foil@DFTA.nyc.gov,Department for the Aging,311
+Foil Officer,foil@DOB.nyc.gov,Department of Buildings,311
+Foil Officer,foil@BIC.nyc.gov,Business Integrity Commission,311
+Foil Officer,foil@OCME.nyc.gov,NYC Office of Chief Medical Examiner,311
+Foil Officer,foil@ACS.nyc.gov,Administration for Children's Services,311
+Foil Officer,foil@DCP.nyc.gov,Department of City Planning,311
+Foil Officer,foil@DCAS.nyc.gov,Department of Citywide Administrative Services,311
+Foil Officer,foil@CSC.nyc.gov,Civil Service Commission,311
+Foil Officer,foil@CCRB.nyc.gov,Civilian Complaint Review Board,311
+Foil Officer,foil@CCPC.nyc.gov,Commission to Combat Police Corruption,311
+Foil Officer,foil@COIB.nyc.gov,Conflicts of Interest Board,311
+Foil Officer,foil@DCA.nyc.gov,Department of Consumer Affairs,311
+Foil Officer,foil@MOCS.nyc.gov,Mayor's Office of Contract Services,311
+Foil Officer,foil@BOCS.nyc.gov,Board of Correction,311
+Foil Officer,foil@DOC.nyc.gov,Department of Correction,311
+Foil Officer,foil@DCLA.nyc.gov,Department of Cultural Affairs,311
+Foil Officer,foil@DDC.nyc.gov,Department of Design and Construction,311
+Foil Officer,foil@DC.nyc.gov,Design Commission,311
+Foil Officer,foil@DOE.nyc.gov,Department of Education,311
+Foil Officer,foil@OEM.nyc.gov,NYC Emergency Management NYC,311
+Foil Officer,foil@DEP.nyc.gov,Department of Environmental Protection,311
+Foil Officer,foil@OER.nyc.gov,Office of Environmental Remediation,311
+Foil Officer,foil@EEPC.nyc.gov,Equal Employment Practices Commission,311
+Foil Officer,foil@DOF.nyc.gov,Department of Finance,311
+Foil Officer,foil@FDNY.nyc.gov,New York City Fire Department,311
+Foil Officer,foil@HHC.nyc.gov,Health and Hospitals Corporation,311
+Foil Officer,foil@DOHMH.nyc.gov,Department of Health and Mental Hygiene,311
+Foil Officer,foil@DHS.nyc.gov,Department of Homeless Services,311
+Foil Officer,foil@NYCHA.nyc.gov,New York City Housing Authority,311
+Foil Officer,foil@HPD.nyc.gov,Department of Housing Preservation and Development,311
+Foil Officer,foil@HRO.nyc.gov,Housing Recovery Operations,311
+Foil Officer,foil@HRA.nyc.gov,Human Resources Administration,311
+Foil Officer,foil@CCHR.nyc.gov,City Commission on Human Rights,311
+Foil Officer,foil@DOITT.nyc.gov,Department of Information Technology and Telecommunications,311
+Foil Officer,foil@DOI.nyc.gov,Department of Investigation,311
+Foil Officer,foil@OLR.nyc.gov,NYC Office of Labor Relations,311
+Foil Officer,foil@LPC.nyc.gov,Landmarks Preservation Commission,311
+Foil Officer,foil@LAW.nyc.gov,Law Department,311
+Foil Officer,foil@LOFT.nyc.gov,Loft Board,311
+Foil Officer,foil@OLTPS.nyc.gov,Office of Long-Term Planning & Sustainability,311
+Foil Officer,foil@OMB.nyc.gov,Office of Management and Budget,311
+Foil Officer,foil@OM.nyc.gov,Mayor's Office,311
+Foil Officer,foil@MOME.nyc.gov,Mayor's Office of Media and Entertainment,311
+Foil Officer,foil@DPR.nyc.gov,Department of Parks and Recreation,311
+Foil Officer,foil@OPA.nyc.gov,Office of Payroll Administration,311
+Foil Officer,foil@NYPD.nyc.gov,Police Department,311
+Foil Officer,foil@DOP.nyc.gov,Department of Probation,311
+Foil Officer,foil@PPB.nyc.gov,Procurement Policy Board,311
+Foil Officer,foil@DOR.nyc.gov,Department of Records,311
+Foil Officer,foil@DSNY.nyc.gov,Department of Sanitation,311
+Foil Officer,foil@SCA.nyc.gov,School Construction Authority,311
+Foil Officer,foil@SBS.nyc.gov,Small Business Services,311
+Foil Officer,foil@SNP.nyc.gov,NYC Office of the Special Narcotics Prosecutor,311
+Foil Officer,foil@BSA.nyc.gov,Board of Standards and Appeals,311
+Foil Officer,foil@TLC.nyc.gov,Taxi and Limousine Commission,311
+Foil Officer,foil@DOCT.nyc.gov,Department of Transportation,311
+Foil Officer,foil@DYCD.nyc.gov,Department of Youth and Community Development,311

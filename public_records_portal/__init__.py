@@ -1,77 +1,133 @@
-"""A flask app to handle public records requests and display responses.
+"""
+A flask app to handle public records requests and display responses.
 
-	Initializes application and all of its environment variables.
+Initializes application and all of its environment variables.
 
 .. moduleauthor:: Richa Agarwal <richa@codeforamerica.org>
 
 """
 
 import logging
-from os import environ
+import time
+from datetime import timedelta
+from logging.handlers import TimedRotatingFileHandler
+from os import environ, pardir
+from os.path import abspath, dirname, join
+
+import pytz
+from business_calendar import Calendar, MO, TU, WE, TH, FR
+from dotenv import load_dotenv
 from flask import Flask
+from flask.ext.kvsession import KVSessionExtension
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask_recaptcha import ReCaptcha
+from simplekv.db.sql import SQLAlchemyStore
+from tzlocal import get_localzone
 
 # Initialize Flask app
 app = Flask(__name__)
-app.debug = True
+
+load_dotenv(abspath(join(join(dirname(__file__), pardir), '.env')))
+
+# Setup Calendar
+cal = Calendar(
+        workdays=[MO, TU, WE, TH, FR],
+        holidays=[
+            '2016-01-01',
+            '2016-01-18',
+            '2016-02-15',
+            '2016-05-30',
+            '2016-07-4',
+            '2016-09-5',
+            '2016-10-10',
+            '2016-11-08',
+            '2016-11-11',
+            '2016-11-24',
+            '2016-12-26'
+        ]
+)
 
 
+def set_env(key, default=None):
+    """ Used to set environment variables """
+    if key in environ:
+        app.config[key] = environ[key]
+    elif key in app.config:
+        pass
+    elif default:
+        app.config[key] = default
 
-# Set environment variables
-def set_env(key, default = None):
-	if key in environ:
-		app.config[key] = environ[key]
-	elif default:
-		app.config[key] = default
-
-def set_bool_env(key, default = None):
-	if key in environ:
-		app.config[key] = environ[key].lower() in ('true', 'yes', 'on')
-	elif default is not None:
-		app.config[key] = default
 
 # UPDATES TO THESE DEFAULTS SHOULD OCCUR IN YOUR .env FILE.
-
-set_env(key = 'APPLICATION_URL', default = "http://127.0.0.1:5000/")
-set_env(key = 'ENVIRONMENT', default="LOCAL")
-# The default records liaison, to whom requests get routed to if no department is selected:
-set_env(key = 'DEFAULT_OWNER_EMAIL', default = 'recordtrac@codeforamerica.org')
-set_env(key = 'DEFAULT_OWNER_REASON', default = 'Open government coordinator' )
-
-set_env(key = 'AGENCY_NAME', default = 'Your agency name') # e.g. City of Oakland
-set_env(key = 'SECRET_KEY', default = 'Change this to something super secret') # Flask application's secret key
-
-# The number of days an agency has (determined by law or policy) to fulfill a request
-# Currently due dates and overdue status is only showed to logged in agency staff
-set_env(key = 'DAYS_TO_FULFILL', default = '10')
-set_env(key = 'DAYS_AFTER_EXTENSION', default = '14')
-set_env(key = 'DAYS_UNTIL_OVERDUE', default = '2')
-
-set_env(key = 'TIMEZONE', default = "US/Pacific")
+set_env(key='TIMEZONE', default=pytz.timezone(str(get_localzone())))
 
 # Set rest of the variables that don't have defaults:
 envvars = [
-			'DEFAULT_MAIL_SENDER', # The e-mail address used as the FROM field for all notifications
-			'MAIL_USERNAME', # The SendGrid username
-			'MAIL_PASSWORD', # The SendGrid password
-			'SENDGRID_MONTHLY_LIMIT', # Your SendGrid Monthly Limit
-			'LIST_OF_ADMINS', # Defines who has admin access (/admin) with a comma delimited list of e-mail addresses. i.e. 'richa@codeforamerica.org,cris@codeforamerica.org'
-			'SECRET_KEY', # Flask app secret key
-			'AKISMET_KEY', # Used for spam filtering
-			'RECAPTCHA_PUBLIC_KEY',
-			'RECAPTCHA_PRIVATE_KEY',
-			'DEV_EMAIL', # Used for local e-mail testing if set
-			'CHECK_FOR_SPAM', # Used to test spam locally if set
-			'GOOGLE_FEEDBACK_FORM_ID', # The form ID that the feedback tab is hooked up to,
-			'STAFF_URL', # The path/URL at which a csv containing staff data lives. If this is not set, no one will be able to log into RecordTrac
-			'LIAISONS_URL', # The path/URL at which a csv containing liaisons/department data lives. If this is not set, initial request routing will always be directed to the default owner
-			'LOGO_ON_WHITE_URL', # The path/URL at which a logo (on a white background) of the agency is hosted. (.png or .jpg)
-			'LOGO_ON_BLACK_URL', # The path/URL at which a logo (on a black background) of the agency is hosted. (.png or .jpg)
-			'TESTING', # Set if you are running tests. Primarily used to ignore @login_requireds when running tests.
-			'SHOULD_UPLOAD' # Set if you want to test uploading documents to the specified host
-			]
+    # Application Settings
+    'AGENCY_NAME',  # City Government Name
+    'LIAISONS_URL',  # Path to Records Liaison file
+    'STAFF_URL',  # Path to Records Staff file
+    'LIST_OF_ADMINS',  # List of System Administrators
+    'DEFAULT_MAIL_SENDER',  # Default from address
+    'DEFAULT_OWNER_EMAIL',  # Default email for Portal Administrator
+    'DEFAULT_OWNER_REASON',  # Default Title for Portal Administrator
+    'DAYS_AFTER_EXTENSION',  # Default number of days for an extension
+    'DAYS_TO_FULFILL',  # Default number of days to fulfill a request
+    'DAYS_UNTIL_OVERDUE',  # Default number of days until
+    'NYC_GOV_BASE',  # Base URL for NYC.gov links/assets
+
+    # Flask Settings
+    'PUBLIC_APPLICATION_URL',  # Application URL for Public Users
+    'AGENCY_APPLICATION_URL',  # Application URL for Agency Users
+    'ENVIRONMENT',  # Local Environemnt (LOCAL, STAGING, TESTING, PRODUCTION)
+    'SECRET_KEY',  # Secret key for cookie signing (sessions)
+    'DATABASE_URL',  # URL to access Postgres database
+    'LOGFILE_DIRECTORY', # Location to store logfiles
+
+    # Flask Mail Settings
+    'MAIL_USERNAME',  # Username for mail server
+    'MAIL_PASSWORD',  # Password for mail server
+    'MAIL_SERVER',  # Mail Server URL
+    'MAIL_USE_TLS',  # TLS Setting for Mail Server
+    'MAIL_PORT',  # Port for SMTP
+    'SEND_EMAILS',  # Enable email sending on Local environment
+
+    # Upload Settings
+    'UPLOAD_DOCS',  # Enable uploads of documents on Local environment
+    'UPLOAD_PUBLIC_LOCAL_FOLDER', # Upload records marked as public to this local location
+    'UPLOAD_PRIVATE_LOCAL_FOLDER', # Upload records marked as private to this local location
+    'UPLOAD_PUBLIC_REMOTE_FOLDER', # Upload records marked as public to this remote location
+    'PUBLIC_SERVER_HOSTNAME', # Remote Server Hostname
+    'PUBLIC_SERVER_USER', # User for RSYNC
+    'HOST_URL',  # URL for uploaded documents folder
+
+    # ReCaptcha
+    'RECAPTCHA_SECRET_KEY',  # Secret key for Google ReCaptcha
+    'RECAPTCHA_SITE_KEY',  # Site key for Google ReCaptcha
+
+    # ICAP Variables
+    'ICAP_SERVER',
+    'ICAP_SERVICE_NAME',
+    'ICAP_PORT',
+    'ICAP_PROFILE',
+    'SHOULD_SCAN_FILES',
+    'MAX_FILE_SIZE',
+
+    # LDAP
+    'USE_LDAP',  # Determines if LDAP or Flask-Login is used
+    'LDAP_SERVER',  # LDAP Server URL
+    'LDAP_PORT',  # LDAP Connection Port
+    'LDAP_USE_TLS',  # Using TLS to connect to server
+    'LDAP_CERT_PATH',  # Path to certificate. Required if using TLS
+    'LDAP_SA_BIND_DN',  # Bind DN for the LDAP Service Account
+    'LDAP_SA_PASSWORD',  # Password for the LDAP Service Account
+    'LDAP_BASE_DN',  # Base DN for searching for users
+    'PERMANENT_SESSION_LIFETIME',
+
+]
+
 for envvar in envvars:
-	set_env(key = envvar)
+    set_env(key=envvar)
 
 # Database gets set slightly differently, to support difference between Flask and Heroku naming:
 app.config['SQLALCHEMY_DATABASE_URI'] = environ['DATABASE_URL']
@@ -79,3 +135,18 @@ app.config['SQLALCHEMY_DATABASE_URI'] = environ['DATABASE_URL']
 # Initialize database
 db = SQLAlchemy(app)
 
+# Initialiaze ReCapthca
+recaptcha = ReCaptcha(app)
+app.config['SECRET_KEY'] = environ['SECRET_KEY']
+app.secret_key = app.config['SECRET_KEY']
+app.config['SESSION_TYPE'] = 'sqlalchemy'
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=int(environ['PERMANENT_SESSION_LIFETIME']))
+
+store = SQLAlchemyStore(db.engine, db.metadata, 'sessions')
+kvsession = KVSessionExtension(store, app)
+
+app.debug = True
+log_filename = environ['LOGFILE_DIRECTORY'] + "openrecords_" + time.strftime("%Y%m%d") + ".log"
+handler = TimedRotatingFileHandler(log_filename, when='D', interval=60)
+handler.setLevel(logging.DEBUG)
+app.logger.addHandler(handler)
