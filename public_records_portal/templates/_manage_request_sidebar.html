@@ -1,0 +1,50 @@
+{% block status %}
+{% include '_manage_request_status.html' %}
+{% endblock status %}
+
+<div class="row-fluid participantRow">
+    <div>
+        <h4 class="participantRow-title">Assigned Agency</h4>
+        <div class="participantRow-participants">{{ department.name }}</div>
+    </div>
+    {% if current_user.is_authenticated and audience == 'city' %}
+    <h4 class="participantRow-title">Assigned User</h4>
+    {% else %}
+    <h4 class="participantRow-title">Point of Contact</h4>
+    {% endif %}
+    <div class="participantRow-participants">
+        <a href="mailto:{{ assigned_user.email }}">{{ assigned_user.alias }}</a>
+    </div>
+</div>
+{% if current_user.is_authenticated %}
+<div>
+    <h4 class="participantRow-title">Helpers</h4>
+    {% for helper in helpers %}
+    <div class="participantRow-participants">
+        <a href="mailto:{{ helper.email }}">{{ helper.name }}</a>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% if current_user.is_authenticated and status == 'closed' and audience == 'city' %}
+<div class="r_sidebar_banner hidden-phone hidden-tablet">
+    <form name="reopen_request" class="form-inline" id="question" method="post" action="/update_a_request_reopen">
+        <input type="hidden" name="request_id" value="{{ req.id }}"/>
+        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+        <button id="reopenRequest" class="btn btn-primary btn-block" type="submit">Reopen request</button>
+    </form>
+</div>
+{% endif %}
+<div class="row-fluid">&nbsp;</div>
+{% block request_dates %}
+<div class="muted participantRow-participants text-center">
+    Received: {{ req.date_received.strftime('%Y-%m-%d') }}
+</div>
+{% endblock request_dates %}
+{% if req.solid_status() == 'closed' %}
+{% elif req.solid_status() in ['in_progress', 'overdue'] %}
+<div class="text-center"> Response Due Date: <span class="label"> {{ req.due_date.strftime('%Y-%m-%d') }}</span></div>
+{% else %}
+<div class="text-center">Acknowledgement Due: <span class="label">{{ req.due_date.strftime('%Y-%m-%d') }}</span></div>
+<div class="span12"><br /></div>
+{% endif %}

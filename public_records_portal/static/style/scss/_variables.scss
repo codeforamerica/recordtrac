@@ -1,0 +1,27 @@
+/* colors, sizes, all variables for OpenFOIL */
+
+
+/* Colors */
+$nyc-blue: #0a5796;
+$nyc-light-blue: #1771b7;
+$light-blue: #1771b7;
+$yellow: #fff200;
+$dark-grey: #333333;
+$grey: #666666;
+$light-grey: #999999;
+$off-white: #efefef;
+
+
+/* Spacing */
+
+	/* This is applied to the navbar, wrapper, and footer. It should change at the mobile breakpoint. */
+	$wrapper-pad: 20px;
+	$wrapper-pad-mobile: 20px;
+
+
+	/* This is to keep the footer fixed to the bottom of a page if there isn't much content */
+	$footer-height: 8rem;
+	$footer-height-mobile: 27rem;
+
+	/* This is the padding between the bottom of the "content" and the footer */
+	$wrapper-pad-bottom: 3rem;

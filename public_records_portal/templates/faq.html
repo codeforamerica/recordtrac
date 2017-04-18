@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% set active_page="faq" %}
+{% block title %}{{ title }}FAQ - OpenRecords{% endblock title %}
+
+{% block container %}
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/about.css') }}">
+    <div class="row-fluid">
+        <div class="span8">
+
+            <div class="row-fluid">
+<!--                 <div class="bottombreathe">
+                    <h1 id="about">About NYC Open Gov</h1>
+
+                    <p class="lead">NYC Open Gov is a quick, simple way for you to submit a public records request to
+                        the {{ config['AGENCY_NAME'] }}.</p>
+
+                    <p><strong>Most information on this site is public.</strong> Your contact information, and personal
+                        information that may be contained in government documetns will not be made available to the
+                        public.</p>
+                </div> -->
+                <div class="bottombreathe">
+                    <h4 id="what">What does FOIL mean?</h4>
+
+                    <p>FOIL stands for the Freedom of Information Law.  The New York State Freedom of Information Law requires government agencies to provide records to the public upon request. Government records affect the lives of each New Yorker, and providing easy access to the records makes government work better.</p>
+                </div>
+                <div class="bottombreathe">
+                    <h4 id="documents">What kinds of records do I have the right to see?</h4>
+
+                    <p>The FOIL definition of records is very broad and includes information found in paper and electronic documents and audio and visual recordings.  All records are available upon request, unless an exception in FOIL permits an agency to deny access to a record.</p>
+                </div>
+                 <div class="bottombreathe">
+                    <h4 id="documents">Are there any public records that I can’t see?</h4>
+
+                    <p>Yes, there are exceptions in FOIL. Most of the exceptions are based upon common sense and the potential for harm that would arise if the contents of the record were disclosed to unauthorized people.  If disclosure of a record would be damaging to an individual or prevent a government agency from carrying out its duties, it is likely that some or all of the record may be withheld. You can read the law, including the exceptions, by clicking here. <a href="http://www.dos.ny.gov/coog/Right_to_know.html#foil">See FOIL &sect;87(2)</a></p>
+                </div>
+                 <div class="bottombreathe">
+                    <h4 id="documents">Do I have to explain why I want the records?</h4>
+
+                    <p>No, unless you are a business or other organization that is requesting a list of names and addresses.</p>
+                </div>
+                <div class="bottombreathe">
+                    <h4 id="documents">How much does it cost to get access to government records?</h4>
+
+                    <p>There is no charge to submit a FOIL request or to look at records in the office of an agency.  However, you may be charged by an agency for the cost of reproducing the records you requested.  FOIL limits the amount that can be charged.</p>
+                    <p>You may always include in your request letter a specific statement limiting the amount that you are willing to pay. If an agency estimates that the total cost will exceed that amount, you may narrow your request in order to reduce the cost.</p>
+                </div>
+                <div class="bottombreathe">
+                    <h4 id="documents">How long does it take to get access to government records?</h4>
+
+                    <p>The agency will acknowledge your request within five (5) business days of receiving it.  The actual time to complete a request will vary depending on many factors, such as  the number of records requested and the difficulty involved in locating and reviewing the records. You will be notified of the amount of time the agency needs to complete your request.</p>
+                </div>
+                <div class="bottombreathe">
+                    <h4 id="anonymous">Can I make an anonymous request?</h4>
+                    <p>On the OpenRecords portal, your name will not be viewable by the public.  The topic of the request will be shown.</p>
+                </div>
+                <div class="bottombreathe">
+                    <h4 id="documents">How do I know which agency handles the records I need?</h4>
+                    <p>The OpenRecords portal has a field named “categories” that will help you identify the correct agency.  When you choose one of the categories, the list of possible agencies will be narrowed to those that may have the records you want. You can select the agency from the list provided to start the FOIL request process.  If you submit a records request to the wrong agency, you will be notified within five days that the request should be resubmitted to a different agency. </p>
+                </div>
+                <div class="bottombreathe">
+                    <h4 id="documents">How do I make a request?</h4>
+
+                    <p>You can submit a FOIL request at the OpenRecords portal for all NYC agencies.  Visit <a href="{{config['PUBLIC_APPLICATION_URL']}}new">{{config['PUBLIC_APPLICATION_URL']}}new</a> and follow the prompts and directions provided in order to make your request.</p>
+                </div>
+                <div class="bottombreathe">
+                    <h4 id="documents">I asked for a copy of public records and the agency refused my request, saying that it was too broad. What can I do?</h4>
+
+                    <p>An agency may deny a request that does not "reasonably describe" records. If the request is too vague, the agency may ask for clarification.  You may then submit a new request with a more specific description of the records you would like. </p>
+                </div>
+                <div class="bottombreathe">
+                    <h4 id="documents">How do I track a request?</h4>
+
+                    <p>After your request has been submitted, a message will display verifying the submission and providing a request number.  Select Track an Existing Request from the top menu and enter your request number, then press the Find my Request button.  The status of your request will be displayed.</p>
+                </div>
+                <div class="bottombreathe">
+                    <h4 id="multiple">What if I have multiple requests that I want to track or would like to see what other requests have been submitted?</h4>
+
+                    <p>Select View Requests from the top menu.  You can then search existing requests using text from the request, the current status, the date range and the agency.</p>
+                </div>
+                <div class="bottombreathe">
+                    <h4 id="disagree">What if I don’t agree with an agency’s response?</h4>
+
+                    <p>You may appeal a decision to deny your request within 30 days of receiving the denial or partial denial. The denial or partial denial should provide the contact information for the Agency Appeals Officer.  Your appeal letter should state the reason you are appealing and why the agency's response to the request was improper. [See the <a href="http://nsarchive.gwu.edu/nsa/foia/guide.html#appeals">sample FOIA appeal</a> below.]</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock container %}
+
+

@@ -1,5 +1,9 @@
 /* custom css for all_requests.html and child templates */
 
+*{
+
+}
+
 /* top area */
 .blurb {
 	padding-bottom: 1em;
@@ -163,6 +167,10 @@ h3 {
     background-color: #2688AD;
 }
 
+#requests .status.in {
+    background-color: #2688AD;
+}
+
 #requests .status.soon {
     background-color: #FB991B;
 }
@@ -218,6 +226,12 @@ h3 {
 	margin-left: 5px;
 }
 
+.in_progress_style {
+	border-left: 8px solid forestgreen;
+	padding-left: 5px;
+	margin-left: 5px;
+}
+
 /* Icon glips for sortalbe and sorted columns. */
 .sortable:after {
   font-family: FontAwesome;
@@ -243,4 +257,18 @@ h3 {
 
 .date_filter .max_field {
   margin-left: 20px;
+}
+
+input#checkbox {
+    width: 0.5rem;
+    display: inline;
+}
+
+input[type=date] {
+	font-size: 1rem;
+	height: 3rem;
+}
+
+.in_progress {
+	background-color: #2688AD;
 }
